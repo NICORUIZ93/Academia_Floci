@@ -416,9 +416,15 @@
               <span class="eyebrow">RETOS OBLIGATORIOS</span>
               <h2>Ejercicios del módulo</h2>
               <p class="section-note">Marca cada reto solo después de ejecutarlo en tu terminal y ver el resultado.</p>
-              <button class="challenge" *ngFor="let challenge of selectedModule().challenges; let ci = index" [class.done]="progress().completedChallenges[challengeKey(selectedModule().id, ci)]" (click)="toggleChallenge(selectedModule().id, ci)">
+              <button class="challenge guided-challenge" *ngFor="let challenge of selectedModule().challenges; let ci = index" [class.done]="progress().completedChallenges[challengeKey(selectedModule().id, ci)]" (click)="toggleChallenge(selectedModule().id, ci)">
                 <span class="check-box"><lucide-icon [img]="icons.Check" /></span>
-                <span><strong>Ejercicio {{ ci + 1 }}</strong>{{ challenge }}</span>
+                <span class="challenge-body">
+                  <strong>Ejercicio {{ ci + 1 }}</strong>
+                  <span class="challenge-action">{{ challengeGuide(challenge, ci).action }}</span>
+                  <code *ngIf="challengeGuide(challenge, ci).command">{{ challengeGuide(challenge, ci).command }}</code>
+                  <small><b>Verifica:</b> {{ challengeGuide(challenge, ci).verify }}</small>
+                  <small><b>Consejo tecnico:</b> {{ challengeGuide(challenge, ci).advice }}</small>
+                </span>
               </button>
             </div>
           </section>

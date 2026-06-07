@@ -36,6 +36,9 @@ test('modulos: lectura, ejercicios, notas y progreso se conectan', async ({ page
 
   await page.locator('.lesson-tabs button').nth(1).click();
   await expect(page.locator('.adaptive-lab')).toContainText('pip install boto3');
+  await expect(page.locator('.guided-challenge').first()).toContainText('Verifica:');
+  await expect(page.locator('.guided-challenge').first()).toContainText('Consejo tecnico:');
+  await expect(page.locator('.guided-challenge code').first()).toBeVisible();
 
   await page.locator('.lesson-tabs button').nth(2).click();
   await page.locator('textarea').first().fill('Floci permite practicar cloud local con evidencia.');
@@ -84,6 +87,31 @@ test('proyecto final: mini proyectos, integrador y entorno activo son utiles', a
   await page.locator('.project-config .language-select button').filter({ hasText: /^Go/ }).click();
   await expect(page.locator('.project-environment')).toContainText('curl -fsSL');
   await expect(page.locator('.project-environment')).toContainText('go run main.go');
+});
+
+test('labs: java muestra maven y gradle, y todos los mini proyectos tienen codigo verificable', async ({ page, isMobile }) => {
+  await navigateTo(page, 4, isMobile);
+
+  const projectLanguages = page.locator('.project-config .language-select button');
+  await projectLanguages.nth(3).click();
+  await expect(page.locator('.project-environment')).toContainText('Maven:');
+  await expect(page.locator('.project-environment')).toContainText('Gradle:');
+  await expect(page.locator('.project-environment')).toContainText('http://localhost:4566');
+  await expect(page.locator('.topic-recipe .code-sample')).toContainText('S3Client.builder');
+
+  const topicCount = await page.locator('.topic-projects article').count();
+  expect(topicCount).toBe(16);
+  for (let index = 0; index < topicCount; index += 1) {
+    await page.locator('.topic-projects article').nth(index).click();
+    await expect(page.locator('.topic-recipe h2')).toBeVisible();
+    await expect(page.locator('.topic-recipe .code-sample pre code')).not.toHaveText('');
+    await expect(page.locator('.topic-recipe')).toContainText('VERIFICAR');
+  }
+
+  for (let index = 0; index < 6; index += 1) {
+    await projectLanguages.nth(index).click();
+    await expect(page.locator('.project-environment .code-sample pre code')).not.toHaveText('');
+  }
 });
 
 test('certificado: aparece al completar todos los modulos', async ({ page }) => {

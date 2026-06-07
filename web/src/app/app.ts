@@ -40,6 +40,12 @@ interface SetupCommand {
   command: string;
   detail: string;
 }
+interface ChallengeGuide {
+  action: string;
+  command: string;
+  verify: string;
+  advice: string;
+}
 interface LearningRule {
   title: string;
   detail: string;
@@ -343,6 +349,22 @@ export class App implements OnInit {
       detail: 'La salida debe mostrar el recurso creado, el mensaje procesado o el resultado del servicio local.',
     }));
   }
+  challengeGuide(challenge: string, index: number): ChallengeGuide {
+    const normalized = challenge.replaceAll('â€”', '—').replaceAll('–', '—');
+    const [rawAction, ...rawCommandParts] = normalized.split('—');
+    const action = rawAction.trim().replace(/\s+/g, ' ');
+    const command = rawCommandParts.join('—').trim();
+    const lower = `${action} ${command}`.toLowerCase();
+    const verify = command
+      ? this.verificationHintForCommand(command)
+      : 'Registra la evidencia: recurso creado, archivo generado, JSON recibido o error diagnosticado.';
+    const advice = lower.includes('...') || lower.includes('<')
+      ? 'Reemplaza <valores> y puntos suspensivos con IDs reales obtenidos en pasos anteriores.'
+      : index === 0
+        ? 'Empieza con este paso en una carpeta limpia para evitar mezclar recursos de otros laboratorios.'
+        : 'Si falla, copia el error completo y confirma que Floci siga corriendo antes de repetir.';
+    return { action, command, verify, advice };
+  }
   topicProjectCode(project: TopicProject = this.selectedTopicProject()): string {
     const service = project.services[0];
     const resource = project.resource;
@@ -359,14 +381,7 @@ func main() {
   fmt.Println("Recurso local: ${resource}")
   fmt.Println("Implementa el cliente SDK siguiendo el módulo ${project.module} y verifica con la CLI.")
 }`;
-    if (this.selectedLanguage() === 'java') return `public class App {
-  public static void main(String[] args) {
-    System.out.println("Mini proyecto FlociOps: ${project.title}");
-    System.out.println("Servicio: ${project.services.join(', ')}");
-    System.out.println("Recurso local: ${resource}");
-    System.out.println("Implementa el cliente SDK siguiendo el módulo ${project.module} y verifica con la CLI.");
-  }
-}`;
+    if (this.selectedLanguage() === 'java') return this.javaTopicCode(project);
     return `Console.WriteLine("Mini proyecto FlociOps: ${project.title}");
 Console.WriteLine("Servicio: ${project.services.join(', ')}");
 Console.WriteLine("Recurso local: ${resource}");
@@ -584,7 +599,8 @@ Console.WriteLine("Implementa el cliente SDK siguiendo el módulo ${project.modu
       ],
       java: [
         { title: 'Verifica Java', command: 'java --version', detail: 'Debe mostrar JDK 17 o superior.' },
-        { title: 'Verifica Maven', command: 'mvn --version', detail: 'Maven instala dependencias y ejecuta proyectos Java.' },
+        { title: 'Verifica Maven', command: 'mvn --version', detail: 'Ruta A: Maven instala dependencias y ejecuta proyectos Java.' },
+        { title: 'Verifica Gradle', command: 'gradle --version', detail: 'Ruta B: Gradle sirve si prefieres build.gradle o ya vienes de Android/Spring.' },
       ],
       go: [
         { title: 'Verifica Go', command: 'go version', detail: 'Debe mostrar una versión de Go instalada.' },
@@ -623,7 +639,12 @@ Console.WriteLine("Implementa el cliente SDK siguiendo el módulo ${project.modu
         install: 'npm install @aws-sdk/client-s3',
         code: `import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
 
-const s3 = new S3Client({ region: "us-east-1" });
+const s3 = new S3Client({
+  region: "us-east-1",
+  endpoint: "http://localhost:4566",
+  forcePathStyle: true,
+  credentials: { accessKeyId: "test", secretAccessKey: "test" }
+});
 await s3.send(new PutObjectCommand({
   Bucket: "tareas-locales",
   Key: "tarea-001.json",
@@ -640,7 +661,12 @@ console.log("Tarea subida");`,
 
 type Tarea = { titulo: string; estado: "pendiente" | "hecha" };
 const tarea: Tarea = { titulo: "Aprender Floci", estado: "pendiente" };
-const s3 = new S3Client({ region: "us-east-1" });
+const s3 = new S3Client({
+  region: "us-east-1",
+  endpoint: "http://localhost:4566",
+  forcePathStyle: true,
+  credentials: { accessKeyId: "test", secretAccessKey: "test" }
+});
 
 await s3.send(new PutObjectCommand({
   Bucket: "tareas-locales",
@@ -657,7 +683,13 @@ console.log("Tarea subida");`,
         code: `import json
 import boto3
 
-s3 = boto3.client("s3")
+s3 = boto3.client(
+    "s3",
+    endpoint_url="http://localhost:4566",
+    aws_access_key_id="test",
+    aws_secret_access_key="test",
+    region_name="us-east-1",
+)
 s3.put_object(
     Bucket="tareas-locales",
     Key="tarea-001.json",
@@ -667,16 +699,29 @@ print("Tarea subida")`,
         run: 'python app.py',
       },
       java: {
-        title: 'Subir una tarea a S3 con Java',
+        title: 'Subir una tarea a S3 con Java (Maven o Gradle)',
         file: 'App.java',
-        install: 'mvn dependency:get -Dartifact=software.amazon.awssdk:s3:2.25.60',
-        code: `import software.amazon.awssdk.services.s3.S3Client;
-import software.amazon.awssdk.services.s3.model.PutObjectRequest;
+        install: 'Maven: mvn -q archetype:generate -DgroupId=academy.floci -DartifactId=tareas-locales -DarchetypeArtifactId=maven-archetype-quickstart -DinteractiveMode=false | Gradle: gradle init --type java-application --dsl groovy',
+        code: `import java.net.URI;
+import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
+import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
 import software.amazon.awssdk.core.sync.RequestBody;
+import software.amazon.awssdk.regions.Region;
+import software.amazon.awssdk.services.s3.S3Client;
+import software.amazon.awssdk.services.s3.S3Configuration;
+import software.amazon.awssdk.services.s3.model.CreateBucketRequest;
+import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 
 public class App {
   public static void main(String[] args) {
-    var s3 = S3Client.create();
+    var s3 = S3Client.builder()
+        .endpointOverride(URI.create("http://localhost:4566"))
+        .region(Region.US_EAST_1)
+        .credentialsProvider(StaticCredentialsProvider.create(AwsBasicCredentials.create("test", "test")))
+        .serviceConfiguration(S3Configuration.builder().pathStyleAccessEnabled(true).build())
+        .build();
+
+    s3.createBucket(CreateBucketRequest.builder().bucket("tareas-locales").build());
     s3.putObject(
       PutObjectRequest.builder().bucket("tareas-locales").key("tarea-001.json").build(),
       RequestBody.fromString("{\\"titulo\\":\\"Aprender Floci\\",\\"estado\\":\\"pendiente\\"}")
@@ -684,7 +729,7 @@ public class App {
     System.out.println("Tarea subida");
   }
 }`,
-        run: 'mvn exec:java -Dexec.mainClass=App',
+        run: 'Maven: mvn exec:java -Dexec.mainClass=App | Gradle: gradle run',
       },
       go: {
         title: 'Subir una tarea a S3 con Go',
@@ -734,19 +779,19 @@ Console.WriteLine("Tarea subida");`,
     const snippets: Record<string, string> = {
       S3: `import boto3
 
-s3 = boto3.client("s3")
+s3 = boto3.client("s3", endpoint_url="http://localhost:4566", aws_access_key_id="test", aws_secret_access_key="test", region_name="us-east-1")
 s3.create_bucket(Bucket="${resource}")
 s3.put_object(Bucket="${resource}", Key="demo.txt", Body=b"hola desde FlociOps")
 print("Archivo subido a s3://${resource}/demo.txt")`,
       SQS: `import boto3
 
-sqs = boto3.client("sqs")
+sqs = boto3.client("sqs", endpoint_url="http://localhost:4566", aws_access_key_id="test", aws_secret_access_key="test", region_name="us-east-1")
 queue = sqs.create_queue(QueueName="${resource}")
 sqs.send_message(QueueUrl=queue["QueueUrl"], MessageBody="procesar tarea 001")
 print("Mensaje enviado:", queue["QueueUrl"])`,
       DynamoDB: `import boto3
 
-ddb = boto3.client("dynamodb")
+ddb = boto3.client("dynamodb", endpoint_url="http://localhost:4566", aws_access_key_id="test", aws_secret_access_key="test", region_name="us-east-1")
 ddb.create_table(
     TableName="${resource}",
     AttributeDefinitions=[{"AttributeName": "PK", "AttributeType": "S"}],
@@ -757,8 +802,8 @@ ddb.put_item(TableName="${resource}", Item={"PK": {"S": "TASK#001"}, "title": {"
 print("Tarea guardada")`,
       Secrets: `import boto3
 
-secrets = boto3.client("secretsmanager")
-ssm = boto3.client("ssm")
+secrets = boto3.client("secretsmanager", endpoint_url="http://localhost:4566", aws_access_key_id="test", aws_secret_access_key="test", region_name="us-east-1")
+ssm = boto3.client("ssm", endpoint_url="http://localhost:4566", aws_access_key_id="test", aws_secret_access_key="test", region_name="us-east-1")
 secrets.create_secret(Name="${resource}", SecretString="dev-secret")
 ssm.put_parameter(Name="/flociops/stage", Value="local", Type="String", Overwrite=True)
 print("Secreto y parametro creados")`,
@@ -776,7 +821,7 @@ class Handler(BaseHTTPRequestHandler):
 HTTPServer(("localhost", 8080), Handler).serve_forever()`,
       SNS: `import json, boto3
 
-events = boto3.client("events")
+events = boto3.client("events", endpoint_url="http://localhost:4566", aws_access_key_id="test", aws_secret_access_key="test", region_name="us-east-1")
 events.create_event_bus(Name="${resource}")
 events.put_events(Entries=[{
     "Source": "flociops.tasks",
@@ -787,7 +832,7 @@ events.put_events(Entries=[{
 print("Evento publicado")`,
       CloudWatch: `import time, boto3
 
-logs = boto3.client("logs")
+logs = boto3.client("logs", endpoint_url="http://localhost:4566", aws_access_key_id="test", aws_secret_access_key="test", region_name="us-east-1")
 logs.create_log_group(logGroupName="${resource}")
 logs.create_log_stream(logGroupName="${resource}", logStreamName="local")
 logs.put_log_events(logGroupName="${resource}", logStreamName="local", logEvents=[{"timestamp": int(time.time() * 1000), "message": "INFO flociops listo"}])
@@ -799,19 +844,32 @@ print("Log enviado")`,
     const snippets: Record<string, string> = {
       S3: `import { S3Client, CreateBucketCommand, PutObjectCommand } from "@aws-sdk/client-s3";
 
-const s3 = new S3Client({ region: "us-east-1" });
+const s3 = new S3Client({
+  region: "us-east-1",
+  endpoint: "http://localhost:4566",
+  forcePathStyle: true,
+  credentials: { accessKeyId: "test", secretAccessKey: "test" }
+});
 await s3.send(new CreateBucketCommand({ Bucket: "${resource}" }));
 await s3.send(new PutObjectCommand({ Bucket: "${resource}", Key: "demo.txt", Body: "hola desde FlociOps" }));
 console.log("Archivo subido a s3://${resource}/demo.txt");`,
       SQS: `import { SQSClient, CreateQueueCommand, SendMessageCommand } from "@aws-sdk/client-sqs";
 
-const sqs = new SQSClient({ region: "us-east-1" });
+const sqs = new SQSClient({
+  region: "us-east-1",
+  endpoint: "http://localhost:4566",
+  credentials: { accessKeyId: "test", secretAccessKey: "test" }
+});
 const queue = await sqs.send(new CreateQueueCommand({ QueueName: "${resource}" }));
 await sqs.send(new SendMessageCommand({ QueueUrl: queue.QueueUrl, MessageBody: "procesar tarea 001" }));
 console.log("Mensaje enviado:", queue.QueueUrl);`,
       DynamoDB: `import { DynamoDBClient, CreateTableCommand, PutItemCommand } from "@aws-sdk/client-dynamodb";
 
-const ddb = new DynamoDBClient({ region: "us-east-1" });
+const ddb = new DynamoDBClient({
+  region: "us-east-1",
+  endpoint: "http://localhost:4566",
+  credentials: { accessKeyId: "test", secretAccessKey: "test" }
+});
 await ddb.send(new CreateTableCommand({
   TableName: "${resource}",
   AttributeDefinitions: [{ AttributeName: "PK", AttributeType: "S" }],
@@ -823,8 +881,9 @@ console.log("Tarea guardada");`,
       Secrets: `import { SecretsManagerClient, CreateSecretCommand } from "@aws-sdk/client-secrets-manager";
 import { SSMClient, PutParameterCommand } from "@aws-sdk/client-ssm";
 
-await new SecretsManagerClient({ region: "us-east-1" }).send(new CreateSecretCommand({ Name: "${resource}", SecretString: "dev-secret" }));
-await new SSMClient({ region: "us-east-1" }).send(new PutParameterCommand({ Name: "/flociops/stage", Value: "local", Type: "String", Overwrite: true }));
+const credentials = { accessKeyId: "test", secretAccessKey: "test" };
+await new SecretsManagerClient({ region: "us-east-1", endpoint: "http://localhost:4566", credentials }).send(new CreateSecretCommand({ Name: "${resource}", SecretString: "dev-secret" }));
+await new SSMClient({ region: "us-east-1", endpoint: "http://localhost:4566", credentials }).send(new PutParameterCommand({ Name: "/flociops/stage", Value: "local", Type: "String", Overwrite: true }));
 console.log("Secreto y parametro creados");`,
       Lambda: `export const handler = async (event) => {
   console.log("procesando evento", event);
@@ -838,19 +897,136 @@ http.createServer((_, res) => {
 }).listen(8080, () => console.log("API local en http://localhost:8080"));`,
       SNS: `import { EventBridgeClient, CreateEventBusCommand, PutEventsCommand } from "@aws-sdk/client-eventbridge";
 
-const events = new EventBridgeClient({ region: "us-east-1" });
+const events = new EventBridgeClient({
+  region: "us-east-1",
+  endpoint: "http://localhost:4566",
+  credentials: { accessKeyId: "test", secretAccessKey: "test" }
+});
 await events.send(new CreateEventBusCommand({ Name: "${resource}" }));
 await events.send(new PutEventsCommand({ Entries: [{ Source: "flociops.tasks", DetailType: "TaskCreated", Detail: JSON.stringify({ id: "TASK#001" }), EventBusName: "${resource}" }] }));
 console.log("Evento publicado");`,
       CloudWatch: `import { CloudWatchLogsClient, CreateLogGroupCommand, CreateLogStreamCommand, PutLogEventsCommand } from "@aws-sdk/client-cloudwatch-logs";
 
-const logs = new CloudWatchLogsClient({ region: "us-east-1" });
+const logs = new CloudWatchLogsClient({
+  region: "us-east-1",
+  endpoint: "http://localhost:4566",
+  credentials: { accessKeyId: "test", secretAccessKey: "test" }
+});
 await logs.send(new CreateLogGroupCommand({ logGroupName: "${resource}" }));
 await logs.send(new CreateLogStreamCommand({ logGroupName: "${resource}", logStreamName: "local" }));
 await logs.send(new PutLogEventsCommand({ logGroupName: "${resource}", logStreamName: "local", logEvents: [{ timestamp: Date.now(), message: "INFO flociops listo" }] }));
 console.log("Log enviado");`,
     };
     return snippets[service] ?? `console.log("Mini proyecto ${service}: crea el recurso ${resource}, ejecuta una operacion y verifica con la CLI del modulo correspondiente.");`;
+  }
+  private javaTopicCode(project: TopicProject): string {
+    const service = project.services[0];
+    const resource = project.resource;
+    const snippets: Record<string, string> = {
+      S3: `import java.net.URI;
+import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
+import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
+import software.amazon.awssdk.core.sync.RequestBody;
+import software.amazon.awssdk.regions.Region;
+import software.amazon.awssdk.services.s3.S3Client;
+import software.amazon.awssdk.services.s3.S3Configuration;
+import software.amazon.awssdk.services.s3.model.CreateBucketRequest;
+import software.amazon.awssdk.services.s3.model.PutObjectRequest;
+
+public class App {
+  public static void main(String[] args) {
+    var s3 = S3Client.builder()
+        .endpointOverride(URI.create("http://localhost:4566"))
+        .region(Region.US_EAST_1)
+        .credentialsProvider(StaticCredentialsProvider.create(AwsBasicCredentials.create("test", "test")))
+        .serviceConfiguration(S3Configuration.builder().pathStyleAccessEnabled(true).build())
+        .build();
+
+    s3.createBucket(CreateBucketRequest.builder().bucket("${resource}").build());
+    s3.putObject(
+        PutObjectRequest.builder().bucket("${resource}").key("demo.txt").build(),
+        RequestBody.fromString("hola desde FlociOps"));
+    System.out.println("Archivo subido a s3://${resource}/demo.txt");
+  }
+}`,
+      SQS: `import java.net.URI;
+import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
+import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
+import software.amazon.awssdk.regions.Region;
+import software.amazon.awssdk.services.sqs.SqsClient;
+import software.amazon.awssdk.services.sqs.model.CreateQueueRequest;
+import software.amazon.awssdk.services.sqs.model.SendMessageRequest;
+
+public class App {
+  public static void main(String[] args) {
+    var sqs = SqsClient.builder()
+        .endpointOverride(URI.create("http://localhost:4566"))
+        .region(Region.US_EAST_1)
+        .credentialsProvider(StaticCredentialsProvider.create(AwsBasicCredentials.create("test", "test")))
+        .build();
+
+    var queue = sqs.createQueue(CreateQueueRequest.builder().queueName("${resource}").build());
+    sqs.sendMessage(SendMessageRequest.builder().queueUrl(queue.queueUrl()).messageBody("procesar tarea 001").build());
+    System.out.println("Mensaje enviado: " + queue.queueUrl());
+  }
+}`,
+      DynamoDB: `import java.net.URI;
+import java.util.Map;
+import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
+import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
+import software.amazon.awssdk.regions.Region;
+import software.amazon.awssdk.services.dynamodb.DynamoDbClient;
+import software.amazon.awssdk.services.dynamodb.model.AttributeDefinition;
+import software.amazon.awssdk.services.dynamodb.model.AttributeValue;
+import software.amazon.awssdk.services.dynamodb.model.BillingMode;
+import software.amazon.awssdk.services.dynamodb.model.CreateTableRequest;
+import software.amazon.awssdk.services.dynamodb.model.KeySchemaElement;
+import software.amazon.awssdk.services.dynamodb.model.KeyType;
+import software.amazon.awssdk.services.dynamodb.model.PutItemRequest;
+import software.amazon.awssdk.services.dynamodb.model.ScalarAttributeType;
+
+public class App {
+  public static void main(String[] args) {
+    var ddb = DynamoDbClient.builder()
+        .endpointOverride(URI.create("http://localhost:4566"))
+        .region(Region.US_EAST_1)
+        .credentialsProvider(StaticCredentialsProvider.create(AwsBasicCredentials.create("test", "test")))
+        .build();
+
+    ddb.createTable(CreateTableRequest.builder()
+        .tableName("${resource}")
+        .attributeDefinitions(AttributeDefinition.builder().attributeName("PK").attributeType(ScalarAttributeType.S).build())
+        .keySchema(KeySchemaElement.builder().attributeName("PK").keyType(KeyType.HASH).build())
+        .billingMode(BillingMode.PAY_PER_REQUEST)
+        .build());
+
+    ddb.putItem(PutItemRequest.builder()
+        .tableName("${resource}")
+        .item(Map.of("PK", AttributeValue.fromS("TASK#001"), "title", AttributeValue.fromS("Aprender Floci")))
+        .build());
+    System.out.println("Tarea guardada");
+  }
+}`,
+    };
+    return snippets[service] ?? `public class App {
+  public static void main(String[] args) {
+    System.out.println("Mini proyecto FlociOps: ${project.title}");
+    System.out.println("Servicio: ${project.services.join(', ')}");
+    System.out.println("Recurso local: ${resource}");
+    System.out.println("Configura el cliente AWS SDK v2 con endpoint http://localhost:4566 y credenciales test/test.");
+    System.out.println("Ejecuta con Maven o Gradle y verifica con los comandos CLI de este tema.");
+  }
+}`;
+  }
+  private verificationHintForCommand(command: string): string {
+    const value = command.toLowerCase();
+    if (value.includes('create') || value.includes('mb ')) return 'Verifica con un comando list/describe que el recurso exista y copia el nombre creado.';
+    if (value.includes('cp ') || value.includes('upload') || value.includes('put')) return 'Verifica leyendo o listando el objeto/dato que acabas de escribir.';
+    if (value.includes('receive') || value.includes('pull')) return 'Debes ver el mensaje recibido; si no aparece, revisa cola, topic o subscription.';
+    if (value.includes('curl')) return 'Debes obtener HTTP 2xx y un cuerpo JSON o texto coherente con el endpoint.';
+    if (value.includes('logs') || value.includes('tail')) return 'Debes encontrar una linea de log que explique que paso y con que id.';
+    if (value.includes('status') || value.includes('version')) return 'La salida debe confirmar que la herramienta esta instalada o que el emulador esta activo.';
+    return 'Confirma que la salida coincida con el objetivo del paso antes de marcarlo como completado.';
   }
   private loadProgress(): StoredProgress {
     try { return { ...EMPTY_PROGRESS, ...JSON.parse(localStorage.getItem('floci-academy-progress') || '{}') }; }
