@@ -1,0 +1,113 @@
+import { expect, test } from '@playwright/test';
+
+async function navigateTo(page: import('@playwright/test').Page, index: number, isMobile: boolean): Promise<void> {
+  if (isMobile) await page.locator('.mobile-menu').click();
+  await page.locator('.sidebar nav button').nth(index).click();
+}
+
+test.beforeEach(async ({ page }) => {
+  await page.goto('/');
+  await page.evaluate(() => localStorage.clear());
+  await page.reload();
+});
+
+test('inicio: ruta educativa y laboratorio adaptado responden al perfil', async ({ page }) => {
+  await expect(page.locator('.welcome-band')).toBeVisible();
+  await expect(page.locator('.education-flow')).toBeVisible();
+  await expect(page.locator('.starter-toolbox')).toBeVisible();
+  await expect(page.locator('.first-session')).toBeVisible();
+  await expect(page.locator('.quick-lab-card')).toBeVisible();
+
+  await page.locator('.student-config .segmented-control button').filter({ hasText: 'Windows' }).click();
+  await page.locator('.student-config .language-select button').filter({ hasText: 'Python' }).click();
+
+  await expect(page.locator('.first-session')).toContainText('PowerShell');
+  await expect(page.locator('.quick-lab-card')).toContainText('app.py');
+  await expect(page.locator('.quick-lab-card')).toContainText('pip install boto3');
+});
+
+test('modulos: lectura, ejercicios, notas y progreso se conectan', async ({ page, isMobile }) => {
+  await page.locator('.student-config .language-select button').filter({ hasText: 'Python' }).click();
+  await navigateTo(page, 1, isMobile);
+
+  await expect(page.locator('.lesson-content > h1')).toBeVisible();
+  await expect(page.locator('.rail-progress')).toHaveCount(18);
+  await expect(page.locator('.module-trailer')).toBeVisible();
+
+  await page.locator('.lesson-tabs button').nth(1).click();
+  await expect(page.locator('.adaptive-lab')).toContainText('pip install boto3');
+
+  await page.locator('.lesson-tabs button').nth(2).click();
+  await page.locator('textarea').first().fill('Floci permite practicar cloud local con evidencia.');
+  await page.locator('textarea').nth(1).fill('floci start');
+  await page.locator('.complete-button').click();
+  await expect(page.locator('.complete-button')).toContainText('completado');
+
+  await page.reload();
+  await navigateTo(page, 1, isMobile);
+  await page.locator('.module-rail button').first().click();
+  await page.locator('.lesson-tabs button').nth(2).click();
+  await expect(page.locator('textarea').first()).toHaveValue('Floci permite practicar cloud local con evidencia.');
+});
+
+test('servicios y biblioteca: navegacion por contenido local funciona', async ({ page, isMobile }) => {
+  await navigateTo(page, 2, isMobile);
+  await expect(page.locator('.cloud-tabs')).toBeVisible();
+
+  await page.locator('.cloud-tabs button').nth(3).click();
+  await page.locator('.comparison-row').first().click();
+  await expect(page.locator('.lesson-content > h1')).toBeVisible();
+
+  await navigateTo(page, 3, isMobile);
+  await expect(page.locator('.document-index')).toBeVisible();
+  await page.locator('.document-index input').fill('S3');
+  await page.locator('.document-list button').first().click();
+  await expect(page.locator('.document-reader header h2')).toBeVisible();
+  await expect(page.locator('.markdown-body')).toBeVisible();
+});
+
+test('proyecto final: mini proyectos, integrador y entorno activo son utiles', async ({ page, isMobile }) => {
+  await navigateTo(page, 4, isMobile);
+
+  await expect(page.locator('.project-view h1')).toHaveText('FlociOps');
+  await expect(page.locator('.topic-projects article')).toHaveCount(16);
+  await expect(page.locator('.flociops-stages article')).toHaveCount(6);
+  await expect(page.locator('.project-environment')).toBeVisible();
+
+  await page.locator('.project-config .segmented-control button').filter({ hasText: 'Linux' }).click();
+  await page.locator('.project-config .language-select button').filter({ hasText: /^Go/ }).click();
+  await expect(page.locator('.project-environment')).toContainText('curl -fsSL');
+  await expect(page.locator('.project-environment')).toContainText('go run main.go');
+});
+
+test('certificado: aparece al completar todos los modulos', async ({ page }) => {
+  await page.evaluate(() => {
+    localStorage.setItem('floci-academy-progress', JSON.stringify({
+      completedModules: Array.from({ length: 18 }, (_, index) => index),
+      completedChallenges: {},
+      notes: {},
+      evidence: {},
+    }));
+  });
+  await page.reload();
+
+  await expect(page.locator('.completion-certificate')).toBeVisible();
+  await expect(page.locator('.completion-certificate')).toContainText('Completaste Academia Floci');
+});
+
+test('responsive: vistas principales no generan scroll horizontal', async ({ page, isMobile }) => {
+  if (!isMobile) test.skip();
+
+  for (const navIndex of [0, 1, 2, 3, 4]) {
+    await page.goto('/');
+    if (navIndex > 0) {
+      await navigateTo(page, navIndex, true);
+    }
+
+    const size = await page.evaluate(() => ({
+      width: document.documentElement.clientWidth,
+      scrollWidth: document.documentElement.scrollWidth,
+    }));
+    expect(size.scrollWidth).toBeLessThanOrEqual(size.width);
+  }
+});

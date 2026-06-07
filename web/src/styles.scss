@@ -1,0 +1,15 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@500;600;700;800&display=swap');
+
+:root { font-family: 'DM Sans', sans-serif; color: #0f172a; background: #f8fafc; font-synthesis: none; }
+* { box-sizing: border-box; min-width: 0; }
+html { scroll-behavior: smooth; overflow-x: hidden; }
+body { margin: 0; min-height: 100vh; overflow-x: hidden; }
+button, input, textarea { font: inherit; letter-spacing: 0; }
+button { cursor: pointer; }
+
+/* Global overflow protection */
+p, li, td, th, blockquote, figcaption {
+  overflow-wrap: break-word;
+  word-break: break-word;
+}
+img, video, svg { max-width: 100%; height: auto; display: block; }

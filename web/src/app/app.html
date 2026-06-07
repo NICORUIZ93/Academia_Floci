@@ -1,0 +1,741 @@
+<div class="app-shell" [class.focus-active]="focusMode()">
+  <aside class="sidebar" [class.open]="sidebarOpen()">
+    <div class="brand">
+      <div class="brand-mark"><lucide-icon [img]="icons.CloudCog" /></div>
+      <div><strong>Academia Floci</strong><span>Laboratorio local</span></div>
+      <button class="icon-button close-sidebar" title="Cerrar menú" (click)="sidebarOpen.set(false)"><lucide-icon [img]="icons.X" /></button>
+    </div>
+    <nav aria-label="Navegación principal">
+      <button [class.active]="view() === 'dashboard'" (click)="setView('dashboard')"><lucide-icon [img]="icons.LayoutDashboard" /><span>Inicio<small>¿Por dónde empiezo?</small></span></button>
+      <button [class.active]="view() === 'path'" (click)="setView('path')"><lucide-icon [img]="icons.GraduationCap" /><span>Módulos<small>Lecciones y ejercicios</small></span></button>
+      <button [class.active]="view() === 'services'" (click)="setView('services')"><lucide-icon [img]="icons.Boxes" /><span>Servicios cloud<small>AWS · Azure · GCP</small></span></button>
+      <button [class.active]="view() === 'library'" (click)="setView('library')"><lucide-icon [img]="icons.Library" /><span>Biblioteca<small>Guías y referencia</small></span></button>
+      <button [class.active]="view() === 'project'" (click)="setView('project')"><lucide-icon [img]="icons.Network" /><span>Proyecto final<small>Aplicación completa</small></span></button>
+    </nav>
+    <div class="sidebar-progress">
+      <div><span>Tu avance</span><strong>{{ completion() }}%</strong></div>
+      <div class="progress-track"><span [style.width.%]="completion()"></span></div>
+      <p>{{ completedCount() }} de {{ modules.length }} módulos completados</p>
+    </div>
+    <div class="local-note"><lucide-icon [img]="icons.LockKeyhole" /><p><strong>Privado y local</strong><span>Tu progreso vive en este navegador.</span></p></div>
+  </aside>
+  <div class="mobile-scrim" *ngIf="sidebarOpen()" (click)="sidebarOpen.set(false)"></div>
+
+  <main>
+    <header class="topbar">
+      <button class="icon-button mobile-menu" title="Abrir menú" (click)="sidebarOpen.set(true)"><lucide-icon [img]="icons.Menu" /></button>
+      <div class="breadcrumb"><span>Curso interactivo</span><lucide-icon [img]="icons.ChevronRight" /><strong>{{ view() === 'dashboard' ? 'Panel' : view() === 'path' ? selectedModule().shortTitle : view() === 'services' ? 'Mapa de servicios' : view() === 'library' ? 'Biblioteca' : 'Tareas Locales' }}</strong></div>
+      <button class="continue-pill" *ngIf="view() !== 'path'" (click)="openModule(selectedModuleId())"><lucide-icon [img]="icons.Play" /><span>Continuar · {{ selectedModule().shortTitle }}</span></button>
+      <button class="focus-button" [class.active]="focusMode()" (click)="focusMode.set(!focusMode())"><lucide-icon [img]="icons.Focus" /><span>Modo enfoque</span></button>
+    </header>
+
+    <section class="page" *ngIf="view() === 'dashboard'">
+      <section class="completion-certificate" *ngIf="courseCompleted()">
+        <div class="certificate-icon"><lucide-icon [img]="icons.PartyPopper" /></div>
+        <div>
+          <span class="eyebrow">CURSO COMPLETADO</span>
+          <h2>Completaste Academia Floci</h2>
+          <p>Ya recorriste todos los módulos. El siguiente paso es repasar el proyecto completo y preparar tu explicación final.</p>
+        </div>
+        <div class="certificate-stats">
+          <span><strong>{{ completedCount() }}/{{ modules.length }}</strong><small>módulos</small></span>
+          <span><strong>{{ completedChallenges() }}/{{ totalChallenges() }}</strong><small>retos</small></span>
+          <span><strong>{{ earnedBadges().length }}</strong><small>insignias</small></span>
+        </div>
+        <button class="primary" (click)="setView('project')"><lucide-icon [img]="icons.Target" />Repasar proyecto final</button>
+      </section>
+
+      <div class="welcome-band">
+        <div class="welcome-copy">
+          <span class="eyebrow">APRENDE CON LAS MANOS · AWS · AZURE · GOOGLE CLOUD</span>
+          <h1>Domina la nube<br><em>desde tu computadora.</em></h1>
+          <p>18 módulos prácticos que van de cero a experto. Usas Floci (emulador local de AWS) para practicar — el conocimiento se transfiere directamente a Azure y Google Cloud.</p>
+          <div class="hero-actions">
+            <button class="primary" (click)="openModule(selectedModuleId())"><lucide-icon [img]="icons.Play" />{{ completedCount() === 0 ? '¡Empezar desde cero!' : 'Continuar: ' + selectedModule().shortTitle }}</button>
+            <button class="secondary" (click)="setView('path')"><lucide-icon [img]="icons.GraduationCap" />Ver todos los módulos</button>
+          </div>
+          <div class="student-config">
+            <div class="config-group">
+              <span>Mi sistema</span>
+              <div class="segmented-control" role="group" aria-label="Sistema operativo">
+                <button *ngFor="let os of operatingSystems" [class.active]="selectedOs() === os.id" (click)="setStudentOs(os.id)">
+                  <strong>{{ os.title }}</strong><small>{{ os.terminal }}</small>
+                </button>
+              </div>
+            </div>
+            <div class="config-group">
+              <span>Lenguaje para laboratorios</span>
+              <div class="language-select">
+                <button *ngFor="let language of labLanguages" [class.active]="selectedLanguage() === language.id" (click)="setLabLanguage(language.id)">
+                  <strong>{{ language.title }}</strong><small>{{ language.file }}</small>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="welcome-cloud-badges">
+          <div class="cloud-badge-row">
+            <span class="provider-badge aws-badge" style="font-size:13px;padding:6px 12px">AWS</span>
+            <span class="cloud-equiv-arrow">→</span>
+            <span class="provider-badge azure-badge" style="font-size:13px;padding:6px 12px">Azure</span>
+            <span class="cloud-equiv-arrow">→</span>
+            <span class="provider-badge gcp-badge" style="font-size:13px;padding:6px 12px">GCP</span>
+          </div>
+          <p class="cloud-badges-hint">Mismo concepto, tres nubes distintas.<br>Aprende uno y sabrás los tres.</p>
+          <div class="phase-preview">
+            <div *ngFor="let phase of ['Fundamentos','Aplicación','Integración','Experto']" class="phase-dot" [class.done]="levelCount($any(phase)) === levelTotal($any(phase))">
+              <lucide-icon *ngIf="levelCount($any(phase)) === levelTotal($any(phase))" [img]="icons.Award" />
+              <span>{{ phase }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <section class="education-flow">
+        <div class="flow-heading">
+          <div><span class="eyebrow">FLUJO EDUCATIVO</span><h2>Aprende por ciclos, no por búsqueda libre</h2></div>
+          <button class="secondary compact" (click)="setView('path')"><lucide-icon [img]="icons.GraduationCap" />Ver ruta guiada</button>
+        </div>
+        <div class="flow-steps">
+          <article *ngFor="let step of educationFlow; let i = index" [class.done]="educationStepState(i) === 'done'" [class.active]="educationStepState(i) === 'active'">
+            <span class="flow-index"><lucide-icon *ngIf="educationStepState(i) === 'done'; else flowNum" [img]="icons.Check" /><ng-template #flowNum>{{ i + 1 }}</ng-template></span>
+            <div><strong>{{ step.title }}</strong><small>{{ step.label }}</small><p>{{ step.detail }}</p></div>
+          </article>
+        </div>
+      </section>
+
+      <section class="beginner-clarity">
+        <div class="clarity-intro">
+          <span class="eyebrow">PARA EMPEZAR SIN BASES</span>
+          <h2>Cada paso debe decirte qué hacer, dónde hacerlo y cómo saber si funcionó</h2>
+          <p>Cuando el curso pida crear algo, no significa “imagínalo”: significa crear una carpeta, un archivo, un recurso cloud o una variable. Aquí lo verás separado y comprobable.</p>
+        </div>
+        <div class="clarity-rules">
+          <article *ngFor="let rule of beginnerRules">
+            <strong>{{ rule.title }}</strong>
+            <p>{{ rule.detail }}</p>
+            <code>{{ rule.example }}</code>
+          </article>
+        </div>
+      </section>
+
+      <section class="starter-toolbox">
+        <article class="toolbox-card">
+          <div class="toolbox-head">
+            <span class="eyebrow">CONSOLA DESDE CERO</span>
+            <h2>{{ terminalGuide().title }}</h2>
+            <p>La consola o terminal es la ventana donde escribes instrucciones para tu computadora. En este curso, cada comando va ahí.</p>
+          </div>
+          <ol class="plain-steps">
+            <li *ngFor="let step of terminalGuide().openSteps">{{ step }}</li>
+          </ol>
+          <div class="shortcut-grid">
+            <span *ngFor="let shortcut of terminalGuide().shortcuts"><kbd>{{ shortcut.key }}</kbd><small>{{ shortcut.action }}</small></span>
+          </div>
+          <div class="mini-command-list">
+            <button *ngFor="let command of terminalGuide().firstCommands" (click)="copyTextValue(command.command)">
+              <strong>{{ command.title }}</strong>
+              <code>{{ command.command }}</code>
+              <small>{{ command.detail }}</small>
+            </button>
+          </div>
+        </article>
+        <article class="toolbox-card">
+          <div class="toolbox-head">
+            <span class="eyebrow">IDE Y ARCHIVOS</span>
+            <h2>{{ ideGuide().title }}</h2>
+            <p>{{ ideGuide().install }}</p>
+          </div>
+          <ol class="plain-steps">
+            <li *ngFor="let step of ideGuide().openProject">{{ step }}</li>
+          </ol>
+          <div class="shortcut-grid">
+            <span *ngFor="let shortcut of ideGuide().shortcuts"><kbd>{{ shortcut.key }}</kbd><small>{{ shortcut.action }}</small></span>
+          </div>
+          <div class="mini-command-list">
+            <button *ngFor="let command of ideGuide().prerequisites" (click)="copyTextValue(command.command)">
+              <strong>{{ command.title }}</strong>
+              <code>{{ command.command }}</code>
+              <small>{{ command.detail }}</small>
+            </button>
+          </div>
+        </article>
+      </section>
+
+      <!-- Orientación para usuarios nuevos -->
+      <div class="onboarding-banner" *ngIf="completedCount() === 0">
+        <div class="onboarding-title"><lucide-icon [img]="icons.GraduationCap" /><h2>¿Por dónde empiezo?</h2></div>
+        <div class="onboarding-steps">
+          <div class="onboarding-step">
+            <span class="onboarding-num">1</span>
+            <div>
+              <strong>Instala Floci en tu computadora</strong>
+              <p>Floci simula AWS, Azure y Google Cloud en tu máquina. El Módulo 0 te explica cómo instalarlo paso a paso.</p>
+              <button class="primary compact" (click)="openModule(0)"><lucide-icon [img]="icons.Play" />Abrir Módulo 0 · Instalación</button>
+            </div>
+          </div>
+          <div class="onboarding-step">
+            <span class="onboarding-num">2</span>
+            <div>
+              <strong>Sigue los módulos en orden</strong>
+              <p>Cada módulo construye sobre el anterior. Lee la lección, copia los comandos en tu terminal y marca el módulo como completado.</p>
+            </div>
+          </div>
+          <div class="onboarding-step">
+            <span class="onboarding-num">3</span>
+            <div>
+              <strong>Haz los retos obligatorios</strong>
+              <p>Al final de cada módulo hay retos prácticos. No los saltes — son donde realmente aprendes.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <section class="first-session" *ngIf="completedCount() === 0">
+        <div class="first-session-title">
+          <span class="eyebrow">COMANDOS DE INICIO</span>
+          <h2>Prepara {{ selectedOsInfo().title }}</h2>
+          <p>Copia estos comandos en {{ selectedOsInfo().label }} antes de empezar el Módulo 0.</p>
+        </div>
+        <div class="setup-step" *ngFor="let command of setupCommands(); let ci = index">
+          <strong>{{ ci + 1 }}</strong>
+          <div><span>{{ command.title }}</span><code>{{ command.command }}</code><small>{{ command.detail }}</small></div>
+          <button title="Copiar comando" (click)="copyTextValue(command.command)"><lucide-icon [img]="copiedText() === command.command ? icons.Check : icons.Copy" /></button>
+        </div>
+      </section>
+      <section class="quick-lab-card" *ngIf="completedCount() === 0">
+        <div>
+          <span class="eyebrow">TU LABORATORIO ACTUAL</span>
+          <h2>{{ languageSnippet().title }}</h2>
+          <p>{{ selectedOsInfo().title }} · {{ selectedLanguageInfo().title }} · archivo {{ languageSnippet().file }}</p>
+        </div>
+        <button class="copy-line" (click)="copyTextValue(languageSnippet().install)"><code>{{ languageSnippet().install }}</code><lucide-icon [img]="copiedText() === languageSnippet().install ? icons.Check : icons.Copy" /></button>
+        <button class="copy-line" (click)="copyTextValue(languageSnippet().run)"><code>{{ languageSnippet().run }}</code><lucide-icon [img]="copiedText() === languageSnippet().run ? icons.Check : icons.Copy" /></button>
+      </section>
+
+      <div class="metric-grid">
+        <article><div class="metric-icon teal"><lucide-icon [img]="icons.Gauge" /></div><div><span>Progreso total</span><strong>{{ completion() }}%</strong><small>{{ completedCount() }}/{{ modules.length }} módulos</small></div></article>
+        <article><div class="metric-icon coral"><lucide-icon [img]="icons.ListChecks" /></div><div><span>Retos resueltos</span><strong>{{ completedChallenges() }}</strong><small>de {{ totalChallenges() }} prácticas</small></div></article>
+        <article><div class="metric-icon mustard"><lucide-icon [img]="icons.Boxes" /></div><div><span>Catálogo cloud</span><strong>{{ serviceCount() }}</strong><small>servicios en laboratorio</small></div></article>
+        <article><div class="metric-icon violet"><lucide-icon [img]="icons.Trophy" /></div><div><span>Nivel actual</span><strong>{{ selectedModule().level }}</strong><small>módulo {{ selectedModuleId() }}</small></div></article>
+      </div>
+
+      <div class="dashboard-grid">
+        <section class="next-lesson panel" [style.--accent]="selectedModule().color">
+          <div class="next-layout">
+            <div class="progress-ring" [style.--progress]="completion()" [style.--accent]="selectedModule().color"><span>{{ completion() }}%</span></div>
+            <div class="next-main">
+              <div class="section-heading"><div><span class="eyebrow">SIGUIENTE PASO</span><h2>{{ selectedModule().title }}</h2></div><span class="time">Módulo {{ selectedModule().id + 1 }} de {{ modules.length }}</span></div>
+              <p>{{ selectedModule().description }}</p>
+              <div class="concept-row"><span *ngFor="let concept of selectedModule().concepts.slice(0, 4)">{{ concept }}</span></div>
+              <div class="module-mini-progress"><span [style.width.%]="moduleProgressRatio(selectedModule().id) * 100"></span></div>
+              <div class="lesson-footer"><div><strong>{{ completedModuleChallenges(selectedModule().id) }}/{{ selectedModule().challenges.length }}</strong><span>retos completados</span></div><div><strong>{{ selectedModule().duration }}</strong><span>duración estimada</span></div><button class="primary compact" (click)="openModule(selectedModuleId())">Abrir lección<lucide-icon [img]="icons.ChevronRight" /></button></div>
+            </div>
+          </div>
+        </section>
+        <section class="panel level-chart">
+          <div class="section-heading"><div><span class="eyebrow">DOMINIO POR NIVEL</span><h2>Tu recorrido</h2></div></div>
+          <div class="bar-item" *ngFor="let level of ['Fundamentos', 'Aplicación', 'Integración', 'Experto']">
+            <div><span>{{ level }} <lucide-icon class="badge-icon" *ngIf="levelCount($any(level)) === levelTotal($any(level))" [img]="icons.Award" /></span><small>{{ levelCount($any(level)) }}/{{ levelTotal($any(level)) }}</small></div>
+            <div class="bar-track"><span [style.width.%]="levelTotal($any(level)) ? levelCount($any(level)) / levelTotal($any(level)) * 100 : 0"></span></div>
+          </div>
+        </section>
+      </div>
+
+      <section class="quiz-section">
+        <div class="quiz-intro"><span class="eyebrow">COMPROBACIÓN RÁPIDA</span><h2>No memorices comandos.<br>Comprende decisiones.</h2><p>Responde sin consultar la guía. El resultado no modifica tu avance.</p><div class="score" *ngIf="quizChecked()"><strong>{{ quizScore() }}/{{ quiz.length }}</strong><span>respuestas correctas</span></div></div>
+        <div class="quiz-list">
+          <article *ngFor="let item of quiz; let qi = index">
+            <h3><span>{{ qi + 1 }}</span>{{ item.question }}</h3>
+            <button *ngFor="let option of item.options; let oi = index" (click)="selectQuiz(qi, oi)" [class.selected]="selectedQuiz()[qi] === oi" [class.correct]="quizChecked() && item.answer === oi" [class.wrong]="quizChecked() && selectedQuiz()[qi] === oi && item.answer !== oi"><span class="radio"></span>{{ option }}<lucide-icon *ngIf="quizChecked() && item.answer === oi" [img]="icons.Check" /></button>
+          </article>
+          <div class="quiz-actions"><button class="secondary" *ngIf="quizChecked()" (click)="resetQuiz()">Repetir</button><button class="primary" [disabled]="!quizChecked() && (selectedQuiz() | keyvalue).length < quiz.length" (click)="quizChecked.set(true)">{{ quizChecked() ? 'Comprobado' : 'Comprobar respuestas' }}</button></div>
+        </div>
+      </section>
+    </section>
+
+    <section class="page learning-view" *ngIf="view() === 'path'">
+      <aside class="module-rail">
+        <div class="rail-title"><span class="eyebrow">RUTA GUIADA · 18 MÓDULOS</span><h2>Tu camino</h2><p class="rail-subtitle">Completa cada módulo en orden. Cada fase construye sobre la anterior.</p></div>
+        <ng-container *ngFor="let module of modules">
+          <div class="phase-header" *ngIf="isFirstOfPhase(module.id)">
+            <span class="phase-name">{{ module.level }}</span>
+            <span class="phase-count">{{ levelCount($any(module.level)) }}/{{ levelTotal($any(module.level)) }}</span>
+          </div>
+          <button [class.active]="selectedModuleId() === module.id" [class.done]="isModuleDone(module.id)" [style.--accent]="module.color" (click)="openModule(module.id)">
+            <span class="module-number"><lucide-icon *ngIf="isModuleDone(module.id); else number" [img]="icons.Check" /><ng-template #number>{{ module.id }}</ng-template></span>
+            <span><strong>{{ module.shortTitle }}</strong><small>{{ module.duration }} · {{ completedModuleChallenges(module.id) }}/{{ module.challenges.length }} retos</small><span class="rail-progress"><span [style.width.%]="moduleProgressRatio(module.id) * 100"></span></span></span>
+          </button>
+        </ng-container>
+      </aside>
+      <article class="lesson-content">
+        <div class="lesson-kicker"><span [style.background]="selectedModule().color">MÓDULO {{ selectedModule().id }}</span><small>Lección {{ selectedModule().id + 1 }} de {{ modules.length }} · {{ selectedModule().level }} · {{ selectedModule().duration }}</small></div>
+        <h1>{{ selectedModule().title }}</h1><p class="lesson-lead">{{ selectedModule().description }}</p>
+        <section class="module-trailer">
+          <span><lucide-icon [img]="icons.Gauge" /><strong>{{ selectedModule().duration }}</strong><small>duración</small></span>
+          <span><lucide-icon [img]="icons.BookOpen" /><strong>{{ selectedModule().concepts.length }}</strong><small>conceptos</small></span>
+          <span><lucide-icon [img]="icons.Boxes" /><strong>{{ selectedModule().services.length }}</strong><small>servicios</small></span>
+          <span class="trailer-clouds">
+            <small>nubes</small>
+            <span class="provider-badge aws-badge" *ngIf="selectedModule().clouds.includes('aws')">AWS</span>
+            <span class="provider-badge azure-badge" *ngIf="selectedModule().clouds.includes('azure')">Az</span>
+            <span class="provider-badge gcp-badge" *ngIf="selectedModule().clouds.includes('gcp')">G</span>
+          </span>
+        </section>
+        <section class="module-contract">
+          <div class="contract-card objective"><span class="eyebrow">OBJETIVO</span><strong>{{ selectedModule().concepts[0] }}</strong><p>Al cerrar este módulo debes poder explicar el concepto, ejecutarlo localmente y reconocer su equivalente multi-nube.</p></div>
+          <div class="contract-card"><span class="eyebrow">PRÁCTICA</span><strong>{{ completedModuleChallenges(selectedModule().id) }}/{{ selectedModule().challenges.length }} retos</strong><p>Avanza cuando hayas ejecutado los retos en tu terminal, no solo leído la explicación.</p></div>
+          <div class="contract-card"><span class="eyebrow">EVIDENCIA</span><strong>{{ progress().evidence[selectedModule().id] ? 'Registrada' : 'Pendiente' }}</strong><p>Guarda comandos, errores relevantes y una conclusión breve en Mis notas.</p></div>
+          <div class="contract-card"><span class="eyebrow">SALIDA</span><strong>{{ isModuleDone(selectedModule().id) ? 'Aprobado' : 'Por demostrar' }}</strong><p>Responde las preguntas sin mirar antes de marcar el módulo como completado.</p></div>
+        </section>
+        <!-- Guía de cómo usar la lección -->
+        <div class="lesson-how-to">
+          <div class="how-to-step" *ngFor="let step of studyCycle; let i = index" [class.how-active]="(lessonTab() === 'learn' && i < 2) || (lessonTab() === 'practice' && i === 2) || (lessonTab() === 'notes' && i > 2)" (click)="lessonTab.set(i < 2 ? 'learn' : i === 2 ? 'practice' : 'notes')">
+            <span class="how-num">{{ i + 1 }}</span>
+            <div><strong>{{ step.title }}</strong><small>{{ step.detail }}</small></div>
+          </div>
+        </div>
+
+        <div class="lesson-tabs" role="tablist">
+          <button [class.active]="lessonTab() === 'learn'" (click)="lessonTab.set('learn')"><lucide-icon [img]="icons.BookOpen" />① Lección</button>
+          <button [class.active]="lessonTab() === 'practice'" (click)="lessonTab.set('practice')"><lucide-icon [img]="icons.FlaskConical" />② Ejercicios</button>
+          <button [class.active]="lessonTab() === 'notes'" (click)="lessonTab.set('notes')"><lucide-icon [img]="icons.FileCheck2" />③ Mis notas</button>
+        </div>
+
+        <div class="lesson-tab-panel" *ngIf="lessonTab() === 'learn'">
+          <div class="learning-purpose"><strong>Al terminar esta lección vas a saber:</strong><div class="concept-grid"><span *ngFor="let concept of selectedModule().concepts">{{ concept }}</span></div></div>
+          <div class="reader-loading" *ngIf="lessonLoading()">Cargando lección...</div>
+          <div class="markdown-body lesson-markdown" *ngIf="!lessonLoading()" [innerHTML]="lessonHtml()"></div>
+          <div class="lesson-tab-hint" *ngIf="!lessonLoading()">
+            <lucide-icon [img]="icons.ChevronRight" />
+            <span>¿Terminaste de leer? Pasa a <button class="link-button" (click)="lessonTab.set('practice')">② Ejercicios</button> para practicar los comandos.</span>
+          </div>
+        </div>
+
+        <div class="lesson-tab-panel" *ngIf="lessonTab() === 'practice'">
+          <div class="practice-intro">
+            <lucide-icon [img]="icons.Terminal" />
+            <div>
+              <strong>Abre {{ selectedOsInfo().label }} y escribe los comandos tú mismo.</strong>
+              <span>Estás practicando en {{ selectedOsInfo().title }} con {{ selectedLanguageInfo().title }}. Cambia tu sistema o lenguaje desde el inicio si necesitas otro flujo.</span>
+            </div>
+          </div>
+          <section class="process-guide">
+            <div class="process-heading">
+              <div>
+                <span class="eyebrow">PROCESO PASO A PASO</span>
+                <h2>Si no sabes qué hacer, sigue este orden exacto</h2>
+              </div>
+              <span class="process-pill">No avances sin verificar</span>
+            </div>
+            <div class="process-grid">
+              <article *ngFor="let step of workspaceSteps()">
+                <strong>{{ step.title }}</strong>
+                <button class="copy-line" (click)="copyTextValue(step.command)">
+                  <code>{{ step.command }}</code>
+                  <lucide-icon [img]="copiedText() === step.command ? icons.Check : icons.Copy" />
+                </button>
+                <p>{{ step.detail }}</p>
+              </article>
+            </div>
+            <div class="console-ide-split">
+              <article>
+                <span class="eyebrow">ANTES DEL PRIMER COMANDO</span>
+                <h3>{{ terminalGuide().title }}</h3>
+                <ol><li *ngFor="let step of terminalGuide().openSteps">{{ step }}</li></ol>
+              </article>
+              <article>
+                <span class="eyebrow">ANTES DEL PRIMER ARCHIVO</span>
+                <h3>Prepara VS Code</h3>
+                <ol><li *ngFor="let step of ideGuide().openProject">{{ step }}</li></ol>
+              </article>
+            </div>
+            <div class="command-anatomy">
+              <span class="eyebrow">CÓMO LEER UN COMANDO</span>
+              <div>
+                <article *ngFor="let part of commandReading">
+                  <strong>{{ part.title }}</strong>
+                  <p>{{ part.detail }}</p>
+                  <code>{{ part.example }}</code>
+                </article>
+              </div>
+            </div>
+            <div class="command-anatomy file-anatomy">
+              <span class="eyebrow">CÓMO ENTENDER ARCHIVOS Y CARPETAS</span>
+              <div>
+                <article *ngFor="let part of fileBasics">
+                  <strong>{{ part.title }}</strong>
+                  <p>{{ part.detail }}</p>
+                  <code>{{ part.example }}</code>
+                </article>
+              </div>
+            </div>
+          </section>
+          <section class="adaptive-lab">
+            <div class="adaptive-head">
+              <div>
+                <span class="eyebrow">LABORATORIO ADAPTADO</span>
+                <h2>{{ languageSnippet().title }}</h2>
+                <p>Usa este mini-proyecto como base. Cada módulo agrega una pieza nueva a la misma app “Tareas Locales”.</p>
+              </div>
+              <div class="lab-badges">
+                <span>{{ selectedOsInfo().title }}</span>
+                <span>{{ selectedLanguageInfo().title }}</span>
+              </div>
+            </div>
+            <div class="adaptive-grid">
+              <article>
+                <span class="eyebrow">TERMINAL</span>
+                <button class="copy-line" *ngFor="let command of setupCommands().slice(0, 4)" (click)="copyTextValue(command.command)">
+                  <code>{{ command.command }}</code>
+                  <lucide-icon [img]="copiedText() === command.command ? icons.Check : icons.Copy" />
+                </button>
+              </article>
+              <article>
+                <span class="eyebrow">INSTALACIÓN SDK</span>
+                <button class="copy-line" (click)="copyTextValue(languageSnippet().install)">
+                  <code>{{ languageSnippet().install }}</code>
+                  <lucide-icon [img]="copiedText() === languageSnippet().install ? icons.Check : icons.Copy" />
+                </button>
+                <span class="eyebrow file-label">ARCHIVO</span>
+                <code class="file-name">{{ languageSnippet().file }}</code>
+              </article>
+              <article class="code-sample">
+                <div class="code-title"><span>{{ languageSnippet().file }}</span><button title="Copiar código" (click)="copyTextValue(languageSnippet().code)"><lucide-icon [img]="copiedText() === languageSnippet().code ? icons.Check : icons.Copy" /></button></div>
+                <pre><code>{{ languageSnippet().code }}</code></pre>
+                <button class="copy-line run-command" (click)="copyTextValue(languageSnippet().run)">
+                  <code>{{ languageSnippet().run }}</code>
+                  <lucide-icon [img]="copiedText() === languageSnippet().run ? icons.Check : icons.Copy" />
+                </button>
+              </article>
+            </div>
+          </section>
+          <section class="lesson-section challenges">
+            <div class="section-icon"><lucide-icon [img]="icons.FlaskConical" /></div>
+            <div class="grow">
+              <span class="eyebrow">RETOS OBLIGATORIOS</span>
+              <h2>Ejercicios del módulo</h2>
+              <p class="section-note">Marca cada reto solo después de ejecutarlo en tu terminal y ver el resultado.</p>
+              <button class="challenge" *ngFor="let challenge of selectedModule().challenges; let ci = index" [class.done]="progress().completedChallenges[challengeKey(selectedModule().id, ci)]" (click)="toggleChallenge(selectedModule().id, ci)">
+                <span class="check-box"><lucide-icon [img]="icons.Check" /></span>
+                <span><strong>Ejercicio {{ ci + 1 }}</strong>{{ challenge }}</span>
+              </button>
+            </div>
+          </section>
+          <section class="lesson-section questions" *ngIf="!focusMode()">
+            <div class="section-icon"><lucide-icon [img]="icons.CircleHelp" /></div>
+            <div>
+              <span class="eyebrow">¿LO ENTENDISTE?</span>
+              <h2>Responde estas preguntas sin mirar la lección</h2>
+              <p class="section-note">Si no puedes responderlas, vuelve a la lección y busca la respuesta.</p>
+              <ol><li *ngFor="let question of selectedModule().questions">{{ question }}</li></ol>
+            </div>
+          </section>
+          <div class="deliverable"><lucide-icon [img]="icons.FileCheck2" /><div><span>¿QUÉ DEBES MOSTRAR AL TERMINAR?</span><strong>{{ selectedModule().deliverable }}</strong></div></div>
+          <div class="lesson-tab-hint">
+            <lucide-icon [img]="icons.ChevronRight" />
+            <span>¿Completaste todos los ejercicios? Pasa a <button class="link-button" (click)="lessonTab.set('notes')">③ Mis notas</button> y escribe lo que aprendiste.</span>
+          </div>
+        </div>
+
+        <div class="lesson-tab-panel" *ngIf="lessonTab() === 'notes'">
+          <div class="notes-instruction"><strong>Escribe lo que aprendiste con tus propias palabras</strong><span>No copies la lección. Explica como si se lo contaras a un amigo. Esto ayuda a que el conocimiento se quede.</span></div>
+          <section class="workbench">
+            <div>
+              <span class="eyebrow">¿QUÉ APRENDÍ HOY?</span>
+              <h2>Mis notas del módulo</h2>
+              <textarea rows="10" [ngModel]="progress().notes[selectedModule().id] || ''" (ngModelChange)="updateNote(selectedModule().id, $event)" placeholder="¿Qué es lo más importante que aprendí?&#10;¿Qué me costó entender?&#10;¿Para qué usaría esto en un proyecto real?"></textarea>
+            </div>
+            <div>
+              <span class="eyebrow">COMANDOS QUE FUNCIONARON</span>
+              <h2>Mi evidencia</h2>
+              <textarea rows="10" [ngModel]="progress().evidence[selectedModule().id] || ''" (ngModelChange)="updateEvidence(selectedModule().id, $event)" placeholder="Pega aquí los comandos que ejecutaste y el resultado que obtuviste..."></textarea>
+            </div>
+          </section>
+          <div class="complete-reminder">
+            <lucide-icon [img]="icons.Check" />
+            <span>¿Terminaste todo? Marca este módulo como completado con el botón de abajo.</span>
+          </div>
+        </div>
+
+        <div class="lesson-navigation">
+          <button class="secondary" [disabled]="selectedModule().id === 0" (click)="moveModule(-1)"><lucide-icon [img]="icons.ChevronLeft" />Módulo anterior</button>
+          <button class="complete-button" [class.done]="isModuleDone(selectedModule().id)" (click)="toggleModule(selectedModule().id)">
+            <lucide-icon [img]="icons.Check" />{{ isModuleDone(selectedModule().id) ? '✓ Módulo completado' : 'Marcar módulo como completado' }}
+          </button>
+          <button class="secondary" [disabled]="selectedModule().id === modules.length - 1" (click)="moveModule(1)">Módulo siguiente<lucide-icon [img]="icons.ChevronRight" /></button>
+        </div>
+      </article>
+    </section>
+
+    <section class="page" *ngIf="view() === 'services'">
+      <div class="page-heading">
+        <div>
+          <span class="eyebrow">CATÁLOGO MULTI-NUBE</span>
+          <h1>Servicios cloud que vas a dominar</h1>
+          <p>AWS, Azure y Google Cloud resuelven los mismos problemas con distinto nombre. Practica con Floci (emulador local de AWS) y transfiere ese conocimiento a cualquier nube.</p>
+        </div>
+        <label class="search-box" *ngIf="cloudTab() === 'aws'"><lucide-icon [img]="icons.Search" /><input placeholder="Buscar servicio AWS" [ngModel]="serviceQuery()" (ngModelChange)="serviceQuery.set($event)" /></label>
+        <label class="search-box" *ngIf="cloudTab() === 'comparacion'"><lucide-icon [img]="icons.Search" /><input placeholder="Buscar categoría o servicio" [ngModel]="comparisonQuery()" (ngModelChange)="comparisonQuery.set($event)" /></label>
+      </div>
+
+      <div class="cloud-tabs" role="tablist">
+        <button [class.active]="cloudTab() === 'aws'" (click)="cloudTab.set('aws')">
+          <span class="provider-badge aws-badge">AWS</span>
+          <span class="cloud-tab-label">AWS / Floci<small>{{ serviceCount() }} servicios · con laboratorio</small></span>
+        </button>
+        <button [class.active]="cloudTab() === 'azure'" (click)="cloudTab.set('azure')">
+          <span class="provider-badge azure-badge">Az</span>
+          <span class="cloud-tab-label">Microsoft Azure<small>Equivalentes y referencia</small></span>
+        </button>
+        <button [class.active]="cloudTab() === 'gcp'" (click)="cloudTab.set('gcp')">
+          <span class="provider-badge gcp-badge">G</span>
+          <span class="cloud-tab-label">Google Cloud<small>Equivalentes y referencia</small></span>
+        </button>
+        <button [class.active]="cloudTab() === 'comparacion'" (click)="cloudTab.set('comparacion')">
+          <lucide-icon [img]="icons.Boxes" />
+          <span class="cloud-tab-label">Comparación<small>{{ cloudComparison.length }} equivalencias lado a lado</small></span>
+        </button>
+      </div>
+
+      <!-- ── AWS / Floci ─────────────────────────────────────── -->
+      <ng-container *ngIf="cloudTab() === 'aws'">
+        <div class="service-summary">
+          <div><strong>{{ serviceCount() }}</strong><span>servicios AWS en Floci</span></div>
+          <div><strong>7</strong><span>familias técnicas</span></div>
+          <div><strong>18</strong><span>módulos prácticos</span></div>
+        </div>
+        <article class="service-detail" *ngIf="selectedService() as service">
+          <div class="service-detail-main">
+            <span class="eyebrow">EXPLICACIÓN PARA EL ALUMNO</span>
+            <h2>{{ service.name }}</h2><p>{{ service.summary }}</p>
+            <div class="service-actions">
+              <button class="primary" (click)="openModule(moduleForService(service.name))"><lucide-icon [img]="icons.FlaskConical" />Ir al laboratorio</button>
+              <button class="secondary" (click)="openOfficialService(service.referenceQuery)"><lucide-icon [img]="icons.BookOpen" />Documentación</button>
+            </div>
+          </div>
+          <div class="service-learning"><span>ANTES DE AVANZAR</span><strong>Debes poder responder:</strong><p>¿Qué problema resuelve? ¿Qué parte emula Floci? ¿Cómo demostrarías que funciona? ¿Qué volverías a probar contra AWS real?</p></div>
+        </article>
+        <div class="service-groups">
+          <article *ngFor="let group of filteredGroups()" [style.--accent]="group.color">
+            <div class="group-head"><span class="group-dot"></span><div><h2>{{ group.name }}</h2><p>{{ group.description }}</p></div><strong>{{ group.services.length }}</strong></div>
+            <div class="service-tags"><button *ngFor="let service of group.services" (click)="openServiceDocument(service)">{{ service }}<lucide-icon [img]="icons.ChevronRight" /></button></div>
+          </article>
+        </div>
+      </ng-container>
+
+      <!-- ── Microsoft Azure ────────────────────────────────── -->
+      <ng-container *ngIf="cloudTab() === 'azure'">
+        <div class="provider-intro">
+          <div class="provider-info">
+            <span class="provider-badge-lg azure-badge">Az</span>
+            <div>
+              <h2>Microsoft Azure</h2>
+              <p>La plataforma cloud de Microsoft. Dominante en empresas que ya usan Office 365 y Active Directory. Muy fuerte en entornos híbridos (on-premises + cloud) y en IA empresarial con Azure OpenAI.</p>
+            </div>
+          </div>
+          <div class="provider-note"><lucide-icon [img]="icons.GraduationCap" /><span>Los conceptos que aprendes en AWS con Floci se transfieren directamente a Azure. Cada servicio que practicas tiene un equivalente funcional. Lo que cambia es el nombre y algunos detalles de API.</span></div>
+        </div>
+        <div class="service-groups">
+          <article *ngFor="let group of azureGroups" [style.--accent]="group.color">
+            <div class="group-head"><span class="group-dot"></span><div><h2>{{ group.nombre }}</h2><p>{{ group.descripcion }}</p></div><strong>{{ group.servicios.length }}</strong></div>
+            <div class="service-tags"><span *ngFor="let svc of group.servicios" class="service-tag-info">{{ svc }}</span></div>
+          </article>
+        </div>
+      </ng-container>
+
+      <!-- ── Google Cloud ────────────────────────────────────── -->
+      <ng-container *ngIf="cloudTab() === 'gcp'">
+        <div class="provider-intro">
+          <div class="provider-info">
+            <span class="provider-badge-lg gcp-badge">G</span>
+            <div>
+              <h2>Google Cloud Platform (GCP)</h2>
+              <p>La infraestructura de Google al alcance de todos. Líder en analítica de datos (BigQuery), Kubernetes (GKE fue su origen) e inteligencia artificial generativa (Vertex AI y Gemini API).</p>
+            </div>
+          </div>
+          <div class="provider-note"><lucide-icon [img]="icons.GraduationCap" /><span>El modelo mental de colas, cómputo sin servidor y almacenamiento de objetos es idéntico en las tres nubes. Después de dominar AWS con Floci, aprender GCP es principalmente aprender nuevos nombres y convenciones de CLI.</span></div>
+        </div>
+        <div class="service-groups">
+          <article *ngFor="let group of gcpGroups" [style.--accent]="group.color">
+            <div class="group-head"><span class="group-dot"></span><div><h2>{{ group.nombre }}</h2><p>{{ group.descripcion }}</p></div><strong>{{ group.servicios.length }}</strong></div>
+            <div class="service-tags"><span *ngFor="let svc of group.servicios" class="service-tag-info">{{ svc }}</span></div>
+          </article>
+        </div>
+      </ng-container>
+
+      <!-- ── Comparación lado a lado ─────────────────────────── -->
+      <ng-container *ngIf="cloudTab() === 'comparacion'">
+        <div class="comparison-intro">
+          <strong>Mismo problema, tres nombres distintos.</strong> Haz clic en cualquier fila para abrir el laboratorio de Floci correspondiente. Aprende el concepto una vez y aplícalo en cualquier nube.
+        </div>
+        <div class="comparison-table-wrap">
+          <table class="comparison-table">
+            <thead>
+              <tr>
+                <th>Categoría / Concepto</th>
+                <th class="aws-col"><span class="provider-badge aws-badge">AWS</span> AWS / Floci</th>
+                <th class="azure-col"><span class="provider-badge azure-badge">Az</span> Azure</th>
+                <th class="gcp-col"><span class="provider-badge gcp-badge">G</span> Google Cloud</th>
+                <th class="desc-th">Para qué sirve</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let row of filteredComparison()" class="comparison-row" (click)="openModule(row.modulo)" title="Abrir laboratorio: Módulo {{ row.modulo }}">
+                <td><strong>{{ row.categoria }}</strong></td>
+                <td><span class="service-pill aws-pill">{{ row.aws }}</span></td>
+                <td><span class="service-pill azure-pill">{{ row.azure }}</span></td>
+                <td><span class="service-pill gcp-pill">{{ row.gcp }}</span></td>
+                <td class="desc-col">{{ row.descripcion }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </ng-container>
+    </section>
+
+    <section class="page library-view" *ngIf="view() === 'library'">
+      <div class="page-heading library-heading"><div><span class="eyebrow">CONTENIDO INTEGRADO</span><h1>Biblioteca completa</h1><p>Curso y guía en español latino, ejemplos ejecutables y 75 capítulos técnicos traducidos del proyecto Floci bajo licencia MIT.</p></div><div class="library-stats"><strong>{{ libraryDocuments().length }}</strong><span>recursos locales</span></div></div>
+      <div class="library-layout">
+        <aside class="document-index">
+          <label class="search-box"><lucide-icon [img]="icons.Search" /><input placeholder="Buscar documento" [ngModel]="libraryQuery()" (ngModelChange)="libraryQuery.set($event)" /></label>
+          <div class="category-tabs">
+            <button *ngFor="let category of libraryCategories()" [class.active]="libraryCategory() === category" (click)="libraryCategory.set(category)">{{ category }}</button>
+          </div>
+          <div class="document-count">{{ filteredDocuments().length }} resultados</div>
+          <div class="document-list">
+            <button *ngFor="let document of filteredDocuments()" [class.active]="selectedDocument()?.id === document.id" (click)="openDocument(document)">
+              <span class="document-type" [class.code]="document.type === 'code'" [class.official]="document.type === 'official'"><lucide-icon [img]="document.type === 'code' ? icons.Code2 : icons.FileText" /></span>
+              <span><strong>{{ document.title }}</strong><small>{{ document.language }} · {{ document.category }}</small></span>
+            </button>
+          </div>
+        </aside>
+        <article class="document-reader">
+          <header *ngIf="selectedDocument() as document">
+            <div><span class="eyebrow">{{ document.type === 'official' ? 'DOCUMENTACIÓN TÉCNICA TRADUCIDA' : document.type === 'code' ? 'ARCHIVO EJECUTABLE' : 'CONTENIDO EDUCATIVO' }}</span><h2>{{ document.title }}</h2><p>{{ document.language }} · {{ document.category }}</p></div>
+            <div class="reader-actions"><button class="icon-button" title="Copiar contenido" (click)="copyDocument()"><lucide-icon [img]="copiedDocument() ? icons.Check : icons.Copy" /></button><button class="icon-button" title="Descargar archivo" (click)="downloadDocument()"><lucide-icon [img]="icons.Download" /></button></div>
+          </header>
+          <div class="reader-loading" *ngIf="documentLoading()">Cargando contenido...</div>
+          <div class="markdown-body" *ngIf="!documentLoading()" [innerHTML]="documentHtml()"></div>
+          <footer class="license-footer" *ngIf="selectedDocument()?.type === 'official'"><lucide-icon [img]="icons.FileCheck2" /><span>Traducción no oficial al español latino del contenido MIT de Floci. Copyright (c) 2025 Hector Ventura.</span></footer>
+        </article>
+      </div>
+    </section>
+
+    <section class="page project-view" *ngIf="view() === 'project'">
+      <div class="page-heading"><div><span class="eyebrow">PROYECTO TRANSVERSAL</span><h1>FlociOps</h1><p>Un centro de operaciones local que integra tareas, archivos, eventos, workflows, observabilidad e infraestructura. Crece módulo a módulo en {{ selectedLanguageInfo().title }} sobre {{ selectedOsInfo().title }}.</p></div><button class="primary" (click)="openModule(17)"><lucide-icon [img]="icons.Target" />Ver entrega final (Módulo 17)</button></div>
+      <section class="flociops-overview">
+        <div class="flociops-main">
+          <span class="eyebrow">CASO INTEGRADOR</span>
+          <h2>Construye una app real que toque todos los temas de Floci</h2>
+          <p>El alumno empieza con una tarea simple y termina con un sistema local completo: API, colas, funciones, eventos, seguridad, búsqueda, analítica y despliegue reproducible.</p>
+          <div class="active-stack"><strong>{{ selectedLanguageInfo().title }} en {{ selectedOsInfo().title }}</strong><span>{{ languageSnippet().file }} · {{ languageSnippet().run }}</span></div>
+          <div class="coverage-tags">
+            <span *ngFor="let item of flociOpsCoverage">{{ item }}</span>
+          </div>
+        </div>
+        <div class="flociops-languages">
+          <span class="eyebrow">VERSIONES POR LENGUAJE</span>
+          <button *ngFor="let language of flociOpsLanguages" [class.active]="selectedLanguage() === language.id" (click)="setLabLanguage($any(language.id))">
+            <strong>{{ language.title }}</strong>
+            <small>{{ language.stack }}</small>
+            <span>{{ language.role }}</span>
+          </button>
+        </div>
+      </section>
+      <section class="project-flow">
+        <div class="flow-heading">
+          <div><span class="eyebrow">PROYECTOS POR TEMA</span><h2>Practica un servicio a la vez antes del integrador</h2></div>
+          <div class="lab-badges"><span>cortos</span><span>incrementales</span></div>
+        </div>
+        <div class="project-grid topic-projects">
+          <article *ngFor="let project of topicProjects; let pi = index">
+            <span class="step">{{ pi + 1 }}</span>
+            <lucide-icon [img]="icons.FlaskConical" />
+            <h2>{{ project.title }}</h2>
+            <p>{{ project.detail }}</p>
+            <div class="stage-services"><span *ngFor="let service of project.services">{{ service }}</span></div>
+            <button (click)="openModule(project.module)">Abrir módulo {{ project.module }}<lucide-icon [img]="icons.ChevronRight" /></button>
+          </article>
+        </div>
+      </section>
+      <section class="project-environment panel">
+        <div class="flow-heading">
+          <div><span class="eyebrow">ENTORNO ACTIVO</span><h2>Elige sistema y lenguaje; los comandos cambian aquí</h2></div>
+          <div class="lab-badges"><span>{{ selectedOsInfo().title }}</span><span>{{ selectedLanguageInfo().title }}</span></div>
+        </div>
+        <div class="project-config">
+          <div class="config-group">
+            <span>Sistema operativo</span>
+            <div class="segmented-control" role="group" aria-label="Sistema operativo del proyecto">
+              <button *ngFor="let os of operatingSystems" [class.active]="selectedOs() === os.id" (click)="setStudentOs(os.id)"><strong>{{ os.title }}</strong><small>{{ os.terminal }}</small></button>
+            </div>
+          </div>
+          <div class="config-group">
+            <span>Lenguaje del proyecto</span>
+            <div class="language-select">
+              <button *ngFor="let language of labLanguages" [class.active]="selectedLanguage() === language.id" (click)="setLabLanguage(language.id)"><strong>{{ language.title }}</strong><small>{{ language.file }}</small></button>
+            </div>
+          </div>
+        </div>
+        <div class="project-env-grid">
+          <article>
+            <span class="eyebrow">COMANDOS PARA {{ selectedOsInfo().title }}</span>
+            <button class="copy-line" *ngFor="let command of setupCommands().slice(0, 4)" (click)="copyTextValue(command.command)">
+              <code>{{ command.command }}</code>
+              <lucide-icon [img]="copiedText() === command.command ? icons.Check : icons.Copy" />
+            </button>
+          </article>
+          <article>
+            <span class="eyebrow">ARRANQUE EN {{ selectedLanguageInfo().title }}</span>
+            <button class="copy-line" (click)="copyTextValue(languageSnippet().install)"><code>{{ languageSnippet().install }}</code><lucide-icon [img]="copiedText() === languageSnippet().install ? icons.Check : icons.Copy" /></button>
+            <button class="copy-line" (click)="copyTextValue(languageSnippet().run)"><code>{{ languageSnippet().run }}</code><lucide-icon [img]="copiedText() === languageSnippet().run ? icons.Check : icons.Copy" /></button>
+            <code class="file-name">{{ languageSnippet().file }}</code>
+          </article>
+          <article class="code-sample">
+            <div class="code-title"><span>{{ languageSnippet().file }}</span><button title="Copiar código" (click)="copyTextValue(languageSnippet().code)"><lucide-icon [img]="copiedText() === languageSnippet().code ? icons.Check : icons.Copy" /></button></div>
+            <pre><code>{{ languageSnippet().code }}</code></pre>
+          </article>
+        </div>
+      </section>
+      <section class="flociops-stages">
+        <article *ngFor="let stage of flociOpsStages; let si = index" [class.done]="isModuleDone(stage.module)" (click)="openModule(stage.module)">
+          <span class="stage-index">{{ si + 1 }}</span>
+          <div>
+            <small>Módulo {{ stage.module }}</small>
+            <h3>{{ stage.title }}</h3>
+            <p>{{ stage.detail }}</p>
+            <div class="stage-services"><span *ngFor="let service of stage.services">{{ service }}</span></div>
+          </div>
+        </article>
+      </section>
+      <section class="project-flow">
+        <div class="flow-heading">
+          <div><span class="eyebrow">PROYECTO GENERAL</span><h2>Integra todo en FlociOps por entregas</h2></div>
+          <div class="lab-badges"><span>{{ selectedLanguageInfo().title }}</span><span>{{ selectedOsInfo().title }}</span></div>
+        </div>
+        <div class="project-milestones">
+          <button *ngFor="let milestone of projectMilestones; let mi = index" [class.done]="isModuleDone(milestone.module)" (click)="openModule(milestone.module)">
+            <span>{{ mi + 1 }}</span>
+            <strong>{{ milestone.title }}</strong>
+            <small>Módulo {{ milestone.module }}</small>
+            <p>{{ milestone.detail }}</p>
+          </button>
+        </div>
+      </section>
+      <div class="architecture">
+        <div class="arch-column"><span>ENTRADA</span><button (click)="openModule(14)"><lucide-icon [img]="icons.LockKeyhole" /><strong>Cognito</strong><small>M14 · identidad</small></button><button (click)="openModule(6)"><lucide-icon [img]="icons.Network" /><strong>API Gateway</strong><small>M6 · HTTP</small></button></div><div class="arch-arrow"><span></span></div>
+        <div class="arch-column core"><span>NÚCLEO</span><button (click)="openModule(5)"><lucide-icon [img]="icons.Code2" /><strong>Lambda</strong><small>M5 · lógica</small></button><button (click)="openModule(3)"><lucide-icon [img]="icons.Database" /><strong>DynamoDB</strong><small>M3 · tareas</small></button><button (click)="openModule(1)"><lucide-icon [img]="icons.Library" /><strong>S3</strong><small>M1 · archivos</small></button></div><div class="arch-arrow"><span></span></div>
+        <div class="arch-column"><span>EVENTOS</span><button (click)="openModule(7)"><lucide-icon [img]="icons.Sparkles" /><strong>EventBridge</strong><small>M7 · dominio</small></button><button (click)="openModule(2)"><lucide-icon [img]="icons.ListChecks" /><strong>SQS + DLQ</strong><small>M2 · trabajo</small></button><button (click)="openModule(7)"><lucide-icon [img]="icons.MessageSquareText" /><strong>SNS</strong><small>M7 · avisos</small></button></div><div class="arch-arrow"><span></span></div>
+        <div class="arch-column"><span>CONTROL</span><button (click)="openModule(4)"><lucide-icon [img]="icons.Settings2" /><strong>Secrets + KMS</strong><small>M4 · seguridad</small></button><button (click)="openModule(8)"><lucide-icon [img]="icons.Gauge" /><strong>CloudWatch</strong><small>M8 · logs</small></button><button (click)="openModule(11)"><lucide-icon [img]="icons.Code2" /><strong>CloudFormation</strong><small>M11 · IaC</small></button></div>
+      </div>
+      <div class="project-grid">
+        <article><span class="step">01</span><lucide-icon [img]="icons.Terminal" /><h2>Almacenamiento base</h2><p>S3 para archivos, SQS para colas, DynamoDB para datos. Son los cimientos de casi toda aplicación en la nube.</p><button (click)="openModule(1)">Empezar con S3 (M1)<lucide-icon [img]="icons.ChevronRight" /></button></article>
+        <article><span class="step">02</span><lucide-icon [img]="icons.ServerCog" /><h2>API con Lambda</h2><p>Lambda ejecuta la lógica, API Gateway la expone como HTTP. CloudWatch registra todo lo que pasa.</p><button (click)="openModule(5)">Lambda — Módulo 5<lucide-icon [img]="icons.ChevronRight" /></button></article>
+        <article><span class="step">03</span><lucide-icon [img]="icons.Network" /><h2>Sistema de eventos</h2><p>SNS, EventBridge y Step Functions conectan los servicios de forma desacoplada y resiliente.</p><button (click)="openModule(7)">SNS/EventBridge — M7<lucide-icon [img]="icons.ChevronRight" /></button></article>
+        <article><span class="step">04</span><lucide-icon [img]="icons.Trophy" /><h2>Proyecto final multi-nube</h2><p>La misma API construida en AWS (Floci), Azure (Floci-az) y GCP (Floci-gcp) simultáneamente.</p><button (click)="openModule(17)">Proyecto final — M17<lucide-icon [img]="icons.ChevronRight" /></button></article>
+      </div>
+      <section class="decision-callout"><div><lucide-icon [img]="icons.CircleHelp" /></div><div><span class="eyebrow">IMPORTANTE</span><h2>El número junto a cada servicio indica en qué módulo se aprende.</h2><p>Haz clic en cualquier componente del diagrama para ir directamente a la lección correspondiente. No saltes módulos — cada uno tiene conocimientos que el siguiente da por sabidos.</p></div></section>
+    </section>
+  </main>
+</div>

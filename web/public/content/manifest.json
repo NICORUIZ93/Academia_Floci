@@ -1,0 +1,698 @@
+[
+  {
+    "id": "curso",
+    "title": "Curso interactivo completo",
+    "category": "curso",
+    "path": "content/es/curso-interactivo.md",
+    "language": "Español latino",
+    "type": "guide"
+  },
+  {
+    "id": "guia",
+    "title": "Guía completa de Floci",
+    "category": "guia",
+    "path": "content/es/guia-completa.md",
+    "language": "Español latino",
+    "type": "guide"
+  },
+  {
+    "id": "progreso",
+    "title": "Cuaderno de progreso",
+    "category": "curso",
+    "path": "content/es/cuaderno-progreso.md",
+    "language": "Español latino",
+    "type": "guide"
+  },
+  {
+    "id": "compose",
+    "title": "Docker Compose del laboratorio",
+    "category": "ejemplos",
+    "path": "content/ejemplos/docker-compose.yml",
+    "language": "Codigo",
+    "type": "code"
+  },
+  {
+    "id": "env",
+    "title": "Variables de entorno",
+    "category": "ejemplos",
+    "path": "content/ejemplos/env.example",
+    "language": "Codigo",
+    "type": "code"
+  },
+  {
+    "id": "python",
+    "title": "Ejemplo Python",
+    "category": "ejemplos",
+    "path": "content/ejemplos/demo.py",
+    "language": "Codigo",
+    "type": "code"
+  },
+  {
+    "id": "python-deps",
+    "title": "Dependencias Python",
+    "category": "ejemplos",
+    "path": "content/ejemplos/requirements.txt",
+    "language": "Codigo",
+    "type": "code"
+  },
+  {
+    "id": "node",
+    "title": "Ejemplo Node.js",
+    "category": "ejemplos",
+    "path": "content/ejemplos/demo.mjs",
+    "language": "Codigo",
+    "type": "code"
+  },
+  {
+    "id": "node-package",
+    "title": "Dependencias Node.js",
+    "category": "ejemplos",
+    "path": "content/ejemplos/package-node.json",
+    "language": "Codigo",
+    "type": "code"
+  },
+  {
+    "id": "hook",
+    "title": "Hook de inicialización",
+    "category": "ejemplos",
+    "path": "content/ejemplos/10-seed.sh",
+    "language": "Codigo",
+    "type": "code"
+  },
+  {
+    "id": "attribution",
+    "title": "Atribución y uso MIT",
+    "category": "licencia",
+    "path": "content/ATRIBUCION.md",
+    "language": "Español latino",
+    "type": "guide"
+  },
+  {
+    "id": "license",
+    "title": "Licencia MIT de Floci",
+    "category": "licencia",
+    "path": "content/LICENSE-FLOCI.txt",
+    "language": "Legal",
+    "type": "code"
+  },
+  {
+    "id": "official-es-0",
+    "title": "application.yml Referencia",
+    "category": "configuracion",
+    "path": "content/oficial-es/configuration/advanced/application-yml.md",
+    "language": "Español latino",
+    "type": "official"
+  },
+  {
+    "id": "official-es-1",
+    "title": "application.yml Referencia",
+    "category": "configuracion",
+    "path": "content/oficial-es/configuration/application-yml.md",
+    "language": "Español latino",
+    "type": "official"
+  },
+  {
+    "id": "official-es-2",
+    "title": "Ejecutando con Docker",
+    "category": "configuracion",
+    "path": "content/oficial-es/configuration/docker-compose.md",
+    "language": "Español latino",
+    "type": "official"
+  },
+  {
+    "id": "official-es-3",
+    "title": "Docker Imágenes",
+    "category": "configuracion",
+    "path": "content/oficial-es/configuration/docker-images.md",
+    "language": "Español latino",
+    "type": "official"
+  },
+  {
+    "id": "official-es-4",
+    "title": "Configuración de Docker",
+    "category": "configuracion",
+    "path": "content/oficial-es/configuration/docker.md",
+    "language": "Español latino",
+    "type": "official"
+  },
+  {
+    "id": "official-es-5",
+    "title": "Referencia de variables de entorno",
+    "category": "configuracion",
+    "path": "content/oficial-es/configuration/environment-variables.md",
+    "language": "Español latino",
+    "type": "official"
+  },
+  {
+    "id": "official-es-6",
+    "title": "Ganchos de inicialización",
+    "category": "configuracion",
+    "path": "content/oficial-es/configuration/initialization-hooks.md",
+    "language": "Español latino",
+    "type": "official"
+  },
+  {
+    "id": "official-es-7",
+    "title": "Aislamiento de múltiples cuentas",
+    "category": "configuracion",
+    "path": "content/oficial-es/configuration/multi-account.md",
+    "language": "Español latino",
+    "type": "official"
+  },
+  {
+    "id": "official-es-8",
+    "title": "Referencia de puertos",
+    "category": "configuracion",
+    "path": "content/oficial-es/configuration/ports.md",
+    "language": "Español latino",
+    "type": "official"
+  },
+  {
+    "id": "official-es-9",
+    "title": "Modos de almacenamiento",
+    "category": "configuracion",
+    "path": "content/oficial-es/configuration/storage.md",
+    "language": "Español latino",
+    "type": "official"
+  },
+  {
+    "id": "official-es-10",
+    "title": "TLS / HTTPS",
+    "category": "configuracion",
+    "path": "content/oficial-es/configuration/tls.md",
+    "language": "Español latino",
+    "type": "official"
+  },
+  {
+    "id": "official-es-11",
+    "title": "Contribuyendo",
+    "category": "general",
+    "path": "content/oficial-es/contributing.md",
+    "language": "Español latino",
+    "type": "official"
+  },
+  {
+    "id": "official-es-12",
+    "title": "Configuración de AWS CLI y SDK",
+    "category": "primeros pasos",
+    "path": "content/oficial-es/getting-started/aws-setup.md",
+    "language": "Español latino",
+    "type": "official"
+  },
+  {
+    "id": "official-es-13",
+    "title": "Instalación",
+    "category": "primeros pasos",
+    "path": "content/oficial-es/getting-started/installation.md",
+    "language": "Español latino",
+    "type": "official"
+  },
+  {
+    "id": "official-es-14",
+    "title": "Migrar desde LocalStack",
+    "category": "primeros pasos",
+    "path": "content/oficial-es/getting-started/migrate-from-localstack.md",
+    "language": "Español latino",
+    "type": "official"
+  },
+  {
+    "id": "official-es-15",
+    "title": "Inicio rápido",
+    "category": "primeros pasos",
+    "path": "content/oficial-es/getting-started/quick-start.md",
+    "language": "Español latino",
+    "type": "official"
+  },
+  {
+    "id": "official-es-16",
+    "title": "Floci",
+    "category": "general",
+    "path": "content/oficial-es/index.md",
+    "language": "Español latino",
+    "type": "official"
+  },
+  {
+    "id": "official-es-17",
+    "title": "ACM",
+    "category": "servicios",
+    "path": "content/oficial-es/services/acm.md",
+    "language": "Español latino",
+    "type": "official"
+  },
+  {
+    "id": "official-es-18",
+    "title": "Puerta de enlace API",
+    "category": "servicios",
+    "path": "content/oficial-es/services/api-gateway.md",
+    "language": "Español latino",
+    "type": "official"
+  },
+  {
+    "id": "official-es-19",
+    "title": "AppConfig",
+    "category": "servicios",
+    "path": "content/oficial-es/services/appconfig.md",
+    "language": "Español latino",
+    "type": "official"
+  },
+  {
+    "id": "official-es-20",
+    "title": "AppSync",
+    "category": "servicios",
+    "path": "content/oficial-es/services/appsync.md",
+    "language": "Español latino",
+    "type": "official"
+  },
+  {
+    "id": "official-es-21",
+    "title": "Athena",
+    "category": "servicios",
+    "path": "content/oficial-es/services/athena.md",
+    "language": "Español latino",
+    "type": "official"
+  },
+  {
+    "id": "official-es-22",
+    "title": "Escalado automático",
+    "category": "servicios",
+    "path": "content/oficial-es/services/autoscaling.md",
+    "language": "Español latino",
+    "type": "official"
+  },
+  {
+    "id": "official-es-23",
+    "title": "AWS Copia de seguridad",
+    "category": "servicios",
+    "path": "content/oficial-es/services/backup.md",
+    "language": "Español latino",
+    "type": "official"
+  },
+  {
+    "id": "official-es-24",
+    "title": "Exportaciones de datos BCM (`bcm-data-exports:*`)",
+    "category": "servicios",
+    "path": "content/oficial-es/services/bcm-data-exports.md",
+    "language": "Español latino",
+    "type": "official"
+  },
+  {
+    "id": "official-es-25",
+    "title": "Tiempo de ejecución de Bedrock",
+    "category": "servicios",
+    "path": "content/oficial-es/services/bedrock-runtime.md",
+    "language": "Español latino",
+    "type": "official"
+  },
+  {
+    "id": "official-es-26",
+    "title": "Explorador de costos (`ce:*`)",
+    "category": "servicios",
+    "path": "content/oficial-es/services/ce.md",
+    "language": "Español latino",
+    "type": "official"
+  },
+  {
+    "id": "official-es-27",
+    "title": "CloudFormation",
+    "category": "servicios",
+    "path": "content/oficial-es/services/cloudformation.md",
+    "language": "Español latino",
+    "type": "official"
+  },
+  {
+    "id": "official-es-28",
+    "title": "CloudFront",
+    "category": "servicios",
+    "path": "content/oficial-es/services/cloudfront.md",
+    "language": "Español latino",
+    "type": "official"
+  },
+  {
+    "id": "official-es-29",
+    "title": "CloudWatch",
+    "category": "servicios",
+    "path": "content/oficial-es/services/cloudwatch.md",
+    "language": "Español latino",
+    "type": "official"
+  },
+  {
+    "id": "official-es-30",
+    "title": "CodeBuild",
+    "category": "servicios",
+    "path": "content/oficial-es/services/codebuild.md",
+    "language": "Español latino",
+    "type": "official"
+  },
+  {
+    "id": "official-es-31",
+    "title": "CodeDeploy",
+    "category": "servicios",
+    "path": "content/oficial-es/services/codedeploy.md",
+    "language": "Español latino",
+    "type": "official"
+  },
+  {
+    "id": "official-es-32",
+    "title": "Cognito",
+    "category": "servicios",
+    "path": "content/oficial-es/services/cognito.md",
+    "language": "Español latino",
+    "type": "official"
+  },
+  {
+    "id": "official-es-33",
+    "title": "Configuración de AWS",
+    "category": "servicios",
+    "path": "content/oficial-es/services/config.md",
+    "language": "Español latino",
+    "type": "official"
+  },
+  {
+    "id": "official-es-34",
+    "title": "Informes de uso y costo (`cur:*`)",
+    "category": "servicios",
+    "path": "content/oficial-es/services/cur.md",
+    "language": "Español latino",
+    "type": "official"
+  },
+  {
+    "id": "official-es-35",
+    "title": "DynamoDB",
+    "category": "servicios",
+    "path": "content/oficial-es/services/dynamodb.md",
+    "language": "Español latino",
+    "type": "official"
+  },
+  {
+    "id": "official-es-36",
+    "title": "EC2",
+    "category": "servicios",
+    "path": "content/oficial-es/services/ec2.md",
+    "language": "Español latino",
+    "type": "official"
+  },
+  {
+    "id": "official-es-37",
+    "title": "ECR",
+    "category": "servicios",
+    "path": "content/oficial-es/services/ecr.md",
+    "language": "Español latino",
+    "type": "official"
+  },
+  {
+    "id": "official-es-38",
+    "title": "ECS (Servicio de contenedor elástico)",
+    "category": "servicios",
+    "path": "content/oficial-es/services/ecs.md",
+    "language": "Español latino",
+    "type": "official"
+  },
+  {
+    "id": "official-es-39",
+    "title": "EKS (Servicio elástico de Kubernetes)",
+    "category": "servicios",
+    "path": "content/oficial-es/services/eks.md",
+    "language": "Español latino",
+    "type": "official"
+  },
+  {
+    "id": "official-es-40",
+    "title": "ElastiCache",
+    "category": "servicios",
+    "path": "content/oficial-es/services/elasticache.md",
+    "language": "Español latino",
+    "type": "official"
+  },
+  {
+    "id": "official-es-41",
+    "title": "Equilibrio de carga elástico v2",
+    "category": "servicios",
+    "path": "content/oficial-es/services/elb.md",
+    "language": "Español latino",
+    "type": "official"
+  },
+  {
+    "id": "official-es-42",
+    "title": "EventBridge",
+    "category": "servicios",
+    "path": "content/oficial-es/services/eventbridge.md",
+    "language": "Español latino",
+    "type": "official"
+  },
+  {
+    "id": "official-es-43",
+    "title": "Datos Firehose",
+    "category": "servicios",
+    "path": "content/oficial-es/services/firehose.md",
+    "language": "Español latino",
+    "type": "official"
+  },
+  {
+    "id": "official-es-44",
+    "title": "Glue",
+    "category": "servicios",
+    "path": "content/oficial-es/services/glue.md",
+    "language": "Español latino",
+    "type": "official"
+  },
+  {
+    "id": "official-es-45",
+    "title": "IAM",
+    "category": "servicios",
+    "path": "content/oficial-es/services/iam.md",
+    "language": "Español latino",
+    "type": "official"
+  },
+  {
+    "id": "official-es-46",
+    "title": "Descripción general de los servicios",
+    "category": "servicios",
+    "path": "content/oficial-es/services/index.md",
+    "language": "Español latino",
+    "type": "official"
+  },
+  {
+    "id": "official-es-47",
+    "title": "Kinesis",
+    "category": "servicios",
+    "path": "content/oficial-es/services/kinesis.md",
+    "language": "Español latino",
+    "type": "official"
+  },
+  {
+    "id": "official-es-48",
+    "title": "KMS",
+    "category": "servicios",
+    "path": "content/oficial-es/services/kms.md",
+    "language": "Español latino",
+    "type": "official"
+  },
+  {
+    "id": "official-es-49",
+    "title": "Lambda",
+    "category": "servicios",
+    "path": "content/oficial-es/services/lambda.md",
+    "language": "Español latino",
+    "type": "official"
+  },
+  {
+    "id": "official-es-50",
+    "title": "MSK (Transmisión administrada para Kafka)",
+    "category": "servicios",
+    "path": "content/oficial-es/services/msk.md",
+    "language": "Español latino",
+    "type": "official"
+  },
+  {
+    "id": "official-es-51",
+    "title": "Neptune",
+    "category": "servicios",
+    "path": "content/oficial-es/services/neptune.md",
+    "language": "Español latino",
+    "type": "official"
+  },
+  {
+    "id": "official-es-52",
+    "title": "Servicio OpenSearch",
+    "category": "servicios",
+    "path": "content/oficial-es/services/opensearch.md",
+    "language": "Español latino",
+    "type": "official"
+  },
+  {
+    "id": "official-es-53",
+    "title": "EventBridge Tuberías",
+    "category": "servicios",
+    "path": "content/oficial-es/services/pipes.md",
+    "language": "Español latino",
+    "type": "official"
+  },
+  {
+    "id": "official-es-54",
+    "title": "Precios de (servicio de lista de precios de AWS)",
+    "category": "servicios",
+    "path": "content/oficial-es/services/pricing.md",
+    "language": "Español latino",
+    "type": "official"
+  },
+  {
+    "id": "official-es-55",
+    "title": "RDS",
+    "category": "servicios",
+    "path": "content/oficial-es/services/rds.md",
+    "language": "Español latino",
+    "type": "official"
+  },
+  {
+    "id": "official-es-56",
+    "title": "Grupos de recursos Etiquetado API",
+    "category": "servicios",
+    "path": "content/oficial-es/services/resource-groups-tagging.md",
+    "language": "Español latino",
+    "type": "official"
+  },
+  {
+    "id": "official-es-57",
+    "title": "Route53",
+    "category": "servicios",
+    "path": "content/oficial-es/services/route53.md",
+    "language": "Español latino",
+    "type": "official"
+  },
+  {
+    "id": "official-es-58",
+    "title": "S3",
+    "category": "servicios",
+    "path": "content/oficial-es/services/s3.md",
+    "language": "Español latino",
+    "type": "official"
+  },
+  {
+    "id": "official-es-59",
+    "title": "Programador EventBridge",
+    "category": "servicios",
+    "path": "content/oficial-es/services/scheduler.md",
+    "language": "Español latino",
+    "type": "official"
+  },
+  {
+    "id": "official-es-60",
+    "title": "Administrador de secretos",
+    "category": "servicios",
+    "path": "content/oficial-es/services/secrets-manager.md",
+    "language": "Español latino",
+    "type": "official"
+  },
+  {
+    "id": "official-es-61",
+    "title": "SES",
+    "category": "servicios",
+    "path": "content/oficial-es/services/ses.md",
+    "language": "Español latino",
+    "type": "official"
+  },
+  {
+    "id": "official-es-62",
+    "title": "SNS",
+    "category": "servicios",
+    "path": "content/oficial-es/services/sns.md",
+    "language": "Español latino",
+    "type": "official"
+  },
+  {
+    "id": "official-es-63",
+    "title": "SQS",
+    "category": "servicios",
+    "path": "content/oficial-es/services/sqs.md",
+    "language": "Español latino",
+    "type": "official"
+  },
+  {
+    "id": "official-es-64",
+    "title": "SSM Almacén de parámetros",
+    "category": "servicios",
+    "path": "content/oficial-es/services/ssm.md",
+    "language": "Español latino",
+    "type": "official"
+  },
+  {
+    "id": "official-es-65",
+    "title": "Funciones de paso",
+    "category": "servicios",
+    "path": "content/oficial-es/services/step-functions.md",
+    "language": "Español latino",
+    "type": "official"
+  },
+  {
+    "id": "official-es-66",
+    "title": "STS",
+    "category": "servicios",
+    "path": "content/oficial-es/services/sts.md",
+    "language": "Español latino",
+    "type": "official"
+  },
+  {
+    "id": "official-es-67",
+    "title": "DetectDocumentText",
+    "category": "servicios",
+    "path": "content/oficial-es/services/textract.md",
+    "language": "Español latino",
+    "type": "official"
+  },
+  {
+    "id": "official-es-68",
+    "title": "Transcribe",
+    "category": "servicios",
+    "path": "content/oficial-es/services/transcribe.md",
+    "language": "Español latino",
+    "type": "official"
+  },
+  {
+    "id": "official-es-69",
+    "title": "Familia de transferencia",
+    "category": "servicios",
+    "path": "content/oficial-es/services/transfer.md",
+    "language": "Español latino",
+    "type": "official"
+  },
+  {
+    "id": "official-es-70",
+    "title": "Testcontainers — Go",
+    "category": "testcontainers",
+    "path": "content/oficial-es/testcontainers/go.md",
+    "language": "Español latino",
+    "type": "official"
+  },
+  {
+    "id": "official-es-71",
+    "title": "Testcontainers",
+    "category": "testcontainers",
+    "path": "content/oficial-es/testcontainers/index.md",
+    "language": "Español latino",
+    "type": "official"
+  },
+  {
+    "id": "official-es-72",
+    "title": "Testcontainers — Java",
+    "category": "testcontainers",
+    "path": "content/oficial-es/testcontainers/java.md",
+    "language": "Español latino",
+    "type": "official"
+  },
+  {
+    "id": "official-es-73",
+    "title": "Testcontainers — Node.js / TypeScript",
+    "category": "testcontainers",
+    "path": "content/oficial-es/testcontainers/nodejs.md",
+    "language": "Español latino",
+    "type": "official"
+  },
+  {
+    "id": "official-es-74",
+    "title": "Testcontainers — Python",
+    "category": "testcontainers",
+    "path": "content/oficial-es/testcontainers/python.md",
+    "language": "Español latino",
+    "type": "official"
+  }
+]

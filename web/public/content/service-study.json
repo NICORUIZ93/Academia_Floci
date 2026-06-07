@@ -1,0 +1,314 @@
+[
+  {
+    "name": "SSM Parameter Store",
+    "summary": "Almacena parámetros de texto, listas y valores marcados como seguros. Practica crear, consultar por nombre o ruta y eliminar parámetros. Úsalo para configuración que no deba estar codificada en la aplicación.",
+    "practice": "Almacena parámetros de texto, listas y valores marcados como seguros. Practica crear, consultar por nombre o ruta y eliminar parámetros. Úsalo para configuración que no deba estar codificada en la aplicación.",
+    "referenceQuery": "SSM Parameter Store"
+  },
+  {
+    "name": "Secrets Manager",
+    "summary": "Administra secretos, versiones y etiquetas como `AWSCURRENT`. Practica crear un JSON, rotar su valor, consultar una versión, generar una contraseña y eliminar con o sin ventana de recuperación.",
+    "practice": "Administra secretos, versiones y etiquetas como `AWSCURRENT`. Practica crear un JSON, rotar su valor, consultar una versión, generar una contraseña y eliminar con o sin ventana de recuperación.",
+    "referenceQuery": "Secrets Manager"
+  },
+  {
+    "name": "IAM",
+    "summary": "Incluye usuarios, grupos, roles, políticas, perfiles de instancia, access keys, políticas inline y managed policies. El modo de aplicación de permisos permite ensayar autorizaciones. Prueba primero con permisos permitidos y luego agrega un `Deny` explícito.",
+    "practice": "Incluye usuarios, grupos, roles, políticas, perfiles de instancia, access keys, políticas inline y managed policies. El modo de aplicación de permisos permite ensayar autorizaciones. Prueba primero con permisos permitidos y luego agrega un `Deny` explícito.",
+    "referenceQuery": "IAM"
+  },
+  {
+    "name": "STS",
+    "summary": "Simula identidad del llamador, sesiones y asunción de roles. Es el mejor smoke test inicial:",
+    "practice": "```bash aws sts get-caller-identity ```",
+    "referenceQuery": "STS"
+  },
+  {
+    "name": "KMS",
+    "summary": "Permite claves, alias, cifrado, descifrado, data keys y una parte del modelo de grants. Practica envelope encryption: cifra datos con una data key y protege esa data key con KMS.",
+    "practice": "Permite claves, alias, cifrado, descifrado, data keys y una parte del modelo de grants. Practica envelope encryption: cifra datos con una data key y protege esa data key con KMS.",
+    "referenceQuery": "KMS"
+  },
+  {
+    "name": "ACM",
+    "summary": "Genera certificados X.509 locales con claves reales y emisión rápida. Practica solicitar, describir, etiquetar, obtener PEM y exportar certificados privados.",
+    "practice": "Genera certificados X.509 locales con claves reales y emisión rápida. Practica solicitar, describir, etiquetar, obtener PEM y exportar certificados privados.",
+    "referenceQuery": "ACM"
+  },
+  {
+    "name": "Cognito",
+    "summary": "Cubre pools de usuarios, clientes, usuarios, grupos, autenticación, scopes, discovery OAuth y JWT. Construye un flujo de registro administrativo, contraseña permanente, login y validación del token.",
+    "practice": "Cubre pools de usuarios, clientes, usuarios, grupos, autenticación, scopes, discovery OAuth y JWT. Construye un flujo de registro administrativo, contraseña permanente, login y validación del token.",
+    "referenceQuery": "Cognito"
+  },
+  {
+    "name": "AWS Config",
+    "summary": "Modela reglas, recorder, delivery channel, conformance packs y etiquetas. Úsalo para probar el código que administra postura de cumplimiento, no para evaluar toda la semántica real de AWS Config.",
+    "practice": "Modela reglas, recorder, delivery channel, conformance packs y etiquetas. Úsalo para probar el código que administra postura de cumplimiento, no para evaluar toda la semántica real de AWS Config.",
+    "referenceQuery": "AWS Config"
+  },
+  {
+    "name": "Resource Groups Tagging API",
+    "summary": "Permite consultar y filtrar recursos etiquetados desde una API común. Practica etiquetar recursos de varios servicios y recuperarlos por clave y valor.",
+    "practice": "### 12.2 Almacenamiento y bases de datos",
+    "referenceQuery": "Resource Groups Tagging API"
+  },
+  {
+    "name": "S3",
+    "summary": "Cubre buckets, objetos, copias, versiones, multipart, etiquetas, ACL, notificaciones, políticas y S3 Select. Prueba estilos path y virtual-hosted. S3 Select puede consultar CSV, JSON o Parquet según el modo configurado.",
+    "practice": "Cubre buckets, objetos, copias, versiones, multipart, etiquetas, ACL, notificaciones, políticas y S3 Select. Prueba estilos path y virtual-hosted. S3 Select puede consultar CSV, JSON o Parquet según el modo configurado.",
+    "referenceQuery": "S3"
+  },
+  {
+    "name": "DynamoDB y Streams",
+    "summary": "Incluye tablas, items, consultas, scans, índices, TTL, streams y exportación a S3. Diseña bien partition y sort keys; no uses `Scan` como sustituto habitual de `Query`.",
+    "practice": "Incluye tablas, items, consultas, scans, índices, TTL, streams y exportación a S3. Diseña bien partition y sort keys; no uses `Scan` como sustituto habitual de `Query`.",
+    "referenceQuery": "DynamoDB y Streams"
+  },
+  {
+    "name": "RDS",
+    "summary": "El plano de control crea instancias respaldadas por PostgreSQL o MySQL reales. El endpoint devuelto incluye un puerto local. Practica crear una instancia, conectarte con el cliente nativo, ejecutar migraciones y comprobar persistencia.",
+    "practice": "El plano de control crea instancias respaldadas por PostgreSQL o MySQL reales. El endpoint devuelto incluye un puerto local. Practica crear una instancia, conectarte con el cliente nativo, ejecutar migraciones y comprobar persistencia.",
+    "referenceQuery": "RDS"
+  },
+  {
+    "name": "ElastiCache",
+    "summary": "Administra grupos y los conecta con contenedores Redis/Valkey reales mediante un proxy RESP. Practica strings, expiración, hashes y autenticación IAM si tu caso la requiere.",
+    "practice": "Administra grupos y los conecta con contenedores Redis/Valkey reales mediante un proxy RESP. Practica strings, expiración, hashes y autenticación IAM si tu caso la requiere.",
+    "referenceQuery": "ElastiCache"
+  },
+  {
+    "name": "Neptune",
+    "summary": "Expone administración estilo RDS y un plano de datos Gremlin. Practica crear un cluster, agregar vértices y recorrer relaciones. No presupongas soporte de todas las APIs ni de todos los motores de Neptune.",
+    "practice": "Expone administración estilo RDS y un plano de datos Gremlin. Practica crear un cluster, agregar vértices y recorrer relaciones. No presupongas soporte de todas las APIs ni de todos los motores de Neptune.",
+    "referenceQuery": "Neptune"
+  },
+  {
+    "name": "OpenSearch",
+    "summary": "Tiene modo mock y modo real. El modo real crea un contenedor OpenSearch y publica un puerto de datos. Practica crear dominio, índice, documento, búsqueda y eliminación.",
+    "practice": "Tiene modo mock y modo real. El modo real crea un contenedor OpenSearch y publica un puerto de datos. Practica crear dominio, índice, documento, búsqueda y eliminación.",
+    "referenceQuery": "OpenSearch"
+  },
+  {
+    "name": "AWS Backup",
+    "summary": "Modela vaults, planes, selecciones, jobs y recovery points para tipos de recurso admitidos. Verifica el ciclo de vida simulado de los trabajos y sus limitaciones.",
+    "practice": "### 12.3 Mensajería, eventos y streaming",
+    "referenceQuery": "AWS Backup"
+  },
+  {
+    "name": "SQS",
+    "summary": "Incluye colas estándar y FIFO, mensajes, atributos, long polling, visibilidad, purga y dead-letter queues. Implementa un consumidor idempotente y elimina el mensaje solo después de procesarlo.",
+    "practice": "Incluye colas estándar y FIFO, mensajes, atributos, long polling, visibilidad, purga y dead-letter queues. Implementa un consumidor idempotente y elimina el mensaje solo después de procesarlo.",
+    "referenceQuery": "SQS"
+  },
+  {
+    "name": "SNS",
+    "summary": "Permite topics, suscripciones, publicación, fan-out hacia SQS y push móvil simulado. Ensaya filtros y una cola de errores para cada consumidor crítico.",
+    "practice": "Permite topics, suscripciones, publicación, fan-out hacia SQS y push móvil simulado. Ensaya filtros y una cola de errores para cada consumidor crítico.",
+    "referenceQuery": "SNS"
+  },
+  {
+    "name": "EventBridge",
+    "summary": "Administra buses, reglas, patrones, destinos y publicación de eventos. Crea una regla que envíe `pedido.creado` a Lambda y otra que ignore eventos no válidos.",
+    "practice": "Administra buses, reglas, patrones, destinos y publicación de eventos. Crea una regla que envíe `pedido.creado` a Lambda y otra que ignore eventos no válidos.",
+    "referenceQuery": "EventBridge"
+  },
+  {
+    "name": "EventBridge Scheduler",
+    "summary": "Administra grupos y programaciones con reintentos y DLQ. Practica expresiones de fecha, intervalos y cron. En pruebas, usa ventanas cortas y comprueba el destino.",
+    "practice": "Administra grupos y programaciones con reintentos y DLQ. Practica expresiones de fecha, intervalos y cron. En pruebas, usa ventanas cortas y comprueba el destino.",
+    "referenceQuery": "EventBridge Scheduler"
+  },
+  {
+    "name": "EventBridge Pipes",
+    "summary": "Conecta fuentes con destinos, por ejemplo SQS con Lambda. Practica crear, iniciar, detener, actualizar y eliminar un pipe, y verifica sus estados.",
+    "practice": "Conecta fuentes con destinos, por ejemplo SQS con Lambda. Practica crear, iniciar, detener, actualizar y eliminar un pipe, y verifica sus estados.",
+    "referenceQuery": "EventBridge Pipes"
+  },
+  {
+    "name": "Kinesis",
+    "summary": "Incluye streams, shards, records, iterators y consumidores enhanced fan-out. Prueba distribución por partition key y lectura desde distintos tipos de iterator.",
+    "practice": "Incluye streams, shards, records, iterators y consumidores enhanced fan-out. Prueba distribución por partition key y lectura desde distintos tipos de iterator.",
+    "referenceQuery": "Kinesis"
+  },
+  {
+    "name": "Data Firehose",
+    "summary": "Recibe registros y los entrega a destinos compatibles. Construye un flujo hacia S3 y verifica agrupación, serialización y contenido final.",
+    "practice": "Recibe registros y los entrega a destinos compatibles. Construye un flujo hacia S3 y verifica agrupación, serialización y contenido final.",
+    "referenceQuery": "Data Firehose"
+  },
+  {
+    "name": "MSK",
+    "summary": "El plano de control administra clusters y el plano de datos usa un broker Redpanda/Kafka real. Crea un topic con herramientas Kafka, produce eventos, consume desde un grupo y prueba offsets.",
+    "practice": "### 12.4 Cómputo, contenedores y red",
+    "referenceQuery": "MSK"
+  },
+  {
+    "name": "Lambda",
+    "summary": "Ejecuta funciones en contenedores Docker. Soporta operaciones de ciclo de vida, invocación y varias integraciones. Estudia paquetes Zip, imágenes ECR, variables, logs, concurrencia, event source mappings y recarga de código.",
+    "practice": "En Linux con UFW, los contenedores Lambda pueden requerir permiso de entrada por `docker0` hacia los puertos internos. Limita la regla al bridge y al rango necesario.",
+    "referenceQuery": "Lambda"
+  },
+  {
+    "name": "ECR",
+    "summary": "Combina un plano de control compatible con AWS y un registro OCI real. Practica crear un repositorio, obtener login, etiquetar una imagen, hacer push, listar y hacer pull. El registro se inicia bajo demanda.",
+    "practice": "Combina un plano de control compatible con AWS y un registro OCI real. Practica crear un repositorio, obtener login, etiquetar una imagen, hacer push, listar y hacer pull. El registro se inicia bajo demanda.",
+    "referenceQuery": "ECR"
+  },
+  {
+    "name": "ECS",
+    "summary": "Administra clusters, task definitions, tasks, services, task sets, capacity providers y despliegues. El modo real puede ejecutar contenedores; el modo mock es más apropiado para pruebas rápidas de control plane.",
+    "practice": "Administra clusters, task definitions, tasks, services, task sets, capacity providers y despliegues. El modo real puede ejecutar contenedores; el modo mock es más apropiado para pruebas rápidas de control plane.",
+    "referenceQuery": "ECS"
+  },
+  {
+    "name": "EKS",
+    "summary": "En modo real crea clusters k3s; en mock solo simula el plano de control. Practica crear el cluster, obtener endpoint, configurar `kubectl`, desplegar un pod y eliminar todos los recursos.",
+    "practice": "En modo real crea clusters k3s; en mock solo simula el plano de control. Practica crear el cluster, obtener endpoint, configurar `kubectl`, desplegar un pod y eliminar todos los recursos.",
+    "referenceQuery": "EKS"
+  },
+  {
+    "name": "EC2",
+    "summary": "Modela instancias, VPC, subnets, security groups, key pairs, AMI y etiquetas. Puede mapear AMI a imágenes Docker, inyectar claves, ejecutar user data y exponer IMDS. Evalúa por separado la fidelidad de red.",
+    "practice": "Modela instancias, VPC, subnets, security groups, key pairs, AMI y etiquetas. Puede mapear AMI a imágenes Docker, inyectar claves, ejecutar user data y exponer IMDS. Evalúa por separado la fidelidad de red.",
+    "referenceQuery": "EC2"
+  },
+  {
+    "name": "API Gateway v1",
+    "summary": "Permite REST APIs, recursos, métodos, integraciones y stages. Crea un endpoint `GET /saludo` integrado con Lambda, despliega un stage y llama la URL local.",
+    "practice": "Permite REST APIs, recursos, métodos, integraciones y stages. Crea un endpoint `GET /saludo` integrado con Lambda, despliega un stage y llama la URL local.",
+    "referenceQuery": "API Gateway v1"
+  },
+  {
+    "name": "API Gateway v2",
+    "summary": "Cubre HTTP APIs y WebSocket APIs, rutas, integraciones, deployments y stages. Prueba una ruta HTTP con payload v2 y una conexión WebSocket local.",
+    "practice": "Cubre HTTP APIs y WebSocket APIs, rutas, integraciones, deployments y stages. Prueba una ruta HTTP con payload v2 y una conexión WebSocket local.",
+    "referenceQuery": "API Gateway v2"
+  },
+  {
+    "name": "ELB v2",
+    "summary": "Administra load balancers, target groups, targets, listeners y reglas. Practica enrutamiento por path y revisa qué parte es control plane simulado frente a tráfico de datos real.",
+    "practice": "Administra load balancers, target groups, targets, listeners y reglas. Practica enrutamiento por path y revisa qué parte es control plane simulado frente a tráfico de datos real.",
+    "referenceQuery": "ELB v2"
+  },
+  {
+    "name": "Auto Scaling",
+    "summary": "Incluye launch configurations, grupos, instancias, políticas, hooks y actividades. El reconciliador ajusta capacidad y puede integrarse con ELB. Prueba escalar de 1 a 3 y regresar a 1.",
+    "practice": "Incluye launch configurations, grupos, instancias, políticas, hooks y actividades. El reconciliador ajusta capacidad y puede integrarse con ELB. Prueba escalar de 1 a 3 y regresar a 1.",
+    "referenceQuery": "Auto Scaling"
+  },
+  {
+    "name": "CloudFront",
+    "summary": "Modela distribuciones, invalidaciones, políticas, OAC/OAI, funciones y tags. Practica una distribución con origen S3, consulta su configuración y crea una invalidación.",
+    "practice": "Modela distribuciones, invalidaciones, políticas, OAC/OAI, funciones y tags. Practica una distribución con origen S3, consulta su configuración y crea una invalidación.",
+    "referenceQuery": "CloudFront"
+  },
+  {
+    "name": "Route53",
+    "summary": "Incluye hosted zones, record sets, health checks y cambios. Practica una zona privada de laboratorio, registros A/CNAME y eliminación ordenada.",
+    "practice": "Incluye hosted zones, record sets, health checks y cambios. Practica una zona privada de laboratorio, registros A/CNAME y eliminación ordenada.",
+    "referenceQuery": "Route53"
+  },
+  {
+    "name": "Transfer Family",
+    "summary": "Administra servidores, usuarios, claves SSH y etiquetas. Está orientado al plano de control; confirma si tu caso necesita transferencia de archivos real.",
+    "practice": "### 12.5 Orquestación, despliegue y DevOps",
+    "referenceQuery": "Transfer Family"
+  },
+  {
+    "name": "CloudFormation",
+    "summary": "Valida templates, crea, actualiza y elimina stacks, eventos y change sets. Soporta un conjunto delimitado de tipos de recursos. Mantén templates pequeños y revisa la tabla oficial antes de usar un tipo.",
+    "practice": "Valida templates, crea, actualiza y elimina stacks, eventos y change sets. Soporta un conjunto delimitado de tipos de recursos. Mantén templates pequeños y revisa la tabla oficial antes de usar un tipo.",
+    "referenceQuery": "CloudFormation"
+  },
+  {
+    "name": "Step Functions",
+    "summary": "Administra state machines, executions e historial. Practica estados `Pass`, `Task`, `Choice`, `Wait`, `Parallel`, `Map`, éxito y fallo según el soporte de la versión.",
+    "practice": "Administra state machines, executions e historial. Practica estados `Pass`, `Task`, `Choice`, `Wait`, `Parallel`, `Map`, éxito y fallo según el soporte de la versión.",
+    "referenceQuery": "Step Functions"
+  },
+  {
+    "name": "CodeBuild",
+    "summary": "Administra proyectos, builds, report groups, credenciales e imágenes. Puede ejecutar builds y leer `buildspec`. Crea un build que produzca un artefacto S3.",
+    "practice": "Administra proyectos, builds, report groups, credenciales e imágenes. Puede ejecutar builds y leer `buildspec`. Crea un build que produzca un artefacto S3.",
+    "referenceQuery": "CodeBuild"
+  },
+  {
+    "name": "CodeDeploy",
+    "summary": "Incluye aplicaciones, deployment groups, configuraciones y despliegues para Lambda y ECS. Ensaya un despliegue Lambda y un blue/green ECS con AppSpec.",
+    "practice": "Incluye aplicaciones, deployment groups, configuraciones y despliegues para Lambda y ECS. Ensaya un despliegue Lambda y un blue/green ECS con AppSpec.",
+    "referenceQuery": "CodeDeploy"
+  },
+  {
+    "name": "AppConfig y AppConfigData",
+    "summary": "El plano de administración crea aplicaciones, entornos, perfiles, versiones y deployments. El plano de datos abre sesiones y entrega configuración. Practica publicar JSON y consumirlo desde una aplicación.",
+    "practice": "El plano de administración crea aplicaciones, entornos, perfiles, versiones y deployments. El plano de datos abre sesiones y entrega configuración. Practica publicar JSON y consumirlo desde una aplicación.",
+    "referenceQuery": "AppConfig y AppConfigData"
+  },
+  {
+    "name": "AppSync",
+    "summary": "Administra APIs GraphQL, schemas, data sources, resolvers, functions, API keys, tags y variables. Practica cargar un schema mínimo y consultar tipos y resolvers; revisa si el data plane que necesitas está implementado.",
+    "practice": "### 12.6 Datos, analítica e IA",
+    "referenceQuery": "AppSync"
+  },
+  {
+    "name": "Glue",
+    "summary": "Incluye Data Catalog y Schema Registry. Crea bases, tablas para JSON/Parquet, particiones y schemas. Es una pieza central para Athena.",
+    "practice": "Incluye Data Catalog y Schema Registry. Crea bases, tablas para JSON/Parquet, particiones y schemas. Es una pieza central para Athena.",
+    "referenceQuery": "Glue"
+  },
+  {
+    "name": "Athena",
+    "summary": "Ejecuta consultas mediante un sidecar analítico y puede leer datos registrados en Glue y almacenados en S3. Practica un pequeño data lake: CSV en S3, tabla Glue, consulta SQL, polling y resultados.",
+    "practice": "Ejecuta consultas mediante un sidecar analítico y puede leer datos registrados en Glue y almacenados en S3. Practica un pequeño data lake: CSV en S3, tabla Glue, consulta SQL, polling y resultados.",
+    "referenceQuery": "Athena"
+  },
+  {
+    "name": "Textract",
+    "summary": "Simula operaciones síncronas y asíncronas con bloques de respuesta compatibles. No realiza OCR real en todos los casos. Úsalo para probar control de flujo, polling y parseo de respuestas.",
+    "practice": "Simula operaciones síncronas y asíncronas con bloques de respuesta compatibles. No realiza OCR real en todos los casos. Úsalo para probar control de flujo, polling y parseo de respuestas.",
+    "referenceQuery": "Textract"
+  },
+  {
+    "name": "Transcribe",
+    "summary": "Simula jobs y vocabularios, con finalización rápida y URI sintética. No convierte audio a texto. Sirve para probar el código que crea, lista, consulta y elimina trabajos.",
+    "practice": "Simula jobs y vocabularios, con finalización rápida y URI sintética. No convierte audio a texto. Sirve para probar el código que crea, lista, consulta y elimina trabajos.",
+    "referenceQuery": "Transcribe"
+  },
+  {
+    "name": "Bedrock Runtime",
+    "summary": "Expone operaciones de conversación e invocación con respuestas stub. No ejecuta modelos fundacionales reales y el streaming puede no estar disponible. Úsalo para probar integración HTTP y manejo de formatos, no calidad de inferencia.",
+    "practice": "### 12.7 Costos y gobierno financiero",
+    "referenceQuery": "Bedrock Runtime"
+  },
+  {
+    "name": "Pricing",
+    "summary": "Consulta una instantánea local de productos y atributos de precios. Puedes proporcionar una instantánea propia para ampliar cobertura. No la uses para decisiones financieras sin validar contra datos actuales de AWS.",
+    "practice": "Consulta una instantánea local de productos y atributos de precios. Puedes proporcionar una instantánea propia para ampliar cobertura. No la uses para decisiones financieras sin validar contra datos actuales de AWS.",
+    "referenceQuery": "Pricing"
+  },
+  {
+    "name": "Cost Explorer",
+    "summary": "Genera datos sintéticos para consultas de costo y uso. Practica agrupaciones, filtros y semántica de tipos de registro. Los valores no representan una factura.",
+    "practice": "Genera datos sintéticos para consultas de costo y uso. Practica agrupaciones, filtros y semántica de tipos de registro. Los valores no representan una factura.",
+    "referenceQuery": "Cost Explorer"
+  },
+  {
+    "name": "Cost and Usage Reports",
+    "summary": "Administra definiciones CUR y puede emitir Parquet hacia S3 mediante un sidecar. Practica definir reporte, emitirlo y leerlo con DuckDB o PyArrow.",
+    "practice": "Administra definiciones CUR y puede emitir Parquet hacia S3 mediante un sidecar. Practica definir reporte, emitirlo y leerlo con DuckDB o PyArrow.",
+    "referenceQuery": "Cost and Usage Reports"
+  },
+  {
+    "name": "BCM Data Exports",
+    "summary": "Administra exports de Billing and Cost Management, validación, ejecución y emisión. Úsalo para probar pipelines de descarga y transformación con datos locales.",
+    "practice": "### 12.8 Correo",
+    "referenceQuery": "BCM Data Exports"
+  },
+  {
+    "name": "SES y SES v2",
+    "summary": "Incluye identidades, envío simple, raw MIME, plantillas y plano v2 según la operación. Puede capturar mensajes localmente y exponer relay SMTP. Prueba texto, HTML, adjuntos y validación de destinatarios sin enviar correo real.",
+    "practice": "Incluye identidades, envío simple, raw MIME, plantillas y plano v2 según la operación. Puede capturar mensajes localmente y exponer relay SMTP. Prueba texto, HTML, adjuntos y validación de destinatarios sin enviar correo real.",
+    "referenceQuery": "SES y SES v2"
+  }
+]
