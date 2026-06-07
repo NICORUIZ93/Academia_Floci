@@ -71,6 +71,12 @@ test('proyecto final: mini proyectos, integrador y entorno activo son utiles', a
 
   await expect(page.locator('.project-view h1')).toHaveText('FlociOps');
   await expect(page.locator('.topic-projects article')).toHaveCount(16);
+  await expect(page.locator('.topic-recipe')).toContainText('Buzón de archivos desde cero');
+  await expect(page.locator('.topic-recipe')).toContainText('aws s3 ls s3://flociops-files');
+  await expect(page.locator('.topic-recipe .code-sample')).toBeVisible();
+  await page.locator('.topic-projects article').nth(2).click();
+  await expect(page.locator('.topic-recipe')).toContainText('API de tareas desde cero');
+  await expect(page.locator('.topic-recipe')).toContainText('FlociOpsTasks');
   await expect(page.locator('.flociops-stages article')).toHaveCount(6);
   await expect(page.locator('.project-environment')).toBeVisible();
 

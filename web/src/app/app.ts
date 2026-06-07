@@ -58,6 +58,14 @@ interface IdeGuide {
   shortcuts: { key: string; action: string }[];
   prerequisites: SetupCommand[];
 }
+interface TopicProject {
+  module: number;
+  title: string;
+  services: string[];
+  detail: string;
+  resource: string;
+  verify: string[];
+}
 
 const EMPTY_PROGRESS: StoredProgress = { completedModules: [], completedChallenges: {}, notes: {}, evidence: {} };
 const DEFAULT_SETUP: StudentSetup = { os: 'mac', language: 'javascript' };
@@ -134,23 +142,23 @@ export class App implements OnInit {
     'Almacenamiento', 'Colas', 'Base de datos', 'Serverless', 'HTTP API',
     'Eventos', 'Workflows', 'Observabilidad', 'Seguridad', 'IaC', 'Contenedores', 'Búsqueda'
   ];
-  readonly topicProjects = [
-    { module: 1, title: 'Buzón de archivos', services: ['S3'], detail: 'Sube, lista y descarga evidencias desde un bucket local.' },
-    { module: 2, title: 'Cola de trabajos', services: ['SQS', 'DLQ'], detail: 'Envía tareas lentas a una cola y procesa reintentos controlados.' },
-    { module: 3, title: 'API de tareas', services: ['DynamoDB'], detail: 'Guarda tareas por usuario y consulta por clave sin usar atajos malos.' },
-    { module: 4, title: 'Caja de secretos', services: ['Secrets', 'KMS', 'SSM'], detail: 'Lee configuración sensible sin hardcodear contraseñas en el código.' },
-    { module: 5, title: 'Procesador serverless', services: ['Lambda'], detail: 'Ejecuta una función que transforma datos y deja evidencia verificable.' },
-    { module: 6, title: 'Gateway HTTP', services: ['API Gateway'], detail: 'Expón endpoints reales para crear, leer y procesar tareas.' },
-    { module: 7, title: 'Bus de eventos', services: ['SNS', 'EventBridge'], detail: 'Publica eventos de negocio y conecta consumidores desacoplados.' },
-    { module: 8, title: 'Panel de diagnóstico', services: ['CloudWatch'], detail: 'Centraliza logs, filtra errores y crea una métrica verificable.' },
-    { module: 9, title: 'Base relacional', services: ['RDS'], detail: 'Conecta una API a PostgreSQL local con migraciones simples.' },
-    { module: 10, title: 'Worker en contenedor', services: ['ECR', 'ECS'], detail: 'Empaqueta un worker Docker y ejecútalo como tarea local.' },
-    { module: 11, title: 'Ambiente reconstruible', services: ['CloudFormation'], detail: 'Declara recursos como código y levanta todo desde cero.' },
-    { module: 12, title: 'Workflow de aprobación', services: ['Step Functions'], detail: 'Orquesta validación, procesamiento, notificación y errores.' },
-    { module: 13, title: 'Stream de actividad', services: ['Kinesis', 'MSK'], detail: 'Procesa eventos continuos y compara streams contra colas.' },
-    { module: 14, title: 'Login de usuarios', services: ['Cognito'], detail: 'Protege la API con usuarios, tokens y grupos.' },
-    { module: 15, title: 'Reporte de operaciones', services: ['Athena', 'Glue'], detail: 'Consulta eventos guardados en S3 con SQL y genera métricas.' },
-    { module: 16, title: 'Clasificador inteligente', services: ['Bedrock', 'Textract'], detail: 'Extrae texto de documentos y genera un resumen con stubs locales.' },
+  readonly topicProjects: TopicProject[] = [
+    { module: 1, title: 'Buzón de archivos', services: ['S3'], resource: 'flociops-files', detail: 'Sube, lista y descarga evidencias desde un bucket local.', verify: ['aws s3 ls s3://flociops-files', 'aws s3 cp s3://flociops-files/demo.txt -'] },
+    { module: 2, title: 'Cola de trabajos', services: ['SQS', 'DLQ'], resource: 'flociops-jobs', detail: 'Envía tareas lentas a una cola y procesa reintentos controlados.', verify: ['aws sqs get-queue-url --queue-name flociops-jobs', 'aws sqs receive-message --queue-url <queue-url>'] },
+    { module: 3, title: 'API de tareas', services: ['DynamoDB'], resource: 'FlociOpsTasks', detail: 'Guarda tareas por usuario y consulta por clave sin usar atajos malos.', verify: ['aws dynamodb describe-table --table-name FlociOpsTasks', 'aws dynamodb scan --table-name FlociOpsTasks --max-items 5'] },
+    { module: 4, title: 'Caja de secretos', services: ['Secrets', 'KMS', 'SSM'], resource: '/flociops/api-key', detail: 'Lee configuración sensible sin hardcodear contraseñas en el código.', verify: ['aws secretsmanager get-secret-value --secret-id /flociops/api-key', 'aws ssm get-parameter --name /flociops/stage'] },
+    { module: 5, title: 'Procesador serverless', services: ['Lambda'], resource: 'flociops-processor', detail: 'Ejecuta una función que transforma datos y deja evidencia verificable.', verify: ['aws lambda invoke --function-name flociops-processor output.json', 'cat output.json'] },
+    { module: 6, title: 'Gateway HTTP', services: ['API Gateway'], resource: 'flociops-api', detail: 'Expón endpoints reales para crear, leer y procesar tareas.', verify: ['aws apigateway get-rest-apis', 'curl http://localhost:4566/restapis/<api-id>/dev/_user_request_/tasks'] },
+    { module: 7, title: 'Bus de eventos', services: ['SNS', 'EventBridge'], resource: 'flociops-events', detail: 'Publica eventos de negocio y conecta consumidores desacoplados.', verify: ['aws events list-event-buses', 'aws sns list-topics'] },
+    { module: 8, title: 'Panel de diagnóstico', services: ['CloudWatch'], resource: '/flociops/app', detail: 'Centraliza logs, filtra errores y crea una métrica verificable.', verify: ['aws logs describe-log-groups --log-group-name-prefix /flociops', 'aws logs filter-log-events --log-group-name /flociops/app'] },
+    { module: 9, title: 'Base relacional', services: ['RDS'], resource: 'flociops-postgres', detail: 'Conecta una API a PostgreSQL local con migraciones simples.', verify: ['aws rds describe-db-instances --db-instance-identifier flociops-postgres', 'psql -h localhost -U admin -d postgres -c "select 1"'] },
+    { module: 10, title: 'Worker en contenedor', services: ['ECR', 'ECS'], resource: 'flociops-worker', detail: 'Empaqueta un worker Docker y ejecútalo como tarea local.', verify: ['aws ecr describe-repositories --repository-names flociops-worker', 'aws ecs list-tasks --cluster flociops'] },
+    { module: 11, title: 'Ambiente reconstruible', services: ['CloudFormation'], resource: 'flociops-stack', detail: 'Declara recursos como código y levanta todo desde cero.', verify: ['aws cloudformation describe-stacks --stack-name flociops-stack', 'aws cloudformation describe-stack-resources --stack-name flociops-stack'] },
+    { module: 12, title: 'Workflow de aprobación', services: ['Step Functions'], resource: 'flociops-approval', detail: 'Orquesta validación, procesamiento, notificación y errores.', verify: ['aws stepfunctions list-state-machines', 'aws stepfunctions list-executions --state-machine-arn <arn>'] },
+    { module: 13, title: 'Stream de actividad', services: ['Kinesis', 'MSK'], resource: 'flociops-activity', detail: 'Procesa eventos continuos y compara streams contra colas.', verify: ['aws kinesis describe-stream --stream-name flociops-activity', 'aws kinesis list-shards --stream-name flociops-activity'] },
+    { module: 14, title: 'Login de usuarios', services: ['Cognito'], resource: 'flociops-users', detail: 'Protege la API con usuarios, tokens y grupos.', verify: ['aws cognito-idp list-user-pools --max-results 10', 'aws cognito-idp list-users --user-pool-id <pool-id>'] },
+    { module: 15, title: 'Reporte de operaciones', services: ['Athena', 'Glue'], resource: 'flociops_reports', detail: 'Consulta eventos guardados en S3 con SQL y genera métricas.', verify: ['aws glue get-database --name flociops_reports', 'aws athena list-query-executions'] },
+    { module: 16, title: 'Clasificador inteligente', services: ['Bedrock', 'Textract'], resource: 'flociops-classifier', detail: 'Extrae texto de documentos y genera un resumen con stubs locales.', verify: ['aws bedrock-runtime invoke-model --model-id demo --body "{}" output.json', 'aws textract analyze-document --document "{\"S3Object\":{\"Bucket\":\"flociops-files\",\"Name\":\"demo.png\"}}" --feature-types FORMS'] },
   ];
   readonly beginnerRules: LearningRule[] = [
     {
@@ -213,6 +221,7 @@ export class App implements OnInit {
   comparisonQuery = signal('');
   selectedOs = signal<StudentOs>(this.loadSetup().os);
   selectedLanguage = signal<LabLanguage>(this.loadSetup().language);
+  selectedTopicProjectIndex = signal(0);
 
   selectedModule = computed(() => this.modules[this.selectedModuleId()]);
   completedCount = computed(() => this.progress().completedModules.length);
@@ -254,6 +263,7 @@ export class App implements OnInit {
   });
   selectedOsInfo = computed(() => this.operatingSystems.find(item => item.id === this.selectedOs()) ?? this.operatingSystems[0]);
   selectedLanguageInfo = computed(() => this.labLanguages.find(item => item.id === this.selectedLanguage()) ?? this.labLanguages[0]);
+  selectedTopicProject = computed(() => this.topicProjects[this.selectedTopicProjectIndex()] ?? this.topicProjects[0]);
   setupCommands = computed(() => this.commandsForOs(this.selectedOs()));
   languageSnippet = computed(() => this.snippetForLanguage(this.selectedLanguage()));
   workspaceSteps = computed(() => this.stepsToCreateLab(this.selectedOs(), this.languageSnippet()));
@@ -312,6 +322,55 @@ export class App implements OnInit {
     const module = this.modules[moduleId];
     if (!module?.challenges.length) return 0;
     return this.completedModuleChallenges(moduleId) / module.challenges.length;
+  }
+  topicProjectFolder(project: TopicProject = this.selectedTopicProject()): string {
+    return `flociops-${project.module}-${project.title.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')}`;
+  }
+  topicProjectCreateCommands(project: TopicProject = this.selectedTopicProject()): SetupCommand[] {
+    const folder = this.topicProjectFolder(project);
+    const makeFolder = this.selectedOs() === 'windows' ? `mkdir ${folder}; cd ${folder}` : `mkdir -p ${folder} && cd ${folder}`;
+    return [
+      { title: 'Crear carpeta', command: makeFolder, detail: 'Aísla este mini proyecto para que puedas borrarlo y repetirlo desde cero.' },
+      { title: 'Preparar SDK', command: this.languageSnippet().install, detail: `Instala dependencias para ${this.selectedLanguageInfo().title}.` },
+      { title: 'Crear archivo', command: this.selectedOs() === 'windows' ? `New-Item ${this.languageSnippet().file} -ItemType File` : `touch ${this.languageSnippet().file}`, detail: 'Pega el código base en este archivo y guárdalo.' },
+      { title: 'Ejecutar', command: this.languageSnippet().run, detail: 'Ejecuta el mini proyecto contra Floci local.' },
+    ];
+  }
+  topicProjectVerification(project: TopicProject = this.selectedTopicProject()): SetupCommand[] {
+    return project.verify.map((command, index) => ({
+      title: index === 0 ? 'Verificar recurso' : 'Verificar resultado',
+      command,
+      detail: 'La salida debe mostrar el recurso creado, el mensaje procesado o el resultado del servicio local.',
+    }));
+  }
+  topicProjectCode(project: TopicProject = this.selectedTopicProject()): string {
+    const service = project.services[0];
+    const resource = project.resource;
+    if (this.selectedLanguage() === 'python') return this.pythonTopicCode(service, resource);
+    if (this.selectedLanguage() === 'typescript') return this.javascriptTopicCode(service, resource).replace("import {", "import {").replace('.mjs', '.ts');
+    if (this.selectedLanguage() === 'javascript') return this.javascriptTopicCode(service, resource);
+    if (this.selectedLanguage() === 'go') return `package main
+
+import "fmt"
+
+func main() {
+  fmt.Println("Mini proyecto FlociOps: ${project.title}")
+  fmt.Println("Servicio: ${project.services.join(', ')}")
+  fmt.Println("Recurso local: ${resource}")
+  fmt.Println("Implementa el cliente SDK siguiendo el módulo ${project.module} y verifica con la CLI.")
+}`;
+    if (this.selectedLanguage() === 'java') return `public class App {
+  public static void main(String[] args) {
+    System.out.println("Mini proyecto FlociOps: ${project.title}");
+    System.out.println("Servicio: ${project.services.join(', ')}");
+    System.out.println("Recurso local: ${resource}");
+    System.out.println("Implementa el cliente SDK siguiendo el módulo ${project.module} y verifica con la CLI.");
+  }
+}`;
+    return `Console.WriteLine("Mini proyecto FlociOps: ${project.title}");
+Console.WriteLine("Servicio: ${project.services.join(', ')}");
+Console.WriteLine("Recurso local: ${resource}");
+Console.WriteLine("Implementa el cliente SDK siguiendo el módulo ${project.module} y verifica con la CLI.");`;
   }
   commandForSelectedOs(command: SetupCommand): string { return command.command; }
   moduleForService(service: string): number { return this.modules.find(item => item.services.includes(service))?.id ?? 0; }
@@ -670,6 +729,128 @@ Console.WriteLine("Tarea subida");`,
       },
     };
     return snippets[language];
+  }
+  private pythonTopicCode(service: string, resource: string): string {
+    const snippets: Record<string, string> = {
+      S3: `import boto3
+
+s3 = boto3.client("s3")
+s3.create_bucket(Bucket="${resource}")
+s3.put_object(Bucket="${resource}", Key="demo.txt", Body=b"hola desde FlociOps")
+print("Archivo subido a s3://${resource}/demo.txt")`,
+      SQS: `import boto3
+
+sqs = boto3.client("sqs")
+queue = sqs.create_queue(QueueName="${resource}")
+sqs.send_message(QueueUrl=queue["QueueUrl"], MessageBody="procesar tarea 001")
+print("Mensaje enviado:", queue["QueueUrl"])`,
+      DynamoDB: `import boto3
+
+ddb = boto3.client("dynamodb")
+ddb.create_table(
+    TableName="${resource}",
+    AttributeDefinitions=[{"AttributeName": "PK", "AttributeType": "S"}],
+    KeySchema=[{"AttributeName": "PK", "KeyType": "HASH"}],
+    BillingMode="PAY_PER_REQUEST",
+)
+ddb.put_item(TableName="${resource}", Item={"PK": {"S": "TASK#001"}, "title": {"S": "Aprender Floci"}})
+print("Tarea guardada")`,
+      Secrets: `import boto3
+
+secrets = boto3.client("secretsmanager")
+ssm = boto3.client("ssm")
+secrets.create_secret(Name="${resource}", SecretString="dev-secret")
+ssm.put_parameter(Name="/flociops/stage", Value="local", Type="String", Overwrite=True)
+print("Secreto y parametro creados")`,
+      Lambda: `def handler(event, context):
+    print("procesando evento", event)
+    return {"statusCode": 200, "body": "procesado por ${resource}"}`,
+      'API Gateway': `from http.server import BaseHTTPRequestHandler, HTTPServer
+
+class Handler(BaseHTTPRequestHandler):
+    def do_GET(self):
+        self.send_response(200)
+        self.end_headers()
+        self.wfile.write(b'{"status":"ok","service":"${resource}"}')
+
+HTTPServer(("localhost", 8080), Handler).serve_forever()`,
+      SNS: `import json, boto3
+
+events = boto3.client("events")
+events.create_event_bus(Name="${resource}")
+events.put_events(Entries=[{
+    "Source": "flociops.tasks",
+    "DetailType": "TaskCreated",
+    "Detail": json.dumps({"id": "TASK#001"}),
+    "EventBusName": "${resource}",
+}])
+print("Evento publicado")`,
+      CloudWatch: `import time, boto3
+
+logs = boto3.client("logs")
+logs.create_log_group(logGroupName="${resource}")
+logs.create_log_stream(logGroupName="${resource}", logStreamName="local")
+logs.put_log_events(logGroupName="${resource}", logStreamName="local", logEvents=[{"timestamp": int(time.time() * 1000), "message": "INFO flociops listo"}])
+print("Log enviado")`,
+    };
+    return snippets[service] ?? `print("Mini proyecto ${service}: crea el recurso ${resource}, ejecuta una operacion y verifica con la CLI del modulo correspondiente.")`;
+  }
+  private javascriptTopicCode(service: string, resource: string): string {
+    const snippets: Record<string, string> = {
+      S3: `import { S3Client, CreateBucketCommand, PutObjectCommand } from "@aws-sdk/client-s3";
+
+const s3 = new S3Client({ region: "us-east-1" });
+await s3.send(new CreateBucketCommand({ Bucket: "${resource}" }));
+await s3.send(new PutObjectCommand({ Bucket: "${resource}", Key: "demo.txt", Body: "hola desde FlociOps" }));
+console.log("Archivo subido a s3://${resource}/demo.txt");`,
+      SQS: `import { SQSClient, CreateQueueCommand, SendMessageCommand } from "@aws-sdk/client-sqs";
+
+const sqs = new SQSClient({ region: "us-east-1" });
+const queue = await sqs.send(new CreateQueueCommand({ QueueName: "${resource}" }));
+await sqs.send(new SendMessageCommand({ QueueUrl: queue.QueueUrl, MessageBody: "procesar tarea 001" }));
+console.log("Mensaje enviado:", queue.QueueUrl);`,
+      DynamoDB: `import { DynamoDBClient, CreateTableCommand, PutItemCommand } from "@aws-sdk/client-dynamodb";
+
+const ddb = new DynamoDBClient({ region: "us-east-1" });
+await ddb.send(new CreateTableCommand({
+  TableName: "${resource}",
+  AttributeDefinitions: [{ AttributeName: "PK", AttributeType: "S" }],
+  KeySchema: [{ AttributeName: "PK", KeyType: "HASH" }],
+  BillingMode: "PAY_PER_REQUEST"
+}));
+await ddb.send(new PutItemCommand({ TableName: "${resource}", Item: { PK: { S: "TASK#001" }, title: { S: "Aprender Floci" } } }));
+console.log("Tarea guardada");`,
+      Secrets: `import { SecretsManagerClient, CreateSecretCommand } from "@aws-sdk/client-secrets-manager";
+import { SSMClient, PutParameterCommand } from "@aws-sdk/client-ssm";
+
+await new SecretsManagerClient({ region: "us-east-1" }).send(new CreateSecretCommand({ Name: "${resource}", SecretString: "dev-secret" }));
+await new SSMClient({ region: "us-east-1" }).send(new PutParameterCommand({ Name: "/flociops/stage", Value: "local", Type: "String", Overwrite: true }));
+console.log("Secreto y parametro creados");`,
+      Lambda: `export const handler = async (event) => {
+  console.log("procesando evento", event);
+  return { statusCode: 200, body: "procesado por ${resource}" };
+};`,
+      'API Gateway': `import http from "node:http";
+
+http.createServer((_, res) => {
+  res.writeHead(200, { "content-type": "application/json" });
+  res.end(JSON.stringify({ status: "ok", service: "${resource}" }));
+}).listen(8080, () => console.log("API local en http://localhost:8080"));`,
+      SNS: `import { EventBridgeClient, CreateEventBusCommand, PutEventsCommand } from "@aws-sdk/client-eventbridge";
+
+const events = new EventBridgeClient({ region: "us-east-1" });
+await events.send(new CreateEventBusCommand({ Name: "${resource}" }));
+await events.send(new PutEventsCommand({ Entries: [{ Source: "flociops.tasks", DetailType: "TaskCreated", Detail: JSON.stringify({ id: "TASK#001" }), EventBusName: "${resource}" }] }));
+console.log("Evento publicado");`,
+      CloudWatch: `import { CloudWatchLogsClient, CreateLogGroupCommand, CreateLogStreamCommand, PutLogEventsCommand } from "@aws-sdk/client-cloudwatch-logs";
+
+const logs = new CloudWatchLogsClient({ region: "us-east-1" });
+await logs.send(new CreateLogGroupCommand({ logGroupName: "${resource}" }));
+await logs.send(new CreateLogStreamCommand({ logGroupName: "${resource}", logStreamName: "local" }));
+await logs.send(new PutLogEventsCommand({ logGroupName: "${resource}", logStreamName: "local", logEvents: [{ timestamp: Date.now(), message: "INFO flociops listo" }] }));
+console.log("Log enviado");`,
+    };
+    return snippets[service] ?? `console.log("Mini proyecto ${service}: crea el recurso ${resource}, ejecuta una operacion y verifica con la CLI del modulo correspondiente.");`;
   }
   private loadProgress(): StoredProgress {
     try { return { ...EMPTY_PROGRESS, ...JSON.parse(localStorage.getItem('floci-academy-progress') || '{}') }; }

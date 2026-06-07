@@ -649,15 +649,49 @@
           <div class="lab-badges"><span>cortos</span><span>incrementales</span></div>
         </div>
         <div class="project-grid topic-projects">
-          <article *ngFor="let project of topicProjects; let pi = index">
+          <article *ngFor="let project of topicProjects; let pi = index" [class.active]="selectedTopicProjectIndex() === pi" (click)="selectedTopicProjectIndex.set(pi)">
             <span class="step">{{ pi + 1 }}</span>
             <lucide-icon [img]="icons.FlaskConical" />
             <h2>{{ project.title }}</h2>
             <p>{{ project.detail }}</p>
             <div class="stage-services"><span *ngFor="let service of project.services">{{ service }}</span></div>
-            <button (click)="openModule(project.module)">Abrir módulo {{ project.module }}<lucide-icon [img]="icons.ChevronRight" /></button>
+            <button (click)="$event.stopPropagation(); openModule(project.module)">Abrir módulo {{ project.module }}<lucide-icon [img]="icons.ChevronRight" /></button>
           </article>
         </div>
+        <section class="topic-recipe">
+          <div class="flow-heading">
+            <div>
+              <span class="eyebrow">RECETA DEL MINI PROYECTO</span>
+              <h2>{{ selectedTopicProject().title }} desde cero</h2>
+              <p>{{ selectedTopicProject().detail }}</p>
+            </div>
+            <div class="lab-badges"><span>{{ selectedLanguageInfo().title }}</span><span>{{ selectedOsInfo().title }}</span></div>
+          </div>
+          <div class="topic-recipe-grid">
+            <article>
+              <span class="eyebrow">1. CREAR</span>
+              <button class="copy-line" *ngFor="let command of topicProjectCreateCommands()" (click)="copyTextValue(command.command)">
+                <code>{{ command.command }}</code>
+                <lucide-icon [img]="copiedText() === command.command ? icons.Check : icons.Copy" />
+              </button>
+            </article>
+            <article class="code-sample">
+              <div class="code-title">
+                <span>2. Implementar · {{ languageSnippet().file }}</span>
+                <button title="Copiar código" (click)="copyTextValue(topicProjectCode())"><lucide-icon [img]="copiedText() === topicProjectCode() ? icons.Check : icons.Copy" /></button>
+              </div>
+              <pre><code>{{ topicProjectCode() }}</code></pre>
+            </article>
+            <article>
+              <span class="eyebrow">3. VERIFICAR</span>
+              <button class="copy-line" *ngFor="let command of topicProjectVerification()" (click)="copyTextValue(command.command)">
+                <code>{{ command.command }}</code>
+                <lucide-icon [img]="copiedText() === command.command ? icons.Check : icons.Copy" />
+              </button>
+              <button class="secondary compact" (click)="openModule(selectedTopicProject().module)">Ver explicación del módulo {{ selectedTopicProject().module }}</button>
+            </article>
+          </div>
+        </section>
       </section>
       <section class="project-environment panel">
         <div class="flow-heading">

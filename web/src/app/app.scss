@@ -571,6 +571,13 @@ kbd { display:inline-grid; place-items:center; min-height:22px; min-width:38px; 
 .project-env-grid .code-sample{background:#0d1117;border-color:#30363d}
 .topic-projects{margin-top:0}
 .topic-projects .stage-services{margin:8px 0}
+.topic-projects article.active{border-color:$p;background:$pl;box-shadow:inset 0 3px $p,$sh}
+.topic-recipe{margin-top:12px;border-top:1px solid $bd;padding-top:14px}
+.topic-recipe .flow-heading p{margin:4px 0 0;color:$mu;font-size:11px;line-height:1.45}
+.topic-recipe-grid{display:grid;grid-template-columns:.9fr 1.35fr .9fr;gap:10px}
+.topic-recipe-grid article{min-width:0;background:$bg;border:1px solid $bd;border-radius:$rs;padding:12px}
+.topic-recipe-grid .code-sample{background:#0d1117;border-color:#30363d}
+.topic-recipe-grid .secondary{margin-top:10px;width:100%}
 
 .architecture {
   min-height:240px; background:$wh; border:1px solid $bd; border-radius:$rr;
@@ -934,6 +941,7 @@ kbd { display:inline-grid; place-items:center; min-height:22px; min-width:38px; 
   .project-milestones{grid-template-columns:repeat(2,1fr)}
   .flociops-stages{grid-template-columns:repeat(2,1fr)}
   .project-env-grid{grid-template-columns:1fr}
+  .topic-recipe-grid{grid-template-columns:1fr}
   .architecture{justify-content:start}
   .flow-steps{grid-template-columns:repeat(3,1fr)}
   .flow-steps article::after{display:none}
