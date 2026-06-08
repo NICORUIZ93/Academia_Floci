@@ -168,15 +168,3 @@ s3.upload_file("ventas.parquet", "datos-athena", "ventas-parquet/ventas.parquet"
 2. ¿Por qué Parquet es 10x más eficiente que CSV para analítica?
 3. ¿Qué hace un Glue Crawler que no hace Athena sola?
 4. ¿Cuándo elegirías Athena sobre cargar los datos en RDS PostgreSQL?
-## Verificación
-
-### Resultado de entrega automática
-- URL: http://localhost:63031/content/lecciones/modulo-15.md
-- Estado: 200 OK
-- Tamaño: 6321 bytes
-
-
-- Descargar la lección desde la UI: `curl -fsS http://localhost:63031/content/lecciones/modulo-15.md -o /dev/null`
-- Buscar bloques de código: `grep -n "```" modulo-15.md || true`
-- Buscar rutas con usuario hardcodeado: `grep -n "nicol" modulo-15.md || true`
-

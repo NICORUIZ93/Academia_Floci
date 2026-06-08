@@ -265,15 +265,3 @@ def lambda_handler(event, context):
 2. ¿Cuál es el patrón Saga y cuándo lo usarías?
 3. ¿Qué diferencia hay entre `Parallel` y `Map`?
 4. ¿Cómo debugueas un flujo que falla en el paso 3 de 5?
-## Verificación
-
-### Resultado de entrega automática
-- URL: http://localhost:63031/content/lecciones/modulo-12.md
-- Estado: 200 OK
-- Tamaño: 7322 bytes
-
-
-- Descargar la lección desde la UI: `curl -fsS http://localhost:63031/content/lecciones/modulo-12.md -o /dev/null`
-- Buscar bloques de código: `grep -n "```" modulo-12.md || true`
-- Buscar rutas con usuario hardcodeado: `grep -n "nicol" modulo-12.md || true`
-

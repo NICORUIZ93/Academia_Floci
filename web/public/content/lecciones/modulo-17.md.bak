@@ -453,15 +453,3 @@ Llegaste de cero al siguiente nivel de conocimiento:
 | 17 | Proyecto final multi-cloud de producción |
 
 **Felicitaciones. Estás listo para trabajar con la nube en producción.**
-## Verificación
-
-### Resultado de entrega automática
-- URL: http://localhost:63031/content/lecciones/modulo-17.md
-- Estado: 200 OK
-- Tamaño: 15235 bytes
-
-
-- Descargar la lección desde la UI: `curl -fsS http://localhost:63031/content/lecciones/modulo-17.md -o /dev/null`
-- Buscar bloques de código: `grep -n "```" modulo-17.md || true`
-- Buscar rutas con usuario hardcodeado: `grep -n "nicol" modulo-17.md || true`
-

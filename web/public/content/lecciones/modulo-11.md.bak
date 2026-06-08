@@ -305,15 +305,3 @@ aws cloudformation wait stack-delete-complete --stack-name mi-stack
 2. ¿Qué es un Change Set y por qué es importante usarlo en producción?
 3. ¿Cuándo elegirías CDK sobre CloudFormation?
 4. ¿Qué pasa si eliminas un stack — los datos en S3 y DynamoDB se borran?
-## Verificación
-
-### Resultado de entrega automática
-- URL: http://localhost:63031/content/lecciones/modulo-11.md
-- Estado: 200 OK
-- Tamaño: 8807 bytes
-
-
-- Descargar la lección desde la UI: `curl -fsS http://localhost:63031/content/lecciones/modulo-11.md -o /dev/null`
-- Buscar bloques de código: `grep -n "```" modulo-11.md || true`
-- Buscar rutas con usuario hardcodeado: `grep -n "nicol" modulo-11.md || true`
-

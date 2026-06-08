@@ -312,15 +312,3 @@ def llamar_api(usuario):
 2. ¿Qué diferencia hay entre una clave Redis sin TTL y con TTL?
 3. ¿Cuándo es mejor usar ElastiCache en lugar de DynamoDB para leer datos?
 4. ¿Qué hace `INCR` en Redis y por qué es atómico?
-## Verificación
-
-### Resultado de entrega automática
-- URL: http://localhost:63031/content/lecciones/modulo-9.md
-- Estado: 200 OK
-- Tamaño: 8851 bytes
-
-
-- Descargar la lección desde la UI: `curl -fsS http://localhost:63031/content/lecciones/modulo-9.md -o /dev/null`
-- Buscar bloques de código: `grep -n "```" modulo-9.md || true`
-- Buscar rutas con usuario hardcodeado: `grep -n "nicol" modulo-9.md || true`
-

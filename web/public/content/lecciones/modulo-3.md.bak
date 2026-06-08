@@ -239,15 +239,3 @@ for item in container.query_items(
 2. ¿Cómo decides qué atributo usar como Partition Key?
 3. ¿Cuándo elegirías DynamoDB sobre RDS PostgreSQL?
 4. ¿Qué hace un GSI y qué problema resuelve?
-## Verificación
-
-### Resultado de entrega automática
-- URL: http://localhost:63031/content/lecciones/modulo-3.md
-- Estado: 200 OK
-- Tamaño: 7492 bytes
-
-
-- Descargar la lección desde la UI: `curl -fsS http://localhost:63031/content/lecciones/modulo-3.md -o /dev/null`
-- Buscar bloques de código: `grep -n "```" modulo-3.md || true`
-- Buscar rutas con usuario hardcodeado: `grep -n "nicol" modulo-3.md || true`
-

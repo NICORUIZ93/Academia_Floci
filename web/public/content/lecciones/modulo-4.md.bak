@@ -258,15 +258,3 @@ az keyvault secret show \
 2. ¿Cuándo elegirías Secrets Manager sobre SSM Parameter Store?
 3. ¿Qué hace KMS que no hace Secrets Manager solo?
 4. ¿Qué es el "principio de mínimo privilegio" y cómo se aplica aquí?
-## Verificación
-
-### Resultado de entrega automática
-- URL: http://localhost:63031/content/lecciones/modulo-4.md
-- Estado: 200 OK
-- Tamaño: 8132 bytes
-
-
-- Descargar la lección desde la UI: `curl -fsS http://localhost:63031/content/lecciones/modulo-4.md -o /dev/null`
-- Buscar bloques de código: `grep -n "```" modulo-4.md || true`
-- Buscar rutas con usuario hardcodeado: `grep -n "nicol" modulo-4.md || true`
-

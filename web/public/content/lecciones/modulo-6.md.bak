@@ -225,15 +225,3 @@ Códigos HTTP correctos:
 2. ¿Por qué el método de integración con Lambda es siempre POST aunque la ruta sea GET?
 3. ¿Cuál es la diferencia entre PUT y PATCH?
 4. ¿Qué código HTTP debes devolver cuando el JSON es inválido?
-## Verificación
-
-### Resultado de entrega automática
-- URL: http://localhost:63031/content/lecciones/modulo-6.md
-- Estado: 200 OK
-- Tamaño: 6807 bytes
-
-
-- Descargar la lección desde la UI: `curl -fsS http://localhost:63031/content/lecciones/modulo-6.md -o /dev/null`
-- Buscar bloques de código: `grep -n "```" modulo-6.md || true`
-- Buscar rutas con usuario hardcodeado: `grep -n "nicol" modulo-6.md || true`
-

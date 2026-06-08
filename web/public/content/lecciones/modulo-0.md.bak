@@ -298,15 +298,3 @@ floci start --persist ./datos-locales
 ## Próximo paso
 
 Ahora que tienes los emuladores corriendo, el Módulo 1 te enseña a guardar y recuperar archivos en los tres proveedores usando **almacenamiento de objetos**.
-## Verificación
-
-### Resultado de entrega automática
-- URL: http://localhost:63031/content/lecciones/modulo-0.md
-- Estado: 200 OK
-- Tamaño: 7677 bytes
-
-
-- Descargar la lección desde la UI: `curl -fsS http://localhost:63031/content/lecciones/modulo-0.md -o /dev/null`
-- Buscar bloques de código: `grep -n "```" modulo-0.md || true`
-- Buscar rutas con usuario hardcodeado: `grep -n "nicol" modulo-0.md || true`
-

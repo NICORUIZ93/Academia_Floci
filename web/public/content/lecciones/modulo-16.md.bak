@@ -341,15 +341,3 @@ print(f"Factura #{datos['numero_factura']} - Total: {datos['total']}")
 2. ¿Qué son los embeddings y para qué sirven?
 3. ¿Qué diferencia hay entre Textract y un OCR simple?
 4. ¿En qué idiomas funciona Transcribe para español?
-## Verificación
-
-### Resultado de entrega automática
-- URL: http://localhost:63031/content/lecciones/modulo-16.md
-- Estado: 200 OK
-- Tamaño: 10925 bytes
-
-
-- Descargar la lección desde la UI: `curl -fsS http://localhost:63031/content/lecciones/modulo-16.md -o /dev/null`
-- Buscar bloques de código: `grep -n "```" modulo-16.md || true`
-- Buscar rutas con usuario hardcodeado: `grep -n "nicol" modulo-16.md || true`
-

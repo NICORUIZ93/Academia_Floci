@@ -125,15 +125,3 @@ def autenticar(client_id, username, password):
 2. ¿Por qué el token expira (campo `exp` en el JWT)?
 3. ¿Por qué NO debes construir tu propio sistema de autenticación desde cero?
 4. ¿Qué es PKCE y para qué sirve en aplicaciones móviles?
-## Verificación
-
-### Resultado de entrega automática
-- URL: http://localhost:63031/content/lecciones/modulo-14.md
-- Estado: 200 OK
-- Tamaño: 4857 bytes
-
-
-- Descargar la lección desde la UI: `curl -fsS http://localhost:63031/content/lecciones/modulo-14.md -o /dev/null`
-- Buscar bloques de código: `grep -n "```" modulo-14.md || true`
-- Buscar rutas con usuario hardcodeado: `grep -n "nicol" modulo-14.md || true`
-

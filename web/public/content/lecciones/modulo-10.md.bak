@@ -293,15 +293,3 @@ kubectl apply -f deployment.yaml
 2. ¿Por qué preferirías EKS si planeas usar múltiples nubes?
 3. ¿Qué es una Task Definition en ECS y qué define?
 4. ¿Qué hace `readinessProbe` en Kubernetes?
-## Verificación
-
-### Resultado de entrega automática
-- URL: http://localhost:63031/content/lecciones/modulo-10.md
-- Estado: 200 OK
-- Tamaño: 7453 bytes
-
-
-- Descargar la lección desde la UI: `curl -fsS http://localhost:63031/content/lecciones/modulo-10.md -o /dev/null`
-- Buscar bloques de código: `grep -n "```" modulo-10.md || true`
-- Buscar rutas con usuario hardcodeado: `grep -n "nicol" modulo-10.md || true`
-

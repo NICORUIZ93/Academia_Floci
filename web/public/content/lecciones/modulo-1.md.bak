@@ -282,15 +282,3 @@ Antes de avanzar, debes poder responder sin consultar:
 2. ¿Qué pasa si subes dos archivos con la misma key/nombre sin habilitar versionado?
 3. ¿Qué diferencia hay entre `aws s3` (alto nivel) y `aws s3api` (bajo nivel)?
 4. ¿Por qué en S3 no existen "carpetas" reales?
-## Verificación
-
-### Resultado de entrega automática
-- URL: http://localhost:63031/content/lecciones/modulo-1.md
-- Estado: 200 OK
-- Tamaño: 7890 bytes
-
-
-- Descargar la lección desde la UI: `curl -fsS http://localhost:63031/content/lecciones/modulo-1.md -o /dev/null`
-- Buscar bloques de código: `grep -n "```" modulo-1.md || true`
-- Buscar rutas con usuario hardcodeado: `grep -n "nicol" modulo-1.md || true`
-

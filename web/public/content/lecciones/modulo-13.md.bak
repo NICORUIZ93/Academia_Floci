@@ -209,15 +209,3 @@ for msg in consumer:
 2. ¿Qué es un consumer group en Kafka y para qué sirve?
 3. ¿Qué diferencia hay entre Kinesis Data Streams y Kinesis Data Firehose?
 4. ¿Por qué Kafka mantiene los mensajes después de que el consumidor los lee?
-## Verificación
-
-### Resultado de entrega automática
-- URL: http://localhost:63031/content/lecciones/modulo-13.md
-- Estado: 200 OK
-- Tamaño: 6712 bytes
-
-
-- Descargar la lección desde la UI: `curl -fsS http://localhost:63031/content/lecciones/modulo-13.md -o /dev/null`
-- Buscar bloques de código: `grep -n "```" modulo-13.md || true`
-- Buscar rutas con usuario hardcodeado: `grep -n "nicol" modulo-13.md || true`
-

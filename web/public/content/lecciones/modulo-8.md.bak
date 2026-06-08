@@ -258,15 +258,3 @@ fields @timestamp, @message
 2. ¿Qué diferencia hay entre logs y métricas?
 3. ¿Qué es una traza y cuándo la necesitas?
 4. ¿Qué hace `sequenceToken` en CloudWatch y por qué importa?
-## Verificación
-
-### Resultado de entrega automática
-- URL: http://localhost:63031/content/lecciones/modulo-8.md
-- Estado: 200 OK
-- Tamaño: 7948 bytes
-
-
-- Descargar la lección desde la UI: `curl -fsS http://localhost:63031/content/lecciones/modulo-8.md -o /dev/null`
-- Buscar bloques de código: `grep -n "```" modulo-8.md || true`
-- Buscar rutas con usuario hardcodeado: `grep -n "nicol" modulo-8.md || true`
-

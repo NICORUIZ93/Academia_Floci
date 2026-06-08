@@ -236,15 +236,3 @@ def lambda_handler(event, context):
 2. ¿Qué es el cold start y cuándo importa?
 3. ¿Cómo pasas credenciales seguras a una Lambda en producción?
 4. ¿Qué diferencia hay entre invocar Lambda síncronamente vs asíncronamente?
-## Verificación
-
-### Resultado de entrega automática
-- URL: http://localhost:63031/content/lecciones/modulo-5.md
-- Estado: 200 OK
-- Tamaño: 6951 bytes
-
-
-- Descargar la lección desde la UI: `curl -fsS http://localhost:63031/content/lecciones/modulo-5.md -o /dev/null`
-- Buscar bloques de código: `grep -n "```" modulo-5.md || true`
-- Buscar rutas con usuario hardcodeado: `grep -n "nicol" modulo-5.md || true`
-
