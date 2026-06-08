@@ -4,6 +4,7 @@ Inserta resultados de verificación HTTP en cada lección bajo la sección '## V
 
 Uso: py scripts/insert_verification_results.py
 """
+import argparse
 import glob
 import os
 import urllib.request
@@ -64,21 +65,33 @@ def insert_result(path, ok, status_or_err, size):
         f.write(content)
 
 def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--check', action='store_true', help='No modifica archivos; solo informa resultados')
+    args = parser.parse_args()
+
     files = sorted(glob.glob(LESSONS_GLOB))
     if not files:
         print('No se encontraron lecciones')
         return 1
 
+    failed = 0
     for p in files:
         filename = os.path.basename(p)
         ok, status_or_err, size = fetch_info(filename)
-        insert_result(p, ok, status_or_err, size)
-        if ok:
-            print('Insertado:', filename, 'OK size=', size)
+        if args.check:
+            if ok:
+                print('OK   (check):', filename, 'size=', size)
+            else:
+                print('FAIL (check):', filename, status_or_err)
+                failed += 1
         else:
-            print('Insertado:', filename, 'ERROR', status_or_err)
+            insert_result(p, ok, status_or_err, size)
+            if ok:
+                print('Insertado:', filename, 'OK size=', size)
+            else:
+                print('Insertado:', filename, 'ERROR', status_or_err)
 
-    return 0
+    return 1 if failed else 0
 
 if __name__ == '__main__':
     raise SystemExit(main())

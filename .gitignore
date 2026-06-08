@@ -1,4 +1,10 @@
-.env
+# Ignorar backups de lecciones y artefactos temporales
+web/public/content/lecciones/*.bak
+*.pyc
+__pycache__/
+node_modules/
+dist/
+/.cache.env
 .venv/
 __pycache__/
 *.pyc

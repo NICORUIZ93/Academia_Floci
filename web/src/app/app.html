@@ -212,6 +212,84 @@
         </article>
       </section>
 
+      <section class="install-options" *ngIf="selectedOs() === 'windows'">
+        <div class="install-intro">
+          <span class="eyebrow">WSL / UI ANGULAR</span>
+          <h2>Levanta la UI Angular desde Kali WSL</h2>
+          <p>Si ves «Command 'ng' not found», usa estos comandos en WSL dentro de tu carpeta del proyecto: <code>/mnt/c/Users/&lt;TU_USUARIO&gt;/Downloads/floci/floci/web</code>. Reemplaza <code>&lt;TU_USUARIO&gt;</code> por tu nombre de usuario de Windows.</p>
+        </div>
+        <article *ngFor="let command of windowsAngularCommands; let oi = index">
+          <span class="install-option-index">{{ oi + 1 }}</span>
+          <div>
+            <h3>{{ command.title }}</h3>
+            <p>{{ command.detail }}</p>
+            <button class="copy-line" (click)="copyTextValue(command.command)">
+              <code>{{ command.command }}</code>
+              <lucide-icon [img]="copiedText() === command.command ? icons.Check : icons.Copy" />
+            </button>
+          </div>
+        </article>
+      </section>
+
+      <section class="install-options" *ngIf="completedCount() === 0">
+        <div class="install-intro">
+          <span class="eyebrow">UI OPCIONAL</span>
+          <h2>Explora recursos con una interfaz visual</h2>
+          <p>Floci es CLI. Para una vista web de recursos locales, usa StackPort y apunta su conexión al emulador local.</p>
+        </div>
+        <article>
+          <span class="install-option-index">1</span>
+          <div>
+            <h3>{{ stackportCommand.title }}</h3>
+            <p>{{ stackportCommand.detail }}</p>
+            <button class="copy-line" (click)="copyTextValue(stackportCommand.command)">
+              <code>{{ stackportCommand.command }}</code>
+              <lucide-icon [img]="copiedText() === stackportCommand.command ? icons.Check : icons.Copy" />
+            </button>
+            <strong>Abre <code>http://localhost:8080</code> en Windows.</strong>
+          </div>
+        </article>
+        <div class="stackport-guide">
+          <h3>Cómo usar StackPort</h3>
+          <ol>
+            <li *ngFor="let step of stackportGuide">
+              <strong>{{ step.title }}</strong>
+              <p>{{ step.detail }}</p>
+              <button class="copy-line small" (click)="copyTextValue(step.command)">
+                <code>{{ step.command }}</code>
+                <lucide-icon [img]="copiedText() === step.command ? icons.Check : icons.Copy" />
+              </button>
+            </li>
+          </ol>
+          <p class="note">Si Docker no resuelve <code>host.docker.internal</code>, prueba con la IP de tu host Windows (ej. <code>172.17.0.1</code>) o la IP de Docker en WSL.</p>
+        </div>
+      </section>
+
+        <!-- Mostrar guía StackPort directamente en Módulo 0 para acceso rápido -->
+        <div *ngIf="selectedModuleId() === 0" class="stackport-guide" style="margin-top:18px;">
+          <h3>Cómo usar StackPort (acceso rápido)</h3>
+          <div>
+            <strong>{{ stackportCommand.title }}</strong>
+            <p>{{ stackportCommand.detail }}</p>
+            <button class="copy-line" (click)="copyTextValue(stackportCommand.command)">
+              <code>{{ stackportCommand.command }}</code>
+              <lucide-icon [img]="copiedText() === stackportCommand.command ? icons.Check : icons.Copy" />
+            </button>
+            <strong>Abre <code>http://localhost:8080</code> en Windows.</strong>
+          </div>
+          <ol>
+            <li *ngFor="let step of stackportGuide">
+              <strong>{{ step.title }}</strong>
+              <p>{{ step.detail }}</p>
+              <button class="copy-line small" (click)="copyTextValue(step.command)">
+                <code>{{ step.command }}</code>
+                <lucide-icon [img]="copiedText() === step.command ? icons.Check : icons.Copy" />
+              </button>
+            </li>
+          </ol>
+          <p class="note">Si Docker no resuelve <code>host.docker.internal</code>, prueba con la IP de tu host Windows (ej. <code>172.17.0.1</code>).</p>
+        </div>
+
       <section class="first-session" *ngIf="completedCount() === 0">
         <div class="first-session-title">
           <span class="eyebrow">COMANDOS DE INICIO</span>
@@ -233,6 +311,7 @@
         <button class="copy-line" *ngFor="let command of languageInstallCommands()" (click)="copyTextValue(command.command)"><span class="command-label">{{ command.title }}</span><code>{{ command.command }}</code><lucide-icon [img]="copiedText() === command.command ? icons.Check : icons.Copy" /></button>
         <button class="copy-line" *ngFor="let command of languageRunCommands()" (click)="copyTextValue(command.command)"><span class="command-label">{{ command.title }}</span><code>{{ command.command }}</code><lucide-icon [img]="copiedText() === command.command ? icons.Check : icons.Copy" /></button>
       </section>
+
 
       <div class="metric-grid">
         <article><div class="metric-icon teal"><lucide-icon [img]="icons.Gauge" /></div><div><span>Progreso total</span><strong>{{ completion() }}%</strong><small>{{ completedCount() }}/{{ modules.length }} módulos</small></div></article>

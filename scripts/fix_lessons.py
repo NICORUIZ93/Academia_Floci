@@ -5,6 +5,7 @@ También intenta descargar cada lección desde el servidor de desarrollo en http
 
 Uso: python scripts/fix_lessons.py
 """
+import argparse
 import glob
 import os
 import shutil
@@ -55,6 +56,10 @@ def check_http(path, base_url='http://localhost:63031/content/lecciones/'):
         return False, str(e), 0
 
 def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--check', action='store_true', help='No modifica archivos; solo informa qué cambiaría')
+    args = parser.parse_args()
+
     files = sorted(glob.glob(LESSONS_GLOB))
     if not files:
         print('No se encontraron lecciones en', LESSONS_GLOB)
@@ -63,9 +68,21 @@ def main():
     modified = []
     print('Procesando %d lecciones...' % len(files))
     for p in files:
-        if fix_content(p):
-            modified.append(p)
-            print('Modificado:', os.path.basename(p))
+        if args.check:
+            # En modo check, solo informaríamos sin escribir
+            with open(p, 'r', encoding='utf-8') as f:
+                content = f.read()
+            orig = content
+            content = content.replace('/mnt/c/Users/nicol', '/mnt/c/Users/<TU_USUARIO>')
+            content = content.replace('C:\\Users\\nicol', '/mnt/c/Users/<TU_USUARIO>')
+            if '## Verificación' not in content:
+                # marcaría para añadir sección
+                modified.append(p)
+                print('Would modify:', os.path.basename(p))
+        else:
+            if fix_content(p):
+                modified.append(p)
+                print('Modificado:', os.path.basename(p))
 
     print('\nVerificando entrega HTTP de cada lección (http://localhost:63031)...')
     ok_count = 0
