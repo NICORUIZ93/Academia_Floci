@@ -92,10 +92,16 @@ test('proyecto final: mini proyectos, integrador y entorno activo son utiles', a
   await expect(page.locator('.topic-projects article')).toHaveCount(16);
   await expect(page.locator('.topic-recipe')).toContainText('Buzón de archivos desde cero');
   await expect(page.locator('.topic-recipe')).toContainText('aws s3 ls s3://flociops-files');
+  await expect(page.locator('.project-newcomer-guide')).toContainText('APRENDER EL MINI PROYECTO');
+  await expect(page.locator('.project-newcomer-guide')).toContainText('Analog');
+  await expect(page.locator('.project-newcomer-guide')).toContainText('3 ERRORES COMUNES');
+  await expect(page.locator('.project-newcomer-guide')).toContainText('Hazlo hoy');
   await expect(page.locator('.topic-recipe .code-sample')).toBeVisible();
   await page.locator('.topic-projects article').nth(2).click();
   await expect(page.locator('.topic-recipe')).toContainText('API de tareas desde cero');
   await expect(page.locator('.topic-recipe')).toContainText('FlociOpsTasks');
+  await expect(page.locator('.project-newcomer-guide')).toContainText('API de tareas');
+  await expect(page.locator('.project-newcomer-guide')).toContainText('FlociOpsTasks');
   await expect(page.locator('.flociops-stages article')).toHaveCount(6);
   await expect(page.locator('.project-environment')).toBeVisible();
 
@@ -123,7 +129,7 @@ test('labs: java muestra maven y gradle, y todos los mini proyectos tienen codig
   expect(topicCount).toBe(16);
   for (let index = 0; index < topicCount; index += 1) {
     await page.locator('.topic-projects article').nth(index).click();
-    await expect(page.locator('.topic-recipe h2')).toBeVisible();
+    await expect(page.locator('.topic-recipe > .flow-heading h2')).toBeVisible();
     await expect(page.locator('.topic-recipe .code-sample pre code')).not.toHaveText('');
     await expect(page.locator('.topic-recipe')).toContainText('VERIFICAR');
   }

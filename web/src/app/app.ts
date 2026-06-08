@@ -278,6 +278,7 @@ export class App implements OnInit {
   selectedLanguageInfo = computed(() => this.labLanguages.find(item => item.id === this.selectedLanguage()) ?? this.labLanguages[0]);
   newcomerGuide = computed(() => this.explainLikeNewcomer(this.selectedModule()));
   selectedTopicProject = computed(() => this.topicProjects[this.selectedTopicProjectIndex()] ?? this.topicProjects[0]);
+  selectedTopicProjectGuide = computed(() => this.explainTopicProjectLikeNewcomer(this.selectedTopicProject()));
   setupCommands = computed(() => this.commandsForOs(this.selectedOs()));
   languageSnippet = computed(() => this.snippetForLanguage(this.selectedLanguage()));
   languageInstallCommands = computed(() => this.commandsForLanguageAction('install', this.selectedLanguage(), this.languageSnippet()));
@@ -371,6 +372,36 @@ export class App implements OnInit {
         ? `Hoy haz esto: ${firstChallenge.action}. Ejecuta: ${firstChallenge.command}`
         : `Hoy haz esto: abre el modulo ${module.id}, ejecuta el primer reto y guarda la evidencia en tus notas.`,
       misconception: `No aprendas ${module.shortTitle} como una lista de comandos. Aprende el circuito: problema -> servicio -> recurso -> operacion -> verificacion.`,
+    };
+  }
+  explainTopicProjectLikeNewcomer(project: TopicProject): ExplainLikeNewcomer {
+    const mainService = project.services[0] ?? 'Floci';
+    const secondaryService = project.services[1] ?? 'CLI';
+    const firstVerify = project.verify[0] ?? 'ejecuta la verificacion del laboratorio';
+    const language = this.selectedLanguageInfo().title;
+    return {
+      essence: `${project.title} sirve para practicar ${mainService} en un caso pequeño y real: ${project.detail}`,
+      analogy: `${mainService} es como una estacion de trabajo del proyecto: recibe una solicitud, la guarda o procesa, y luego te deja comprobar que el resultado existe.`,
+      parts: [
+        { title: '1. Caso real', detail: `Primero entiende que problema resuelve: ${project.detail}` },
+        { title: '2. Recurso central', detail: `El recurso que vas a crear o consultar se llama ${project.resource}. Si ese nombre no aparece en la salida, algo falta.` },
+        { title: '3. Codigo minimo', detail: `Usa ${language} para ejecutar una accion pequeña contra Floci local antes de intentar arquitectura grande.` },
+        { title: '4. Verificacion', detail: `Termina el mini proyecto solo cuando puedas ejecutar: ${firstVerify}` },
+      ],
+      mistakes: [
+        `Crear codigo sin saber para que sirve ${mainService}.`,
+        `Cambiar el nombre ${project.resource} y luego verificar otro recurso diferente.`,
+        'Ejecutar el codigo sin confirmar que Floci, Docker y la CLI esten activos.',
+      ],
+      questions: [
+        `Que problema pequeño resuelve ${project.title}?`,
+        `Que recurso exacto debo ver creado o consultado: ${project.resource}?`,
+        `Que papel cumple ${mainService} y que papel cumple ${secondaryService}?`,
+        `Que comando demuestra que el proyecto funciono?`,
+        'Que error anotaria si tuviera que explicarle este laboratorio a otra persona?',
+      ],
+      action: `Hoy completa ${project.title}: crea la carpeta, pega el codigo, ejecutalo y guarda una captura o nota de esta verificacion: ${firstVerify}`,
+      misconception: `No trates ${project.title} como un ejemplo aislado. Es una pieza de FlociOps: problema -> recurso -> codigo -> ejecucion -> evidencia.`,
     };
   }
   topicProjectFolder(project: TopicProject = this.selectedTopicProject()): string {

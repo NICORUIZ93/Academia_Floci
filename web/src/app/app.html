@@ -706,6 +706,38 @@
             </div>
             <div class="lab-badges"><span>{{ selectedLanguageInfo().title }}</span><span>{{ selectedOsInfo().title }}</span></div>
           </div>
+          <section class="newcomer-guide project-newcomer-guide">
+            <div class="newcomer-heading">
+              <span class="eyebrow">APRENDER EL MINI PROYECTO</span>
+              <h2>Primero entiéndelo, después copia código</h2>
+              <p>{{ selectedTopicProjectGuide().essence }}</p>
+            </div>
+            <div class="analogy-card">
+              <span>Analogía simple</span>
+              <p>{{ selectedTopicProjectGuide().analogy }}</p>
+            </div>
+            <div class="newcomer-grid">
+              <article *ngFor="let part of selectedTopicProjectGuide().parts">
+                <h3>{{ part.title }}</h3>
+                <p>{{ part.detail }}</p>
+              </article>
+            </div>
+            <div class="newcomer-checks">
+              <div>
+                <h3>3 ERRORES COMUNES</h3>
+                <ul><li *ngFor="let mistake of selectedTopicProjectGuide().mistakes">{{ mistake }}</li></ul>
+              </div>
+              <div>
+                <h3>5 PREGUNTAS PARA VALIDAR</h3>
+                <ol><li *ngFor="let question of selectedTopicProjectGuide().questions">{{ question }}</li></ol>
+              </div>
+            </div>
+            <div class="action-now">
+              <strong>Hazlo hoy</strong>
+              <p>{{ selectedTopicProjectGuide().action }}</p>
+              <span>{{ selectedTopicProjectGuide().misconception }}</span>
+            </div>
+          </section>
           <div class="topic-recipe-grid">
             <article>
               <span class="eyebrow">1. CREAR</span>
