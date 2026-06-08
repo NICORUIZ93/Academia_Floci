@@ -15,6 +15,12 @@ test('inicio: ruta educativa y laboratorio adaptado responden al perfil', async 
   await expect(page.locator('.welcome-band')).toBeVisible();
   await expect(page.locator('.education-flow')).toBeVisible();
   await expect(page.locator('.starter-toolbox')).toBeVisible();
+  await expect(page.locator('.install-options').first()).toContainText('Opcion 1: Homebrew');
+  await expect(page.locator('.install-options').first()).toContainText('brew install floci-io/floci/floci');
+  await expect(page.locator('.install-options').first()).toContainText('Opcion 2: Script de instalacion');
+  await expect(page.locator('.install-options').first()).toContainText('curl -fsSL https://floci.io/install.sh | sh');
+  await expect(page.locator('.install-options').first()).toContainText('Opcion 3: Docker');
+  await expect(page.locator('.install-options').first()).toContainText('floci/floci:latest');
   await expect(page.locator('.first-session')).toBeVisible();
   await expect(page.locator('.quick-lab-card')).toBeVisible();
 
@@ -51,6 +57,8 @@ test('modulos: lectura, ejercicios, notas y progreso se conectan', async ({ page
   await expect(page.locator('.action-now')).toContainText('Hazlo hoy');
 
   await page.locator('.lesson-tabs button').nth(1).click();
+  await expect(page.locator('.compact-install')).toContainText('Escoge solo una forma de instalar Floci');
+  await expect(page.locator('.compact-install')).toContainText('Opcion 3: Docker');
   await expect(page.locator('.adaptive-lab')).toContainText('pip install boto3');
   await expect(page.locator('.process-guide .profile-line')).toContainText('Sistema: macOS');
   await expect(page.locator('.process-guide .profile-line')).toContainText('Lenguaje: Python');

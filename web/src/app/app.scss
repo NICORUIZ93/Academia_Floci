@@ -816,6 +816,18 @@ kbd { display:inline-grid; place-items:center; min-height:22px; min-width:38px; 
 .setup-step small    { font-size:8px; color:$mul; margin-top:3px; line-height:1.25; overflow-wrap:break-word; }
 .setup-step button   { border:0; background:$bg; color:$p; width:24px; height:24px; display:grid; place-items:center; border-radius:$rs; cursor:pointer; flex-shrink:0; }
 .setup-step lucide-icon { width:12px; }
+.install-options { margin-top:12px; background:$wh; border:1px solid $bd; border-radius:$rr; box-shadow:$sh; padding:14px; display:grid; grid-template-columns:1.05fr repeat(3,1fr); gap:10px; }
+.install-intro { min-width:0; padding:4px 4px 4px 0; }
+.install-intro h2 { font-size:15px; margin:4px 0; overflow-wrap:anywhere; }
+.install-intro p { color:$mu; font-size:11px; line-height:1.5; margin:0; overflow-wrap:anywhere; }
+.install-options article { min-width:0; border:1px solid $bd; border-radius:$rs; background:$bg; padding:11px; display:grid; grid-template-columns:24px 1fr; gap:8px; }
+.install-option-index { width:24px; height:24px; border-radius:50%; background:$ink; color:$wh; display:grid; place-items:center; font-size:10px; font-weight:800; }
+.install-options small { display:block; color:$p; font-size:9px; font-weight:800; text-transform:uppercase; line-height:1.25; overflow-wrap:anywhere; }
+.install-options h3 { font-size:12px; margin:3px 0 5px; overflow-wrap:anywhere; }
+.install-options p { color:$mu; font-size:10px; line-height:1.45; margin:0; overflow-wrap:anywhere; }
+.install-options article strong { display:block; color:$i3; font-size:9px; line-height:1.35; margin-top:7px; overflow-wrap:anywhere; }
+.compact-install { grid-template-columns:1fr; box-shadow:none; border-color:$pm; background:rgba($wh,.75); margin-top:10px; }
+.compact-install article { grid-template-columns:24px 1fr; background:$wh; }
 .quick-lab-card{display:grid;grid-template-columns:minmax(0,1fr) minmax(180px,.55fr) minmax(150px,.45fr);gap:10px;align-items:center;background:$wh;border:1px solid $bd;border-radius:$rr;margin-top:12px;padding:14px 16px;box-shadow:$sh}
 .quick-lab-card h2{font-size:15px;margin:3px 0}.quick-lab-card p{margin:0;color:$mu;font-size:11px}
 .quick-lab-card .copy-line{margin-top:0}
@@ -1146,6 +1158,7 @@ kbd { display:inline-grid; place-items:center; min-height:22px; min-width:38px; 
   .module-trailer{grid-template-columns:repeat(2,1fr)}
   .beginner-clarity{grid-template-columns:1fr}
   .starter-toolbox{grid-template-columns:1fr}
+  .install-options{grid-template-columns:1fr}
   .process-grid{grid-template-columns:repeat(2,1fr)}
   .command-anatomy>div{grid-template-columns:repeat(2,1fr)}
   .newcomer-grid{grid-template-columns:repeat(2,1fr)}

@@ -191,6 +191,27 @@
         </div>
       </div>
 
+      <section class="install-options" *ngIf="completedCount() === 0">
+        <div class="install-intro">
+          <span class="eyebrow">INSTALACION DE FLOCI</span>
+          <h2>Elige una opcion antes de copiar comandos del Modulo 0</h2>
+          <p>No son pasos para ejecutar todos. Son caminos alternativos: Homebrew, script o Docker.</p>
+        </div>
+        <article *ngFor="let option of flociInstallOptions; let oi = index">
+          <span class="install-option-index">{{ oi + 1 }}</span>
+          <div>
+            <small>{{ option.scope }}</small>
+            <h3>{{ option.title }}</h3>
+            <p>{{ option.detail }}</p>
+            <button class="copy-line" (click)="copyTextValue(option.command)">
+              <code>{{ option.command }}</code>
+              <lucide-icon [img]="copiedText() === option.command ? icons.Check : icons.Copy" />
+            </button>
+            <strong>{{ option.recommendation }}</strong>
+          </div>
+        </article>
+      </section>
+
       <section class="first-session" *ngIf="completedCount() === 0">
         <div class="first-session-title">
           <span class="eyebrow">COMANDOS DE INICIO</span>
@@ -412,6 +433,25 @@
                   <code>{{ part.example }}</code>
                 </article>
               </div>
+            </div>
+            <div class="install-options compact-install" *ngIf="selectedModuleId() === 0">
+              <div class="install-intro">
+                <span class="eyebrow">INSTALACION</span>
+                <h2>Escoge solo una forma de instalar Floci</h2>
+                <p>Despues de instalar, sigue la linea de trabajo de tu sistema operativo y lenguaje.</p>
+              </div>
+              <article *ngFor="let option of flociInstallOptions; let oi = index">
+                <span class="install-option-index">{{ oi + 1 }}</span>
+                <div>
+                  <small>{{ option.scope }}</small>
+                  <h3>{{ option.title }}</h3>
+                  <button class="copy-line" (click)="copyTextValue(option.command)">
+                    <code>{{ option.command }}</code>
+                    <lucide-icon [img]="copiedText() === option.command ? icons.Check : icons.Copy" />
+                  </button>
+                  <strong>{{ option.recommendation }}</strong>
+                </div>
+              </article>
             </div>
           </section>
           <section class="adaptive-lab">

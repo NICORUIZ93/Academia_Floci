@@ -62,6 +62,13 @@ interface LearningRule {
   detail: string;
   example: string;
 }
+interface InstallationOption {
+  title: string;
+  scope: string;
+  command: string;
+  detail: string;
+  recommendation: string;
+}
 interface TerminalGuide {
   title: string;
   openSteps: string[];
@@ -196,6 +203,29 @@ export class App implements OnInit {
       title: 'Anota el error completo',
       detail: 'Si algo falla, copia el comando, el error y qué intentaste. Eso entrena diagnóstico real.',
       example: 'Error: Docker no responde. Acción: abrir Docker Desktop y repetir docker info.',
+    },
+  ];
+  readonly flociInstallOptions: InstallationOption[] = [
+    {
+      title: 'Opcion 1: Homebrew',
+      scope: 'macOS / Linux',
+      command: 'brew install floci-io/floci/floci',
+      detail: 'Instala la CLI de Floci como herramienta del sistema. Es la ruta mas comoda si ya usas Homebrew.',
+      recommendation: 'Recomendada para macOS y para Linux cuando ya tienes brew instalado.',
+    },
+    {
+      title: 'Opcion 2: Script de instalacion',
+      scope: 'macOS / Linux',
+      command: 'curl -fsSL https://floci.io/install.sh | sh',
+      detail: 'Descarga e instala Floci desde la terminal sin depender de Homebrew.',
+      recommendation: 'Usala en Linux o cuando Homebrew no este disponible.',
+    },
+    {
+      title: 'Opcion 3: Docker',
+      scope: 'Solo emulador AWS',
+      command: 'docker run -d --name floci -p 4566:4566 -v /var/run/docker.sock:/var/run/docker.sock floci/floci:latest',
+      detail: 'Ejecuta Floci como contenedor. Sirve para levantar el emulador AWS sin instalar la CLI completa.',
+      recommendation: 'Usala si quieres probar AWS local rapido o si trabajas con entornos basados en contenedores.',
     },
   ];
   readonly commandReading = [
