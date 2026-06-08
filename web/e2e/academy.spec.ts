@@ -43,6 +43,12 @@ test('modulos: lectura, ejercicios, notas y progreso se conectan', async ({ page
   await expect(page.locator('.lesson-content > h1')).toBeVisible();
   await expect(page.locator('.rail-progress')).toHaveCount(18);
   await expect(page.locator('.module-trailer')).toBeVisible();
+  await expect(page.locator('.newcomer-guide')).toBeVisible();
+  await expect(page.locator('.newcomer-guide')).toContainText('ENTENDER DE VERDAD');
+  await expect(page.locator('.newcomer-guide')).toContainText('Analogía simple');
+  await expect(page.locator('.newcomer-checks')).toContainText('3 ERRORES COMUNES');
+  await expect(page.locator('.newcomer-checks')).toContainText('5 PREGUNTAS PARA VALIDAR');
+  await expect(page.locator('.action-now')).toContainText('Hazlo hoy');
 
   await page.locator('.lesson-tabs button').nth(1).click();
   await expect(page.locator('.adaptive-lab')).toContainText('pip install boto3');

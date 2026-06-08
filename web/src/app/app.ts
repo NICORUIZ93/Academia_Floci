@@ -45,6 +45,15 @@ interface ChallengeGuide {
   verify: string;
   advice: string;
 }
+interface ExplainLikeNewcomer {
+  essence: string;
+  analogy: string;
+  parts: { title: string; detail: string }[];
+  mistakes: string[];
+  questions: string[];
+  action: string;
+  misconception: string;
+}
 interface LearningRule {
   title: string;
   detail: string;
@@ -267,6 +276,7 @@ export class App implements OnInit {
   });
   selectedOsInfo = computed(() => this.operatingSystems.find(item => item.id === this.selectedOs()) ?? this.operatingSystems[0]);
   selectedLanguageInfo = computed(() => this.labLanguages.find(item => item.id === this.selectedLanguage()) ?? this.labLanguages[0]);
+  newcomerGuide = computed(() => this.explainLikeNewcomer(this.selectedModule()));
   selectedTopicProject = computed(() => this.topicProjects[this.selectedTopicProjectIndex()] ?? this.topicProjects[0]);
   setupCommands = computed(() => this.commandsForOs(this.selectedOs()));
   languageSnippet = computed(() => this.snippetForLanguage(this.selectedLanguage()));
@@ -329,6 +339,39 @@ export class App implements OnInit {
     const module = this.moduleById(moduleId);
     if (!module?.challenges.length) return 0;
     return this.completedModuleChallenges(moduleId) / module.challenges.length;
+  }
+  explainLikeNewcomer(module: CourseModule): ExplainLikeNewcomer {
+    const mainService = module.services[0] ?? module.shortTitle;
+    const firstConcept = module.concepts[0] ?? module.shortTitle;
+    const secondConcept = module.concepts[1] ?? 'flujo de trabajo';
+    const thirdConcept = module.concepts[2] ?? 'verificacion';
+    const firstChallenge = module.challenges[0] ? this.challengeGuide(module.challenges[0], 0) : null;
+    return {
+      essence: `${module.shortTitle} sirve para resolver un problema real: ${module.description}`,
+      analogy: `${firstConcept} es como una estacion de trabajo: primero recibes algo, luego lo organizas y al final verificas que quedo donde esperabas.`,
+      parts: [
+        { title: '1. Problema', detail: `Identifica que necesidad cubre ${mainService}: guardar, procesar, proteger, consultar o automatizar algo.` },
+        { title: '2. Pieza central', detail: `Entiende ${firstConcept} antes de mezclarlo con otros servicios. Una idea clara vale mas que diez comandos copiados.` },
+        { title: '3. Flujo', detail: `Conecta ${secondConcept} con una entrada, una accion y una salida observable.` },
+        { title: '4. Evidencia', detail: `Comprueba ${thirdConcept} con CLI, logs, archivo generado, respuesta HTTP o recurso listado.` },
+      ],
+      mistakes: [
+        'Copiar comandos sin mirar en que carpeta o terminal se ejecutan.',
+        `Confundir el nombre del servicio con el problema que resuelve ${mainService}.`,
+        'Marcar el reto como terminado sin una salida verificable.',
+      ],
+      questions: [
+        `Que problema real resuelve ${mainService}?`,
+        `Que entrada necesita este modulo para funcionar?`,
+        'Que salida demuestra que no solo lo lei, sino que lo ejecute?',
+        'Que error comun podria aparecer y como lo diagnosticaria?',
+        'Como explicaria este tema en una frase a alguien que empieza desde cero?',
+      ],
+      action: firstChallenge?.command
+        ? `Hoy haz esto: ${firstChallenge.action}. Ejecuta: ${firstChallenge.command}`
+        : `Hoy haz esto: abre el modulo ${module.id}, ejecuta el primer reto y guarda la evidencia en tus notas.`,
+      misconception: `No aprendas ${module.shortTitle} como una lista de comandos. Aprende el circuito: problema -> servicio -> recurso -> operacion -> verificacion.`,
+    };
   }
   topicProjectFolder(project: TopicProject = this.selectedTopicProject()): string {
     return `flociops-${project.module}-${project.title.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')}`;

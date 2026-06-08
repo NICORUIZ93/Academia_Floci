@@ -304,6 +304,37 @@
 
         <div class="lesson-tab-panel" *ngIf="lessonTab() === 'learn'">
           <div class="learning-purpose"><strong>Al terminar esta lección vas a saber:</strong><div class="concept-grid"><span *ngFor="let concept of selectedModule().concepts">{{ concept }}</span></div></div>
+          <section class="newcomer-guide">
+            <div class="newcomer-heading">
+              <span class="eyebrow">ENTENDER DE VERDAD</span>
+              <h2>Explícamelo como si empezara desde cero</h2>
+              <p>{{ newcomerGuide().essence }}</p>
+            </div>
+            <div class="analogy-card">
+              <strong>Analogía simple</strong>
+              <p>{{ newcomerGuide().analogy }}</p>
+            </div>
+            <div class="newcomer-grid">
+              <article *ngFor="let part of newcomerGuide().parts">
+                <strong>{{ part.title }}</strong>
+                <p>{{ part.detail }}</p>
+              </article>
+            </div>
+            <div class="newcomer-checks">
+              <article>
+                <span class="eyebrow">3 ERRORES COMUNES</span>
+                <ul><li *ngFor="let mistake of newcomerGuide().mistakes">{{ mistake }}</li></ul>
+              </article>
+              <article>
+                <span class="eyebrow">5 PREGUNTAS PARA VALIDAR</span>
+                <ol><li *ngFor="let question of newcomerGuide().questions">{{ question }}</li></ol>
+              </article>
+            </div>
+            <div class="action-now">
+              <lucide-icon [img]="icons.Play" />
+              <div><span>Hazlo hoy</span><strong>{{ newcomerGuide().action }}</strong><p>{{ newcomerGuide().misconception }}</p></div>
+            </div>
+          </section>
           <div class="reader-loading" *ngIf="lessonLoading()">Cargando lección...</div>
           <div class="markdown-body lesson-markdown" *ngIf="!lessonLoading()" [innerHTML]="lessonHtml()"></div>
           <div class="lesson-tab-hint" *ngIf="!lessonLoading()">

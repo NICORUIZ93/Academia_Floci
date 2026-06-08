@@ -828,6 +828,75 @@ kbd { display:inline-grid; place-items:center; min-height:22px; min-width:38px; 
 
 .learning-purpose { padding:13px 15px; background:$pl; border-radius:$rs; margin-top:14px; }
 .learning-purpose > strong { font-size:10px; display:block; margin-bottom:7px; color:$p; text-transform:uppercase; letter-spacing:.5px; }
+.newcomer-guide {
+  margin-top:12px;
+  border:1px solid $bd;
+  border-radius:$rr;
+  background:$wh;
+  box-shadow:$sh;
+  overflow:hidden;
+}
+.newcomer-heading {
+  padding:16px 18px;
+  background:$bg;
+  border-bottom:1px solid $bd;
+}
+.newcomer-heading h2 { margin:4px 0 6px; font-size:18px; overflow-wrap:anywhere; }
+.newcomer-heading p { margin:0; color:$i3; font-size:12px; line-height:1.55; overflow-wrap:anywhere; }
+.analogy-card {
+  margin:14px 16px 0;
+  padding:12px 14px;
+  background:$al;
+  border:1px solid #fde68a;
+  border-left:4px solid $a;
+  border-radius:0 $rs $rs 0;
+}
+.analogy-card strong { color:#92400e; font-size:11px; text-transform:uppercase; letter-spacing:.4px; }
+.analogy-card p { margin:5px 0 0; color:$i2; font-size:12px; line-height:1.55; overflow-wrap:anywhere; }
+.newcomer-grid {
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:8px;
+  padding:14px 16px 0;
+}
+.newcomer-grid article {
+  border:1px solid $bd;
+  border-radius:$rs;
+  background:$bg;
+  padding:11px;
+  min-width:0;
+}
+.newcomer-grid strong { display:block; color:$p; font-size:11px; margin-bottom:5px; }
+.newcomer-grid p { margin:0; color:$mu; font-size:10px; line-height:1.5; overflow-wrap:anywhere; }
+.newcomer-checks {
+  display:grid;
+  grid-template-columns:1fr 1.25fr;
+  gap:10px;
+  padding:14px 16px;
+}
+.newcomer-checks article {
+  border:1px solid $bd;
+  border-radius:$rs;
+  padding:12px;
+  min-width:0;
+}
+.newcomer-checks ul,.newcomer-checks ol { margin:8px 0 0; padding-left:18px; color:$i3; font-size:11px; line-height:1.55; }
+.newcomer-checks li { margin:4px 0; overflow-wrap:anywhere; }
+.action-now {
+  display:flex;
+  gap:10px;
+  align-items:flex-start;
+  margin:0 16px 16px;
+  padding:12px 14px;
+  background:$pl;
+  border:1px solid $pm;
+  border-radius:$rs;
+}
+.action-now lucide-icon { width:17px; color:$p; flex:0 0 17px; margin-top:1px; }
+.action-now div { min-width:0; }
+.action-now span { display:block; color:$p; font-size:9px; font-weight:800; text-transform:uppercase; letter-spacing:.4px; }
+.action-now strong { display:block; margin-top:3px; color:$ink; font-size:12px; line-height:1.45; overflow-wrap:anywhere; }
+.action-now p { margin:5px 0 0; color:$mu; font-size:10px; line-height:1.45; overflow-wrap:anywhere; }
 .lesson-markdown { padding:18px 0 10px; }
 .lesson-markdown h2:first-child { display:none; }
 .lesson-markdown h2 { font-size:19px; }
@@ -1068,6 +1137,8 @@ kbd { display:inline-grid; place-items:center; min-height:22px; min-width:38px; 
   .starter-toolbox{grid-template-columns:1fr}
   .process-grid{grid-template-columns:repeat(2,1fr)}
   .command-anatomy>div{grid-template-columns:repeat(2,1fr)}
+  .newcomer-grid{grid-template-columns:repeat(2,1fr)}
+  .newcomer-checks{grid-template-columns:1fr}
 }
 @media(max-width:1000px){
   .first-session{grid-template-columns:1fr 1fr}
@@ -1147,6 +1218,7 @@ kbd { display:inline-grid; place-items:center; min-height:22px; min-width:38px; 
   .process-grid{grid-template-columns:1fr}
   .console-ide-split{grid-template-columns:1fr}
   .command-anatomy>div{grid-template-columns:1fr}
+  .newcomer-grid{grid-template-columns:1fr}
   .onboarding-step{padding:10px}
   .first-session{grid-template-columns:1fr}
   .quick-lab-card{grid-template-columns:1fr}
