@@ -87,6 +87,12 @@ test('modulos: lectura, ejercicios, notas y progreso se conectan', async ({ page
 
 test('servicios y biblioteca: navegacion por contenido local funciona', async ({ page, isMobile }) => {
   await navigateTo(page, 2, isMobile);
+  await expect(page.locator('.services-purpose')).toContainText('PARA QUE SIRVE ESTE MODULO');
+  await expect(page.locator('.services-purpose')).toContainText('decisiones tecnicas');
+  await expect(page.locator('.cloud-good-practices')).toContainText('CLEAN CLOUD');
+  await expect(page.locator('.cloud-good-practices')).toContainText('Un servicio, una responsabilidad');
+  await expect(page.locator('.device-learning-guide')).toContainText('ADAPTADO AL DISPOSITIVO');
+  await expect(page.locator('.device-learning-guide')).toContainText('Movil');
   await expect(page.locator('.cloud-tabs')).toBeVisible();
 
   await page.locator('.cloud-tabs button').nth(3).click();

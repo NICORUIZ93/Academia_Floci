@@ -590,6 +590,44 @@
         <label class="search-box" *ngIf="cloudTab() === 'comparacion'"><lucide-icon [img]="icons.Search" /><input placeholder="Buscar categoría o servicio" [ngModel]="comparisonQuery()" (ngModelChange)="comparisonQuery.set($event)" /></label>
       </div>
 
+      <section class="services-purpose">
+        <div class="services-purpose-main">
+          <span class="eyebrow">PARA QUE SIRVE ESTE MODULO</span>
+          <h2>Convierte una lista de servicios en decisiones tecnicas</h2>
+          <p>Este modulo existe para que entiendas que problema resuelve cada servicio, cual es su equivalente multi-nube y en que laboratorio lo vas a comprobar.</p>
+        </div>
+        <div class="services-purpose-grid">
+          <article *ngFor="let item of serviceModulePurpose">
+            <strong>{{ item.title }}</strong>
+            <p>{{ item.detail }}</p>
+            <span>{{ item.action }}</span>
+          </article>
+        </div>
+      </section>
+
+      <section class="cloud-good-practices">
+        <div class="practice-header">
+          <span class="eyebrow">CLEAN CLOUD</span>
+          <h2>Buenas practicas para estudiar servicios</h2>
+        </div>
+        <article *ngFor="let practice of serviceCleanPractices">
+          <strong>{{ practice.title }}</strong>
+          <p>{{ practice.detail }}</p>
+          <span>{{ practice.action }}</span>
+        </article>
+      </section>
+
+      <section class="device-learning-guide">
+        <span class="eyebrow">ADAPTADO AL DISPOSITIVO</span>
+        <div>
+          <article *ngFor="let tip of serviceDeviceTips">
+            <strong>{{ tip.title }}</strong>
+            <p>{{ tip.detail }}</p>
+            <span>{{ tip.action }}</span>
+          </article>
+        </div>
+      </section>
+
       <div class="cloud-tabs" role="tablist">
         <button [class.active]="cloudTab() === 'aws'" (click)="cloudTab.set('aws')">
           <span class="provider-badge aws-badge">AWS</span>

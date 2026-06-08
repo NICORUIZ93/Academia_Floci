@@ -69,6 +69,11 @@ interface InstallationOption {
   detail: string;
   recommendation: string;
 }
+interface ServiceModuleCard {
+  title: string;
+  detail: string;
+  action: string;
+}
 interface TerminalGuide {
   title: string;
   openSteps: string[];
@@ -226,6 +231,62 @@ export class App implements OnInit {
       command: 'docker run -d --name floci -p 4566:4566 -v /var/run/docker.sock:/var/run/docker.sock floci/floci:latest',
       detail: 'Ejecuta Floci como contenedor. Sirve para levantar el emulador AWS sin instalar la CLI completa.',
       recommendation: 'Usala si quieres probar AWS local rapido o si trabajas con entornos basados en contenedores.',
+    },
+  ];
+  readonly serviceModulePurpose: ServiceModuleCard[] = [
+    {
+      title: 'Entender para que sirve cada servicio',
+      detail: 'No memorices nombres. Identifica si el servicio guarda archivos, procesa eventos, expone una API, protege secretos o automatiza infraestructura.',
+      action: 'Antes de abrir un laboratorio, resume el problema que resuelve en una frase.',
+    },
+    {
+      title: 'Comparar AWS, Azure y GCP sin confundirte',
+      detail: 'La nube cambia nombres y detalles, pero los patrones se repiten. S3, Blob Storage y Cloud Storage resuelven la misma familia de problema.',
+      action: 'Usa la pestaña Comparacion cuando no sepas como se llama un servicio en otra nube.',
+    },
+    {
+      title: 'Elegir el siguiente laboratorio correcto',
+      detail: 'Cada tarjeta apunta a un modulo practico. Si un servicio aparece abstracto, abre su laboratorio y verifica con Floci.',
+      action: 'Haz clic en un servicio, lee su explicacion y abre el laboratorio asociado.',
+    },
+  ];
+  readonly serviceCleanPractices: ServiceModuleCard[] = [
+    {
+      title: 'Un servicio, una responsabilidad',
+      detail: 'Usa S3 para objetos, SQS para colas, DynamoDB para clave-valor y CloudWatch para observabilidad. Evita forzar un servicio a resolver todo.',
+      action: 'Pregunta: que responsabilidad tecnica cumple este servicio?',
+    },
+    {
+      title: 'Nombres consistentes',
+      detail: 'Mantén prefijos como flociops-files, flociops-jobs o FlociOpsTasks. Los nombres claros reducen errores al verificar recursos.',
+      action: 'Anota el nombre exacto del recurso antes de ejecutar comandos.',
+    },
+    {
+      title: 'Verificacion antes de avanzar',
+      detail: 'Un servicio no esta aprendido cuando lees la tarjeta. Esta aprendido cuando puedes crear, consultar y explicar la evidencia.',
+      action: 'Busca una salida verificable: lista, JSON, log, URL, estado o tabla.',
+    },
+    {
+      title: 'Comparacion con criterio',
+      detail: 'No compares por marketing. Compara por problema, contrato de API, costo operativo, seguridad, observabilidad y facilidad de automatizacion.',
+      action: 'Usa la tabla multi-nube para decidir equivalentes, no para memorizar marcas.',
+    },
+  ];
+  readonly serviceDeviceTips: ServiceModuleCard[] = [
+    {
+      title: 'Desktop',
+      detail: 'Trabaja con la tabla de comparacion y el detalle del servicio abierto. Es ideal para estudiar equivalencias lado a lado.',
+      action: 'Usa buscador + pestañas + laboratorio.',
+    },
+    {
+      title: 'Tablet',
+      detail: 'Avanza por grupos: almacenamiento, eventos, datos, seguridad y observabilidad. Menos columnas, mas lectura guiada.',
+      action: 'Escanea tarjetas y abre solo lo que vas a practicar.',
+    },
+    {
+      title: 'Movil',
+      detail: 'Usa una pregunta concreta: que servicio necesito y para que? La vista se compacta para leer una tarjeta a la vez.',
+      action: 'Busca, abre detalle y guarda el modulo para practicar luego.',
     },
   ];
   readonly commandReading = [
