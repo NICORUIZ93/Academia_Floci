@@ -21,6 +21,10 @@ test('inicio: ruta educativa y laboratorio adaptado responden al perfil', async 
   await expect(page.locator('.install-options').first()).toContainText('curl -fsSL https://floci.io/install.sh | sh');
   await expect(page.locator('.install-options').first()).toContainText('Opcion 3: Docker');
   await expect(page.locator('.install-options').first()).toContainText('floci/floci:latest');
+  await expect(page.locator('.install-options').nth(1)).toContainText('STACKPORT INTEGRADO');
+  await expect(page.locator('.install-options').nth(1)).toContainText('docker compose up -d floci stackport');
+  await expect(page.locator('.install-options').nth(1)).toContainText('http://floci:4566');
+  await expect(page.locator('.install-options').nth(1)).toContainText('http://localhost:8080');
   await expect(page.locator('.first-session')).toBeVisible();
   await expect(page.locator('.quick-lab-card')).toBeVisible();
 

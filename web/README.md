@@ -16,6 +16,7 @@ Abre <http://localhost:4200>.
 - Cuaderno de hipotesis y evidencias por modulo.
 - Cuestionario autocorregible.
 - Mapa visual de servicios y arquitectura de Tareas Locales.
+- Guia integrada para levantar StackPort con Docker Compose y revisar recursos locales.
 - Biblioteca con 75 capitulos oficiales, guia completa y archivos ejecutables.
 - Busqueda por documento, categoria y servicio.
 - Copia y descarga local de cada recurso.

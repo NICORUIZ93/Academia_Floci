@@ -15,6 +15,19 @@ services:
       timeout: 3s
       retries: 20
 
+  stackport:
+    image: davireis/stackport:latest
+    depends_on:
+      - floci
+    ports:
+      - "8080:8080"
+    environment:
+      AWS_ENDPOINT_URL: http://floci:4566
+      AWS_ACCESS_KEY_ID: test
+      AWS_SECRET_ACCESS_KEY: test
+      AWS_REGION: us-east-1
+      STACKPORT_PORT: "8080"
+
   floci-az:
     image: floci/floci-az:latest
     ports:

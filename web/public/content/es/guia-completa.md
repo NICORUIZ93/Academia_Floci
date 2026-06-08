@@ -1010,24 +1010,19 @@ Si Angular CLI pregunta si quieres activar autocompletado, responde `Y`.
 Abre `http://localhost:4200` desde Windows. Si la página no carga, prueba con la
 IP de tu WSL: `http://<WSL_IP>:4200`.
 
-### UI alternativa
+### StackPort integrado
 
-Floci es principalmente una CLI y no tiene una UI oficial integrada. Para
-explorar recursos visualmente, recomendamos usar StackPort como alternativa.
+Floci es principalmente una CLI. Este proyecto integra StackPort en
+`docker-compose.yml` para explorar visualmente los recursos AWS locales que
+creas durante los laboratorios.
 
 ```bash
-docker run -d --name stackport \
-  -p 8080:8080 \
-  -e AWS_ENDPOINT_URL=http://host.docker.internal:4566 \
-  -e AWS_ACCESS_KEY_ID=test \
-  -e AWS_SECRET_ACCESS_KEY=test \
-  -e AWS_REGION=us-east-1 \
-  davireis/stackport
+docker compose up -d floci stackport
 ```
 
-Abre `http://localhost:8080` desde Windows. Si trabajas desde WSL y la UI no
-conecta, usa la IP de Windows dentro del contenedor o `host.docker.internal`
-según tu configuración de Docker.
+Abre `http://localhost:8080` desde Windows. StackPort se conecta a Floci dentro
+de la red de Docker usando `AWS_ENDPOINT_URL=http://floci:4566`. Desde tu
+terminal, el endpoint sigue siendo `http://localhost:4566`.
 
 - **NiceBucket (solo S3)** — explorador nativo para buckets S3. Útil en clases
   cuando el objetivo es enseñar almacenamiento de objetos.

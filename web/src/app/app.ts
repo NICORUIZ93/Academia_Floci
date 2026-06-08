@@ -256,30 +256,35 @@ export class App implements OnInit {
     },
   ];
   readonly stackportCommand: SetupCommand = {
-    title: 'UI visual recomendada',
-    command: 'docker run -d --name stackport -p 8080:8080 -e AWS_ENDPOINT_URL=http://host.docker.internal:4566 -e AWS_ACCESS_KEY_ID=test -e AWS_SECRET_ACCESS_KEY=test -e AWS_REGION=us-east-1 davireis/stackport',
-    detail: 'Ejecuta StackPort como contenedor y apunta su UI al emulador Floci local.',
+    title: 'Levanta Floci + StackPort',
+    command: 'docker compose up -d floci stackport',
+    detail: 'Arranca el emulador AWS y la interfaz visual integrada en este proyecto.',
   };
   readonly stackportGuide: SetupCommand[] = [
     {
-      title: 'Levanta StackPort',
-      command: 'docker run -d --name stackport -p 8080:8080 -e AWS_ENDPOINT_URL=http://host.docker.internal:4566 -e AWS_ACCESS_KEY_ID=test -e AWS_SECRET_ACCESS_KEY=test -e AWS_REGION=us-east-1 davireis/stackport',
-      detail: 'Arranca la interfaz web de StackPort y conéctala a Floci en el puerto 4566.',
+      title: 'Levanta el laboratorio visual',
+      command: 'docker compose up -d floci stackport',
+      detail: 'Compose crea ambos contenedores en la misma red. StackPort apunta a Floci con AWS_ENDPOINT_URL=http://floci:4566.',
     },
     {
-      title: 'Abre el navegador',
+      title: 'Comprueba contenedores',
+      command: 'docker compose ps',
+      detail: 'Verifica que floci publique el puerto 4566 y stackport publique el puerto 8080.',
+    },
+    {
+      title: 'Abre StackPort',
       command: 'http://localhost:8080',
-      detail: 'Accede desde Windows o WSL al panel de StackPort.',
+      detail: 'Accede desde Windows al panel visual para explorar buckets, colas, tablas y otros recursos AWS locales.',
     },
     {
-      title: 'Conecta con Floci',
-      command: 'Endpoint: http://host.docker.internal:4566',
-      detail: 'Usa esta URL como endpoint AWS cuando StackPort te pida la conexión.',
+      title: 'Crea algo y míralo',
+      command: 'aws --endpoint-url=http://localhost:4566 s3 mb s3://stackport-demo',
+      detail: 'Después de crear el recurso por CLI, refresca StackPort y valida que aparece en S3.',
     },
     {
-      title: 'Credenciales de Floci',
-      command: 'Access Key: test  Secret Key: test',
-      detail: 'StackPort usa credenciales ficticias para hablar con el emulador local.',
+      title: 'Credenciales locales',
+      command: 'AWS_ACCESS_KEY_ID=test AWS_SECRET_ACCESS_KEY=test AWS_REGION=us-east-1',
+      detail: 'Son credenciales ficticias del laboratorio. No uses claves reales dentro de Floci ni StackPort.',
     },
   ];
   readonly serviceModulePurpose: ServiceModuleCard[] = [

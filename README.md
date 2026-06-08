@@ -17,12 +17,14 @@ por cuenta propia. Los ejemplos resueltos no forman parte del recorrido inicial.
 
 ```bash
 cp .env.example .env
-docker compose up -d
+docker compose up -d floci stackport
 source .env
 aws sts get-caller-identity
 ```
 
 Docker debe estar iniciado antes de ejecutar `docker compose up`.
+StackPort queda disponible en `http://localhost:8080` para inspeccionar los
+recursos AWS locales que creas con Floci.
 
 No abras los ejemplos hasta haber completado los retos equivalentes. El Compose
 no crea recursos automáticamente: bucket, colas, tablas y funciones los debes

@@ -233,9 +233,9 @@
 
       <section class="install-options" *ngIf="completedCount() === 0">
         <div class="install-intro">
-          <span class="eyebrow">UI OPCIONAL</span>
-          <h2>Explora recursos con una interfaz visual</h2>
-          <p>Floci es CLI. Para una vista web de recursos locales, usa StackPort y apunta su conexión al emulador local.</p>
+          <span class="eyebrow">STACKPORT INTEGRADO</span>
+          <h2>Inspecciona lo que construyes en Floci</h2>
+          <p>El proyecto incluye StackPort en Docker Compose para ver buckets, colas, tablas y recursos locales sin salir del laboratorio.</p>
         </div>
         <article>
           <span class="install-option-index">1</span>
@@ -246,7 +246,7 @@
               <code>{{ stackportCommand.command }}</code>
               <lucide-icon [img]="copiedText() === stackportCommand.command ? icons.Check : icons.Copy" />
             </button>
-            <strong>Abre <code>http://localhost:8080</code> en Windows.</strong>
+            <strong>Abre <code>http://localhost:8080</code> y valida visualmente cada recurso que crees.</strong>
           </div>
         </article>
         <div class="stackport-guide">
@@ -261,7 +261,7 @@
               </button>
             </li>
           </ol>
-          <p class="note">Si Docker no resuelve <code>host.docker.internal</code>, prueba con la IP de tu host Windows (ej. <code>172.17.0.1</code>) o la IP de Docker en WSL.</p>
+          <p class="note">Dentro de Compose, StackPort usa <code>http://floci:4566</code>. Desde tu terminal sigues usando <code>http://localhost:4566</code>.</p>
         </div>
       </section>
 

@@ -229,17 +229,33 @@ export SECRETMANAGER_EMULATOR_HOST=localhost:4588
 
 ## Los tres corriendo al mismo tiempo
 
-Puedes tener los tres emuladores corriendo simultáneamente. Crea este `docker-compose.yml`:
+Puedes tener los tres emuladores y una UI visual corriendo simultáneamente. El
+`docker-compose.yml` del proyecto ya trae Floci y StackPort integrados:
 
 ```yaml
-version: "3.8"
 services:
   floci:
-    image: floci/floci:latest
+    image: floci/floci:1.5.22-compat
     ports:
       - "4566:4566"
+    environment:
+      FLOCI_STORAGE_MODE: persistent
+      FLOCI_STORAGE_PERSISTENT_PATH: /app/data
     volumes:
+      - ./data:/app/data
       - /var/run/docker.sock:/var/run/docker.sock
+
+  stackport:
+    image: davireis/stackport:latest
+    depends_on:
+      - floci
+    ports:
+      - "8080:8080"
+    environment:
+      AWS_ENDPOINT_URL: http://floci:4566
+      AWS_ACCESS_KEY_ID: test
+      AWS_SECRET_ACCESS_KEY: test
+      AWS_REGION: us-east-1
 
   floci-az:
     image: floci/floci-az:latest
@@ -255,8 +271,13 @@ services:
 ```
 
 ```bash
-docker compose up -d
+docker compose up -d floci stackport
 ```
+
+Abre `http://localhost:8080` para explorar los recursos AWS locales con
+StackPort. Desde tu terminal sigues usando `http://localhost:4566`; dentro de
+Compose, StackPort usa `http://floci:4566` porque ambos contenedores comparten
+red.
 
 ---
 
