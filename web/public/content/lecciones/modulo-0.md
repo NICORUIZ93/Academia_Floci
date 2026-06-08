@@ -51,15 +51,6 @@ docker run -d --name floci \
   floci/floci:latest
 ```
 
-### Opciones rápidas (texto compacto)
-
-- Opcion 1: Homebrew
-- brew install floci-io/floci/floci
-- Opcion 2: Script de instalacion
-- curl -fsSL https://floci.io/install.sh | sh
-- Opcion 3: Docker
-- floci/floci:latest
-
 ### Windows (PowerShell / Git Bash / WSL)
 
 Si usas Windows recomendamos WSL2 (distro Ubuntu/Kali) y ejecutar el
@@ -95,7 +86,7 @@ No uses `sh` directo desde PowerShell sin WSL. Si el instalador detecta
 floci --version
 ```
 
-## Problemas comunes y soluciones
+## Problemás comunes y soluciones
 
 - `sh: command not found` / `Unsupported OS: mingw64_nt`
 
@@ -319,15 +310,23 @@ floci start --persist ./datos-locales
 ## Próximo paso
 
 Ahora que tienes los emuladores corriendo, el Módulo 1 te enseña a guardar y recuperar archivos en los tres proveedores usando **almacenamiento de objetos**.
-## Verificación
+## Verificación del aprendizaje
 
-### Resultado de entrega automática
-- URL: http://localhost:63031/content/lecciones/modulo-0.md
-- Estado: 200 OK
-- Tamaño: 7677 bytes
+Antes de marcar este módulo como completado, confirma esto con evidencia propia:
 
+1. **Lo puedo explicar en una frase.** Escribe qué problema resuelve este módulo y para qué lo usarías en una aplicación real.
+2. **Lo ejecuté, no solo lo leí.** Guarda el comando principal que corriste y una salida real de tu terminal.
+3. **Lo puedo verificar.** Consulta el recurso con AWS CLI, Azure CLI, GCP CLI o StackPort cuando aplique. La evidencia debe mostrar nombre, estado o contenido del recurso.
+4. **Entiendo un fallo común.** Provoca o identifica un error sencillo, copia el mensaje completo y explica cómo lo diagnosticaste.
+5. **Sé cuándo avanzar.** Avanza solo si puedes repetir el laboratorio desde una carpeta limpia sin depender de copiar a ciegas.
 
-- Descargar la lección desde la UI: `curl -fsS http://localhost:63031/content/lecciones/modulo-0.md -o /dev/null`
-- Buscar bloques de código: `grep -n "```" modulo-0.md || true`
-- Buscar rutas con usuario hardcodeado: `grep -n "nicol" modulo-0.md || true`
+Evidencia mínima sugerida:
+
+```text
+Comando ejecutado:
+Salida obtenida:
+Qué significa la salida:
+Error o duda encontrada:
+Cómo la resolví:
+```
 

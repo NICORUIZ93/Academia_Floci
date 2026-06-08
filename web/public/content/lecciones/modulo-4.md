@@ -258,15 +258,23 @@ az keyvault secret show \
 2. ¿Cuándo elegirías Secrets Manager sobre SSM Parameter Store?
 3. ¿Qué hace KMS que no hace Secrets Manager solo?
 4. ¿Qué es el "principio de mínimo privilegio" y cómo se aplica aquí?
-## Verificación
+## Verificación del aprendizaje
 
-### Resultado de entrega automática
-- URL: http://localhost:63031/content/lecciones/modulo-4.md
-- Estado: 200 OK
-- Tamaño: 8132 bytes
+Antes de marcar este módulo como completado, confirma esto con evidencia propia:
 
+1. **Lo puedo explicar en una frase.** Escribe qué problema resuelve este módulo y para qué lo usarías en una aplicación real.
+2. **Lo ejecuté, no solo lo leí.** Guarda el comando principal que corriste y una salida real de tu terminal.
+3. **Lo puedo verificar.** Consulta el recurso con AWS CLI, Azure CLI, GCP CLI o StackPort cuando aplique. La evidencia debe mostrar nombre, estado o contenido del recurso.
+4. **Entiendo un fallo común.** Provoca o identifica un error sencillo, copia el mensaje completo y explica cómo lo diagnosticaste.
+5. **Sé cuándo avanzar.** Avanza solo si puedes repetir el laboratorio desde una carpeta limpia sin depender de copiar a ciegas.
 
-- Descargar la lección desde la UI: `curl -fsS http://localhost:63031/content/lecciones/modulo-4.md -o /dev/null`
-- Buscar bloques de código: `grep -n "```" modulo-4.md || true`
-- Buscar rutas con usuario hardcodeado: `grep -n "nicol" modulo-4.md || true`
+Evidencia mínima sugerida:
+
+```text
+Comando ejecutado:
+Salida obtenida:
+Qué significa la salida:
+Error o duda encontrada:
+Cómo la resolví:
+```
 

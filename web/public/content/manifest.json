@@ -28,7 +28,7 @@
     "title": "Docker Compose del laboratorio",
     "category": "ejemplos",
     "path": "content/ejemplos/docker-compose.yml",
-    "language": "Codigo",
+    "language": "Código",
     "type": "code"
   },
   {
@@ -36,7 +36,7 @@
     "title": "Variables de entorno",
     "category": "ejemplos",
     "path": "content/ejemplos/env.example",
-    "language": "Codigo",
+    "language": "Código",
     "type": "code"
   },
   {
@@ -44,7 +44,7 @@
     "title": "Ejemplo Python",
     "category": "ejemplos",
     "path": "content/ejemplos/demo.py",
-    "language": "Codigo",
+    "language": "Código",
     "type": "code"
   },
   {
@@ -52,7 +52,7 @@
     "title": "Dependencias Python",
     "category": "ejemplos",
     "path": "content/ejemplos/requirements.txt",
-    "language": "Codigo",
+    "language": "Código",
     "type": "code"
   },
   {
@@ -60,7 +60,7 @@
     "title": "Ejemplo Node.js",
     "category": "ejemplos",
     "path": "content/ejemplos/demo.mjs",
-    "language": "Codigo",
+    "language": "Código",
     "type": "code"
   },
   {
@@ -68,7 +68,7 @@
     "title": "Dependencias Node.js",
     "category": "ejemplos",
     "path": "content/ejemplos/package-node.json",
-    "language": "Codigo",
+    "language": "Código",
     "type": "code"
   },
   {
@@ -76,7 +76,7 @@
     "title": "Hook de inicialización",
     "category": "ejemplos",
     "path": "content/ejemplos/10-seed.sh",
-    "language": "Codigo",
+    "language": "Código",
     "type": "code"
   },
   {

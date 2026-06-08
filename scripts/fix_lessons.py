@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 """
-Corrige rutas hardcodeadas en las lecciones y añade una sección de Verificación
-También intenta descargar cada lección desde el servidor de desarrollo en http://localhost:63031
+Corrige rutas hardcodeadas en las lecciones y asegura una verificación educativa.
 
 Uso: python scripts/fix_lessons.py
 """
@@ -13,6 +12,26 @@ import urllib.request
 ROOT = os.path.dirname(os.path.dirname(__file__))
 LESSONS_GLOB = os.path.join(ROOT, 'web', 'public', 'content', 'lecciones', 'modulo-*.md')
 DEFAULT_BASE_URL = 'http://localhost:63031/content/lecciones/'
+LEARNING_VERIFICATION = '''## Verificación del aprendizaje
+
+Antes de marcar este módulo como completado, confirma esto con evidencia propia:
+
+1. **Lo puedo explicar en una frase.** Escribe qué problema resuelve este módulo y para qué lo usarías en una aplicación real.
+2. **Lo ejecuté, no solo lo leí.** Guarda el comando principal que corriste y una salida real de tu terminal.
+3. **Lo puedo verificar.** Consulta el recurso con AWS CLI, Azure CLI, GCP CLI o StackPort cuando aplique. La evidencia debe mostrar nombre, estado o contenido del recurso.
+4. **Entiendo un fallo común.** Provoca o identifica un error sencillo, copia el mensaje completo y explica cómo lo diagnosticaste.
+5. **Sé cuándo avanzar.** Avanza solo si puedes repetir el laboratorio desde una carpeta limpia sin depender de copiar a ciegas.
+
+Evidencia mínima sugerida:
+
+```text
+Comando ejecutado:
+Salida obtenida:
+Qué significa la salida:
+Error o duda encontrada:
+Cómo la resolví:
+```
+'''
 
 def fix_content(path):
     with open(path, 'r', encoding='utf-8') as f:
@@ -25,15 +44,8 @@ def fix_content(path):
 
     changed = content != orig
 
-    if '## Verificación' not in content:
-        filename = os.path.basename(path)
-        ver = (
-            '\n## Verificación\n'
-            '- Descargar la lección desde la UI: `curl -fsS http://localhost:63031/content/lecciones/%s -o /dev/null`\n'
-            '- Buscar bloques de código: `grep -n "```" %s || true`\n'
-            '- Buscar rutas con usuario hardcodeado: `grep -n "nicol" %s || true`\n'
-        ) % (filename, filename, filename)
-        content = content.rstrip() + ver + "\n"
+    if '## Verificación del aprendizaje' not in content:
+        content = content.rstrip() + '\n\n' + LEARNING_VERIFICATION + '\n'
         changed = True
 
     if changed:
@@ -75,7 +87,7 @@ def main():
             orig = content
             content = content.replace('/mnt/c/Users/nicol', '/mnt/c/Users/<TU_USUARIO>')
             content = content.replace('C:\\Users\\nicol', '/mnt/c/Users/<TU_USUARIO>')
-            if content != orig or '## Verificación' not in content:
+            if content != orig or '## Verificación del aprendizaje' not in content:
                 modified.append(p)
                 print('Would modify:', os.path.basename(p))
         else:

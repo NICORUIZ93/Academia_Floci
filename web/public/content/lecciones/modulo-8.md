@@ -83,7 +83,7 @@ class CloudWatchHandler(logging.Handler):
             "nivel": record.levelname,
             "mensaje": record.getMessage(),
             "modulo": record.module,
-            "linea": record.lineno,
+            "línea": record.lineno,
             "timestamp_iso": datetime.utcnow().isoformat()
         }
 
@@ -258,15 +258,23 @@ fields @timestamp, @message
 2. ¿Qué diferencia hay entre logs y métricas?
 3. ¿Qué es una traza y cuándo la necesitas?
 4. ¿Qué hace `sequenceToken` en CloudWatch y por qué importa?
-## Verificación
+## Verificación del aprendizaje
 
-### Resultado de entrega automática
-- URL: http://localhost:63031/content/lecciones/modulo-8.md
-- Estado: 200 OK
-- Tamaño: 7948 bytes
+Antes de marcar este módulo como completado, confirma esto con evidencia propia:
 
+1. **Lo puedo explicar en una frase.** Escribe qué problema resuelve este módulo y para qué lo usarías en una aplicación real.
+2. **Lo ejecuté, no solo lo leí.** Guarda el comando principal que corriste y una salida real de tu terminal.
+3. **Lo puedo verificar.** Consulta el recurso con AWS CLI, Azure CLI, GCP CLI o StackPort cuando aplique. La evidencia debe mostrar nombre, estado o contenido del recurso.
+4. **Entiendo un fallo común.** Provoca o identifica un error sencillo, copia el mensaje completo y explica cómo lo diagnosticaste.
+5. **Sé cuándo avanzar.** Avanza solo si puedes repetir el laboratorio desde una carpeta limpia sin depender de copiar a ciegas.
 
-- Descargar la lección desde la UI: `curl -fsS http://localhost:63031/content/lecciones/modulo-8.md -o /dev/null`
-- Buscar bloques de código: `grep -n "```" modulo-8.md || true`
-- Buscar rutas con usuario hardcodeado: `grep -n "nicol" modulo-8.md || true`
+Evidencia mínima sugerida:
+
+```text
+Comando ejecutado:
+Salida obtenida:
+Qué significa la salida:
+Error o duda encontrada:
+Cómo la resolví:
+```
 

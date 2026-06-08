@@ -193,8 +193,8 @@
 
       <section class="install-options" *ngIf="completedCount() === 0">
         <div class="install-intro">
-          <span class="eyebrow">INSTALACION DE FLOCI</span>
-          <h2>Elige una opcion antes de copiar comandos del Modulo 0</h2>
+          <span class="eyebrow">INSTALACIÓN DE FLOCI</span>
+          <h2>Elige una opción antes de copiar comandos del Módulo 0</h2>
           <p>No son pasos para ejecutar todos. Son caminos alternativos: Homebrew, script o Docker.</p>
         </div>
         <article *ngFor="let option of flociInstallOptions; let oi = index">
@@ -504,7 +504,7 @@
               <div class="install-intro">
                 <span class="eyebrow">INSTALACION</span>
                 <h2>Escoge solo una forma de instalar Floci</h2>
-                <p>Despues de instalar, sigue la linea de trabajo de tu sistema operativo y lenguaje.</p>
+                <p>Después de instalar, sigue la línea de trabajo de tu sistema operativo y lenguaje.</p>
               </div>
               <article *ngFor="let option of flociInstallOptions; let oi = index">
                 <span class="install-option-index">{{ oi + 1 }}</span>
@@ -552,7 +552,7 @@
                 </button>
               </article>
               <article class="code-sample">
-                <div class="code-title"><span>Codigo · {{ languageSnippet().file }}</span><button title="Copiar codigo" (click)="copyTextValue(languageSnippet().code)"><lucide-icon [img]="copiedText() === languageSnippet().code ? icons.Check : icons.Copy" /></button></div>
+                <div class="code-title"><span>Código · {{ languageSnippet().file }}</span><button title="Copiar código" (click)="copyTextValue(languageSnippet().code)"><lucide-icon [img]="copiedText() === languageSnippet().code ? icons.Check : icons.Copy" /></button></div>
                 <pre><code [class]="codeLanguageClass()" [innerHTML]="highlightedLanguageCode()"></code></pre>
               </article>
               <article class="run-panel">
@@ -582,7 +582,7 @@
                   <span class="challenge-action">{{ challengeGuide(challenge, ci).action }}</span>
                   <code *ngIf="challengeGuide(challenge, ci).command">{{ challengeGuide(challenge, ci).command }}</code>
                   <small><b>Verifica:</b> {{ challengeGuide(challenge, ci).verify }}</small>
-                  <small><b>Consejo tecnico:</b> {{ challengeGuide(challenge, ci).advice }}</small>
+                  <small><b>Consejo técnico:</b> {{ challengeGuide(challenge, ci).advice }}</small>
                 </span>
               </button>
             </div>
@@ -638,7 +638,7 @@
         <div>
           <span class="eyebrow">CATÁLOGO MULTI-NUBE</span>
           <h1>Servicios cloud que vas a dominar</h1>
-          <p>AWS, Azure y Google Cloud resuelven los mismos problemas con distinto nombre. Practica con Floci (emulador local de AWS) y transfiere ese conocimiento a cualquier nube.</p>
+          <p>AWS, Azure y Google Cloud resuelven los mismos problemás con distinto nombre. Practica con Floci (emulador local de AWS) y transfiere ese conocimiento a cualquier nube.</p>
         </div>
         <label class="search-box" *ngIf="cloudTab() === 'aws'"><lucide-icon [img]="icons.Search" /><input placeholder="Buscar servicio AWS" [ngModel]="serviceQuery()" (ngModelChange)="serviceQuery.set($event)" /></label>
         <label class="search-box" *ngIf="cloudTab() === 'comparacion'"><lucide-icon [img]="icons.Search" /><input placeholder="Buscar categoría o servicio" [ngModel]="comparisonQuery()" (ngModelChange)="comparisonQuery.set($event)" /></label>
@@ -646,9 +646,9 @@
 
       <section class="services-purpose">
         <div class="services-purpose-main">
-          <span class="eyebrow">PARA QUE SIRVE ESTE MODULO</span>
-          <h2>Convierte una lista de servicios en decisiones tecnicas</h2>
-          <p>Este modulo existe para que entiendas que problema resuelve cada servicio, cual es su equivalente multi-nube y en que laboratorio lo vas a comprobar.</p>
+          <span class="eyebrow">PARA QU? SIRVE ESTE M?DULO</span>
+          <h2>Convierte una lista de servicios en decisiones técnicas</h2>
+          <p>Este módulo existe para qué entiendas qué problema resuelve cada servicio, cuál es su equivalente multi-nube y en qué laboratorio lo vas a comprobar.</p>
         </div>
         <div class="services-purpose-grid">
           <article *ngFor="let item of serviceModulePurpose">

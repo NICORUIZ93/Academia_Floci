@@ -15,12 +15,12 @@ test('inicio: ruta educativa y laboratorio adaptado responden al perfil', async 
   await expect(page.locator('.welcome-band')).toBeVisible();
   await expect(page.locator('.education-flow')).toBeVisible();
   await expect(page.locator('.starter-toolbox')).toBeVisible();
-  await expect(page.locator('.install-options').first()).toContainText('Opcion 1: Homebrew');
+  await expect(page.locator('.install-options').first()).toContainText('Opción 1: Homebrew');
   await expect(page.locator('.install-options').first()).toContainText('brew install floci-io/floci/floci');
-  await expect(page.locator('.install-options').first()).toContainText('Opcion 2: Script de instalacion');
+  await expect(page.locator('.install-options').first()).toContainText('Opción 2: Script de instalación');
   await expect(page.locator('.install-options').first()).toContainText('curl -fsSL https://floci.io/install.sh | sh');
-  await expect(page.locator('.install-options').first()).toContainText('Opcion 3: Docker');
-  await expect(page.locator('.install-options').first()).toContainText('floci/floci:latest');
+  await expect(page.locator('.install-options').first()).toContainText('Opción 3: Docker Compose del proyecto');
+  await expect(page.locator('.install-options').first()).toContainText('docker compose up -d floci');
   await expect(page.locator('.install-options').nth(1)).toContainText('STACKPORT INTEGRADO');
   await expect(page.locator('.install-options').nth(1)).toContainText('docker compose up -d floci stackport');
   await expect(page.locator('.install-options').nth(1)).toContainText('http://floci:4566');
@@ -64,7 +64,7 @@ test('modulos: lectura, ejercicios, notas y progreso se conectan', async ({ page
 
   await page.locator('.lesson-tabs button').nth(1).click();
   await expect(page.locator('.compact-install')).toContainText('Escoge solo una forma de instalar Floci');
-  await expect(page.locator('.compact-install')).toContainText('Opcion 3: Docker');
+  await expect(page.locator('.compact-install')).toContainText('Opción 3: Docker Compose del proyecto');
   await expect(page.locator('.adaptive-lab')).toContainText('pip install boto3');
   await expect(page.locator('.adaptive-lab .code-line').first()).toBeVisible();
   await expect(page.locator('.adaptive-lab .tok-keyword').first()).toBeVisible();
@@ -73,7 +73,7 @@ test('modulos: lectura, ejercicios, notas y progreso se conectan', async ({ page
   await expect(page.locator('.process-guide .profile-line')).toContainText('Lenguaje: Python');
   await expect(page.locator('.process-guide .profile-line')).toContainText('python app.py');
   await expect(page.locator('.guided-challenge').first()).toContainText('Verifica:');
-  await expect(page.locator('.guided-challenge').first()).toContainText('Consejo tecnico:');
+  await expect(page.locator('.guided-challenge').first()).toContainText('Consejo técnico:');
   await expect(page.locator('.guided-challenge code').first()).toBeVisible();
 
   await page.locator('.lesson-tabs button').nth(2).click();
@@ -91,8 +91,8 @@ test('modulos: lectura, ejercicios, notas y progreso se conectan', async ({ page
 
 test('servicios y biblioteca: navegacion por contenido local funciona', async ({ page, isMobile }) => {
   await navigateTo(page, 2, isMobile);
-  await expect(page.locator('.services-purpose')).toContainText('PARA QUE SIRVE ESTE MODULO');
-  await expect(page.locator('.services-purpose')).toContainText('decisiones tecnicas');
+  await expect(page.locator('.services-purpose')).toContainText('PARA QU? SIRVE ESTE M?DULO');
+  await expect(page.locator('.services-purpose')).toContainText('decisiones técnicas');
   await expect(page.locator('.cloud-good-practices')).toContainText('CLEAN CLOUD');
   await expect(page.locator('.cloud-good-practices')).toContainText('Un servicio, una responsabilidad');
   await expect(page.locator('.device-learning-guide')).toContainText('ADAPTADO AL DISPOSITIVO');
@@ -111,7 +111,7 @@ test('servicios y biblioteca: navegacion por contenido local funciona', async ({
   await expect(page.locator('.markdown-body')).toBeVisible();
 });
 
-test('modulos: java separa instalacion, codigo y ejecucion', async ({ page, isMobile }) => {
+test('modulos: java separa instalacion, código y ejecución', async ({ page, isMobile }) => {
   await page.locator('.student-config .segmented-control button').filter({ hasText: 'Windows' }).click();
   await page.locator('.student-config .language-select button').nth(3).click();
   await navigateTo(page, 1, isMobile);
@@ -122,7 +122,7 @@ test('modulos: java separa instalacion, codigo y ejecucion', async ({ page, isMo
   await expect(page.locator('.adaptive-lab .sdk-panel')).toContainText('Elige una ruta: Maven o Gradle');
   await expect(page.locator('.adaptive-lab .sdk-panel')).toContainText('mvn -q archetype:generate');
   await expect(page.locator('.adaptive-lab .sdk-panel')).toContainText('gradle init --type java-application');
-  await expect(page.locator('.adaptive-lab .code-title')).toContainText('Codigo');
+  await expect(page.locator('.adaptive-lab .code-title')).toContainText('Código');
   await expect(page.locator('.adaptive-lab .code-title')).toContainText('App.java');
   await expect(page.locator('.adaptive-lab .code-sample')).toContainText('S3Client.builder');
   await expect(page.locator('.adaptive-lab .code-sample')).not.toContainText('mvn exec:java');
@@ -162,7 +162,7 @@ test('proyecto final: mini proyectos, integrador y entorno activo son utiles', a
   await expect(page.locator('.project-environment')).toContainText('go run main.go');
 });
 
-test('labs: java muestra maven y gradle, y todos los mini proyectos tienen codigo verificable', async ({ page, isMobile }) => {
+test('labs: java muestra maven y gradle, y todos los mini proyectos tienen código verificable', async ({ page, isMobile }) => {
   await navigateTo(page, 4, isMobile);
 
   const projectLanguages = page.locator('.project-config .language-select button');

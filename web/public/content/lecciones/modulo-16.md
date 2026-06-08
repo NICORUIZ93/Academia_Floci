@@ -72,7 +72,7 @@ def preguntar_claude(pregunta, max_tokens=1000):
     return resultado["content"][0]["text"]
 
 # Uso simple
-respuesta = preguntar_claude("¿Cuándo usarías SQS en lugar de SNS?")
+respuesta = preguntar_claude("¿Cuándo usarías SQS en lugar de SNSé")
 print(respuesta)
 ```
 
@@ -142,7 +142,7 @@ documentos = [
     "Lambda ejecuta funciones sin gestionar servidores"
 ]
 
-pregunta = "¿Cómo guardo archivos en AWS?"
+pregunta = "¿Cómo guardo archivos en AWSé"
 
 emb_pregunta = generar_embedding(pregunta)
 emb_docs = [generar_embedding(doc) for doc in documentos]
@@ -187,8 +187,8 @@ def extraer_texto_de_imagen(bucket, key):
         Document={"S3Object": {"Bucket": bucket, "Name": key}}
     )
 
-    lineas = [block["Text"] for block in resp["Blocks"] if block["BlockType"] == "LINE"]
-    return "\n".join(lineas)
+    líneas = [block["Text"] for block in resp["Blocks"] if block["BlockType"] == "LINE"]
+    return "\n".join(líneas)
 
 # Extrae pares clave-valor de formularios
 def extraer_formulario(bucket, key):
@@ -293,8 +293,8 @@ def procesar_factura(bucket, key):
     texto = textract.detect_document_text(
         Document={"S3Object": {"Bucket": bucket, "Name": key}}
     )
-    lineas = [b["Text"] for b in texto["Blocks"] if b["BlockType"] == "LINE"]
-    texto_plano = "\n".join(lineas)
+    líneas = [b["Text"] for b in texto["Blocks"] if b["BlockType"] == "LINE"]
+    texto_plano = "\n".join(líneas)
 
     # 2. Clasifica y extrae datos con Claude
     prompt = f"""Analiza este texto de una factura y devuelve un JSON con:
@@ -330,7 +330,7 @@ print(f"Factura #{datos['numero_factura']} - Total: {datos['total']}")
 
 ## Reto del módulo
 
-1. Usa Bedrock para preguntarle a Claude "¿Qué es un Dead Letter Queue en SQS?" y muestra la respuesta
+1. Usa Bedrock para preguntarle a Claude "¿Qué es un Dead Letter Queue en SQSé" y muestra la respuesta
 2. Implementa la función de embeddings y encuentra el documento más similar a "base de datos clave-valor"
 3. Usa Textract para extraer texto de cualquier imagen subida a S3
 4. Conecta Textract + Bedrock: sube una imagen con texto, extráelo con Textract y resume con Claude
@@ -339,17 +339,25 @@ print(f"Factura #{datos['numero_factura']} - Total: {datos['total']}")
 
 1. ¿Cuándo usarías Bedrock en lugar de entrenar tu propio modelo?
 2. ¿Qué son los embeddings y para qué sirven?
-3. ¿Qué diferencia hay entre Textract y un OCR simple?
-4. ¿En qué idiomas funciona Transcribe para español?
-## Verificación
+3. ¿Qué diferencia hay entre Textract y un OCR simpleí
+4. ¿En qué idiomás funciona Transcribe para español?
+## Verificación del aprendizaje
 
-### Resultado de entrega automática
-- URL: http://localhost:63031/content/lecciones/modulo-16.md
-- Estado: 200 OK
-- Tamaño: 10925 bytes
+Antes de marcar este módulo como completado, confirma esto con evidencia propia:
 
+1. **Lo puedo explicar en una frase.** Escribe qué problema resuelve este módulo y para qué lo usarías en una aplicación real.
+2. **Lo ejecuté, no solo lo leí.** Guarda el comando principal que corriste y una salida real de tu terminal.
+3. **Lo puedo verificar.** Consulta el recurso con AWS CLI, Azure CLI, GCP CLI o StackPort cuando aplique. La evidencia debe mostrar nombre, estado o contenido del recurso.
+4. **Entiendo un fallo común.** Provoca o identifica un error sencillo, copia el mensaje completo y explica cómo lo diagnosticaste.
+5. **Sé cuándo avanzar.** Avanza solo si puedes repetir el laboratorio desde una carpeta limpia sin depender de copiar a ciegas.
 
-- Descargar la lección desde la UI: `curl -fsS http://localhost:63031/content/lecciones/modulo-16.md -o /dev/null`
-- Buscar bloques de código: `grep -n "```" modulo-16.md || true`
-- Buscar rutas con usuario hardcodeado: `grep -n "nicol" modulo-16.md || true`
+Evidencia mínima sugerida:
+
+```text
+Comando ejecutado:
+Salida obtenida:
+Qué significa la salida:
+Error o duda encontrada:
+Cómo la resolví:
+```
 

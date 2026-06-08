@@ -395,7 +395,7 @@ Antes de considerar una aplicación lista para producción, verifica:
 **Observabilidad**
 - [ ] Logs estructurados en JSON a CloudWatch
 - [ ] Métricas de latencia y errores
-- [ ] Alarmas configuradas
+- [ ] Alarmás configuradas
 - [ ] Dashboard con los KPIs del servicio
 
 **CI/CD**
@@ -444,7 +444,7 @@ Llegaste de cero al siguiente nivel de conocimiento:
 | 8 | CloudFormation — infraestructura como código |
 | 9 | RDS (PostgreSQL real) + ElastiCache (Redis real) |
 | 10 | ECS, ECR, EKS — contenedores |
-| 11 | CloudWatch — logs, métricas y alarmas |
+| 11 | CloudWatch — logs, métricas y alarmás |
 | 12 | Step Functions — flujos de trabajo complejos |
 | 13 | Kinesis, MSK, Athena — streaming y analítica |
 | 14 | VPC, Route53, ALB — redes |
@@ -453,15 +453,23 @@ Llegaste de cero al siguiente nivel de conocimiento:
 | 17 | Proyecto final multi-cloud de producción |
 
 **Felicitaciones. Estás listo para trabajar con la nube en producción.**
-## Verificación
+## Verificación del aprendizaje
 
-### Resultado de entrega automática
-- URL: http://localhost:63031/content/lecciones/modulo-17.md
-- Estado: 200 OK
-- Tamaño: 15235 bytes
+Antes de marcar este módulo como completado, confirma esto con evidencia propia:
 
+1. **Lo puedo explicar en una frase.** Escribe qué problema resuelve este módulo y para qué lo usarías en una aplicación real.
+2. **Lo ejecuté, no solo lo leí.** Guarda el comando principal que corriste y una salida real de tu terminal.
+3. **Lo puedo verificar.** Consulta el recurso con AWS CLI, Azure CLI, GCP CLI o StackPort cuando aplique. La evidencia debe mostrar nombre, estado o contenido del recurso.
+4. **Entiendo un fallo común.** Provoca o identifica un error sencillo, copia el mensaje completo y explica cómo lo diagnosticaste.
+5. **Sé cuándo avanzar.** Avanza solo si puedes repetir el laboratorio desde una carpeta limpia sin depender de copiar a ciegas.
 
-- Descargar la lección desde la UI: `curl -fsS http://localhost:63031/content/lecciones/modulo-17.md -o /dev/null`
-- Buscar bloques de código: `grep -n "```" modulo-17.md || true`
-- Buscar rutas con usuario hardcodeado: `grep -n "nicol" modulo-17.md || true`
+Evidencia mínima sugerida:
+
+```text
+Comando ejecutado:
+Salida obtenida:
+Qué significa la salida:
+Error o duda encontrada:
+Cómo la resolví:
+```
 

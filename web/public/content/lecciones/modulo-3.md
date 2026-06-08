@@ -239,15 +239,23 @@ for item in container.query_items(
 2. ¿Cómo decides qué atributo usar como Partition Key?
 3. ¿Cuándo elegirías DynamoDB sobre RDS PostgreSQL?
 4. ¿Qué hace un GSI y qué problema resuelve?
-## Verificación
+## Verificación del aprendizaje
 
-### Resultado de entrega automática
-- URL: http://localhost:63031/content/lecciones/modulo-3.md
-- Estado: 200 OK
-- Tamaño: 7492 bytes
+Antes de marcar este módulo como completado, confirma esto con evidencia propia:
 
+1. **Lo puedo explicar en una frase.** Escribe qué problema resuelve este módulo y para qué lo usarías en una aplicación real.
+2. **Lo ejecuté, no solo lo leí.** Guarda el comando principal que corriste y una salida real de tu terminal.
+3. **Lo puedo verificar.** Consulta el recurso con AWS CLI, Azure CLI, GCP CLI o StackPort cuando aplique. La evidencia debe mostrar nombre, estado o contenido del recurso.
+4. **Entiendo un fallo común.** Provoca o identifica un error sencillo, copia el mensaje completo y explica cómo lo diagnosticaste.
+5. **Sé cuándo avanzar.** Avanza solo si puedes repetir el laboratorio desde una carpeta limpia sin depender de copiar a ciegas.
 
-- Descargar la lección desde la UI: `curl -fsS http://localhost:63031/content/lecciones/modulo-3.md -o /dev/null`
-- Buscar bloques de código: `grep -n "```" modulo-3.md || true`
-- Buscar rutas con usuario hardcodeado: `grep -n "nicol" modulo-3.md || true`
+Evidencia mínima sugerida:
+
+```text
+Comando ejecutado:
+Salida obtenida:
+Qué significa la salida:
+Error o duda encontrada:
+Cómo la resolví:
+```
 

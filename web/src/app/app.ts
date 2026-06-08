@@ -212,25 +212,25 @@ export class App implements OnInit {
   ];
   readonly flociInstallOptions: InstallationOption[] = [
     {
-      title: 'Opcion 1: Homebrew',
+      title: 'Opción 1: Homebrew',
       scope: 'macOS / Linux',
       command: 'brew install floci-io/floci/floci',
-      detail: 'Instala la CLI de Floci como herramienta del sistema. Es la ruta mas comoda si ya usas Homebrew.',
+      detail: 'Instala la CLI de Floci como herramienta del sistema. Es la ruta más cómoda si ya usas Homebrew.',
       recommendation: 'Recomendada para macOS y para Linux cuando ya tienes brew instalado.',
     },
     {
-      title: 'Opcion 2: Script de instalacion',
+      title: 'Opción 2: Script de instalación',
       scope: 'macOS / Linux',
       command: 'curl -fsSL https://floci.io/install.sh | sh',
       detail: 'Descarga e instala Floci desde la terminal sin depender de Homebrew.',
-      recommendation: 'Usala en Linux o cuando Homebrew no este disponible.',
+      recommendation: 'Úsala en Linux o cuando Homebrew no esté disponible.',
     },
     {
-      title: 'Opcion 3: Docker',
-      scope: 'Solo emulador AWS',
-      command: 'docker run -d --name floci -p 4566:4566 -v /var/run/docker.sock:/var/run/docker.sock floci/floci:latest',
-      detail: 'Ejecuta Floci como contenedor. Sirve para levantar el emulador AWS sin instalar la CLI completa.',
-      recommendation: 'Usala si quieres probar AWS local rapido o si trabajas con entornos basados en contenedores.',
+      title: 'Opción 3: Docker Compose del proyecto',
+      scope: 'Windows / macOS / Linux con Docker',
+      command: 'docker compose up -d floci',
+      detail: 'Usa el docker-compose.yml incluido en este repositorio. Es la ruta más coherente si también usarás StackPort.',
+      recommendation: 'Recomendada para este curso cuando trabajas desde la carpeta raíz del proyecto.',
     },
   ];
   readonly windowsAngularCommands: SetupCommand[] = [
@@ -289,26 +289,26 @@ export class App implements OnInit {
   ];
   readonly serviceModulePurpose: ServiceModuleCard[] = [
     {
-      title: 'Entender para que sirve cada servicio',
+      title: 'Entender para qué sirve cada servicio',
       detail: 'No memorices nombres. Identifica si el servicio guarda archivos, procesa eventos, expone una API, protege secretos o automatiza infraestructura.',
       action: 'Antes de abrir un laboratorio, resume el problema que resuelve en una frase.',
     },
     {
       title: 'Comparar AWS, Azure y GCP sin confundirte',
       detail: 'La nube cambia nombres y detalles, pero los patrones se repiten. S3, Blob Storage y Cloud Storage resuelven la misma familia de problema.',
-      action: 'Usa la pestaña Comparacion cuando no sepas como se llama un servicio en otra nube.',
+      action: 'Usa la pestaña Comparación cuando no sepas c?mo se llama un servicio en otra nube.',
     },
     {
       title: 'Elegir el siguiente laboratorio correcto',
-      detail: 'Cada tarjeta apunta a un modulo practico. Si un servicio aparece abstracto, abre su laboratorio y verifica con Floci.',
-      action: 'Haz clic en un servicio, lee su explicacion y abre el laboratorio asociado.',
+      detail: 'Cada tarjeta apunta a un módulo práctico. Si un servicio aparece abstracto, abre su laboratorio y verifica con Floci.',
+      action: 'Haz clic en un servicio, lee su explicación y abre el laboratorio asociado.',
     },
   ];
   readonly serviceCleanPractices: ServiceModuleCard[] = [
     {
       title: 'Un servicio, una responsabilidad',
       detail: 'Usa S3 para objetos, SQS para colas, DynamoDB para clave-valor y CloudWatch para observabilidad. Evita forzar un servicio a resolver todo.',
-      action: 'Pregunta: que responsabilidad tecnica cumple este servicio?',
+      action: 'Pregunta: qué responsabilidad técnica cumple este servicio?',
     },
     {
       title: 'Nombres consistentes',
@@ -316,13 +316,13 @@ export class App implements OnInit {
       action: 'Anota el nombre exacto del recurso antes de ejecutar comandos.',
     },
     {
-      title: 'Verificacion antes de avanzar',
-      detail: 'Un servicio no esta aprendido cuando lees la tarjeta. Esta aprendido cuando puedes crear, consultar y explicar la evidencia.',
+      title: 'Verificación antes de avanzar',
+      detail: 'Un servicio no está aprendido cuando lees la tarjeta. Esta aprendido cuando puedes crear, consultar y explicar la evidencia.',
       action: 'Busca una salida verificable: lista, JSON, log, URL, estado o tabla.',
     },
     {
-      title: 'Comparacion con criterio',
-      detail: 'No compares por marketing. Compara por problema, contrato de API, costo operativo, seguridad, observabilidad y facilidad de automatizacion.',
+      title: 'Comparación con criterio',
+      detail: 'No compares por marketing. Compara por problema, contrato de API, costo operativo, seguridad, observabilidad y facilidad de automatización.',
       action: 'Usa la tabla multi-nube para decidir equivalentes, no para memorizar marcas.',
     },
   ];
@@ -334,13 +334,13 @@ export class App implements OnInit {
     },
     {
       title: 'Tablet',
-      detail: 'Avanza por grupos: almacenamiento, eventos, datos, seguridad y observabilidad. Menos columnas, mas lectura guiada.',
+      detail: 'Avanza por grupos: almacenamiento, eventos, datos, seguridad y observabilidad. Menos columnas, más lectura guiada.',
       action: 'Escanea tarjetas y abre solo lo que vas a practicar.',
     },
     {
       title: 'Movil',
-      detail: 'Usa una pregunta concreta: que servicio necesito y para que? La vista se compacta para leer una tarjeta a la vez.',
-      action: 'Busca, abre detalle y guarda el modulo para practicar luego.',
+      detail: 'Usa una pregunta concreta: qué servicio necesito y para qué? La vista se compacta para leer una tarjeta a la vez.',
+      action: 'Busca, abre detalle y guarda el módulo para practicar luego.',
     },
   ];
   readonly commandReading = [
@@ -432,8 +432,8 @@ export class App implements OnInit {
   languageInstallCommands = computed(() => this.commandsForLanguageAction('install', this.selectedLanguage(), this.languageSnippet()));
   languageRunCommands = computed(() => this.commandsForLanguageAction('run', this.selectedLanguage(), this.languageSnippet()));
   workspaceSteps = computed(() => this.stepsToCreateLab(this.selectedOs(), this.languageSnippet()));
-  profileSetupLine = computed(() => this.linearSetupLine(this.workspaceSteps()));
-  projectSetupLine = computed(() => this.linearSetupLine(this.topicProjectCreateCommands(), this.topicProjectVerification().slice(0, 1)));
+  profileSetupLine = computed(() => this.línearSetupLine(this.workspaceSteps()));
+  projectSetupLine = computed(() => this.línearSetupLine(this.topicProjectCreateCommands(), this.topicProjectVerification().slice(0, 1)));
   highlightedLanguageCode = computed(() => this.highlightCode(this.languageSnippet().code, this.selectedLanguage()));
   highlightedTopicProjectCode = computed(() => this.highlightCode(this.topicProjectCode(), this.selectedLanguage()));
   terminalGuide = computed(() => this.guideForTerminal(this.selectedOs()));
@@ -490,70 +490,70 @@ export class App implements OnInit {
   }
   moduleProgressRatio(moduleId: number): number {
     const module = this.moduleById(moduleId);
-    if (!module?.challenges.length) return 0;
+    if (!module || !module.challenges.length) return 0;
     return this.completedModuleChallenges(moduleId) / module.challenges.length;
   }
   explainLikeNewcomer(module: CourseModule): ExplainLikeNewcomer {
     const mainService = module.services[0] ?? module.shortTitle;
     const firstConcept = module.concepts[0] ?? module.shortTitle;
     const secondConcept = module.concepts[1] ?? 'flujo de trabajo';
-    const thirdConcept = module.concepts[2] ?? 'verificacion';
+    const thirdConcept = module.concepts[2] ?? 'verificación';
     const firstChallenge = module.challenges[0] ? this.challengeGuide(module.challenges[0], 0) : null;
     return {
       essence: `${module.shortTitle} sirve para resolver un problema real: ${module.description}`,
-      analogy: `${firstConcept} es como una estacion de trabajo: primero recibes algo, luego lo organizas y al final verificas que quedo donde esperabas.`,
+      analogy: `${firstConcept} es como una estación de trabajo: primero recibes algo, luego lo organizas y al final verificas que quedó donde esperabas.`,
       parts: [
-        { title: '1. Problema', detail: `Identifica que necesidad cubre ${mainService}: guardar, procesar, proteger, consultar o automatizar algo.` },
-        { title: '2. Pieza central', detail: `Entiende ${firstConcept} antes de mezclarlo con otros servicios. Una idea clara vale mas que diez comandos copiados.` },
-        { title: '3. Flujo', detail: `Conecta ${secondConcept} con una entrada, una accion y una salida observable.` },
+        { title: '1. Problema', detail: `Identifica qué necesidad cubre ${mainService}: guardar, procesar, proteger, consultar o automatizar algo.` },
+        { title: '2. Pieza central', detail: `Entiende ${firstConcept} antes de mezclarlo con otros servicios. Una idea clara vale más que diez comandos copiados.` },
+        { title: '3. Flujo', detail: `Conecta ${secondConcept} con una entrada, una acción y una salida observable.` },
         { title: '4. Evidencia', detail: `Comprueba ${thirdConcept} con CLI, logs, archivo generado, respuesta HTTP o recurso listado.` },
       ],
       mistakes: [
-        'Copiar comandos sin mirar en que carpeta o terminal se ejecutan.',
+        'Copiar comandos sin mirar en qué carpeta o terminal se ejecutan.',
         `Confundir el nombre del servicio con el problema que resuelve ${mainService}.`,
         'Marcar el reto como terminado sin una salida verificable.',
       ],
       questions: [
-        `Que problema real resuelve ${mainService}?`,
-        `Que entrada necesita este modulo para funcionar?`,
-        'Que salida demuestra que no solo lo lei, sino que lo ejecute?',
-        'Que error comun podria aparecer y como lo diagnosticaria?',
-        'Como explicaria este tema en una frase a alguien que empieza desde cero?',
+        `¿Qué problema real resuelve ${mainService}?`,
+        `¿Qué entrada necesita este módulo para funcionar?`,
+        '¿Qué salida demuestra que no solo lo leí, sino que lo ejecuté?',
+        '¿Qué error común podría aparecer y cómo lo diagnosticaría?',
+        '¿Cómo explicaría este tema en una frase a alguien que empieza desde cero?',
       ],
       action: firstChallenge?.command
         ? `Hoy haz esto: ${firstChallenge.action}. Ejecuta: ${firstChallenge.command}`
-        : `Hoy haz esto: abre el modulo ${module.id}, ejecuta el primer reto y guarda la evidencia en tus notas.`,
-      misconception: `No aprendas ${module.shortTitle} como una lista de comandos. Aprende el circuito: problema -> servicio -> recurso -> operacion -> verificacion.`,
+        : `Hoy haz esto: abre el módulo ${module.id}, ejecuta el primer reto y guarda la evidencia en tus notas.`,
+      misconception: `No aprendas ${module.shortTitle} como una lista de comandos. Aprende el circuito: problema -> servicio -> recurso -> operación -> verificación.`,
     };
   }
   explainTopicProjectLikeNewcomer(project: TopicProject): ExplainLikeNewcomer {
     const mainService = project.services[0] ?? 'Floci';
     const secondaryService = project.services[1] ?? 'CLI';
-    const firstVerify = project.verify[0] ?? 'ejecuta la verificacion del laboratorio';
+    const firstVerify = project.verify[0] ?? 'ejecuta la verificación del laboratorio';
     const language = this.selectedLanguageInfo().title;
     return {
       essence: `${project.title} sirve para practicar ${mainService} en un caso pequeño y real: ${project.detail}`,
-      analogy: `${mainService} es como una estacion de trabajo del proyecto: recibe una solicitud, la guarda o procesa, y luego te deja comprobar que el resultado existe.`,
+      analogy: `${mainService} es como una estación de trabajo del proyecto: recibe una solicitud, la guarda o procesa, y luego te deja comprobar que el resultado existe.`,
       parts: [
-        { title: '1. Caso real', detail: `Primero entiende que problema resuelve: ${project.detail}` },
+        { title: '1. Caso real', detail: `Primero entiende qué problema resuelve: ${project.detail}` },
         { title: '2. Recurso central', detail: `El recurso que vas a crear o consultar se llama ${project.resource}. Si ese nombre no aparece en la salida, algo falta.` },
-        { title: '3. Codigo minimo', detail: `Usa ${language} para ejecutar una accion pequeña contra Floci local antes de intentar arquitectura grande.` },
-        { title: '4. Verificacion', detail: `Termina el mini proyecto solo cuando puedas ejecutar: ${firstVerify}` },
+        { title: '3. Código mínimo', detail: `Usa ${language} para ejecutar una acción pequeña contra Floci local antes de intentar arquitectura grande.` },
+        { title: '4. Verificación', detail: `Termina el mini proyecto solo cuando puedas ejecutar: ${firstVerify}` },
       ],
       mistakes: [
-        `Crear codigo sin saber para que sirve ${mainService}.`,
+        `Crear código sin saber para qué sirve ${mainService}.`,
         `Cambiar el nombre ${project.resource} y luego verificar otro recurso diferente.`,
-        'Ejecutar el codigo sin confirmar que Floci, Docker y la CLI esten activos.',
+        'Ejecutar el código sin confirmar que Floci, Docker y la CLI estén activos.',
       ],
       questions: [
-        `Que problema pequeño resuelve ${project.title}?`,
-        `Que recurso exacto debo ver creado o consultado: ${project.resource}?`,
-        `Que papel cumple ${mainService} y que papel cumple ${secondaryService}?`,
-        `Que comando demuestra que el proyecto funciono?`,
-        'Que error anotaria si tuviera que explicarle este laboratorio a otra persona?',
+        `¿Qué problema pequeño resuelve ${project.title}?`,
+        `¿Qué recurso exacto debo ver creado o consultado: ${project.resource}?`,
+        `¿Qué papel cumple ${mainService} y qué papel cumple ${secondaryService}?`,
+        `¿Qué comando demuestra que el proyecto funcionó?`,
+        '¿Qué error anotaría si tuviera que explicarle este laboratorio a otra persona?',
       ],
-      action: `Hoy completa ${project.title}: crea la carpeta, pega el codigo, ejecutalo y guarda una captura o nota de esta verificacion: ${firstVerify}`,
-      misconception: `No trates ${project.title} como un ejemplo aislado. Es una pieza de FlociOps: problema -> recurso -> codigo -> ejecucion -> evidencia.`,
+      action: `Hoy completa ${project.title}: crea la carpeta, pega el código, ejecútalo y guarda una captura o nota de esta verificación: ${firstVerify}`,
+      misconception: `No trates ${project.title} como un ejemplo aislado. Es una pieza de FlociOps: problema -> recurso -> código -> ejecución -> evidencia.`,
     };
   }
   topicProjectFolder(project: TopicProject = this.selectedTopicProject()): string {
@@ -563,9 +563,9 @@ export class App implements OnInit {
     const folder = this.topicProjectFolder(project);
     const makeFolder = this.selectedOs() === 'windows' ? `mkdir ${folder}; cd ${folder}` : `mkdir -p ${folder} && cd ${folder}`;
     return [
-      { title: 'Crear carpeta', command: makeFolder, detail: 'Aisla este mini proyecto para que puedas borrarlo y repetirlo desde cero.' },
+      { title: 'Crear carpeta', command: makeFolder, detail: 'Aisla este mini proyecto para qué puedas borrarlo y repetirlo desde cero.' },
       ...this.languageInstallCommands(),
-      { title: 'Crear archivo', command: this.selectedOs() === 'windows' ? `New-Item ${this.languageSnippet().file} -ItemType File` : `touch ${this.languageSnippet().file}`, detail: 'Pega el codigo base en este archivo y guardalo.' },
+      { title: 'Crear archivo', command: this.selectedOs() === 'windows' ? `New-Item ${this.languageSnippet().file} -ItemType File` : `touch ${this.languageSnippet().file}`, detail: 'Pega el código base en este archivo y guárdalo.' },
       ...this.languageRunCommands(),
     ];
   }
@@ -777,12 +777,12 @@ Console.WriteLine("Implementa el cliente SDK siguiendo el módulo ${project.modu
         {
           title: 'Ruta Maven',
           command: 'mvn -q archetype:generate -DgroupId=academy.floci -DartifactId=tareas-locales -DarchetypeArtifactId=maven-archetype-quickstart -DinteractiveMode=false',
-          detail: 'Crea un proyecto Maven. Despues agrega la dependencia software.amazon.awssdk:s3 en pom.xml.',
+          detail: 'Crea un proyecto Maven. Después agrega la dependencia software.amazon.awssdk:s3 en pom.xml.',
         },
         {
           title: 'Ruta Gradle',
           command: 'gradle init --type java-application --dsl groovy',
-          detail: 'Crea un proyecto Gradle. Despues agrega implementation "software.amazon.awssdk:s3" en build.gradle.',
+          detail: 'Crea un proyecto Gradle. Después agrega implementation "software.amazon.awssdk:s3" en build.gradle.',
         },
       ];
     }
@@ -811,15 +811,15 @@ Console.WriteLine("Implementa el cliente SDK siguiendo el módulo ${project.modu
       ? `notepad ${snippet.file}`
       : `code ${snippet.file}`;
     const steps: SetupCommand[] = [
-      { title: 'Crea la carpeta del laboratorio', command: createFolder, detail: 'Haz esto una sola vez por modulo. Despues todos los archivos quedan ordenados ahi.' },
-      { title: 'Crea el archivo de codigo', command: createFile, detail: `El archivo debe llamarse exactamente ${snippet.file}. Si el nombre cambia, el comando de ejecucion puede fallar.` },
+      { title: 'Crea la carpeta del laboratorio', command: createFolder, detail: 'Haz esto una sola vez por módulo. Después todos los archivos quedan ordenados ahí.' },
+      { title: 'Crea el archivo de código', command: createFile, detail: `El archivo debe llamarse exactamente ${snippet.file}. Si el nombre cambia, el comando de ejecución puede fallar.` },
       ...this.languageInstallCommands(),
-      { title: 'Abre el archivo y pega el codigo', command: openFile, detail: 'Pega el ejemplo, guarda el archivo y luego vuelve a la terminal.' },
+      { title: 'Abre el archivo y pega el código', command: openFile, detail: 'Pega el ejemplo, guarda el archivo y luego vuelve a la terminal.' },
       ...this.languageRunCommands(),
     ];
     return steps.map((step, index) => ({ ...step, title: `${index + 1}. ${step.title}` }));
   }
-  private linearSetupLine(workSteps: SetupCommand[], verificationSteps: SetupCommand[] = []): LinearSetupStep[] {
+  private línearSetupLine(workSteps: SetupCommand[], verificationSteps: SetupCommand[] = []): LinearSetupStep[] {
     const osSteps = this.setupCommands().slice(0, 4).map(command => ({
       ...command,
       phase: `Sistema: ${this.selectedOsInfo().title}`,
@@ -830,7 +830,7 @@ Console.WriteLine("Implementa el cliente SDK siguiendo el módulo ${project.modu
     }));
     const verification = verificationSteps.map(command => ({
       ...command,
-      phase: 'Verificacion',
+      phase: 'Verificación',
     }));
     return [...osSteps, ...labSteps, ...verification];
   }
@@ -1166,7 +1166,7 @@ logs.create_log_stream(logGroupName="${resource}", logStreamName="local")
 logs.put_log_events(logGroupName="${resource}", logStreamName="local", logEvents=[{"timestamp": int(time.time() * 1000), "message": "INFO flociops listo"}])
 print("Log enviado")`,
     };
-    return snippets[service] ?? `print("Mini proyecto ${service}: crea el recurso ${resource}, ejecuta una operacion y verifica con la CLI del modulo correspondiente.")`;
+    return snippets[service] ?? `print("Mini proyecto ${service}: crea el recurso ${resource}, ejecuta una operación y verifica con la CLI del módulo correspondiente.")`;
   }
   private javascriptTopicCode(service: string, resource: string): string {
     const snippets: Record<string, string> = {
@@ -1245,7 +1245,7 @@ await logs.send(new CreateLogStreamCommand({ logGroupName: "${resource}", logStr
 await logs.send(new PutLogEventsCommand({ logGroupName: "${resource}", logStreamName: "local", logEvents: [{ timestamp: Date.now(), message: "INFO flociops listo" }] }));
 console.log("Log enviado");`,
     };
-    return snippets[service] ?? `console.log("Mini proyecto ${service}: crea el recurso ${resource}, ejecuta una operacion y verifica con la CLI del modulo correspondiente.");`;
+    return snippets[service] ?? `console.log("Mini proyecto ${service}: crea el recurso ${resource}, ejecuta una operación y verifica con la CLI del módulo correspondiente.");`;
   }
   private javaTopicCode(project: TopicProject): string {
     const service = project.services[0];
@@ -1352,8 +1352,8 @@ public class App {
     if (value.includes('cp ') || value.includes('upload') || value.includes('put')) return 'Verifica leyendo o listando el objeto/dato que acabas de escribir.';
     if (value.includes('receive') || value.includes('pull')) return 'Debes ver el mensaje recibido; si no aparece, revisa cola, topic o subscription.';
     if (value.includes('curl')) return 'Debes obtener HTTP 2xx y un cuerpo JSON o texto coherente con el endpoint.';
-    if (value.includes('logs') || value.includes('tail')) return 'Debes encontrar una linea de log que explique que paso y con que id.';
-    if (value.includes('status') || value.includes('version')) return 'La salida debe confirmar que la herramienta esta instalada o que el emulador esta activo.';
+    if (value.includes('logs') || value.includes('tail')) return 'Debes encontrar una línea de log que explique qué pasó y con qué id.';
+    if (value.includes('status') || value.includes('version')) return 'La salida debe confirmar que la herramienta está instalada o que el emulador está activo.';
     return 'Confirma que la salida coincida con el objetivo del paso antes de marcarlo como completado.';
   }
   private loadProgress(): StoredProgress {
