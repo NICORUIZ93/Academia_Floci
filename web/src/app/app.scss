@@ -927,7 +927,16 @@ kbd { display:inline-grid; place-items:center; min-height:22px; min-width:38px; 
   gap:8px; text-align:left; cursor:pointer; min-width:0;
 }
 .copy-line:hover { border-color:$pm; background:$pl; }
+.copy-line .command-label {
+  flex:0 0 auto;
+  color:$p;
+  font-size:9px;
+  font-weight:800;
+  text-transform:uppercase;
+  white-space:nowrap;
+}
 .copy-line code {
+  flex:1 1 auto;
   color:$i2; font:10px/1.4 ui-monospace,SFMono-Regular,Menlo,monospace;
   white-space:normal; overflow-wrap:anywhere; word-break:break-word;
 }

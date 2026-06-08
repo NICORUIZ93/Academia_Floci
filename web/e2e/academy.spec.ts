@@ -26,6 +26,16 @@ test('inicio: ruta educativa y laboratorio adaptado responden al perfil', async 
   await expect(page.locator('.quick-lab-card')).toContainText('pip install boto3');
 });
 
+test('inicio: configuracion guardada invalida vuelve a valores seguros', async ({ page }) => {
+  await page.evaluate(() => {
+    localStorage.setItem('floci-academy-setup', JSON.stringify({ os: 'plan9', language: 'ruby' }));
+  });
+  await page.reload();
+
+  await expect(page.locator('.quick-lab-card')).toContainText('app.mjs');
+  await expect(page.locator('.quick-lab-card')).toContainText('node app.mjs');
+});
+
 test('modulos: lectura, ejercicios, notas y progreso se conectan', async ({ page, isMobile }) => {
   await page.locator('.student-config .language-select button').filter({ hasText: 'Python' }).click();
   await navigateTo(page, 1, isMobile);
@@ -94,8 +104,12 @@ test('labs: java muestra maven y gradle, y todos los mini proyectos tienen codig
 
   const projectLanguages = page.locator('.project-config .language-select button');
   await projectLanguages.nth(3).click();
-  await expect(page.locator('.project-environment')).toContainText('Maven:');
-  await expect(page.locator('.project-environment')).toContainText('Gradle:');
+  await expect(page.locator('.project-environment')).toContainText('Ruta Maven');
+  await expect(page.locator('.project-environment')).toContainText('Ruta Gradle');
+  await expect(page.locator('.project-environment')).toContainText('mvn -q archetype:generate');
+  await expect(page.locator('.project-environment')).toContainText('gradle init --type java-application');
+  await expect(page.locator('.project-environment')).not.toContainText('Maven:');
+  await expect(page.locator('.project-environment')).not.toContainText('| Gradle:');
   await expect(page.locator('.project-environment')).toContainText('http://localhost:4566');
   await expect(page.locator('.topic-recipe .code-sample')).toContainText('S3Client.builder');
 

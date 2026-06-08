@@ -209,8 +209,8 @@
           <h2>{{ languageSnippet().title }}</h2>
           <p>{{ selectedOsInfo().title }} · {{ selectedLanguageInfo().title }} · archivo {{ languageSnippet().file }}</p>
         </div>
-        <button class="copy-line" (click)="copyTextValue(languageSnippet().install)"><code>{{ languageSnippet().install }}</code><lucide-icon [img]="copiedText() === languageSnippet().install ? icons.Check : icons.Copy" /></button>
-        <button class="copy-line" (click)="copyTextValue(languageSnippet().run)"><code>{{ languageSnippet().run }}</code><lucide-icon [img]="copiedText() === languageSnippet().run ? icons.Check : icons.Copy" /></button>
+        <button class="copy-line" *ngFor="let command of languageInstallCommands()" (click)="copyTextValue(command.command)"><span class="command-label">{{ command.title }}</span><code>{{ command.command }}</code><lucide-icon [img]="copiedText() === command.command ? icons.Check : icons.Copy" /></button>
+        <button class="copy-line" *ngFor="let command of languageRunCommands()" (click)="copyTextValue(command.command)"><span class="command-label">{{ command.title }}</span><code>{{ command.command }}</code><lucide-icon [img]="copiedText() === command.command ? icons.Check : icons.Copy" /></button>
       </section>
 
       <div class="metric-grid">
@@ -387,15 +387,17 @@
               <article>
                 <span class="eyebrow">TERMINAL</span>
                 <button class="copy-line" *ngFor="let command of setupCommands().slice(0, 4)" (click)="copyTextValue(command.command)">
+                  <span class="command-label">{{ command.title }}</span>
                   <code>{{ command.command }}</code>
                   <lucide-icon [img]="copiedText() === command.command ? icons.Check : icons.Copy" />
                 </button>
               </article>
               <article>
                 <span class="eyebrow">INSTALACIÓN SDK</span>
-                <button class="copy-line" (click)="copyTextValue(languageSnippet().install)">
-                  <code>{{ languageSnippet().install }}</code>
-                  <lucide-icon [img]="copiedText() === languageSnippet().install ? icons.Check : icons.Copy" />
+                <button class="copy-line" *ngFor="let command of languageInstallCommands()" (click)="copyTextValue(command.command)">
+                  <span class="command-label">{{ command.title }}</span>
+                  <code>{{ command.command }}</code>
+                  <lucide-icon [img]="copiedText() === command.command ? icons.Check : icons.Copy" />
                 </button>
                 <span class="eyebrow file-label">ARCHIVO</span>
                 <code class="file-name">{{ languageSnippet().file }}</code>
@@ -403,9 +405,9 @@
               <article class="code-sample">
                 <div class="code-title"><span>{{ languageSnippet().file }}</span><button title="Copiar código" (click)="copyTextValue(languageSnippet().code)"><lucide-icon [img]="copiedText() === languageSnippet().code ? icons.Check : icons.Copy" /></button></div>
                 <pre><code>{{ languageSnippet().code }}</code></pre>
-                <button class="copy-line run-command" (click)="copyTextValue(languageSnippet().run)">
-                  <code>{{ languageSnippet().run }}</code>
-                  <lucide-icon [img]="copiedText() === languageSnippet().run ? icons.Check : icons.Copy" />
+                <button class="copy-line run-command" *ngFor="let command of languageRunCommands()" (click)="copyTextValue(command.command)">
+                  <code>{{ command.command }}</code>
+                  <lucide-icon [img]="copiedText() === command.command ? icons.Check : icons.Copy" />
                 </button>
               </article>
             </div>
@@ -635,7 +637,7 @@
           <span class="eyebrow">CASO INTEGRADOR</span>
           <h2>Construye una app real que toque todos los temas de Floci</h2>
           <p>El alumno empieza con una tarea simple y termina con un sistema local completo: API, colas, funciones, eventos, seguridad, búsqueda, analítica y despliegue reproducible.</p>
-          <div class="active-stack"><strong>{{ selectedLanguageInfo().title }} en {{ selectedOsInfo().title }}</strong><span>{{ languageSnippet().file }} · {{ languageSnippet().run }}</span></div>
+          <div class="active-stack"><strong>{{ selectedLanguageInfo().title }} en {{ selectedOsInfo().title }}</strong><span>{{ languageSnippet().file }} · {{ languageRunCommands()[0].command }}</span></div>
           <div class="coverage-tags">
             <span *ngFor="let item of flociOpsCoverage">{{ item }}</span>
           </div>
@@ -728,8 +730,8 @@
           </article>
           <article>
             <span class="eyebrow">ARRANQUE EN {{ selectedLanguageInfo().title }}</span>
-            <button class="copy-line" (click)="copyTextValue(languageSnippet().install)"><code>{{ languageSnippet().install }}</code><lucide-icon [img]="copiedText() === languageSnippet().install ? icons.Check : icons.Copy" /></button>
-            <button class="copy-line" (click)="copyTextValue(languageSnippet().run)"><code>{{ languageSnippet().run }}</code><lucide-icon [img]="copiedText() === languageSnippet().run ? icons.Check : icons.Copy" /></button>
+            <button class="copy-line" *ngFor="let command of languageInstallCommands()" (click)="copyTextValue(command.command)"><span class="command-label">{{ command.title }}</span><code>{{ command.command }}</code><lucide-icon [img]="copiedText() === command.command ? icons.Check : icons.Copy" /></button>
+            <button class="copy-line" *ngFor="let command of languageRunCommands()" (click)="copyTextValue(command.command)"><span class="command-label">{{ command.title }}</span><code>{{ command.command }}</code><lucide-icon [img]="copiedText() === command.command ? icons.Check : icons.Copy" /></button>
             <code class="file-name">{{ languageSnippet().file }}</code>
           </article>
           <article class="code-sample">

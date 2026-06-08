@@ -1,7 +1,6 @@
 import { CommonModule } from '@angular/common';
-import { Component, ViewEncapsulation, computed, inject, OnInit, signal } from '@angular/core';
+import { Component, ViewEncapsulation, computed, OnInit, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { marked } from 'marked';
 import {
   Award, BookOpen, Boxes, Check, ChevronLeft, ChevronRight, CircleHelp, CloudCog,
@@ -84,7 +83,6 @@ const DEFAULT_SETUP: StudentSetup = { os: 'mac', language: 'javascript' };
   encapsulation: ViewEncapsulation.None
 })
 export class App implements OnInit {
-  private readonly sanitizer = inject(DomSanitizer);
   readonly icons = { Award, BookOpen, Boxes, Check, ChevronLeft, ChevronRight, CircleHelp, CloudCog, Code2, Copy, Database, Download, FileCheck2, FileText, FlaskConical, Focus, Gauge, GraduationCap, LayoutDashboard, Library, ListChecks, LockKeyhole, Menu, MessageSquareText, Network, PartyPopper, Play, Search, ServerCog, Settings2, Sparkles, Target, Terminal, Trophy, X };
   readonly modules = COURSE_MODULES;
   readonly serviceGroups = SERVICE_GROUPS;
@@ -210,12 +208,12 @@ export class App implements OnInit {
   libraryCategory = signal('todos');
   libraryDocuments = signal<LibraryDocument[]>([]);
   selectedDocument = signal<LibraryDocument | null>(null);
-  documentHtml = signal<SafeHtml>('');
+  documentHtml = signal('');
   documentRaw = signal('');
   documentLoading = signal(false);
   copiedDocument = signal(false);
   lessonTab = signal<'learn' | 'practice' | 'notes'>('learn');
-  lessonHtml = signal<SafeHtml>('');
+  lessonHtml = signal('');
   lessonLoading = signal(false);
   serviceStudies = signal<ServiceStudy[]>([]);
   selectedService = signal<ServiceStudy | null>(null);
@@ -229,7 +227,7 @@ export class App implements OnInit {
   selectedLanguage = signal<LabLanguage>(this.loadSetup().language);
   selectedTopicProjectIndex = signal(0);
 
-  selectedModule = computed(() => this.modules[this.selectedModuleId()]);
+  selectedModule = computed(() => this.moduleById(this.selectedModuleId()) ?? this.modules[0]);
   completedCount = computed(() => this.progress().completedModules.length);
   completion = computed(() => Math.round((this.completedCount() / this.modules.length) * 100));
   courseCompleted = computed(() => this.completion() === 100);
@@ -272,6 +270,8 @@ export class App implements OnInit {
   selectedTopicProject = computed(() => this.topicProjects[this.selectedTopicProjectIndex()] ?? this.topicProjects[0]);
   setupCommands = computed(() => this.commandsForOs(this.selectedOs()));
   languageSnippet = computed(() => this.snippetForLanguage(this.selectedLanguage()));
+  languageInstallCommands = computed(() => this.commandsForLanguageAction('install', this.selectedLanguage(), this.languageSnippet()));
+  languageRunCommands = computed(() => this.commandsForLanguageAction('run', this.selectedLanguage(), this.languageSnippet()));
   workspaceSteps = computed(() => this.stepsToCreateLab(this.selectedOs(), this.languageSnippet()));
   terminalGuide = computed(() => this.guideForTerminal(this.selectedOs()));
   ideGuide = computed(() => this.guideForIde(this.selectedOs(), this.selectedLanguage()));
@@ -321,11 +321,12 @@ export class App implements OnInit {
     return index === active ? 'active' : 'pending';
   }
   completedModuleChallenges(moduleId: number): number {
-    const module = this.modules[moduleId];
+    const module = this.moduleById(moduleId);
+    if (!module) return 0;
     return module.challenges.filter((_, index) => this.progress().completedChallenges[this.challengeKey(moduleId, index)]).length;
   }
   moduleProgressRatio(moduleId: number): number {
-    const module = this.modules[moduleId];
+    const module = this.moduleById(moduleId);
     if (!module?.challenges.length) return 0;
     return this.completedModuleChallenges(moduleId) / module.challenges.length;
   }
@@ -336,10 +337,10 @@ export class App implements OnInit {
     const folder = this.topicProjectFolder(project);
     const makeFolder = this.selectedOs() === 'windows' ? `mkdir ${folder}; cd ${folder}` : `mkdir -p ${folder} && cd ${folder}`;
     return [
-      { title: 'Crear carpeta', command: makeFolder, detail: 'Aísla este mini proyecto para que puedas borrarlo y repetirlo desde cero.' },
-      { title: 'Preparar SDK', command: this.languageSnippet().install, detail: `Instala dependencias para ${this.selectedLanguageInfo().title}.` },
-      { title: 'Crear archivo', command: this.selectedOs() === 'windows' ? `New-Item ${this.languageSnippet().file} -ItemType File` : `touch ${this.languageSnippet().file}`, detail: 'Pega el código base en este archivo y guárdalo.' },
-      { title: 'Ejecutar', command: this.languageSnippet().run, detail: 'Ejecuta el mini proyecto contra Floci local.' },
+      { title: 'Crear carpeta', command: makeFolder, detail: 'Aisla este mini proyecto para que puedas borrarlo y repetirlo desde cero.' },
+      ...this.languageInstallCommands(),
+      { title: 'Crear archivo', command: this.selectedOs() === 'windows' ? `New-Item ${this.languageSnippet().file} -ItemType File` : `touch ${this.languageSnippet().file}`, detail: 'Pega el codigo base en este archivo y guardalo.' },
+      ...this.languageRunCommands(),
     ];
   }
   topicProjectVerification(project: TopicProject = this.selectedTopicProject()): SetupCommand[] {
@@ -388,6 +389,7 @@ Console.WriteLine("Recurso local: ${resource}");
 Console.WriteLine("Implementa el cliente SDK siguiendo el módulo ${project.module} y verifica con la CLI.");`;
   }
   commandForSelectedOs(command: SetupCommand): string { return command.command; }
+  moduleById(moduleId: number): CourseModule | undefined { return this.modules.find(item => item.id === moduleId); }
   moduleForService(service: string): number { return this.modules.find(item => item.services.includes(service))?.id ?? 0; }
   isFirstOfPhase(id: number): boolean {
     if (id === 0) return true;
@@ -426,15 +428,15 @@ Console.WriteLine("Implementa el cliente SDK siguiendo el módulo ${project.modu
       const raw = await response.text();
       this.documentRaw.set(raw);
       if (document.type === 'code') {
-        this.documentHtml.set(this.sanitizer.bypassSecurityTrustHtml(`<pre class="code-document"><code>${this.escapeHtml(raw)}</code></pre>`));
+        this.documentHtml.set(`<pre class="code-document"><code>${this.escapeHtml(raw)}</code></pre>`);
       } else {
         const normalized = raw
           .replaceAll('../assets/', '/content/oficial-es/assets/')
           .replaceAll('](assets/', '](/content/oficial-es/assets/');
-        this.documentHtml.set(this.sanitizer.bypassSecurityTrustHtml(marked.parse(normalized, { async: false }) as string));
+        this.documentHtml.set(marked.parse(normalized, { async: false }) as string);
       }
     } catch (error) {
-      this.documentHtml.set(this.sanitizer.bypassSecurityTrustHtml(`<p>No se pudo cargar este recurso: ${this.escapeHtml(String(error))}</p>`));
+      this.documentHtml.set(`<p>No se pudo cargar este recurso: ${this.escapeHtml(String(error))}</p>`);
     } finally { this.documentLoading.set(false); }
   }
   async copyDocument(): Promise<void> {
@@ -453,8 +455,20 @@ Console.WriteLine("Implementa el cliente SDK siguiendo el módulo ${project.modu
     localStorage.setItem('floci-academy-setup', JSON.stringify({ os: this.selectedOs(), language: this.selectedLanguage() }));
   }
   private loadSetup(): StudentSetup {
-    try { return { ...DEFAULT_SETUP, ...JSON.parse(localStorage.getItem('floci-academy-setup') || '{}') }; }
+    try {
+      const stored = JSON.parse(localStorage.getItem('floci-academy-setup') || '{}') as Partial<StudentSetup>;
+      return {
+        os: this.isStudentOs(stored.os) ? stored.os : DEFAULT_SETUP.os,
+        language: this.isLabLanguage(stored.language) ? stored.language : DEFAULT_SETUP.language,
+      };
+    }
     catch { return DEFAULT_SETUP; }
+  }
+  private isStudentOs(value: unknown): value is StudentOs {
+    return value === 'mac' || value === 'windows' || value === 'linux';
+  }
+  private isLabLanguage(value: unknown): value is LabLanguage {
+    return value === 'javascript' || value === 'typescript' || value === 'python' || value === 'java' || value === 'go' || value === 'csharp';
   }
   private commandsForOs(os: StudentOs): SetupCommand[] {
     const shared = {
@@ -488,6 +502,45 @@ Console.WriteLine("Implementa el cliente SDK siguiendo el módulo ${project.modu
       { ...shared.verify, command: 'aws sts get-caller-identity' },
     ];
   }
+  private commandsForLanguageAction(action: 'install' | 'run', language: LabLanguage, snippet: { install: string; run: string }): SetupCommand[] {
+    if (language !== 'java') {
+      return [{
+        title: action === 'install' ? 'Preparar SDK' : 'Ejecutar',
+        command: action === 'install' ? snippet.install : snippet.run,
+        detail: action === 'install'
+          ? `Instala dependencias para ${this.selectedLanguageInfo().title}.`
+          : 'Ejecuta el laboratorio contra Floci local.',
+      }];
+    }
+
+    if (action === 'install') {
+      return [
+        {
+          title: 'Ruta Maven',
+          command: 'mvn -q archetype:generate -DgroupId=academy.floci -DartifactId=tareas-locales -DarchetypeArtifactId=maven-archetype-quickstart -DinteractiveMode=false',
+          detail: 'Crea un proyecto Maven. Despues agrega la dependencia software.amazon.awssdk:s3 en pom.xml.',
+        },
+        {
+          title: 'Ruta Gradle',
+          command: 'gradle init --type java-application --dsl groovy',
+          detail: 'Crea un proyecto Gradle. Despues agrega implementation "software.amazon.awssdk:s3" en build.gradle.',
+        },
+      ];
+    }
+
+    return [
+      {
+        title: 'Ejecutar con Maven',
+        command: 'mvn exec:java -Dexec.mainClass=App',
+        detail: 'Usa esta ruta si creaste el proyecto con Maven.',
+      },
+      {
+        title: 'Ejecutar con Gradle',
+        command: 'gradle run',
+        detail: 'Usa esta ruta si creaste el proyecto con Gradle.',
+      },
+    ];
+  }
   private stepsToCreateLab(os: StudentOs, snippet: { title: string; file: string; install: string; code: string; run: string }): SetupCommand[] {
     const createFolder = os === 'windows'
       ? 'mkdir floci-labs\\modulo-0-primeros-pasos; cd floci-labs\\modulo-0-primeros-pasos'
@@ -499,11 +552,11 @@ Console.WriteLine("Implementa el cliente SDK siguiendo el módulo ${project.modu
       ? `notepad ${snippet.file}`
       : `code ${snippet.file}`;
     return [
-      { title: '1. Crea la carpeta del laboratorio', command: createFolder, detail: 'Haz esto una sola vez por módulo. Después todos los archivos quedan ordenados ahí.' },
-      { title: '2. Crea el archivo de código', command: createFile, detail: `El archivo debe llamarse exactamente ${snippet.file}. Si el nombre cambia, el comando de ejecución puede fallar.` },
-      { title: '3. Instala el SDK necesario', command: snippet.install, detail: 'El SDK es la librería que permite que tu lenguaje hable con servicios cloud.' },
-      { title: '4. Abre el archivo y pega el código', command: openFile, detail: 'Pega el ejemplo, guarda el archivo y luego vuelve a la terminal.' },
-      { title: '5. Ejecuta y verifica', command: snippet.run, detail: 'Si ves una salida o un recurso creado, registra la evidencia. Si falla, copia el error completo.' },
+      { title: '1. Crea la carpeta del laboratorio', command: createFolder, detail: 'Haz esto una sola vez por modulo. Despues todos los archivos quedan ordenados ahi.' },
+      { title: '2. Crea el archivo de codigo', command: createFile, detail: `El archivo debe llamarse exactamente ${snippet.file}. Si el nombre cambia, el comando de ejecucion puede fallar.` },
+      ...this.languageInstallCommands().map((command, index) => ({ ...command, title: `${3 + index}. ${command.title}` })),
+      { title: '4. Abre el archivo y pega el codigo', command: openFile, detail: 'Pega el ejemplo, guarda el archivo y luego vuelve a la terminal.' },
+      ...this.languageRunCommands().map((command, index) => ({ ...command, title: `${5 + index}. ${command.title}` })),
     ];
   }
   private guideForTerminal(os: StudentOs): TerminalGuide {
@@ -701,7 +754,7 @@ print("Tarea subida")`,
       java: {
         title: 'Subir una tarea a S3 con Java (Maven o Gradle)',
         file: 'App.java',
-        install: 'Maven: mvn -q archetype:generate -DgroupId=academy.floci -DartifactId=tareas-locales -DarchetypeArtifactId=maven-archetype-quickstart -DinteractiveMode=false | Gradle: gradle init --type java-application --dsl groovy',
+        install: 'mvn -q archetype:generate -DgroupId=academy.floci -DartifactId=tareas-locales -DarchetypeArtifactId=maven-archetype-quickstart -DinteractiveMode=false',
         code: `import java.net.URI;
 import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
 import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
@@ -729,7 +782,7 @@ public class App {
     System.out.println("Tarea subida");
   }
 }`,
-        run: 'Maven: mvn exec:java -Dexec.mainClass=App | Gradle: gradle run',
+        run: 'mvn exec:java -Dexec.mainClass=App',
       },
       go: {
         title: 'Subir una tarea a S3 con Go',
@@ -1056,9 +1109,9 @@ public class App {
       if (!response.ok) throw new Error(`HTTP ${response.status}`);
       const raw = await response.text();
       const withoutRepeatedTitle = raw.replace(/^#{1,2}\s+Módulo[^\n]*\n+/, '');
-      this.lessonHtml.set(this.sanitizer.bypassSecurityTrustHtml(marked.parse(withoutRepeatedTitle, { async: false }) as string));
+      this.lessonHtml.set(marked.parse(withoutRepeatedTitle, { async: false }) as string);
     } catch {
-      this.lessonHtml.set(this.sanitizer.bypassSecurityTrustHtml('<p>La lección completa no está disponible en este entorno.</p>'));
+      this.lessonHtml.set('<p>La lección completa no está disponible en este entorno.</p>');
     } finally { this.lessonLoading.set(false); }
   }
   private async loadServiceStudies(): Promise<void> {
