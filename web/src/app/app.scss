@@ -847,8 +847,29 @@ kbd { display:inline-grid; place-items:center; min-height:22px; min-width:38px; 
 .install-options h3 { font-size:12px; margin:3px 0 5px; overflow-wrap:anywhere; }
 .install-options p { color:$mu; font-size:10px; line-height:1.45; margin:0; overflow-wrap:anywhere; }
 .install-options article strong { display:block; color:$i3; font-size:9px; line-height:1.35; margin-top:7px; overflow-wrap:anywhere; }
+.stackport-guide { grid-column:1/-1; padding:10px 0 0; border-top:1px solid $bd; }
+.stackport-guide h3 { margin:10px 0 8px; font-size:13px; }
+.stackport-guide ol { padding-left:18px; margin:0; }
+.stackport-guide li { margin-bottom:10px; }
+.stackport-guide li p { margin:4px 0 7px; color:$mu; font-size:11px; }
+.stackport-guide .copy-line.small { margin-top:4px; padding:7px 10px; font-size:11px; }
+.stackport-guide .note { margin-top:10px; color:$p; font-size:11px; }
 .compact-install { grid-template-columns:1fr; box-shadow:none; border-color:$pm; background:rgba($wh,.75); margin-top:10px; }
 .compact-install article { grid-template-columns:24px 1fr; background:$wh; }
+
+/* UI tools section */
+.ui-tools { margin-top:12px; background:$wh; border:1px solid $bd; border-radius:$rr; box-shadow:$sh; padding:14px; display:grid; grid-template-columns:1.15fr 1fr; gap:10px; align-items:start; }
+.ui-tools article { border:1px solid $bd; border-radius:$rs; padding:10px; display:grid; grid-template-columns:28px 1fr; gap:8px; align-items:start; background:$bg; }
+.ui-tools .tool-index { width:28px; height:28px; border-radius:50%; background:$ink; color:$wh; display:grid; place-items:center; font-size:11px; font-weight:800; }
+.ui-tools code { font-family:ui-monospace,monospace; font-size:11px; display:block; margin-top:8px; white-space:nowrap; overflow:auto; }
+
+/* Tool guide section styles */
+/* Responsive: collapse install options to single column on small screens */
+@media (max-width: 880px) {
+  .install-options { grid-template-columns: 1fr; }
+  .install-options article { grid-template-columns: 24px 1fr; }
+}
+
 .quick-lab-card{display:grid;grid-template-columns:minmax(0,1fr) minmax(180px,.55fr) minmax(150px,.45fr);gap:10px;align-items:center;background:$wh;border:1px solid $bd;border-radius:$rr;margin-top:12px;padding:14px 16px;box-shadow:$sh}
 .quick-lab-card h2{font-size:15px;margin:3px 0}.quick-lab-card p{margin:0;color:$mu;font-size:11px}
 .quick-lab-card .copy-line{margin-top:0}

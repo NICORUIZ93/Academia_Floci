@@ -1,16 +1,20 @@
+version: "3.8"
 services:
   floci:
-    image: floci/floci:1.5.22-compat
+    image: floci/floci:latest
     ports:
       - "4566:4566"
-    environment:
-      FLOCI_STORAGE_MODE: persistent
-      FLOCI_STORAGE_PERSISTENT_PATH: /app/data
     volumes:
-      - ./data:/app/data
       - /var/run/docker.sock:/var/run/docker.sock
-    healthcheck:
-      test: ["CMD-SHELL", "aws sts get-caller-identity >/dev/null 2>&1"]
-      interval: 5s
-      timeout: 3s
-      retries: 20
+
+  floci-az:
+    image: floci/floci-az:latest
+    ports:
+      - "4577:4577"
+      - "5672:5672"   # Event Hubs AMQP
+      - "5673:5673"   # Service Bus AMQP
+
+  floci-gcp:
+    image: floci/floci-gcp:latest
+    ports:
+      - "4588:4588"

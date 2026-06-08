@@ -955,11 +955,160 @@ floci env
 Revisa el script antes de canalizarlo al shell, especialmente en entornos
 corporativos. La CLI unifica arranque y diagnóstico de los emuladores.
 
-### UI
+#### Windows
 
-`floci-ui` permite explorar recursos como buckets, tablas, colas, funciones y
-logs. Úsala para inspección; conserva scripts o infraestructura como código como
-fuente reproducible del entorno.
+Si usas Windows, el comando anterior requiere un shell compatible con `sh`.
+Opciones recomendadas:
+
+- **WSL (recomendado)**: instala WSL2 y una distro Linux (Ubuntu/Kali). Abre
+  la terminal de la distro y ejecuta el comando original:
+
+  ```bash
+  wsl --install -d kali-linux
+  wsl -d kali-linux -e bash -c "curl -fsSL https://floci.io/install.sh | sh"
+  ```
+
+  Si ves errores como "sh: command not found" o "Unsupported OS: mingw64",
+  no uses PowerShell ni CMD para este paso. Ejecuta el comando desde WSL.
+
+- **Git Bash**: puedes intentar ejecutar el comando desde Git Bash. Si `sh`
+  no está disponible, usa `bash`:
+
+  ```bash
+  curl -fsSL https://floci.io/install.sh | bash
+  ```
+
+  Si el instalador detecta `mingw` y falla, cambia a WSL.
+
+- **PowerShell/CMD**: `sh` no existe por defecto. Descarga el script y revísalo
+  antes de ejecutar:
+
+  ```powershell
+  curl.exe -fsSL https://floci.io/install.sh -o install.sh
+  notepad install.sh
+  ```
+
+  Para ejecutarlo en un entorno compatible, usa Git Bash o WSL con:
+
+  ```bash
+  bash install.sh
+  ```
+
+  También puedes buscar un binario nativo de Windows en https://floci.io.
+
+#### Angular UI en Windows (puerto 4200)
+
+Si necesitas usar el puerto 4200, inicia la aplicación Angular desde la carpeta
+`web` con:
+
+```bash
+npm start -- --port 4200 --host 0.0.0.0
+```
+
+Si Angular CLI pregunta si quieres activar autocompletado, responde `Y`.
+
+Abre `http://localhost:4200` desde Windows. Si la página no carga, prueba con la
+IP de tu WSL: `http://<WSL_IP>:4200`.
+
+### UI alternativa
+
+Floci es principalmente una CLI y no tiene una UI oficial integrada. Para
+explorar recursos visualmente, recomendamos usar StackPort como alternativa.
+
+```bash
+docker run -d --name stackport \
+  -p 8080:8080 \
+  -e AWS_ENDPOINT_URL=http://host.docker.internal:4566 \
+  -e AWS_ACCESS_KEY_ID=test \
+  -e AWS_SECRET_ACCESS_KEY=test \
+  -e AWS_REGION=us-east-1 \
+  davireis/stackport
+```
+
+Abre `http://localhost:8080` desde Windows. Si trabajas desde WSL y la UI no
+conecta, usa la IP de Windows dentro del contenedor o `host.docker.internal`
+según tu configuración de Docker.
+
+- **NiceBucket (solo S3)** — explorador nativo para buckets S3. Útil en clases
+  cuando el objetivo es enseñar almacenamiento de objetos.
+
+### Persistencia de datos
+
+Para mantener el estado entre reinicios usa:
+
+```bash
+floci start --persist ./datos-locales
+```
+
+Verifica que el contenedor tiene un volumen montado:
+
+```bash
+docker inspect floci | grep -A 5 Mounts
+```
+
+### Comandos útiles
+
+```bash
+floci doctor
+floci doctor --fix
+floci status
+floci logs
+floci restart
+floci snapshot save mi-snapshot
+floci snapshot restore mi-snapshot
+floci aws start
+floci az start
+floci gcp start
+```
+
+### Solución de conflictos de puerto y contenedores
+
+En ocasiones el puerto `4566` puede estar ocupado (por otro contenedor o
+servicio) y Floci no podrá iniciarse. Pasos recomendados para diagnosticar y
+resolver el conflicto:
+
+1. Ver contenedores que usan el puerto (desde WSL o Linux):
+
+```bash
+docker ps -a | grep 4566
+```
+
+2. Identificar procesos que escuchan en el puerto:
+
+```bash
+sudo apt update && sudo apt install -y lsof
+sudo lsof -i :4566
+```
+
+3. Si un contenedor ocupa el puerto, deténlo y bórralo (si no lo necesitas):
+
+```bash
+docker stop <container> && docker rm <container>
+# o para todos los contenedores relacionados con floci:
+docker stop $(docker ps -a -q --filter "name=floci") 2>/dev/null || true
+docker rm $(docker ps -a -q --filter "name=floci") 2>/dev/null || true
+```
+
+4. Reinicia Floci con persistencia o en otro puerto si hace falta:
+
+```bash
+floci start --persist ./datos-locales
+# o usar puerto alternativo
+floci start --persist ./datos-locales --port 4567
+export AWS_ENDPOINT_URL=http://localhost:4567
+```
+
+5. Uso de `floci doctor` para diagnóstico rápido:
+
+```bash
+floci doctor
+# para intentar arreglar problemas automáticos
+floci doctor --fix
+```
+
+Estas instrucciones están pensadas para entornos de enseñanza: inclúyelas en
+las notas del curso o en la guía práctica para que los alumnos resuelvan
+rapidez los problemas comunes.
 
 ### Azure
 

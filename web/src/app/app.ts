@@ -233,6 +233,55 @@ export class App implements OnInit {
       recommendation: 'Usala si quieres probar AWS local rapido o si trabajas con entornos basados en contenedores.',
     },
   ];
+  readonly windowsAngularCommands: SetupCommand[] = [
+    {
+      title: 'Instala Angular CLI en WSL',
+      command: 'npm install -g @angular/cli',
+      detail: 'Agrega el comando ng en tu distribución Kali para poder usar ng serve.',
+    },
+    {
+      title: 'Instala dependencias del proyecto',
+      command: 'cd /mnt/c/Users/<TU_USUARIO>/Downloads/floci/floci/web && npm install',
+      detail: 'Reemplaza <TU_USUARIO> por tu nombre de usuario de Windows y ejecuta esto en la carpeta web antes de levantar la aplicación.',
+    },
+    {
+      title: 'Arranca la UI Angular',
+      command: 'cd /mnt/c/Users/<TU_USUARIO>/Downloads/floci/floci/web && npx ng serve --host 0.0.0.0 --port 4200',
+      detail: 'Inicia Angular desde WSL y expone la app al navegador de Windows. Reemplaza <TU_USUARIO> por tu usuario de Windows.',
+    },
+    {
+      title: 'Abre la app en el navegador',
+      command: 'http://localhost:4200',
+      detail: 'Usa esta URL desde Windows para ver la UI una vez levantada.',
+    },
+  ];
+  readonly stackportCommand: SetupCommand = {
+    title: 'UI visual recomendada',
+    command: 'docker run -d --name stackport -p 8080:8080 -e AWS_ENDPOINT_URL=http://host.docker.internal:4566 -e AWS_ACCESS_KEY_ID=test -e AWS_SECRET_ACCESS_KEY=test -e AWS_REGION=us-east-1 davireis/stackport',
+    detail: 'Ejecuta StackPort como contenedor y apunta su UI al emulador Floci local.',
+  };
+  readonly stackportGuide: SetupCommand[] = [
+    {
+      title: 'Levanta StackPort',
+      command: 'docker run -d --name stackport -p 8080:8080 -e AWS_ENDPOINT_URL=http://host.docker.internal:4566 -e AWS_ACCESS_KEY_ID=test -e AWS_SECRET_ACCESS_KEY=test -e AWS_REGION=us-east-1 davireis/stackport',
+      detail: 'Arranca la interfaz web de StackPort y conéctala a Floci en el puerto 4566.',
+    },
+    {
+      title: 'Abre el navegador',
+      command: 'http://localhost:8080',
+      detail: 'Accede desde Windows o WSL al panel de StackPort.',
+    },
+    {
+      title: 'Conecta con Floci',
+      command: 'Endpoint: http://host.docker.internal:4566',
+      detail: 'Usa esta URL como endpoint AWS cuando StackPort te pida la conexión.',
+    },
+    {
+      title: 'Credenciales de Floci',
+      command: 'Access Key: test  Secret Key: test',
+      detail: 'StackPort usa credenciales ficticias para hablar con el emulador local.',
+    },
+  ];
   readonly serviceModulePurpose: ServiceModuleCard[] = [
     {
       title: 'Entender para que sirve cada servicio',
