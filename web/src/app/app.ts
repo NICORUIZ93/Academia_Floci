@@ -319,6 +319,8 @@ export class App implements OnInit {
   workspaceSteps = computed(() => this.stepsToCreateLab(this.selectedOs(), this.languageSnippet()));
   profileSetupLine = computed(() => this.linearSetupLine(this.workspaceSteps()));
   projectSetupLine = computed(() => this.linearSetupLine(this.topicProjectCreateCommands(), this.topicProjectVerification().slice(0, 1)));
+  highlightedLanguageCode = computed(() => this.highlightCode(this.languageSnippet().code, this.selectedLanguage()));
+  highlightedTopicProjectCode = computed(() => this.highlightCode(this.topicProjectCode(), this.selectedLanguage()));
   terminalGuide = computed(() => this.guideForTerminal(this.selectedOs()));
   ideGuide = computed(() => this.guideForIde(this.selectedOs(), this.selectedLanguage()));
 
@@ -496,6 +498,39 @@ func main() {
 Console.WriteLine("Servicio: ${project.services.join(', ')}");
 Console.WriteLine("Recurso local: ${resource}");
 Console.WriteLine("Implementa el cliente SDK siguiendo el módulo ${project.module} y verifica con la CLI.");`;
+  }
+  codeLanguageClass(language: LabLanguage = this.selectedLanguage()): string {
+    return `language-${language}`;
+  }
+  highlightCode(source: string, language: LabLanguage): string {
+    return source.split('\n').map((line, index) =>
+      `<span class="code-line"><span class="line-no">${index + 1}</span><span class="line-src">${this.highlightLine(line, language)}</span></span>`
+    ).join('');
+  }
+  private highlightLine(line: string, language: LabLanguage): string {
+    const tokens: string[] = [];
+    let html = this.escapeHtml(line);
+    const stash = (value: string, className: string): string => {
+      const token = `%%${'x'.repeat(tokens.length + 1)}%%`;
+      tokens.push(`<span class="${className}">${value}</span>`);
+      return token;
+    };
+    html = html.replace(/(".*?"|'.*?'|`.*?`)/g, value => stash(value, 'tok-string'));
+    html = html.replace(/(\/\/.*|#.*)$/g, value => stash(value, 'tok-comment'));
+    const keywordSets: Record<LabLanguage, string[]> = {
+      javascript: ['import', 'from', 'const', 'let', 'var', 'await', 'new', 'return', 'async', 'function'],
+      typescript: ['import', 'from', 'const', 'let', 'type', 'await', 'new', 'return', 'async', 'function'],
+      python: ['import', 'from', 'def', 'return', 'print', 'class', 'with', 'as', 'None', 'True', 'False'],
+      java: ['import', 'public', 'class', 'static', 'void', 'new', 'var', 'return'],
+      go: ['package', 'import', 'func', 'return', 'var', 'const'],
+      csharp: ['using', 'var', 'await', 'new', 'return', 'class', 'public'],
+    };
+    const keywords = keywordSets[language].join('|');
+    html = html.replace(new RegExp(`\\b(${keywords})\\b`, 'g'), '<span class="tok-keyword">$1</span>');
+    html = html.replace(/\b([A-Z][A-Za-z0-9_]*|[a-zA-Z0-9_]*Client|[a-zA-Z0-9_]*Command)\b/g, '<span class="tok-type">$1</span>');
+    html = html.replace(/\b(\d+)\b/g, '<span class="tok-number">$1</span>');
+    html = html.replace(/%%(x+)%%/g, (_, key) => tokens[String(key).length - 1] ?? '');
+    return html || ' ';
   }
   commandForSelectedOs(command: SetupCommand): string { return command.command; }
   moduleById(moduleId: number): CourseModule | undefined { return this.modules.find(item => item.id === moduleId); }

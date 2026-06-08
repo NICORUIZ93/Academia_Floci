@@ -49,6 +49,8 @@ test('modulos: lectura, ejercicios, notas y progreso se conectan', async ({ page
   await expect(page.locator('.lesson-content > h1')).toBeVisible();
   await expect(page.locator('.rail-progress')).toHaveCount(18);
   await expect(page.locator('.module-trailer')).toBeVisible();
+  await expect(page.locator('.active-course-profile')).toContainText('macOS con Python');
+  await expect(page.locator('.active-course-profile')).toContainText('app.py');
   await expect(page.locator('.newcomer-guide')).toBeVisible();
   await expect(page.locator('.newcomer-guide')).toContainText('ENTENDER DE VERDAD');
   await expect(page.locator('.newcomer-guide')).toContainText('Analogía simple');
@@ -60,6 +62,9 @@ test('modulos: lectura, ejercicios, notas y progreso se conectan', async ({ page
   await expect(page.locator('.compact-install')).toContainText('Escoge solo una forma de instalar Floci');
   await expect(page.locator('.compact-install')).toContainText('Opcion 3: Docker');
   await expect(page.locator('.adaptive-lab')).toContainText('pip install boto3');
+  await expect(page.locator('.adaptive-lab .code-line').first()).toBeVisible();
+  await expect(page.locator('.adaptive-lab .tok-keyword').first()).toBeVisible();
+  await expect(page.locator('.adaptive-lab .tok-string').first()).toBeVisible();
   await expect(page.locator('.process-guide .profile-line')).toContainText('Sistema: macOS');
   await expect(page.locator('.process-guide .profile-line')).toContainText('Lenguaje: Python');
   await expect(page.locator('.process-guide .profile-line')).toContainText('python app.py');
@@ -108,6 +113,7 @@ test('proyecto final: mini proyectos, integrador y entorno activo son utiles', a
   await expect(page.locator('.project-newcomer-guide')).toContainText('3 ERRORES COMUNES');
   await expect(page.locator('.project-newcomer-guide')).toContainText('Hazlo hoy');
   await expect(page.locator('.topic-recipe .code-sample')).toBeVisible();
+  await expect(page.locator('.topic-recipe .code-line').first()).toBeVisible();
   await page.locator('.topic-projects article').nth(2).click();
   await expect(page.locator('.topic-recipe')).toContainText('API de tareas desde cero');
   await expect(page.locator('.topic-recipe')).toContainText('FlociOpsTasks');

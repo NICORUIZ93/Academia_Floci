@@ -292,6 +292,18 @@
       <article class="lesson-content">
         <div class="lesson-kicker"><span [style.background]="selectedModule().color">MÓDULO {{ selectedModule().id }}</span><small>Lección {{ selectedModule().id + 1 }} de {{ modules.length }} · {{ selectedModule().level }} · {{ selectedModule().duration }}</small></div>
         <h1>{{ selectedModule().title }}</h1><p class="lesson-lead">{{ selectedModule().description }}</p>
+        <section class="active-course-profile">
+          <div>
+            <span class="eyebrow">RUTA ACTIVA DEL CURSO</span>
+            <h2>{{ selectedOsInfo().title }} con {{ selectedLanguageInfo().title }}</h2>
+            <p>Los ejercicios, comandos, archivos y snippets se generan para este perfil.</p>
+          </div>
+          <div class="profile-pills">
+            <span>{{ selectedOsInfo().label }}</span>
+            <span>{{ selectedLanguageInfo().file }}</span>
+            <span>{{ languageRunCommands()[0].command }}</span>
+          </div>
+        </section>
         <section class="module-trailer">
           <span><lucide-icon [img]="icons.Gauge" /><strong>{{ selectedModule().duration }}</strong><small>duración</small></span>
           <span><lucide-icon [img]="icons.BookOpen" /><strong>{{ selectedModule().concepts.length }}</strong><small>conceptos</small></span>
@@ -487,7 +499,7 @@
               </article>
               <article class="code-sample">
                 <div class="code-title"><span>{{ languageSnippet().file }}</span><button title="Copiar código" (click)="copyTextValue(languageSnippet().code)"><lucide-icon [img]="copiedText() === languageSnippet().code ? icons.Check : icons.Copy" /></button></div>
-                <pre><code>{{ languageSnippet().code }}</code></pre>
+                <pre><code [class]="codeLanguageClass()" [innerHTML]="highlightedLanguageCode()"></code></pre>
                 <button class="copy-line run-command" *ngFor="let command of languageRunCommands()" (click)="copyTextValue(command.command)">
                   <code>{{ command.command }}</code>
                   <lucide-icon [img]="copiedText() === command.command ? icons.Check : icons.Copy" />
@@ -803,7 +815,7 @@
                 <span>2. Implementar · {{ languageSnippet().file }}</span>
                 <button title="Copiar código" (click)="copyTextValue(topicProjectCode())"><lucide-icon [img]="copiedText() === topicProjectCode() ? icons.Check : icons.Copy" /></button>
               </div>
-              <pre><code>{{ topicProjectCode() }}</code></pre>
+              <pre><code [class]="codeLanguageClass()" [innerHTML]="highlightedTopicProjectCode()"></code></pre>
             </article>
             <article>
               <span class="eyebrow">3. VERIFICAR</span>
@@ -863,7 +875,7 @@
           </article>
           <article class="code-sample">
             <div class="code-title"><span>{{ languageSnippet().file }}</span><button title="Copiar código" (click)="copyTextValue(languageSnippet().code)"><lucide-icon [img]="copiedText() === languageSnippet().code ? icons.Check : icons.Copy" /></button></div>
-            <pre><code>{{ languageSnippet().code }}</code></pre>
+            <pre><code [class]="codeLanguageClass()" [innerHTML]="highlightedLanguageCode()"></code></pre>
           </article>
         </div>
       </section>
