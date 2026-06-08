@@ -359,6 +359,18 @@
               </div>
               <span class="process-pill">No avances sin verificar</span>
             </div>
+            <div class="profile-line" aria-label="Linea de trabajo por sistema operativo y lenguaje">
+              <article *ngFor="let step of profileSetupLine(); let si = index">
+                <span>{{ si + 1 }}</span>
+                <small>{{ step.phase }}</small>
+                <strong>{{ step.title }}</strong>
+                <button class="copy-line" (click)="copyTextValue(step.command)">
+                  <code>{{ step.command }}</code>
+                  <lucide-icon [img]="copiedText() === step.command ? icons.Check : icons.Copy" />
+                </button>
+                <p>{{ step.detail }}</p>
+              </article>
+            </div>
             <div class="process-grid">
               <article *ngFor="let step of workspaceSteps()">
                 <strong>{{ step.title }}</strong>
@@ -782,6 +794,18 @@
               <button *ngFor="let language of labLanguages" [class.active]="selectedLanguage() === language.id" (click)="setLabLanguage(language.id)"><strong>{{ language.title }}</strong><small>{{ language.file }}</small></button>
             </div>
           </div>
+        </div>
+        <div class="profile-line project-line" aria-label="Linea del proyecto por sistema operativo y lenguaje">
+          <article *ngFor="let step of projectSetupLine(); let si = index">
+            <span>{{ si + 1 }}</span>
+            <small>{{ step.phase }}</small>
+            <strong>{{ step.title }}</strong>
+            <button class="copy-line" (click)="copyTextValue(step.command)">
+              <code>{{ step.command }}</code>
+              <lucide-icon [img]="copiedText() === step.command ? icons.Check : icons.Copy" />
+            </button>
+            <p>{{ step.detail }}</p>
+          </article>
         </div>
         <div class="project-env-grid">
           <article>

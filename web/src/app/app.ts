@@ -39,6 +39,9 @@ interface SetupCommand {
   command: string;
   detail: string;
 }
+interface LinearSetupStep extends SetupCommand {
+  phase: string;
+}
 interface ChallengeGuide {
   action: string;
   command: string;
@@ -284,6 +287,8 @@ export class App implements OnInit {
   languageInstallCommands = computed(() => this.commandsForLanguageAction('install', this.selectedLanguage(), this.languageSnippet()));
   languageRunCommands = computed(() => this.commandsForLanguageAction('run', this.selectedLanguage(), this.languageSnippet()));
   workspaceSteps = computed(() => this.stepsToCreateLab(this.selectedOs(), this.languageSnippet()));
+  profileSetupLine = computed(() => this.linearSetupLine(this.workspaceSteps()));
+  projectSetupLine = computed(() => this.linearSetupLine(this.topicProjectCreateCommands(), this.topicProjectVerification().slice(0, 1)));
   terminalGuide = computed(() => this.guideForTerminal(this.selectedOs()));
   ideGuide = computed(() => this.guideForIde(this.selectedOs(), this.selectedLanguage()));
 
@@ -625,13 +630,29 @@ Console.WriteLine("Implementa el cliente SDK siguiendo el módulo ${project.modu
     const openFile = os === 'windows'
       ? `notepad ${snippet.file}`
       : `code ${snippet.file}`;
-    return [
-      { title: '1. Crea la carpeta del laboratorio', command: createFolder, detail: 'Haz esto una sola vez por modulo. Despues todos los archivos quedan ordenados ahi.' },
-      { title: '2. Crea el archivo de codigo', command: createFile, detail: `El archivo debe llamarse exactamente ${snippet.file}. Si el nombre cambia, el comando de ejecucion puede fallar.` },
-      ...this.languageInstallCommands().map((command, index) => ({ ...command, title: `${3 + index}. ${command.title}` })),
-      { title: '4. Abre el archivo y pega el codigo', command: openFile, detail: 'Pega el ejemplo, guarda el archivo y luego vuelve a la terminal.' },
-      ...this.languageRunCommands().map((command, index) => ({ ...command, title: `${5 + index}. ${command.title}` })),
+    const steps: SetupCommand[] = [
+      { title: 'Crea la carpeta del laboratorio', command: createFolder, detail: 'Haz esto una sola vez por modulo. Despues todos los archivos quedan ordenados ahi.' },
+      { title: 'Crea el archivo de codigo', command: createFile, detail: `El archivo debe llamarse exactamente ${snippet.file}. Si el nombre cambia, el comando de ejecucion puede fallar.` },
+      ...this.languageInstallCommands(),
+      { title: 'Abre el archivo y pega el codigo', command: openFile, detail: 'Pega el ejemplo, guarda el archivo y luego vuelve a la terminal.' },
+      ...this.languageRunCommands(),
     ];
+    return steps.map((step, index) => ({ ...step, title: `${index + 1}. ${step.title}` }));
+  }
+  private linearSetupLine(workSteps: SetupCommand[], verificationSteps: SetupCommand[] = []): LinearSetupStep[] {
+    const osSteps = this.setupCommands().slice(0, 4).map(command => ({
+      ...command,
+      phase: `Sistema: ${this.selectedOsInfo().title}`,
+    }));
+    const labSteps = workSteps.map(command => ({
+      ...command,
+      phase: `Lenguaje: ${this.selectedLanguageInfo().title}`,
+    }));
+    const verification = verificationSteps.map(command => ({
+      ...command,
+      phase: 'Verificacion',
+    }));
+    return [...osSteps, ...labSteps, ...verification];
   }
   private guideForTerminal(os: StudentOs): TerminalGuide {
     if (os === 'windows') {

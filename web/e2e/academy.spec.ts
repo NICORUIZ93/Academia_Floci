@@ -52,6 +52,9 @@ test('modulos: lectura, ejercicios, notas y progreso se conectan', async ({ page
 
   await page.locator('.lesson-tabs button').nth(1).click();
   await expect(page.locator('.adaptive-lab')).toContainText('pip install boto3');
+  await expect(page.locator('.process-guide .profile-line')).toContainText('Sistema: macOS');
+  await expect(page.locator('.process-guide .profile-line')).toContainText('Lenguaje: Python');
+  await expect(page.locator('.process-guide .profile-line')).toContainText('python app.py');
   await expect(page.locator('.guided-challenge').first()).toContainText('Verifica:');
   await expect(page.locator('.guided-challenge').first()).toContainText('Consejo tecnico:');
   await expect(page.locator('.guided-challenge code').first()).toBeVisible();
@@ -107,6 +110,9 @@ test('proyecto final: mini proyectos, integrador y entorno activo son utiles', a
 
   await page.locator('.project-config .segmented-control button').filter({ hasText: 'Linux' }).click();
   await page.locator('.project-config .language-select button').filter({ hasText: /^Go/ }).click();
+  await expect(page.locator('.project-environment .profile-line')).toContainText('Sistema: Linux');
+  await expect(page.locator('.project-environment .profile-line')).toContainText('Lenguaje: Go');
+  await expect(page.locator('.project-environment .profile-line')).toContainText('go run main.go');
   await expect(page.locator('.project-environment')).toContainText('curl -fsSL');
   await expect(page.locator('.project-environment')).toContainText('go run main.go');
 });
