@@ -1,13 +1,23 @@
-# Ignorar backups de lecciones y artefactos temporales
-web/public/content/lecciones/*.bak
-*.pyc
-__pycache__/
+# Environment and local secrets
+.env
+.env.*
+!.env.example
+/.cache.env
+
+# Dependencies and build artifacts
 node_modules/
 dist/
-/.cache.env
+web/dist/
+web/.angular/cache/
+web/ng-serve*.log
+examples/node/node_modules/
+
+# Python
 .venv/
 __pycache__/
 *.pyc
-data/
-examples/node/node_modules/
 
+# Generated lesson backups and local data
+web/public/content/lecciones/*.bak
+data/
+datos-locales/

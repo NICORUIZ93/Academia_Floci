@@ -13,6 +13,7 @@ import urllib.request
 
 ROOT = os.path.dirname(os.path.dirname(__file__))
 LESSONS_GLOB = os.path.join(ROOT, 'web', 'public', 'content', 'lecciones', 'modulo-*.md')
+DEFAULT_BASE_URL = 'http://localhost:63031/content/lecciones/'
 
 def fix_content(path):
     with open(path, 'r', encoding='utf-8') as f:
@@ -44,7 +45,7 @@ def fix_content(path):
         return True
     return False
 
-def check_http(path, base_url='http://localhost:63031/content/lecciones/'):
+def check_http(path, base_url=DEFAULT_BASE_URL):
     filename = os.path.basename(path)
     url = base_url + filename
     try:
@@ -58,6 +59,8 @@ def check_http(path, base_url='http://localhost:63031/content/lecciones/'):
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--check', action='store_true', help='No modifica archivos; solo informa qué cambiaría')
+    parser.add_argument('--base-url', default=DEFAULT_BASE_URL, help='URL base para verificar entrega HTTP de lecciones')
+    parser.add_argument('--skip-http', action='store_true', help='Omite la verificación HTTP; útil para CI sin servidor local')
     args = parser.parse_args()
 
     files = sorted(glob.glob(LESSONS_GLOB))
@@ -75,8 +78,7 @@ def main():
             orig = content
             content = content.replace('/mnt/c/Users/nicol', '/mnt/c/Users/<TU_USUARIO>')
             content = content.replace('C:\\Users\\nicol', '/mnt/c/Users/<TU_USUARIO>')
-            if '## Verificación' not in content:
-                # marcaría para añadir sección
+            if content != orig or '## Verificación' not in content:
                 modified.append(p)
                 print('Would modify:', os.path.basename(p))
         else:
@@ -84,19 +86,29 @@ def main():
                 modified.append(p)
                 print('Modificado:', os.path.basename(p))
 
-    print('\nVerificando entrega HTTP de cada lección (http://localhost:63031)...')
     ok_count = 0
-    for p in files:
-        ok, info, size = check_http(p)
-        if ok:
-            ok_count += 1
-            print('OK ', os.path.basename(p), 'status=200 size=%d' % size)
-        else:
-            print('FAIL', os.path.basename(p), info)
+    http_failed = 0
+    if args.skip_http:
+        print('\nVerificación HTTP omitida.')
+    else:
+        print('\nVerificando entrega HTTP de cada lección (%s)...' % args.base_url)
+        for p in files:
+            ok, info, size = check_http(p, args.base_url)
+            if ok:
+                ok_count += 1
+                print('OK ', os.path.basename(p), 'status=200 size=%d' % size)
+            else:
+                http_failed += 1
+                print('FAIL', os.path.basename(p), info)
 
     print('\nResumen:')
     print('Lecciones modificadas:', len(modified))
-    print('Lecciones servidas OK:', ok_count, '/', len(files))
+    if not args.skip_http:
+        print('Lecciones servidas OK:', ok_count, '/', len(files))
+    if args.check and modified:
+        return 1
+    if http_failed:
+        return 1
     return 0
 
 if __name__ == '__main__':

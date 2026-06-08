@@ -265,31 +265,6 @@
         </div>
       </section>
 
-        <!-- Mostrar guía StackPort directamente en Módulo 0 para acceso rápido -->
-        <div *ngIf="selectedModuleId() === 0" class="stackport-guide" style="margin-top:18px;">
-          <h3>Cómo usar StackPort (acceso rápido)</h3>
-          <div>
-            <strong>{{ stackportCommand.title }}</strong>
-            <p>{{ stackportCommand.detail }}</p>
-            <button class="copy-line" (click)="copyTextValue(stackportCommand.command)">
-              <code>{{ stackportCommand.command }}</code>
-              <lucide-icon [img]="copiedText() === stackportCommand.command ? icons.Check : icons.Copy" />
-            </button>
-            <strong>Abre <code>http://localhost:8080</code> en Windows.</strong>
-          </div>
-          <ol>
-            <li *ngFor="let step of stackportGuide">
-              <strong>{{ step.title }}</strong>
-              <p>{{ step.detail }}</p>
-              <button class="copy-line small" (click)="copyTextValue(step.command)">
-                <code>{{ step.command }}</code>
-                <lucide-icon [img]="copiedText() === step.command ? icons.Check : icons.Copy" />
-              </button>
-            </li>
-          </ol>
-          <p class="note">Si Docker no resuelve <code>host.docker.internal</code>, prueba con la IP de tu host Windows (ej. <code>172.17.0.1</code>).</p>
-        </div>
-
       <section class="first-session" *ngIf="completedCount() === 0">
         <div class="first-session-title">
           <span class="eyebrow">COMANDOS DE INICIO</span>

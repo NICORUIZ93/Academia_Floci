@@ -5,9 +5,9 @@ por cuenta propia. Los ejemplos resueltos no forman parte del recorrido inicial.
 
 ## Contenido
 
-- [Empieza aquí: curso interactivo](CURSO_INTERACTIVO.md)
-- [Cuaderno de progreso](PROGRESO.md)
-- [Manual de consulta](GUIA_FLOCI_ES.md)
+- [Empieza aquí: curso interactivo](web/public/content/es/curso-interactivo.md)
+- [Cuaderno de progreso](web/public/content/es/cuaderno-progreso.md)
+- [Manual de consulta](web/public/content/es/guia-completa.md)
 - [Docker Compose](docker-compose.yml)
 - [Variables de entorno](.env.example)
 - [Ejemplos de referencia](examples/README.md)

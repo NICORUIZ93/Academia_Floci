@@ -11,10 +11,10 @@ import urllib.request
 
 ROOT = os.path.dirname(os.path.dirname(__file__))
 LESSONS_GLOB = os.path.join(ROOT, 'web', 'public', 'content', 'lecciones', 'modulo-*.md')
-BASE_URL = 'http://localhost:63031/content/lecciones/'
+DEFAULT_BASE_URL = 'http://localhost:63031/content/lecciones/'
 
-def fetch_info(filename):
-    url = BASE_URL + filename
+def fetch_info(filename, base_url=DEFAULT_BASE_URL):
+    url = base_url + filename
     try:
         with urllib.request.urlopen(url, timeout=5) as r:
             status = r.getcode()
@@ -23,7 +23,7 @@ def fetch_info(filename):
     except Exception as e:
         return False, str(e), 0
 
-def insert_result(path, ok, status_or_err, size):
+def insert_result(path, ok, status_or_err, size, base_url=DEFAULT_BASE_URL):
     with open(path, 'r', encoding='utf-8') as f:
         content = f.read()
 
@@ -36,9 +36,9 @@ def insert_result(path, ok, status_or_err, size):
     # Build result block
     filename = os.path.basename(path)
     if ok:
-        result = f"\n### Resultado de entrega automática\n- URL: {BASE_URL}{filename}\n- Estado: 200 OK\n- Tamaño: {size} bytes\n\n"
+        result = f"\n### Resultado de entrega automática\n- URL: {base_url}{filename}\n- Estado: 200 OK\n- Tamaño: {size} bytes\n\n"
     else:
-        result = f"\n### Resultado de entrega automática\n- URL: {BASE_URL}{filename}\n- Error: {status_or_err}\n\n"
+        result = f"\n### Resultado de entrega automática\n- URL: {base_url}{filename}\n- Error: {status_or_err}\n\n"
 
     # If there's already a 'Resultado de entrega automática' section, replace it
     start = content.find('### Resultado de entrega automática', idx)
@@ -67,6 +67,7 @@ def insert_result(path, ok, status_or_err, size):
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--check', action='store_true', help='No modifica archivos; solo informa resultados')
+    parser.add_argument('--base-url', default=DEFAULT_BASE_URL, help='URL base para verificar entrega HTTP de lecciones')
     args = parser.parse_args()
 
     files = sorted(glob.glob(LESSONS_GLOB))
@@ -77,7 +78,7 @@ def main():
     failed = 0
     for p in files:
         filename = os.path.basename(p)
-        ok, status_or_err, size = fetch_info(filename)
+        ok, status_or_err, size = fetch_info(filename, args.base_url)
         if args.check:
             if ok:
                 print('OK   (check):', filename, 'size=', size)
@@ -85,7 +86,7 @@ def main():
                 print('FAIL (check):', filename, status_or_err)
                 failed += 1
         else:
-            insert_result(p, ok, status_or_err, size)
+            insert_result(p, ok, status_or_err, size, args.base_url)
             if ok:
                 print('Insertado:', filename, 'OK size=', size)
             else:

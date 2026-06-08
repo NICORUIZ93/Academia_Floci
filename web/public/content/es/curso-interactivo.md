@@ -1,6 +1,6 @@
 # Curso interactivo de Floci: de cero a experto
 
-Este es el recorrido principal. La [guía completa](GUIA_FLOCI_ES.md) funciona
+Este es el recorrido principal. La [guía completa](guia-completa.md) funciona
 como manual de consulta, no como una lista para copiar. Aquí debes producir las
 respuestas, comandos, scripts y código.
 
@@ -24,7 +24,7 @@ Cuando te bloquees:
 1. Lee el error completo.
 2. Consulta `--help` del comando.
 3. Revisa logs de Floci.
-4. Busca el concepto en `GUIA_FLOCI_ES.md`.
+4. Busca el concepto en `guia-completa.md`.
 5. Consulta la documentación oficial del servicio.
 6. Escribe una hipótesis y prueba una sola modificación.
 7. Solo después revisa `examples/` o pide una pista, no la solución.
@@ -72,7 +72,7 @@ Avanza solamente si cumples los cuatro criterios:
 
 **Meta:** saber qué conoces antes de estudiar.
 
-Sin consultar la guía, escribe en `PROGRESO.md`:
+Sin consultar la guía, escribe en `cuaderno-progreso.md`:
 
 1. Qué es un endpoint.
 2. Qué diferencia hay entre una imagen y un contenedor.
@@ -442,4 +442,3 @@ Usa esta lista para confirmar que ningún tema quedó fuera:
 - Correo: SES y SES v2.
 - Plataforma: Docker, imágenes, puertos, almacenamiento, TLS, hooks, cuentas,
   `application.yml`, migración de LocalStack, Testcontainers, CI, CLI y UI.
-
