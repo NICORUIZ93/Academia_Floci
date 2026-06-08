@@ -101,6 +101,27 @@ test('servicios y biblioteca: navegacion por contenido local funciona', async ({
   await expect(page.locator('.markdown-body')).toBeVisible();
 });
 
+test('modulos: java separa instalacion, codigo y ejecucion', async ({ page, isMobile }) => {
+  await page.locator('.student-config .segmented-control button').filter({ hasText: 'Windows' }).click();
+  await page.locator('.student-config .language-select button').nth(3).click();
+  await navigateTo(page, 1, isMobile);
+  await page.locator('.lesson-tabs button').nth(1).click();
+
+  await expect(page.locator('.adaptive-lab')).toContainText('Windows');
+  await expect(page.locator('.adaptive-lab')).toContainText('Java');
+  await expect(page.locator('.adaptive-lab .sdk-panel')).toContainText('Elige una ruta: Maven o Gradle');
+  await expect(page.locator('.adaptive-lab .sdk-panel')).toContainText('mvn -q archetype:generate');
+  await expect(page.locator('.adaptive-lab .sdk-panel')).toContainText('gradle init --type java-application');
+  await expect(page.locator('.adaptive-lab .code-title')).toContainText('Codigo');
+  await expect(page.locator('.adaptive-lab .code-title')).toContainText('App.java');
+  await expect(page.locator('.adaptive-lab .code-sample')).toContainText('S3Client.builder');
+  await expect(page.locator('.adaptive-lab .code-sample')).not.toContainText('mvn exec:java');
+  await expect(page.locator('.adaptive-lab .code-sample')).not.toContainText('gradle run');
+  await expect(page.locator('.adaptive-lab .run-panel')).toContainText('EJECUTAR');
+  await expect(page.locator('.adaptive-lab .run-panel')).toContainText('mvn exec:java');
+  await expect(page.locator('.adaptive-lab .run-panel')).toContainText('gradle run');
+});
+
 test('proyecto final: mini proyectos, integrador y entorno activo son utiles', async ({ page, isMobile }) => {
   await navigateTo(page, 4, isMobile);
 

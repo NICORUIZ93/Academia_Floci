@@ -1015,9 +1015,27 @@ kbd { display:inline-grid; place-items:center; min-height:22px; min-width:38px; 
 .adaptive-head p { margin:0; color:$mu; font-size:11px; line-height:1.5; overflow-wrap:break-word; }
 .lab-badges { display:flex; gap:5px; flex-wrap:wrap; justify-content:flex-end; flex-shrink:0; }
 .lab-badges span { background:$pl; color:$p; border:1px solid $pm; border-radius:$rs; padding:4px 8px; font-size:9px; font-weight:800; white-space:nowrap; }
-.adaptive-grid { display:grid; grid-template-columns:.8fr .8fr 1.4fr; gap:0; }
+.adaptive-grid { display:grid; grid-template-columns:.9fr 1.1fr; gap:0; }
 .adaptive-grid article { padding:14px; border-right:1px solid $bd; min-width:0; }
 .adaptive-grid article:last-child { border-right:0; }
+.adaptive-grid .sdk-panel { border-right:0; }
+.adaptive-grid .code-sample {
+  grid-column:1/-1;
+  border-right:0;
+  border-top:1px solid $bd;
+}
+.adaptive-grid .run-panel {
+  grid-column:1/-1;
+  border-right:0;
+  border-top:1px solid $bd;
+  background:$bg;
+  display:grid;
+  grid-template-columns:minmax(180px,.45fr) repeat(auto-fit,minmax(240px,1fr));
+  gap:8px;
+  align-items:start;
+}
+.lab-card-hint { margin:6px 0 8px; color:$mu; font-size:10px; line-height:1.45; overflow-wrap:anywhere; }
+.run-panel .copy-line { margin-top:0; background:$wh; }
 .copy-line {
   width:100%; min-height:34px; border:1px solid $bd; background:$bg;
   color:$i2; border-radius:$rs; margin-top:7px; padding:7px 8px;
@@ -1256,6 +1274,7 @@ kbd { display:inline-grid; place-items:center; min-height:22px; min-width:38px; 
   .completion-certificate .primary{width:100%}
   .process-heading{flex-direction:column}
   .process-grid{grid-template-columns:1fr}
+  .adaptive-grid .run-panel{grid-template-columns:1fr}
   .console-ide-split{grid-template-columns:1fr}
   .command-anatomy>div{grid-template-columns:1fr}
   .newcomer-grid{grid-template-columns:1fr}

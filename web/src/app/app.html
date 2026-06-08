@@ -479,7 +479,7 @@
               </div>
             </div>
             <div class="adaptive-grid">
-              <article>
+              <article class="terminal-panel">
                 <span class="eyebrow">TERMINAL</span>
                 <button class="copy-line" *ngFor="let command of setupCommands().slice(0, 4)" (click)="copyTextValue(command.command)">
                   <span class="command-label">{{ command.title }}</span>
@@ -487,20 +487,28 @@
                   <lucide-icon [img]="copiedText() === command.command ? icons.Check : icons.Copy" />
                 </button>
               </article>
-              <article>
-                <span class="eyebrow">INSTALACIÓN SDK</span>
+              <article class="sdk-panel">
+                <span class="eyebrow">INSTALACION SDK</span>
+                <p class="lab-card-hint" *ngIf="selectedLanguage() === 'java'">Elige una ruta: Maven o Gradle. No necesitas crear ambos proyectos para aprender el laboratorio.</p>
+                <p class="lab-card-hint" *ngIf="selectedLanguage() !== 'java'">Instala las dependencias del lenguaje antes de ejecutar el archivo.</p>
                 <button class="copy-line" *ngFor="let command of languageInstallCommands()" (click)="copyTextValue(command.command)">
                   <span class="command-label">{{ command.title }}</span>
                   <code>{{ command.command }}</code>
                   <lucide-icon [img]="copiedText() === command.command ? icons.Check : icons.Copy" />
                 </button>
-                <span class="eyebrow file-label">ARCHIVO</span>
-                <code class="file-name">{{ languageSnippet().file }}</code>
               </article>
               <article class="code-sample">
-                <div class="code-title"><span>{{ languageSnippet().file }}</span><button title="Copiar código" (click)="copyTextValue(languageSnippet().code)"><lucide-icon [img]="copiedText() === languageSnippet().code ? icons.Check : icons.Copy" /></button></div>
+                <div class="code-title"><span>Codigo · {{ languageSnippet().file }}</span><button title="Copiar codigo" (click)="copyTextValue(languageSnippet().code)"><lucide-icon [img]="copiedText() === languageSnippet().code ? icons.Check : icons.Copy" /></button></div>
                 <pre><code [class]="codeLanguageClass()" [innerHTML]="highlightedLanguageCode()"></code></pre>
-                <button class="copy-line run-command" *ngFor="let command of languageRunCommands()" (click)="copyTextValue(command.command)">
+              </article>
+              <article class="run-panel">
+                <div>
+                  <span class="eyebrow">EJECUTAR</span>
+                  <p class="lab-card-hint" *ngIf="selectedLanguage() === 'java'">Usa solo el comando que corresponda a la ruta que elegiste arriba.</p>
+                  <p class="lab-card-hint" *ngIf="selectedLanguage() !== 'java'">Ejecuta desde la misma carpeta donde guardaste {{ languageSnippet().file }}.</p>
+                </div>
+                <button class="copy-line" *ngFor="let command of languageRunCommands()" (click)="copyTextValue(command.command)">
+                  <span class="command-label">{{ command.title }}</span>
                   <code>{{ command.command }}</code>
                   <lucide-icon [img]="copiedText() === command.command ? icons.Check : icons.Copy" />
                 </button>
