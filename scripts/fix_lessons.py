@@ -8,7 +8,6 @@ Uso: python scripts/fix_lessons.py
 import argparse
 import glob
 import os
-import shutil
 import urllib.request
 
 ROOT = os.path.dirname(os.path.dirname(__file__))
@@ -38,8 +37,6 @@ def fix_content(path):
         changed = True
 
     if changed:
-        bak = path + '.bak'
-        shutil.copyfile(path, bak)
         with open(path, 'w', encoding='utf-8') as f:
             f.write(content)
         return True
