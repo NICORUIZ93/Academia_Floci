@@ -38,7 +38,7 @@ El sitio principal presenta cinco piezas:
 | `floci-az` | Emulación local de servicios Azure en el puerto `4577` |
 | `floci-gcp` | Emulación local de servicios GCP en el puerto `4588` |
 | `floci-cli` | Inicio, parada, diagnóstico y variables de los emuladores |
-| `floci-ui` | Exploración visual de recursos locales |
+| StackPort (en este curso) | Exploración visual de recursos locales AWS |
 
 Esta guía profundiza en `floci` para AWS porque es el producto con la
 documentación de servicios más extensa. Al final se incluye una introducción a
@@ -994,7 +994,16 @@ Opciones recomendadas:
   bash install.sh
   ```
 
-  También puedes buscar un binario nativo de Windows en https://floci.io.
+  También puedes usar la ruta Docker Compose del curso:
+
+  ```powershell
+  docker compose up -d floci stackport
+  $env:AWS_ENDPOINT_URL="http://localhost:4566"
+  $env:AWS_ACCESS_KEY_ID="test"
+  $env:AWS_SECRET_ACCESS_KEY="test"
+  $env:AWS_DEFAULT_REGION="us-east-1"
+  aws sts get-caller-identity
+  ```
 
 #### Angular UI en Windows (puerto 4200)
 
@@ -1012,7 +1021,7 @@ IP de tu WSL: `http://<WSL_IP>:4200`.
 
 ### StackPort integrado
 
-Floci es principalmente una CLI. Este proyecto integra StackPort en
+Floci se trabaja principalmente por CLI. Este proyecto integra StackPort en
 `docker-compose.yml` para explorar visualmente los recursos AWS locales que
 creas durante los laboratorios.
 
@@ -1026,6 +1035,22 @@ terminal, el endpoint sigue siendo `http://localhost:4566`.
 
 - **NiceBucket (solo S3)** — explorador nativo para buckets S3. Útil en clases
   cuando el objetivo es enseñar almacenamiento de objetos.
+
+No uses `docker run floci/floci-ui:latest` como paso del curso. Si encuentras
+capturas o referencias a una UI de Floci, trátalas como material externo; la
+ruta validada aquí es CLI + StackPort.
+
+### Problemas comunes validados
+
+| Error | Causa | Solución | Verifica |
+|-------|-------|----------|----------|
+| `sh` no se reconoce | PowerShell/CMD no traen `sh`. | Usa WSL o Git Bash. | `floci --version` |
+| `Unsupported OS: mingw64_nt` | Git Bash/MSYS2 fue detectado como sistema no soportado. | Cambia a WSL o usa Docker Compose. | `uname -s && floci --version` |
+| `GID 1000 is already in use` | Conflicto de usuario/grupo en WSL. | Reinstala la distro de práctica o crea otro usuario. | `whoami && id` |
+| `Bind for 0.0.0.0:4566 failed` | El puerto 4566 ya está ocupado. | Detén el contenedor que publica ese puerto. | `docker ps --filter "publish=4566"` |
+| `Unable to locate credentials` | No cargaste variables locales. | Usa `eval $(floci env)` o `$env:` en PowerShell. | `aws sts get-caller-identity` |
+| `docker.sock permission denied` | Usuario sin permiso para Docker. | `sudo usermod -aG docker $USER` y reinicia sesión. | `docker info` |
+| `Unable to find image floci/floci-ui:latest` | La academia no usa esa imagen. | `docker compose up -d floci stackport`. | `docker compose ps` |
 
 ### Persistencia de datos
 

@@ -69,6 +69,14 @@ interface InstallationOption {
   detail: string;
   recommendation: string;
 }
+interface TroubleshootingItem {
+  error: string;
+  cause: string;
+  command: string;
+  solution: string;
+  verify: string;
+  priority: 'Alta' | 'Media' | 'Baja';
+}
 interface ServiceModuleCard {
   title: string;
   detail: string;
@@ -287,6 +295,72 @@ export class App implements OnInit {
       detail: 'Son credenciales ficticias del laboratorio. No uses claves reales dentro de Floci ni StackPort.',
     },
   ];
+  readonly commonFlociErrors: TroubleshootingItem[] = [
+    {
+      error: '"sh" no se reconoce como comando',
+      cause: 'PowerShell y CMD no traen sh por defecto. El instalador shell es para Linux, macOS, WSL o Git Bash.',
+      command: 'wsl -d kali-linux -e bash -c "curl -fsSL https://floci.io/install.sh | sh"',
+      solution: 'Usa WSL como ruta recomendada. En Git Bash usa bash; en PowerShell descarga y revisa el script antes de ejecutarlo en un shell compatible.',
+      verify: 'floci --version',
+      priority: 'Alta',
+    },
+    {
+      error: 'Unsupported OS: mingw64_nt',
+      cause: 'Git Bash/MSYS2 corre sobre Windows y algunos instaladores no lo mapean bien.',
+      command: 'curl -fsSL https://floci.io/install.sh | bash',
+      solution: 'Prueba Git Bash actualizado. Si la release no trae binario Windows, cambia a WSL o usa Docker Compose del curso.',
+      verify: 'uname -s && floci --version',
+      priority: 'Alta',
+    },
+    {
+      error: 'GID 1000 is already in use',
+      cause: 'La distro WSL ya tiene un grupo o usuario con ese identificador.',
+      command: 'wsl --unregister kali-linux && wsl --install -d kali-linux',
+      solution: 'Reinstala la distro si es de laboratorio o crea un usuario con otro nombre. No borres una distro con trabajo importante sin respaldo.',
+      verify: 'whoami && id',
+      priority: 'Media',
+    },
+    {
+      error: 'Port 4566 is already allocated',
+      cause: 'Ya existe un contenedor o proceso usando el puerto principal de Floci.',
+      command: 'docker ps -a --filter "publish=4566"',
+      solution: 'Identifica el contenedor, detenlo si no lo necesitas y vuelve a levantar Floci. En este curso evita tener dos Floci compitiendo por el mismo puerto.',
+      verify: 'docker compose ps && curl -s http://localhost:4566/_localstack/health',
+      priority: 'Alta',
+    },
+    {
+      error: 'Unable to locate credentials',
+      cause: 'AWS CLI o el SDK no recibieron endpoint y credenciales locales.',
+      command: 'floci env --powershell | Invoke-Expression',
+      solution: 'En PowerShell carga variables con formato PowerShell. En bash/zsh usa eval $(floci env). Las credenciales son test/test.',
+      verify: 'aws sts get-caller-identity',
+      priority: 'Media',
+    },
+    {
+      error: 'Docker.sock permission denied',
+      cause: 'Tu usuario Linux no puede hablar con el daemon de Docker.',
+      command: 'sudo usermod -aG docker $USER',
+      solution: 'Agrega el usuario al grupo docker, cierra sesión y vuelve a entrar. Si usas Docker Desktop, confirma que esté iniciado.',
+      verify: 'docker info',
+      priority: 'Media',
+    },
+    {
+      error: 'Unable to find image floci/floci-ui:latest',
+      cause: 'Este curso no depende de una imagen Docker oficial de UI. La ruta visual soportada aquí es StackPort.',
+      command: 'docker compose up -d floci stackport',
+      solution: 'Trabaja Floci por CLI y usa StackPort en http://localhost:8080 para inspeccionar recursos AWS locales.',
+      verify: 'docker compose ps',
+      priority: 'Alta',
+    },
+    {
+      error: 'export no se reconoce o Invoke-Expression falla',
+      cause: 'Copiaste comandos de un shell en otro. Bash usa export/eval; PowerShell usa $env o Invoke-Expression.',
+      command: '$env:AWS_ENDPOINT_URL="http://localhost:4566"; $env:AWS_ACCESS_KEY_ID="test"; $env:AWS_SECRET_ACCESS_KEY="test"; $env:AWS_DEFAULT_REGION="us-east-1"',
+      solution: 'Selecciona tu sistema operativo en la web antes de copiar comandos. No mezcles PowerShell con bash.',
+      verify: 'aws sts get-caller-identity',
+      priority: 'Media',
+    },
+  ];
   readonly serviceModulePurpose: ServiceModuleCard[] = [
     {
       title: 'Entender para qué sirve cada servicio',
@@ -296,7 +370,7 @@ export class App implements OnInit {
     {
       title: 'Comparar AWS, Azure y GCP sin confundirte',
       detail: 'La nube cambia nombres y detalles, pero los patrones se repiten. S3, Blob Storage y Cloud Storage resuelven la misma familia de problema.',
-      action: 'Usa la pestaña Comparación cuando no sepas c?mo se llama un servicio en otra nube.',
+      action: 'Usa la pestaña Comparación cuando no sepas cómo se llama un servicio en otra nube.',
     },
     {
       title: 'Elegir el siguiente laboratorio correcto',
@@ -308,7 +382,7 @@ export class App implements OnInit {
     {
       title: 'Un servicio, una responsabilidad',
       detail: 'Usa S3 para objetos, SQS para colas, DynamoDB para clave-valor y CloudWatch para observabilidad. Evita forzar un servicio a resolver todo.',
-      action: 'Pregunta: qué responsabilidad técnica cumple este servicio?',
+      action: 'Pregunta: ¿qué responsabilidad técnica cumple este servicio?',
     },
     {
       title: 'Nombres consistentes',
@@ -329,7 +403,7 @@ export class App implements OnInit {
   readonly serviceDeviceTips: ServiceModuleCard[] = [
     {
       title: 'Desktop',
-      detail: 'Trabaja con la tabla de comparacion y el detalle del servicio abierto. Es ideal para estudiar equivalencias lado a lado.',
+      detail: 'Trabaja con la tabla de comparación y el detalle del servicio abierto. Es ideal para estudiar equivalencias lado a lado.',
       action: 'Usa buscador + pestañas + laboratorio.',
     },
     {
@@ -338,8 +412,8 @@ export class App implements OnInit {
       action: 'Escanea tarjetas y abre solo lo que vas a practicar.',
     },
     {
-      title: 'Movil',
-      detail: 'Usa una pregunta concreta: qué servicio necesito y para qué? La vista se compacta para leer una tarjeta a la vez.',
+      title: 'Móvil',
+      detail: 'Usa una pregunta concreta: ¿qué servicio necesito y para qué? La vista se compacta para leer una tarjeta a la vez.',
       action: 'Busca, abre detalle y guarda el módulo para practicar luego.',
     },
   ];

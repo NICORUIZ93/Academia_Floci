@@ -38,12 +38,21 @@ Con Floci:
 brew install floci-io/floci/floci
 ```
 
-### Opción 2: Script de instalación
+### Opción 2: Script de instalación (macOS / Linux / WSL)
 ```bash
 curl -fsSL https://floci.io/install.sh | sh
 ```
 
-### Opción 3: Docker (solo para el emulador AWS)
+No ejecutes este comando en PowerShell puro: `sh` no existe ahí. En Windows usa WSL, Git Bash o la ruta Docker Compose de este curso.
+
+### Opción 3: Docker Compose del curso (Windows / macOS / Linux)
+```bash
+docker compose up -d floci stackport
+```
+
+Esta es la ruta más clara para la academia porque levanta Floci y StackPort con la misma red Docker.
+
+### Opción 4: Docker manual (solo para el emulador AWS)
 ```bash
 docker run -d --name floci \
   -p 4566:4566 \
@@ -79,48 +88,91 @@ bash install.sh
 ```
 
 No uses `sh` directo desde PowerShell sin WSL. Si el instalador detecta
-`mingw` o `Unsupported OS: mingw64_nt`, cambia a WSL.
+`mingw` o `Unsupported OS: mingw64_nt`, cambia a WSL o usa `docker compose up -d floci stackport`.
 
 ### Verificar instalación
 ```bash
 floci --version
 ```
 
-## Problemás comunes y soluciones
+## Problemas comunes y soluciones
 
-- `sh: command not found` / `Unsupported OS: mingw64_nt`
+| Error real | Causa | Solución | Verifica |
+|------------|-------|----------|----------|
+| `sh` no se reconoce | Estás en PowerShell/CMD y ese shell no trae `sh`. | Usa WSL o Git Bash. | `floci --version` |
+| `Unsupported OS: mingw64_nt` | Git Bash/MSYS2 fue detectado como sistema no soportado. | Ejecuta desde WSL o usa Docker Compose. | `uname -s && floci --version` |
+| `GID 1000 is already in use` | Conflicto de usuario/grupo en WSL. | Reinstala la distro de práctica o crea otro usuario. | `whoami && id` |
+| `Bind for 0.0.0.0:4566 failed` | Otro contenedor usa el puerto 4566. | Detén el contenedor que ocupa el puerto. | `docker ps --filter "publish=4566"` |
+| `Unable to locate credentials` | No cargaste variables locales de AWS. | Carga `floci env` según tu shell. | `aws sts get-caller-identity` |
+| `docker.sock permission denied` | Tu usuario no puede usar Docker. | Agrégalo al grupo docker y reinicia sesión. | `docker info` |
+| `Unable to find image floci/floci-ui:latest` | Este curso no depende de una imagen UI oficial. | Usa StackPort con Docker Compose. | `docker compose ps` |
+
+### Windows: instalación recomendada
 
 ```bash
-# Usa WSL o Git Bash con bash
+wsl --install -d kali-linux
 wsl -d kali-linux -e bash -c "curl -fsSL https://floci.io/install.sh | sh"
 ```
 
-- `Bind for 0.0.0.0:4566 failed: port is already allocated`
+### Git Bash
 
 ```bash
-docker ps -a | grep 4566
-docker stop $(docker ps -a -q --filter "name=floci") 2>/dev/null || true
-docker rm $(docker ps -a -q --filter "name=floci") 2>/dev/null || true
+curl -fsSL https://floci.io/install.sh | bash
+```
+
+Si falla por `mingw64_nt`, no pelees con el instalador: cambia a WSL o usa Docker Compose.
+
+### Puerto 4566 ocupado
+
+```bash
+docker ps -a --filter "publish=4566"
+docker stop <container-id>
+docker rm <container-id>
 floci start
 ```
 
-- `Unable to locate credentials`
+No borres contenedores sin mirar el nombre: podrías detener otro laboratorio. Si este proyecto levantó Floci con Compose, usa:
+
+```bash
+docker compose down
+docker compose up -d floci stackport
+```
+
+### Credenciales AWS locales
+
+Linux/macOS/WSL:
 
 ```bash
 eval $(floci env)
 ```
 
-- `permission denied while trying to connect to docker API`
+PowerShell:
+
+```powershell
+$env:AWS_ENDPOINT_URL="http://localhost:4566"
+$env:AWS_ACCESS_KEY_ID="test"
+$env:AWS_SECRET_ACCESS_KEY="test"
+$env:AWS_DEFAULT_REGION="us-east-1"
+```
+
+### Docker permission denied
 
 ```bash
 sudo usermod -aG docker $USER
 # Cierra sesión y vuelve a entrar
+docker info
 ```
 
-- `GID 1000 already in use`
+### WSL: GID already in use
 
-Usa otro nombre de usuario al crear la cuenta en WSL o ajusta el GID del
-usuario nuevo.
+Si la distro es solo para practicar, reinstala:
+
+```powershell
+wsl --unregister kali-linux
+wsl --install -d kali-linux
+```
+
+Si tienes trabajo guardado, respalda antes de desregistrar la distro.
 
 ---
 
@@ -220,7 +272,7 @@ export SECRETMANAGER_EMULATOR_HOST=localhost:4588
 
 ## Los tres corriendo al mismo tiempo
 
-Puedes tener los tres emuladores y una UI visual corriendo simultáneamente. El
+Puedes tener los tres emuladores y una interfaz visual corriendo simultáneamente. El
 `docker-compose.yml` del proyecto ya trae Floci y StackPort integrados:
 
 ```yaml
@@ -270,6 +322,8 @@ StackPort. Desde tu terminal sigues usando `http://localhost:4566`; dentro de
 Compose, StackPort usa `http://floci:4566` porque ambos contenedores comparten
 red.
 
+> Floci se aprende y se automatiza desde la CLI. Para inspección visual en este curso usamos StackPort; no uses una imagen `floci/floci-ui:latest` como paso obligatorio.
+
 ---
 
 ## Comandos útiles de Floci
@@ -280,6 +334,8 @@ floci stop               # Detiene el emulador
 floci status             # Muestra el estado
 floci logs --follow      # Ver logs en tiempo real
 floci doctor             # Diagnóstico de problemas
+floci doctor --fix       # Si tu versión lo soporta, intenta corregir problemas comunes
+floci cleanup            # Si tu versión lo soporta, limpia recursos/contenedores huérfanos
 floci snapshot save v1   # Guarda el estado actual
 floci snapshot restore v1 # Restaura un estado guardado
 
@@ -329,4 +385,3 @@ Qué significa la salida:
 Error o duda encontrada:
 Cómo la resolví:
 ```
-

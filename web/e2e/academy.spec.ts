@@ -25,6 +25,10 @@ test('inicio: ruta educativa y laboratorio adaptado responden al perfil', async 
   await expect(page.locator('.install-options').nth(1)).toContainText('docker compose up -d floci stackport');
   await expect(page.locator('.install-options').nth(1)).toContainText('http://floci:4566');
   await expect(page.locator('.install-options').nth(1)).toContainText('http://localhost:8080');
+  await expect(page.locator('.troubleshooting-panel').first()).toContainText('ERRORES REALES Y SOLUCIONES');
+  await expect(page.locator('.troubleshooting-panel').first()).toContainText('"sh" no se reconoce como comando');
+  await expect(page.locator('.troubleshooting-panel').first()).toContainText('Unable to find image floci/floci-ui:latest');
+  await expect(page.locator('.troubleshooting-panel').first()).toContainText('docker compose up -d floci stackport');
   await expect(page.locator('.first-session')).toBeVisible();
   await expect(page.locator('.quick-lab-card')).toBeVisible();
 
@@ -65,6 +69,8 @@ test('modulos: lectura, ejercicios, notas y progreso se conectan', async ({ page
   await page.locator('.lesson-tabs button').nth(1).click();
   await expect(page.locator('.compact-install')).toContainText('Escoge solo una forma de instalar Floci');
   await expect(page.locator('.compact-install')).toContainText('Opción 3: Docker Compose del proyecto');
+  await expect(page.locator('.compact-troubleshooting')).toContainText('Errores comunes del Módulo 0');
+  await expect(page.locator('.compact-troubleshooting')).toContainText('Unsupported OS: mingw64_nt');
   await expect(page.locator('.adaptive-lab')).toContainText('pip install boto3');
   await expect(page.locator('.adaptive-lab .code-line').first()).toBeVisible();
   await expect(page.locator('.adaptive-lab .tok-keyword').first()).toBeVisible();
@@ -91,12 +97,12 @@ test('modulos: lectura, ejercicios, notas y progreso se conectan', async ({ page
 
 test('servicios y biblioteca: navegacion por contenido local funciona', async ({ page, isMobile }) => {
   await navigateTo(page, 2, isMobile);
-  await expect(page.locator('.services-purpose')).toContainText('PARA QU? SIRVE ESTE M?DULO');
+  await expect(page.locator('.services-purpose')).toContainText('PARA QUÉ SIRVE ESTE MÓDULO');
   await expect(page.locator('.services-purpose')).toContainText('decisiones técnicas');
   await expect(page.locator('.cloud-good-practices')).toContainText('CLEAN CLOUD');
   await expect(page.locator('.cloud-good-practices')).toContainText('Un servicio, una responsabilidad');
   await expect(page.locator('.device-learning-guide')).toContainText('ADAPTADO AL DISPOSITIVO');
-  await expect(page.locator('.device-learning-guide')).toContainText('Movil');
+  await expect(page.locator('.device-learning-guide')).toContainText('Móvil');
   await expect(page.locator('.cloud-tabs')).toBeVisible();
 
   await page.locator('.cloud-tabs button').nth(3).click();

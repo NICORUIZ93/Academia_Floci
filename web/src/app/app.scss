@@ -567,6 +567,90 @@ kbd { display:inline-grid; place-items:center; min-height:22px; min-width:38px; 
 .service-tags button:hover { border-color:var(--accent); color:var(--accent); }
 .service-tags lucide-icon { width:10px; flex-shrink:0; }
 
+.troubleshooting-panel {
+  background:$wh;
+  border:1px solid $bd;
+  border-radius:$rr;
+  padding:18px;
+  margin-bottom:12px;
+  box-shadow:$sh;
+}
+.troubleshooting-grid {
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:10px;
+  margin-top:12px;
+}
+.troubleshooting-grid article {
+  min-width:0;
+  background:$bg;
+  border:1px solid $bd;
+  border-radius:$rs;
+  padding:12px;
+  display:grid;
+  gap:8px;
+}
+.trouble-head {
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:8px;
+}
+.trouble-head strong {
+  color:$ink;
+  font-size:12px;
+  line-height:1.35;
+  overflow-wrap:anywhere;
+}
+.priority {
+  flex:0 0 auto;
+  border-radius:$rs;
+  padding:3px 6px;
+  font-size:9px;
+  font-weight:800;
+  text-transform:uppercase;
+}
+.priority.alta { background:#fee2e2; color:#991b1b; }
+.priority.media { background:#fef3c7; color:#92400e; }
+.priority.baja { background:#dcfce7; color:#166534; }
+.troubleshooting-grid p {
+  margin:0;
+  color:$mu;
+  font-size:11px;
+  line-height:1.5;
+  overflow-wrap:break-word;
+}
+.troubleshooting-grid small {
+  color:$p;
+  font-size:9px;
+  font-weight:800;
+  text-transform:uppercase;
+}
+.verify-line {
+  display:flex;
+  gap:6px;
+  align-items:flex-start;
+  background:$wh;
+  border:1px solid $bd;
+  border-radius:$rs;
+  padding:7px 8px;
+  min-width:0;
+}
+.verify-line span {
+  flex:0 0 auto;
+  color:$p;
+  font-size:9px;
+  font-weight:800;
+  text-transform:uppercase;
+}
+.verify-line code {
+  color:$i2;
+  font:10px/1.4 ui-monospace,SFMono-Regular,Menlo,monospace;
+  overflow-wrap:anywhere;
+  word-break:break-word;
+}
+.compact-troubleshooting { margin-top:12px; }
+
 .service-detail {
   background:$wh; border:1px solid $bd; border-left:4px solid $p;
   border-radius:0 $rr $rr 0; margin-bottom:12px; padding:18px;
@@ -1218,6 +1302,7 @@ kbd { display:inline-grid; place-items:center; min-height:22px; min-width:38px; 
   .project-milestones{grid-template-columns:repeat(2,1fr)}
   .flociops-stages{grid-template-columns:repeat(2,1fr)}
   .project-env-grid{grid-template-columns:1fr}
+  .troubleshooting-grid{grid-template-columns:1fr}
   .topic-recipe-grid{grid-template-columns:1fr}
   .services-purpose{grid-template-columns:1fr}
   .services-purpose-grid{grid-template-columns:1fr}

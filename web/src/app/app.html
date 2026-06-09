@@ -265,6 +265,33 @@
         </div>
       </section>
 
+      <section class="troubleshooting-panel" *ngIf="completedCount() === 0">
+        <div class="install-intro">
+          <span class="eyebrow">ERRORES REALES Y SOLUCIONES</span>
+          <h2>Antes de frustrarte, diagnostica con evidencia</h2>
+          <p>Estos son fallos comunes del laboratorio. Cada tarjeta muestra causa, comando de corrección y cómo validar que ya funciona.</p>
+        </div>
+        <div class="troubleshooting-grid">
+          <article *ngFor="let item of commonFlociErrors">
+            <div class="trouble-head">
+              <strong>{{ item.error }}</strong>
+              <span [class]="'priority ' + item.priority.toLowerCase()">{{ item.priority }}</span>
+            </div>
+            <p>{{ item.cause }}</p>
+            <small>Solución</small>
+            <p>{{ item.solution }}</p>
+            <button class="copy-line" (click)="copyTextValue(item.command)">
+              <code>{{ item.command }}</code>
+              <lucide-icon [img]="copiedText() === item.command ? icons.Check : icons.Copy" />
+            </button>
+            <div class="verify-line">
+              <span>Verifica:</span>
+              <code>{{ item.verify }}</code>
+            </div>
+          </article>
+        </div>
+      </section>
+
       <section class="first-session" *ngIf="completedCount() === 0">
         <div class="first-session-title">
           <span class="eyebrow">COMANDOS DE INICIO</span>
@@ -502,7 +529,7 @@
             </div>
             <div class="install-options compact-install" *ngIf="selectedModuleId() === 0">
               <div class="install-intro">
-                <span class="eyebrow">INSTALACION</span>
+                <span class="eyebrow">INSTALACIÓN</span>
                 <h2>Escoge solo una forma de instalar Floci</h2>
                 <p>Después de instalar, sigue la línea de trabajo de tu sistema operativo y lenguaje.</p>
               </div>
@@ -518,6 +545,30 @@
                   <strong>{{ option.recommendation }}</strong>
                 </div>
               </article>
+            </div>
+            <div class="troubleshooting-panel compact-troubleshooting" *ngIf="selectedModuleId() === 0">
+              <div class="install-intro">
+                <span class="eyebrow">SI ALGO FALLA</span>
+                <h2>Errores comunes del Módulo 0</h2>
+                <p>Lee el mensaje exacto, aplica la solución correspondiente y guarda la evidencia antes de avanzar.</p>
+              </div>
+              <div class="troubleshooting-grid">
+                <article *ngFor="let item of commonFlociErrors.slice(0, 6)">
+                  <div class="trouble-head">
+                    <strong>{{ item.error }}</strong>
+                    <span [class]="'priority ' + item.priority.toLowerCase()">{{ item.priority }}</span>
+                  </div>
+                  <p>{{ item.cause }}</p>
+                  <button class="copy-line" (click)="copyTextValue(item.command)">
+                    <code>{{ item.command }}</code>
+                    <lucide-icon [img]="copiedText() === item.command ? icons.Check : icons.Copy" />
+                  </button>
+                  <div class="verify-line">
+                    <span>Verifica:</span>
+                    <code>{{ item.verify }}</code>
+                  </div>
+                </article>
+              </div>
             </div>
           </section>
           <section class="adaptive-lab">
@@ -542,7 +593,7 @@
                 </button>
               </article>
               <article class="sdk-panel">
-                <span class="eyebrow">INSTALACION SDK</span>
+                <span class="eyebrow">INSTALACIÓN SDK</span>
                 <p class="lab-card-hint" *ngIf="selectedLanguage() === 'java'">Elige una ruta: Maven o Gradle. No necesitas crear ambos proyectos para aprender el laboratorio.</p>
                 <p class="lab-card-hint" *ngIf="selectedLanguage() !== 'java'">Instala las dependencias del lenguaje antes de ejecutar el archivo.</p>
                 <button class="copy-line" *ngFor="let command of languageInstallCommands()" (click)="copyTextValue(command.command)">
@@ -646,9 +697,9 @@
 
       <section class="services-purpose">
         <div class="services-purpose-main">
-          <span class="eyebrow">PARA QU? SIRVE ESTE M?DULO</span>
+          <span class="eyebrow">PARA QUÉ SIRVE ESTE MÓDULO</span>
           <h2>Convierte una lista de servicios en decisiones técnicas</h2>
-          <p>Este módulo existe para qué entiendas qué problema resuelve cada servicio, cuál es su equivalente multi-nube y en qué laboratorio lo vas a comprobar.</p>
+          <p>Este módulo existe para que entiendas qué problema resuelve cada servicio, cuál es su equivalente multi-nube y en qué laboratorio lo vas a comprobar.</p>
         </div>
         <div class="services-purpose-grid">
           <article *ngFor="let item of serviceModulePurpose">
