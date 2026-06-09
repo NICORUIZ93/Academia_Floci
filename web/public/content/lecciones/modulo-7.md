@@ -184,9 +184,9 @@ aws scheduler create-schedule \
 
 ## Preguntas de salida
 
-1. ¿Cuál es la diferencia entre SNS y SQSé
+1. ¿Cuál es la diferencia entre SNS y SQS?
 2. ¿Por qué el patrón SNS + SQS (fan-out a colas) es más robusto que SNS solo?
-3. ¿Cuándo usarías EventBridge en lugar de SNSé
+3. ¿Cuándo usarías EventBridge en lugar de SNS?
 4. ¿Qué ventaja tiene EventBridge Scheduler sobre un cron en EC2?
 ## Verificación del aprendizaje
 

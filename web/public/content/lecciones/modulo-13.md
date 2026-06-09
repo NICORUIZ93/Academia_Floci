@@ -205,7 +205,7 @@ for msg in consumer:
 
 ## Preguntas de salida
 
-1. ¿Cuándo usarías Kinesis sobre SQSé
+1. ¿Cuándo usarías Kinesis sobre SQS?
 2. ¿Qué es un consumer group en Kafka y para qué sirve?
 3. ¿Qué diferencia hay entre Kinesis Data Streams y Kinesis Data Firehose?
 4. ¿Por qué Kafka mantiene los mensajes después de que el consumidor los lee?

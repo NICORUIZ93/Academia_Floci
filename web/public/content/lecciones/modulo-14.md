@@ -97,7 +97,7 @@ def autenticar(client_id, username, password):
 
 ## Preguntas de salida
 
-1. ¿Cuál es la diferencia entre SNS y SQSé
+1. ¿Cuál es la diferencia entre SNS y SQS?
 2. ¿Por qué usar EventBridge en lugar de SNS para arquitecturas complejas?
 3. ¿Qué es un token JWT y qué contiene?
 4. ¿Cuándo usarías Cognito en lugar de implementar tu propio sistema de auth?

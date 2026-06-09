@@ -72,7 +72,7 @@ def preguntar_claude(pregunta, max_tokens=1000):
     return resultado["content"][0]["text"]
 
 # Uso simple
-respuesta = preguntar_claude("¿Cuándo usarías SQS en lugar de SNSé")
+respuesta = preguntar_claude("¿Cuándo usarías SQS en lugar de SNS?")
 print(respuesta)
 ```
 
@@ -142,7 +142,7 @@ documentos = [
     "Lambda ejecuta funciones sin gestionar servidores"
 ]
 
-pregunta = "¿Cómo guardo archivos en AWSé"
+pregunta = "¿Cómo guardo archivos en AWS?"
 
 emb_pregunta = generar_embedding(pregunta)
 emb_docs = [generar_embedding(doc) for doc in documentos]
@@ -330,7 +330,7 @@ print(f"Factura #{datos['numero_factura']} - Total: {datos['total']}")
 
 ## Reto del módulo
 
-1. Usa Bedrock para preguntarle a Claude "¿Qué es un Dead Letter Queue en SQSé" y muestra la respuesta
+1. Usa Bedrock para preguntarle a Claude "¿Qué es una Dead Letter Queue en SQS?" y muestra la respuesta
 2. Implementa la función de embeddings y encuentra el documento más similar a "base de datos clave-valor"
 3. Usa Textract para extraer texto de cualquier imagen subida a S3
 4. Conecta Textract + Bedrock: sube una imagen con texto, extráelo con Textract y resume con Claude
@@ -339,8 +339,8 @@ print(f"Factura #{datos['numero_factura']} - Total: {datos['total']}")
 
 1. ¿Cuándo usarías Bedrock en lugar de entrenar tu propio modelo?
 2. ¿Qué son los embeddings y para qué sirven?
-3. ¿Qué diferencia hay entre Textract y un OCR simpleí
-4. ¿En qué idiomás funciona Transcribe para español?
+3. ¿Qué diferencia hay entre Textract y un OCR simple?
+4. ¿En qué idiomas funciona Transcribe para audio en español?
 ## Verificación del aprendizaje
 
 Antes de marcar este módulo como completado, confirma esto con evidencia propia:
@@ -360,4 +360,3 @@ Qué significa la salida:
 Error o duda encontrada:
 Cómo la resolví:
 ```
-

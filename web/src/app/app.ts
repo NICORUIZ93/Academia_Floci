@@ -676,7 +676,7 @@ export class App implements OnInit {
     }));
   }
   challengeGuide(challenge: string, index: number): ChallengeGuide {
-    const normalized = challenge.replaceAll('â€”', '—').replaceAll('–', '—');
+    const normalized = challenge.replaceAll('\u00e2\u20ac\u201d', '—').replaceAll('–', '—');
     const [rawAction, ...rawCommandParts] = normalized.split('—');
     const action = rawAction.trim().replace(/\s+/g, ' ');
     const command = rawCommandParts.join('—').trim();

@@ -83,9 +83,9 @@ aws athena get-query-results --query-execution-id $QUERY_ID
 
 ## Preguntas de salida
 
-1. ¿Cuándo elegirías Kinesis sobre SQSé
+1. ¿Cuándo elegirías Kinesis sobre SQS?
 2. ¿Qué es una partition key en Kinesis y por qué afecta el orden?
-3. ¿Qué ventaja tiene Athena sobre cargar el CSV en RDSé
+3. ¿Qué ventaja tiene Athena sobre cargar el CSV en RDS?
 4. ¿Qué diferencia hay entre Kafka y Kinesis?
 
 ---

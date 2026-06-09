@@ -289,7 +289,7 @@ kubectl apply -f deployment.yaml
 
 ## Preguntas de salida
 
-1. ¿Qué diferencia hay entre ECS y EKSé
+1. ¿Qué diferencia hay entre ECS y EKS?
 2. ¿Por qué preferirías EKS si planeas usar múltiples nubes?
 3. ¿Qué es una Task Definition en ECS y qué define?
 4. ¿Qué hace `readinessProbe` en Kubernetes?
