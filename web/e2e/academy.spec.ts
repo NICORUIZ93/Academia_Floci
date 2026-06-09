@@ -26,7 +26,7 @@ test('inicio: ruta educativa y laboratorio adaptado responden al perfil', async 
   await expect(page.locator('.install-options').nth(1)).toContainText('http://floci:4566');
   await expect(page.locator('.install-options').nth(1)).toContainText('http://localhost:8080');
   await expect(page.locator('.troubleshooting-panel').first()).toContainText('ERRORES REALES Y SOLUCIONES');
-  await expect(page.locator('.troubleshooting-panel').first()).toContainText('"sh" no se reconoce como comando');
+  await expect(page.locator('.troubleshooting-panel').first()).not.toContainText('"sh" no se reconoce como comando');
   await expect(page.locator('.troubleshooting-panel').first()).toContainText('Unable to find image floci/floci-ui:latest');
   await expect(page.locator('.troubleshooting-panel').first()).toContainText('docker compose up -d floci stackport');
   await expect(page.locator('.first-session')).toBeVisible();
@@ -38,6 +38,8 @@ test('inicio: ruta educativa y laboratorio adaptado responden al perfil', async 
   await expect(page.locator('.first-session')).toContainText('PowerShell');
   await expect(page.locator('.quick-lab-card')).toContainText('app.py');
   await expect(page.locator('.quick-lab-card')).toContainText('pip install boto3');
+  await expect(page.locator('.troubleshooting-panel').first()).toContainText('"sh" no se reconoce como comando');
+  await expect(page.locator('.troubleshooting-panel').first()).toContainText('Unsupported OS: mingw64_nt');
 });
 
 test('inicio: configuracion guardada invalida vuelve a valores seguros', async ({ page }) => {
@@ -65,12 +67,15 @@ test('modulos: lectura, ejercicios, notas y progreso se conectan', async ({ page
   await expect(page.locator('.newcomer-checks')).toContainText('3 ERRORES COMUNES');
   await expect(page.locator('.newcomer-checks')).toContainText('5 PREGUNTAS PARA VALIDAR');
   await expect(page.locator('.action-now')).toContainText('Hazlo hoy');
+  await expect(page.locator('.lesson-markdown')).toContainText('Tu sistema seleccionado es macOS');
+  await expect(page.locator('.lesson-markdown')).toContainText('Opción 1: Homebrew');
+  await expect(page.locator('.lesson-markdown')).not.toContainText('Unsupported OS: mingw64_nt');
 
   await page.locator('.lesson-tabs button').nth(1).click();
   await expect(page.locator('.compact-install')).toContainText('Escoge solo una forma de instalar Floci');
   await expect(page.locator('.compact-install')).toContainText('Opción 3: Docker Compose del proyecto');
   await expect(page.locator('.compact-troubleshooting')).toContainText('Errores comunes del Módulo 0');
-  await expect(page.locator('.compact-troubleshooting')).toContainText('Unsupported OS: mingw64_nt');
+  await expect(page.locator('.compact-troubleshooting')).not.toContainText('Unsupported OS: mingw64_nt');
   await expect(page.locator('.adaptive-lab')).toContainText('pip install boto3');
   await expect(page.locator('.adaptive-lab .code-line').first()).toBeVisible();
   await expect(page.locator('.adaptive-lab .tok-keyword').first()).toBeVisible();
@@ -121,8 +126,14 @@ test('modulos: java separa instalacion, código y ejecución', async ({ page, is
   await page.locator('.student-config .segmented-control button').filter({ hasText: 'Windows' }).click();
   await page.locator('.student-config .language-select button').nth(3).click();
   await navigateTo(page, 1, isMobile);
+  await expect(page.locator('.lesson-markdown')).toContainText('Tu sistema seleccionado es Windows');
+  await expect(page.locator('.lesson-markdown')).not.toContainText('Opción 1: Homebrew');
+  await expect(page.locator('.lesson-markdown')).toContainText('Unsupported OS: mingw64_nt');
   await page.locator('.lesson-tabs button').nth(1).click();
 
+  await expect(page.locator('.compact-install')).toContainText('Docker Compose del proyecto');
+  await expect(page.locator('.compact-install')).not.toContainText('Homebrew');
+  await expect(page.locator('.compact-troubleshooting')).toContainText('Unsupported OS: mingw64_nt');
   await expect(page.locator('.adaptive-lab')).toContainText('Windows');
   await expect(page.locator('.adaptive-lab')).toContainText('Java');
   await expect(page.locator('.adaptive-lab .sdk-panel')).toContainText('Elige una ruta: Maven o Gradle');

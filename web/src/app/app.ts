@@ -68,6 +68,7 @@ interface InstallationOption {
   command: string;
   detail: string;
   recommendation: string;
+  os: StudentOs[];
 }
 interface TroubleshootingItem {
   error: string;
@@ -76,6 +77,7 @@ interface TroubleshootingItem {
   solution: string;
   verify: string;
   priority: 'Alta' | 'Media' | 'Baja';
+  os: StudentOs[];
 }
 interface ServiceModuleCard {
   title: string;
@@ -225,6 +227,7 @@ export class App implements OnInit {
       command: 'brew install floci-io/floci/floci',
       detail: 'Instala la CLI de Floci como herramienta del sistema. Es la ruta más cómoda si ya usas Homebrew.',
       recommendation: 'Recomendada para macOS y para Linux cuando ya tienes brew instalado.',
+      os: ['mac'],
     },
     {
       title: 'Opción 2: Script de instalación',
@@ -232,6 +235,7 @@ export class App implements OnInit {
       command: 'curl -fsSL https://floci.io/install.sh | sh',
       detail: 'Descarga e instala Floci desde la terminal sin depender de Homebrew.',
       recommendation: 'Úsala en Linux o cuando Homebrew no esté disponible.',
+      os: ['mac', 'linux'],
     },
     {
       title: 'Opción 3: Docker Compose del proyecto',
@@ -239,6 +243,7 @@ export class App implements OnInit {
       command: 'docker compose up -d floci',
       detail: 'Usa el docker-compose.yml incluido en este repositorio. Es la ruta más coherente si también usarás StackPort.',
       recommendation: 'Recomendada para este curso cuando trabajas desde la carpeta raíz del proyecto.',
+      os: ['mac', 'windows', 'linux'],
     },
   ];
   readonly windowsAngularCommands: SetupCommand[] = [
@@ -303,6 +308,7 @@ export class App implements OnInit {
       solution: 'Usa WSL como ruta recomendada. En Git Bash usa bash; en PowerShell descarga y revisa el script antes de ejecutarlo en un shell compatible.',
       verify: 'floci --version',
       priority: 'Alta',
+      os: ['windows'],
     },
     {
       error: 'Unsupported OS: mingw64_nt',
@@ -311,6 +317,7 @@ export class App implements OnInit {
       solution: 'Prueba Git Bash actualizado. Si la release no trae binario Windows, cambia a WSL o usa Docker Compose del curso.',
       verify: 'uname -s && floci --version',
       priority: 'Alta',
+      os: ['windows'],
     },
     {
       error: 'GID 1000 is already in use',
@@ -319,6 +326,7 @@ export class App implements OnInit {
       solution: 'Reinstala la distro si es de laboratorio o crea un usuario con otro nombre. No borres una distro con trabajo importante sin respaldo.',
       verify: 'whoami && id',
       priority: 'Media',
+      os: ['windows'],
     },
     {
       error: 'Port 4566 is already allocated',
@@ -327,6 +335,7 @@ export class App implements OnInit {
       solution: 'Identifica el contenedor, detenlo si no lo necesitas y vuelve a levantar Floci. En este curso evita tener dos Floci compitiendo por el mismo puerto.',
       verify: 'docker compose ps && curl -s http://localhost:4566/_localstack/health',
       priority: 'Alta',
+      os: ['mac', 'windows', 'linux'],
     },
     {
       error: 'Unable to locate credentials',
@@ -335,6 +344,16 @@ export class App implements OnInit {
       solution: 'En PowerShell carga variables con formato PowerShell. En bash/zsh usa eval $(floci env). Las credenciales son test/test.',
       verify: 'aws sts get-caller-identity',
       priority: 'Media',
+      os: ['windows'],
+    },
+    {
+      error: 'Unable to locate credentials',
+      cause: 'AWS CLI o el SDK no recibieron endpoint y credenciales locales.',
+      command: 'eval $(floci env)',
+      solution: 'En bash/zsh carga las variables con eval $(floci env). Las credenciales del laboratorio son test/test.',
+      verify: 'aws sts get-caller-identity',
+      priority: 'Media',
+      os: ['mac', 'linux'],
     },
     {
       error: 'Docker.sock permission denied',
@@ -343,6 +362,7 @@ export class App implements OnInit {
       solution: 'Agrega el usuario al grupo docker, cierra sesión y vuelve a entrar. Si usas Docker Desktop, confirma que esté iniciado.',
       verify: 'docker info',
       priority: 'Media',
+      os: ['linux'],
     },
     {
       error: 'Unable to find image floci/floci-ui:latest',
@@ -351,6 +371,7 @@ export class App implements OnInit {
       solution: 'Trabaja Floci por CLI y usa StackPort en http://localhost:8080 para inspeccionar recursos AWS locales.',
       verify: 'docker compose ps',
       priority: 'Alta',
+      os: ['mac', 'windows', 'linux'],
     },
     {
       error: 'export no se reconoce o Invoke-Expression falla',
@@ -359,6 +380,7 @@ export class App implements OnInit {
       solution: 'Selecciona tu sistema operativo en la web antes de copiar comandos. No mezcles PowerShell con bash.',
       verify: 'aws sts get-caller-identity',
       priority: 'Media',
+      os: ['windows'],
     },
   ];
   readonly serviceModulePurpose: ServiceModuleCard[] = [
@@ -498,6 +520,8 @@ export class App implements OnInit {
   });
   selectedOsInfo = computed(() => this.operatingSystems.find(item => item.id === this.selectedOs()) ?? this.operatingSystems[0]);
   selectedLanguageInfo = computed(() => this.labLanguages.find(item => item.id === this.selectedLanguage()) ?? this.labLanguages[0]);
+  flociInstallOptionsForSelectedOs = computed(() => this.flociInstallOptions.filter(item => item.os.includes(this.selectedOs())));
+  commonFlociErrorsForSelectedOs = computed(() => this.commonFlociErrors.filter(item => item.os.includes(this.selectedOs())));
   newcomerGuide = computed(() => this.explainLikeNewcomer(this.selectedModule()));
   selectedTopicProject = computed(() => this.topicProjects[this.selectedTopicProjectIndex()] ?? this.topicProjects[0]);
   selectedTopicProjectGuide = computed(() => this.explainTopicProjectLikeNewcomer(this.selectedTopicProject()));
@@ -523,6 +547,7 @@ export class App implements OnInit {
   setStudentOs(os: StudentOs): void {
     this.selectedOs.set(os);
     this.saveSetup();
+    if (this.selectedModuleId() === 0) void this.loadLesson(0);
   }
   setLabLanguage(language: LabLanguage): void {
     this.selectedLanguage.set(language);
@@ -1456,7 +1481,7 @@ public class App {
     try {
       const response = await fetch(`content/lecciones/modulo-${id}.md`);
       if (!response.ok) throw new Error(`HTTP ${response.status}`);
-      const raw = await response.text();
+      const raw = id === 0 ? this.adaptModuleZeroLesson(await response.text()) : await response.text();
       const withoutRepeatedTitle = raw.replace(/^#{1,2}\s+Módulo[^\n]*\n+/, '');
       this.lessonHtml.set(marked.parse(withoutRepeatedTitle, { async: false }) as string);
     } catch {
@@ -1482,5 +1507,70 @@ public class App {
   }
   private escapeHtml(value: string): string {
     return value.replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;');
+  }
+  private adaptModuleZeroLesson(raw: string): string {
+    const os = this.selectedOsInfo();
+    const installLines = this.flociInstallOptionsForSelectedOs()
+      .map(option => [
+        `### ${option.title}`,
+        '',
+        `**Aplica para:** ${option.scope}`,
+        '',
+        option.detail,
+        '',
+        '```bash',
+        option.command,
+        '```',
+        '',
+        `> ${option.recommendation}`,
+      ].join('\n')).join('\n\n');
+    const errorLines = this.commonFlociErrorsForSelectedOs()
+      .map(item => `| \`${item.error}\` | ${item.cause} | ${item.solution} | \`${item.verify}\` |`)
+      .join('\n');
+    const credentials = this.selectedOs() === 'windows'
+      ? [
+          '### Credenciales AWS locales en PowerShell',
+          '',
+          '```powershell',
+          '$env:AWS_ENDPOINT_URL="http://localhost:4566"',
+          '$env:AWS_ACCESS_KEY_ID="test"',
+          '$env:AWS_SECRET_ACCESS_KEY="test"',
+          '$env:AWS_DEFAULT_REGION="us-east-1"',
+          '```',
+        ].join('\n')
+      : [
+          '### Credenciales AWS locales en bash/zsh',
+          '',
+          '```bash',
+          'eval $(floci env)',
+          '```',
+        ].join('\n');
+    const replacement = [
+      '## Instalación',
+      '',
+      `Tu sistema seleccionado es **${os.title} (${os.terminal})**. Esta lección muestra solo los pasos que corresponden a ese perfil.`,
+      '',
+      installLines,
+      '',
+      '### Verificar instalación',
+      '',
+      '```bash',
+      'floci --version',
+      '```',
+      '',
+      '## Problemas comunes y soluciones',
+      '',
+      `Estos errores son los que tienen sentido para **${os.title}** dentro de este curso.`,
+      '',
+      '| Error real | Causa | Solución | Verifica |',
+      '|------------|-------|----------|----------|',
+      errorLines,
+      '',
+      credentials,
+      '',
+      '---',
+      '',
+    ].join('\n');
+    return raw.replace(/## Instalación[\s\S]*?---\n\n## Levantando el emulador de AWS/, `${replacement}## Levantando el emulador de AWS`);
   }
 }

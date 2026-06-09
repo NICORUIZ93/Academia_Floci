@@ -195,9 +195,9 @@
         <div class="install-intro">
           <span class="eyebrow">INSTALACIÓN DE FLOCI</span>
           <h2>Elige una opción antes de copiar comandos del Módulo 0</h2>
-          <p>No son pasos para ejecutar todos. Son caminos alternativos: Homebrew, script o Docker.</p>
+          <p>Solo ves las opciones que aplican a {{ selectedOsInfo().title }}. No ejecutes rutas de otro sistema operativo.</p>
         </div>
-        <article *ngFor="let option of flociInstallOptions; let oi = index">
+        <article *ngFor="let option of flociInstallOptionsForSelectedOs(); let oi = index">
           <span class="install-option-index">{{ oi + 1 }}</span>
           <div>
             <small>{{ option.scope }}</small>
@@ -272,7 +272,7 @@
           <p>Estos son fallos comunes del laboratorio. Cada tarjeta muestra causa, comando de corrección y cómo validar que ya funciona.</p>
         </div>
         <div class="troubleshooting-grid">
-          <article *ngFor="let item of commonFlociErrors">
+          <article *ngFor="let item of commonFlociErrorsForSelectedOs()">
             <div class="trouble-head">
               <strong>{{ item.error }}</strong>
               <span [class]="'priority ' + item.priority.toLowerCase()">{{ item.priority }}</span>
@@ -533,7 +533,7 @@
                 <h2>Escoge solo una forma de instalar Floci</h2>
                 <p>Después de instalar, sigue la línea de trabajo de tu sistema operativo y lenguaje.</p>
               </div>
-              <article *ngFor="let option of flociInstallOptions; let oi = index">
+              <article *ngFor="let option of flociInstallOptionsForSelectedOs(); let oi = index">
                 <span class="install-option-index">{{ oi + 1 }}</span>
                 <div>
                   <small>{{ option.scope }}</small>
@@ -553,7 +553,7 @@
                 <p>Lee el mensaje exacto, aplica la solución correspondiente y guarda la evidencia antes de avanzar.</p>
               </div>
               <div class="troubleshooting-grid">
-                <article *ngFor="let item of commonFlociErrors.slice(0, 6)">
+                <article *ngFor="let item of commonFlociErrorsForSelectedOs()">
                   <div class="trouble-head">
                     <strong>{{ item.error }}</strong>
                     <span [class]="'priority ' + item.priority.toLowerCase()">{{ item.priority }}</span>
