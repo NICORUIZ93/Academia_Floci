@@ -61,6 +61,11 @@ test('modulos: lectura, ejercicios, notas y progreso se conectan', async ({ page
   await expect(page.locator('.module-trailer')).toBeVisible();
   await expect(page.locator('.active-course-profile')).toContainText('macOS con Python');
   await expect(page.locator('.active-course-profile')).toContainText('app.py');
+  await expect(page.locator('.lesson-profile-guide')).toContainText('macOS + Python');
+  await expect(page.locator('.lesson-profile-guide')).toContainText('Sistema: macOS');
+  await expect(page.locator('.lesson-profile-guide')).toContainText('Lenguaje: Python');
+  await expect(page.locator('.lesson-profile-guide')).toContainText('app.py');
+  await expect(page.locator('.lesson-profile-guide')).toContainText('python app.py');
   await expect(page.locator('.newcomer-guide')).toBeVisible();
   await expect(page.locator('.newcomer-guide')).toContainText('ENTENDER DE VERDAD');
   await expect(page.locator('.newcomer-guide')).toContainText('Analogía simple');
@@ -100,6 +105,24 @@ test('modulos: lectura, ejercicios, notas y progreso se conectan', async ({ page
   await expect(page.locator('textarea').first()).toHaveValue('Floci permite practicar cloud local con evidencia.');
 });
 
+test('modulos: todos muestran ruta activa segun sistema y lenguaje', async ({ page, isMobile }) => {
+  await page.locator('.student-config .segmented-control button').filter({ hasText: 'Windows' }).click();
+  await page.locator('.student-config .language-select button').filter({ hasText: 'TypeScript' }).click();
+  await navigateTo(page, 1, isMobile);
+
+  const moduleButtons = page.locator('.module-rail button');
+  await expect(moduleButtons).toHaveCount(18);
+
+  for (let index = 0; index < 18; index += 1) {
+    await moduleButtons.nth(index).click();
+    await expect(page.locator('.lesson-profile-guide')).toContainText('Windows + TypeScript');
+    await expect(page.locator('.lesson-profile-guide')).toContainText('Sistema: Windows');
+    await expect(page.locator('.lesson-profile-guide')).toContainText('Lenguaje: TypeScript');
+    await expect(page.locator('.lesson-profile-guide')).toContainText('app.ts');
+    await expect(page.locator('.lesson-profile-guide')).toContainText('npx tsx app.ts');
+  }
+});
+
 test('servicios y biblioteca: navegacion por contenido local funciona', async ({ page, isMobile }) => {
   await navigateTo(page, 2, isMobile);
   await expect(page.locator('.services-purpose')).toContainText('PARA QUÉ SIRVE ESTE MÓDULO');
@@ -126,6 +149,10 @@ test('modulos: java separa instalacion, código y ejecución', async ({ page, is
   await page.locator('.student-config .segmented-control button').filter({ hasText: 'Windows' }).click();
   await page.locator('.student-config .language-select button').nth(3).click();
   await navigateTo(page, 1, isMobile);
+  await expect(page.locator('.lesson-profile-guide')).toContainText('Windows + Java');
+  await expect(page.locator('.lesson-profile-guide')).toContainText('App.java');
+  await expect(page.locator('.lesson-profile-guide')).toContainText('mvn exec:java');
+  await expect(page.locator('.lesson-profile-guide')).toContainText('gradle run');
   await expect(page.locator('.lesson-markdown')).toContainText('Tu sistema seleccionado es Windows');
   await expect(page.locator('.lesson-markdown')).not.toContainText('Opción 1: Homebrew');
   await expect(page.locator('.lesson-markdown')).toContainText('Unsupported OS: mingw64_nt');

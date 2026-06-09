@@ -417,6 +417,32 @@
         </div>
 
         <div class="lesson-tab-panel" *ngIf="lessonTab() === 'learn'">
+          <section class="lesson-profile-guide">
+            <div class="lesson-profile-head">
+              <div>
+                <span class="eyebrow">PARA TU SISTEMA Y LENGUAJE</span>
+                <h2>{{ selectedModule().shortTitle }} en {{ selectedOsInfo().title }} + {{ selectedLanguageInfo().title }}</h2>
+                <p>Esta es la ruta que debes seguir en este módulo. Si cambias el sistema operativo o el lenguaje desde Inicio, estos pasos cambian en todos los módulos.</p>
+              </div>
+              <div class="lab-badges">
+                <span>{{ selectedOsInfo().label }}</span>
+                <span>{{ languageSnippet().file }}</span>
+                <span>{{ languageRunCommands()[0].command }}</span>
+              </div>
+            </div>
+            <div class="profile-line lesson-profile-line" aria-label="Ruta activa de la lección por sistema operativo y lenguaje">
+              <article *ngFor="let step of lessonProfileLine(); let si = index">
+                <span>{{ si + 1 }}</span>
+                <small>{{ step.phase }}</small>
+                <strong>{{ step.title }}</strong>
+                <button class="copy-line" (click)="copyTextValue(step.command)">
+                  <code>{{ step.command }}</code>
+                  <lucide-icon [img]="copiedText() === step.command ? icons.Check : icons.Copy" />
+                </button>
+                <p>{{ step.detail }}</p>
+              </article>
+            </div>
+          </section>
           <div class="learning-purpose"><strong>Al terminar esta lección vas a saber:</strong><div class="concept-grid"><span *ngFor="let concept of selectedModule().concepts">{{ concept }}</span></div></div>
           <section class="newcomer-guide">
             <div class="newcomer-heading">

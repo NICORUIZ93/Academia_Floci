@@ -531,6 +531,7 @@ export class App implements OnInit {
   languageRunCommands = computed(() => this.commandsForLanguageAction('run', this.selectedLanguage(), this.languageSnippet()));
   workspaceSteps = computed(() => this.stepsToCreateLab(this.selectedOs(), this.languageSnippet()));
   profileSetupLine = computed(() => this.línearSetupLine(this.workspaceSteps()));
+  lessonProfileLine = computed(() => this.activeLessonLine());
   projectSetupLine = computed(() => this.línearSetupLine(this.topicProjectCreateCommands(), this.topicProjectVerification().slice(0, 1)));
   highlightedLanguageCode = computed(() => this.highlightCode(this.languageSnippet().code, this.selectedLanguage()));
   highlightedTopicProjectCode = computed(() => this.highlightCode(this.topicProjectCode(), this.selectedLanguage()));
@@ -932,6 +933,49 @@ Console.WriteLine("Implementa el cliente SDK siguiendo el módulo ${project.modu
       phase: 'Verificación',
     }));
     return [...osSteps, ...labSteps, ...verification];
+  }
+  private activeLessonLine(): LinearSetupStep[] {
+    const module = this.selectedModule();
+    const firstChallenge = module.challenges[0] ? this.challengeGuide(module.challenges[0], 0) : null;
+    const createFile = this.selectedOs() === 'windows'
+      ? `New-Item ${this.languageSnippet().file} -ItemType File`
+      : `touch ${this.languageSnippet().file}`;
+    const verifyStep: SetupCommand = firstChallenge?.command
+      ? {
+          title: 'Primera evidencia',
+          command: firstChallenge.command,
+          detail: firstChallenge.verify,
+        }
+      : {
+          title: 'Evidencia del módulo',
+          command: module.deliverable,
+          detail: 'Guarda una nota con lo que creaste, cómo lo verificaste y qué error corregiste.',
+        };
+
+    return [
+      ...this.setupCommands().slice(0, 4).map(command => ({
+        ...command,
+        phase: `Sistema: ${this.selectedOsInfo().title}`,
+      })),
+      {
+        title: 'Archivo activo',
+        command: createFile,
+        detail: `Trabaja este módulo en ${this.languageSnippet().file}. No mezcles archivos de otro lenguaje.`,
+        phase: `Lenguaje: ${this.selectedLanguageInfo().title}`,
+      },
+      ...this.languageInstallCommands().map(command => ({
+        ...command,
+        phase: `SDK: ${this.selectedLanguageInfo().title}`,
+      })),
+      ...this.languageRunCommands().map(command => ({
+        ...command,
+        phase: 'Ejecutar',
+      })),
+      {
+        ...verifyStep,
+        phase: `Módulo ${module.id}`,
+      },
+    ];
   }
   private guideForTerminal(os: StudentOs): TerminalGuide {
     if (os === 'windows') {

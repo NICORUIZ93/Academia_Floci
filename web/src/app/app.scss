@@ -965,6 +965,35 @@ kbd { display:inline-grid; place-items:center; min-height:22px; min-width:38px; 
 .lesson-tabs lucide-icon { width:14px; }
 .lesson-tab-panel { min-height:340px; }
 
+.lesson-profile-guide {
+  margin-top:14px;
+  border:1px solid $pm;
+  border-radius:$rr;
+  background:$pl;
+  box-shadow:$sh;
+  padding:14px;
+}
+.lesson-profile-head {
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-start;
+  gap:12px;
+  margin-bottom:10px;
+}
+.lesson-profile-head h2 { font-size:17px; margin:3px 0; overflow-wrap:anywhere; }
+.lesson-profile-head p { margin:0; color:$i3; font-size:11px; line-height:1.5; overflow-wrap:anywhere; }
+.lesson-profile-line {
+  margin-bottom:0;
+  grid-template-columns:repeat(auto-fit,minmax(210px,1fr));
+}
+.lesson-profile-line article {
+  box-shadow:none;
+  border-color:$bd;
+}
+.lesson-profile-line .copy-line {
+  background:$bg;
+}
+
 .learning-purpose { padding:13px 15px; background:$pl; border-radius:$rs; margin-top:14px; }
 .learning-purpose > strong { font-size:10px; display:block; margin-bottom:7px; color:$p; text-transform:uppercase; letter-spacing:.5px; }
 .newcomer-guide {
@@ -1400,6 +1429,8 @@ kbd { display:inline-grid; place-items:center; min-height:22px; min-width:38px; 
   .certificate-stats{justify-content:stretch}
   .certificate-stats span{flex:1 1 90px}
   .completion-certificate .primary{width:100%}
+  .lesson-profile-head{flex-direction:column}
+  .lesson-profile-head .lab-badges{justify-content:flex-start}
   .process-heading{flex-direction:column}
   .process-grid{grid-template-columns:1fr}
   .adaptive-grid .run-panel{grid-template-columns:1fr}
