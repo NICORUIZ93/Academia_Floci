@@ -39,6 +39,13 @@ interface SetupCommand {
   command: string;
   detail: string;
 }
+interface LabSnippet {
+  title: string;
+  file: string;
+  install: string;
+  code: string;
+  run: string;
+}
 interface LinearSetupStep extends SetupCommand {
   phase: string;
 }
@@ -526,7 +533,7 @@ export class App implements OnInit {
   selectedTopicProject = computed(() => this.topicProjects[this.selectedTopicProjectIndex()] ?? this.topicProjects[0]);
   selectedTopicProjectGuide = computed(() => this.explainTopicProjectLikeNewcomer(this.selectedTopicProject()));
   setupCommands = computed(() => this.commandsForOs(this.selectedOs()));
-  languageSnippet = computed(() => this.snippetForLanguage(this.selectedLanguage()));
+  languageSnippet = computed(() => this.snippetForLanguage(this.selectedLanguage(), this.selectedModuleId()));
   languageInstallCommands = computed(() => this.commandsForLanguageAction('install', this.selectedLanguage(), this.languageSnippet()));
   languageRunCommands = computed(() => this.commandsForLanguageAction('run', this.selectedLanguage(), this.languageSnippet()));
   workspaceSteps = computed(() => this.stepsToCreateLab(this.selectedOs(), this.languageSnippet()));
@@ -861,8 +868,15 @@ Console.WriteLine("Implementa el cliente SDK siguiendo el módulo ${project.modu
       { ...shared.verify, command: 'aws sts get-caller-identity' },
     ];
   }
-  private commandsForLanguageAction(action: 'install' | 'run', language: LabLanguage, snippet: { install: string; run: string }): SetupCommand[] {
+  private commandsForLanguageAction(action: 'install' | 'run', language: LabLanguage, snippet: LabSnippet): SetupCommand[] {
     if (language !== 'java') {
+      if (action === 'run' && this.selectedModuleId() === 5) {
+        return [{
+          title: 'Empaquetar e invocar',
+          command: this.lambdaRunCommandFor(language, snippet.run),
+          detail: 'Empaqueta el handler, crea la función Lambda e invoca contra Floci local.',
+        }];
+      }
       return [{
         title: action === 'install' ? 'Preparar SDK' : 'Ejecutar',
         command: action === 'install' ? snippet.install : snippet.run,
@@ -873,6 +887,20 @@ Console.WriteLine("Implementa el cliente SDK siguiendo el módulo ${project.modu
     }
 
     if (action === 'install') {
+      if (this.selectedModuleId() === 5) {
+        return [
+          {
+            title: 'Ruta Maven',
+            command: 'mvn -q archetype:generate -DgroupId=academy.floci -DartifactId=lambda-local -DarchetypeArtifactId=maven-archetype-quickstart -DinteractiveMode=false',
+            detail: 'Crea un proyecto Maven. Agrega com.amazonaws:aws-lambda-java-core en pom.xml antes de empaquetar.',
+          },
+          {
+            title: 'Ruta Gradle',
+            command: 'gradle init --type java-application --dsl groovy --project-name lambda-local',
+            detail: 'Crea un proyecto Gradle. Agrega implementation "com.amazonaws:aws-lambda-java-core" en build.gradle.',
+          },
+        ];
+      }
       return [
         {
           title: 'Ruta Maven',
@@ -883,6 +911,31 @@ Console.WriteLine("Implementa el cliente SDK siguiendo el módulo ${project.modu
           title: 'Ruta Gradle',
           command: 'gradle init --type java-application --dsl groovy',
           detail: 'Crea un proyecto Gradle. Después agrega implementation "software.amazon.awssdk:s3" en build.gradle.',
+        },
+      ];
+    }
+
+    if (this.selectedModuleId() === 5) {
+      return [
+        {
+          title: 'Empaquetar Maven',
+          command: 'mvn -q package',
+          detail: 'Genera el JAR que Lambda ejecutará dentro del contenedor local de Floci.',
+        },
+        {
+          title: 'Empaquetar Gradle',
+          command: 'gradle clean jar',
+          detail: 'Usa esta ruta si creaste el proyecto con Gradle.',
+        },
+        {
+          title: 'Crear Lambda Java',
+          command: 'aws lambda create-function --function-name mi-funcion-java --runtime java21 --handler App::handleRequest --role arn:aws:iam::000000000000:role/lambda-role --zip-file fileb://target/lambda-local-1.0-SNAPSHOT.jar',
+          detail: 'Si usas Gradle, cambia la ruta del JAR por el archivo generado dentro de build/libs.',
+        },
+        {
+          title: 'Invocar Lambda',
+          command: 'aws lambda invoke --function-name mi-funcion-java --payload "{\\"nombre\\":\\"Floci\\"}" --cli-binary-format raw-in-base64-out output.json; Get-Content output.json',
+          detail: 'En PowerShell el punto y coma encadena la invocación y la lectura del resultado.',
         },
       ];
     }
@@ -900,10 +953,38 @@ Console.WriteLine("Implementa el cliente SDK siguiendo el módulo ${project.modu
       },
     ];
   }
-  private stepsToCreateLab(os: StudentOs, snippet: { title: string; file: string; install: string; code: string; run: string }): SetupCommand[] {
+  private lambdaRunCommandFor(language: LabLanguage, fallbackCommand: string): string {
+    if (this.selectedOs() !== 'windows') return fallbackCommand;
+    const role = '--role arn:aws:iam::000000000000:role/lambda-role';
+    if (language === 'javascript') {
+      return `Compress-Archive -Path index.mjs -DestinationPath function.zip -Force; aws lambda create-function --function-name mi-funcion-node --runtime nodejs22.x --handler index.handler ${role} --zip-file fileb://function.zip; aws lambda invoke --function-name mi-funcion-node --payload "{\\"nombre\\":\\"Floci\\"}" --cli-binary-format raw-in-base64-out output.json; Get-Content output.json`;
+    }
+    if (language === 'typescript') {
+      return `npx esbuild index.ts --bundle --platform=node --outfile=index.js; Compress-Archive -Path index.js -DestinationPath function.zip -Force; aws lambda create-function --function-name mi-funcion-ts --runtime nodejs22.x --handler index.handler ${role} --zip-file fileb://function.zip; aws lambda invoke --function-name mi-funcion-ts --payload "{\\"nombre\\":\\"Floci\\"}" --cli-binary-format raw-in-base64-out output.json; Get-Content output.json`;
+    }
+    if (language === 'python') {
+      return `Compress-Archive -Path handler.py -DestinationPath function.zip -Force; aws lambda create-function --function-name mi-funcion-python --runtime python3.12 --handler handler.handler ${role} --zip-file fileb://function.zip; aws lambda invoke --function-name mi-funcion-python --payload "{\\"nombre\\":\\"Floci\\"}" --cli-binary-format raw-in-base64-out output.json; Get-Content output.json`;
+    }
+    if (language === 'go') {
+      return '$env:GOOS="linux"; $env:GOARCH="amd64"; go build -o bootstrap main.go; Compress-Archive -Path bootstrap -DestinationPath function.zip -Force; aws lambda create-function --function-name mi-funcion-go --runtime provided.al2023 --handler bootstrap --role arn:aws:iam::000000000000:role/lambda-role --zip-file fileb://function.zip';
+    }
+    if (language === 'csharp') {
+      return 'dotnet publish -c Release; Compress-Archive -Path bin\\Release\\* -DestinationPath function.zip -Force; aws lambda create-function --function-name mi-funcion-dotnet --runtime dotnet8 --handler Function::Handler --role arn:aws:iam::000000000000:role/lambda-role --zip-file fileb://function.zip';
+    }
+    return fallbackCommand;
+  }
+  private stepsToCreateLab(os: StudentOs, snippet: LabSnippet): SetupCommand[] {
+    const module = this.selectedModule();
+    const folderSlug = module.shortTitle.toLowerCase()
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .replace(/[^a-z0-9]+/g, '-')
+      .replace(/^-|-$/g, '');
+    const folder = `floci-labs\\modulo-${module.id}-${folderSlug}`;
+    const unixFolder = folder.replaceAll('\\', '/');
     const createFolder = os === 'windows'
-      ? 'mkdir floci-labs\\modulo-0-primeros-pasos; cd floci-labs\\modulo-0-primeros-pasos'
-      : 'mkdir -p floci-labs/modulo-0-primeros-pasos && cd floci-labs/modulo-0-primeros-pasos';
+      ? `mkdir ${folder}; cd ${folder}`
+      : `mkdir -p ${unixFolder} && cd ${unixFolder}`;
     const createFile = os === 'windows'
       ? `New-Item ${snippet.file} -ItemType File`
       : `touch ${snippet.file}`;
@@ -1102,8 +1183,9 @@ Console.WriteLine("Implementa el cliente SDK siguiendo el módulo ${project.modu
       prerequisites: prereq[language],
     };
   }
-  private snippetForLanguage(language: LabLanguage): { title: string; file: string; install: string; code: string; run: string } {
-    const snippets: Record<LabLanguage, { title: string; file: string; install: string; code: string; run: string }> = {
+  private snippetForLanguage(language: LabLanguage, moduleId = this.selectedModuleId()): LabSnippet {
+    if (moduleId === 5) return this.lambdaSnippetForLanguage(language);
+    const snippets: Record<LabLanguage, LabSnippet> = {
       javascript: {
         title: 'Subir una tarea a S3 con Node.js',
         file: 'app.mjs',
@@ -1242,6 +1324,117 @@ await s3.PutObjectAsync(new PutObjectRequest {
 });
 Console.WriteLine("Tarea subida");`,
         run: 'dotnet run',
+      },
+    };
+    return snippets[language];
+  }
+  private lambdaSnippetForLanguage(language: LabLanguage): LabSnippet {
+    const snippets: Record<LabLanguage, LabSnippet> = {
+      javascript: {
+        title: 'Crear e invocar una Lambda con Node.js',
+        file: 'index.mjs',
+        install: 'npm install @aws-sdk/client-lambda',
+        code: `export const handler = async (event) => {
+  const nombre = event.nombre ?? "Floci";
+  console.log("Procesando evento", event);
+  return {
+    statusCode: 200,
+    body: JSON.stringify({ mensaje: \`Hola, \${nombre}! Desde Lambda local\` })
+  };
+};`,
+        run: 'zip function.zip index.mjs && aws lambda create-function --function-name mi-funcion-node --runtime nodejs22.x --handler index.handler --role arn:aws:iam::000000000000:role/lambda-role --zip-file fileb://function.zip && aws lambda invoke --function-name mi-funcion-node --payload \'{"nombre":"Floci"}\' --cli-binary-format raw-in-base64-out output.json',
+      },
+      typescript: {
+        title: 'Crear e invocar una Lambda con TypeScript',
+        file: 'index.ts',
+        install: 'npm install -D typescript esbuild && npm install @types/aws-lambda',
+        code: `type Event = { nombre?: string };
+
+export const handler = async (event: Event) => {
+  const nombre = event.nombre ?? "Floci";
+  console.log("Procesando evento", event);
+  return {
+    statusCode: 200,
+    body: JSON.stringify({ mensaje: \`Hola, \${nombre}! Desde Lambda TypeScript\` })
+  };
+};`,
+        run: 'npx esbuild index.ts --bundle --platform=node --outfile=index.js && zip function.zip index.js && aws lambda create-function --function-name mi-funcion-ts --runtime nodejs22.x --handler index.handler --role arn:aws:iam::000000000000:role/lambda-role --zip-file fileb://function.zip',
+      },
+      python: {
+        title: 'Crear e invocar una Lambda con Python',
+        file: 'handler.py',
+        install: 'pip install boto3',
+        code: `import json
+
+def handler(event, context):
+    nombre = event.get("nombre", "Floci")
+    print("Procesando evento", event)
+    return {
+        "statusCode": 200,
+        "body": json.dumps({"mensaje": f"Hola, {nombre}! Desde Lambda local"})
+    }`,
+        run: 'zip function.zip handler.py && aws lambda create-function --function-name mi-funcion-python --runtime python3.12 --handler handler.handler --role arn:aws:iam::000000000000:role/lambda-role --zip-file fileb://function.zip && aws lambda invoke --function-name mi-funcion-python --payload \'{"nombre":"Floci"}\' --cli-binary-format raw-in-base64-out output.json',
+      },
+      java: {
+        title: 'Crear e invocar una Lambda con Java (Maven o Gradle)',
+        file: 'App.java',
+        install: 'mvn -q archetype:generate -DgroupId=academy.floci -DartifactId=lambda-local -DarchetypeArtifactId=maven-archetype-quickstart -DinteractiveMode=false',
+        code: `import com.amazonaws.services.lambda.runtime.Context;
+import com.amazonaws.services.lambda.runtime.RequestHandler;
+import java.util.Map;
+
+public class App implements RequestHandler<Map<String, Object>, Map<String, Object>> {
+  @Override
+  public Map<String, Object> handleRequest(Map<String, Object> event, Context context) {
+    var nombre = String.valueOf(event.getOrDefault("nombre", "Floci"));
+    context.getLogger().log("Procesando evento para " + nombre);
+    return Map.of(
+      "statusCode", 200,
+      "body", "Hola, " + nombre + "! Desde Java Lambda local"
+    );
+  }
+}`,
+        run: 'mvn -q package',
+      },
+      go: {
+        title: 'Crear e invocar una Lambda con Go',
+        file: 'main.go',
+        install: 'go get github.com/aws/aws-lambda-go/lambda',
+        code: `package main
+
+import (
+  "context"
+  "fmt"
+  "github.com/aws/aws-lambda-go/lambda"
+)
+
+type Event struct { Nombre string \`json:"nombre"\` }
+type Response struct { StatusCode int \`json:"statusCode"\`; Body string \`json:"body"\` }
+
+func handler(ctx context.Context, event Event) (Response, error) {
+  if event.Nombre == "" { event.Nombre = "Floci" }
+  return Response{StatusCode: 200, Body: fmt.Sprintf("Hola, %s! Desde Go Lambda local", event.Nombre)}, nil
+}
+
+func main() { lambda.Start(handler) }`,
+        run: 'GOOS=linux GOARCH=amd64 go build -o bootstrap main.go && zip function.zip bootstrap',
+      },
+      csharp: {
+        title: 'Crear e invocar una Lambda con C#',
+        file: 'Function.cs',
+        install: 'dotnet add package Amazon.Lambda.Core',
+        code: `using Amazon.Lambda.Core;
+
+public class Function
+{
+  public object Handler(Dictionary<string, object> input, ILambdaContext context)
+  {
+    var nombre = input.TryGetValue("nombre", out var value) ? value?.ToString() : "Floci";
+    context.Logger.LogInformation($"Procesando evento para {nombre}");
+    return new { statusCode = 200, body = $"Hola, {nombre}! Desde .NET Lambda local" };
+  }
+}`,
+        run: 'dotnet publish -c Release',
       },
     };
     return snippets[language];

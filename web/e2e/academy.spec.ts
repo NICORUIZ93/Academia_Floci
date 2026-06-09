@@ -118,8 +118,13 @@ test('modulos: todos muestran ruta activa segun sistema y lenguaje', async ({ pa
     await expect(page.locator('.lesson-profile-guide')).toContainText('Windows + TypeScript');
     await expect(page.locator('.lesson-profile-guide')).toContainText('Sistema: Windows');
     await expect(page.locator('.lesson-profile-guide')).toContainText('Lenguaje: TypeScript');
-    await expect(page.locator('.lesson-profile-guide')).toContainText('app.ts');
-    await expect(page.locator('.lesson-profile-guide')).toContainText('npx tsx app.ts');
+    if (index === 5) {
+      await expect(page.locator('.lesson-profile-guide')).toContainText('index.ts');
+      await expect(page.locator('.lesson-profile-guide')).toContainText('npx esbuild index.ts');
+    } else {
+      await expect(page.locator('.lesson-profile-guide')).toContainText('app.ts');
+      await expect(page.locator('.lesson-profile-guide')).toContainText('npx tsx app.ts');
+    }
   }
 });
 
@@ -174,6 +179,31 @@ test('modulos: java separa instalacion, código y ejecución', async ({ page, is
   await expect(page.locator('.adaptive-lab .run-panel')).toContainText('EJECUTAR');
   await expect(page.locator('.adaptive-lab .run-panel')).toContainText('mvn exec:java');
   await expect(page.locator('.adaptive-lab .run-panel')).toContainText('gradle run');
+});
+
+test('modulo 5: windows java muestra laboratorio lambda real', async ({ page, isMobile }) => {
+  await page.locator('.student-config .segmented-control button').filter({ hasText: 'Windows' }).click();
+  await page.locator('.student-config .language-select button').nth(3).click();
+  await navigateTo(page, 1, isMobile);
+  await page.locator('.module-rail button').nth(5).click();
+
+  await expect(page.locator('.active-course-profile')).toContainText('Terminal');
+  await expect(page.locator('.active-course-profile')).toContainText('PowerShell');
+  await expect(page.locator('.active-course-profile')).not.toContainText('PowerShell recomendado');
+  await expect(page.locator('.lesson-profile-guide')).toContainText('Lambda / Functions en Windows + Java');
+  await expect(page.locator('.lesson-profile-guide')).toContainText('App.java');
+  await expect(page.locator('.lesson-profile-guide')).toContainText('mvn -q package');
+  await expect(page.locator('.lesson-profile-guide')).toContainText('aws lambda create-function');
+
+  await page.locator('.lesson-tabs button').nth(1).click();
+  await expect(page.locator('.adaptive-lab')).toContainText('Crear e invocar una Lambda con Java');
+  await expect(page.locator('.adaptive-lab .sdk-panel')).toContainText('aws-lambda-java-core');
+  await expect(page.locator('.adaptive-lab .code-sample')).toContainText('RequestHandler');
+  await expect(page.locator('.adaptive-lab .code-sample')).toContainText('handleRequest');
+  await expect(page.locator('.adaptive-lab .code-sample')).not.toContainText('S3Client.builder');
+  await expect(page.locator('.adaptive-lab .run-panel')).toContainText('mvn -q package');
+  await expect(page.locator('.adaptive-lab .run-panel')).toContainText('gradle clean jar');
+  await expect(page.locator('.adaptive-lab .run-panel')).toContainText('aws lambda invoke');
 });
 
 test('proyecto final: mini proyectos, integrador y entorno activo son utiles', async ({ page, isMobile }) => {

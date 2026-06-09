@@ -450,7 +450,14 @@ kbd { display:inline-grid; place-items:center; min-height:22px; min-width:38px; 
 .active-course-profile h2 { font-size:16px; margin:3px 0; overflow-wrap:anywhere; }
 .active-course-profile p { margin:0; color:$i3; font-size:11px; line-height:1.5; overflow-wrap:anywhere; }
 .profile-pills { display:flex; flex-wrap:wrap; gap:6px; justify-content:flex-end; flex-shrink:0; }
-.profile-pills span { background:$wh; color:$p; border:1px solid $pm; border-radius:$rs; padding:5px 8px; font-size:9px; font-weight:800; overflow-wrap:anywhere; }
+.profile-pills span {
+  background:$wh; color:$p; border:1px solid $pm; border-radius:$rs;
+  padding:5px 8px; font-size:9px; font-weight:800; overflow-wrap:anywhere;
+  display:flex; flex-direction:column; gap:2px; min-width:92px; line-height:1.25;
+}
+.profile-pills small {
+  color:$mu; font-size:8px; font-weight:800; text-transform:uppercase;
+}
 
 .module-contract { display:grid; grid-template-columns:repeat(4,1fr); gap:8px; margin-top:16px; }
 .contract-card { border:1px solid $bd; border-radius:$rs; background:$bg; padding:12px; min-width:0; }

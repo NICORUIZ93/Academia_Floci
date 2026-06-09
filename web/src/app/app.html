@@ -380,9 +380,9 @@
             <p>Los ejercicios, comandos, archivos y snippets se generan para este perfil.</p>
           </div>
           <div class="profile-pills">
-            <span>{{ selectedOsInfo().label }}</span>
-            <span>{{ selectedLanguageInfo().file }}</span>
-            <span>{{ languageRunCommands()[0].command }}</span>
+            <span><small>Terminal</small>{{ selectedOsInfo().terminal }}</span>
+            <span><small>Archivo</small>{{ languageSnippet().file }}</span>
+            <span><small>Ejecutar</small>{{ languageRunCommands()[0].command }}</span>
           </div>
         </section>
         <section class="module-trailer">
@@ -425,7 +425,7 @@
                 <p>Esta es la ruta que debes seguir en este módulo. Si cambias el sistema operativo o el lenguaje desde Inicio, estos pasos cambian en todos los módulos.</p>
               </div>
               <div class="lab-badges">
-                <span>{{ selectedOsInfo().label }}</span>
+                <span>{{ selectedOsInfo().terminal }}</span>
                 <span>{{ languageSnippet().file }}</span>
                 <span>{{ languageRunCommands()[0].command }}</span>
               </div>
@@ -620,7 +620,8 @@
               </article>
               <article class="sdk-panel">
                 <span class="eyebrow">INSTALACIÓN SDK</span>
-                <p class="lab-card-hint" *ngIf="selectedLanguage() === 'java'">Elige una ruta: Maven o Gradle. No necesitas crear ambos proyectos para aprender el laboratorio.</p>
+                <p class="lab-card-hint" *ngIf="selectedLanguage() === 'java' && selectedModuleId() !== 5">Elige una ruta: Maven o Gradle. No necesitas crear ambos proyectos para aprender el laboratorio.</p>
+                <p class="lab-card-hint" *ngIf="selectedLanguage() === 'java' && selectedModuleId() === 5">Elige Maven o Gradle y agrega la dependencia <code>com.amazonaws:aws-lambda-java-core</code> antes de empaquetar la Lambda.</p>
                 <p class="lab-card-hint" *ngIf="selectedLanguage() !== 'java'">Instala las dependencias del lenguaje antes de ejecutar el archivo.</p>
                 <button class="copy-line" *ngFor="let command of languageInstallCommands()" (click)="copyTextValue(command.command)">
                   <span class="command-label">{{ command.title }}</span>
