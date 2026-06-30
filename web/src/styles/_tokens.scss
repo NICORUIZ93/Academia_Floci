@@ -1,0 +1,30 @@
+// ── Tokens compartidos por toda la app (catálogo, lector de libro, cloud clásico) ──
+$p:   #0f766e; // primary teal
+$ph:  #0b5f59; // primary hover
+$pl:  #e7f4f1; // primary light bg
+$pm:  #a8d8d1; // primary mid (border)
+$g:   #059669; // green (success)
+$gl:  #d1fae5; // green light
+$gm:  #6ee7b7; // green mid
+$a:   #b45309; // amber (warning)
+$al:  #fef3c7; // amber light
+$r:   #dc2626; // red (error)
+$ink: #162321; // darkest text
+$i2:  #243331;
+$i3:  #364845;
+$mu:  #64748b; // muted text
+$mul: #94a3b8; // muted light
+$bd:  #dce5e2; // border
+$bd2: #c5d4d0; // border darker
+$bg:  #f5f7f5; // page background
+$bg2: #edf3f0; // subtle bg
+$wh:  #ffffff;
+$sw:  240px;   // sidebar width
+$th:  58px;    // topbar height
+$rr:  8px;     // radius card
+$rs:  6px;     // radius small
+$rl:  12px;    // radius large
+$sh:  0 1px 3px rgba(0,0,0,.06),0 1px 2px rgba(0,0,0,.04);
+$shm: 0 4px 6px -1px rgba(0,0,0,.07),0 2px 4px rgba(0,0,0,.05);
+$shl: 0 10px 25px -3px rgba(0,0,0,.1),0 4px 6px -4px rgba(0,0,0,.05);
+$reading-width: 720px; // ancho máximo de la columna de lectura del lector tipo libro

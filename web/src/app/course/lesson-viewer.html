@@ -1,0 +1,84 @@
+<ng-container *ngIf="module() as m; else notFound">
+  <article class="lesson">
+    <div class="lesson-breadcrumb">
+      <span>{{ track()?.name }}</span>
+      <span class="sep">/</span>
+      <span>Módulo {{ moduleIndex() + 1 }} de {{ track()?.modules?.length }} · {{ m.level }} · {{ m.duration }}</span>
+    </div>
+
+    <h1>{{ m.title }}</h1>
+    <p class="lesson-description">{{ m.description }}</p>
+
+    <section class="lesson-method" aria-label="Método de estudio del módulo">
+      <div class="lesson-method-head">
+        <span>Método aplicado a este módulo</span>
+        <strong>Lee, ejecuta, rompe, explica y enseña</strong>
+      </div>
+      <div class="lesson-method-grid">
+        <article *ngFor="let layer of studyLayers()">
+          <strong>{{ layer.title }}</strong>
+          <span>{{ layer.label }}</span>
+          <p>{{ layer.detail }}</p>
+          <ul>
+            <li *ngFor="let item of layer.items">{{ item }}</li>
+          </ul>
+        </article>
+      </div>
+    </section>
+
+    <div class="lesson-tabs">
+      <button [class.active]="tab() === 'teoria'" (click)="setTab('teoria')">Teoría</button>
+      <button [class.active]="tab() === 'retos'" (click)="setTab('retos')">Retos<small *ngIf="m.challenges.length">{{ m.challenges.length }}</small></button>
+      <button [class.active]="tab() === 'preguntas'" (click)="setTab('preguntas')">Preguntas<small *ngIf="m.questions.length">{{ m.questions.length }}</small></button>
+    </div>
+
+    <section class="lesson-panel" *ngIf="tab() === 'teoria'">
+      <div *ngIf="lessonLoading()" class="lesson-skeleton">Cargando lección…</div>
+      <div *ngIf="!lessonLoading() && lessonHtml() as html" class="lesson-markdown" [innerHTML]="sanitizedLesson(html)"></div>
+      <ng-container *ngIf="!lessonLoading() && !lessonHtml()">
+        <p class="lesson-soon">La lección completa de este módulo se está redactando. Mientras tanto, estos son los conceptos clave que vas a dominar:</p>
+        <ul class="lesson-concepts">
+          <li *ngFor="let concept of m.concepts">{{ concept }}</li>
+        </ul>
+        <p class="lesson-deliverable"><strong>Entregable previsto:</strong> {{ m.deliverable }}</p>
+      </ng-container>
+    </section>
+
+    <section class="lesson-panel" *ngIf="tab() === 'retos'">
+      <ul class="lesson-challenges" *ngIf="m.challenges.length; else challengesSoon">
+        <li *ngFor="let challenge of m.challenges; let i = index">
+          <button class="challenge-check" [class.done]="isChallengeComplete(i)" (click)="toggleChallenge(i)">
+            <lucide-icon *ngIf="isChallengeComplete(i)" [img]="icons.CircleCheck" />
+          </button>
+          <span>{{ challenge }}</span>
+        </li>
+      </ul>
+      <ng-template #challengesSoon><p class="lesson-soon">Los retos prácticos de este módulo todavía no están redactados.</p></ng-template>
+    </section>
+
+    <section class="lesson-panel" *ngIf="tab() === 'preguntas'">
+      <ol class="lesson-questions" *ngIf="m.questions.length; else questionsSoon">
+        <li *ngFor="let question of m.questions">{{ question }}</li>
+      </ol>
+      <ng-template #questionsSoon><p class="lesson-soon">Las preguntas de comprobación de este módulo todavía no están redactadas.</p></ng-template>
+    </section>
+
+    <footer class="lesson-footer">
+      <button class="complete-toggle" [class.done]="isComplete()" (click)="toggleComplete()">
+        <lucide-icon [img]="icons.CircleCheck" />
+        <span>{{ isComplete() ? 'Módulo completado' : 'Marcar módulo como completado' }}</span>
+      </button>
+      <div class="lesson-nav">
+        <button *ngIf="previousModule() as prev" (click)="goToModule(prev.id)"><lucide-icon [img]="icons.ChevronLeft" /><span>{{ prev.shortTitle }}</span></button>
+        <button *ngIf="nextModule() as next" class="next" (click)="goToModule(next.id)"><span>{{ next.shortTitle }}</span><lucide-icon [img]="icons.ChevronRight" /></button>
+      </div>
+    </footer>
+  </article>
+</ng-container>
+
+<ng-template #notFound>
+  <div class="lesson-missing">
+    <p>No encontramos este módulo.</p>
+    <a [routerLink]="['/curso', track()?.id]">Volver al índice del curso</a>
+  </div>
+</ng-template>

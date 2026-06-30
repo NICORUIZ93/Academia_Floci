@@ -1,0 +1,174 @@
+<div class="study-app" [class.dark]="dark">
+  <header class="study-header">
+    <div>
+      <strong>De cero a profesional master</strong>
+      <span>Página de estudio limpia y progresiva</span>
+    </div>
+    <nav>
+      <a href="#inicio">Inicio</a>
+      <a href="#modulos">Módulos</a>
+      <a href="#progreso">Progreso</a>
+      <a href="#acerca">Acerca de</a>
+    </nav>
+    <button class="ghost" (click)="toggleTheme()">{{ dark ? 'Modo claro' : 'Modo oscuro' }}</button>
+    <button class="menu" (click)="mobileSidebar = !mobileSidebar">Módulos</button>
+  </header>
+
+  <div class="progress-top" id="progreso">
+    <div>
+      <span>Avance global</span>
+      <strong>{{ globalProgress() }}%</strong>
+      <div class="bar"><i [style.width.%]="globalProgress()"></i></div>
+    </div>
+    <div>
+      <span>{{ selectedModule.title }}</span>
+      <strong>{{ currentModuleProgress() }}%</strong>
+      <div class="bar"><i [style.width.%]="currentModuleProgress()"></i></div>
+    </div>
+  </div>
+
+  <div class="study-layout">
+    <aside class="sidebar" [class.open]="mobileSidebar" id="modulos">
+      <label class="search">
+        <span>Buscar tema</span>
+        <input [(ngModel)]="query" placeholder="variables, event loop, seguridad..." />
+      </label>
+
+      <section *ngFor="let module of filteredModules" class="module-block">
+        <details [open]="module.id === selectedModuleId || query">
+          <summary>
+            <span>{{ module.title }}</span>
+            <small>{{ moduleProgress(module) }}%</small>
+          </summary>
+          <div class="mini-bar"><i [style.width.%]="moduleProgress(module)"></i></div>
+
+          <div class="level-group" *ngFor="let level of levelsFor(module)">
+            <strong>{{ level }}</strong>
+            <button
+              *ngFor="let topic of topicsByLevel(module, level)"
+              [class.active]="topic.id === selectedTopic.id"
+              [class.done]="isCompleted(topic.id)"
+              (click)="selectTopic(module, topic)"
+            >
+              <span>{{ topic.title }}</span>
+              <small>{{ topic.minutes }} min</small>
+            </button>
+          </div>
+        </details>
+      </section>
+    </aside>
+
+    <main class="content" id="inicio">
+      <article class="topic-card">
+        <header class="topic-head">
+          <div>
+            <span class="level" [class.basic]="selectedTopic.level === 'Básico'" [class.medium]="selectedTopic.level === 'Medio'" [class.advanced]="selectedTopic.level === 'Avanzado'" [class.master]="selectedTopic.level === 'Master'">
+              {{ selectedTopic.level }}
+            </span>
+            <h1>{{ selectedTopic.title }}</h1>
+            <p>{{ selectedModule.description }}</p>
+          </div>
+          <time>{{ selectedTopic.minutes }} min</time>
+        </header>
+
+        <section class="intro">
+          <p *ngFor="let paragraph of selectedTopic.intro">{{ paragraph }}</p>
+        </section>
+
+        <section class="objectives">
+          <h2>Objetivos de aprendizaje</h2>
+          <ul>
+            <li *ngFor="let objective of selectedTopic.objectives"><span>✓</span>{{ objective }}</li>
+          </ul>
+        </section>
+
+        <div class="tabs">
+          <button [class.active]="tab === 'teoria'" (click)="tab = 'teoria'">Teoría</button>
+          <button [class.active]="tab === 'ejemplo'" (click)="tab = 'ejemplo'">Ejemplo</button>
+          <button [class.active]="tab === 'ejercicio'" (click)="tab = 'ejercicio'">Ejercicio</button>
+        </div>
+
+        <section *ngIf="tab === 'teoria'" class="panel">
+          <div class="theory-grid">
+            <section *ngFor="let section of selectedTopic.theory">
+              <h3>{{ section.title }}</h3>
+              <p>{{ section.body }}</p>
+              <ul *ngIf="section.bullets">
+                <li *ngFor="let bullet of section.bullets">{{ bullet }}</li>
+              </ul>
+            </section>
+          </div>
+
+          <div class="diagram">
+            <strong>Diagrama mental</strong>
+            <code>{{ selectedTopic.diagram }}</code>
+          </div>
+
+          <table *ngIf="selectedTopic.comparison">
+            <thead>
+              <tr><th>{{ selectedTopic.comparison.left }}</th><th>{{ selectedTopic.comparison.right }}</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>{{ selectedTopic.comparison.leftDetail }}</td><td>{{ selectedTopic.comparison.rightDetail }}</td></tr>
+            </tbody>
+          </table>
+
+          <details>
+            <summary>Errores comunes</summary>
+            <ul>
+              <li *ngFor="let error of selectedTopic.commonErrors">{{ error }}</li>
+            </ul>
+          </details>
+        </section>
+
+        <section *ngIf="tab === 'ejemplo'" class="panel example">
+          <div>
+            <h2>Ejemplo práctico guiado</h2>
+            <pre><code>{{ selectedTopic.code }}</code></pre>
+            <button class="primary" (click)="runCode()">Ejecutar ejemplo</button>
+          </div>
+          <div>
+            <h3>Explicación línea por línea</h3>
+            <ol>
+              <li *ngFor="let line of selectedTopic.lineByLine">{{ line }}</li>
+            </ol>
+            <output>{{ output }}</output>
+          </div>
+        </section>
+
+        <section *ngIf="tab === 'ejercicio'" class="panel exercise">
+          <h2>Ejercicio para ti</h2>
+          <p>{{ selectedTopic.exercise }}</p>
+
+          <details open>
+            <summary>Pistas</summary>
+            <ul>
+              <li *ngFor="let hint of selectedTopic.hints">{{ hint }}</li>
+            </ul>
+          </details>
+
+          <textarea [(ngModel)]="answer" placeholder="Escribe tu solución, explicación o pseudocódigo aquí..."></textarea>
+          <div class="exercise-actions">
+            <button class="primary" (click)="verifyAnswer()">Verificar</button>
+            <button class="ghost" (click)="toggleComplete()">
+              {{ isCompleted(selectedTopic.id) ? 'Tema completado' : 'Marcar como completado' }}
+            </button>
+          </div>
+          <output>{{ output }}</output>
+
+          <section class="summary">
+            <h3>Resumen rápido</h3>
+            <ul>
+              <li *ngFor="let item of selectedTopic.summary">{{ item }}</li>
+            </ul>
+          </section>
+
+          <section class="resources">
+            <h3>Recursos externos</h3>
+            <a *ngFor="let resource of selectedTopic.resources" [href]="resource.url" target="_blank" rel="noreferrer">{{ resource.label }}</a>
+          </section>
+        </section>
+      </article>
+    </main>
+  </div>
+</div>

@@ -1,0 +1,15 @@
+<nav class="lesson-index" aria-label="Índice del curso">
+  <div class="lesson-index-group" *ngFor="let group of groups()">
+    <span class="lesson-index-level">{{ group.level }}</span>
+    <a
+      *ngFor="let module of group.modules"
+      class="lesson-index-item"
+      [class.done]="isDone(module.id)"
+      [routerLink]="['/curso', trackId, module.id]"
+      routerLinkActive="active"
+    >
+      <span class="lesson-index-check"><lucide-icon *ngIf="isDone(module.id)" [img]="icons.CircleCheck" /></span>
+      <span class="lesson-index-title">{{ module.shortTitle }}</span>
+    </a>
+  </div>
+</nav>

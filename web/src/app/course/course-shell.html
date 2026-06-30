@@ -1,0 +1,34 @@
+<div class="shell" *ngIf="track() as t; else missing" [style.--track-color]="t.color">
+  <header class="shell-topbar">
+    <button class="icon-button mobile-only" title="Abrir índice" (click)="sidebarOpen.set(true)"><lucide-icon [img]="icons.Menu" /></button>
+    <a class="back-link" routerLink="/"><lucide-icon [img]="icons.ArrowLeft" /><span>Catálogo</span></a>
+    <div class="shell-title">
+      <strong>{{ t.name }}</strong>
+      <div class="shell-progress"><span [style.width.%]="percent()"></span></div>
+    </div>
+    <button class="search-trigger" (click)="paletteService.open()">
+      <lucide-icon [img]="icons.Search" /><span>Buscar</span><kbd>⌘K</kbd>
+    </button>
+  </header>
+
+  <div class="shell-body">
+    <aside class="shell-sidebar" [class.open]="sidebarOpen()">
+      <div class="shell-sidebar-header mobile-only">
+        <strong>Índice del curso</strong>
+        <button class="icon-button" (click)="sidebarOpen.set(false)"><lucide-icon [img]="icons.X" /></button>
+      </div>
+      <app-lesson-index [trackId]="t.id" />
+    </aside>
+    <div class="shell-scrim mobile-only" *ngIf="sidebarOpen()" (click)="sidebarOpen.set(false)"></div>
+    <main class="shell-main">
+      <router-outlet />
+    </main>
+  </div>
+</div>
+
+<ng-template #missing>
+  <div class="shell-missing">
+    <p>No encontramos este curso.</p>
+    <a routerLink="/">Volver al catálogo</a>
+  </div>
+</ng-template>

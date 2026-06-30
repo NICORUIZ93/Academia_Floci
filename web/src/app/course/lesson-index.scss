@@ -1,0 +1,17 @@
+@use '../../styles/tokens' as *;
+
+:host { display:block; }
+.lesson-index-group { margin-bottom:14px; }
+.lesson-index-level {
+  display:block; padding:0 12px 6px; font-size:10px; font-weight:800; letter-spacing:.6px;
+  text-transform:uppercase; color:$mul;
+}
+.lesson-index-item {
+  display:flex; align-items:center; gap:8px; padding:8px 12px; border-radius:$rs;
+  text-decoration:none; color:$i3; font-size:13px; line-height:1.3;
+}
+.lesson-index-item:hover { background:$bg2; }
+.lesson-index-item.active { background:$pl; color:$ph; font-weight:600; }
+.lesson-index-check { width:15px; height:15px; flex-shrink:0; display:grid; place-items:center; color:$g; }
+.lesson-index-check lucide-icon { width:14px; }
+.lesson-index-item.done .lesson-index-title { color:$i3; }

@@ -6,7 +6,7 @@ async function navigateTo(page: import('@playwright/test').Page, index: number, 
 }
 
 test.beforeEach(async ({ page }) => {
-  await page.goto('/');
+  await page.goto('/laboratorio/floci');
   await page.evaluate(() => localStorage.clear());
   await page.reload();
 });
@@ -284,7 +284,7 @@ test('responsive: vistas principales no generan scroll horizontal', async ({ pag
   if (!isMobile) test.skip();
 
   for (const navIndex of [0, 1, 2, 3, 4]) {
-    await page.goto('/');
+    await page.goto('/laboratorio/floci');
     if (navIndex > 0) {
       await navigateTo(page, navIndex, true);
     }

@@ -1,18 +1,18 @@
-export interface CourseModule {
-  id: number;
-  title: string;
-  shortTitle: string;
-  level: 'Fundamentos' | 'Aplicación' | 'Integración' | 'Experto';
-  duration: string;
-  description: string;
-  concepts: string[];
-  challenges: string[];
-  questions: string[];
-  services: string[];
-  deliverable: string;
-  color: string;
-  clouds: ('aws' | 'azure' | 'gcp')[];
-}
+import { CourseModule, Track, createModule } from './course-module.model';
+import { DEVOPS_MODULES } from './tracks/devops.track';
+import { JAVASCRIPT_MODULES } from './tracks/javascript.track';
+import { NODE_MODULES } from './tracks/node.track';
+import { ANGULAR_MODULES } from './tracks/angular.track';
+import { REACT_MODULES } from './tracks/react.track';
+import { JAVA_MODULES } from './tracks/java.track';
+import { SPRING_BOOT_MODULES } from './tracks/spring-boot.track';
+import { KOTLIN_MULTIPLATFORM_MODULES } from './tracks/kotlin-multiplatform.track';
+import { ANDROID_MODULES } from './tracks/android.track';
+import { IOS_MODULES } from './tracks/ios.track';
+import { FLUTTER_MODULES } from './tracks/flutter.track';
+
+export type { CourseModule, Track };
+export { createModule };
 
 export interface ServiceGroup {
   name: string;
@@ -21,13 +21,7 @@ export interface ServiceGroup {
   services: string[];
 }
 
-const m = (
-  id: number, title: string, shortTitle: string,
-  level: CourseModule['level'], duration: string, color: string,
-  description: string, concepts: string[], challenges: string[],
-  questions: string[], services: string[], deliverable: string,
-  clouds: ('aws' | 'azure' | 'gcp')[] = ['aws']
-): CourseModule => ({ id, title, shortTitle, level, duration, color, description, concepts, challenges, questions, services, deliverable, clouds });
+const m = createModule;
 
 export const COURSE_MODULES: CourseModule[] = [
   m(0,
@@ -35,7 +29,7 @@ export const COURSE_MODULES: CourseModule[] = [
     'Primeros pasos',
     'Fundamentos', '1 h', '#137c8b',
     'Instala los tres emuladores de Floci (AWS, Azure y GCP), levántalos en tu máquina y ejecuta tu primer comando en cada nube sin pagar ni crear cuentas.',
-    ['IaaS / PaaS / SaaS', 'Emulador vs nube real', 'Endpoint local', 'Variables de entorno', 'floci start / floci az start / floci gcp start'],
+    ['IaaS / PaaS / SaaS', 'Emulador vs nube real', 'Endpoint local', 'Variables de entorno', 'floci start / floci az start / floci gcp start', 'Virtualización, elasticidad y escalabilidad (vertical vs horizontal)', 'Regiones, Zonas de Disponibilidad y Edge Locations', 'Qué es Floci: alternativa gratuita a LocalStack y filosofía "sin ataduras"', 'Ecosistema Floci: floci-ui (consola web) y floci-duck (motor DuckDB para Athena/Firehose)'],
     [
       'Instala Floci CLI: brew install floci-io/floci/floci (o curl -fsSL https://floci.io/install.sh | sh)',
       'Inicia Floci AWS: floci start — verifica con floci status',
@@ -281,7 +275,7 @@ export const COURSE_MODULES: CourseModule[] = [
     'CloudFormation / IaC',
     'Integración', '3 h', '#bd4b72',
     'Define toda tu infraestructura en archivos YAML versionables. Crea, actualiza y destruye recursos con un solo comando sin tocar la consola.',
-    ['Stack', 'Template', 'Resource', 'Parameter', 'Output', 'Change set', 'Drift detection'],
+    ['Stack', 'Template', 'Resource', 'Parameter', 'Output', 'Change set', 'Drift detection', 'Terraform y OpenTofu como alternativa multi-nube (HCL, plan/apply, state)', 'AWS CDK: infraestructura como código real (TypeScript/Python)', 'Compatibilidad de Floci con AWS CLI v2, SDK v2/v3, boto3, Go, Rust y Terraform'],
     [
       'Escribe un template stack-basico.yaml que define un bucket S3 + una cola SQS + una tabla DynamoDB con Resources y Outputs',
       'Despliega el stack: aws cloudformation deploy --template-file stack-basico.yaml --stack-name mi-stack',
@@ -413,7 +407,7 @@ export const COURSE_MODULES: CourseModule[] = [
     'Proyecto final',
     'Experto', '8 h', '#bd4b72',
     'Construye la misma API "Gestor de Tareas" tres veces: una en AWS con Floci, una en Azure con Floci-az y una en GCP con Floci-gcp. Compara las diferencias y demuestra portabilidad de conocimiento.',
-    ['Arquitectura multi-nube', 'Portabilidad', 'Feature parity', 'Interoperabilidad', 'CI local', 'Documentación de diferencias'],
+    ['Arquitectura multi-nube', 'Portabilidad', 'Feature parity', 'Interoperabilidad', 'CI local', 'Documentación de diferencias', 'Arquitectura interna de Floci: GraalVM, arranque en ~24ms, "real engines, not mocks"', 'Floci en CI/CD: pruebas de integración sin coste, integración con Testcontainers', 'Migración desde LocalStack, Azurite o gcloud emulators a un único endpoint Floci', 'Persistencia de estado entre reinicios (ECS, CodeBuild, Config) y límites: emulador para desarrollo, no para producción'],
     [
       'AWS: implementa GET /tareas y POST /tareas usando Lambda + API Gateway + DynamoDB + SQS + S3 + CloudWatch',
       'AWS: añade autenticación con Cognito y despliega toda la infraestructura con CloudFormation',
@@ -508,3 +502,26 @@ export const GCP_GROUPS: AltCloudGroup[] = [
   { nombre: 'Mensajería', color: '#a142f4', descripcion: 'Desacopla y procesa eventos — disponible en Floci-gcp.', servicios: ['Pub/Sub (gRPC)', 'Cloud Tasks (en progreso)', 'Managed Kafka (Redpanda)'] },
   { nombre: 'Identidad y secretos', color: '#4285f4', descripcion: 'Gestiona acceso y secretos — disponible en Floci-gcp.', servicios: ['Secret Manager (gRPC)', 'IAM (REST JSON)'] },
 ];
+
+// ── Multi-track registry ─────────────────────────────────────────────────────
+// Cada track es un "libro": reutiliza el mismo CourseModule que ya valida
+// Cloud. El contenido detallado (challenges/questions) de los tracks nuevos
+// se redacta por etapas; mientras tanto el módulo ya es navegable con su
+// descripción, conceptos clave y entregable previstos.
+
+export const TRACKS: Track[] = [
+  { id: 'cloud', name: 'Cloud (Floci) — AWS, Azure y GCP', shortName: 'Cloud', tagline: 'Servicios cloud reales en local, sin pagar ni crear cuentas.', color: '#137c8b', icon: 'cloud-cog', modules: COURSE_MODULES },
+  { id: 'devops', name: 'DevOps', shortName: 'DevOps', tagline: 'Linux, Docker, CI/CD, Kubernetes e infraestructura como código.', color: '#475569', icon: 'git-branch', modules: DEVOPS_MODULES },
+  { id: 'javascript', name: 'JavaScript de cero a master', shortName: 'JavaScript', tagline: 'El lenguaje base de la web: del primer script al rendimiento avanzado.', color: '#e9b400', icon: 'braces', modules: JAVASCRIPT_MODULES },
+  { id: 'node', name: 'Node.js de cero a master', shortName: 'Node.js', tagline: 'Backend en JavaScript: APIs, bases de datos y producción.', color: '#3c873a', icon: 'server', modules: NODE_MODULES },
+  { id: 'angular', name: 'Angular — última versión y migraciones', shortName: 'Angular', tagline: 'Componentes, signals y arquitectura moderna sin NgModules.', color: '#dd0031', icon: 'shield', modules: ANGULAR_MODULES },
+  { id: 'react', name: 'React de cero a master', shortName: 'React', tagline: 'Hooks, estado, datos y frameworks full-stack con React.', color: '#149eca', icon: 'atom', modules: REACT_MODULES },
+  { id: 'java', name: 'Java de cero a avanzado', shortName: 'Java', tagline: 'POO, concurrencia y JVM moderna, de Java 8 a Java 21.', color: '#5382a1', icon: 'coffee', modules: JAVA_MODULES },
+  { id: 'spring-boot', name: 'Spring Boot', shortName: 'Spring Boot', tagline: 'APIs, persistencia, seguridad y microservicios con Spring.', color: '#6db33f', icon: 'leaf', modules: SPRING_BOOT_MODULES },
+  { id: 'kotlin-multiplatform', name: 'Kotlin Multiplatform', shortName: 'Kotlin MP', tagline: 'Lógica compartida entre Android e iOS con Kotlin.', color: '#7f52ff', icon: 'layers', modules: KOTLIN_MULTIPLATFORM_MODULES },
+  { id: 'android', name: 'Android con Jetpack Compose', shortName: 'Android', tagline: 'Apps Android nativas modernas con Compose y Kotlin.', color: '#3ddc84', icon: 'smartphone', modules: ANDROID_MODULES },
+  { id: 'ios', name: 'iOS con SwiftUI', shortName: 'iOS', tagline: 'Apps iOS nativas con Swift, SwiftUI y concurrencia moderna.', color: '#0a84ff', icon: 'apple', modules: IOS_MODULES },
+  { id: 'flutter', name: 'Flutter', shortName: 'Flutter', tagline: 'Una base de código para Android, iOS y web con Dart.', color: '#02569b', icon: 'wind', modules: FLUTTER_MODULES },
+];
+
+export const findTrack = (trackId: string): Track | undefined => TRACKS.find(t => t.id === trackId);

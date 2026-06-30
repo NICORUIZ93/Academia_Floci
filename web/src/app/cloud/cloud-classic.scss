@@ -1,32 +1,5 @@
-// ── Tokens ────────────────────────────────────────────────────────────────────
-$p:   #0f766e; // primary teal
-$ph:  #0b5f59; // primary hover
-$pl:  #e7f4f1; // primary light bg
-$pm:  #a8d8d1; // primary mid (border)
-$g:   #059669; // green (success)
-$gl:  #d1fae5; // green light
-$gm:  #6ee7b7; // green mid
-$a:   #b45309; // amber (warning)
-$al:  #fef3c7; // amber light
-$r:   #dc2626; // red (error)
-$ink: #162321; // darkest text
-$i2:  #243331;
-$i3:  #364845;
-$mu:  #64748b; // muted text
-$mul: #94a3b8; // muted light
-$bd:  #dce5e2; // border
-$bd2: #c5d4d0; // border darker
-$bg:  #f5f7f5; // page background
-$bg2: #edf3f0; // subtle bg
-$wh:  #ffffff;
-$sw:  240px;   // sidebar width
-$th:  58px;    // topbar height
-$rr:  8px;     // radius card
-$rs:  6px;     // radius small
-$rl:  12px;    // radius large
-$sh:  0 1px 3px rgba(0,0,0,.06),0 1px 2px rgba(0,0,0,.04);
-$shm: 0 4px 6px -1px rgba(0,0,0,.07),0 2px 4px rgba(0,0,0,.05);
-$shl: 0 10px 25px -3px rgba(0,0,0,.1),0 4px 6px -4px rgba(0,0,0,.05);
+// ── Tokens compartidos (catálogo, lector de libro y esta vista clásica de Cloud) ──
+@use '../../styles/tokens' as *;
 
 // ── Base ──────────────────────────────────────────────────────────────────────
 :host { display:block; min-height:100vh; overflow-x:hidden; }
@@ -57,6 +30,13 @@ h1,h2,h3,h4 { font-family:Manrope,sans-serif; color:$ink; margin:0; line-height:
 .brand > div:nth-child(2) { display:flex; flex-direction:column; overflow:hidden; }
 .brand strong { font:700 13px Manrope; color:$ink; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
 .brand span   { font-size:10px; color:$mu; margin-top:1px; }
+.back-to-catalog {
+  display:flex; align-items:center; gap:8px; padding:10px 14px;
+  font-size:12px; font-weight:600; color:$mu; text-decoration:none;
+  border-bottom:1px solid $bd; flex-shrink:0;
+}
+.back-to-catalog:hover { color:$p; background:$pl; }
+.back-to-catalog lucide-icon { width:14px; flex-shrink:0; }
 .close-sidebar { display:none !important; flex-shrink:0; border:0; background:transparent; color:$mu; width:30px; height:30px; place-items:center; border-radius:$rs; margin-left:auto; }
 
 .sidebar nav { padding:10px 8px; display:flex; flex-direction:column; gap:2px; flex:1; }

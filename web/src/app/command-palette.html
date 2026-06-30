@@ -1,0 +1,22 @@
+<div class="palette-scrim" *ngIf="paletteService.isOpen()" (click)="close()">
+  <div class="palette" (click)="$event.stopPropagation()">
+    <div class="palette-input">
+      <lucide-icon [img]="icons.Search" />
+      <input
+        type="text"
+        placeholder="Busca un curso o un tema…"
+        [ngModel]="query()"
+        (ngModelChange)="query.set($event)"
+        autofocus
+      />
+      <button class="icon-button" (click)="close()"><lucide-icon [img]="icons.X" /></button>
+    </div>
+    <div class="palette-results">
+      <button class="palette-result" *ngFor="let entry of results()" (click)="select(entry)">
+        <strong>{{ entry.label }}</strong>
+        <span>{{ entry.sublabel }}</span>
+      </button>
+      <p class="palette-empty" *ngIf="!results().length">Sin resultados para "{{ query() }}".</p>
+    </div>
+  </div>
+</div>

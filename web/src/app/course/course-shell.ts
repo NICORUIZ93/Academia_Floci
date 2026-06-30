@@ -1,0 +1,37 @@
+import { CommonModule } from '@angular/common';
+import { Component, computed, inject, signal } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { ActivatedRoute, RouterLink, RouterOutlet } from '@angular/router';
+import { ArrowLeft, LucideAngularModule, Menu, Search, X } from 'lucide-angular';
+import { map } from 'rxjs';
+import { findTrack } from '../course-data';
+import { CommandPaletteService } from '../command-palette.service';
+import { ProgressService } from '../progress.service';
+import { LessonIndexComponent } from './lesson-index';
+
+@Component({
+  selector: 'app-course-shell',
+  imports: [CommonModule, RouterLink, RouterOutlet, LucideAngularModule, LessonIndexComponent],
+  templateUrl: './course-shell.html',
+  styleUrl: './course-shell.scss',
+})
+export class CourseShellComponent {
+  readonly icons = { ArrowLeft, Menu, Search, X };
+  readonly progressService = inject(ProgressService);
+  readonly paletteService = inject(CommandPaletteService);
+  private readonly route = inject(ActivatedRoute);
+
+  // Reactivo (no snapshot): Angular reutiliza esta instancia al navegar entre tracks hermanos
+  // (ej. desde la paleta de comandos), así que el trackId debe seguir al ActivatedRoute.
+  readonly trackId = toSignal(
+    this.route.paramMap.pipe(map(params => params.get('trackId') ?? '')),
+    { initialValue: this.route.snapshot.paramMap.get('trackId') ?? '' },
+  );
+  readonly track = computed(() => findTrack(this.trackId()));
+  readonly sidebarOpen = signal(false);
+
+  readonly percent = computed(() => {
+    const track = this.track();
+    return track ? this.progressService.percentComplete(track.id, track.modules.length) : 0;
+  });
+}
