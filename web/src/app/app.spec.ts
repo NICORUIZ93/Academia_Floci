@@ -23,9 +23,10 @@ describe('App', () => {
     const harness = await RouterTestingHarness.create();
     await harness.navigateByUrl('/', StudyPageComponent);
     harness.detectChanges();
-    expect(harness.routeNativeElement?.textContent).toContain('De cero a profesional master');
-    expect(harness.routeNativeElement?.textContent).toContain('JavaScript de cero a master');
+    expect(harness.routeNativeElement?.textContent).toContain('Academia Floci');
+    expect(harness.routeNativeElement?.textContent).toContain('De cero a experto en Cloud local');
+    expect(harness.routeNativeElement?.textContent).toContain('Diagnóstico inicial');
     expect(harness.routeNativeElement?.textContent).toContain('Objetivos de aprendizaje');
-    expect(harness.routeNativeElement?.textContent).toContain('Variables');
+    expect(harness.routeNativeElement?.textContent).toContain('Modo examen');
   });
 });

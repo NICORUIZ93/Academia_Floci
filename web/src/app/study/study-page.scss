@@ -23,7 +23,7 @@
   z-index: 20;
   height: 64px;
   display: grid;
-  grid-template-columns: minmax(220px, 1fr) auto auto;
+  grid-template-columns: minmax(220px, 1fr) auto auto auto auto;
   align-items: center;
   gap: 20px;
   padding: 0 28px;
@@ -103,7 +103,7 @@
 
 .progress-top {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr 1fr minmax(220px, .7fr);
   gap: 18px;
   padding: 18px 28px;
   background: #fff;
@@ -125,6 +125,25 @@
 .progress-top span {
   color: #64748b;
   font-size: 12px;
+}
+
+.progress-top .badges {
+  align-content: center;
+  padding-left: 18px;
+  border-left: 1px solid #e2e8f0;
+}
+
+.mobile-actions {
+  display: none;
+}
+
+.dark .progress-top .badges {
+  border-color: #334155;
+}
+
+.badges strong {
+  font-size: 13px;
+  line-height: 1.4;
 }
 
 .bar,
@@ -346,6 +365,11 @@
   white-space: nowrap;
 }
 
+.muted {
+  color: #64748b;
+  font-style: italic;
+}
+
 .intro,
 .objectives,
 .panel {
@@ -529,6 +553,16 @@ textarea {
   margin-top: 24px;
 }
 
+.exam ol {
+  display: grid;
+  gap: 14px;
+}
+
+.exam li strong {
+  display: block;
+  margin-bottom: 6px;
+}
+
 .resources {
   display: flex;
   flex-wrap: wrap;
@@ -551,10 +585,11 @@ textarea {
 
 @media (max-width: 900px) {
   .study-header {
-    grid-template-columns: 1fr auto auto;
+    grid-template-columns: 1fr auto;
   }
 
-  .study-header nav {
+  .study-header nav,
+  .study-header .ghost {
     display: none;
   }
 
@@ -568,6 +603,31 @@ textarea {
   .theory-grid,
   .example {
     grid-template-columns: 1fr;
+  }
+
+  .progress-top .badges {
+    padding-left: 0;
+    border-left: 0;
+  }
+
+  .mobile-actions {
+    display: flex;
+    gap: 8px;
+    overflow-x: auto;
+    padding: 12px 20px;
+    border-bottom: 1px solid #e2e8f0;
+    background: #fff;
+  }
+
+  .dark .mobile-actions {
+    background: #111827;
+    border-color: #334155;
+  }
+
+  .mobile-actions .ghost {
+    display: inline-flex;
+    align-items: center;
+    white-space: nowrap;
   }
 
   .sidebar {
