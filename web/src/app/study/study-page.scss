@@ -245,6 +245,60 @@
   font-weight: 800;
 }
 
+.profile-card {
+  margin-bottom: 22px;
+  padding: 16px;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  background: #f8fafc;
+}
+
+.dark .profile-card {
+  background: #0f172a;
+  border-color: #334155;
+}
+
+.profile-card > span {
+  display: block;
+  color: #64748b;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.profile-card > strong {
+  display: block;
+  margin-top: 4px;
+  font-size: 18px;
+}
+
+.badge-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+  margin-top: 12px;
+}
+
+.badge-list span {
+  border: 1px solid #bfdbfe;
+  border-radius: 999px;
+  padding: 5px 8px;
+  background: #eff6ff;
+  color: #1d4ed8;
+  font-size: 11px;
+  font-weight: 850;
+}
+
+.badge-list span.locked {
+  border-color: #e2e8f0;
+  background: #fff;
+  color: #94a3b8;
+}
+
+.dark .badge-list span.locked {
+  background: #111827;
+  border-color: #334155;
+}
+
 .search input {
   width: 100%;
   height: 40px;
@@ -469,6 +523,7 @@
 
 .tabs {
   display: flex;
+  flex-wrap: wrap;
   gap: 8px;
   margin-top: 28px;
   border-bottom: 1px solid #e2e8f0;
@@ -564,6 +619,84 @@ summary {
   display: grid;
   grid-template-columns: 1.1fr .9fr;
   gap: 24px;
+}
+
+.editor-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 14px;
+  align-items: flex-start;
+  margin-bottom: 12px;
+}
+
+.editor-head p {
+  margin: 0;
+  font-size: 13px;
+}
+
+.code-editor {
+  min-height: 330px;
+  margin-top: 0;
+  border-color: #1e293b;
+  background: #0f172a;
+  color: #e2e8f0;
+  font-size: 13px;
+  tab-size: 2;
+}
+
+.lab-panel > p {
+  margin-top: 0;
+}
+
+.lab-steps {
+  display: grid;
+  gap: 16px;
+  padding-left: 0;
+  list-style: none;
+}
+
+.lab-steps li {
+  display: grid;
+  gap: 12px;
+  padding: 16px;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  background: #f8fafc;
+}
+
+.dark .lab-steps li {
+  background: #0f172a;
+  border-color: #334155;
+}
+
+.lab-steps li.done {
+  border-color: #93c5fd;
+  background: #eff6ff;
+}
+
+.dark .lab-steps li.done {
+  background: #172554;
+  border-color: #2563eb;
+}
+
+.lab-steps li.done strong::before {
+  content: '✓ ';
+  color: #2563eb;
+}
+
+.lab-steps span {
+  display: block;
+  margin-top: 4px;
+  color: #475569;
+  line-height: 1.55;
+}
+
+.dark .lab-steps span {
+  color: #cbd5e1;
+}
+
+.lab-steps pre {
+  margin: 0;
 }
 
 output {

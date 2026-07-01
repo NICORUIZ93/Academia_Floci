@@ -51,6 +51,16 @@
 
   <div class="study-layout">
     <aside class="sidebar" [class.open]="mobileSidebar" id="modulos">
+      <section class="profile-card">
+        <span>Perfil de estudio</span>
+        <strong>{{ completedModulesCount() }} / {{ modules.length }} módulos</strong>
+        <div class="badge-list">
+          <span *ngFor="let badge of badgeCatalog()" [class.locked]="!badge.unlocked" [title]="badge.description">
+            {{ badge.name }}
+          </span>
+        </div>
+      </section>
+
       <label class="search">
         <span>Buscar tema</span>
         <input [(ngModel)]="query" placeholder="S3, Lambda, Azure, GCP, errores..." />
@@ -105,10 +115,11 @@
         </section>
 
         <div class="tabs">
-          <button [class.active]="tab === 'teoria'" (click)="tab = 'teoria'">Teoría</button>
-          <button [class.active]="tab === 'ejemplo'" (click)="tab = 'ejemplo'">Ejemplo</button>
-          <button [class.active]="tab === 'ejercicio'" (click)="tab = 'ejercicio'">Ejercicio</button>
-          <button [class.active]="tab === 'examen'" (click)="tab = 'examen'">Examen</button>
+          <button [class.active]="tab === 'teoria'" (click)="selectTab('teoria')">Teoría</button>
+          <button [class.active]="tab === 'ejemplo'" (click)="selectTab('ejemplo')">Ejemplo</button>
+          <button [class.active]="tab === 'laboratorio'" (click)="selectTab('laboratorio')">Laboratorio</button>
+          <button [class.active]="tab === 'ejercicio'" (click)="selectTab('ejercicio')">Ejercicio</button>
+          <button [class.active]="tab === 'examen'" (click)="selectTab('examen')">Examen</button>
         </div>
 
         <section *ngIf="tab === 'teoria'" class="panel">
@@ -146,9 +157,15 @@
 
         <section *ngIf="tab === 'ejemplo'" class="panel example">
           <div>
-            <h2>Ejemplo práctico guiado</h2>
-            <pre><code>{{ selectedTopic.code }}</code></pre>
-            <button class="primary" (click)="runCode()">Ejecutar ejemplo</button>
+            <div class="editor-head">
+              <div>
+                <h2>Editor interactivo</h2>
+                <p>{{ editorLanguage() }} · modifica el ejemplo y ejecútalo o simúlalo.</p>
+              </div>
+              <button class="ghost" (click)="resetEditor()">Restaurar</button>
+            </div>
+            <textarea class="code-editor" [(ngModel)]="editorCode" (ngModelChange)="saveEditorDraft()" spellcheck="false"></textarea>
+            <button class="primary" (click)="runCode()">Ejecutar</button>
           </div>
           <div>
             <h3>Explicación línea por línea</h3>
@@ -158,6 +175,25 @@
             <ng-template #hiddenSolution><p class="muted">Modo examen activo: la explicación queda oculta.</p></ng-template>
             <output>{{ output }}</output>
           </div>
+        </section>
+
+        <section *ngIf="tab === 'laboratorio'" class="panel lab-panel">
+          <h2>Laboratorio paso a paso</h2>
+          <p>Ejecuta cada paso en tu terminal local. La página simula la verificación y guarda qué pasos ya revisaste.</p>
+
+          <ol class="lab-steps">
+            <li *ngFor="let step of selectedTopic.labSteps; let index = index" [class.done]="isLabStepVerified(index)">
+              <div>
+                <strong>{{ step.title }}</strong>
+                <span>{{ step.verify }}</span>
+              </div>
+              <pre><code>{{ step.command }}</code></pre>
+              <button class="ghost" (click)="verifyLabStep(index)">
+                {{ isLabStepVerified(index) ? 'Verificado' : 'Verificar comando' }}
+              </button>
+            </li>
+          </ol>
+          <output>{{ output }}</output>
         </section>
 
         <section *ngIf="tab === 'ejercicio'" class="panel exercise">
