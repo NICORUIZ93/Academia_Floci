@@ -1,139 +1,347 @@
-<div class="study-app" [class.dark]="dark">
-  <header class="study-header">
-    <div class="brand">
-      <strong>Academia Cloud Local</strong>
-      <span>Un paso a la vez</span>
-    </div>
+<div class="lms-shell" [class.dark]="dark">
+  <header class="lms-topbar">
+    <a class="brand" href="#inicio" aria-label="Ir al inicio">
+      <span class="brand-mark"><lucide-icon [img]="icons.Cloud" /></span>
+      <span>
+        <strong>Academia Cloud Local</strong>
+        <small>Cloud desde cero hasta experto</small>
+      </span>
+    </a>
 
-    <div class="top-progress" id="progreso">
-      <span>Progreso: {{ guidedCompletionText }}</span>
-      <div class="bar"><i [style.width.%]="guidedStepProgress"></i></div>
-      <strong>{{ guidedLevelLabel() }}</strong>
-    </div>
+    <nav class="top-nav" aria-label="Secciones principales">
+      <a href="#ruta">Ruta</a>
+      <a href="#clase">Clase actual</a>
+      <a href="#metodologia">Método</a>
+      <a href="#proyecto">Proyecto</a>
+      <a href="#cursos">Cursos</a>
+    </nav>
 
-    <div class="header-actions">
-      <a class="ghost link-button" href="/catalogo">Ver cursos</a>
-      <button class="ghost" (click)="exportMarkdown()">Exportar</button>
-      <button class="ghost" (click)="toggleTheme()">{{ dark ? 'Modo claro' : 'Modo oscuro' }}</button>
+    <div class="top-actions">
+      <div class="mini-progress" aria-label="Progreso de la ruta">
+        <span>{{ guidedCompletionText }}</span>
+        <div><i [style.width.%]="guidedStepProgress"></i></div>
+      </div>
+      <button class="icon-action" type="button" (click)="exportMarkdown()" title="Exportar cuaderno">
+        <lucide-icon [img]="icons.Download" />
+      </button>
+      <button class="icon-action" type="button" (click)="toggleTheme()" [title]="dark ? 'Modo claro' : 'Modo oscuro'">
+        <lucide-icon [img]="dark ? icons.Sun : icons.Moon" />
+      </button>
     </div>
   </header>
 
-  <main class="single-step-page" id="inicio">
-    <article class="step-card">
-      <header class="step-head">
-        <span>{{ currentStep.module }}</span>
-        <h1>Paso {{ currentStep.id }}: {{ currentStep.title }}</h1>
-        <p>Paso {{ currentStep.id }} de {{ guidedSteps.length }}</p>
-      </header>
+  <main class="academy-layout" id="inicio">
+    <aside class="course-sidebar" aria-label="Temario del curso">
+      <div class="sidebar-head">
+        <span>Curso principal</span>
+        <strong>Cloud local</strong>
+        <p>{{ guidedSteps.length }} pasos guiados · {{ courseDuration() }} estimadas · AWS, Azure y GCP</p>
+      </div>
 
-      <section class="lesson-block">
-        <h2>Explicación</h2>
-        <p>{{ currentStep.explanation }}</p>
-        <p *ngIf="currentStep.analogy" class="analogy">{{ currentStep.analogy }}</p>
-      </section>
+      <label class="search-box">
+        <lucide-icon [img]="icons.Search" />
+        <input [(ngModel)]="query" placeholder="Buscar módulo, servicio o concepto" />
+      </label>
 
-      <section class="lesson-block depth-block">
-        <h2>Lo que debes entender de verdad</h2>
-        <ul>
-          <li *ngFor="let note of stepDeepNotes()">{{ note }}</li>
-        </ul>
-      </section>
-
-      <section class="lesson-block">
-        <h2>Comando</h2>
-        <pre *ngIf="currentStep.command; else noCommand"><code>{{ currentStep.command }}</code></pre>
-        <ng-template #noCommand>
-          <p class="muted">Este paso no requiere comando. Lee la explicación y responde la pregunta.</p>
-        </ng-template>
-        <button class="ghost" (click)="copyGuidedCommand()">Copiar</button>
-      </section>
-
-      <section class="lesson-block">
-        <h2>Desglose</h2>
-        <ul>
-          <li *ngFor="let item of currentStep.breakdown">{{ item }}</li>
-        </ul>
-      </section>
-
-      <section class="lesson-block">
-        <h2>Salida esperada</h2>
-        <pre><code>{{ currentStep.expectedOutput }}</code></pre>
-      </section>
-
-      <section class="lesson-block support-grid">
-        <div>
-          <h2>Cómo saber que vas bien</h2>
-          <ul>
-            <li *ngFor="let item of stepChecklist()">{{ item }}</li>
-          </ul>
-        </div>
-        <div>
-          <h2>Errores comunes</h2>
-          <ul>
-            <li *ngFor="let mistake of stepCommonMistakes()">{{ mistake }}</li>
-          </ul>
-        </div>
-      </section>
-
-      <section class="lesson-block">
-        <h2>Práctica</h2>
-        <p>{{ currentStep.practice }}</p>
-        <textarea class="code-editor" [(ngModel)]="guidedEditor" (ngModelChange)="saveGuidedStepState()" spellcheck="false"></textarea>
-        <button class="primary" (click)="runGuidedStep()">Ejecutar simulación</button>
-      </section>
-
-      <section class="lesson-block">
-        <h2>Pregunta</h2>
-        <p>{{ currentStep.question }}</p>
-        <textarea class="answer-box" [(ngModel)]="guidedAnswer" (ngModelChange)="saveGuidedStepState()" placeholder="Responde con tus palabras..."></textarea>
-        <details class="answer-guide">
-          <summary>Ver respuesta guía</summary>
-          <p>{{ currentStep.expectedAnswer }}</p>
-        </details>
-        <div class="inline-actions">
-          <button class="primary" (click)="verifyGuidedAnswer()">Verificar</button>
-          <button class="ghost" (click)="toggleGuidedStepComplete()">
-            {{ isGuidedStepCompleted(currentStep.id) ? 'Paso completado' : 'Ya lo ejecuté' }}
+      <div class="curriculum-list" id="ruta">
+        <details *ngFor="let section of stepSections(); let si = index" [open]="si < 3 || section.module === currentStep.module">
+          <summary>
+            <span>{{ section.steps.length }} pasos</span>
+            <strong>{{ section.module }}</strong>
+          </summary>
+          <button
+            *ngFor="let step of section.steps"
+            type="button"
+            [class.active]="step.id === currentStep.id"
+            [class.done]="isGuidedStepCompleted(step.id)"
+            (click)="selectGuidedStep(step.id - 1)"
+          >
+            <lucide-icon [img]="isGuidedStepCompleted(step.id) ? icons.CheckCircle2 : icons.Circle" />
+            <span>
+              <small>{{ currentStepStatus(step.id) }}</small>
+              <strong>{{ step.id }}. {{ step.title }}</strong>
+            </span>
           </button>
-        </div>
-      </section>
-
-      <output>{{ guidedOutput }}</output>
-
-      <nav class="step-actions" aria-label="Navegación de pasos">
-        <button class="ghost" (click)="previousGuidedStep()" [disabled]="selectedStepIndex === 0">Anterior</button>
-        <button class="primary" (click)="nextGuidedStep()" [disabled]="selectedStepIndex === guidedSteps.length - 1">Siguiente paso</button>
-      </nav>
-    </article>
-
-    <aside class="nearby-progress" aria-label="Mi progreso">
-      <h2>Mi progreso</h2>
-      <button
-        *ngFor="let item of visibleGuidedSteps()"
-        [class.active]="item.index === selectedStepIndex"
-        [class.done]="isGuidedStepCompleted(item.step.id)"
-        (click)="selectGuidedStep(item.index)"
-      >
-        <span>{{ isGuidedStepCompleted(item.step.id) ? 'Completado' : item.index === selectedStepIndex ? 'Actual' : 'Pendiente' }}</span>
-        <strong>Paso {{ item.step.id }}: {{ item.step.title }}</strong>
-      </button>
+        </details>
+      </div>
     </aside>
 
-    <section class="course-access" aria-label="Todos los cursos">
-      <header>
-        <div>
-          <h2>Todos los cursos</h2>
-          <p>La ruta de el emulador de cloud local va paso a paso. Estos son los demás cursos disponibles para estudiar cuando quieras cambiar de tema.</p>
+    <section class="learning-stage">
+      <section class="course-hero" aria-label="Resumen del curso">
+        <div class="course-intro">
+          <span class="eyebrow">Ruta tipo plataforma educativa</span>
+          <h1>Aprende cloud local con orden, práctica y evidencia</h1>
+          <p>
+            Este curso no es una lista de temas. Cada clase sigue una secuencia:
+            concepto, comando, desglose, práctica, pregunta, evidencia y proyecto.
+            El objetivo es que puedas estudiar solo, escribir tú mismo y no depender de IA.
+          </p>
+          <div class="hero-actions">
+            <a class="primary" href="#clase"><lucide-icon [img]="icons.PlayCircle" />Continuar clase</a>
+            <a class="ghost link-button" href="/catalogo"><lucide-icon [img]="icons.BookOpen" />Ver catálogo</a>
+          </div>
         </div>
-        <a class="ghost link-button" href="/catalogo">Abrir catálogo completo</a>
-      </header>
 
-      <div class="course-grid">
-        <a *ngFor="let track of tracks" [href]="'/curso/' + track.id">
-          <strong>{{ track.name }}</strong>
-          <span>{{ track.modules.length }} módulos · {{ track.tagline }}</span>
-        </a>
-      </div>
+        <div class="course-summary">
+          <div class="summary-ring">
+            <strong>{{ guidedStepProgress }}%</strong>
+            <span>{{ guidedLevelLabel() }}</span>
+          </div>
+          <ul>
+            <li *ngFor="let stat of lmsStats">
+              <strong>{{ stat.value }}</strong>
+              <span>{{ stat.label }}</span>
+            </li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="lesson-player" id="clase">
+        <article class="player-main">
+          <header class="player-head">
+            <div>
+              <span>{{ currentStep.module }}</span>
+              <h2>Clase {{ currentStep.id }}: {{ currentStep.title }}</h2>
+              <p>Clase {{ currentStep.id }} de {{ guidedSteps.length }} · avance de posición {{ currentStepPercent() }}%</p>
+            </div>
+            <button class="complete-pill" type="button" [class.done]="isGuidedStepCompleted(currentStep.id)" (click)="toggleGuidedStepComplete()">
+              <lucide-icon [img]="icons.CheckCircle2" />
+              {{ isGuidedStepCompleted(currentStep.id) ? 'Completada' : 'Marcar completa' }}
+            </button>
+          </header>
+
+          <div class="lesson-section">
+            <h3>1. Explicación clara</h3>
+            <p>{{ currentStep.explanation }}</p>
+            <p *ngIf="currentStep.analogy" class="analogy">{{ currentStep.analogy }}</p>
+          </div>
+
+          <div class="lesson-section method-grid">
+            <div>
+              <h3>2. Lo que debes entender</h3>
+              <ul>
+                <li *ngFor="let note of stepDeepNotes()">{{ note }}</li>
+              </ul>
+            </div>
+            <div>
+              <h3>3. Cómo saber que vas bien</h3>
+              <ul>
+                <li *ngFor="let item of stepChecklist()">{{ item }}</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="lesson-section">
+            <h3>4. Comando o acción</h3>
+            <pre *ngIf="currentStep.command; else noCommand"><code>{{ currentStep.command }}</code></pre>
+            <ng-template #noCommand>
+              <p class="muted">Esta clase es conceptual. Lee, escribe tu explicación y responde la pregunta.</p>
+            </ng-template>
+            <div class="inline-actions">
+              <button class="ghost" type="button" (click)="copyGuidedCommand()"><lucide-icon [img]="icons.ClipboardCheck" />Copiar comando</button>
+            </div>
+          </div>
+
+          <div class="lesson-section method-grid">
+            <div>
+              <h3>5. Desglose</h3>
+              <ul>
+                <li *ngFor="let item of currentStep.breakdown">{{ item }}</li>
+              </ul>
+            </div>
+            <div>
+              <h3>6. Errores comunes</h3>
+              <ul>
+                <li *ngFor="let mistake of stepCommonMistakes()">{{ mistake }}</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="lesson-section">
+            <h3>7. Salida esperada</h3>
+            <pre><code>{{ currentStep.expectedOutput }}</code></pre>
+          </div>
+
+          <div class="lesson-section lab-work">
+            <div>
+              <h3>8. Práctica del alumno</h3>
+              <p>{{ currentStep.practice }}</p>
+              <textarea class="code-editor" [(ngModel)]="guidedEditor" (ngModelChange)="saveGuidedStepState()" spellcheck="false"></textarea>
+              <button class="primary" type="button" (click)="runGuidedStep()"><lucide-icon [img]="icons.Terminal" />Ejecutar simulación</button>
+            </div>
+            <div>
+              <h3>9. Pregunta de control</h3>
+              <p>{{ currentStep.question }}</p>
+              <textarea class="answer-box" [(ngModel)]="guidedAnswer" (ngModelChange)="saveGuidedStepState()" placeholder="Responde con tus palabras..."></textarea>
+              <details class="answer-guide">
+                <summary>Ver respuesta guía</summary>
+                <p>{{ currentStep.expectedAnswer }}</p>
+              </details>
+              <button class="primary" type="button" (click)="verifyGuidedAnswer()"><lucide-icon [img]="icons.CheckCircle2" />Verificar respuesta</button>
+            </div>
+          </div>
+
+          <output>{{ guidedOutput }}</output>
+
+          <nav class="lesson-actions" aria-label="Navegación de clases">
+            <button class="ghost" type="button" (click)="previousGuidedStep()" [disabled]="selectedStepIndex === 0">
+              <lucide-icon [img]="icons.ChevronLeft" />Anterior
+            </button>
+            <button class="primary" type="button" (click)="nextGuidedStep()" [disabled]="selectedStepIndex === guidedSteps.length - 1">
+              Siguiente clase<lucide-icon [img]="icons.ChevronRight" />
+            </button>
+          </nav>
+        </article>
+
+        <aside class="player-aside">
+          <section>
+            <h3>Progreso cercano</h3>
+            <button
+              *ngFor="let item of visibleGuidedSteps()"
+              type="button"
+              [class.active]="item.index === selectedStepIndex"
+              [class.done]="isGuidedStepCompleted(item.step.id)"
+              (click)="selectGuidedStep(item.index)"
+            >
+              <small>{{ currentStepStatus(item.step.id) }}</small>
+              <strong>{{ item.step.id }}. {{ item.step.title }}</strong>
+            </button>
+          </section>
+
+          <section>
+            <h3>Regla de estudio</h3>
+            <ol>
+              <li>Lee lo mínimo necesario.</li>
+              <li>Escribe el comando tú mismo.</li>
+              <li>Rompe algo pequeño.</li>
+              <li>Explica la evidencia.</li>
+              <li>Marca la clase solo si puedes enseñarla.</li>
+            </ol>
+          </section>
+        </aside>
+      </section>
+
+      <section class="content-band" id="metodologia">
+        <div class="section-heading">
+          <span>Metodología</span>
+          <h2>Un formato fijo para no perderte</h2>
+          <p>Cada tema se explica con la misma estructura para que sepas qué leer, qué practicar y cuándo estás listo para avanzar.</p>
+        </div>
+        <div class="method-cards">
+          <article *ngFor="let layer of methodLayers">
+            <span>{{ layer.number }}</span>
+            <h3>{{ layer.title }}</h3>
+            <strong>{{ layer.goal }}</strong>
+            <p>{{ layer.detail }}</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="content-band">
+        <div class="section-heading">
+          <span>Nubes locales</span>
+          <h2>El mismo problema en AWS, Azure y GCP</h2>
+          <p>Aprendes el patrón una vez y después comparas nombres, puertos, CLI y SDK por proveedor.</p>
+        </div>
+        <div class="provider-grid">
+          <article *ngFor="let provider of providerCards">
+            <header>
+              <lucide-icon [img]="icons.Cloud" />
+              <div>
+                <h3>{{ provider.name }}</h3>
+                <span>Puerto {{ provider.port }}</span>
+              </div>
+            </header>
+            <p>{{ provider.focus }}</p>
+            <small>{{ provider.services }}</small>
+          </article>
+        </div>
+      </section>
+
+      <section class="content-band">
+        <div class="section-heading">
+          <span>Instalación desde cero</span>
+          <h2>Mac, Windows y Linux sin asumir conocimientos</h2>
+          <p>El alumno debe saber abrir una consola, instalar herramientas y verificar antes de ejecutar laboratorios.</p>
+        </div>
+        <div class="setup-grid">
+          <article *ngFor="let setup of setupCards">
+            <header>
+              <lucide-icon [img]="icons.Monitor" />
+              <div>
+                <h3>{{ setup.os }}</h3>
+                <span>{{ setup.shortcut }}</span>
+              </div>
+            </header>
+            <ol>
+              <li *ngFor="let step of setup.steps">{{ step }}</li>
+            </ol>
+          </article>
+        </div>
+      </section>
+
+      <section class="content-band">
+        <div class="section-heading">
+          <span>Lenguajes para labs</span>
+          <h2>Escoge un lenguaje popular y repite el mismo concepto</h2>
+          <p>Los ejemplos no reemplazan tu trabajo: sirven para comparar cómo se ve el mismo flujo en distintos stacks.</p>
+        </div>
+        <div class="language-grid">
+          <article *ngFor="let lab of languageLabs">
+            <lucide-icon [img]="icons.Code2" />
+            <h3>{{ lab.name }}</h3>
+            <p>{{ lab.use }}</p>
+            <code>{{ lab.file }}</code>
+          </article>
+        </div>
+      </section>
+
+      <section class="content-band module-roadmap">
+        <div class="section-heading">
+          <span>Temario cloud</span>
+          <h2>Módulos completos con entregables</h2>
+          <p>Este bloque funciona como índice de curso: conceptos, servicios y entregable esperado por módulo.</p>
+        </div>
+        <div class="module-grid">
+          <article *ngFor="let module of featuredModules()">
+            <span>{{ module.title }}</span>
+            <h3>{{ module.source?.shortTitle }}</h3>
+            <p>{{ module.description }}</p>
+            <small>{{ module.topics.length }} temas · {{ module.source?.deliverable }}</small>
+          </article>
+        </div>
+        <a class="ghost link-button roadmap-link" href="/curso/cloud">Abrir temario completo</a>
+      </section>
+
+      <section class="project-panel" id="proyecto">
+        <div>
+          <span>Proyecto obligatorio</span>
+          <h2>Gestor de tareas multi-nube</h2>
+          <p>
+            Construyes una API real por entregas: storage, colas, NoSQL, secretos,
+            funciones, API, eventos, observabilidad, RDS, contenedores, IaC,
+            workflows, streams, auth, analytics e IA.
+          </p>
+        </div>
+        <ol>
+          <li *ngFor="let milestone of projectMilestones">{{ milestone }}</li>
+        </ol>
+      </section>
+
+      <section class="content-band" id="cursos">
+        <div class="section-heading">
+          <span>Catálogo completo</span>
+          <h2>Rutas complementarias para llegar a experto</h2>
+          <p>Cloud no vive solo. También necesitas lenguaje, frontend, backend, móvil y DevOps para construir productos completos.</p>
+        </div>
+        <div class="course-grid">
+          <a *ngFor="let track of tracks" [href]="'/curso/' + track.id">
+            <lucide-icon [img]="icons.BookOpen" />
+            <strong>{{ track.name }}</strong>
+            <span>{{ track.modules.length }} módulos · {{ track.tagline }}</span>
+          </a>
+        </div>
+      </section>
     </section>
   </main>
 </div>

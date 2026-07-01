@@ -10,18 +10,19 @@ test.beforeEach(async ({ page }) => {
 });
 
 test('inicio: muestra la ruta guiada Cloud Local sin marca anterior', async ({ page }) => {
-  await expect(page.locator('.study-header')).toContainText('Academia Cloud Local');
-  await expect(page.locator('.step-card h1')).toContainText('Paso 1: Qué es Docker y por qué lo necesitas');
-  await expect(page.locator('.nearby-progress button')).toHaveCount(5);
-  await expect(page.locator('.course-access')).toContainText('Todos los cursos');
+  await expect(page.locator('.lms-topbar')).toContainText('Academia Cloud Local');
+  await expect(page.locator('.course-hero h1')).toContainText('Aprende cloud local con orden');
+  await expect(page.locator('.player-main h2')).toContainText('Clase 1: Qué es Docker y por qué lo necesitas');
+  await expect(page.locator('.player-aside button')).toHaveCount(5);
+  await expect(page.locator('.content-band#cursos')).toContainText('Catálogo completo');
   await expect(page.locator('body')).not.toContainText(previousBrand);
 });
 
 test('catalogo: enseña metodologia, proveedores y cursos disponibles', async ({ page }) => {
   await page.goto('/catalogo');
 
-  await expect(page.locator('.catalog-header')).toContainText('Academia Cloud Local');
-  await expect(page.locator('.catalog-hero h1')).toContainText('Aprende cloud local desde cero');
+  await expect(page.locator('.catalog-topbar')).toContainText('Academia Cloud Local');
+  await expect(page.locator('.catalog-hero h1')).toContainText('Escoge una ruta');
   await expect(page.locator('.cloud-levels article')).toHaveCount(4);
   await expect(page.locator('.provider-matrix')).toContainText('AWS local · 4566');
   await expect(page.locator('.provider-matrix')).toContainText('Azure local · 4577');
@@ -43,5 +44,5 @@ test('ruta antigua de laboratorio vuelve al inicio nuevo', async ({ page }) => {
   await page.goto(`/laboratorio/${previousBrand.toLowerCase()}`);
 
   await expect(page).toHaveURL(/\/$/);
-  await expect(page.locator('.study-header')).toContainText('Academia Cloud Local');
+  await expect(page.locator('.lms-topbar')).toContainText('Academia Cloud Local');
 });

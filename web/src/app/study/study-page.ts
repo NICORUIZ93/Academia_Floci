@@ -1,6 +1,28 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import {
+  BookOpen,
+  CheckCircle2,
+  ChevronLeft,
+  ChevronRight,
+  Circle,
+  ClipboardCheck,
+  Cloud,
+  Code2,
+  Download,
+  GraduationCap,
+  Layers,
+  LucideAngularModule,
+  Monitor,
+  Moon,
+  PlayCircle,
+  Route,
+  Search,
+  Sun,
+  Terminal,
+  Trophy,
+} from 'lucide-angular';
 import { COURSE_MODULES, CourseModule, TRACKS } from '../course-data';
 
 type Level = 'Básico' | 'Medio' | 'Avanzado' | 'Master';
@@ -73,6 +95,42 @@ interface CourseStep {
   question: string;
   expectedAnswer: string;
   keywords: string[];
+}
+
+interface LmsStat {
+  value: string;
+  label: string;
+}
+
+interface MethodLayer {
+  number: string;
+  title: string;
+  goal: string;
+  detail: string;
+}
+
+interface ProviderCard {
+  name: string;
+  port: string;
+  services: string;
+  focus: string;
+}
+
+interface SetupCard {
+  os: string;
+  shortcut: string;
+  steps: string[];
+}
+
+interface LanguageLab {
+  name: string;
+  use: string;
+  file: string;
+}
+
+interface StepSection {
+  module: string;
+  steps: CourseStep[];
 }
 
 const STORAGE_KEY = 'cloud-local-study-progress-v2';
@@ -1130,15 +1188,73 @@ const azureGcpSource: CourseModule = {
 
 @Component({
   selector: 'app-study-page',
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, LucideAngularModule],
   templateUrl: './study-page.html',
   styleUrl: './study-page.scss',
 })
 export class StudyPageComponent implements OnInit {
+  readonly icons = {
+    BookOpen,
+    CheckCircle2,
+    ChevronLeft,
+    ChevronRight,
+    Circle,
+    ClipboardCheck,
+    Cloud,
+    Code2,
+    Download,
+    GraduationCap,
+    Layers,
+    Monitor,
+    Moon,
+    PlayCircle,
+    Route,
+    Search,
+    Sun,
+    Terminal,
+    Trophy,
+  };
   readonly standards = studyStandards;
   readonly modules: StudyModule[] = [...COURSE_MODULES, azureGcpSource].map(moduleToStudy);
   readonly guidedSteps = GUIDED_STEPS;
   readonly tracks = TRACKS;
+  readonly lmsStats: LmsStat[] = [
+    { value: '45', label: 'pasos guiados' },
+    { value: '19', label: 'módulos cloud' },
+    { value: '3', label: 'nubes locales' },
+    { value: '12', label: 'rutas completas' },
+  ];
+  readonly methodLayers: MethodLayer[] = [
+    { number: '01', title: 'El qué', goal: 'Entender el concepto', detail: 'Definición clara, analogía y vocabulario mínimo antes de tocar comandos.' },
+    { number: '02', title: 'El cómo', goal: 'Verlo funcionando', detail: 'Comando o código pequeño, escrito por el alumno y explicado línea por línea.' },
+    { number: '03', title: 'El por qué', goal: 'Tomar decisiones', detail: 'Cuándo conviene, cuándo no, límites, costo, seguridad y alternativas.' },
+    { number: '04', title: 'El problema', goal: 'Practicar sin copiar', detail: 'Reto guiado, errores comunes, evidencia y explicación propia.' },
+    { number: '05', title: 'El maestro', goal: 'Pensar profesionalmente', detail: 'Diseño, trade-offs, entrevistas, arquitectura y enseñanza a otra persona.' },
+  ];
+  readonly providerCards: ProviderCard[] = [
+    { name: 'AWS local', port: '4566', services: 'S3, SQS, DynamoDB, Lambda, API Gateway, RDS, ECS/EKS, CloudWatch', focus: 'Base principal para entender servicios cloud y endpoint local.' },
+    { name: 'Azure local', port: '4577', services: 'Blob, Queue, Table Storage, Cosmos DB, Functions, Key Vault, Event Hubs', focus: 'Comparar nombres y patrones con Azure sin pagar recursos reales.' },
+    { name: 'GCP local', port: '4588', services: 'Cloud Storage, Pub/Sub, Firestore, Datastore, Cloud Functions', focus: 'Repetir los mismos problemas en Google Cloud con CLI y SDK.' },
+  ];
+  readonly setupCards: SetupCard[] = [
+    { os: 'Mac', shortcut: 'Cmd + Espacio → Terminal', steps: ['Instala Docker Desktop.', 'Instala VS Code y Node.js LTS.', 'Usa zsh y ejecuta un comando a la vez.'] },
+    { os: 'Windows', shortcut: 'Win + X → Terminal', steps: ['Instala Docker Desktop con WSL2.', 'Usa PowerShell para comandos Windows.', 'Usa WSL cuando necesites comandos Linux.'] },
+    { os: 'Linux', shortcut: 'Ctrl + Alt + T', steps: ['Instala Docker Engine.', 'Agrega tu usuario al grupo docker si hace falta.', 'Usa tu gestor de paquetes para CLI y Git.'] },
+  ];
+  readonly languageLabs: LanguageLab[] = [
+    { name: 'JavaScript / Node.js', use: 'SDKs cloud, APIs, colas y funciones.', file: 'app.mjs' },
+    { name: 'Python', use: 'Automatización, boto3, datos y scripts claros.', file: 'demo.py' },
+    { name: 'Java / Spring Boot', use: 'Backend empresarial, APIs y microservicios.', file: 'Application.java' },
+    { name: 'TypeScript / Angular', use: 'Frontend, dashboards y clientes web.', file: 'app.ts' },
+    { name: 'Dart / Flutter', use: 'App móvil para consumir la API final.', file: 'main.dart' },
+    { name: 'Kotlin / Android', use: 'Cliente Android y bases sólidas móviles.', file: 'MainActivity.kt' },
+  ];
+  readonly projectMilestones = [
+    'M1-M3: archivos, colas y NoSQL para crear tareas y eventos.',
+    'M4-M8: secretos, funciones, API, eventos y observabilidad.',
+    'M9-M12: RDS, contenedores, IaC y workflows reproducibles.',
+    'M13-M17: streams, auth, analytics, IA y proyecto multi-nube.',
+  ];
 
   selectedModuleId = this.modules[0].id;
   selectedTopicId = this.modules[0].topics[0].id;
@@ -1199,6 +1315,40 @@ export class StudyPageComponent implements OnInit {
 
   get guidedCompletionText(): string {
     return `${this.completedGuidedSteps.size}/${this.guidedSteps.length}`;
+  }
+
+  currentStepPercent(): number {
+    return Math.round(((this.selectedStepIndex + 1) / this.guidedSteps.length) * 100);
+  }
+
+  stepSections(): StepSection[] {
+    return this.guidedSteps.reduce<StepSection[]>((sections, step) => {
+      const current = sections.at(-1);
+      if (current?.module === step.module) {
+        current.steps.push(step);
+      } else {
+        sections.push({ module: step.module, steps: [step] });
+      }
+      return sections;
+    }, []);
+  }
+
+  featuredModules(): StudyModule[] {
+    return this.modules.slice(0, 8);
+  }
+
+  courseDuration(): string {
+    const hours = COURSE_MODULES.reduce((sum, module) => {
+      const match = module.duration.match(/(\d+(?:[.,]\d+)?)/);
+      return sum + (match ? Number(match[1].replace(',', '.')) : 0);
+    }, 0);
+    return `${Math.round(hours)} h`;
+  }
+
+  currentStepStatus(stepId: number): string {
+    if (this.completedGuidedSteps.has(stepId)) return 'Completado';
+    if (this.currentStep.id === stepId) return 'Actual';
+    return 'Pendiente';
   }
 
   visibleGuidedSteps(): { step: CourseStep; index: number }[] {

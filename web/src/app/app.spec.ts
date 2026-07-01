@@ -25,10 +25,10 @@ describe('App', () => {
     harness.detectChanges();
     const text = harness.routeNativeElement?.textContent ?? '';
     expect(text).toContain('Academia Cloud Local');
-    expect(text).toContain('Un paso a la vez');
-    expect(text).toContain('Paso 1: Qué es Docker y por qué lo necesitas');
-    expect(text).toContain('Siguiente paso');
-    expect(text).toContain('Mi progreso');
-    expect(harness.routeNativeElement?.querySelectorAll('.nearby-progress button').length).toBe(5);
+    expect(text).toContain('Aprende cloud local con orden, práctica y evidencia');
+    expect(text).toContain('Clase 1: Qué es Docker y por qué lo necesitas');
+    expect(text).toContain('Siguiente clase');
+    expect(text).toContain('Progreso cercano');
+    expect(harness.routeNativeElement?.querySelectorAll('.player-aside button').length).toBe(5);
   });
 });

@@ -9,6 +9,25 @@
     <h1>{{ m.title }}</h1>
     <p class="lesson-description">{{ m.description }}</p>
 
+    <section class="lesson-overview" aria-label="Resumen del módulo">
+      <article>
+        <span>Nivel</span>
+        <strong>{{ m.level }}</strong>
+      </article>
+      <article>
+        <span>Duración</span>
+        <strong>{{ m.duration }}</strong>
+      </article>
+      <article>
+        <span>Servicios</span>
+        <strong>{{ m.services.length || 'Base' }}</strong>
+      </article>
+      <article>
+        <span>Retos</span>
+        <strong>{{ m.challenges.length }}</strong>
+      </article>
+    </section>
+
     <section class="lesson-method" aria-label="Método de estudio del módulo">
       <div class="lesson-method-head">
         <span>Método aplicado a este módulo</span>
@@ -36,11 +55,37 @@
       <div *ngIf="lessonLoading()" class="lesson-skeleton">Cargando lección…</div>
       <div *ngIf="!lessonLoading() && lessonHtml() as html" class="lesson-markdown" [innerHTML]="sanitizedLesson(html)"></div>
       <ng-container *ngIf="!lessonLoading() && !lessonHtml()">
-        <p class="lesson-soon">La lección completa de este módulo se está redactando. Mientras tanto, estos son los conceptos clave que vas a dominar:</p>
-        <ul class="lesson-concepts">
-          <li *ngFor="let concept of m.concepts">{{ concept }}</li>
-        </ul>
-        <p class="lesson-deliverable"><strong>Entregable previsto:</strong> {{ m.deliverable }}</p>
+        <div class="structured-lesson">
+          <section>
+            <h2>Qué vas a dominar</h2>
+            <p>{{ m.description }}</p>
+            <div class="concept-chips">
+              <span *ngFor="let concept of m.concepts">{{ concept }}</span>
+            </div>
+          </section>
+
+          <section>
+            <h2>Servicios y herramientas</h2>
+            <p>Estos son los servicios que aparecen en el módulo. No los memorices como nombres sueltos: relaciónalos con el problema que resuelven.</p>
+            <ul class="lesson-concepts">
+              <li *ngFor="let service of m.services">{{ service }}</li>
+              <li *ngIf="!m.services.length">Fundamentos, terminal, Docker, CLI y documentación oficial.</li>
+            </ul>
+          </section>
+
+          <section>
+            <h2>Cómo estudiar este módulo</h2>
+            <ol class="study-order">
+              <li>Lee la descripción y escribe con tus palabras qué problema resuelve.</li>
+              <li>Ejecuta el primer reto sin copiar todo de una vez.</li>
+              <li>Guarda la salida importante como evidencia.</li>
+              <li>Rompe un parámetro pequeño y documenta el error.</li>
+              <li>Vuelve a ejecutar hasta poder explicarlo sin mirar la guía.</li>
+            </ol>
+          </section>
+
+          <p class="lesson-deliverable"><strong>Entregable previsto:</strong> {{ m.deliverable }}</p>
+        </div>
       </ng-container>
     </section>
 

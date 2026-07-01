@@ -1,231 +1,182 @@
 <div class="catalog-page">
-  <header class="catalog-header">
-    <div class="brand">
-      <div class="brand-mark"><lucide-icon [img]="brandIcon" /></div>
-      <div>
+  <header class="catalog-topbar">
+    <a class="brand" routerLink="/">
+      <span class="brand-mark"><lucide-icon [img]="brandIcon" /></span>
+      <span>
         <strong>Academia Cloud Local</strong>
-        <span>Cursos de cero a master, a tu ritmo</span>
-      </div>
-    </div>
+        <small>Catálogo de rutas</small>
+      </span>
+    </a>
+    <nav aria-label="Catálogo">
+      <a href="#ruta">Ruta recomendada</a>
+      <a href="#cloud">Cloud local</a>
+      <a href="#metodo">Método</a>
+      <a href="#cursos">Cursos</a>
+    </nav>
   </header>
 
-  <section class="catalog-hero">
-    <div class="hero-copy">
-      <span class="eyebrow">Academia local en español latino</span>
-      <h1>Aprende cloud local desde cero con una ruta clara y práctica</h1>
-      <p>Cloud Local es tu laboratorio en la PC para practicar AWS, Azure y GCP sin pagar ni crear cuentas. Aquí cada tema se estudia con qué es, cómo se usa, por qué importa, qué problema resuelve y cómo lo defenderías como profesional.</p>
-      <div class="hero-actions">
-        <a routerLink="/curso/cloud">Empezar por Cloud Local</a>
-        <a routerLink="/curso/flutter" class="secondary">Ver proyecto móvil</a>
+  <main>
+    <section class="catalog-hero">
+      <div class="hero-copy">
+        <span class="eyebrow">Plataforma de estudio en español latino</span>
+        <h1>Escoge una ruta, estudia por módulos y construye evidencia real</h1>
+        <p>
+          El catálogo organiza todo como un LMS: ruta recomendada, módulo cloud,
+          lenguajes populares, backend, frontend, móvil, DevOps y proyecto final.
+          Cada curso tiene temas visibles, entregable y progreso.
+        </p>
+        <div class="hero-actions">
+          <a routerLink="/curso/cloud">Empezar Cloud Local</a>
+          <a routerLink="/" class="secondary">Ir al aula principal</a>
+        </div>
       </div>
-    </div>
-    <img class="hero-art" src="/assets/cloud-local-learning-lab.png" alt="Laboratorio visual de aprendizaje cloud con contenedores, datos y código" />
-    <aside class="hero-route" aria-label="Ruta recomendada">
-      <strong>Ruta clara para novatos</strong>
-      <ol>
-        <li *ngFor="let step of primaryRoute">{{ step }}</li>
+
+      <aside class="learning-card">
+        <strong>Formato de cada curso</strong>
+        <ol>
+          <li>Introducción y objetivos.</li>
+          <li>Conceptos esenciales.</li>
+          <li>Ejemplo guiado.</li>
+          <li>Reto verificable.</li>
+          <li>Proyecto o entregable.</li>
+        </ol>
+      </aside>
+    </section>
+
+    <section class="route-section" id="ruta">
+      <div class="section-heading">
+        <span>Ruta recomendada</span>
+        <h2>De cero a producto completo</h2>
+        <p>Esta ruta evita que el alumno salte temas sin base. Primero consola y fundamentos, luego código, después cloud y proyecto.</p>
+      </div>
+      <ol class="route-steps">
+        <li *ngFor="let step of primaryRoute; let i = index">
+          <span>{{ i + 1 }}</span>
+          <p>{{ step }}</p>
+        </li>
       </ol>
-    </aside>
-  </section>
+    </section>
 
-  <section class="cloud-syllabus">
-    <div class="section-title">
-      <span>Cloud local explicado con la metodología enviada</span>
-      <h2>Cloud local de básico a master</h2>
-      <p>La metodología se estudia como plataforma completa: primero entiendes cloud, después ejecutas servicios reales o emulados en local, luego integras DevOps y finalmente analizas migración, límites y contribución.</p>
-    </div>
-
-    <div class="cloud-levels">
-      <article *ngFor="let item of cloudLocalLevels">
-        <header>
-          <span>{{ item.level }}</span>
-          <h3>{{ item.title }}</h3>
-        </header>
-        <dl>
-          <div><dt>Qué</dt><dd>{{ item.what }}</dd></div>
-          <div><dt>Cómo</dt><dd>{{ item.how }}</dd></div>
-          <div><dt>Por qué</dt><dd>{{ item.why }}</dd></div>
-          <div><dt>Problema</dt><dd>{{ item.problem }}</dd></div>
-          <div><dt>Maestro</dt><dd>{{ item.master }}</dd></div>
-        </dl>
-      </article>
-    </div>
-
-    <div class="provider-matrix">
-      <article *ngFor="let provider of providerServices">
-        <strong>{{ provider.provider }}</strong>
-        <ul>
-          <li *ngFor="let group of provider.groups">{{ group }}</li>
-        </ul>
-      </article>
-    </div>
-  </section>
-
-  <section class="learning-method">
-    <div class="method-lead">
-      <span>Metodología del libro</span>
-      <h2>Aprender desde cero hasta nivel profesional master</h2>
-      <p>Cada tema se estudia con cinco capas. Primero entiendes el concepto en lenguaje humano, luego ejecutas comandos, después analizas decisiones, resuelves problemas y finalmente lo defiendes como profesional.</p>
-    </div>
-    <div class="layer-grid">
-      <article *ngFor="let layer of learningLayers">
-        <strong>{{ layer.title }}</strong>
-        <em>{{ layer.goal }}</em>
-        <p>{{ layer.detail }}</p>
-        <small>{{ layer.time }} del módulo</small>
-      </article>
-    </div>
-  </section>
-
-  <section class="method-panels">
-    <article>
-      <span>Perfiles de alumno</span>
-      <h2>La misma ruta, distinta profundidad</h2>
-      <div class="profile-list">
-        <div *ngFor="let profile of learnerProfiles">
-          <strong>{{ profile.title }}</strong>
-          <p>{{ profile.detail }}</p>
-        </div>
-      </div>
-    </article>
-    <article>
-      <span>Ciclo recomendado</span>
-      <h2>Ver, hacer, romper, explicar y enseñar</h2>
-      <ol>
-        <li *ngFor="let step of studyCycle">{{ step }}</li>
-      </ol>
-    </article>
-  </section>
-
-  <section class="chapter-section">
-    <div class="section-title">
-      <span>Estructura de cada capítulo</span>
-      <h2>Qué debe hacer el alumno en cada módulo</h2>
-      <p>Los cursos no son una lista de enlaces. Cada capítulo debe llevar al alumno desde contexto y teoría hasta práctica, errores, evaluación y desafío profesional.</p>
-    </div>
-    <div class="chapter-grid">
-      <article *ngFor="let item of chapterStructure">
-        <strong>{{ item.title }}</strong>
-        <p>{{ item.detail }}</p>
-      </article>
-    </div>
-  </section>
-
-  <section class="study-system">
-    <article>
-      <span>Plan de estudio</span>
-      <h2>Ritmo sugerido</h2>
-      <div class="compact-list">
-        <div *ngFor="let plan of studyPlans">
-          <strong>{{ plan.title }}</strong>
-          <p>{{ plan.detail }}</p>
-        </div>
-      </div>
-    </article>
-    <article>
-      <span>Gamificación</span>
-      <h2>Motivación con evidencia</h2>
-      <div class="compact-list">
-        <div *ngFor="let item of gamification">
-          <strong>{{ item.title }}</strong>
-          <p>{{ item.detail }}</p>
-        </div>
-      </div>
-    </article>
-    <article>
-      <span>Herramientas</span>
-      <h2>Según tu nivel</h2>
-      <div class="compact-list">
-        <div *ngFor="let item of toolsByLevel">
-          <strong>{{ item.level }}</strong>
-          <p>{{ item.tools }}</p>
-        </div>
-      </div>
-    </article>
-  </section>
-
-  <section class="setup-section">
-    <div class="section-title">
-      <span>Antes de programar</span>
-      <h2>Preparación para Mac, Windows y Linux</h2>
-      <p>El alumno debe saber abrir la consola, instalar herramientas y ejecutar comandos antes de tocar cloud o código.</p>
-    </div>
-    <div class="setup-grid">
-      <article *ngFor="let guide of setupGuides">
-        <strong>{{ guide.os }}</strong>
-        <ul>
-          <li *ngFor="let step of guide.steps">{{ step }}</li>
-        </ul>
-      </article>
-    </div>
-  </section>
-
-  <section class="master-path">
-    <div>
-      <span>Proyecto integrador sugerido</span>
-      <h2>E-commerce Flutter + Spring Boot</h2>
-      <p>El proyecto obliga a usar lo aprendido. No es una demo suelta: cada curso aporta una parte concreta del sistema final.</p>
-      <div class="language-pills">
-        <span *ngFor="let language of languageChoices">{{ language }}</span>
-      </div>
-    </div>
-    <div class="ecommerce-steps">
-      <span *ngFor="let step of ecommercePath">{{ step }}</span>
-    </div>
-  </section>
-
-  <section class="evaluation-strip">
-    <article *ngFor="let item of evaluationLevels">
-      <strong>{{ item.level }}</strong>
-      <p>{{ item.question }}</p>
-    </article>
-  </section>
-
-  <section class="curriculum-section">
-    <div class="section-title">
-      <span>Temario completo</span>
-      <h2>Todos los cursos y temas visibles</h2>
-      <p>No tienes que adivinar qué sigue. Cada tarjeta muestra los módulos que vas a estudiar, el nivel y el entregable final.</p>
-    </div>
-
-    <div class="track-group" *ngFor="let group of trackGroups()">
-      <div class="track-group-heading">
-        <h3>{{ group.title }}</h3>
-        <p>{{ group.description }}</p>
+    <section class="cloud-section" id="cloud">
+      <div class="section-heading">
+        <span>Módulo principal</span>
+        <h2>Cloud local de básico a master</h2>
+        <p>AWS, Azure y GCP se estudian por problema: storage, colas, bases de datos, funciones, APIs, eventos, observabilidad, IaC y proyecto.</p>
       </div>
 
-      <div class="catalog-grid">
-        <article class="track-card" *ngFor="let card of group.cards" [style.--track-color]="card.color">
-          <a class="track-card-main" [routerLink]="['/curso', card.id]">
-            <div class="track-card-icon"><lucide-icon [img]="card.icon" /></div>
-            <div>
-              <h4>{{ card.name }}</h4>
-              <p>{{ card.tagline }}</p>
-            </div>
-          </a>
-
-          <div class="track-card-meta">
-            <span>{{ card.moduleCount }} módulos</span>
-            <span>{{ card.totalHours }}</span>
-            <span>{{ card.percent }}% completado</span>
-          </div>
-          <div class="track-card-progress"><span [style.width.%]="card.percent"></span></div>
-
-          <div class="track-levels">{{ card.levels }}</div>
-
-          <details class="track-topics" open>
-            <summary>Ver temas del curso</summary>
-            <ol>
-              <li *ngFor="let module of card.modules">{{ module }}</li>
-            </ol>
-          </details>
-
-          <div class="track-outcome">
-            <strong>Entregable final</strong>
-            <p>{{ card.outcome }}</p>
-          </div>
+      <div class="cloud-levels">
+        <article *ngFor="let item of cloudLocalLevels">
+          <header>
+            <span>{{ item.level }}</span>
+            <h3>{{ item.title }}</h3>
+          </header>
+          <dl>
+            <div><dt>Qué</dt><dd>{{ item.what }}</dd></div>
+            <div><dt>Cómo</dt><dd>{{ item.how }}</dd></div>
+            <div><dt>Por qué</dt><dd>{{ item.why }}</dd></div>
+            <div><dt>Problema</dt><dd>{{ item.problem }}</dd></div>
+            <div><dt>Master</dt><dd>{{ item.master }}</dd></div>
+          </dl>
         </article>
       </div>
-    </div>
-  </section>
+
+      <div class="provider-matrix">
+        <article *ngFor="let provider of providerServices">
+          <strong>{{ provider.provider }}</strong>
+          <ul>
+            <li *ngFor="let group of provider.groups">{{ group }}</li>
+          </ul>
+        </article>
+      </div>
+    </section>
+
+    <section class="method-section" id="metodo">
+      <div class="section-heading">
+        <span>Metodología</span>
+        <h2>El mismo orden en cada tema</h2>
+        <p>La página no debe obligarte a buscar. Cada módulo te dice qué leer, qué ejecutar, qué romper, qué responder y qué entregar.</p>
+      </div>
+      <div class="method-grid">
+        <article *ngFor="let layer of learningLayers">
+          <strong>{{ layer.title }}</strong>
+          <span>{{ layer.goal }}</span>
+          <p>{{ layer.detail }}</p>
+          <small>{{ layer.time }} del módulo</small>
+        </article>
+      </div>
+    </section>
+
+    <section class="setup-section">
+      <div class="section-heading">
+        <span>Antes de iniciar</span>
+        <h2>Preparación por sistema operativo</h2>
+      </div>
+      <div class="setup-grid">
+        <article *ngFor="let guide of setupGuides">
+          <strong>{{ guide.os }}</strong>
+          <ul>
+            <li *ngFor="let step of guide.steps">{{ step }}</li>
+          </ul>
+        </article>
+      </div>
+    </section>
+
+    <section class="project-section">
+      <div>
+        <span>Proyecto integrador</span>
+        <h2>E-commerce Flutter + Spring Boot + Cloud Local</h2>
+        <p>El proyecto obliga a implementar cada bloque: móvil, API, datos, storage, colas, secretos, logs, pruebas, Docker y CI/CD.</p>
+      </div>
+      <div class="project-list">
+        <span *ngFor="let step of ecommercePath">{{ step }}</span>
+      </div>
+    </section>
+
+    <section class="tracks-section" id="cursos">
+      <div class="section-heading">
+        <span>Todos los cursos</span>
+        <h2>Rutas completas con módulos visibles</h2>
+        <p>Las tarjetas muestran nivel, duración, progreso, temas y entregable para que no tengas que adivinar qué estás estudiando.</p>
+      </div>
+
+      <div class="track-group" *ngFor="let group of trackGroups()">
+        <header>
+          <h3>{{ group.title }}</h3>
+          <p>{{ group.description }}</p>
+        </header>
+
+        <div class="catalog-grid">
+          <article class="track-card" *ngFor="let card of group.cards" [style.--track-color]="card.color">
+            <a class="track-card-main" [routerLink]="['/curso', card.id]">
+              <div class="track-card-icon"><lucide-icon [img]="card.icon" /></div>
+              <div>
+                <h4>{{ card.name }}</h4>
+                <p>{{ card.tagline }}</p>
+              </div>
+            </a>
+
+            <div class="track-card-meta">
+              <span>{{ card.moduleCount }} módulos</span>
+              <span>{{ card.totalHours }}</span>
+              <span>{{ card.percent }}%</span>
+            </div>
+            <div class="track-card-progress"><span [style.width.%]="card.percent"></span></div>
+            <p class="track-levels">{{ card.levels }}</p>
+
+            <details class="track-topics">
+              <summary>Temas del curso</summary>
+              <ol>
+                <li *ngFor="let module of card.modules">{{ module }}</li>
+              </ol>
+            </details>
+
+            <div class="track-outcome">
+              <strong>Entregable</strong>
+              <p>{{ card.outcome }}</p>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+  </main>
 </div>

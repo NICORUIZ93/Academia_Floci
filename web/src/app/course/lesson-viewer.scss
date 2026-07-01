@@ -9,6 +9,37 @@
 .lesson h1 { font:800 26px/1.25 Manrope, sans-serif; color:$ink; margin:0 0 10px; }
 .lesson-description { font-size:15px; line-height:1.6; color:$i3; margin:0 0 22px; }
 
+.lesson-overview {
+  display:grid;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:10px;
+  margin:0 0 22px;
+}
+
+.lesson-overview article {
+  min-width:0;
+  padding:13px 14px;
+  border:1px solid #d8e3df;
+  border-radius:8px;
+  background:#ffffff;
+}
+
+.lesson-overview span {
+  display:block;
+  color:$mu;
+  font-size:10px;
+  font-weight:900;
+  text-transform:uppercase;
+}
+
+.lesson-overview strong {
+  display:block;
+  margin-top:5px;
+  color:$ink;
+  font-size:16px;
+  overflow-wrap:anywhere;
+}
+
 .lesson-method {
   border:1px solid #d8e3df;
   border-radius:12px;
@@ -120,6 +151,57 @@
 .lesson-deliverable { font-size:14px; color:$i3; background:$pl; border-radius:$rs; padding:12px 14px; }
 .lesson-skeleton { color:$mu; font-size:14px; }
 
+.structured-lesson {
+  display:grid;
+  gap:18px;
+}
+
+.structured-lesson section {
+  padding:18px;
+  border:1px solid #d8e3df;
+  border-radius:8px;
+  background:#ffffff;
+}
+
+.structured-lesson h2 {
+  margin:0 0 8px;
+  color:$ink;
+  font:800 18px/1.25 Manrope, sans-serif;
+}
+
+.structured-lesson p {
+  margin:0;
+  color:$i3;
+  font-size:14.5px;
+  line-height:1.65;
+}
+
+.concept-chips {
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+  margin-top:14px;
+}
+
+.concept-chips span {
+  max-width:100%;
+  padding:6px 9px;
+  border-radius:999px;
+  color:$ph;
+  background:$pl;
+  font-size:12px;
+  font-weight:800;
+  overflow-wrap:anywhere;
+}
+
+.study-order {
+  margin:0;
+  padding-left:20px;
+  color:$i3;
+  font-size:14.5px;
+  line-height:1.7;
+}
+
 .lesson-challenges { list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:10px; }
 .lesson-challenges li { display:flex; align-items:flex-start; gap:10px; font-size:14.5px; color:$i3; line-height:1.6; }
 .challenge-check {
@@ -155,6 +237,7 @@
 @media (max-width: 640px) {
   :host { padding:22px 16px 64px; }
   .lesson h1 { font-size:23px; }
+  .lesson-overview { grid-template-columns:1fr 1fr; }
   .lesson-method-head { align-items:flex-start; flex-direction:column; }
   .lesson-method-grid article { grid-template-columns:1fr; }
   .lesson-tabs { overflow-x:auto; }

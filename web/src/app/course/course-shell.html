@@ -1,7 +1,7 @@
 <div class="shell" *ngIf="track() as t; else missing" [style.--track-color]="t.color">
   <header class="shell-topbar">
     <button class="icon-button mobile-only" title="Abrir índice" (click)="sidebarOpen.set(true)"><lucide-icon [img]="icons.Menu" /></button>
-    <a class="back-link" routerLink="/"><lucide-icon [img]="icons.ArrowLeft" /><span>Catálogo</span></a>
+    <a class="back-link" routerLink="/catalogo"><lucide-icon [img]="icons.ArrowLeft" /><span>Catálogo</span></a>
     <div class="shell-title">
       <strong>{{ t.shortName }}</strong>
       <div class="shell-progress"><span [style.width.%]="percent()"></span></div>
