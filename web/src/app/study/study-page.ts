@@ -60,11 +60,29 @@ interface Badge {
   unlocked: boolean;
 }
 
+interface CourseStep {
+  id: number;
+  module: string;
+  title: string;
+  explanation: string;
+  analogy?: string;
+  command?: string;
+  breakdown: string[];
+  expectedOutput: string;
+  practice: string;
+  question: string;
+  expectedAnswer: string;
+  keywords: string[];
+}
+
 const STORAGE_KEY = 'floci-study-progress-v2';
 const THEME_KEY = 'floci-study-theme-v2';
 const ANSWERS_KEY = 'floci-study-answers-v2';
 const EDITOR_KEY = 'floci-study-editor-v1';
 const LAB_KEY = 'floci-study-labs-v1';
+const STEP_KEY = 'floci-guided-steps-v1';
+const STEP_ANSWERS_KEY = 'floci-guided-step-answers-v1';
+const STEP_EDITORS_KEY = 'floci-guided-step-editors-v1';
 
 const resources = [
   { label: 'Documentación Floci', url: 'https://floci.io/' },
@@ -81,6 +99,432 @@ const studyStandards = [
   'Laboratorios con AWS, Azure y GCP; no solo AWS.',
   'Proyecto final obligatorio que integra almacenamiento, colas, NoSQL, secretos, funciones, API, eventos, observabilidad, RDS, contenedores, IaC, workflows, streams, auth, analytics e IA.',
   'Exportación del cuaderno de progreso para estudiar sin depender de la IA.',
+];
+
+const guidedStep = (
+  id: number,
+  module: string,
+  title: string,
+  explanation: string,
+  command: string | undefined,
+  breakdown: string[],
+  expectedOutput: string,
+  practice: string,
+  question: string,
+  expectedAnswer: string,
+  keywords: string[],
+  analogy?: string,
+): CourseStep => ({ id, module, title, explanation, command, breakdown, expectedOutput, practice, question, expectedAnswer, keywords, analogy });
+
+const GUIDED_STEPS: CourseStep[] = [
+  guidedStep(1, 'Docker y Floci', 'Qué es Docker y por qué lo necesitas',
+    'Docker permite ejecutar aplicaciones empaquetadas en contenedores. Lo necesitas porque Floci corre como un servicio local aislado, con sus puertos y dependencias controladas.',
+    undefined,
+    ['Docker evita instalar dependencias sueltas en tu sistema.', 'Un contenedor es una ejecución viva de una imagen.', 'Floci usa contenedores para darte servicios cloud locales.'],
+    'No hay salida esperada. Este paso es conceptual.',
+    'Escribe con tus palabras qué problema resuelve Docker antes de instalar nada.',
+    '¿Por qué usamos Docker para practicar con Floci?',
+    'Porque Docker ejecuta Floci aislado en mi computador sin instalar servicios reales ni usar nube con costo.',
+    ['docker', 'contenedor', 'aislado', 'floci'],
+    'Docker es como una lonchera técnica: trae la app con todo lo que necesita para correr igual en otra máquina.'),
+  guidedStep(2, 'Docker y Floci', 'Instalar Docker en Mac, Windows o Linux',
+    'Antes de usar Floci debes tener Docker encendido. En Mac y Windows normalmente instalas Docker Desktop; en Linux puedes usar el gestor de paquetes de tu distribución.',
+    'sudo apt update && sudo apt install docker.io -y',
+    ['sudo ejecuta el comando con permisos de administrador.', 'apt update actualiza el índice de paquetes.', 'apt install docker.io instala Docker desde los repositorios.', '-y acepta la instalación sin preguntar cada paso.'],
+    'Reading package lists... Done\nSetting up docker.io ...\nDocker instalado correctamente.',
+    'Si estás en Linux, escribe el comando. En Mac o Windows, escribe "Docker Desktop instalado" y verifica que la app esté abierta.',
+    '¿Qué debes abrir en Mac o Windows después de instalar Docker?',
+    'Debo abrir Docker Desktop y esperar a que indique que Docker está corriendo.',
+    ['docker', 'desktop', 'instalado', 'corriendo']),
+  guidedStep(3, 'Docker y Floci', 'Verificar Docker',
+    'La instalación no se asume: se comprueba. Este paso confirma que el comando docker existe y responde desde tu terminal.',
+    'docker --version',
+    ['docker llama al programa principal.', '--version pide que muestre la versión instalada sin iniciar contenedores.'],
+    'Docker version 24.0.7, build afdd53b',
+    'Ejecuta el comando y pega la versión exacta que aparece en tu terminal.',
+    '¿Qué versión de Docker tienes?',
+    'Una respuesta correcta incluye la palabra Docker y un número de versión.',
+    ['docker', 'version']),
+  guidedStep(4, 'Docker y Floci', 'Levantar Floci',
+    'Ahora ejecutas Floci localmente. El puerto 4566 queda disponible en tu computador para que herramientas como AWS CLI hablen con el emulador.',
+    'docker run -p 4566:4566 floci/floci:latest',
+    ['docker run ejecuta un contenedor.', '-p 4566:4566 conecta el puerto 4566 del contenedor con el puerto 4566 de tu máquina.', 'floci/floci:latest indica la imagen y versión que se va a ejecutar.'],
+    'Starting Floci on port 4566...\nReady.',
+    'Copia el comando, ejecútalo y confirma que ves una línea parecida a Ready.',
+    '¿En qué puerto queda escuchando Floci?',
+    'Floci queda escuchando en el puerto 4566.',
+    ['4566', 'puerto', 'floci']),
+  guidedStep(5, 'Docker y Floci', 'Verificar salud de Floci',
+    'No basta con levantar un contenedor: debes verificar que el servicio responde por HTTP en localhost.',
+    'curl http://localhost:4566/_localstack/health',
+    ['curl hace una petición HTTP desde la terminal.', 'localhost significa tu propio computador.', '4566 es el puerto donde escucha Floci.', '/_localstack/health devuelve el estado de servicios disponibles.'],
+    '{"services":{"s3":"available","sqs":"available","lambda":"available"}}',
+    'Ejecuta el comando y pega al menos dos servicios que aparezcan como available.',
+    '¿Qué servicios aparecen disponibles?',
+    'Debe mencionar servicios como s3, sqs, lambda o dynamodb en estado available.',
+    ['available', 's3', 'sqs', 'lambda']),
+  guidedStep(6, 'Docker y Floci', 'Configurar AWS CLI para laboratorio local',
+    'AWS CLI necesita credenciales aunque Floci sea local. Usamos valores ficticios porque el emulador no cobra ni autentica contra AWS real.',
+    'aws configure set aws_access_key_id test\naws configure set aws_secret_access_key test\naws configure set region us-east-1',
+    ['aws configure set guarda una configuración local.', 'aws_access_key_id test define una clave falsa.', 'aws_secret_access_key test define un secreto falso.', 'region us-east-1 define una región estándar para los comandos.'],
+    'Sin salida si la configuración se guarda correctamente.',
+    'Ejecuta las tres líneas una por una. No pegues claves reales.',
+    '¿Por qué usamos test como access key?',
+    'Porque Floci corre local y solo necesita credenciales ficticias para que AWS CLI forme las peticiones.',
+    ['test', 'credenciales', 'local', 'floci']),
+  guidedStep(7, 'Docker y Floci', 'Probar AWS CLI contra Floci',
+    'Este paso confirma que AWS CLI está hablando con el endpoint local y no con AWS real.',
+    'aws s3 ls --endpoint-url http://localhost:4566',
+    ['aws s3 ls lista buckets de S3.', '--endpoint-url cambia el destino del comando.', 'http://localhost:4566 apunta al Floci local.'],
+    'Sin salida si todavía no existen buckets.',
+    'Ejecuta el comando. Si no aparece nada, eso también es una respuesta válida al inicio.',
+    '¿Qué deberías ver si no hay buckets creados?',
+    'No debería ver buckets; la salida puede estar vacía.',
+    ['sin salida', 'vacia', 'bucket']),
+  guidedStep(8, 'S3 almacenamiento', 'Qué es S3',
+    'S3 guarda objetos: archivos con nombre, contenido y metadata. En Floci practicas buckets y objetos sin pagar almacenamiento real.',
+    undefined,
+    ['Bucket es el contenedor lógico.', 'Objeto es el archivo guardado.', 'Key es la ruta o nombre del objeto dentro del bucket.'],
+    'No hay salida esperada. Este paso es conceptual.',
+    'Escribe una analogía propia para bucket, objeto y key.',
+    '¿Qué diferencia hay entre bucket y objeto?',
+    'El bucket contiene objetos; el objeto es el archivo o dato almacenado.',
+    ['bucket', 'objeto', 'archivo'],
+    'S3 es como un almacén gigante: el bucket es una bodega y cada objeto es una caja con etiqueta.'),
+  guidedStep(9, 'S3 almacenamiento', 'Crear un bucket',
+    'Crear un bucket es el primer recurso real del laboratorio S3. Todo archivo que subas necesita vivir dentro de un bucket.',
+    'aws s3 mb s3://mi-bucket --endpoint-url http://localhost:4566',
+    ['aws s3 mb significa make bucket.', 's3://mi-bucket es el nombre del bucket.', '--endpoint-url evita tocar AWS real y usa Floci.'],
+    'make_bucket: mi-bucket',
+    'Crea un bucket. Puedes cambiar mi-bucket por un nombre propio corto.',
+    '¿Qué nombre le pusiste a tu bucket?',
+    'Debe indicar el nombre del bucket creado.',
+    ['bucket', 'mi-bucket', 'make_bucket']),
+  guidedStep(10, 'S3 almacenamiento', 'Crear y subir un archivo',
+    'Vas a crear un archivo local y luego copiarlo al bucket. Así verificas el flujo completo: disco local -> S3 local.',
+    'echo "Hola Mundo" > miarchivo.txt\naws s3 cp miarchivo.txt s3://mi-bucket/ --endpoint-url http://localhost:4566',
+    ['echo crea texto en la terminal.', '> miarchivo.txt guarda el texto en un archivo.', 'aws s3 cp copia archivos.', 'miarchivo.txt es el origen local.', 's3://mi-bucket/ es el destino en S3.'],
+    'upload: ./miarchivo.txt to s3://mi-bucket/miarchivo.txt',
+    'Ejecuta ambas líneas y pega la salida upload.',
+    '¿Qué comando usaste para subir el archivo?',
+    'Debe incluir aws s3 cp y el destino s3://mi-bucket/.',
+    ['aws', 's3', 'cp', 'upload']),
+  guidedStep(11, 'S3 almacenamiento', 'Listar objetos en el bucket',
+    'Después de subir, debes comprobar que el objeto existe. Listar es la forma más simple de obtener evidencia.',
+    'aws s3 ls s3://mi-bucket/ --endpoint-url http://localhost:4566',
+    ['aws s3 ls lista contenido.', 's3://mi-bucket/ limita la lista a ese bucket.', '--endpoint-url mantiene la consulta local.'],
+    '2024-01-01 12:00:00         11 miarchivo.txt',
+    'Lista tu bucket y pega el nombre del archivo que aparece.',
+    '¿Qué archivos ves en tu bucket?',
+    'Debe aparecer miarchivo.txt o el archivo que subiste.',
+    ['miarchivo', 'txt', 'bucket']),
+  guidedStep(12, 'S3 almacenamiento', 'Descargar un archivo',
+    'Descargar comprueba que el objeto no solo fue listado, sino que puede recuperarse desde el almacenamiento.',
+    'aws s3 cp s3://mi-bucket/miarchivo.txt ./ --endpoint-url http://localhost:4566',
+    ['aws s3 cp también descarga.', 's3://mi-bucket/miarchivo.txt es el origen remoto.', './ significa carpeta actual como destino local.'],
+    'download: s3://mi-bucket/miarchivo.txt to ./miarchivo.txt',
+    'Descarga el archivo y verifica su contenido con cat miarchivo.txt.',
+    '¿Qué comando usaste para descargar el archivo?',
+    'Debe incluir aws s3 cp desde s3://mi-bucket/miarchivo.txt hacia ./.',
+    ['download', 'aws', 's3', 'cp']),
+  guidedStep(13, 'S3 almacenamiento', 'Eliminar un objeto',
+    'Eliminar un objeto limpia el bucket y te prepara para borrar el bucket completo.',
+    'aws s3 rm s3://mi-bucket/miarchivo.txt --endpoint-url http://localhost:4566',
+    ['aws s3 rm elimina un objeto.', 's3://mi-bucket/miarchivo.txt identifica exactamente qué borrar.', '--endpoint-url usa Floci local.'],
+    'delete: s3://mi-bucket/miarchivo.txt',
+    'Elimina el objeto y luego lista el bucket para confirmar que ya no aparece.',
+    '¿Cómo verificas que el archivo fue eliminado?',
+    'Listando el bucket con aws s3 ls y comprobando que el archivo ya no aparece.',
+    ['delete', 's3', 'ls', 'no aparece']),
+  guidedStep(14, 'S3 almacenamiento', 'Eliminar el bucket',
+    'Un bucket normalmente debe estar vacío antes de borrarlo. Este paso enseña limpieza de recursos.',
+    'aws s3 rb s3://mi-bucket --endpoint-url http://localhost:4566',
+    ['aws s3 rb significa remove bucket.', 's3://mi-bucket identifica el bucket.', 'Si contiene objetos, primero debes eliminarlos.'],
+    'remove_bucket: mi-bucket',
+    'Borra el bucket y vuelve a listar buckets para comprobar que ya no está.',
+    '¿Qué pasa si intentas eliminar un bucket que no está vacío?',
+    'Falla o rechaza la operación hasta que elimines los objetos internos.',
+    ['vacio', 'objetos', 'falla']),
+  guidedStep(15, 'SQS colas', 'Qué es SQS',
+    'SQS desacopla sistemas usando mensajes. Un productor deja trabajo en una cola y un consumidor lo procesa después.',
+    undefined,
+    ['Productor envía mensajes.', 'Cola guarda mensajes pendientes.', 'Consumidor recibe y procesa mensajes.', 'El mensaje puede llegar más de una vez, por eso importa la idempotencia.'],
+    'No hay salida esperada. Este paso es conceptual.',
+    'Describe un caso real donde conviene una cola.',
+    '¿Para qué sirve una cola?',
+    'Sirve para guardar trabajo pendiente y desacoplar productor y consumidor.',
+    ['cola', 'mensaje', 'productor', 'consumidor'],
+    'SQS es como un buzón: alguien deja cartas y otra persona las recoge cuando puede.'),
+  guidedStep(16, 'SQS colas', 'Crear una cola',
+    'Una cola necesita nombre y devuelve una URL. Esa URL se usa en los siguientes comandos.',
+    'aws sqs create-queue --queue-name mi-cola --endpoint-url http://localhost:4566',
+    ['aws sqs create-queue crea una cola.', '--queue-name mi-cola define el nombre.', '--endpoint-url apunta a Floci local.'],
+    '{"QueueUrl":"http://localhost:4566/000000000000/mi-cola"}',
+    'Crea la cola y copia la QueueUrl.',
+    '¿Cuál es la URL de tu cola?',
+    'Debe incluir http://localhost:4566/000000000000/mi-cola.',
+    ['queueurl', 'localhost', 'mi-cola']),
+  guidedStep(17, 'SQS colas', 'Enviar un mensaje',
+    'Enviar un mensaje pone una unidad de trabajo en la cola para que otro proceso la lea luego.',
+    'aws sqs send-message --queue-url http://localhost:4566/000000000000/mi-cola --message-body "Hola desde SQS" --endpoint-url http://localhost:4566',
+    ['send-message envía un mensaje.', '--queue-url indica a qué cola.', '--message-body contiene el texto del mensaje.'],
+    '{"MD5OfMessageBody":"...","MessageId":"..."}',
+    'Envía el mensaje y pega el MessageId.',
+    '¿Qué ID de mensaje recibiste?',
+    'Debe mencionar el MessageId devuelto por la CLI.',
+    ['messageid', 'hola', 'sqs']),
+  guidedStep(18, 'SQS colas', 'Recibir mensajes',
+    'Recibir no elimina automáticamente. SQS entrega el mensaje y te da un ReceiptHandle para borrarlo después.',
+    'aws sqs receive-message --queue-url http://localhost:4566/000000000000/mi-cola --endpoint-url http://localhost:4566',
+    ['receive-message lee mensajes disponibles.', '--queue-url identifica la cola.', 'La respuesta incluye Body y ReceiptHandle.'],
+    '{"Messages":[{"MessageId":"...","ReceiptHandle":"...","Body":"Hola desde SQS"}]}',
+    'Recibe el mensaje y copia Body y ReceiptHandle.',
+    '¿Qué mensaje recibiste?',
+    'Debe aparecer Hola desde SQS.',
+    ['messages', 'body', 'receipt', 'hola']),
+  guidedStep(19, 'SQS colas', 'Eliminar un mensaje procesado',
+    'Después de procesar un mensaje debes eliminarlo. Si no lo haces, puede volver a aparecer.',
+    'aws sqs delete-message --queue-url http://localhost:4566/000000000000/mi-cola --receipt-handle <RECEIPT_HANDLE> --endpoint-url http://localhost:4566',
+    ['delete-message borra el mensaje.', '--receipt-handle debe ser el valor recibido al leer.', 'No uses MessageId para borrar; se usa ReceiptHandle.'],
+    'Sin salida si se elimina correctamente.',
+    'Reemplaza <RECEIPT_HANDLE> por el valor real y elimina el mensaje.',
+    '¿Qué pasa si no eliminas el mensaje?',
+    'Puede reaparecer después del visibility timeout y procesarse de nuevo.',
+    ['receipt', 'visibility', 'reaparecer']),
+  guidedStep(20, 'SQS colas', 'Eliminar la cola',
+    'Limpiar la cola evita dejar recursos de laboratorio vivos y cierra el ciclo de SQS.',
+    'aws sqs delete-queue --queue-url http://localhost:4566/000000000000/mi-cola --endpoint-url http://localhost:4566',
+    ['delete-queue elimina toda la cola.', '--queue-url identifica la cola exacta.', 'Después de eliminarla, enviar o recibir contra esa URL falla.'],
+    'Sin salida si se elimina correctamente.',
+    'Elimina la cola y prueba listar colas para confirmar.',
+    '¿Cómo sabes que la cola ya no existe?',
+    'Listando colas o intentando usar la URL y comprobando que ya no aparece.',
+    ['delete-queue', 'cola', 'no existe']),
+  guidedStep(21, 'DynamoDB NoSQL', 'Qué es DynamoDB',
+    'DynamoDB guarda ítems en tablas NoSQL. Diseñas la tabla según las consultas, no como si fuera SQL tradicional.',
+    undefined,
+    ['Tabla contiene ítems.', 'Partition key agrupa datos.', 'Sort key ordena o diferencia ítems dentro de la partición.', 'Query es preferible a Scan.'],
+    'No hay salida esperada. Este paso es conceptual.',
+    'Escribe una consulta que tu app necesitaría responder.',
+    '¿Por qué evitar Scan como primera opción?',
+    'Porque Scan revisa toda la tabla y escala mal; Query usa la clave y es más eficiente.',
+    ['scan', 'query', 'partition']),
+  guidedStep(22, 'DynamoDB NoSQL', 'Crear una tabla',
+    'Crearás una tabla de tareas con PK y SK para practicar un patrón común de single-table design.',
+    'aws dynamodb create-table --table-name Tareas --attribute-definitions AttributeName=PK,AttributeType=S AttributeName=SK,AttributeType=S --key-schema AttributeName=PK,KeyType=HASH AttributeName=SK,KeyType=RANGE --billing-mode PAY_PER_REQUEST --endpoint-url http://localhost:4566',
+    ['create-table crea la tabla.', '--attribute-definitions declara atributos clave.', '--key-schema define partition key y sort key.', 'PAY_PER_REQUEST evita configurar capacidad fija.'],
+    '{"TableDescription":{"TableName":"Tareas","TableStatus":"ACTIVE"}}',
+    'Crea la tabla y confirma que el estado sea ACTIVE.',
+    '¿Qué atributos forman la clave primaria?',
+    'PK es la partition key y SK es la sort key.',
+    ['pk', 'sk', 'active']),
+  guidedStep(23, 'DynamoDB NoSQL', 'Insertar un ítem',
+    'Un ítem representa una tarea. Usamos USER#alice como partición para consultar todas sus tareas.',
+    'aws dynamodb put-item --table-name Tareas --item \'{"PK":{"S":"USER#alice"},"SK":{"S":"TAREA#001"},"titulo":{"S":"Aprender Floci"},"estado":{"S":"pendiente"}}\' --endpoint-url http://localhost:4566',
+    ['put-item inserta o reemplaza un ítem.', 'PK USER#alice agrupa datos de Alice.', 'SK TAREA#001 identifica la tarea.', 'estado permite luego filtrar o indexar.'],
+    'Sin salida si se inserta correctamente.',
+    'Inserta el ítem y luego prepárate para consultarlo.',
+    '¿Qué representa USER#alice?',
+    'Representa la partición donde se guardan los datos del usuario Alice.',
+    ['user#alice', 'pk', 'item']),
+  guidedStep(24, 'DynamoDB NoSQL', 'Consultar con Query',
+    'Query recupera ítems por clave. Es la forma correcta de leer datos cuando conoces la partición.',
+    'aws dynamodb query --table-name Tareas --key-condition-expression "PK = :pk" --expression-attribute-values \'{":pk":{"S":"USER#alice"}}\' --endpoint-url http://localhost:4566',
+    ['query lee por clave.', '--key-condition-expression define la condición.', ':pk es una variable de expresión.', '--expression-attribute-values da valor a la variable.'],
+    '{"Items":[{"PK":{"S":"USER#alice"},"SK":{"S":"TAREA#001"},"titulo":{"S":"Aprender Floci"}}]}',
+    'Consulta la tabla y pega el título devuelto.',
+    '¿Por qué Query es mejor que Scan aquí?',
+    'Porque Query usa la partition key USER#alice y no revisa toda la tabla.',
+    ['query', 'pk', 'user#alice']),
+  guidedStep(25, 'DynamoDB NoSQL', 'Eliminar tabla de laboratorio',
+    'Eliminar recursos también se aprende. Este paso cierra el laboratorio de DynamoDB.',
+    'aws dynamodb delete-table --table-name Tareas --endpoint-url http://localhost:4566',
+    ['delete-table elimina la tabla completa.', '--table-name Tareas identifica el recurso.', 'Después de borrarla, las consultas fallan.'],
+    '{"TableDescription":{"TableName":"Tareas","TableStatus":"DELETING"}}',
+    'Elimina la tabla y documenta por qué no harías esto en producción sin respaldo.',
+    '¿Qué pierdes al eliminar una tabla?',
+    'Pierdo todos los ítems de la tabla si no tengo respaldo o exportación.',
+    ['delete', 'tabla', 'datos']),
+  guidedStep(26, 'Lambda funciones', 'Qué es Lambda',
+    'Lambda ejecuta funciones sin que administres servidores. En Floci practicas empaquetado, invocación y logs localmente.',
+    undefined,
+    ['Handler es la función de entrada.', 'Event contiene los datos de invocación.', 'Context trae metadata de ejecución.', 'La función debe ser pequeña y observable.'],
+    'No hay salida esperada. Este paso es conceptual.',
+    'Describe qué evento dispararía una Lambda en tu proyecto final.',
+    '¿Qué recibe el parámetro event?',
+    'Recibe los datos de entrada de la invocación, como HTTP, mensaje de cola o evento.',
+    ['event', 'handler', 'lambda']),
+  guidedStep(27, 'Lambda funciones', 'Crear handler.py',
+    'Antes de desplegar, necesitas un archivo con la función handler que Lambda invocará.',
+    'cat > handler.py <<\'PY\'\ndef handler(event, context):\n    return {"statusCode": 200, "body": "Hola Floci"}\nPY',
+    ['cat > handler.py crea el archivo.', "<<'PY' abre un bloque heredoc.", 'def handler(event, context) define la función de entrada.', 'return devuelve una respuesta compatible con HTTP.'],
+    'Se crea el archivo handler.py sin salida adicional.',
+    'Crea el archivo y revisa su contenido con cat handler.py.',
+    '¿Cómo se llama la función de entrada?',
+    'La función de entrada se llama handler.',
+    ['handler', 'event', 'context']),
+  guidedStep(28, 'Lambda funciones', 'Empaquetar y crear Lambda',
+    'Lambda necesita un paquete zip y una configuración que diga runtime, handler y rol.',
+    'zip function.zip handler.py\naws lambda create-function --function-name mi-funcion --runtime python3.12 --handler handler.handler --role arn:aws:iam::000000000000:role/lambda-role --zip-file fileb://function.zip --endpoint-url http://localhost:4566',
+    ['zip function.zip handler.py crea el paquete.', '--function-name define el nombre.', '--runtime python3.12 indica el lenguaje.', '--handler handler.handler apunta archivo.función.', '--zip-file sube el paquete local.'],
+    '{"FunctionName":"mi-funcion","Runtime":"python3.12","State":"Active"}',
+    'Empaqueta y crea la función. Si falla, revisa nombre de archivo y handler.',
+    '¿Qué significa handler.handler?',
+    'Significa archivo handler.py y función handler dentro de ese archivo.',
+    ['handler.handler', 'zip', 'runtime']),
+  guidedStep(29, 'Lambda funciones', 'Invocar Lambda',
+    'Invocar ejecuta la función y guarda la respuesta en un archivo para inspeccionarla.',
+    'aws lambda invoke --function-name mi-funcion output.json --endpoint-url http://localhost:4566 && cat output.json',
+    ['lambda invoke ejecuta la función.', '--function-name indica cuál.', 'output.json guarda la respuesta.', 'cat output.json muestra el contenido.'],
+    '{"statusCode":200,"body":"Hola Floci"}',
+    'Invoca la función y pega el contenido de output.json.',
+    '¿Qué body devolvió la función?',
+    'Devolvió Hola Floci.',
+    ['hola', 'floci', 'statuscode']),
+  guidedStep(30, 'Lambda funciones', 'Leer logs de Lambda',
+    'Los logs son la primera herramienta para entender fallos. No adivines: busca evidencia.',
+    'aws logs filter-log-events --log-group-name /aws/lambda/mi-funcion --endpoint-url http://localhost:4566',
+    ['logs filter-log-events consulta eventos.', '--log-group-name apunta al grupo de la Lambda.', '/aws/lambda/mi-funcion es la convención de nombre.'],
+    '{"events":[{"message":"START RequestId ..."},{"message":"END RequestId ..."}]}',
+    'Consulta logs después de invocar la función.',
+    '¿Qué buscarías si la Lambda falla?',
+    'Buscaría mensajes de error, stack trace, RequestId y logs escritos por mi código.',
+    ['error', 'requestid', 'logs']),
+  guidedStep(31, 'API Gateway', 'Qué es API Gateway',
+    'API Gateway expone funciones como endpoints HTTP. Sirve para que un cliente llame tu backend con rutas como POST /tareas.',
+    undefined,
+    ['Recurso es una ruta.', 'Método es GET, POST, PUT o DELETE.', 'Stage es una versión desplegada.', 'Integración conecta la API con Lambda.'],
+    'No hay salida esperada. Este paso es conceptual.',
+    'Dibuja una ruta Cliente -> API Gateway -> Lambda.',
+    '¿Qué problema resuelve API Gateway?',
+    'Expone una interfaz HTTP controlada para invocar funciones o servicios backend.',
+    ['http', 'lambda', 'ruta']),
+  guidedStep(32, 'API Gateway', 'Crear API REST',
+    'Crear el API es el contenedor de rutas y métodos. Luego agregarás recursos como /tareas.',
+    'aws apigateway create-rest-api --name "API Tareas" --endpoint-url http://localhost:4566',
+    ['create-rest-api crea una API REST.', '--name asigna un nombre legible.', '--endpoint-url mantiene todo local.'],
+    '{"id":"abc123","name":"API Tareas"}',
+    'Crea la API y copia el id devuelto.',
+    '¿Para qué necesitas el id del API?',
+    'Para crear recursos, métodos, integraciones y despliegues sobre esa API.',
+    ['id', 'api', 'rest']),
+  guidedStep(33, 'API Gateway', 'Crear recurso y método POST',
+    'Un recurso representa la ruta /tareas y el método POST define qué operación acepta.',
+    'aws apigateway create-resource --rest-api-id <API_ID> --parent-id <ROOT_ID> --path-part tareas --endpoint-url http://localhost:4566\naws apigateway put-method --rest-api-id <API_ID> --resource-id <RESOURCE_ID> --http-method POST --authorization-type NONE --endpoint-url http://localhost:4566',
+    ['create-resource crea /tareas.', '--parent-id indica de qué ruta cuelga.', 'put-method agrega POST.', '--authorization-type NONE deja el método abierto para laboratorio.'],
+    '{"id":"resource123","path":"/tareas"}\nSin salida relevante para put-method.',
+    'Reemplaza los IDs reales y crea la ruta POST /tareas.',
+    '¿Qué método HTTP aceptará /tareas?',
+    'Aceptará POST.',
+    ['post', 'tareas', 'resource']),
+  guidedStep(34, 'API Gateway', 'Invocar API con curl',
+    'La prueba final de API es enviar una petición HTTP y observar una respuesta.',
+    'curl -X POST http://localhost:4566/restapis/<API_ID>/dev/_user_request_/tareas -d \'{"titulo":"Mi primera tarea"}\'',
+    ['curl ejecuta la petición HTTP.', '-X POST define el método.', '-d envía el cuerpo JSON.', '_user_request_ es la ruta local de invocación en emuladores tipo LocalStack/Floci.'],
+    '{"ok":true,"titulo":"Mi primera tarea"}',
+    'Ejecuta curl y pega el JSON de respuesta o el error exacto.',
+    '¿Qué envía el flag -d?',
+    'Envía el cuerpo de la petición HTTP, en este caso un JSON con titulo.',
+    ['curl', 'post', 'json']),
+  guidedStep(35, 'Observabilidad', 'CloudWatch logs y métricas',
+    'Observabilidad significa poder explicar qué pasó usando logs, métricas y alarmas. Sin eso solo estás adivinando.',
+    'aws logs create-log-group --log-group-name /mi-app/backend --endpoint-url http://localhost:4566\naws logs filter-log-events --log-group-name /mi-app/backend --filter-pattern "ERROR" --endpoint-url http://localhost:4566',
+    ['create-log-group crea un grupo de logs.', 'filter-log-events busca eventos.', '--filter-pattern "ERROR" filtra mensajes con esa palabra.'],
+    '[] si no hay errores todavía, o eventos que contengan ERROR.',
+    'Crea el log group y escribe qué filtro usarías para encontrar errores.',
+    '¿Por qué no basta con decir "falló"?',
+    'Porque necesito logs o métricas que demuestren dónde y por qué falló.',
+    ['logs', 'error', 'metricas']),
+  guidedStep(36, 'Secretos', 'Guardar secretos fuera del código',
+    'Las contraseñas no deben vivir en el código. Secrets Manager permite guardarlas y leerlas en tiempo de ejecución.',
+    'aws secretsmanager create-secret --name /app/db-password --secret-string "mi-password-segura" --endpoint-url http://localhost:4566\naws secretsmanager get-secret-value --secret-id /app/db-password --query SecretString --output text --endpoint-url http://localhost:4566',
+    ['create-secret guarda un secreto.', '--name define una ruta lógica.', '--secret-string contiene el valor.', 'get-secret-value recupera el secreto.', '--query SecretString muestra solo el valor.'],
+    'mi-password-segura',
+    'Crea un secreto local y léelo sin ponerlo en el código de la app.',
+    '¿Por qué no debes subir secretos a Git?',
+    'Porque cualquiera con acceso al repo podría usarlos y comprometer sistemas.',
+    ['secret', 'password', 'git']),
+  guidedStep(37, 'RDS PostgreSQL', 'Crear base relacional local',
+    'RDS se usa cuando necesitas SQL, relaciones, transacciones y consultas estructuradas.',
+    'aws rds create-db-instance --db-instance-identifier mi-postgres --db-instance-class db.t3.micro --engine postgres --master-username admin --master-user-password admin123 --allocated-storage 20 --endpoint-url http://localhost:4566',
+    ['create-db-instance crea la instancia.', '--engine postgres elige PostgreSQL.', '--master-username y --master-user-password definen credenciales de laboratorio.', '--allocated-storage define almacenamiento.'],
+    '{"DBInstance":{"DBInstanceIdentifier":"mi-postgres","DBInstanceStatus":"creating"}}',
+    'Crea la instancia y documenta cuándo usarías SQL en lugar de DynamoDB.',
+    '¿Cuándo elegirías RDS sobre DynamoDB?',
+    'Cuando necesito SQL, joins, transacciones o esquema relacional claro.',
+    ['postgres', 'sql', 'relacional']),
+  guidedStep(38, 'Contenedores', 'Construir y subir imagen a ECR',
+    'ECR almacena imágenes Docker. ECS u otros servicios luego ejecutan esas imágenes.',
+    'docker build -t mi-api:latest .\naws ecr create-repository --repository-name mi-api --endpoint-url http://localhost:4566\ndocker tag mi-api:latest localhost:4566/mi-api:latest\ndocker push localhost:4566/mi-api:latest',
+    ['docker build crea la imagen.', 'create-repository crea el repositorio ECR.', 'docker tag asigna el destino local.', 'docker push sube la imagen.'],
+    'Successfully tagged localhost:4566/mi-api:latest\nPushed mi-api:latest',
+    'Escribe qué hace cada línea antes de ejecutarla.',
+    '¿Qué diferencia hay entre imagen y contenedor?',
+    'La imagen es la plantilla; el contenedor es una ejecución de esa imagen.',
+    ['imagen', 'contenedor', 'ecr']),
+  guidedStep(39, 'Infraestructura como código', 'Crear infraestructura reproducible',
+    'IaC evita crear recursos a mano sin registro. Un archivo declara qué recursos existen y permite repetir el ambiente.',
+    'aws cloudformation deploy --template-file template.yml --stack-name academia-floci --endpoint-url http://localhost:4566',
+    ['cloudformation deploy aplica una plantilla.', '--template-file indica el archivo declarativo.', '--stack-name agrupa recursos.', '--endpoint-url usa Floci local.'],
+    'Successfully created/updated stack - academia-floci',
+    'Crea una plantilla mínima con un bucket y una cola, luego despliega el stack.',
+    '¿Qué ventaja tiene IaC frente a comandos manuales?',
+    'Permite repetir, versionar y revisar infraestructura de forma controlada.',
+    ['iac', 'template', 'stack']),
+  guidedStep(40, 'Step Functions', 'Orquestar un workflow',
+    'Step Functions coordina pasos con estado visible: éxito, error, reintento o decisión.',
+    'aws stepfunctions create-state-machine --name flujo-tareas --definition file://state-machine.json --role-arn arn:aws:iam::000000000000:role/step-role --endpoint-url http://localhost:4566',
+    ['create-state-machine crea el workflow.', '--definition carga el JSON de estados.', '--role-arn define el rol usado por la máquina.'],
+    '{"stateMachineArn":"arn:aws:states:us-east-1:000000000000:stateMachine:flujo-tareas"}',
+    'Crea una definición con StartAt, Task y End.',
+    '¿Qué diferencia hay entre orquestación y eventos sueltos?',
+    'La orquestación mantiene un flujo explícito con estado e historial de ejecución.',
+    ['workflow', 'state', 'orquestacion']),
+  guidedStep(41, 'Streams', 'Crear stream de eventos',
+    'Un stream guarda eventos ordenados por partición durante un tiempo. Sirve para procesamiento continuo.',
+    'aws kinesis create-stream --stream-name eventos-tareas --shard-count 1 --endpoint-url http://localhost:4566\naws kinesis put-record --stream-name eventos-tareas --partition-key tarea-1 --data "TareaCreada" --endpoint-url http://localhost:4566',
+    ['create-stream crea el stream.', '--shard-count define capacidad/particiones.', 'put-record publica un evento.', '--partition-key controla orden dentro de una partición.'],
+    '{"ShardId":"shardId-000000000000","SequenceNumber":"..."}',
+    'Publica un evento y copia ShardId o SequenceNumber.',
+    '¿Qué hace partition-key?',
+    'Define en qué partición cae el evento y ayuda a mantener orden para la misma clave.',
+    ['partition', 'stream', 'sequence']),
+  guidedStep(42, 'Autenticación', 'Entender Cognito y JWT',
+    'La autenticación prueba quién eres. Cognito emite tokens JWT que luego una API puede validar.',
+    'aws cognito-idp create-user-pool --pool-name academia-users --endpoint-url http://localhost:4566',
+    ['cognito-idp opera user pools.', 'create-user-pool crea el directorio de usuarios.', '--pool-name define el nombre.'],
+    '{"UserPool":{"Id":"us-east-1_abc123","Name":"academia-users"}}',
+    'Crea el user pool y escribe qué dato usaría una API para validar identidad.',
+    '¿Qué contiene un JWT?',
+    'Contiene claims como usuario, expiración, issuer y scopes/permisos.',
+    ['jwt', 'claims', 'usuario']),
+  guidedStep(43, 'Analytics', 'Consultar datos con Athena o BigQuery',
+    'Analytics consulta archivos como tablas. No reemplaza una base transaccional; responde preguntas sobre datos acumulados.',
+    'aws athena start-query-execution --query-string "SELECT estado, count(*) FROM tareas GROUP BY estado" --result-configuration OutputLocation=s3://mi-bucket/resultados/ --endpoint-url http://localhost:4566',
+    ['start-query-execution inicia una consulta.', '--query-string contiene SQL.', 'OutputLocation define dónde guardar resultados.', 'En GCP, BigQuery resuelve el mismo tipo de análisis.'],
+    '{"QueryExecutionId":"..."}',
+    'Escribe una consulta que cuente tareas por estado.',
+    '¿Qué diferencia hay entre analytics y transaccional?',
+    'Analytics analiza conjuntos de datos; transaccional atiende operaciones de la app en tiempo real.',
+    ['athena', 'bigquery', 'sql']),
+  guidedStep(44, 'Azure y GCP', 'Comparar servicios equivalentes',
+    'Aprender cloud por problema evita casarte con una marca. S3, Blob Storage y Cloud Storage resuelven almacenamiento de objetos con nombres distintos.',
+    'floci az start\nexport STORAGE_EMULATOR_HOST=http://localhost:4588',
+    ['floci az start levanta emulador Azure.', 'STORAGE_EMULATOR_HOST apunta herramientas GCP al emulador local.', 'El objetivo es comparar patrón, endpoint y comando.'],
+    'Floci Azure ready\nGCP emulator listening on localhost:4588',
+    'Haz una tabla de equivalencias: S3=Blob=Cloud Storage, SQS=Service Bus/Pub/Sub, Lambda=Functions/Cloud Functions.',
+    '¿Por qué conviene aprender equivalencias entre nubes?',
+    'Porque el patrón técnico se repite aunque cambien nombres y comandos.',
+    ['azure', 'gcp', 'equivalencias']),
+  guidedStep(45, 'Proyecto final', 'Construir gestor de tareas cloud local',
+    'El proyecto final une todo: API, auth, almacenamiento, mensajes, base de datos, logs, secretos, contenedores e infraestructura.',
+    'make demo-local',
+    ['make ejecuta una receta del proyecto.', 'demo-local debe levantar servicios locales, crear recursos y correr pruebas.', 'Si no existe Makefile, documenta los comandos equivalentes en README.'],
+    'Demo local OK\nAPI disponible\nPruebas completadas',
+    'Entrega README, comandos, capturas, errores corregidos y exportación del progreso.',
+    '¿Cómo demuestras que tu proyecto no depende de memoria ni suerte?',
+    'Con comandos reproducibles, evidencias, pruebas y documentación para reconstruirlo desde cero.',
+    ['proyecto', 'demo', 'readme', 'evidencia']),
 ];
 
 const topicBlueprints: Record<number, TopicBlueprint[]> = {
@@ -692,9 +1136,11 @@ const azureGcpSource: CourseModule = {
 export class StudyPageComponent implements OnInit {
   readonly standards = studyStandards;
   readonly modules: StudyModule[] = [...COURSE_MODULES, azureGcpSource].map(moduleToStudy);
+  readonly guidedSteps = GUIDED_STEPS;
 
   selectedModuleId = this.modules[0].id;
   selectedTopicId = this.modules[0].topics[0].id;
+  selectedStepIndex = 0;
   tab: Tab = 'teoria';
   query = '';
   dark = false;
@@ -703,22 +1149,33 @@ export class StudyPageComponent implements OnInit {
   mobileSidebar = false;
   completed = new Set<string>();
   verifiedLabSteps = new Set<string>();
+  completedGuidedSteps = new Set<number>();
   answers: Record<string, string> = {};
   editorDrafts: Record<string, string> = {};
+  guidedAnswers: Record<number, string> = {};
+  guidedEditors: Record<number, string> = {};
   answer = '';
   editorCode = '';
+  guidedAnswer = '';
+  guidedEditor = '';
   output = '';
+  guidedOutput = '';
 
   constructor(private readonly cdr: ChangeDetectorRef) {}
 
   ngOnInit(): void {
     this.completed = new Set(JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]'));
     this.verifiedLabSteps = new Set(JSON.parse(localStorage.getItem(LAB_KEY) || '[]'));
+    this.completedGuidedSteps = new Set(JSON.parse(localStorage.getItem(STEP_KEY) || '[]'));
     this.answers = JSON.parse(localStorage.getItem(ANSWERS_KEY) || '{}');
     this.editorDrafts = JSON.parse(localStorage.getItem(EDITOR_KEY) || '{}');
+    this.guidedAnswers = JSON.parse(localStorage.getItem(STEP_ANSWERS_KEY) || '{}');
+    this.guidedEditors = JSON.parse(localStorage.getItem(STEP_EDITORS_KEY) || '{}');
     this.dark = localStorage.getItem(THEME_KEY) === 'dark';
     this.answer = this.answers[this.selectedTopicId] ?? '';
     this.editorCode = this.editorDrafts[this.selectedTopicId] ?? this.selectedTopic.code;
+    this.guidedAnswer = this.guidedAnswers[this.currentStep.id] ?? '';
+    this.guidedEditor = this.guidedEditors[this.currentStep.id] ?? this.currentStep.command ?? '';
   }
 
   get selectedModule(): StudyModule {
@@ -727,6 +1184,14 @@ export class StudyPageComponent implements OnInit {
 
   get selectedTopic(): Topic {
     return this.selectedModule.topics.find(topic => topic.id === this.selectedTopicId) ?? this.selectedModule.topics[0];
+  }
+
+  get currentStep(): CourseStep {
+    return this.guidedSteps[this.selectedStepIndex] ?? this.guidedSteps[0];
+  }
+
+  get guidedStepProgress(): number {
+    return Math.round((this.completedGuidedSteps.size / this.guidedSteps.length) * 100);
   }
 
   get filteredModules(): StudyModule[] {
@@ -783,6 +1248,107 @@ export class StudyPageComponent implements OnInit {
     if (nextTab === 'ejemplo') {
       this.editorCode = this.editorDrafts[this.selectedTopicId] ?? this.selectedTopic.code;
     }
+  }
+
+  selectGuidedStep(index: number): void {
+    this.saveGuidedStepState();
+    this.selectedStepIndex = Math.max(0, Math.min(index, this.guidedSteps.length - 1));
+    this.guidedAnswer = this.guidedAnswers[this.currentStep.id] ?? '';
+    this.guidedEditor = this.guidedEditors[this.currentStep.id] ?? this.currentStep.command ?? '';
+    this.guidedOutput = '';
+    this.mobileSidebar = false;
+    this.cdr.detectChanges();
+  }
+
+  previousGuidedStep(): void {
+    this.selectGuidedStep(this.selectedStepIndex - 1);
+  }
+
+  nextGuidedStep(): void {
+    this.selectGuidedStep(this.selectedStepIndex + 1);
+  }
+
+  isGuidedStepCompleted(stepId: number): boolean {
+    return this.completedGuidedSteps.has(stepId);
+  }
+
+  toggleGuidedStepComplete(): void {
+    if (this.completedGuidedSteps.has(this.currentStep.id)) {
+      this.completedGuidedSteps.delete(this.currentStep.id);
+    } else {
+      this.completedGuidedSteps.add(this.currentStep.id);
+    }
+    localStorage.setItem(STEP_KEY, JSON.stringify([...this.completedGuidedSteps]));
+    this.cdr.detectChanges();
+  }
+
+  saveGuidedStepState(): void {
+    this.guidedAnswers[this.currentStep.id] = this.guidedAnswer;
+    this.guidedEditors[this.currentStep.id] = this.guidedEditor;
+    localStorage.setItem(STEP_ANSWERS_KEY, JSON.stringify(this.guidedAnswers));
+    localStorage.setItem(STEP_EDITORS_KEY, JSON.stringify(this.guidedEditors));
+  }
+
+  runGuidedStep(): void {
+    this.saveGuidedStepState();
+    if (!this.currentStep.command) {
+      this.guidedOutput = [
+        'Este paso es conceptual.',
+        'La práctica aquí es escribir tu explicación y responder la pregunta.',
+      ].join('\n');
+      this.cdr.detectChanges();
+      return;
+    }
+    const lines = this.guidedEditor
+      .split('\n')
+      .map(line => line.trim())
+      .filter(line => line && !line.startsWith('#'));
+    const tools = lines.flatMap(line => line.match(/\b(aws|az|gcloud|docker|floci|curl|terraform|kubectl|psql|zip|make|cat|echo)\b/g) ?? []);
+    this.guidedOutput = [
+      'Simulación educativa completada.',
+      `Paso ${this.currentStep.id}/${this.guidedSteps.length}: ${this.currentStep.title}.`,
+      `Comandos detectados: ${lines.length}.`,
+      `Herramientas detectadas: ${[...new Set(tools)].join(', ') || 'ninguna'}.`,
+      '',
+      'Salida esperada de referencia:',
+      this.currentStep.expectedOutput,
+    ].join('\n');
+    this.cdr.detectChanges();
+  }
+
+  verifyGuidedAnswer(): void {
+    this.saveGuidedStepState();
+    const normalized = this.normalize(this.guidedAnswer);
+    const matches = this.currentStep.keywords.filter(keyword => normalized.includes(this.normalize(keyword)));
+    if (matches.length >= Math.min(2, this.currentStep.keywords.length)) {
+      this.guidedOutput = [
+        'Correcto: tu respuesta toca los conceptos clave.',
+        `Coincidencias: ${matches.join(', ')}.`,
+        `Respuesta esperada: ${this.currentStep.expectedAnswer}`,
+      ].join('\n');
+      this.cdr.detectChanges();
+      return;
+    }
+    this.guidedOutput = [
+      'Todavía falta precisión.',
+      `Incluye en tu respuesta ideas como: ${this.currentStep.keywords.slice(0, 5).join(', ')}.`,
+      `Guía: ${this.currentStep.expectedAnswer}`,
+    ].join('\n');
+    this.cdr.detectChanges();
+  }
+
+  async copyGuidedCommand(): Promise<void> {
+    if (!this.currentStep.command) {
+      this.guidedOutput = 'Este paso no tiene comando para copiar.';
+      return;
+    }
+    try {
+      await navigator.clipboard?.writeText(this.currentStep.command);
+      this.guidedOutput = 'Comando copiado. Pégalo en tu terminal local y compara con la salida esperada.';
+    } catch {
+      this.guidedOutput = 'No se pudo copiar automáticamente. Selecciona el comando y cópialo manualmente.';
+    }
+    this.cdr.detectChanges();
   }
 
   isCompleted(topicId: string): boolean {
@@ -938,7 +1504,14 @@ export class StudyPageComponent implements OnInit {
       '# Cuaderno de progreso Academia Floci',
       '',
       `Progreso global: ${this.globalProgress()}%`,
+      `Progreso ruta guiada: ${this.completedGuidedSteps.size}/${this.guidedSteps.length} pasos`,
       `Insignias: ${this.earnedBadges().join(', ') || 'Sin insignias todavía'}`,
+      '',
+      '## Ruta guiada de 45 pasos',
+      ...this.guidedSteps.map(step => [
+        `- [${this.completedGuidedSteps.has(step.id) ? 'x' : ' '}] Paso ${step.id}: ${step.title}`,
+        `  - Respuesta: ${this.guidedAnswers[step.id] || 'Sin respuesta escrita.'}`,
+      ].join('\n')),
       '',
       ...this.modules.flatMap(module => [
         `## ${module.title} (${this.moduleProgress(module)}%)`,

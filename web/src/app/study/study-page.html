@@ -61,6 +61,23 @@
         </div>
       </section>
 
+      <section class="guided-nav">
+        <header>
+          <span>Ruta guiada</span>
+          <strong>{{ completedGuidedSteps.size }} / {{ guidedSteps.length }} pasos</strong>
+          <div class="mini-bar"><i [style.width.%]="guidedStepProgress"></i></div>
+        </header>
+        <button
+          *ngFor="let step of guidedSteps; let index = index"
+          [class.active]="index === selectedStepIndex"
+          [class.done]="isGuidedStepCompleted(step.id)"
+          (click)="selectGuidedStep(index)"
+        >
+          <span>{{ step.id }}. {{ step.title }}</span>
+          <small>{{ step.module }}</small>
+        </button>
+      </section>
+
       <label class="search">
         <span>Buscar tema</span>
         <input [(ngModel)]="query" placeholder="S3, Lambda, Azure, GCP, errores..." />
@@ -91,6 +108,72 @@
     </aside>
 
     <main class="content" id="inicio">
+      <article class="step-card" id="ruta-guiada">
+        <header class="step-head">
+          <div>
+            <span>Mini-clase paso a paso</span>
+            <h1>Paso {{ currentStep.id }}: {{ currentStep.title }}</h1>
+            <p>{{ currentStep.module }} · Progreso {{ completedGuidedSteps.size }}/{{ guidedSteps.length }}</p>
+          </div>
+          <strong>{{ guidedStepProgress }}%</strong>
+        </header>
+
+        <section class="step-section">
+          <h2>Explicación</h2>
+          <p>{{ currentStep.explanation }}</p>
+          <p *ngIf="currentStep.analogy" class="analogy">{{ currentStep.analogy }}</p>
+        </section>
+
+        <section class="step-grid">
+          <div class="step-section command-box">
+            <h2>Comando o código</h2>
+            <pre *ngIf="currentStep.command; else noCommand"><code>{{ currentStep.command }}</code></pre>
+            <ng-template #noCommand><p class="muted">Este paso es teoría. Lee, escribe tu explicación y responde la pregunta.</p></ng-template>
+            <button class="ghost" (click)="copyGuidedCommand()">Copiar</button>
+          </div>
+
+          <div class="step-section">
+            <h2>Salida esperada</h2>
+            <pre><code>{{ currentStep.expectedOutput }}</code></pre>
+          </div>
+        </section>
+
+        <section class="step-section">
+          <h2>Desglose del comando</h2>
+          <ul>
+            <li *ngFor="let item of currentStep.breakdown">{{ item }}</li>
+          </ul>
+        </section>
+
+        <section class="step-grid practice-grid">
+          <div class="step-section">
+            <h2>Práctica</h2>
+            <p>{{ currentStep.practice }}</p>
+            <textarea class="code-editor guided-editor" [(ngModel)]="guidedEditor" (ngModelChange)="saveGuidedStepState()" spellcheck="false"></textarea>
+            <button class="primary" (click)="runGuidedStep()">Ejecutar simulación</button>
+          </div>
+
+          <div class="step-section">
+            <h2>Pregunta de comprensión</h2>
+            <p>{{ currentStep.question }}</p>
+            <textarea [(ngModel)]="guidedAnswer" (ngModelChange)="saveGuidedStepState()" placeholder="Responde con tus palabras y menciona la evidencia..."></textarea>
+            <div class="exercise-actions">
+              <button class="primary" (click)="verifyGuidedAnswer()">Verificar respuesta</button>
+              <button class="ghost" (click)="toggleGuidedStepComplete()">
+                {{ isGuidedStepCompleted(currentStep.id) ? 'Paso completado' : 'Ya lo hice y vi la salida' }}
+              </button>
+            </div>
+          </div>
+        </section>
+
+        <output>{{ guidedOutput }}</output>
+
+        <footer class="step-actions">
+          <button class="ghost" (click)="previousGuidedStep()" [disabled]="selectedStepIndex === 0">Anterior</button>
+          <button class="primary" (click)="nextGuidedStep()" [disabled]="selectedStepIndex === guidedSteps.length - 1">Siguiente</button>
+        </footer>
+      </article>
+
       <article class="topic-card">
         <header class="topic-head">
           <div>
