@@ -27,9 +27,10 @@ Luego abre `http://localhost:8081`.
 
 ## Qué contiene
 
+- Catálogo de cursos tipo Udemy, pero simple.
 - 45 pasos numerados.
-- Un solo paso visible a la vez.
-- Panel lateral con 5 pasos visibles.
+- Una sola lección visible a la vez.
+- Temario del curso activo.
 - Botón para copiar comandos.
 - Progreso guardado en `localStorage`.
 - Diseño blanco, simple y sin distracciones.
@@ -48,13 +49,18 @@ Desde la raíz del repositorio:
 ./scripts/validate.sh
 ```
 
-## Mapa de pasos
+## Cursos
 
-| Nivel de referencia | Pasos | Temas |
+| Curso | Pasos | Tema |
 |---|---:|---|
-| Fundamentos | 1-27 | Docker, Floci, AWS CLI, S3, SQS y DynamoDB |
-| Aplicaciones | 28-40 | Lambda, API Gateway e IAM |
-| Integración | 41-45 | Proyecto final de tareas |
+| Inicio y ambiente | 1-7 | Docker, Floci y AWS CLI |
+| Almacenamiento S3 | 8-14 | Buckets, archivos y limpieza |
+| Colas SQS | 15-20 | Mensajes, recepción y borrado |
+| Base NoSQL DynamoDB | 21-27 | Tabla, items, lectura y limpieza |
+| Funciones Lambda | 28-32 | Crear, invocar, actualizar y borrar |
+| API Gateway | 33-36 | API REST, recurso, método y despliegue |
+| Permisos IAM | 37-40 | Usuario, política y asignación |
+| Proyecto final | 41-45 | CRUD de tareas con servicios locales |
 
 ## Angular
 

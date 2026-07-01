@@ -32,20 +32,29 @@
     }
     .brand { font-size: 24px; }
     .progress { white-space: nowrap; }
-    .layout {
+    .app-shell {
       width: 100%;
-      max-width: 1200px;
+      max-width: 1400px;
       margin: 0 auto;
       padding: 40px;
       display: grid;
-      grid-template-columns: minmax(0, 1fr) 320px;
-      gap: 40px;
+      grid-template-columns: 300px minmax(0, 1fr) 340px;
+      gap: 32px;
       align-items: start;
     }
-    main, aside { min-width: 0; }
-    aside {
+    main, aside, nav { min-width: 0; }
+    .courses-panel {
+      border-right: 1px solid #dddddd;
+      padding-right: 24px;
+    }
+    .outline-panel {
       border-left: 1px solid #dddddd;
-      padding-left: 32px;
+      padding-left: 24px;
+    }
+    .panel-title {
+      margin: 0 0 16px;
+      font-size: 20px;
+      line-height: 1.3;
     }
     h1 {
       margin: 0 0 24px;
@@ -123,6 +132,100 @@
       padding-left: 18px;
       border-left: 4px solid #1a1a1a;
     }
+    .course-list {
+      display: grid;
+      gap: 12px;
+    }
+    .course-card {
+      width: 100%;
+      min-height: 116px;
+      display: grid;
+      grid-template-columns: 44px minmax(0, 1fr);
+      gap: 12px;
+      align-items: start;
+      padding: 14px;
+      text-align: left;
+      border: 1px solid #dddddd;
+      background: #ffffff;
+    }
+    .course-card:hover,
+    .course-card:focus-visible {
+      background: #f0f0f0;
+    }
+    .course-card.active {
+      border-color: #005bbb;
+      border-left: 6px solid #005bbb;
+      padding-left: 9px;
+    }
+    .course-card.completed {
+      border-color: #0f7a34;
+    }
+    .course-icon {
+      width: 44px;
+      height: 44px;
+      display: grid;
+      place-items: center;
+      color: #ffffff;
+      background: #1a1a1a;
+      font-weight: 700;
+      font-size: 15px;
+    }
+    .course-card.active .course-icon { background: #005bbb; }
+    .course-card.completed .course-icon { background: #0f7a34; }
+    .course-name {
+      display: block;
+      font-weight: 700;
+      line-height: 1.25;
+      overflow-wrap: break-word;
+    }
+    .course-meta,
+    .course-summary,
+    .lesson-meta {
+      display: block;
+      margin-top: 4px;
+      color: #555555;
+      font-size: 15px;
+      line-height: 1.35;
+      overflow-wrap: break-word;
+    }
+    .course-label {
+      margin: 0 0 10px;
+      color: #005bbb;
+      font-size: 16px;
+      font-weight: 700;
+    }
+    .lesson-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    .lesson-list button {
+      width: 100%;
+      min-width: 0;
+      display: grid;
+      grid-template-columns: 28px minmax(0, 1fr);
+      gap: 8px;
+      align-items: start;
+      text-align: left;
+      border: 0;
+      border-left: 4px solid transparent;
+      padding: 10px 8px;
+      background: #ffffff;
+    }
+    .lesson-list button:hover,
+    .lesson-list button:focus-visible {
+      background: #f0f0f0;
+    }
+    .lesson-list .completed { color: #0f7a34; }
+    .lesson-list .active {
+      color: #005bbb;
+      border-left-color: #005bbb;
+      font-weight: 700;
+    }
+    .lesson-list span {
+      min-width: 0;
+      overflow-wrap: break-word;
+    }
     .actions {
       display: flex;
       justify-content: space-between;
@@ -143,36 +246,6 @@
       flex-wrap: wrap;
       gap: 12px;
     }
-    .side-title {
-      margin: 0 0 16px;
-      font-size: 20px;
-    }
-    .steps {
-      list-style: none;
-      padding: 0;
-      margin: 0;
-    }
-    .steps button {
-      width: 100%;
-      display: grid;
-      grid-template-columns: 28px minmax(0, 1fr);
-      gap: 8px;
-      text-align: left;
-      border: 0;
-      border-left: 4px solid transparent;
-      padding: 10px 8px;
-      background: #ffffff;
-    }
-    .steps span {
-      min-width: 0;
-      overflow-wrap: break-word;
-    }
-    .steps .completed { color: #0f7a34; }
-    .steps .active {
-      color: #005bbb;
-      border-left-color: #005bbb;
-      font-weight: 700;
-    }
     .status {
       margin-top: 16px;
       color: #555555;
@@ -184,12 +257,14 @@
         flex-direction: column;
         padding: 20px;
       }
-      .layout {
+      .app-shell {
         grid-template-columns: 1fr;
         padding: 28px 20px;
       }
-      aside {
+      .courses-panel,
+      .outline-panel {
         border-left: 0;
+        border-right: 0;
         border-top: 1px solid #dddddd;
         padding: 28px 0 0;
       }
@@ -203,8 +278,14 @@
     <p id="progress" class="progress">Paso 1 de 45</p>
   </header>
 
-  <div class="layout">
+  <div class="app-shell">
+    <nav class="courses-panel" aria-label="Cursos">
+      <h2 class="panel-title">Cursos</h2>
+      <div id="courseList" class="course-list"></div>
+    </nav>
+
     <main>
+      <p id="courseLabel" class="course-label"></p>
       <h1 id="title">Paso 1: Cargando...</h1>
       <p id="explanation"></p>
       <p id="analogy"></p>
@@ -242,9 +323,9 @@
       </div>
     </main>
 
-    <aside>
-      <h2 class="side-title">Ruta visible</h2>
-      <ul id="stepsList" class="steps"></ul>
+    <aside class="outline-panel">
+      <h2 id="outlineTitle" class="panel-title">Temario</h2>
+      <ul id="lessonList" class="lesson-list"></ul>
       <p id="status" class="status"></p>
     </aside>
   </div>
@@ -309,10 +390,23 @@
       step(45, "¡Felicidades! Has completado el curso", "Has completado el curso. Ahora sabes usar Floci para emular AWS localmente.", "", "No aplica.", "No aplica.")
     ];
 
+    const courses = [
+      { id: "inicio", code: "01", title: "Inicio y ambiente", description: "Docker, Floci y AWS CLI", start: 1, end: 7 },
+      { id: "s3", code: "02", title: "Almacenamiento S3", description: "Buckets, archivos y limpieza", start: 8, end: 14 },
+      { id: "sqs", code: "03", title: "Colas SQS", description: "Mensajes, recepción y borrado", start: 15, end: 20 },
+      { id: "dynamodb", code: "04", title: "Base NoSQL DynamoDB", description: "Tabla, items, lectura y limpieza", start: 21, end: 27 },
+      { id: "lambda", code: "05", title: "Funciones Lambda", description: "Crear, invocar, actualizar y borrar", start: 28, end: 32 },
+      { id: "api", code: "06", title: "API Gateway", description: "API REST, recurso, método y despliegue", start: 33, end: 36 },
+      { id: "iam", code: "07", title: "Permisos IAM", description: "Usuario, política y asignación", start: 37, end: 40 },
+      { id: "proyecto", code: "08", title: "Proyecto final", description: "CRUD de tareas con servicios locales", start: 41, end: 45 },
+    ];
+
     let progressStep = readProgress();
     let viewStep = Math.min(progressStep, steps.length);
 
     const $ = (id) => document.getElementById(id);
+    const courseList = $("courseList");
+    const courseLabel = $("courseLabel");
     const title = $("title");
     const explanation = $("explanation");
     const analogy = $("analogy");
@@ -322,7 +416,8 @@
     const breakdown = $("breakdown");
     const output = $("output");
     const question = $("question");
-    const stepsList = $("stepsList");
+    const outlineTitle = $("outlineTitle");
+    const lessonList = $("lessonList");
 
     function readProgress() {
       const saved = Number(localStorage.getItem(STORAGE_KEY));
@@ -335,9 +430,31 @@
       localStorage.setItem(STORAGE_KEY, String(progressStep));
     }
 
+    function courseForStep(stepNumber) {
+      return courses.find((course) => stepNumber >= course.start && stepNumber <= course.end) || courses[0];
+    }
+
+    function stepsForCourse(course) {
+      return steps.filter((item) => item.number >= course.start && item.number <= course.end);
+    }
+
+    function completedInCourse(course) {
+      return stepsForCourse(course).filter((item) => item.number < progressStep).length;
+    }
+
+    function firstAvailableStep(course) {
+      const pending = stepsForCourse(course).find((item) => item.number >= progressStep);
+      return pending ? pending.number : course.start;
+    }
+
     function render() {
       const current = steps[viewStep - 1];
-      $("progress").textContent = `Paso ${current.number} de ${steps.length}`;
+      const currentCourse = courseForStep(current.number);
+      const courseSteps = stepsForCourse(currentCourse);
+      const lessonPosition = courseSteps.findIndex((item) => item.number === current.number) + 1;
+
+      $("progress").textContent = `Curso ${courses.indexOf(currentCourse) + 1} de ${courses.length} · Paso ${current.number} de ${steps.length}`;
+      courseLabel.textContent = `${currentCourse.title} · Lección ${lessonPosition} de ${courseSteps.length}`;
       title.textContent = `Paso ${current.number}: ${current.title}`;
       explanation.textContent = current.explanation;
       analogy.textContent = current.command
@@ -368,21 +485,57 @@
       $("prev").disabled = viewStep === 1;
       $("next").disabled = viewStep === steps.length;
       $("done").disabled = progressStep > steps.length && viewStep === steps.length;
-      $("done").textContent = progressStep > steps.length && viewStep === steps.length ? "Curso completado" : "✅ Ya lo ejecuté";
+      $("done").textContent = progressStep > steps.length && viewStep === steps.length ? "Ruta completada" : "✓ Ya lo completé";
 
-      renderVisibleSteps();
+      renderCourses(currentCourse);
+      renderLessons(currentCourse);
       $("status").textContent = progressStep > steps.length
-        ? "Todos los pasos están completados."
-        : `Primer paso pendiente: ${progressStep}.`;
+        ? "Ruta completa. Todos los cursos están terminados."
+        : `Siguiente paso pendiente: ${progressStep}.`;
     }
 
-    function renderVisibleSteps() {
-      const visibleCount = 5;
-      const maxStart = Math.max(0, steps.length - visibleCount);
-      const start = Math.min(Math.max(0, viewStep - 3), maxStart);
-      stepsList.innerHTML = "";
+    function renderCourses(currentCourse) {
+      courseList.innerHTML = "";
 
-      steps.slice(start, start + visibleCount).forEach((item) => {
+      courses.forEach((course) => {
+        const total = course.end - course.start + 1;
+        const completed = completedInCourse(course);
+        const isActive = course.id === currentCourse.id;
+        const isCompleted = completed === total;
+        const button = document.createElement("button");
+        const icon = document.createElement("span");
+        const body = document.createElement("span");
+        const name = document.createElement("span");
+        const summary = document.createElement("span");
+        const meta = document.createElement("span");
+
+        button.type = "button";
+        button.className = `course-card${isActive ? " active" : ""}${isCompleted ? " completed" : ""}`;
+        icon.className = "course-icon";
+        icon.textContent = course.code;
+        name.className = "course-name";
+        name.textContent = course.title;
+        summary.className = "course-summary";
+        summary.textContent = course.description;
+        meta.className = "course-meta";
+        meta.textContent = `${completed}/${total} lecciones · pasos ${course.start}-${course.end}`;
+
+        body.append(name, summary, meta);
+        button.append(icon, body);
+        button.addEventListener("click", () => {
+          viewStep = firstAvailableStep(course);
+          render();
+          scrollTo({ top: 0, behavior: "smooth" });
+        });
+        courseList.appendChild(button);
+      });
+    }
+
+    function renderLessons(currentCourse) {
+      outlineTitle.textContent = `Temario: ${currentCourse.title}`;
+      lessonList.innerHTML = "";
+
+      stepsForCourse(currentCourse).forEach((item) => {
         const isCompleted = item.number < progressStep;
         const isActive = item.number === viewStep;
         const li = document.createElement("li");
@@ -401,7 +554,7 @@
           scrollTo({ top: 0, behavior: "smooth" });
         });
         li.appendChild(button);
-        stepsList.appendChild(li);
+        lessonList.appendChild(li);
       });
     }
 

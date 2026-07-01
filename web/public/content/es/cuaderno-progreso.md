@@ -28,11 +28,11 @@ Qué puedo explicar sin mirar:
 Próximo paso:
 ```
 
-## Avance por pasos
+## Avance por cursos
 
 Marca un paso solo cuando tengas comando, salida o explicación propia.
 
-### Fundamentos
+### Curso 1: Inicio y ambiente
 
 - [ ] Paso 1: ¿Qué es Docker?
 - [ ] Paso 2: Instalar Docker
@@ -41,6 +41,9 @@ Marca un paso solo cuando tengas comando, salida o explicación propia.
 - [ ] Paso 5: Verificar Floci
 - [ ] Paso 6: Configurar AWS CLI
 - [ ] Paso 7: Probar AWS CLI
+
+### Curso 2: Almacenamiento S3
+
 - [ ] Paso 8: ¿Qué es S3?
 - [ ] Paso 9: Crear un bucket S3
 - [ ] Paso 10: Subir un archivo a S3
@@ -48,12 +51,18 @@ Marca un paso solo cuando tengas comando, salida o explicación propia.
 - [ ] Paso 12: Descargar un archivo de S3
 - [ ] Paso 13: Eliminar un archivo de S3
 - [ ] Paso 14: Eliminar el bucket S3
+
+### Curso 3: Colas SQS
+
 - [ ] Paso 15: ¿Qué es SQS?
 - [ ] Paso 16: Crear una cola SQS
 - [ ] Paso 17: Enviar un mensaje a SQS
 - [ ] Paso 18: Recibir mensajes de SQS
 - [ ] Paso 19: Eliminar un mensaje de SQS
 - [ ] Paso 20: Eliminar la cola SQS
+
+### Curso 4: Base NoSQL DynamoDB
+
 - [ ] Paso 21: ¿Qué es DynamoDB?
 - [ ] Paso 22: Crear una tabla DynamoDB
 - [ ] Paso 23: Insertar un item en DynamoDB
@@ -62,23 +71,29 @@ Marca un paso solo cuando tengas comando, salida o explicación propia.
 - [ ] Paso 26: Eliminar un item de DynamoDB
 - [ ] Paso 27: Eliminar la tabla DynamoDB
 
-### Aplicaciones
+### Curso 5: Funciones Lambda
 
 - [ ] Paso 28: ¿Qué es Lambda?
 - [ ] Paso 29: Crear una función Lambda
 - [ ] Paso 30: Invocar la función Lambda
 - [ ] Paso 31: Actualizar la función Lambda
 - [ ] Paso 32: Eliminar la función Lambda
+
+### Curso 6: API Gateway
+
 - [ ] Paso 33: ¿Qué es API Gateway?
 - [ ] Paso 34: Crear una API REST
 - [ ] Paso 35: Crear un recurso y método en API Gateway
 - [ ] Paso 36: Desplegar la API
+
+### Curso 7: Permisos IAM
+
 - [ ] Paso 37: ¿Qué es IAM?
 - [ ] Paso 38: Crear un usuario en IAM
 - [ ] Paso 39: Crear una política en IAM
 - [ ] Paso 40: Asignar la política al usuario
 
-### Integración
+### Curso 8: Proyecto final
 
 - [ ] Paso 41: Proyecto Final - Crear tabla DynamoDB
 - [ ] Paso 42: Proyecto Final - Crear Lambda para tareas

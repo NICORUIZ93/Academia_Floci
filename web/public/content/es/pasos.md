@@ -4,13 +4,18 @@ Ruta simple de estudio. Cada paso corresponde a la página `web/index.html`.
 
 Cómo usar este archivo: lee el paso, predice la salida, ejecuta el comando si existe, compara con la salida esperada y responde la pregunta de control en tu cuaderno.
 
-## Mapa de niveles
+## Cursos
 
-| Nivel de referencia | Pasos | Temas |
+| Curso | Pasos | Tema |
 |---|---:|---|
-| Fundamentos | 1-27 | Docker, Floci, AWS CLI, S3, SQS y DynamoDB |
-| Aplicaciones | 28-40 | Lambda, API Gateway e IAM |
-| Integración | 41-45 | Proyecto final de tareas |
+| Inicio y ambiente | 1-7 | Docker, Floci y AWS CLI |
+| Almacenamiento S3 | 8-14 | Buckets, archivos y limpieza |
+| Colas SQS | 15-20 | Mensajes, recepción y borrado |
+| Base NoSQL DynamoDB | 21-27 | Tabla, items, lectura y limpieza |
+| Funciones Lambda | 28-32 | Crear, invocar, actualizar y borrar |
+| API Gateway | 33-36 | API REST, recurso, método y despliegue |
+| Permisos IAM | 37-40 | Usuario, política y asignación |
+| Proyecto final | 41-45 | CRUD de tareas con servicios locales |
 
 ## Paso 1: ¿Qué es Docker?
 

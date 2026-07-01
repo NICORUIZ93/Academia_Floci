@@ -1,6 +1,7 @@
 # Academia Floci
 
-Curso simple en español para aprender cloud local con Floci paso a paso.
+Curso simple en español para aprender cloud local con Floci, organizado por
+cursos cortos y lecciones paso a paso.
 
 La entrada principal es una página HTML de un solo archivo. En GitHub el enlace
 puede mostrarse como código; para usar el curso, abre el archivo localmente o
@@ -14,10 +15,11 @@ sirve la carpeta `web` como sitio estático.
 ## Cómo empezar
 
 1. Abre `web/index.html` en tu navegador.
-2. Lee un solo paso.
-3. Ejecuta el comando en tu terminal si el paso lo pide.
-4. Compara tu salida con la salida esperada.
-5. Marca `Ya lo ejecuté` para avanzar.
+2. Elige un curso en el panel izquierdo.
+3. Lee una sola lección.
+4. Ejecuta el comando en tu terminal si la lección lo pide.
+5. Compara tu salida con la salida esperada.
+6. Marca `Ya lo completé` para avanzar.
 
 El progreso se guarda localmente en tu navegador con `localStorage`.
 
@@ -58,13 +60,18 @@ $env:AWS_DEFAULT_REGION="us-east-1"
 aws sts get-caller-identity
 ```
 
-## Mapa de la ruta
+## Cursos
 
-| Nivel de referencia | Pasos | Temas |
+| Curso | Pasos | Tema |
 |---|---:|---|
-| Fundamentos | 1-27 | Docker, Floci, AWS CLI, S3, SQS y DynamoDB |
-| Aplicaciones | 28-40 | Lambda, API Gateway e IAM |
-| Integración | 41-45 | Proyecto final de tareas |
+| Inicio y ambiente | 1-7 | Docker, Floci y AWS CLI |
+| Almacenamiento S3 | 8-14 | Buckets, archivos y limpieza |
+| Colas SQS | 15-20 | Mensajes, recepción y borrado |
+| Base NoSQL DynamoDB | 21-27 | Tabla, items, lectura y limpieza |
+| Funciones Lambda | 28-32 | Crear, invocar, actualizar y borrar |
+| API Gateway | 33-36 | API REST, recurso, método y despliegue |
+| Permisos IAM | 37-40 | Usuario, política y asignación |
+| Proyecto final | 41-45 | CRUD de tareas con servicios locales |
 
 ## Estructura
 
@@ -99,8 +106,9 @@ Antes de subir cambios, ejecuta:
 ```
 
 La validación comprueba que existan los archivos principales, que `web/index.html`
-y `pasos.md` tengan 45 pasos, que el manifest sea JSON válido y que no vuelvan
-a aparecer páginas HTML duplicadas en la raíz.
+tenga 8 cursos, que `web/index.html` y `pasos.md` tengan 45 pasos, que el
+manifest sea JSON válido y que no vuelvan a aparecer páginas HTML duplicadas en
+la raíz.
 
 ## Contribuir
 
