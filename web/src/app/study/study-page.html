@@ -33,6 +33,16 @@
     </div>
   </div>
 
+  <section class="standards-strip" aria-label="Estándares de la academia">
+    <header>
+      <span>Metodología aplicada</span>
+      <strong>Ruta completa, práctica y verificable</strong>
+    </header>
+    <div>
+      <span *ngFor="let standard of standards">{{ standard }}</span>
+    </div>
+  </section>
+
   <div class="mobile-actions">
     <button class="ghost" (click)="toggleExam()">{{ examMode ? 'Salir examen' : 'Modo examen' }}</button>
     <button class="ghost" (click)="exportMarkdown()">Exportar</button>

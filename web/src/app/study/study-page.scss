@@ -141,6 +141,58 @@
   border-color: #334155;
 }
 
+.standards-strip {
+  display: grid;
+  grid-template-columns: minmax(210px, .35fr) 1fr;
+  gap: 18px;
+  padding: 16px 28px;
+  border-bottom: 1px solid #e2e8f0;
+  background: #f8fafc;
+}
+
+.dark .standards-strip {
+  background: #0f172a;
+  border-color: #334155;
+}
+
+.standards-strip header span {
+  display: block;
+  margin-bottom: 4px;
+  color: #64748b;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.standards-strip header strong {
+  display: block;
+  line-height: 1.35;
+}
+
+.standards-strip > div {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.standards-strip > div span {
+  max-width: 100%;
+  overflow-wrap: anywhere;
+  border: 1px solid #cbd5e1;
+  border-radius: 999px;
+  padding: 7px 10px;
+  background: #fff;
+  color: #334155;
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1.35;
+}
+
+.dark .standards-strip > div span {
+  background: #111827;
+  border-color: #475569;
+  color: #dbeafe;
+}
+
 .badges strong {
   font-size: 13px;
   line-height: 1.4;
@@ -599,6 +651,7 @@ textarea {
   }
 
   .progress-top,
+  .standards-strip,
   .study-layout,
   .theory-grid,
   .example {
