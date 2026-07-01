@@ -23,10 +23,12 @@ describe('App', () => {
     const harness = await RouterTestingHarness.create();
     await harness.navigateByUrl('/', StudyPageComponent);
     harness.detectChanges();
-    expect(harness.routeNativeElement?.textContent).toContain('Academia Floci');
-    expect(harness.routeNativeElement?.textContent).toContain('De cero a experto en Cloud local');
-    expect(harness.routeNativeElement?.textContent).toContain('Diagnóstico inicial');
-    expect(harness.routeNativeElement?.textContent).toContain('Objetivos de aprendizaje');
-    expect(harness.routeNativeElement?.textContent).toContain('Modo examen');
+    const text = harness.routeNativeElement?.textContent ?? '';
+    expect(text).toContain('Academia Floci');
+    expect(text).toContain('Un paso a la vez');
+    expect(text).toContain('Paso 1: Qué es Docker y por qué lo necesitas');
+    expect(text).toContain('Siguiente paso');
+    expect(text).toContain('Mi progreso');
+    expect(harness.routeNativeElement?.querySelectorAll('.nearby-progress button').length).toBe(5);
   });
 });

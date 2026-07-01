@@ -1174,8 +1174,9 @@ export class StudyPageComponent implements OnInit {
     this.dark = localStorage.getItem(THEME_KEY) === 'dark';
     this.answer = this.answers[this.selectedTopicId] ?? '';
     this.editorCode = this.editorDrafts[this.selectedTopicId] ?? this.selectedTopic.code;
-    this.guidedAnswer = this.guidedAnswers[this.currentStep.id] ?? '';
-    this.guidedEditor = this.guidedEditors[this.currentStep.id] ?? this.currentStep.command ?? '';
+    const firstPendingIndex = this.guidedSteps.findIndex(step => !this.completedGuidedSteps.has(step.id));
+    this.selectedStepIndex = firstPendingIndex >= 0 ? firstPendingIndex : 0;
+    this.loadGuidedStepState();
   }
 
   get selectedModule(): StudyModule {
@@ -1192,6 +1193,28 @@ export class StudyPageComponent implements OnInit {
 
   get guidedStepProgress(): number {
     return Math.round((this.completedGuidedSteps.size / this.guidedSteps.length) * 100);
+  }
+
+  get guidedCompletionText(): string {
+    return `${this.completedGuidedSteps.size}/${this.guidedSteps.length}`;
+  }
+
+  visibleGuidedSteps(): { step: CourseStep; index: number }[] {
+    const windowSize = 5;
+    const maxStart = Math.max(0, this.guidedSteps.length - windowSize);
+    const start = Math.min(Math.max(0, this.selectedStepIndex - 2), maxStart);
+    return this.guidedSteps
+      .slice(start, start + windowSize)
+      .map((step, offset) => ({ step, index: start + offset }));
+  }
+
+  guidedLevelLabel(): string {
+    const completed = this.completedGuidedSteps.size;
+    if (completed >= this.guidedSteps.length) return 'Curso completo';
+    if (completed >= 30) return 'Nivel avanzado';
+    if (completed >= 15) return 'Nivel intermedio';
+    if (completed >= 5) return 'En marcha';
+    return 'Inicio';
   }
 
   get filteredModules(): StudyModule[] {
@@ -1253,8 +1276,7 @@ export class StudyPageComponent implements OnInit {
   selectGuidedStep(index: number): void {
     this.saveGuidedStepState();
     this.selectedStepIndex = Math.max(0, Math.min(index, this.guidedSteps.length - 1));
-    this.guidedAnswer = this.guidedAnswers[this.currentStep.id] ?? '';
-    this.guidedEditor = this.guidedEditors[this.currentStep.id] ?? this.currentStep.command ?? '';
+    this.loadGuidedStepState();
     this.guidedOutput = '';
     this.mobileSidebar = false;
     this.cdr.detectChanges();
@@ -1287,6 +1309,11 @@ export class StudyPageComponent implements OnInit {
     this.guidedEditors[this.currentStep.id] = this.guidedEditor;
     localStorage.setItem(STEP_ANSWERS_KEY, JSON.stringify(this.guidedAnswers));
     localStorage.setItem(STEP_EDITORS_KEY, JSON.stringify(this.guidedEditors));
+  }
+
+  loadGuidedStepState(): void {
+    this.guidedAnswer = this.guidedAnswers[this.currentStep.id] ?? '';
+    this.guidedEditor = this.guidedEditors[this.currentStep.id] ?? this.currentStep.command ?? '';
   }
 
   runGuidedStep(): void {
