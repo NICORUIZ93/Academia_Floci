@@ -23,6 +23,11 @@ sirve la carpeta `web` como sitio estático.
 
 El progreso se guarda localmente en tu navegador con `localStorage`.
 
+Cuando sirves la carpeta `web` por HTTP, la página carga las lecciones desde
+`web/public/content/es/pasos.md`. Si abres `web/index.html` directo desde el
+disco, usa los mismos pasos embebidos como respaldo para evitar bloqueos de
+seguridad del navegador con archivos locales.
+
 Si prefieres servirlo por HTTP:
 
 ```bash

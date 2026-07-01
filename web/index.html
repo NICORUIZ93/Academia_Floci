@@ -342,7 +342,7 @@
       output
     });
 
-    const steps = [
+    const fallbackSteps = [
       step(1, "¿Qué es Docker?", "Docker es una herramienta que ejecuta programas en contenedores. Es como tener una caja mágica donde metes cualquier programa y funciona en cualquier computadora.", `docker --version`, [`"docker" es el programa`, `"--version" pregunta qué versión tienes`], "Docker version 24.0.7"),
       step(2, "Instalar Docker", "Ve a docker.com, descarga Docker para tu sistema (Windows, Mac o Linux) e instálalo. Después de instalar, reinicia tu terminal.", "", "No aplica.", "No aplica."),
       step(3, "Verificar Docker", "Vamos a comprobar que Docker se instaló bien.", `docker --version`, [`"docker" ejecuta el programa`, `"--version" muestra la versión`], "Docker version 24.0.7, build afdd53b"),
@@ -389,6 +389,8 @@
       step(44, "Probar el sistema completo", "Vamos a probar todo el sistema: crear, listar, actualizar y eliminar tareas.", `Usar curl para probar cada endpoint.`, "Cada comando prueba una función.", "Respuestas de la API."),
       step(45, "¡Felicidades! Has completado el curso", "Has completado el curso. Ahora sabes usar Floci para emular AWS localmente.", "", "No aplica.", "No aplica.")
     ];
+
+    let steps = fallbackSteps;
 
     const courses = [
       { id: "inicio", code: "01", title: "Inicio y ambiente", description: "Docker, Floci y AWS CLI", start: 1, end: 7 },
@@ -595,12 +597,73 @@
       scrollTo({ top: 0, behavior: "smooth" });
     }
 
+    function textBetween(source, startLabel, endLabel) {
+      const start = source.indexOf(startLabel);
+      if (start === -1) return "";
+      const contentStart = start + startLabel.length;
+      const end = endLabel ? source.indexOf(endLabel, contentStart) : source.length;
+      return source.slice(contentStart, end === -1 ? source.length : end).trim();
+    }
+
+    function parseMarkdownSteps(markdown) {
+      return markdown
+        .split(/\n(?=## Paso \d+:)/)
+        .filter((section) => section.startsWith("## Paso "))
+        .map((section) => {
+          const heading = section.match(/^## Paso (\d+): (.+)$/m);
+          if (!heading) return null;
+
+          const commandText = textBetween(section, "**Comando:**", "**Desglose:**");
+          const commandBlock = commandText.match(/```(?:bash|text)?\n([\s\S]*?)\n```/);
+          const command = commandBlock ? commandBlock[1].trim() : "";
+          const breakdownText = textBetween(section, "**Desglose:**", "**Salida esperada:**");
+          const breakdown = breakdownText
+            .split("\n")
+            .map((line) => line.match(/^- (.+)$/))
+            .filter(Boolean)
+            .map((match) => match[1].trim());
+          const outputText = textBetween(section, "**Salida esperada:**", "**Pregunta de control:**");
+          const outputBlock = outputText.match(/```text\n([\s\S]*?)\n```/);
+
+          return step(
+            Number(heading[1]),
+            heading[2].trim(),
+            (section.match(/\*\*Explicación:\*\*\s*(.+)/) || [])[1] || "",
+            /No hay comando\./.test(commandText) ? "" : command,
+            breakdown.length ? breakdown : ["No aplica."],
+            outputBlock ? outputBlock[1].trim() : outputText.replace(/```/g, "").trim(),
+          );
+        })
+        .filter(Boolean)
+        .sort((a, b) => a.number - b.number);
+    }
+
+    async function loadMarkdownSteps() {
+      if (window.location.protocol === "file:") return;
+
+      const response = await fetch("public/content/es/pasos.md", { cache: "no-store" });
+      if (!response.ok) throw new Error("No se pudo cargar pasos.md");
+
+      const parsedSteps = parseMarkdownSteps(await response.text());
+      if (parsedSteps.length !== 45) throw new Error("pasos.md no contiene 45 pasos");
+
+      steps = parsedSteps;
+      progressStep = readProgress();
+      viewStep = Math.min(Math.max(1, viewStep), steps.length);
+      document.documentElement.dataset.stepsSource = "pasos.md";
+      render();
+    }
+
     $("copy").addEventListener("click", copyCommand);
     $("done").addEventListener("click", completeStep);
     $("prev").addEventListener("click", () => move(-1));
     $("next").addEventListener("click", () => move(1));
 
     render();
+    loadMarkdownSteps().catch(() => {
+      steps = fallbackSteps;
+      render();
+    });
   </script>
 </body>
 </html>

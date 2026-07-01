@@ -35,6 +35,10 @@ Luego abre `http://localhost:8081`.
 - Progreso guardado en `localStorage`.
 - Diseño blanco, simple y sin distracciones.
 
+Cuando se sirve por HTTP, `index.html` carga las lecciones desde
+`public/content/es/pasos.md`. Si se abre directo como archivo local, usa el
+respaldo embebido en el HTML para seguir funcionando.
+
 ## Contenido de referencia
 
 - `public/content/es/pasos.md`: los mismos 45 pasos en Markdown.

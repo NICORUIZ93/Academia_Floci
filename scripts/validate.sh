@@ -33,6 +33,8 @@ if (!manifest.some((entry) => entry.path === 'content/es/pasos.md')) {
 const html = fs.readFileSync('web/index.html', 'utf8');
 const htmlSteps = [...html.matchAll(/step\((\d+),/g)].map((match) => Number(match[1]));
 const htmlCourses = [...html.matchAll(/\{\s*id:\s*"[^"]+",\s*code:\s*"[^"]+",\s*title:/g)];
+const loadsMarkdown = html.includes('fetch("public/content/es/pasos.md"');
+const hasFallback = html.includes('const fallbackSteps = [');
 const markdown = fs.readFileSync('web/public/content/es/pasos.md', 'utf8');
 const markdownSteps = [...markdown.matchAll(/^## Paso (\d+):/gm)].map((match) => Number(match[1]));
 const notebook = fs.readFileSync('web/public/content/es/cuaderno-progreso.md', 'utf8');
@@ -56,9 +58,13 @@ if (htmlCourses.length !== 8) {
   throw new Error(`web/index.html debe tener 8 cursos. Encontrados=${htmlCourses.length}`);
 }
 
+if (!loadsMarkdown || !hasFallback) {
+  throw new Error('web/index.html debe cargar pasos.md por HTTP y conservar respaldo embebido');
+}
+
 if (fs.existsSync('index.html') || fs.existsSync('academia-floci-simple.html')) {
   throw new Error('No debe haber HTML duplicado en la raiz. Usa web/index.html.');
 }
 
-console.log('Validacion OK: 8 cursos, 45 pasos y manifest correctos.');
+console.log('Validacion OK: 8 cursos, 45 pasos, pasos.md y respaldo correctos.');
 NODE
