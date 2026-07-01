@@ -8,6 +8,14 @@
     "type": "guide"
   },
   {
+    "id": "pasos",
+    "title": "45 pasos de Academia Floci",
+    "category": "curso",
+    "path": "content/es/pasos.md",
+    "language": "Español latino",
+    "type": "guide"
+  },
+  {
     "id": "guia",
     "title": "Guía completa de Floci",
     "category": "guia",

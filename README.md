@@ -1,34 +1,43 @@
-# Academia Cloud Local en español
+# Academia Floci
 
-Curso local para aprender cloud escribiendo, investigando, fallando y validando
-por cuenta propia. La metodología usa emuladores locales de AWS, Azure y GCP
-para practicar gratis en tu PC antes de tocar una cuenta real.
+Curso simple en español para aprender cloud local con Floci paso a paso.
 
-## Contenido
+La entrada principal es una página HTML de un solo archivo:
 
-- [Empieza aquí: curso interactivo](web/public/content/es/curso-interactivo.md)
+- [Abrir curso paso a paso](web/index.html)
+- [Ver los 45 pasos en Markdown](web/public/content/es/pasos.md)
 - [Cuaderno de progreso](web/public/content/es/cuaderno-progreso.md)
 - [Manual de consulta](web/public/content/es/guia-completa.md)
-- [Docker Compose](docker-compose.yml)
-- [Variables de entorno](.env.example)
-- [Ejemplos de referencia](examples/README.md)
-- [Aplicacion Angular interactiva](web/README.md)
 
-## Inicio rápido
+## Cómo empezar
+
+1. Abre `web/index.html` en tu navegador.
+2. Lee un solo paso.
+3. Ejecuta el comando en tu terminal si el paso lo pide.
+4. Compara tu salida con la salida esperada.
+5. Marca `Ya lo ejecuté` para avanzar.
+
+El progreso se guarda localmente en tu navegador con `localStorage`.
+
+## Requisitos
+
+- Docker instalado y abierto.
+- AWS CLI instalada para los pasos de AWS.
+- Terminal disponible: Terminal en macOS/Linux, PowerShell o WSL en Windows.
+
+## Laboratorio local
+
+Puedes levantar los servicios locales con Docker Compose:
 
 ```bash
 cp .env.example .env
 docker compose up -d aws-local stackport
-source .env
-aws sts get-caller-identity
 ```
 
-Docker debe estar iniciado antes de ejecutar `docker compose up`.
-StackPort queda disponible en `http://localhost:8080` para inspeccionar los
-recursos AWS locales que creas durante el curso.
+StackPort queda disponible en `http://localhost:8080` para inspeccionar recursos
+AWS locales. Floci/AWS local escucha en `http://localhost:4566`.
 
-En Windows, si PowerShell muestra errores con `sh`, usa WSL o Git Bash. Para
-este curso la ruta más estable es Docker Compose:
+En Windows PowerShell:
 
 ```powershell
 docker compose up -d aws-local stackport
@@ -39,21 +48,26 @@ $env:AWS_DEFAULT_REGION="us-east-1"
 aws sts get-caller-identity
 ```
 
-Cloud local se trabaja por CLI. Este proyecto usa StackPort como interfaz
-visual para inspeccionar recursos AWS locales; no dependas de una UI externa
-para seguir la academia.
+## Estructura
 
-No abras los ejemplos hasta haber completado los retos equivalentes. El Compose
-no crea recursos automáticamente: bucket, colas, tablas y funciones los debes
-crear tú durante el curso.
-
-## Aplicacion visual
-
-```bash
-cd web
-npm install
-npm start
+```text
+Academia_Floci/
+├── README.md
+├── docker-compose.yml
+├── .env.example
+├── examples/
+├── scripts/
+└── web/
+    ├── index.html
+    ├── README.md
+    └── public/content/es/
+        ├── pasos.md
+        ├── cuaderno-progreso.md
+        └── guia-completa.md
 ```
 
-Abre `http://localhost:4200`. El progreso, las notas y las evidencias se guardan
-localmente en el navegador.
+## Nota sobre la app Angular
+
+La carpeta `web/src` conserva la versión Angular anterior como referencia de
+desarrollo, pero no es la ruta recomendada para estudiar. Para aprender sin
+perderse, usa `web/index.html`.

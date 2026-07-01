@@ -1,30 +1,43 @@
-# Academia Cloud Local
+# Web
 
-Aplicacion Angular interactiva para aprender cloud local desde cero.
+La página principal del curso es `index.html`.
 
-```bash
-npm install
-npm start
+No usa Angular, componentes, TypeScript ni librerías externas. Es un solo archivo
+HTML con CSS y JavaScript embebidos.
+
+## Abrir el curso
+
+Opción directa:
+
+```text
+web/index.html
 ```
 
-Abre <http://localhost:4200>.
+También puedes servir la carpeta con cualquier servidor estático:
 
-## Funciones
+```bash
+cd web
+python3 -m http.server 8081
+```
 
-- 18 modulos desde fundamentos hasta examen autonomo.
-- Seguimiento de retos y modulos mediante `localStorage`.
-- Cuaderno de hipotesis y evidencias por modulo.
-- Cuestionario autocorregible.
-- Mapa visual de servicios y arquitectura de Tareas Locales.
-- Guia integrada para levantar StackPort con Docker Compose y revisar recursos locales.
-- Biblioteca con 75 capitulos oficiales, guia completa y archivos ejecutables.
-- Busqueda por documento, categoria y servicio.
-- Copia y descarga local de cada recurso.
-- Diseno adaptable a escritorio y movil.
+Luego abre `http://localhost:8081`.
 
-La aplicacion no ejecuta los retos por el estudiante. Docker, las CLI cloud y
-los emuladores locales se usan desde la terminal, y la interfaz conserva el
-proceso de aprendizaje.
+## Qué contiene
 
-La documentacion de referencia incluida conserva licencia y atribucion en
-`public/content/LICENSE-FLOCI.txt` y `public/content/ATRIBUCION.md`.
+- 45 pasos numerados.
+- Un solo paso visible a la vez.
+- Panel lateral con 5 pasos visibles.
+- Botón para copiar comandos.
+- Progreso guardado en `localStorage`.
+- Diseño blanco, simple y sin distracciones.
+
+## Contenido de referencia
+
+- `public/content/es/pasos.md`: los mismos 45 pasos en Markdown.
+- `public/content/es/cuaderno-progreso.md`: plantilla para evidencias.
+- `public/content/es/guia-completa.md`: manual de consulta.
+
+## Angular
+
+`src/` conserva la app Angular anterior como referencia técnica. No es la ruta
+principal de estudio porque tiene más navegación y estructura de la necesaria.
