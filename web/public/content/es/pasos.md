@@ -4,6 +4,14 @@ Ruta simple de estudio. Cada paso corresponde a la página `web/index.html`.
 
 Cómo usar este archivo: lee el paso, predice la salida, ejecuta el comando si existe, compara con la salida esperada y responde la pregunta de control en tu cuaderno.
 
+## Mapa de niveles
+
+| Nivel de referencia | Pasos | Temas |
+|---|---:|---|
+| Fundamentos | 1-27 | Docker, Floci, AWS CLI, S3, SQS y DynamoDB |
+| Aplicaciones | 28-40 | Lambda, API Gateway e IAM |
+| Integración | 41-45 | Proyecto final de tareas |
+
 ## Paso 1: ¿Qué es Docker?
 
 **Explicación:** Docker es una herramienta que ejecuta programas en contenedores. Es como tener una caja mágica donde metes cualquier programa y funciona en cualquier computadora.

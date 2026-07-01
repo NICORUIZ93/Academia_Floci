@@ -16,7 +16,7 @@ Duplica este bloque en cada sesión:
 
 ```text
 Fecha:
-Módulo:
+Paso:
 Objetivo en una frase:
 Hipótesis antes de ejecutar:
 Comandos o código escritos por mí:
@@ -28,26 +28,63 @@ Qué puedo explicar sin mirar:
 Próximo paso:
 ```
 
-## Avance
+## Avance por pasos
 
-- [ ] 0. Diagnóstico inicial
-- [ ] 1. Docker, endpoint, credenciales y STS
-- [ ] 2. S3
-- [ ] 3. SQS
-- [ ] 4. DynamoDB
-- [ ] 5. SDK propio
-- [ ] 6. Configuración y secretos
-- [ ] 7. SNS, EventBridge y Scheduler
-- [ ] 8. Lambda y API Gateway
-- [ ] 9. Step Functions y Pipes
-- [ ] 10. CloudWatch y diagnóstico
-- [ ] 11. Persistencia, TLS, cuentas y hooks
-- [ ] 12. Infraestructura, pruebas y CI
-- [ ] 13. Bases, streaming y búsqueda
-- [ ] 14. Contenedores, redes y despliegue
-- [ ] 15. Datos, analítica, IA y costos
-- [ ] 16. Proyecto completo
-- [ ] 17. Examen final sin guía
+Marca un paso solo cuando tengas comando, salida o explicación propia.
+
+### Fundamentos
+
+- [ ] Paso 1: ¿Qué es Docker?
+- [ ] Paso 2: Instalar Docker
+- [ ] Paso 3: Verificar Docker
+- [ ] Paso 4: Levantar Floci
+- [ ] Paso 5: Verificar Floci
+- [ ] Paso 6: Configurar AWS CLI
+- [ ] Paso 7: Probar AWS CLI
+- [ ] Paso 8: ¿Qué es S3?
+- [ ] Paso 9: Crear un bucket S3
+- [ ] Paso 10: Subir un archivo a S3
+- [ ] Paso 11: Listar archivos en S3
+- [ ] Paso 12: Descargar un archivo de S3
+- [ ] Paso 13: Eliminar un archivo de S3
+- [ ] Paso 14: Eliminar el bucket S3
+- [ ] Paso 15: ¿Qué es SQS?
+- [ ] Paso 16: Crear una cola SQS
+- [ ] Paso 17: Enviar un mensaje a SQS
+- [ ] Paso 18: Recibir mensajes de SQS
+- [ ] Paso 19: Eliminar un mensaje de SQS
+- [ ] Paso 20: Eliminar la cola SQS
+- [ ] Paso 21: ¿Qué es DynamoDB?
+- [ ] Paso 22: Crear una tabla DynamoDB
+- [ ] Paso 23: Insertar un item en DynamoDB
+- [ ] Paso 24: Obtener un item de DynamoDB
+- [ ] Paso 25: Consultar todos los items de DynamoDB
+- [ ] Paso 26: Eliminar un item de DynamoDB
+- [ ] Paso 27: Eliminar la tabla DynamoDB
+
+### Aplicaciones
+
+- [ ] Paso 28: ¿Qué es Lambda?
+- [ ] Paso 29: Crear una función Lambda
+- [ ] Paso 30: Invocar la función Lambda
+- [ ] Paso 31: Actualizar la función Lambda
+- [ ] Paso 32: Eliminar la función Lambda
+- [ ] Paso 33: ¿Qué es API Gateway?
+- [ ] Paso 34: Crear una API REST
+- [ ] Paso 35: Crear un recurso y método en API Gateway
+- [ ] Paso 36: Desplegar la API
+- [ ] Paso 37: ¿Qué es IAM?
+- [ ] Paso 38: Crear un usuario en IAM
+- [ ] Paso 39: Crear una política en IAM
+- [ ] Paso 40: Asignar la política al usuario
+
+### Integración
+
+- [ ] Paso 41: Proyecto Final - Crear tabla DynamoDB
+- [ ] Paso 42: Proyecto Final - Crear Lambda para tareas
+- [ ] Paso 43: Proyecto Final - Crear API Gateway
+- [ ] Paso 44: Probar el sistema completo
+- [ ] Paso 45: ¡Felicidades! Has completado el curso
 
 ## Evidencias del proyecto
 
@@ -57,11 +94,9 @@ Próximo paso:
 | Primer objeto S3 | | | | |
 | Primera cola | | | | |
 | Primera tabla | | | | |
-| Primer SDK | | | | |
 | Primera Lambda | | | | |
 | Primera API | | | | |
-| Primer evento | | | | |
-| Primer workflow | | | | |
+| Primer usuario IAM | | | | |
 | Primera prueba aislada | | | | |
 | Proyecto reconstruido | | | | |
 
@@ -75,11 +110,8 @@ documentación, `3` lo hago y lo explico.
 | Explicar endpoint local y credenciales | | |
 | Diagnosticar Docker y red | | |
 | Diseñar S3, SQS y DynamoDB | | |
-| Configurar un SDK | | |
 | Integrar Lambda y API Gateway | | |
-| Diseñar eventos y reintentos | | |
-| Observar logs y métricas | | |
-| Automatizar infraestructura | | |
-| Escribir pruebas con Testcontainers | | |
+| Explicar permisos IAM | | |
+| Probar una API con curl | | |
+| Reconstruir el proyecto final | | |
 | Distinguir emulación y AWS real | | |
-
