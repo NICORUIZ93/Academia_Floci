@@ -12,6 +12,7 @@
     </div>
 
     <div class="header-actions">
+      <a class="ghost link-button" href="/catalogo">Ver cursos</a>
       <button class="ghost" (click)="exportMarkdown()">Exportar</button>
       <button class="ghost" (click)="toggleTheme()">{{ dark ? 'Modo claro' : 'Modo oscuro' }}</button>
     </div>
@@ -29,6 +30,13 @@
         <h2>Explicación</h2>
         <p>{{ currentStep.explanation }}</p>
         <p *ngIf="currentStep.analogy" class="analogy">{{ currentStep.analogy }}</p>
+      </section>
+
+      <section class="lesson-block depth-block">
+        <h2>Lo que debes entender de verdad</h2>
+        <ul>
+          <li *ngFor="let note of stepDeepNotes()">{{ note }}</li>
+        </ul>
       </section>
 
       <section class="lesson-block">
@@ -52,6 +60,21 @@
         <pre><code>{{ currentStep.expectedOutput }}</code></pre>
       </section>
 
+      <section class="lesson-block support-grid">
+        <div>
+          <h2>Cómo saber que vas bien</h2>
+          <ul>
+            <li *ngFor="let item of stepChecklist()">{{ item }}</li>
+          </ul>
+        </div>
+        <div>
+          <h2>Errores comunes</h2>
+          <ul>
+            <li *ngFor="let mistake of stepCommonMistakes()">{{ mistake }}</li>
+          </ul>
+        </div>
+      </section>
+
       <section class="lesson-block">
         <h2>Práctica</h2>
         <p>{{ currentStep.practice }}</p>
@@ -63,6 +86,10 @@
         <h2>Pregunta</h2>
         <p>{{ currentStep.question }}</p>
         <textarea class="answer-box" [(ngModel)]="guidedAnswer" (ngModelChange)="saveGuidedStepState()" placeholder="Responde con tus palabras..."></textarea>
+        <details class="answer-guide">
+          <summary>Ver respuesta guía</summary>
+          <p>{{ currentStep.expectedAnswer }}</p>
+        </details>
         <div class="inline-actions">
           <button class="primary" (click)="verifyGuidedAnswer()">Verificar</button>
           <button class="ghost" (click)="toggleGuidedStepComplete()">
@@ -91,5 +118,22 @@
         <strong>Paso {{ item.step.id }}: {{ item.step.title }}</strong>
       </button>
     </aside>
+
+    <section class="course-access" aria-label="Todos los cursos">
+      <header>
+        <div>
+          <h2>Todos los cursos</h2>
+          <p>La ruta de Floci va paso a paso. Estos son los demás cursos disponibles para estudiar cuando quieras cambiar de tema.</p>
+        </div>
+        <a class="ghost link-button" href="/catalogo">Abrir catálogo completo</a>
+      </header>
+
+      <div class="course-grid">
+        <a *ngFor="let track of tracks" [href]="'/curso/' + track.id">
+          <strong>{{ track.name }}</strong>
+          <span>{{ track.modules.length }} módulos · {{ track.tagline }}</span>
+        </a>
+      </div>
+    </section>
   </main>
 </div>

@@ -91,6 +91,13 @@
   cursor: pointer;
 }
 
+.link-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+}
+
 .ghost {
   border: 1px solid #cbd5e1;
   background: #ffffff;
@@ -208,6 +215,36 @@
   padding-left: 24px;
 }
 
+.depth-block {
+  padding: 22px;
+  border: 1px solid #dbe3ef;
+  border-radius: 8px;
+  background: #ffffff;
+}
+
+.dark .depth-block {
+  border-color: #334155;
+  background: #111827;
+}
+
+.support-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+}
+
+.support-grid > div {
+  padding: 22px;
+  border: 1px solid #dbe3ef;
+  border-radius: 8px;
+  background: #ffffff;
+}
+
+.dark .support-grid > div {
+  border-color: #334155;
+  background: #111827;
+}
+
 pre,
 textarea,
 code {
@@ -272,6 +309,28 @@ output {
   white-space: pre-wrap;
 }
 
+.answer-guide {
+  margin: 0 0 14px;
+  padding: 14px 16px;
+  border: 1px solid #dbe3ef;
+  border-radius: 8px;
+  background: #ffffff;
+}
+
+.dark .answer-guide {
+  border-color: #334155;
+  background: #111827;
+}
+
+.answer-guide summary {
+  cursor: pointer;
+  font-weight: 900;
+}
+
+.answer-guide p {
+  margin: 10px 0 0;
+}
+
 .dark output {
   background: #020617;
   color: #e2e8f0;
@@ -291,6 +350,89 @@ output {
 .nearby-progress {
   margin-top: 28px;
   padding: 28px;
+}
+
+.course-access {
+  margin-top: 28px;
+  padding: 28px;
+  border: 1px solid #dbe3ef;
+  border-radius: 10px;
+  background: #ffffff;
+}
+
+.dark .course-access {
+  border-color: #334155;
+  background: #111827;
+}
+
+.course-access header {
+  display: flex;
+  justify-content: space-between;
+  gap: 24px;
+  align-items: flex-start;
+  margin-bottom: 20px;
+}
+
+.course-access h2 {
+  margin: 0 0 8px;
+  font-size: 1.25rem;
+}
+
+.course-access p {
+  max-width: 700px;
+  margin: 0;
+  color: #52627a;
+  font-size: 1.05rem;
+  line-height: 1.6;
+}
+
+.dark .course-access p {
+  color: #cbd5e1;
+}
+
+.course-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.course-grid a {
+  display: grid;
+  gap: 6px;
+  min-width: 0;
+  padding: 16px;
+  border: 1px solid #dbe3ef;
+  border-radius: 8px;
+  color: inherit;
+  text-decoration: none;
+}
+
+.course-grid a:hover {
+  border-color: #2563eb;
+  background: #eff6ff;
+}
+
+.dark .course-grid a {
+  border-color: #334155;
+}
+
+.dark .course-grid a:hover {
+  background: #172554;
+}
+
+.course-grid strong,
+.course-grid span {
+  overflow-wrap: anywhere;
+}
+
+.course-grid span {
+  color: #52627a;
+  font-size: .95rem;
+  line-height: 1.45;
+}
+
+.dark .course-grid span {
+  color: #cbd5e1;
 }
 
 .nearby-progress h2 {
@@ -370,6 +512,15 @@ output {
 
   .step-card {
     padding: 28px 20px;
+  }
+
+  .support-grid,
+  .course-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .course-access header {
+    display: grid;
   }
 
   .step-actions {

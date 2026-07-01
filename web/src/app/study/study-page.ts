@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { COURSE_MODULES, CourseModule } from '../course-data';
+import { COURSE_MODULES, CourseModule, TRACKS } from '../course-data';
 
 type Level = 'Básico' | 'Medio' | 'Avanzado' | 'Master';
 type Tab = 'teoria' | 'ejemplo' | 'laboratorio' | 'ejercicio' | 'examen';
@@ -1137,6 +1137,7 @@ export class StudyPageComponent implements OnInit {
   readonly standards = studyStandards;
   readonly modules: StudyModule[] = [...COURSE_MODULES, azureGcpSource].map(moduleToStudy);
   readonly guidedSteps = GUIDED_STEPS;
+  readonly tracks = TRACKS;
 
   selectedModuleId = this.modules[0].id;
   selectedTopicId = this.modules[0].topics[0].id;
@@ -1215,6 +1216,67 @@ export class StudyPageComponent implements OnInit {
     if (completed >= 15) return 'Nivel intermedio';
     if (completed >= 5) return 'En marcha';
     return 'Inicio';
+  }
+
+  stepDeepNotes(): string[] {
+    const command = this.currentStep.command ?? '';
+    const notes = [
+      `Qué estás construyendo: ${this.currentStep.explanation}`,
+      'Qué debes poder explicar después: qué problema resuelve el paso, qué comando lo ejecuta y qué evidencia demuestra que funcionó.',
+      `Cómo conectarlo con el curso: este paso pertenece a ${this.currentStep.module}; no es teoría aislada, prepara una pieza que usarás en los pasos siguientes.`,
+      this.currentStep.command
+        ? 'Qué no debes hacer: no ejecutes el comando como ritual. Identifica primero herramienta, recurso, nombre, endpoint y salida esperada.'
+        : 'Qué no debes hacer: no memorices la definición. Construye una explicación propia y relaciónala con un caso real.',
+      `Pregunta de control: si alguien te pide probar que entendiste, debes poder responder: "${this.currentStep.question}" sin mirar la solución.`,
+    ];
+    if (command.includes('--endpoint-url')) {
+      notes.push('Punto crítico: --endpoint-url obliga a la herramienta a hablar con Floci local. Sin eso puedes terminar apuntando a nube real.');
+    }
+    if (command.includes('docker')) {
+      notes.push('Docker no es el objetivo final: es el motor que permite levantar servicios locales repetibles sin ensuciar tu sistema.');
+    }
+    if (command.includes('aws s3')) {
+      notes.push('En S3 siempre piensa en tres piezas: bucket, objeto y key. Si no sabes cuál es cuál, el comando se vuelve memorización vacía.');
+    }
+    if (command.includes('sqs')) {
+      notes.push('En colas importa el ciclo completo: crear cola, enviar mensaje, recibirlo, procesarlo y eliminarlo para que no reaparezca.');
+    }
+    if (command.includes('dynamodb')) {
+      notes.push('En DynamoDB primero decides cómo vas a consultar. La clave no es un detalle: define si tu tabla será fácil o dolorosa de usar.');
+    }
+    if (command.includes('lambda')) {
+      notes.push('En Lambda siempre revisa handler, runtime, paquete zip y logs. La mayoría de errores nacen de uno de esos cuatro puntos.');
+    }
+    return notes;
+  }
+
+  stepChecklist(): string[] {
+    if (!this.currentStep.command) {
+      return [
+        'Puedes explicar el concepto sin repetir palabras al azar.',
+        'Puedes dar una analogía propia.',
+        'Puedes decir en qué parte del proyecto final usarías este concepto.',
+      ];
+    }
+    return [
+      'Copiaste o escribiste el comando completo.',
+      'Ejecutaste el comando en una terminal real cuando corresponde.',
+      'Comparaste tu salida con la salida esperada.',
+      'Pegaste evidencia o explicación en el campo de práctica.',
+    ];
+  }
+
+  stepCommonMistakes(): string[] {
+    const command = this.currentStep.command ?? '';
+    const mistakes = [
+      'Copiar el comando sin leer qué parte es nombre, puerto, ruta o endpoint.',
+      'Cambiar varias cosas a la vez cuando aparece un error.',
+    ];
+    if (command.includes('localhost')) mistakes.push('Olvidar que localhost significa tu propia máquina, no internet ni AWS real.');
+    if (command.includes('4566')) mistakes.push('Tener otro proceso usando el puerto 4566 o no haber levantado Floci antes.');
+    if (command.includes('<')) mistakes.push('No reemplazar valores como <API_ID> o <RECEIPT_HANDLE> por el valor real que te dio la terminal.');
+    if (command.includes('aws ')) mistakes.push('Olvidar --endpoint-url y ejecutar contra la configuración normal de AWS CLI.');
+    return mistakes;
   }
 
   get filteredModules(): StudyModule[] {
