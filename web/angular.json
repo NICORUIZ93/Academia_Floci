@@ -7,7 +7,7 @@
   },
   "newProjectRoot": "projects",
   "projects": {
-    "academia-floci": {
+    "academia-cloud-local": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
@@ -62,10 +62,10 @@
           "builder": "@angular/build:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "academia-floci:build:production"
+              "buildTarget": "academia-cloud-local:build:production"
             },
             "development": {
-              "buildTarget": "academia-floci:build:development"
+              "buildTarget": "academia-cloud-local:build:development"
             }
           },
           "defaultConfiguration": "development"

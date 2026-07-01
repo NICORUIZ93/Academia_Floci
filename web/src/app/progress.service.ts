@@ -9,7 +9,7 @@ type ProgressState = Record<string, TrackProgress>;
 
 const EMPTY_TRACK_PROGRESS: TrackProgress = { completedModules: [], completedChallenges: {} };
 const STORAGE_KEY = 'academia-progress-v2';
-const LEGACY_CLOUD_KEY = 'floci-academy-progress';
+const LEGACY_CLOUD_KEY = 'cloud-local-academy-progress';
 
 @Injectable({ providedIn: 'root' })
 export class ProgressService {

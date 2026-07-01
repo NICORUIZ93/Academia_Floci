@@ -10,8 +10,9 @@ export const routes: Routes = [
     loadComponent: () => import('./catalog/course-catalog').then(m => m.CourseCatalogComponent),
   },
   {
-    path: 'laboratorio/floci',
-    loadComponent: () => import('./cloud/cloud-classic').then(m => m.CloudClassicComponent),
+    path: 'laboratorio/cloud-local',
+    redirectTo: '',
+    pathMatch: 'full',
   },
   {
     path: 'curso/:trackId',

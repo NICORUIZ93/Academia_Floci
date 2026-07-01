@@ -6,7 +6,7 @@ export AWS_DEFAULT_REGION="${AWS_DEFAULT_REGION:-us-east-1}"
 export AWS_ACCESS_KEY_ID="${AWS_ACCESS_KEY_ID:-test}"
 export AWS_SECRET_ACCESS_KEY="${AWS_SECRET_ACCESS_KEY:-test}"
 
-aws s3api create-bucket --bucket curso-floci 2>/dev/null || true
+aws s3api create-bucket --bucket curso-cloud-local 2>/dev/null || true
 aws sqs create-queue --queue-name pedidos >/dev/null
 
 aws dynamodb create-table \

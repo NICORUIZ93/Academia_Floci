@@ -35,14 +35,14 @@ export class CourseCatalogComponent {
     'Construye backend con Node.js o Spring Boot.',
     'Crea interfaz web con Angular o React.',
     'Crea móvil con Flutter, Android, iOS o Kotlin Multiplatform.',
-    'Integra todo con Floci: AWS, Azure, GCP, Docker, pruebas y despliegue local.',
+    'Integra todo con Cloud local: AWS, Azure, GCP, Docker, pruebas y despliegue local.',
   ];
-  readonly flociLevels = [
+  readonly cloudLocalLevels = [
     {
       level: 'Básico',
-      title: 'Fundamentos de Cloud y Floci',
+      title: 'Fundamentos de Cloud local',
       what: 'Cloud computing, virtualización, escalabilidad, elasticidad, IaaS/PaaS/SaaS, nube pública, privada, híbrida y multi-cloud.',
-      how: 'Instala Docker, levanta Floci AWS en el puerto 4566, Floci-az en 4577 y Floci-gcp en 4588. Verifica con AWS CLI usando endpoint local.',
+      how: 'Instala Docker, levanta AWS local en el puerto 4566, Azure local en 4577 y GCP local en 4588. Verifica cada nube con su CLI apuntando a localhost.',
       why: 'Practicas cloud sin cuenta, sin token, sin cuotas y sin pagar. Aprendes el concepto antes de depender de una consola real.',
       problem: 'Levanta los tres emuladores, crea un recurso mínimo y documenta qué comando confirma que está funcionando.',
       master: 'Explica cuándo un emulador local sirve para desarrollo y pruebas, y cuándo debes validar contra la nube real.',
@@ -59,16 +59,16 @@ export class CourseCatalogComponent {
     {
       level: 'Avanzado',
       title: 'Arquitectura, rendimiento y DevOps',
-      what: 'GraalVM, arranque rápido, bajo consumo, motores reales en contenedores, IaC, SDKs oficiales, CI/CD y Testcontainers.',
-      how: 'Usa Terraform/OpenTofu, AWS CDK o CloudFormation contra Floci. Prueba Lambda, RDS, Kafka/MSK, Redis/ElastiCache, EKS y builds con Docker.',
-      why: 'No basta con mockear respuestas. Floci permite validar comportamiento más cercano a producción usando motores reales.',
-      problem: 'Crea un pipeline local que levante Floci, despliegue infraestructura, ejecute pruebas de integración y destruya recursos.',
+      what: 'Arranque rápido, bajo consumo, motores reales cuando importa la fidelidad, IaC, SDKs oficiales, CI/CD y Testcontainers.',
+      how: 'Usa Terraform/OpenTofu, AWS CDK o CloudFormation contra cloud local. Prueba Lambda, RDS, Kafka/MSK, Redis/ElastiCache, EKS y builds con Docker.',
+      why: 'No basta con mockear respuestas. cloud local permite validar comportamiento más cercano a producción usando motores reales.',
+      problem: 'Crea un pipeline local que levante cloud local, despliegue infraestructura, ejecute pruebas de integración y destruya recursos.',
       master: 'Defiende qué pruebas pertenecen al entorno local, cuáles al CI y cuáles obligatoriamente a cloud real.',
     },
     {
       level: 'Master',
       title: 'Migración, contribución y límites',
-      what: 'Migración desde LocalStack, Azurite y emuladores GCP; hoja de ruta; contribución open source; límites de usar Floci en producción.',
+      what: 'Migración desde emuladores separados, hoja de ruta, contribución open source, licencia MIT y límites de usar cloud local en producción.',
       how: 'Reutiliza endpoint 4566 para migrar desde LocalStack, centraliza Azure/GCP en endpoints únicos y revisa compatibilidad por servicio.',
       why: 'El objetivo no es “casarse” con una herramienta: es aprender cloud con fidelidad, costo cero y una ruta sostenible.',
       problem: 'Documenta una estrategia de migración para un equipo que hoy usa emuladores separados y quiere un laboratorio local único.',
@@ -76,9 +76,9 @@ export class CourseCatalogComponent {
     },
   ];
   readonly providerServices = [
-    { provider: 'AWS · 4566', groups: ['Compute: EC2, ECS, EKS, Lambda, CodeBuild', 'Storage: S3, S3 Vectors, EFS', 'Datos: RDS, DynamoDB Streams, ElastiCache, DocumentDB, Glue', 'Integración: SQS, SNS, EventBridge, Step Functions, Kinesis, MSK', 'Seguridad: IAM, STS, KMS, Cognito, SSM, WAF v2'] },
-    { provider: 'Azure · 4577', groups: ['Blob Storage', 'Queue Storage', 'Table Storage', 'Cosmos DB', 'Functions', 'App Configuration', 'Key Vault', 'Event Hubs'] },
-    { provider: 'GCP · 4588', groups: ['Cloud Storage', 'Pub/Sub', 'Firestore', 'Datastore', 'Bigtable', 'Spanner', 'Cloud Functions'] },
+    { provider: 'AWS local · 4566 · 65 servicios', groups: ['Storage: S3, S3 Vectors, EFS', 'Mensajería: SQS, SNS, EventBridge, Scheduler, Kinesis, MSK', 'Compute: Lambda, ECS, EKS, EC2, CodeBuild', 'Datos: DynamoDB, RDS, ElastiCache, OpenSearch, Glue, Athena', 'Seguridad: IAM, STS, KMS, Cognito, Secrets Manager, SSM'] },
+    { provider: 'Azure local · 4577 · 19+ servicios', groups: ['Storage: Blob, Queue y Table Storage', 'Serverless: Azure Functions HTTP y Timer', 'Datos: Cosmos DB, Azure SQL, PostgreSQL, Cache for Redis', 'Mensajería: Event Hubs, Service Bus, Event Grid', 'Plataforma: Key Vault, App Configuration, AKS, API Management, Virtual Network, Container Registry, Azure Monitor'] },
+    { provider: 'GCP local · 4588 · 17 servicios', groups: ['Storage: Cloud Storage', 'Mensajería: Pub/Sub, Cloud Tasks, Managed Kafka, Cloud Scheduler', 'Datos: Firestore, Datastore, Cloud SQL', 'Serverless: Cloud Run, Cloud Functions', 'Seguridad y ops: Secret Manager, IAM, KMS, Cloud Logging, Cloud Monitoring, GKE, Operations'] },
   ];
   readonly learningLayers = [
     { title: '1. El qué', goal: 'Entender el concepto', detail: 'Definición simple, analogía del mundo real, vocabulario mínimo y dibujo mental antes de escribir código.', time: '20%' },
@@ -110,7 +110,7 @@ export class CourseCatalogComponent {
   ];
   readonly studyPlans = [
     { title: 'Principiante: 6 meses', detail: '1 a 2 horas diarias. JavaScript, Node.js, frontend, Java/Spring, DevOps y proyecto final full-stack.' },
-    { title: 'Profesional: 3 meses', detail: '2 a 3 horas diarias. Avanzado backend, Kubernetes, Floci cloud, frontend moderno, móvil y sistema cloud-native.' },
+    { title: 'Profesional: 3 meses', detail: '2 a 3 horas diarias. Avanzado backend, Kubernetes, cloud local, frontend moderno, móvil y sistema cloud-native.' },
   ];
   readonly gamification = [
     { title: 'Insignias', detail: 'Explorador, Constructor, Arquitecto y Maestro según la capa completada.' },
@@ -137,7 +137,7 @@ export class CourseCatalogComponent {
     'Flutter: catálogo, detalle de producto, carrito, checkout, perfil y estado local.',
     'Spring Boot: API REST, productos, usuarios, órdenes, seguridad JWT y validaciones.',
     'Base de datos: PostgreSQL para órdenes, DynamoDB/NoSQL para eventos y cache cuando aplique.',
-    'Floci Cloud: S3/Blob/Storage, SQS/Service Bus/Pub/Sub, secretos, logs y pruebas locales.',
+    'Cloud local: S3/Blob/Storage, SQS/Service Bus/Pub/Sub, secretos, logs y pruebas locales.',
     'DevOps: Docker, docker compose, CI/CD, pruebas automatizadas y despliegue reproducible.',
     'Nivel master: observabilidad, errores controlados, rendimiento, arquitectura y documentación técnica.',
   ];
@@ -187,7 +187,7 @@ export class CourseCatalogComponent {
   private percentFor(trackId: string, totalModules: number): number {
     if (trackId === 'cloud') {
       try {
-        const completed: number[] = JSON.parse(localStorage.getItem('floci-academy-progress') || '{}').completedModules || [];
+        const completed: number[] = JSON.parse(localStorage.getItem('cloud-local-academy-progress') || '{}').completedModules || [];
         return totalModules ? Math.round((completed.length / totalModules) * 100) : 0;
       } catch {
         return 0;

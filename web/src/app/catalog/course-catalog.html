@@ -3,7 +3,7 @@
     <div class="brand">
       <div class="brand-mark"><lucide-icon [img]="brandIcon" /></div>
       <div>
-        <strong>Academia Floci</strong>
+        <strong>Academia Cloud Local</strong>
         <span>Cursos de cero a master, a tu ritmo</span>
       </div>
     </div>
@@ -12,14 +12,14 @@
   <section class="catalog-hero">
     <div class="hero-copy">
       <span class="eyebrow">Academia local en español latino</span>
-      <h1>Aprende Floci desde cero con una ruta clara y práctica</h1>
-      <p>Floci es tu laboratorio local para practicar AWS, Azure y GCP sin pagar ni crear cuentas. Aquí cada tema se estudia con qué es, cómo se usa, por qué importa, qué problema resuelve y cómo lo defenderías como profesional.</p>
+      <h1>Aprende cloud local desde cero con una ruta clara y práctica</h1>
+      <p>Cloud Local es tu laboratorio en la PC para practicar AWS, Azure y GCP sin pagar ni crear cuentas. Aquí cada tema se estudia con qué es, cómo se usa, por qué importa, qué problema resuelve y cómo lo defenderías como profesional.</p>
       <div class="hero-actions">
-        <a routerLink="/curso/cloud">Empezar por Floci</a>
+        <a routerLink="/curso/cloud">Empezar por Cloud Local</a>
         <a routerLink="/curso/flutter" class="secondary">Ver proyecto móvil</a>
       </div>
     </div>
-    <img class="hero-art" src="/assets/floci-learning-lab.png" alt="Laboratorio visual de aprendizaje cloud con contenedores, datos y código" />
+    <img class="hero-art" src="/assets/cloud-local-learning-lab.png" alt="Laboratorio visual de aprendizaje cloud con contenedores, datos y código" />
     <aside class="hero-route" aria-label="Ruta recomendada">
       <strong>Ruta clara para novatos</strong>
       <ol>
@@ -28,15 +28,15 @@
     </aside>
   </section>
 
-  <section class="floci-syllabus">
+  <section class="cloud-syllabus">
     <div class="section-title">
-      <span>Floci explicado con la metodología enviada</span>
+      <span>Cloud local explicado con la metodología enviada</span>
       <h2>Cloud local de básico a master</h2>
-      <p>Floci se estudia como plataforma completa: primero entiendes cloud, después ejecutas servicios reales en local, luego integras DevOps y finalmente analizas migración, límites y contribución.</p>
+      <p>La metodología se estudia como plataforma completa: primero entiendes cloud, después ejecutas servicios reales o emulados en local, luego integras DevOps y finalmente analizas migración, límites y contribución.</p>
     </div>
 
-    <div class="floci-levels">
-      <article *ngFor="let item of flociLevels">
+    <div class="cloud-levels">
+      <article *ngFor="let item of cloudLocalLevels">
         <header>
           <span>{{ item.level }}</span>
           <h3>{{ item.title }}</h3>

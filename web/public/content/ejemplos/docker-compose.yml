@@ -1,5 +1,5 @@
 services:
-  floci:
+  aws-local:
     image: floci/floci:1.5.22-compat
     ports:
       - "4566:4566"

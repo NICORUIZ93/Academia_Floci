@@ -1,6 +1,6 @@
-# Academia Floci
+# Academia Cloud Local
 
-Aplicacion Angular interactiva del curso local de Floci.
+Aplicacion Angular interactiva para aprender cloud local desde cero.
 
 ```bash
 npm install
@@ -22,8 +22,9 @@ Abre <http://localhost:4200>.
 - Copia y descarga local de cada recurso.
 - Diseno adaptable a escritorio y movil.
 
-La aplicacion no ejecuta los retos por el estudiante. Floci y AWS CLI se usan
-desde la terminal, y la interfaz conserva el proceso de aprendizaje.
+La aplicacion no ejecuta los retos por el estudiante. Docker, las CLI cloud y
+los emuladores locales se usan desde la terminal, y la interfaz conserva el
+proceso de aprendizaje.
 
-La documentacion oficial incluida conserva la licencia MIT y atribucion en
+La documentacion de referencia incluida conserva licencia y atribucion en
 `public/content/LICENSE-FLOCI.txt` y `public/content/ATRIBUCION.md`.

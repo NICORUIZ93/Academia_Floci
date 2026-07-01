@@ -21,9 +21,9 @@ const sqs = new SQSClient(config);
 
 await s3.send(
   new PutObjectCommand({
-    Bucket: "curso-floci",
+    Bucket: "curso-cloud-local",
     Key: "saludos/node.txt",
-    Body: "Hola desde Node.js y Floci\n",
+    Body: "Hola desde Node.js y Cloud Local\n",
   }),
 );
 
@@ -37,6 +37,6 @@ await sqs.send(
   }),
 );
 
-console.log(await s3.send(new ListObjectsV2Command({ Bucket: "curso-floci" })));
+console.log(await s3.send(new ListObjectsV2Command({ Bucket: "curso-cloud-local" })));
 console.log(await sqs.send(new ReceiveMessageCommand({ QueueUrl })));
 

@@ -75,19 +75,20 @@ interface CourseStep {
   keywords: string[];
 }
 
-const STORAGE_KEY = 'floci-study-progress-v2';
-const THEME_KEY = 'floci-study-theme-v2';
-const ANSWERS_KEY = 'floci-study-answers-v2';
-const EDITOR_KEY = 'floci-study-editor-v1';
-const LAB_KEY = 'floci-study-labs-v1';
-const STEP_KEY = 'floci-guided-steps-v1';
-const STEP_ANSWERS_KEY = 'floci-guided-step-answers-v1';
-const STEP_EDITORS_KEY = 'floci-guided-step-editors-v1';
+const STORAGE_KEY = 'cloud-local-study-progress-v2';
+const THEME_KEY = 'cloud-local-study-theme-v2';
+const ANSWERS_KEY = 'cloud-local-study-answers-v2';
+const EDITOR_KEY = 'cloud-local-study-editor-v1';
+const LAB_KEY = 'cloud-local-study-labs-v1';
+const STEP_KEY = 'cloud-local-guided-steps-v1';
+const STEP_ANSWERS_KEY = 'cloud-local-guided-step-answers-v1';
+const STEP_EDITORS_KEY = 'cloud-local-guided-step-editors-v1';
 
 const resources = [
-  { label: 'Documentación Floci', url: 'https://floci.io/' },
+  { label: 'Docker', url: 'https://docs.docker.com/' },
   { label: 'AWS CLI', url: 'https://docs.aws.amazon.com/cli/' },
-  { label: 'AWS SDKs', url: 'https://aws.amazon.com/developer/tools/' },
+  { label: 'Azure CLI', url: 'https://learn.microsoft.com/cli/azure/' },
+  { label: 'Google Cloud CLI', url: 'https://cloud.google.com/sdk/docs' },
 ];
 
 const studyStandards = [
@@ -117,18 +118,18 @@ const guidedStep = (
 ): CourseStep => ({ id, module, title, explanation, command, breakdown, expectedOutput, practice, question, expectedAnswer, keywords, analogy });
 
 const GUIDED_STEPS: CourseStep[] = [
-  guidedStep(1, 'Docker y Floci', 'Qué es Docker y por qué lo necesitas',
-    'Docker permite ejecutar aplicaciones empaquetadas en contenedores. Lo necesitas porque Floci corre como un servicio local aislado, con sus puertos y dependencias controladas.',
+  guidedStep(1, 'Docker y Cloud local', 'Qué es Docker y por qué lo necesitas',
+    'Docker permite ejecutar aplicaciones empaquetadas en contenedores. Lo necesitas porque el emulador de cloud local corre como un servicio aislado, con sus puertos y dependencias controladas.',
     undefined,
-    ['Docker evita instalar dependencias sueltas en tu sistema.', 'Un contenedor es una ejecución viva de una imagen.', 'Floci usa contenedores para darte servicios cloud locales.'],
+    ['Docker evita instalar dependencias sueltas en tu sistema.', 'Un contenedor es una ejecución viva de una imagen.', 'El emulador de cloud local usa contenedores para darte servicios cloud locales.'],
     'No hay salida esperada. Este paso es conceptual.',
     'Escribe con tus palabras qué problema resuelve Docker antes de instalar nada.',
-    '¿Por qué usamos Docker para practicar con Floci?',
-    'Porque Docker ejecuta Floci aislado en mi computador sin instalar servicios reales ni usar nube con costo.',
-    ['docker', 'contenedor', 'aislado', 'floci'],
+    '¿Por qué usamos Docker para practicar con cloud local?',
+    'Porque Docker ejecuta el laboratorio aislado en mi computador sin instalar servicios reales ni usar nube con costo.',
+    ['docker', 'contenedor', 'aislado', 'cloud local'],
     'Docker es como una lonchera técnica: trae la app con todo lo que necesita para correr igual en otra máquina.'),
-  guidedStep(2, 'Docker y Floci', 'Instalar Docker en Mac, Windows o Linux',
-    'Antes de usar Floci debes tener Docker encendido. En Mac y Windows normalmente instalas Docker Desktop; en Linux puedes usar el gestor de paquetes de tu distribución.',
+  guidedStep(2, 'Docker y Cloud local', 'Instalar Docker en Mac, Windows o Linux',
+    'Antes de usar cloud local debes tener Docker encendido. En Mac y Windows normalmente instalas Docker Desktop; en Linux puedes usar el gestor de paquetes de tu distribución.',
     'sudo apt update && sudo apt install docker.io -y',
     ['sudo ejecuta el comando con permisos de administrador.', 'apt update actualiza el índice de paquetes.', 'apt install docker.io instala Docker desde los repositorios.', '-y acepta la instalación sin preguntar cada paso.'],
     'Reading package lists... Done\nSetting up docker.io ...\nDocker instalado correctamente.',
@@ -136,7 +137,7 @@ const GUIDED_STEPS: CourseStep[] = [
     '¿Qué debes abrir en Mac o Windows después de instalar Docker?',
     'Debo abrir Docker Desktop y esperar a que indique que Docker está corriendo.',
     ['docker', 'desktop', 'instalado', 'corriendo']),
-  guidedStep(3, 'Docker y Floci', 'Verificar Docker',
+  guidedStep(3, 'Docker y Cloud local', 'Verificar Docker',
     'La instalación no se asume: se comprueba. Este paso confirma que el comando docker existe y responde desde tu terminal.',
     'docker --version',
     ['docker llama al programa principal.', '--version pide que muestre la versión instalada sin iniciar contenedores.'],
@@ -145,44 +146,44 @@ const GUIDED_STEPS: CourseStep[] = [
     '¿Qué versión de Docker tienes?',
     'Una respuesta correcta incluye la palabra Docker y un número de versión.',
     ['docker', 'version']),
-  guidedStep(4, 'Docker y Floci', 'Levantar Floci',
-    'Ahora ejecutas Floci localmente. El puerto 4566 queda disponible en tu computador para que herramientas como AWS CLI hablen con el emulador.',
-    'docker run -p 4566:4566 floci/floci:latest',
-    ['docker run ejecuta un contenedor.', '-p 4566:4566 conecta el puerto 4566 del contenedor con el puerto 4566 de tu máquina.', 'floci/floci:latest indica la imagen y versión que se va a ejecutar.'],
-    'Starting Floci on port 4566...\nReady.',
+  guidedStep(4, 'Docker y Cloud local', 'Levantar el emulador local',
+    'Ahora ejecutas un emulador AWS local. El puerto 4566 queda disponible en tu computador para que herramientas como AWS CLI hablen con el laboratorio y no con AWS real.',
+    'docker run -p 4566:4566 <imagen-emulador-aws-local>:latest',
+    ['docker run ejecuta un contenedor.', '-p 4566:4566 conecta el puerto 4566 del contenedor con el puerto 4566 de tu máquina.', '<imagen-emulador-aws-local>:latest representa la imagen Docker del emulador que usarás en el laboratorio.'],
+    'Starting local AWS emulator on port 4566...\nReady.',
     'Copia el comando, ejecútalo y confirma que ves una línea parecida a Ready.',
-    '¿En qué puerto queda escuchando Floci?',
-    'Floci queda escuchando en el puerto 4566.',
-    ['4566', 'puerto', 'floci']),
-  guidedStep(5, 'Docker y Floci', 'Verificar salud de Floci',
+    '¿En qué puerto queda escuchando el emulador AWS local?',
+    'El emulador AWS local queda escuchando en el puerto 4566.',
+    ['4566', 'puerto', 'cloud local']),
+  guidedStep(5, 'Docker y Cloud local', 'Verificar salud del emulador local',
     'No basta con levantar un contenedor: debes verificar que el servicio responde por HTTP en localhost.',
     'curl http://localhost:4566/_localstack/health',
-    ['curl hace una petición HTTP desde la terminal.', 'localhost significa tu propio computador.', '4566 es el puerto donde escucha Floci.', '/_localstack/health devuelve el estado de servicios disponibles.'],
+    ['curl hace una petición HTTP desde la terminal.', 'localhost significa tu propio computador.', '4566 es el puerto donde escucha el emulador AWS local.', '/_localstack/health devuelve el estado de servicios disponibles.'],
     '{"services":{"s3":"available","sqs":"available","lambda":"available"}}',
     'Ejecuta el comando y pega al menos dos servicios que aparezcan como available.',
     '¿Qué servicios aparecen disponibles?',
     'Debe mencionar servicios como s3, sqs, lambda o dynamodb en estado available.',
     ['available', 's3', 'sqs', 'lambda']),
-  guidedStep(6, 'Docker y Floci', 'Configurar AWS CLI para laboratorio local',
-    'AWS CLI necesita credenciales aunque Floci sea local. Usamos valores ficticios porque el emulador no cobra ni autentica contra AWS real.',
+  guidedStep(6, 'Docker y Cloud local', 'Configurar AWS CLI para laboratorio local',
+    'AWS CLI necesita credenciales aunque el laboratorio sea local. Usamos valores ficticios porque el emulador no cobra ni autentica contra AWS real.',
     'aws configure set aws_access_key_id test\naws configure set aws_secret_access_key test\naws configure set region us-east-1',
     ['aws configure set guarda una configuración local.', 'aws_access_key_id test define una clave falsa.', 'aws_secret_access_key test define un secreto falso.', 'region us-east-1 define una región estándar para los comandos.'],
     'Sin salida si la configuración se guarda correctamente.',
     'Ejecuta las tres líneas una por una. No pegues claves reales.',
     '¿Por qué usamos test como access key?',
-    'Porque Floci corre local y solo necesita credenciales ficticias para que AWS CLI forme las peticiones.',
-    ['test', 'credenciales', 'local', 'floci']),
-  guidedStep(7, 'Docker y Floci', 'Probar AWS CLI contra Floci',
+    'Porque el emulador corre local y solo necesita credenciales ficticias para que AWS CLI forme las peticiones.',
+    ['test', 'credenciales', 'local', 'cloud local']),
+  guidedStep(7, 'Docker y Cloud local', 'Probar AWS CLI contra el emulador local',
     'Este paso confirma que AWS CLI está hablando con el endpoint local y no con AWS real.',
     'aws s3 ls --endpoint-url http://localhost:4566',
-    ['aws s3 ls lista buckets de S3.', '--endpoint-url cambia el destino del comando.', 'http://localhost:4566 apunta al Floci local.'],
+    ['aws s3 ls lista buckets de S3.', '--endpoint-url cambia el destino del comando.', 'http://localhost:4566 apunta al emulador local, no a AWS real.'],
     'Sin salida si todavía no existen buckets.',
     'Ejecuta el comando. Si no aparece nada, eso también es una respuesta válida al inicio.',
     '¿Qué deberías ver si no hay buckets creados?',
     'No debería ver buckets; la salida puede estar vacía.',
     ['sin salida', 'vacia', 'bucket']),
   guidedStep(8, 'S3 almacenamiento', 'Qué es S3',
-    'S3 guarda objetos: archivos con nombre, contenido y metadata. En Floci practicas buckets y objetos sin pagar almacenamiento real.',
+    'S3 guarda objetos: archivos con nombre, contenido y metadata. En cloud local practicas buckets y objetos sin pagar almacenamiento real.',
     undefined,
     ['Bucket es el contenedor lógico.', 'Objeto es el archivo guardado.', 'Key es la ruta o nombre del objeto dentro del bucket.'],
     'No hay salida esperada. Este paso es conceptual.',
@@ -194,7 +195,7 @@ const GUIDED_STEPS: CourseStep[] = [
   guidedStep(9, 'S3 almacenamiento', 'Crear un bucket',
     'Crear un bucket es el primer recurso real del laboratorio S3. Todo archivo que subas necesita vivir dentro de un bucket.',
     'aws s3 mb s3://mi-bucket --endpoint-url http://localhost:4566',
-    ['aws s3 mb significa make bucket.', 's3://mi-bucket es el nombre del bucket.', '--endpoint-url evita tocar AWS real y usa Floci.'],
+    ['aws s3 mb significa make bucket.', 's3://mi-bucket es el nombre del bucket.', '--endpoint-url evita tocar AWS real y usa el emulador local.'],
     'make_bucket: mi-bucket',
     'Crea un bucket. Puedes cambiar mi-bucket por un nombre propio corto.',
     '¿Qué nombre le pusiste a tu bucket?',
@@ -230,7 +231,7 @@ const GUIDED_STEPS: CourseStep[] = [
   guidedStep(13, 'S3 almacenamiento', 'Eliminar un objeto',
     'Eliminar un objeto limpia el bucket y te prepara para borrar el bucket completo.',
     'aws s3 rm s3://mi-bucket/miarchivo.txt --endpoint-url http://localhost:4566',
-    ['aws s3 rm elimina un objeto.', 's3://mi-bucket/miarchivo.txt identifica exactamente qué borrar.', '--endpoint-url usa Floci local.'],
+    ['aws s3 rm elimina un objeto.', 's3://mi-bucket/miarchivo.txt identifica exactamente qué borrar.', '--endpoint-url usa el emulador de cloud local.'],
     'delete: s3://mi-bucket/miarchivo.txt',
     'Elimina el objeto y luego lista el bucket para confirmar que ya no aparece.',
     '¿Cómo verificas que el archivo fue eliminado?',
@@ -258,7 +259,7 @@ const GUIDED_STEPS: CourseStep[] = [
   guidedStep(16, 'SQS colas', 'Crear una cola',
     'Una cola necesita nombre y devuelve una URL. Esa URL se usa en los siguientes comandos.',
     'aws sqs create-queue --queue-name mi-cola --endpoint-url http://localhost:4566',
-    ['aws sqs create-queue crea una cola.', '--queue-name mi-cola define el nombre.', '--endpoint-url apunta a Floci local.'],
+    ['aws sqs create-queue crea una cola.', '--queue-name mi-cola define el nombre.', '--endpoint-url apunta a el emulador de cloud local.'],
     '{"QueueUrl":"http://localhost:4566/000000000000/mi-cola"}',
     'Crea la cola y copia la QueueUrl.',
     '¿Cuál es la URL de tu cola?',
@@ -320,7 +321,7 @@ const GUIDED_STEPS: CourseStep[] = [
     ['pk', 'sk', 'active']),
   guidedStep(23, 'DynamoDB NoSQL', 'Insertar un ítem',
     'Un ítem representa una tarea. Usamos USER#alice como partición para consultar todas sus tareas.',
-    'aws dynamodb put-item --table-name Tareas --item \'{"PK":{"S":"USER#alice"},"SK":{"S":"TAREA#001"},"titulo":{"S":"Aprender Floci"},"estado":{"S":"pendiente"}}\' --endpoint-url http://localhost:4566',
+    'aws dynamodb put-item --table-name Tareas --item \'{"PK":{"S":"USER#alice"},"SK":{"S":"TAREA#001"},"titulo":{"S":"Aprender el emulador de cloud local"},"estado":{"S":"pendiente"}}\' --endpoint-url http://localhost:4566',
     ['put-item inserta o reemplaza un ítem.', 'PK USER#alice agrupa datos de Alice.', 'SK TAREA#001 identifica la tarea.', 'estado permite luego filtrar o indexar.'],
     'Sin salida si se inserta correctamente.',
     'Inserta el ítem y luego prepárate para consultarlo.',
@@ -331,7 +332,7 @@ const GUIDED_STEPS: CourseStep[] = [
     'Query recupera ítems por clave. Es la forma correcta de leer datos cuando conoces la partición.',
     'aws dynamodb query --table-name Tareas --key-condition-expression "PK = :pk" --expression-attribute-values \'{":pk":{"S":"USER#alice"}}\' --endpoint-url http://localhost:4566',
     ['query lee por clave.', '--key-condition-expression define la condición.', ':pk es una variable de expresión.', '--expression-attribute-values da valor a la variable.'],
-    '{"Items":[{"PK":{"S":"USER#alice"},"SK":{"S":"TAREA#001"},"titulo":{"S":"Aprender Floci"}}]}',
+    '{"Items":[{"PK":{"S":"USER#alice"},"SK":{"S":"TAREA#001"},"titulo":{"S":"Aprender el emulador de cloud local"}}]}',
     'Consulta la tabla y pega el título devuelto.',
     '¿Por qué Query es mejor que Scan aquí?',
     'Porque Query usa la partition key USER#alice y no revisa toda la tabla.',
@@ -346,7 +347,7 @@ const GUIDED_STEPS: CourseStep[] = [
     'Pierdo todos los ítems de la tabla si no tengo respaldo o exportación.',
     ['delete', 'tabla', 'datos']),
   guidedStep(26, 'Lambda funciones', 'Qué es Lambda',
-    'Lambda ejecuta funciones sin que administres servidores. En Floci practicas empaquetado, invocación y logs localmente.',
+    'Lambda ejecuta funciones sin que administres servidores. En el emulador de cloud local practicas empaquetado, invocación y logs localmente.',
     undefined,
     ['Handler es la función de entrada.', 'Event contiene los datos de invocación.', 'Context trae metadata de ejecución.', 'La función debe ser pequeña y observable.'],
     'No hay salida esperada. Este paso es conceptual.',
@@ -356,7 +357,7 @@ const GUIDED_STEPS: CourseStep[] = [
     ['event', 'handler', 'lambda']),
   guidedStep(27, 'Lambda funciones', 'Crear handler.py',
     'Antes de desplegar, necesitas un archivo con la función handler que Lambda invocará.',
-    'cat > handler.py <<\'PY\'\ndef handler(event, context):\n    return {"statusCode": 200, "body": "Hola Floci"}\nPY',
+    'cat > handler.py <<\'PY\'\ndef handler(event, context):\n    return {"statusCode": 200, "body": "Hola el emulador de cloud local"}\nPY',
     ['cat > handler.py crea el archivo.', "<<'PY' abre un bloque heredoc.", 'def handler(event, context) define la función de entrada.', 'return devuelve una respuesta compatible con HTTP.'],
     'Se crea el archivo handler.py sin salida adicional.',
     'Crea el archivo y revisa su contenido con cat handler.py.',
@@ -376,11 +377,11 @@ const GUIDED_STEPS: CourseStep[] = [
     'Invocar ejecuta la función y guarda la respuesta en un archivo para inspeccionarla.',
     'aws lambda invoke --function-name mi-funcion output.json --endpoint-url http://localhost:4566 && cat output.json',
     ['lambda invoke ejecuta la función.', '--function-name indica cuál.', 'output.json guarda la respuesta.', 'cat output.json muestra el contenido.'],
-    '{"statusCode":200,"body":"Hola Floci"}',
+    '{"statusCode":200,"body":"Hola el emulador de cloud local"}',
     'Invoca la función y pega el contenido de output.json.',
     '¿Qué body devolvió la función?',
-    'Devolvió Hola Floci.',
-    ['hola', 'floci', 'statuscode']),
+    'Devolvió Hola el emulador de cloud local.',
+    ['hola', 'cloud local', 'statuscode']),
   guidedStep(30, 'Lambda funciones', 'Leer logs de Lambda',
     'Los logs son la primera herramienta para entender fallos. No adivines: busca evidencia.',
     'aws logs filter-log-events --log-group-name /aws/lambda/mi-funcion --endpoint-url http://localhost:4566',
@@ -420,7 +421,7 @@ const GUIDED_STEPS: CourseStep[] = [
   guidedStep(34, 'API Gateway', 'Invocar API con curl',
     'La prueba final de API es enviar una petición HTTP y observar una respuesta.',
     'curl -X POST http://localhost:4566/restapis/<API_ID>/dev/_user_request_/tareas -d \'{"titulo":"Mi primera tarea"}\'',
-    ['curl ejecuta la petición HTTP.', '-X POST define el método.', '-d envía el cuerpo JSON.', '_user_request_ es la ruta local de invocación en emuladores tipo LocalStack/Floci.'],
+    ['curl ejecuta la petición HTTP.', '-X POST define el método.', '-d envía el cuerpo JSON.', '_user_request_ es la ruta local de invocación en emuladores tipo LocalStack/el emulador de cloud local.'],
     '{"ok":true,"titulo":"Mi primera tarea"}',
     'Ejecuta curl y pega el JSON de respuesta o el error exacto.',
     '¿Qué envía el flag -d?',
@@ -464,9 +465,9 @@ const GUIDED_STEPS: CourseStep[] = [
     ['imagen', 'contenedor', 'ecr']),
   guidedStep(39, 'Infraestructura como código', 'Crear infraestructura reproducible',
     'IaC evita crear recursos a mano sin registro. Un archivo declara qué recursos existen y permite repetir el ambiente.',
-    'aws cloudformation deploy --template-file template.yml --stack-name academia-floci --endpoint-url http://localhost:4566',
-    ['cloudformation deploy aplica una plantilla.', '--template-file indica el archivo declarativo.', '--stack-name agrupa recursos.', '--endpoint-url usa Floci local.'],
-    'Successfully created/updated stack - academia-floci',
+    'aws cloudformation deploy --template-file template.yml --stack-name academia-cloud local --endpoint-url http://localhost:4566',
+    ['cloudformation deploy aplica una plantilla.', '--template-file indica el archivo declarativo.', '--stack-name agrupa recursos.', '--endpoint-url usa el emulador de cloud local.'],
+    'Successfully created/updated stack - academia-cloud local',
     'Crea una plantilla mínima con un bucket y una cola, luego despliega el stack.',
     '¿Qué ventaja tiene IaC frente a comandos manuales?',
     'Permite repetir, versionar y revisar infraestructura de forma controlada.',
@@ -509,9 +510,9 @@ const GUIDED_STEPS: CourseStep[] = [
     ['athena', 'bigquery', 'sql']),
   guidedStep(44, 'Azure y GCP', 'Comparar servicios equivalentes',
     'Aprender cloud por problema evita casarte con una marca. S3, Blob Storage y Cloud Storage resuelven almacenamiento de objetos con nombres distintos.',
-    'floci az start\nexport STORAGE_EMULATOR_HOST=http://localhost:4588',
-    ['floci az start levanta emulador Azure.', 'STORAGE_EMULATOR_HOST apunta herramientas GCP al emulador local.', 'El objetivo es comparar patrón, endpoint y comando.'],
-    'Floci Azure ready\nGCP emulator listening on localhost:4588',
+    '<cli-emulador-azure> start\nexport STORAGE_EMULATOR_HOST=http://localhost:4588',
+    ['<cli-emulador-azure> start representa el comando de arranque del emulador Azure que elijas.', 'STORAGE_EMULATOR_HOST apunta herramientas GCP al emulador local.', 'El objetivo es comparar patrón, endpoint y comando.'],
+    'Azure local emulator ready\nGCP emulator listening on localhost:4588',
     'Haz una tabla de equivalencias: S3=Blob=Cloud Storage, SQS=Service Bus/Pub/Sub, Lambda=Functions/Cloud Functions.',
     '¿Por qué conviene aprender equivalencias entre nubes?',
     'Porque el patrón técnico se repite aunque cambien nombres y comandos.',
@@ -534,18 +535,18 @@ const topicBlueprints: Record<number, TopicBlueprint[]> = {
       level: 'Básico',
       minutes: 45,
       focus: 'Aprender a abrir una terminal, instalar herramientas y distinguir Docker, CLI, SDK, endpoint y variable de entorno.',
-      lab: 'Instala Docker Desktop, abre Terminal en Mac/Linux o PowerShell en Windows, ejecuta docker version y luego floci status.',
+      lab: 'Instala Docker Desktop, abre Terminal en Mac/Linux o PowerShell en Windows, ejecuta docker version y luego revisa el estado del emulador local que elegiste.',
       objectives: ['Abrir una consola sin depender de un IDE.', 'Instalar Docker y verificar que esté encendido.', 'Entender qué comando solo valida y cuál modifica recursos.'],
       concepts: ['Terminal', 'Docker Desktop', 'PowerShell', 'Terminal macOS', 'Shell Linux', 'PATH', 'variable de entorno'],
     },
     {
-      title: 'Floci AWS, Azure y GCP en local',
+      title: 'Cloud local con AWS, Azure y GCP',
       level: 'Básico',
       minutes: 50,
       focus: 'Levantar los tres emuladores y entender que el mismo patrón se repite: servicio local, endpoint local y credenciales falsas.',
-      lab: 'Ejecuta floci start, floci az start y docker run -p 4588:4588 floci/floci-gcp:latest; verifica cada estado.',
-      objectives: ['Diferenciar AWS real de Floci local.', 'Configurar endpoint y credenciales sin cuenta real.', 'Reconocer cuándo un laboratorio habla con localhost.'],
-      concepts: ['floci start', 'floci az start', 'floci-gcp', 'localhost', 'endpoint local', 'credenciales dummy'],
+      lab: 'Levanta un emulador AWS en 4566, un emulador Azure en 4577 y un emulador GCP en 4588; verifica cada estado antes de crear recursos.',
+      objectives: ['Diferenciar AWS real de un emulador local.', 'Configurar endpoint y credenciales sin cuenta real.', 'Reconocer cuándo un laboratorio habla con localhost.'],
+      concepts: ['puerto 4566', 'puerto 4577', 'puerto 4588', 'localhost', 'endpoint local', 'credenciales dummy'],
       cloud: 'AWS + Azure + GCP',
     },
   ],
@@ -762,7 +763,7 @@ const topicBlueprints: Record<number, TopicBlueprint[]> = {
       level: 'Avanzado',
       minutes: 60,
       focus: 'Definir recursos en archivo, aplicarlos y revisar diferencias antes de cambiar infraestructura.',
-      lab: 'Crea template CloudFormation para S3 + SQS y aplícalo contra Floci.',
+      lab: 'Crea template CloudFormation para S3 + SQS y aplícalo contra el emulador de cloud local.',
       objectives: ['Leer YAML de infraestructura.', 'Crear stack reproducible.', 'Entender create/update/delete.'],
       concepts: ['CloudFormation', 'Terraform', 'IaC', 'stack', 'drift', 'plan'],
     },
@@ -915,9 +916,9 @@ const topicBlueprints: Record<number, TopicBlueprint[]> = {
       level: 'Master',
       minutes: 75,
       focus: 'Repetir el mismo flujo en tres nubes locales: archivo, evento, función y evidencia.',
-      lab: 'Sube archivo, publica evento y ejecuta una función equivalente en AWS Floci, Floci Azure y Floci GCP.',
+      lab: 'Sube archivo, publica evento y ejecuta una función equivalente en AWS local, Azure local y GCP local.',
       objectives: ['Comparar comandos reales.', 'Registrar diferencias de endpoint.', 'Construir criterio multi-cloud.'],
-      concepts: ['multi-cloud', 'floci-az', 'floci-gcp', 'endpoint', 'SDK'],
+      concepts: ['multi-cloud', 'emulador Azure local', 'emulador GCP local', 'endpoint', 'SDK'],
       cloud: 'AWS + Azure + GCP',
     },
   ],
@@ -933,7 +934,7 @@ const levelFromCourse = (level: CourseModule['level']): Level => {
 const commandFrom = (module: CourseModule): string =>
   module.challenges.find(challenge => challenge.includes('—'))?.split('—').pop()?.trim()
   ?? module.challenges[0]
-  ?? 'floci status';
+  ?? 'cloud local status';
 
 const commandOnly = (text: string): string => text.includes('—')
   ? text.split('—').pop()?.trim() || text
@@ -947,8 +948,8 @@ const labStepsFor = (module: CourseModule, blueprint: TopicBlueprint): LabStep[]
   return [
     {
       title: 'Preparar entorno',
-      command: 'docker version && floci status',
-      verify: 'Debe mostrar una versión de Docker y el estado del emulador Floci. Si falla, abre Docker Desktop y vuelve a ejecutar.',
+      command: 'docker version',
+      verify: 'Debe mostrar una versión de Docker. Después confirma manualmente que el emulador local elegido está encendido.',
     },
     {
       title: 'Ejecutar paso principal',
@@ -972,7 +973,7 @@ const fallbackBlueprints = (module: CourseModule): TopicBlueprint[] => [
     lab: module.challenges[0] ?? commandFrom(module),
     objectives: [
       `Explicar qué problema resuelve ${module.shortTitle}.`,
-      `Ejecutar un paso verificable con ${module.services.join(', ') || 'Floci'}.`,
+      `Ejecutar un paso verificable con ${module.services.join(', ') || 'el emulador de cloud local'}.`,
       'Registrar evidencia en tu cuaderno.',
     ],
     concepts: module.concepts.slice(0, 6),
@@ -999,7 +1000,7 @@ const buildTopic = (module: CourseModule, blueprint: TopicBlueprint, index: numb
   const code = [
     '# Antes de ejecutar',
     '# 1. Abre la terminal.',
-    '# 2. Verifica que Docker y Floci estén encendidos.',
+    '# 2. Verifica que Docker y Cloud local estén encendidos.',
     '# 3. Copia un comando a la vez y lee la salida.',
     '',
     '# Laboratorio',
@@ -1028,7 +1029,7 @@ const buildTopic = (module: CourseModule, blueprint: TopicBlueprint, index: numb
       },
       {
         title: 'Cómo se aplica',
-        body: `Este tema se practica con ${serviceList}. Primero haces que funcione en Floci; después comparas el mismo patrón con nube real sin gastar dinero ni tocar producción.`,
+        body: `Este tema se practica con ${serviceList}. Primero haces que funcione en el emulador de cloud local; después comparas el mismo patrón con nube real sin gastar dinero ni tocar producción.`,
         bullets: [
           `Laboratorio: ${blueprint.lab}`,
           `Entrega: ${module.deliverable}`,
@@ -1038,11 +1039,11 @@ const buildTopic = (module: CourseModule, blueprint: TopicBlueprint, index: numb
     ],
     comparison: {
       left: blueprint.cloud ?? 'Nube real',
-      right: 'Floci local',
+      right: 'el emulador de cloud local',
       leftDetail: 'Requiere cuenta, permisos, costo potencial y limpieza cuidadosa de recursos.',
       rightDetail: 'Permite practicar rápido en localhost, repetir errores y validar comandos sin costo mientras aprendes el patrón.',
     },
-    diagram: `Alumno -> Terminal -> Floci localhost -> ${serviceList} -> Evidencia -> Explicación propia`,
+    diagram: `Alumno -> Terminal -> localhost -> ${serviceList} -> Evidencia -> Explicación propia`,
     code,
     labSteps: labStepsFor(module, blueprint),
     lineByLine: code.split('\n').slice(0, 6).map((line, index) => `Línea ${index + 1}: ${line || 'separador visual del ejemplo.'}`),
@@ -1055,7 +1056,7 @@ const buildTopic = (module: CourseModule, blueprint: TopicBlueprint, index: numb
       'Si falla, lee el error completo antes de cambiar varios comandos a la vez.',
     ],
     commonErrors: [
-      'No tener Docker corriendo antes de levantar Floci.',
+      'No tener Docker corriendo antes de levantar el emulador de cloud local.',
       'Olvidar el endpoint local o las variables de entorno.',
       'Crear recursos y no verificar que existen.',
       'Copiar comandos sin entender qué parte es nombre, región o identificador.',
@@ -1086,7 +1087,7 @@ const diagnosticTopic = (module: CourseModule): Topic => ({
   ],
   exercise: 'Responde las 5 preguntas de diagnóstico antes de iniciar el laboratorio. No busques la respuesta: escribe tu hipótesis.',
   quiz: [
-    { question: '¿Qué diferencia hay entre un endpoint local y AWS real?', answer: 'El endpoint local apunta a Floci en localhost; AWS real apunta a servicios administrados con cuenta, permisos y costo.' },
+    { question: '¿Qué diferencia hay entre un endpoint local y AWS real?', answer: 'El endpoint local apunta a un emulador en localhost; AWS real apunta a servicios administrados con cuenta, permisos y costo.' },
     { question: '¿Qué diferencia hay entre imagen Docker y contenedor?', answer: 'La imagen es la plantilla; el contenedor es una ejecución viva de esa plantilla.' },
     { question: '¿Para qué sirven access key, secret key y ARN?', answer: 'Las keys autentican llamadas; el ARN identifica recursos en formato estándar.' },
     { question: '¿Cuándo usar cola, topic, stream o event bus?', answer: 'Cola para trabajo pendiente, topic para fan-out, stream para eventos ordenados/retención, event bus para ruteo por reglas.' },
@@ -1106,13 +1107,13 @@ const moduleToStudy = (module: CourseModule): StudyModule => ({
 
 const azureGcpSource: CourseModule = {
   id: 18,
-  title: 'Azure y GCP con Floci',
+  title: 'Azure y GCP con el emulador de cloud local',
   shortTitle: 'Azure y GCP',
   level: 'Integración',
   duration: '2 h',
   color: '#2563eb',
-  description: 'Módulo dedicado a cerrar la brecha multi-cloud: equivalencias, comandos y laboratorios comparables entre AWS, Azure y GCP usando Floci local.',
-  concepts: ['equivalencias cloud', 'floci-az', 'floci-gcp', 'Blob Storage', 'Cloud Storage', 'Service Bus', 'Pub/Sub', 'Cosmos DB', 'Firestore'],
+  description: 'Módulo dedicado a cerrar la brecha multi-cloud: equivalencias, comandos y laboratorios comparables entre AWS, Azure y GCP usando el emulador de cloud local.',
+  concepts: ['equivalencias cloud', 'emulador Azure local', 'emulador GCP local', 'Blob Storage', 'Cloud Storage', 'Service Bus', 'Pub/Sub', 'Cosmos DB', 'Firestore'],
   challenges: [
     'Compara servicios — crea una tabla local de equivalencias AWS/Azure/GCP',
     'Ejecuta flujo multi-cloud — sube archivo, publica evento y registra evidencia',
@@ -1230,7 +1231,7 @@ export class StudyPageComponent implements OnInit {
       `Pregunta de control: si alguien te pide probar que entendiste, debes poder responder: "${this.currentStep.question}" sin mirar la solución.`,
     ];
     if (command.includes('--endpoint-url')) {
-      notes.push('Punto crítico: --endpoint-url obliga a la herramienta a hablar con Floci local. Sin eso puedes terminar apuntando a nube real.');
+      notes.push('Punto crítico: --endpoint-url obliga a la herramienta a hablar con el emulador de cloud local. Sin eso puedes terminar apuntando a nube real.');
     }
     if (command.includes('docker')) {
       notes.push('Docker no es el objetivo final: es el motor que permite levantar servicios locales repetibles sin ensuciar tu sistema.');
@@ -1273,7 +1274,7 @@ export class StudyPageComponent implements OnInit {
       'Cambiar varias cosas a la vez cuando aparece un error.',
     ];
     if (command.includes('localhost')) mistakes.push('Olvidar que localhost significa tu propia máquina, no internet ni AWS real.');
-    if (command.includes('4566')) mistakes.push('Tener otro proceso usando el puerto 4566 o no haber levantado Floci antes.');
+    if (command.includes('4566')) mistakes.push('Tener otro proceso usando el puerto 4566 o no haber levantado el emulador de cloud local antes.');
     if (command.includes('<')) mistakes.push('No reemplazar valores como <API_ID> o <RECEIPT_HANDLE> por el valor real que te dio la terminal.');
     if (command.includes('aws ')) mistakes.push('Olvidar --endpoint-url y ejecutar contra la configuración normal de AWS CLI.');
     return mistakes;
@@ -1392,7 +1393,7 @@ export class StudyPageComponent implements OnInit {
       .split('\n')
       .map(line => line.trim())
       .filter(line => line && !line.startsWith('#'));
-    const tools = lines.flatMap(line => line.match(/\b(aws|az|gcloud|docker|floci|curl|terraform|kubectl|psql|zip|make|cat|echo)\b/g) ?? []);
+    const tools = lines.flatMap(line => line.match(/\b(aws|az|gcloud|docker|cloud local|curl|terraform|kubectl|psql|zip|make|cat|echo)\b/g) ?? []);
     this.guidedOutput = [
       'Simulación educativa completada.',
       `Paso ${this.currentStep.id}/${this.guidedSteps.length}: ${this.currentStep.title}.`,
@@ -1517,7 +1518,7 @@ export class StudyPageComponent implements OnInit {
     const code = this.editorCode.toLowerCase();
     if (/console\.log|const |let |function |=>/.test(code)) return 'JavaScript';
     if (/def |print\(|import boto3|python/.test(code)) return 'Python';
-    if (/aws |az |gcloud |docker |floci |curl |terraform |kubectl/.test(code)) return 'Terminal';
+    if (/aws |az |gcloud |docker |cloud local |curl |terraform |kubectl/.test(code)) return 'Terminal';
     return 'Texto';
   }
 
@@ -1529,7 +1530,7 @@ export class StudyPageComponent implements OnInit {
     const step = this.selectedTopic.labSteps[index];
     if (!step) return;
     const command = step.command.toLowerCase();
-    const hasTool = /aws|az |gcloud|docker|floci|curl|terraform|kubectl|psql|zip/.test(command);
+    const hasTool = /aws|az |gcloud|docker|cloud local|curl|terraform|kubectl|psql|zip/.test(command);
     if (!hasTool && command.split(/\s+/).length < 3) {
       this.output = 'Este paso necesita un comando más concreto antes de marcarlo como verificado.';
       return;
@@ -1574,7 +1575,7 @@ export class StudyPageComponent implements OnInit {
         .map(line => line.trim())
         .filter(line => line && !line.startsWith('#'));
       const tools = commandLines
-        .flatMap(line => line.match(/\b(aws|az|gcloud|docker|floci|curl|terraform|kubectl|psql|zip)\b/g) ?? []);
+        .flatMap(line => line.match(/\b(aws|az|gcloud|docker|cloud local|curl|terraform|kubectl|psql|zip)\b/g) ?? []);
       this.output = [
         'Simulación de terminal completada.',
         `Comandos detectados: ${commandLines.length}.`,
@@ -1590,7 +1591,7 @@ export class StudyPageComponent implements OnInit {
     this.saveCurrentAnswer();
     this.saveEditorDraft();
     const lines = [
-      '# Cuaderno de progreso Academia Floci',
+      '# Cuaderno de progreso Academia Cloud Local',
       '',
       `Progreso global: ${this.globalProgress()}%`,
       `Progreso ruta guiada: ${this.completedGuidedSteps.size}/${this.guidedSteps.length} pasos`,
@@ -1612,7 +1613,7 @@ export class StudyPageComponent implements OnInit {
     const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
     link.href = url;
-    link.download = 'cuaderno-progreso-floci.md';
+    link.download = 'cuaderno-progreso-cloud local.md';
     link.click();
     URL.revokeObjectURL(url);
   }
@@ -1629,7 +1630,7 @@ export class StudyPageComponent implements OnInit {
     )];
     const matches = expectedTokens.filter(token => normalizedAnswer.includes(token)).slice(0, 10);
     const missing = expectedTokens.filter(token => !normalizedAnswer.includes(token));
-    const hasCommandSignal = /\b(aws|floci|docker|gcloud|az|curl|terraform|kubectl|psql|zip)\b/.test(normalizedAnswer);
+    const hasCommandSignal = /\b(aws|cloud local|docker|gcloud|az|curl|terraform|kubectl|psql|zip)\b/.test(normalizedAnswer);
     const hasEvidenceSignal = /\b(output|json|arn|http|localhost|status|created|ok|error|id|bucket|queue|tabla|log)\b/.test(normalizedAnswer);
     const enoughExplanation = normalizedAnswer.split(/\s+/).filter(Boolean).length >= 24;
     return {
@@ -1658,7 +1659,7 @@ export class StudyPageComponent implements OnInit {
       return Promise.resolve('El sandbox bloqueó APIs o bucles peligrosos. Usa ejemplos pequeños con console.log y lógica pura.');
     }
 
-    const id = `floci-${Date.now()}-${Math.random().toString(16).slice(2)}`;
+    const id = `cloud local-${Date.now()}-${Math.random().toString(16).slice(2)}`;
     const iframe = document.createElement('iframe');
     iframe.sandbox.add('allow-scripts');
     iframe.style.display = 'none';
@@ -1671,7 +1672,7 @@ export class StudyPageComponent implements OnInit {
       };
       const timeout = window.setTimeout(() => finish('El sandbox tardó demasiado. Revisa si tu código tiene un ciclo infinito.'), 1200);
       const onMessage = (event: MessageEvent): void => {
-        if (!event.data || event.data.source !== 'floci-sandbox' || event.data.id !== id) return;
+        if (!event.data || event.data.source !== 'cloud local-sandbox' || event.data.id !== id) return;
         window.clearTimeout(timeout);
         const lines = event.data.error
           ? [`Error: ${event.data.error}`]
@@ -1689,9 +1690,9 @@ export class StudyPageComponent implements OnInit {
           try {
             const result = Function('console', ${JSON.stringify(`"use strict";\n${code}`)})(safeConsole);
             if (result !== undefined) logs.push(String(result));
-            parent.postMessage({ source: 'floci-sandbox', id: ${JSON.stringify(id)}, logs }, '*');
+            parent.postMessage({ source: 'cloud local-sandbox', id: ${JSON.stringify(id)}, logs }, '*');
           } catch (error) {
-            parent.postMessage({ source: 'floci-sandbox', id: ${JSON.stringify(id)}, error: error.message }, '*');
+            parent.postMessage({ source: 'cloud local-sandbox', id: ${JSON.stringify(id)}, error: error.message }, '*');
           }
         <\/script>
       `;

@@ -1,5 +1,7 @@
+name: academia_cloud_local
+
 services:
-  floci:
+  aws-local:
     image: floci/floci:1.5.22-compat
     ports:
       - "4566:4566"
@@ -18,24 +20,24 @@ services:
   stackport:
     image: davireis/stackport:latest
     depends_on:
-      - floci
+      - aws-local
     ports:
       - "8080:8080"
     environment:
-      AWS_ENDPOINT_URL: http://floci:4566
+      AWS_ENDPOINT_URL: http://aws-local:4566
       AWS_ACCESS_KEY_ID: test
       AWS_SECRET_ACCESS_KEY: test
       AWS_REGION: us-east-1
       STACKPORT_PORT: "8080"
 
-  floci-az:
+  azure-local:
     image: floci/floci-az:latest
     ports:
       - "4577:4577"
       - "5672:5672" # Event Hubs AMQP
       - "5673:5673" # Service Bus AMQP
 
-  floci-gcp:
+  gcp-local:
     image: floci/floci-gcp:latest
     ports:
       - "4588:4588"

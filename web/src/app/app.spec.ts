@@ -24,7 +24,7 @@ describe('App', () => {
     await harness.navigateByUrl('/', StudyPageComponent);
     harness.detectChanges();
     const text = harness.routeNativeElement?.textContent ?? '';
-    expect(text).toContain('Academia Floci');
+    expect(text).toContain('Academia Cloud Local');
     expect(text).toContain('Un paso a la vez');
     expect(text).toContain('Paso 1: Qué es Docker y por qué lo necesitas');
     expect(text).toContain('Siguiente paso');
