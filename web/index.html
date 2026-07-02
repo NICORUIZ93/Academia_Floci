@@ -31,7 +31,7 @@
       <span id="progressLabel">Paso 1 de 45</span>
       <progress id="progressBar" value="1" max="45"></progress>
     </div>
-    <button id="toggleNav" class="mobile-nav-button" type="button" aria-expanded="false" aria-controls="courseNav">Menu</button>
+    <button id="toggleNav" class="mobile-nav-button" type="button" aria-expanded="false" aria-controls="courseNav">☰ Pasos</button>
   </header>
 
   <section class="floci-check" aria-label="Verificacion de Floci">
@@ -202,12 +202,23 @@ flowchart TB
     <aside class="outline" aria-label="Temario">
       <div class="outline-header">
         <h2 id="outlineTitle">Temario</h2>
-        <button id="toggleAllLessons" class="ghost-button" type="button">Ver todos</button>
+        <button id="toggleAllLessons" class="ghost-button" type="button">Temario completo</button>
       </div>
       <ol id="lessonList" class="lesson-list"></ol>
       <p id="sourceStatus" class="status-text"></p>
     </aside>
   </div>
+
+  <dialog id="fullOutlineDialog" class="outline-dialog" aria-labelledby="fullOutlineTitle">
+    <div class="dialog-header">
+      <div>
+        <p class="eyebrow">Ruta completa</p>
+        <h2 id="fullOutlineTitle">Temario completo</h2>
+      </div>
+      <button id="closeFullOutline" class="ghost-button" type="button">Cerrar</button>
+    </div>
+    <ol id="fullLessonList" class="full-lesson-list"></ol>
+  </dialog>
 
   <script src="app-data.js"></script>
   <script src="app.js"></script>

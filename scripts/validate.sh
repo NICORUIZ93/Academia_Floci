@@ -102,6 +102,15 @@ for (const lesson of fallbackSteps) {
   if (!Array.isArray(lesson.resources) || lesson.resources.length < 3) {
     throw new Error(`La leccion ${lesson.number} debe tener recursos`);
   }
+  if (!lesson.explanation.includes('¿Por que es importante esto?') || !lesson.explanation.includes('¿Como se conecta con lo que ya aprendiste?')) {
+    throw new Error(`La leccion ${lesson.number} debe empezar con contexto inicial`);
+  }
+  if (!['Principiante', 'Intermedio', 'Avanzado', 'Master'].includes(lesson.difficulty)) {
+    throw new Error(`La leccion ${lesson.number} debe tener nivel Principiante, Intermedio, Avanzado o Master`);
+  }
+  if (!lesson.breakdown.some((item) => item.includes('Opciones y flags'))) {
+    throw new Error(`La leccion ${lesson.number} debe desglosar opciones y flags`);
+  }
 }
 
 for (const course of courses) {
@@ -185,19 +194,19 @@ if (!html.includes('id="floci-status"') || !app.includes('async function verific
   throw new Error('La web debe incluir verificacion de Floci');
 }
 
-for (const expected of ['id="noteText"', 'id="saveNote"', 'id="difficultyBadge"', 'id="timeBadge"', 'diagram-card', 'class="mermaid"', 'service-icon', 'id="predictionText"', 'id="explanationText"', 'id="toggleNav"', 'id="toggleAllLessons"']) {
+for (const expected of ['id="noteText"', 'id="saveNote"', 'id="difficultyBadge"', 'id="timeBadge"', 'diagram-card', 'class="mermaid"', 'service-icon', 'id="predictionText"', 'id="explanationText"', 'id="toggleNav"', 'id="toggleAllLessons"', 'id="fullOutlineDialog"', 'id="fullLessonList"']) {
   if (!html.includes(expected)) {
     throw new Error(`web/index.html no contiene ${expected}`);
   }
 }
 
-for (const expected of ['saveCurrentNote', 'highlightCommand', 'token-command', 'saveActiveResponse', 'isActiveResponseComplete', 'toggleNavigation', 'showAllLessons']) {
+for (const expected of ['saveCurrentNote', 'highlightCommand', 'token-command', 'saveActiveResponse', 'isActiveResponseComplete', 'toggleNavigation', 'NEARBY_LESSON_WINDOW = 2', 'renderFullOutline', 'openFullOutline', '✅']) {
   if (!app.includes(expected)) {
     throw new Error(`web/app.js no contiene ${expected}`);
   }
 }
 
-for (const expected of ['@media (max-width: 760px)', 'body.nav-open .sidebar', '.mobile-nav-button', '.active-learning-panel', 'position: sticky', 'bottom: 0', '.service-icons']) {
+for (const expected of ['@media (max-width: 760px)', 'body.nav-open .sidebar', '.mobile-nav-button', '.active-learning-panel', 'position: sticky', 'bottom: 0', '.service-icons', '#16a34a', '.outline-dialog', '.full-course-lessons']) {
   if (!fs.readFileSync('web/app.css', 'utf8').includes(expected)) {
     throw new Error(`web/app.css no contiene ${expected}`);
   }

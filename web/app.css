@@ -8,6 +8,8 @@
   --accent: #0b6b5f;
   --accent-strong: #084f47;
   --accent-soft: #e4f2ef;
+  --complete: #16a34a;
+  --complete-soft: #dcfce7;
   --warn-soft: #f8efd7;
   --code: #171a1f;
 }
@@ -192,7 +194,13 @@ progress {
 }
 
 .course-card.is-complete {
-  background: var(--accent-soft);
+  color: #ffffff;
+  border-color: var(--complete);
+  background: var(--complete);
+}
+
+.course-card.is-complete .course-meta {
+  color: #ecfdf5;
 }
 
 .course-code {
@@ -265,13 +273,16 @@ progress {
 
 .panel {
   margin-top: 22px;
-  padding-top: 18px;
-  border-top: 1px solid var(--line);
+  padding: 18px;
+  border: 1px solid var(--line);
+  border-left: 4px solid var(--accent);
+  border-radius: 8px;
+  background: #fbfaf7;
 }
 
 .check-panel {
-  padding: 16px;
   border: 1px solid #e5d09a;
+  border-left: 4px solid #d97706;
   border-radius: 8px;
   background: var(--warn-soft);
 }
@@ -444,8 +455,79 @@ ul {
 }
 
 .lesson-list .is-complete {
+  color: #ffffff;
+  border-color: var(--complete);
+  background: var(--complete);
+}
+
+.outline-dialog {
+  width: min(980px, calc(100vw - 32px));
+  max-height: min(840px, calc(100vh - 32px));
+  padding: 0;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--surface);
+  box-shadow: 0 28px 80px rgb(0 0 0 / 22%);
+}
+
+.outline-dialog::backdrop {
+  background: rgb(32 33 36 / 50%);
+}
+
+.dialog-header {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 18px;
+  border-bottom: 1px solid var(--line);
+  background: var(--surface);
+}
+
+.dialog-header h2 {
+  margin: 4px 0 0;
+}
+
+.full-lesson-list {
+  display: grid;
+  gap: 18px;
+  margin: 0;
+  padding: 18px;
+  list-style: none;
+}
+
+.full-course-group h3 {
+  margin: 0 0 10px;
   color: var(--accent-strong);
-  background: var(--accent-soft);
+}
+
+.full-course-lessons {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.full-course-lessons button {
+  width: 100%;
+  min-height: 38px;
+  text-align: left;
+}
+
+.full-course-lessons .is-active {
+  border-color: var(--accent);
+  box-shadow: inset 4px 0 0 var(--accent);
+}
+
+.full-course-lessons .is-complete {
+  color: #ffffff;
+  border-color: var(--complete);
+  background: var(--complete);
 }
 
 .lesson-list-hint {
@@ -558,5 +640,9 @@ ul {
   .actions {
     margin: 24px -16px -18px;
     padding: 12px 16px;
+  }
+
+  .full-course-lessons {
+    grid-template-columns: 1fr;
   }
 }

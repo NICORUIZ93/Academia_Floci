@@ -3,7 +3,7 @@ let progressStep = readProgress();
 let viewStep = Math.min(progressStep, steps.length);
 const NOTES_KEY = "academia-master-notes";
 const ACTIVE_KEY = "academia-master-active-learning";
-let showAllLessons = false;
+const NEARBY_LESSON_WINDOW = 2;
 
 const $ = (id) => document.getElementById(id);
 
@@ -28,11 +28,14 @@ const elements = {
   resourcesList: $("resourcesList"),
   controlQuestion: $("controlQuestion"),
   lessonList: $("lessonList"),
+  fullOutlineDialog: $("fullOutlineDialog"),
+  fullLessonList: $("fullLessonList"),
   outlineTitle: $("outlineTitle"),
   progressLabel: $("progressLabel"),
   progressBar: $("progressBar"),
   sourceStatus: $("sourceStatus"),
   toggleAllLessons: $("toggleAllLessons"),
+  closeFullOutline: $("closeFullOutline"),
   toggleNav: $("toggleNav"),
   closeNav: $("closeNav"),
   previousStep: $("previousStep"),
@@ -272,11 +275,9 @@ function renderLessons(currentCourse) {
   elements.lessonList.replaceChildren();
 
   const courseLessons = stepsForCourse(currentCourse);
-  const visibleLessons = showAllLessons
-    ? courseLessons
-    : courseLessons.filter((item) => Math.abs(item.number - viewStep) <= 3);
+  const visibleLessons = courseLessons.filter((item) => Math.abs(item.number - viewStep) <= NEARBY_LESSON_WINDOW);
 
-  elements.toggleAllLessons.textContent = showAllLessons ? "Ver cercanos" : "Ver todos";
+  elements.toggleAllLessons.textContent = "Temario completo";
 
   visibleLessons.forEach((item) => {
     const li = document.createElement("li");
@@ -287,7 +288,7 @@ function renderLessons(currentCourse) {
     button.type = "button";
     if (item.number === viewStep) button.classList.add("is-active");
     if (item.number < progressStep) button.classList.add("is-complete");
-    marker.textContent = item.number < progressStep ? "✓" : item.number === viewStep ? "●" : "○";
+    marker.textContent = item.number < progressStep ? "✅" : item.number === viewStep ? "●" : "○";
     label.textContent = `Paso ${item.number}: ${item.title}`;
 
     button.append(marker, label);
@@ -296,12 +297,44 @@ function renderLessons(currentCourse) {
     elements.lessonList.appendChild(li);
   });
 
-  if (!showAllLessons && visibleLessons.length < courseLessons.length) {
+  if (visibleLessons.length < courseLessons.length) {
     const li = document.createElement("li");
     li.className = "lesson-list-hint";
     li.textContent = `Mostrando ${visibleLessons.length} pasos cercanos de ${courseLessons.length}.`;
     elements.lessonList.appendChild(li);
   }
+}
+
+function renderFullOutline() {
+  elements.fullLessonList.replaceChildren();
+
+  courses.forEach((course) => {
+    const courseItem = document.createElement("li");
+    const title = document.createElement("h3");
+    const list = document.createElement("ol");
+
+    courseItem.className = "full-course-group";
+    title.textContent = `${course.code} · ${course.title}`;
+    list.className = "full-course-lessons";
+
+    stepsForCourse(course).forEach((item) => {
+      const li = document.createElement("li");
+      const button = document.createElement("button");
+      button.type = "button";
+      button.textContent = `${item.number < progressStep ? "✅ " : ""}Paso ${item.number}: ${item.title}`;
+      if (item.number === viewStep) button.classList.add("is-active");
+      if (item.number < progressStep) button.classList.add("is-complete");
+      button.addEventListener("click", () => {
+        elements.fullOutlineDialog.close();
+        showStep(item.number);
+      });
+      li.appendChild(button);
+      list.appendChild(li);
+    });
+
+    courseItem.append(title, list);
+    elements.fullLessonList.appendChild(courseItem);
+  });
 }
 
 function renderActions() {
@@ -364,6 +397,15 @@ function toggleNavigation(open) {
   elements.toggleNav.setAttribute("aria-expanded", String(open));
 }
 
+function openFullOutline() {
+  renderFullOutline();
+  if (typeof elements.fullOutlineDialog.showModal === "function") {
+    elements.fullOutlineDialog.showModal();
+  } else {
+    elements.fullOutlineDialog.setAttribute("open", "");
+  }
+}
+
 function resetProgress() {
   progressStep = 1;
   viewStep = 1;
@@ -397,10 +439,8 @@ $("resetProgress").addEventListener("click", resetProgress);
 $("saveNote").addEventListener("click", saveCurrentNote);
 $("predictionText").addEventListener("input", saveActiveResponse);
 $("explanationText").addEventListener("input", saveActiveResponse);
-$("toggleAllLessons").addEventListener("click", () => {
-  showAllLessons = !showAllLessons;
-  render();
-});
+$("toggleAllLessons").addEventListener("click", openFullOutline);
+$("closeFullOutline").addEventListener("click", () => elements.fullOutlineDialog.close());
 $("toggleNav").addEventListener("click", () => toggleNavigation(!document.body.classList.contains("nav-open")));
 $("closeNav").addEventListener("click", () => toggleNavigation(false));
 

@@ -240,7 +240,7 @@
     },
     {
       "path": "scripts/validate.sh",
-      "lines": 220,
+      "lines": 229,
       "kind": "automation-script",
       "symbols": [],
       "imports": [],
@@ -310,7 +310,7 @@
     },
     {
       "path": "web/app-data.js",
-      "lines": 2360,
+      "lines": 2373,
       "kind": "project-file",
       "symbols": [],
       "imports": [
@@ -323,7 +323,7 @@
     },
     {
       "path": "web/app.css",
-      "lines": 563,
+      "lines": 649,
       "kind": "project-file",
       "symbols": [],
       "imports": [],
@@ -331,7 +331,7 @@
     },
     {
       "path": "web/app.js",
-      "lines": 410,
+      "lines": 450,
       "kind": "project-file",
       "symbols": [],
       "imports": [],
@@ -349,7 +349,7 @@
     },
     {
       "path": "web/index.html",
-      "lines": 216,
+      "lines": 227,
       "kind": "project-file",
       "symbols": [
         "progressLabel",

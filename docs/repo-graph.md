@@ -1,6 +1,6 @@
 # Academia Floci Repo Graph
 
-Generated: 2026-07-02 17:05 UTC
+Generated: 2026-07-02 17:11 UTC
 Root: `Academia_Floci`
 Indexed files: 415
 Import edges: 26
@@ -44,10 +44,10 @@ For automated lookups, use `docs/repo-graph.json`.
 
 - `README.md` (170 lines, documentation)
   - headings: # Academia Master Hacker, ## Como empezar, ## Levantar Floci, # 1. Levantar todos los servicios, # 2. Verificar Floci AWS
-- `scripts/validate.sh` (220 lines, automation-script)
+- `scripts/validate.sh` (229 lines, automation-script)
 - `scripts/build_repo_graph.py` (434 lines, automation-script)
   - symbols: FileNode, repo_files, read_text, classify, parse_ts_symbols, parse_ts_imports, parse_python_symbols, parse_python_imports, parse_markdown_headings, unique
-- `web/index.html` (216 lines, project-file)
+- `web/index.html` (227 lines, project-file)
   - symbols: progressLabel, progressBar, toggleNav, floci-status, verifyFloci, courseNav, resetProgress, closeNav, courseList, courseLabel
 - `web/src/app/app.ts` (11 lines, angular-app)
   - symbols: App
@@ -147,7 +147,7 @@ For automated lookups, use `docs/repo-graph.json`.
 - `scripts/fix_lessons.py` (205 lines) - symbols: safe_print, iter_text_check_files, find_text_quality_issues, normalized_content, fix_content, check_http, main; imports: argparse, glob, os, re, urllib.request
 - `scripts/start.sh` (10 lines)
 - `scripts/validate-floci.sh` (43 lines)
-- `scripts/validate.sh` (220 lines)
+- `scripts/validate.sh` (229 lines)
 
 ### course-content
 
@@ -220,11 +220,11 @@ For automated lookups, use `docs/repo-graph.json`.
 - `web/.vscode/mcp.json` (10 lines)
 - `web/.vscode/tasks.json` (43 lines)
 - `web/angular.json` (80 lines)
-- `web/app-data.js` (2360 lines) - imports: ./Component.module.css, ./module, ./component, ./Component
-- `web/app.css` (563 lines)
-- `web/app.js` (410 lines)
+- `web/app-data.js` (2373 lines) - imports: ./Component.module.css, ./module, ./component, ./Component
+- `web/app.css` (649 lines)
+- `web/app.js` (450 lines)
 - `web/e2e/academy.spec.ts` (49 lines) - imports: @playwright/test
-- `web/index.html` (216 lines) - symbols: progressLabel, progressBar, toggleNav, floci-status, verifyFloci, courseNav, resetProgress, closeNav
+- `web/index.html` (227 lines) - symbols: progressLabel, progressBar, toggleNav, floci-status, verifyFloci, courseNav, resetProgress, closeNav
 - `web/package.json` (42 lines)
 - `web/playwright.config.ts` (22 lines) - imports: @playwright/test
 - `web/scripts/.translation-cache.json` (1 lines)

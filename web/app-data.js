@@ -2326,16 +2326,20 @@ const fallbackSteps = COURSE_BLUEPRINTS.flatMap((course, courseIndex) => {
 
 function step(number, course, level, topic) {
   const subtopics = topic.subtopics.length ? topic.subtopics : ["Idea principal, vocabulario clave y uso en proyecto real"];
+  const normalizedLevel = normalizeLevel(level.title);
+  const connection = number === 1
+    ? "Este primer paso crea el mapa mental base para avanzar sin memorizar a ciegas."
+    : "Se conecta con lo anterior porque convierte el fundamento previo en una decision practica dentro del proyecto.";
   return {
     number,
     title: `${course.title}: ${topic.title}`,
-    explanation: `${level.title} (${level.tone}). ${subtopics[0]}.`,
+    explanation: `¿Por que es importante esto? Porque ${topic.title} aparece cuando construyes, depuras o defiendes una solucion real. ¿Como se conecta con lo que ya aprendiste? ${connection} ${normalizedLevel} (${level.tone}). ${subtopics[0]}.`,
     objective: `Dominar ${topic.title} dentro de ${course.title} y conectarlo con el proyecto final.`,
-    theory: `Estudia el concepto, identifica sus piezas y explica donde aparece en sistemas reales. Tema base: ${subtopics[0]}.`,
+    theory: `Teoria: ${topic.title} se estudia identificando proposito, entradas, salidas, errores comunes y limites. Primero entiende que problema resuelve; despues observa donde aparece en ${course.project}. Tema base extraido de la guia completa: ${subtopics[0]}. La meta no es repetir definiciones, sino poder explicar cuando usarlo, cuando evitarlo y como validarlo con una prueba pequena.`,
     command: `Practica: crea una nota, ejemplo o mini ejercicio sobre "${topic.title}" dentro del proyecto final: ${course.project}.`,
     // Cambio P2: cada leccion generada recibe nivel y tiempo para badges visuales.
-    difficulty: level.title,
-    estimatedTime: level.title === "Fundamentos" ? "10 min" : level.title === "Intermedio" ? "15 min" : level.title === "Avanzado" ? "20 min" : "25 min",
+    difficulty: normalizedLevel,
+    estimatedTime: normalizedLevel === "Principiante" ? "10 min" : normalizedLevel === "Intermedio" ? "15 min" : normalizedLevel === "Avanzado" ? "20 min" : "25 min",
     deepDive: `Profundiza revisando sus limites, costos, tradeoffs y relacion con otros temas del modulo ${course.title}.`,
     commonErrors: [
       "Memorizar nombres sin construir un ejemplo minimo.",
@@ -2350,10 +2354,19 @@ function step(number, course, level, topic) {
     ],
     breakdown: [
       `Modulo: ${course.title}`,
-      `Nivel: ${level.title}`,
+      `Nivel: ${normalizedLevel}`,
       `Proyecto final: ${course.project}`,
+      `Desglose de practica: define el objetivo, crea el ejemplo minimo, ejecuta la prueba, compara la salida esperada y escribe una conclusion.`,
+      `Opciones y flags: si el comando usa --endpoint-url, -p, --region u otra opcion, explica que valor cambia, por que existe y que fallaria al quitarla.`,
       ...subtopics,
     ],
     output: `Resultado esperado: puedes explicar ${topic.title}, aplicar sus subtemas, detectar errores comunes y defender una solucion practica.`,
   };
+}
+
+function normalizeLevel(title) {
+  if (title === "Fundamentos") return "Principiante";
+  if (title === "Intermedio") return "Intermedio";
+  if (title === "Avanzado") return "Avanzado";
+  return "Master";
 }
