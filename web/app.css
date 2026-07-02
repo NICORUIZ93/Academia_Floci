@@ -313,7 +313,14 @@ ul {
 
 .actions {
   flex-wrap: wrap;
-  margin-top: 28px;
+  position: sticky;
+  bottom: 0;
+  z-index: 10;
+  margin: 28px calc(clamp(18px, 3vw, 34px) * -1) calc(clamp(18px, 3vw, 34px) * -1);
+  padding: 14px clamp(18px, 3vw, 34px);
+  border-top: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.94);
+  backdrop-filter: blur(10px);
 }
 
 .primary-button {
@@ -340,7 +347,47 @@ ul {
   font: inherit;
 }
 
-/* Cambio P2: diagramas visuales de arquitectura y metodologia. */
+/* Cambio P2/P3: diagramas Mermaid e iconografia de servicios. */
+.service-icons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.service-icon {
+  display: inline-flex;
+  align-items: center;
+  min-height: 34px;
+  padding: 6px 10px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  color: #ffffff;
+  background: var(--accent);
+  font-size: 0.86rem;
+  font-weight: 800;
+}
+
+.service-icon-docker {
+  background: #2563eb;
+}
+
+.service-icon-s3 {
+  background: #16a34a;
+}
+
+.service-icon-lambda {
+  background: #d97706;
+}
+
+.service-icon-queue {
+  background: #7c3aed;
+}
+
+.service-icon-db {
+  background: #0f766e;
+}
+
 .diagram-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -360,27 +407,13 @@ ul {
   margin: 0 0 10px;
 }
 
-.diagram-flow {
-  display: grid;
-  gap: 8px;
-}
-
-.diagram-flow span {
-  position: relative;
-  padding: 8px 10px;
-  border-radius: 8px;
-  color: var(--accent-strong);
-  background: var(--accent-soft);
-  font-size: 0.88rem;
-  font-weight: 700;
-}
-
-.diagram-flow span + span::before {
-  content: "↓";
-  display: block;
-  margin: -8px 0 2px;
-  color: var(--muted);
-  font-weight: 400;
+.mermaid {
+  margin: 0;
+  padding: 10px;
+  min-height: 210px;
+  color: var(--ink);
+  background: #ffffff;
+  border: 1px solid var(--line);
 }
 
 .ghost-button {
@@ -520,5 +553,10 @@ ul {
 
   .actions button {
     width: 100%;
+  }
+
+  .actions {
+    margin: 24px -16px -18px;
+    padding: 12px 16px;
   }
 }

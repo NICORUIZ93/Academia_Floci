@@ -36,6 +36,8 @@ const pasos = fs.readFileSync('web/public/content/es/pasos.md', 'utf8');
 const compose = fs.readFileSync('docker-compose.yml', 'utf8');
 const flociNode = fs.readFileSync('examples/node/floci-example.js', 'utf8');
 const flociPython = fs.readFileSync('examples/python/floci-example.py', 'utf8');
+const demoNode = fs.readFileSync('examples/node/demo.mjs', 'utf8');
+const demoPython = fs.readFileSync('examples/python/demo.py', 'utf8');
 const flociScript = fs.readFileSync('scripts/validate-floci.sh', 'utf8');
 const linksAssets = html.includes('href="app.css"')
   && html.includes('src="app-data.js"')
@@ -167,11 +169,23 @@ if (!flociScript.includes('curl -s http://localhost:4566/_localstack/health') ||
   throw new Error('scripts/validate-floci.sh debe validar AWS, Azure, GCP y AWS CLI');
 }
 
+for (const expected of ['Objetivo: practicar servicios', 'Floci escucha por defecto', 'S3 necesita forcePathStyle', 'publica un mensaje JSON']) {
+  if (!demoNode.includes(expected)) {
+    throw new Error(`examples/node/demo.mjs debe explicar: ${expected}`);
+  }
+}
+
+for (const expected of ['practicar S3, SQS y DynamoDB', 'endpoint_url fuerza', 'put_object escribe', 'pruebas de observacion']) {
+  if (!demoPython.includes(expected)) {
+    throw new Error(`examples/python/demo.py debe explicar: ${expected}`);
+  }
+}
+
 if (!html.includes('id="floci-status"') || !app.includes('async function verificarFloci')) {
   throw new Error('La web debe incluir verificacion de Floci');
 }
 
-for (const expected of ['id="noteText"', 'id="saveNote"', 'id="difficultyBadge"', 'id="timeBadge"', 'diagram-card', 'id="predictionText"', 'id="explanationText"', 'id="toggleNav"', 'id="toggleAllLessons"']) {
+for (const expected of ['id="noteText"', 'id="saveNote"', 'id="difficultyBadge"', 'id="timeBadge"', 'diagram-card', 'class="mermaid"', 'service-icon', 'id="predictionText"', 'id="explanationText"', 'id="toggleNav"', 'id="toggleAllLessons"']) {
   if (!html.includes(expected)) {
     throw new Error(`web/index.html no contiene ${expected}`);
   }
@@ -183,9 +197,15 @@ for (const expected of ['saveCurrentNote', 'highlightCommand', 'token-command', 
   }
 }
 
-for (const expected of ['@media (max-width: 760px)', 'body.nav-open .sidebar', '.mobile-nav-button', '.active-learning-panel']) {
+for (const expected of ['@media (max-width: 760px)', 'body.nav-open .sidebar', '.mobile-nav-button', '.active-learning-panel', 'position: sticky', 'bottom: 0', '.service-icons']) {
   if (!fs.readFileSync('web/app.css', 'utf8').includes(expected)) {
     throw new Error(`web/app.css no contiene ${expected}`);
+  }
+}
+
+for (const expected of ['flowchart LR', 'sequenceDiagram', 'AWS local :4566', 'Azure local :4577', 'GCP local :4588']) {
+  if (!html.includes(expected)) {
+    throw new Error(`web/index.html no contiene el diagrama Mermaid: ${expected}`);
   }
 }
 

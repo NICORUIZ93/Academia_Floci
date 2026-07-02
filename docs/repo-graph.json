@@ -73,7 +73,7 @@
     },
     {
       "path": "examples/node/demo.mjs",
-      "lines": 43,
+      "lines": 68,
       "kind": "example",
       "symbols": [],
       "imports": [
@@ -100,7 +100,7 @@
     },
     {
       "path": "examples/python/demo.py",
-      "lines": 37,
+      "lines": 68,
       "kind": "example",
       "symbols": [],
       "imports": [
@@ -240,7 +240,7 @@
     },
     {
       "path": "scripts/validate.sh",
-      "lines": 200,
+      "lines": 220,
       "kind": "automation-script",
       "symbols": [],
       "imports": [],
@@ -323,7 +323,7 @@
     },
     {
       "path": "web/app.css",
-      "lines": 525,
+      "lines": 563,
       "kind": "project-file",
       "symbols": [],
       "imports": [],
@@ -349,7 +349,7 @@
     },
     {
       "path": "web/index.html",
-      "lines": 173,
+      "lines": 216,
       "kind": "project-file",
       "symbols": [
         "progressLabel",

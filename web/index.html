@@ -5,6 +5,21 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Academia Master Hacker</title>
   <link rel="stylesheet" href="app.css">
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+  <script>
+    window.mermaid?.initialize({
+      startOnLoad: true,
+      theme: "base",
+      themeVariables: {
+        primaryColor: "#e4f2ef",
+        primaryTextColor: "#202124",
+        primaryBorderColor: "#0b6b5f",
+        lineColor: "#0b6b5f",
+        secondaryColor: "#f8efd7",
+        tertiaryColor: "#ffffff"
+      }
+    });
+  </script>
 </head>
 <body>
   <header class="topbar">
@@ -127,24 +142,52 @@
       <!-- Cambio P2: diagramas clave para que la arquitectura no sea solo texto. -->
       <section class="panel visuals-panel" aria-label="Diagramas clave">
         <h3>Diagramas clave</h3>
+        <div class="service-icons" aria-label="Conceptos principales">
+          <span class="service-icon service-icon-docker">Docker</span>
+          <span class="service-icon service-icon-s3">S3</span>
+          <span class="service-icon service-icon-lambda">Lambda</span>
+          <span class="service-icon service-icon-queue">SQS</span>
+          <span class="service-icon service-icon-db">DynamoDB</span>
+        </div>
         <div class="diagram-grid">
           <article class="diagram-card">
             <h4>Arquitectura Floci</h4>
-            <div class="diagram-flow">
-              <span>PC local</span><span>Docker</span><span>AWS 4566</span><span>Azure 4577</span><span>GCP 4588</span>
-            </div>
+            <pre class="mermaid">
+flowchart LR
+  Dev["PC local"] --> Docker["Docker Compose"]
+  Docker --> AWS["AWS local :4566"]
+  Docker --> Azure["Azure local :4577"]
+  Docker --> GCP["GCP local :4588"]
+  AWS --> Stackport["Stackport :4567"]
+            </pre>
           </article>
           <article class="diagram-card">
-            <h4>Tareas Locales</h4>
-            <div class="diagram-flow">
-              <span>Frontend</span><span>API Gateway</span><span>Lambda</span><span>SQS</span><span>S3/DynamoDB</span>
-            </div>
+            <h4>Peticion AWS local</h4>
+            <pre class="mermaid">
+sequenceDiagram
+  participant Alumno
+  participant CLI as AWS CLI
+  participant Floci as Floci AWS
+  participant S3
+  Alumno->>CLI: aws s3 ls --endpoint-url
+  CLI->>Floci: Firma test + region us-east-1
+  Floci->>S3: Lista buckets locales
+  S3-->>Floci: Buckets simulados
+  Floci-->>CLI: Respuesta compatible AWS
+  CLI-->>Alumno: Salida en terminal
+            </pre>
           </article>
           <article class="diagram-card">
-            <h4>Metodo</h4>
-            <div class="diagram-flow">
-              <span>Lee</span><span>Predice</span><span>Haz</span><span>Observa</span><span>Explica</span><span>Repite</span>
-            </div>
+            <h4>AWS vs Azure vs GCP</h4>
+            <pre class="mermaid">
+flowchart TB
+  Cloud["Practica local multi-cloud"] --> AWS["AWS: S3, SQS, Lambda, DynamoDB"]
+  Cloud --> Azure["Azure: Storage, Functions, Queues"]
+  Cloud --> GCP["GCP: Storage, Pub/Sub, Cloud Functions"]
+  AWS --> Skill["Mismo metodo: predice, ejecuta, observa, explica"]
+  Azure --> Skill
+  GCP --> Skill
+            </pre>
           </article>
         </div>
       </section>

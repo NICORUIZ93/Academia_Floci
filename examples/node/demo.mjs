@@ -1,3 +1,6 @@
+// Demo Node.js para Academia_Floci.
+// Objetivo: practicar servicios compatibles con AWS dentro de Floci/LocalStack
+// sin usar una cuenta real de AWS ni generar costos.
 import {
   ListObjectsV2Command,
   PutObjectCommand,
@@ -10,15 +13,28 @@ import {
   SQSClient,
 } from "@aws-sdk/client-sqs";
 
+// Todos los clientes usan el mismo endpoint local.
+// Floci escucha por defecto en http://localhost:4566 para APIs estilo AWS.
+// La region y credenciales "test" son convenciones locales: no autentican
+// contra AWS real, pero permiten que el SDK firme peticiones de forma valida.
 const config = {
   endpoint: "http://localhost:4566",
   region: "us-east-1",
   credentials: { accessKeyId: "test", secretAccessKey: "test" },
 };
 
+// S3 necesita forcePathStyle cuando se trabaja contra emuladores locales.
+// Esto hace que el bucket viaje en la ruta de la URL en lugar de depender
+// de subdominios DNS, que normalmente no existen en localhost.
 const s3 = new S3Client({ ...config, forcePathStyle: true });
+
+// SQS reutiliza la misma configuracion porque tambien apunta al endpoint AWS local.
 const sqs = new SQSClient(config);
 
+// PutObjectCommand escribe un objeto en un bucket creado previamente por el laboratorio.
+// Bucket: contenedor logico.
+// Key: ruta/nombre del objeto dentro del bucket.
+// Body: contenido que Floci guardara en el almacenamiento local.
 await s3.send(
   new PutObjectCommand({
     Bucket: "curso-cloud-local",
@@ -27,9 +43,15 @@ await s3.send(
   }),
 );
 
+// GetQueueUrlCommand resuelve el URL interno de una cola SQS existente.
+// Usar QueueUrl evita acoplar el codigo al formato exacto de URLs que usa el emulador.
 const { QueueUrl } = await sqs.send(
   new GetQueueUrlCommand({ QueueName: "pedidos" }),
 );
+
+// SendMessageCommand publica un mensaje JSON.
+// En sistemas reales, este patron desacopla productores y consumidores:
+// una API puede encolar un pedido y otro proceso puede leerlo despues.
 await sqs.send(
   new SendMessageCommand({
     QueueUrl,
@@ -37,6 +59,9 @@ await sqs.send(
   }),
 );
 
+// ListObjectsV2Command confirma que el objeto quedo guardado en S3 local.
+// ReceiveMessageCommand lee mensajes disponibles de la cola local.
+// Estos console.log son verificaciones educativas: muestran exactamente
+// que devuelve el SDK para que el estudiante compare teoria vs salida real.
 console.log(await s3.send(new ListObjectsV2Command({ Bucket: "curso-cloud-local" })));
 console.log(await sqs.send(new ReceiveMessageCommand({ QueueUrl })));
-
