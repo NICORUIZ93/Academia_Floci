@@ -91,7 +91,7 @@ Docker version 24.0.7, build afdd53b
 
 ## Paso 4: Levantar Floci
 
-**Explicación:** Floci es un emulador de AWS que corre en tu computadora. Es como tener un mini AWS en tu PC sin pagar ni crear cuentas.
+**Explicación:** Floci es un emulador local gratuito de servicios cloud. En este paso levantamos el emulador compatible con AWS en el puerto `4566`. Es como tener un laboratorio de AWS en tu computador, sin cuenta cloud, sin tarjetas y sin costos.
 
 **Comando:**
 
@@ -104,11 +104,13 @@ docker run -p 4566:4566 floci/floci:latest
 - "docker run" ejecuta un contenedor
 - "-p 4566:4566" conecta el puerto
 - "floci/floci:latest" es la imagen
+- Si prefieres levantar todo el laboratorio, usa `docker compose up -d`
+- El endpoint AWS local quedará en `http://localhost:4566`
 
 **Salida esperada:**
 
 ```text
-Floci started on port 4566
+Floci escuchando en http://localhost:4566
 ```
 
 **Pregunta de control:**
@@ -117,7 +119,7 @@ Floci started on port 4566
 
 ## Paso 5: Verificar Floci
 
-**Explicación:** Vamos a comprobar que Floci está funcionando.
+**Explicación:** Vamos a comprobar que Floci responde antes de usar AWS CLI. El endpoint `_localstack/health` devuelve el estado de los servicios emulados.
 
 **Comando:**
 
@@ -129,6 +131,7 @@ curl http://localhost:4566/_localstack/health
 
 - "curl" hace una petición web
 - "http://localhost:4566" es la dirección de Floci
+- "_localstack/health" muestra el estado del emulador
 
 **Salida esperada:**
 
@@ -142,18 +145,22 @@ curl http://localhost:4566/_localstack/health
 
 ## Paso 6: Configurar AWS CLI
 
-**Explicación:** AWS CLI es la herramienta para hablar con AWS. Vamos a configurarla para que hable con Floci.
+**Explicación:** AWS CLI es la herramienta para hablar con AWS. Floci acepta credenciales locales de prueba, así que configuramos región y usaremos `test/test` como credenciales cuando haga falta.
 
 **Comando:**
 
 ```bash
 aws configure set region us-east-1
+aws configure set aws_access_key_id test
+aws configure set aws_secret_access_key test
 ```
 
 **Desglose:**
 
 - "aws configure" configura AWS
 - "set region us-east-1" establece la región
+- "aws_access_key_id test" usa una credencial local de laboratorio
+- "aws_secret_access_key test" usa una clave local de laboratorio
 
 **Salida esperada:**
 
@@ -167,18 +174,19 @@ No hay salida visible.
 
 ## Paso 7: Probar AWS CLI
 
-**Explicación:** Vamos a probar que AWS CLI funciona con Floci.
+**Explicación:** Vamos a probar que AWS CLI se conecta al endpoint local de Floci. Si no hay buckets todavía, una lista vacía también significa que la conexión funciona.
 
 **Comando:**
 
 ```bash
-aws s3 ls --endpoint-url=http://localhost:4566
+aws s3 ls --endpoint-url http://localhost:4566
 ```
 
 **Desglose:**
 
 - "aws s3 ls" lista buckets
 - "--endpoint-url" usa Floci
+- "http://localhost:4566" apunta a AWS local, no a AWS real
 
 **Salida esperada:**
 

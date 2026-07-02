@@ -1,8 +1,8 @@
 # Academia Floci Repo Graph
 
-Generated: 2026-07-02 15:04 UTC
+Generated: 2026-07-02 15:12 UTC
 Root: `Academia_Floci`
-Indexed files: 412
+Indexed files: 415
 Import edges: 26
 
 Use this file as the first, compact context for AI assistants. Refresh it with:
@@ -16,10 +16,10 @@ For automated lookups, use `docs/repo-graph.json`.
 ## Project Shape
 
 - `angular-app`: 44 files
-- `automation-script`: 5 files
+- `automation-script`: 6 files
 - `course-content`: 253 files
 - `documentation`: 78 files
-- `example`: 6 files
+- `example`: 8 files
 - `local-infra`: 1 files
 - `project-file`: 25 files
 
@@ -29,26 +29,26 @@ For automated lookups, use `docs/repo-graph.json`.
 - `.ts`: 30
 - `.json`: 15
 - `.html`: 9
+- `.py`: 8
 - `.scss`: 8
-- `.py`: 7
-- `.sh`: 5
+- `.sh`: 6
 - `.txt`: 4
 - `.yml`: 3
+- `.js`: 3
 - `.css`: 3
 - `.gitignore`: 2
 - `.mjs`: 2
-- `.js`: 2
 - `.example`: 1
 
 ## High Signal Files
 
-- `README.md` (129 lines, documentation)
-  - headings: # Academia Master Hacker, ## Como empezar, ## Metodologia, ## Modulos, ## Contenido aplicado
-- `scripts/validate.sh` (119 lines, automation-script)
+- `README.md` (170 lines, documentation)
+  - headings: # Academia Master Hacker, ## Como empezar, ## Levantar Floci, # 1. Levantar todos los servicios, # 2. Verificar Floci AWS
+- `scripts/validate.sh` (170 lines, automation-script)
 - `scripts/build_repo_graph.py` (434 lines, automation-script)
   - symbols: FileNode, repo_files, read_text, classify, parse_ts_symbols, parse_ts_imports, parse_python_symbols, parse_python_imports, parse_markdown_headings, unique
-- `web/index.html` (108 lines, project-file)
-  - symbols: progressLabel, progressBar, resetProgress, courseList, courseLabel, lessonTitle, lessonText, lessonHint, objectiveText, theoryText
+- `web/index.html` (116 lines, project-file)
+  - symbols: progressLabel, progressBar, floci-status, verifyFloci, resetProgress, courseList, courseLabel, lessonTitle, lessonText, lessonHint
 - `web/src/app/app.ts` (11 lines, angular-app)
   - symbols: App
 - `web/src/app/course-data.ts` (528 lines, angular-app)
@@ -60,7 +60,7 @@ For automated lookups, use `docs/repo-graph.json`.
 - `web/src/app/course/lesson-viewer.ts` (133 lines, angular-app)
   - symbols: LessonViewerComponent, track, module, moduleIndex, previousModule, nextModule, tab, lessonHtml, lessonLoading, isComplete
 - `web/public/content/manifest.json` (707 lines, course-content)
-- `web/public/content/es/pasos.md` (1114 lines, course-content)
+- `web/public/content/es/pasos.md` (1122 lines, course-content)
   - headings: # 45 pasos de Academia Floci, ## Cursos, ## Paso 1: ¿Qué es Docker?, ## Paso 2: Instalar Docker, ## Paso 3: Verificar Docker
 
 ## Internal Import Graph
@@ -146,7 +146,8 @@ For automated lookups, use `docs/repo-graph.json`.
 - `scripts/build_repo_graph.py` (434 lines) - symbols: FileNode, repo_files, read_text, classify, parse_ts_symbols, parse_ts_imports, parse_python_symbols, parse_python_imports; imports: __future__, argparse, ast, json, re, collections, dataclasses, datetime
 - `scripts/fix_lessons.py` (205 lines) - symbols: safe_print, iter_text_check_files, find_text_quality_issues, normalized_content, fix_content, check_http, main; imports: argparse, glob, os, re, urllib.request
 - `scripts/start.sh` (10 lines)
-- `scripts/validate.sh` (119 lines)
+- `scripts/validate-floci.sh` (28 lines)
+- `scripts/validate.sh` (170 lines)
 
 ### course-content
 
@@ -172,7 +173,7 @@ For automated lookups, use `docs/repo-graph.json`.
 
 ### documentation
 
-- `README.md` (129 lines) - headings: # Academia Master Hacker, ## Como empezar, ## Metodologia, ## Modulos
+- `README.md` (170 lines) - headings: # Academia Master Hacker, ## Como empezar, ## Levantar Floci, # 1. Levantar todos los servicios
 - `web/README.md` (56 lines) - headings: # Web, ## Abrir la academia, ## Que contiene, ## Archivos principales
 - `web/scripts/source-docs-en/configuration/advanced/application-yml.md` (335 lines) - headings: # application.yml Reference, ## URL configuration, ## Full Reference, ### Initialization hooks
 - `web/scripts/source-docs-en/configuration/application-yml.md` (7 lines) - headings: # application.yml Reference
@@ -197,13 +198,15 @@ For automated lookups, use `docs/repo-graph.json`.
 - `examples/README.md` (15 lines) - headings: # Ejemplos de referencia
 - `examples/init/ready.d/10-seed.sh` (20 lines)
 - `examples/node/demo.mjs` (43 lines) - imports: @aws-sdk/client-s3, @aws-sdk/client-sqs
+- `examples/node/floci-example.js` (19 lines)
 - `examples/node/package.json` (14 lines)
 - `examples/python/demo.py` (37 lines) - imports: json, boto3
+- `examples/python/floci-example.py` (13 lines) - imports: boto3
 - `examples/python/requirements.txt` (3 lines)
 
 ### local-infra
 
-- `docker-compose.yml` (44 lines)
+- `docker-compose.yml` (33 lines)
 
 ### project-file
 
@@ -218,10 +221,10 @@ For automated lookups, use `docs/repo-graph.json`.
 - `web/.vscode/tasks.json` (43 lines)
 - `web/angular.json` (80 lines)
 - `web/app-data.js` (2357 lines) - imports: ./Component.module.css, ./module, ./component, ./Component
-- `web/app.css` (316 lines)
-- `web/app.js` (246 lines)
+- `web/app.css` (339 lines)
+- `web/app.js` (269 lines)
 - `web/e2e/academy.spec.ts` (49 lines) - imports: @playwright/test
-- `web/index.html` (108 lines) - symbols: progressLabel, progressBar, resetProgress, courseList, courseLabel, lessonTitle, lessonText, lessonHint
+- `web/index.html` (116 lines) - symbols: progressLabel, progressBar, floci-status, verifyFloci, resetProgress, courseList, courseLabel, lessonTitle
 - `web/package.json` (42 lines)
 - `web/playwright.config.ts` (22 lines) - imports: @playwright/test
 - `web/scripts/.translation-cache.json` (1 lines)

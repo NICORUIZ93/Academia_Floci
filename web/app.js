@@ -30,7 +30,29 @@ const elements = {
   previousStep: $("previousStep"),
   nextStep: $("nextStep"),
   completeStep: $("completeStep"),
+  flociStatus: $("floci-status"),
 };
+
+async function verificarFloci() {
+  if (!elements.flociStatus) return;
+
+  elements.flociStatus.textContent = "Verificando Floci...";
+
+  try {
+    const response = await fetch("http://localhost:4566/_localstack/health");
+    if (response.ok) {
+      const data = await response.json();
+      const services = data.services ? Object.keys(data.services).join(", ") : "servicios disponibles";
+      elements.flociStatus.textContent = `Floci funcionando: ${services}`;
+    } else {
+      elements.flociStatus.textContent = "Floci no responde";
+    }
+  } catch {
+    elements.flociStatus.textContent = "No se puede conectar. Ejecuta: docker compose up -d";
+  }
+}
+
+window.verificarFloci = verificarFloci;
 
 function readProgress() {
   const saved = Number(localStorage.getItem(STORAGE_KEY));
@@ -243,3 +265,4 @@ $("resetProgress").addEventListener("click", resetProgress);
 
 render();
 elements.sourceStatus.textContent = `${courses.length} modulos · ${steps.length} lecciones generadas.`;
+verificarFloci();

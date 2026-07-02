@@ -98,6 +98,28 @@ progress {
   align-items: start;
 }
 
+.floci-check {
+  width: min(1500px, 100%);
+  margin: 0 auto;
+  padding: 18px clamp(16px, 3vw, 36px);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  border-bottom: 1px solid var(--line);
+  background: var(--accent-soft);
+}
+
+.floci-check h2 {
+  margin: 0 0 4px;
+  font-size: 1rem;
+}
+
+.floci-check p {
+  margin: 0;
+  color: var(--muted);
+}
+
 .sidebar,
 .lesson,
 .outline {
@@ -296,6 +318,7 @@ ul {
 
 @media (max-width: 760px) {
   .topbar,
+  .floci-check,
   .layout {
     display: grid;
     grid-template-columns: 1fr;

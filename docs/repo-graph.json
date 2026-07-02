@@ -26,25 +26,28 @@
     },
     {
       "path": "README.md",
-      "lines": 129,
+      "lines": 170,
       "kind": "documentation",
       "symbols": [],
       "imports": [],
       "headings": [
         "# Academia Master Hacker",
         "## Como empezar",
+        "## Levantar Floci",
+        "# 1. Levantar todos los servicios",
+        "# 2. Verificar Floci AWS",
+        "# 3. Verificar Azure",
+        "# 4. Verificar GCP",
+        "# 5. Validar todo el entorno",
         "## Metodologia",
         "## Modulos",
         "## Contenido aplicado",
-        "## Seguridad",
-        "## Estructura",
-        "## Validar el repositorio",
-        "## Mapa compacto para asistentes de IA"
+        "## Seguridad"
       ]
     },
     {
       "path": "docker-compose.yml",
-      "lines": 44,
+      "lines": 33,
       "kind": "local-infra",
       "symbols": [],
       "imports": [],
@@ -80,6 +83,14 @@
       "headings": []
     },
     {
+      "path": "examples/node/floci-example.js",
+      "lines": 19,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
       "path": "examples/node/package.json",
       "lines": 14,
       "kind": "example",
@@ -94,6 +105,16 @@
       "symbols": [],
       "imports": [
         "json",
+        "boto3"
+      ],
+      "headings": []
+    },
+    {
+      "path": "examples/python/floci-example.py",
+      "lines": 13,
+      "kind": "example",
+      "symbols": [],
+      "imports": [
         "boto3"
       ],
       "headings": []
@@ -202,8 +223,16 @@
       "headings": []
     },
     {
+      "path": "scripts/validate-floci.sh",
+      "lines": 28,
+      "kind": "automation-script",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
       "path": "scripts/validate.sh",
-      "lines": 119,
+      "lines": 170,
       "kind": "automation-script",
       "symbols": [],
       "imports": [],
@@ -286,7 +315,7 @@
     },
     {
       "path": "web/app.css",
-      "lines": 316,
+      "lines": 339,
       "kind": "project-file",
       "symbols": [],
       "imports": [],
@@ -294,7 +323,7 @@
     },
     {
       "path": "web/app.js",
-      "lines": 246,
+      "lines": 269,
       "kind": "project-file",
       "symbols": [],
       "imports": [],
@@ -312,11 +341,13 @@
     },
     {
       "path": "web/index.html",
-      "lines": 108,
+      "lines": 116,
       "kind": "project-file",
       "symbols": [
         "progressLabel",
         "progressBar",
+        "floci-status",
+        "verifyFloci",
         "resetProgress",
         "courseList",
         "courseLabel",
@@ -336,9 +367,7 @@
         "expectedOutput",
         "resourcesList",
         "controlQuestion",
-        "previousStep",
-        "completeStep",
-        "nextStep"
+        "previousStep"
       ],
       "imports": [],
       "headings": []
@@ -1036,7 +1065,7 @@
     },
     {
       "path": "web/public/content/es/pasos.md",
-      "lines": 1114,
+      "lines": 1122,
       "kind": "course-content",
       "symbols": [],
       "imports": [],

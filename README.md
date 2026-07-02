@@ -30,6 +30,47 @@ Si prefieres servirlo por HTTP:
 
 Luego abre `http://localhost:8081`.
 
+## Levantar Floci
+
+```bash
+# 1. Levantar todos los servicios
+docker compose up -d
+
+# 2. Verificar Floci AWS
+curl http://localhost:4566/_localstack/health
+
+# 3. Verificar Azure
+curl http://localhost:4577
+
+# 4. Verificar GCP
+curl http://localhost:4588
+
+# 5. Validar todo el entorno
+./scripts/validate-floci.sh
+```
+
+Servicios locales:
+
+- AWS local: `http://localhost:4566`
+- StackPort: `http://localhost:4567`
+- Azure local: `http://localhost:4577`
+- GCP local: `http://localhost:4588`
+
+Credenciales locales para AWS CLI y SDKs:
+
+```bash
+aws configure set region us-east-1
+aws configure set aws_access_key_id test
+aws configure set aws_secret_access_key test
+```
+
+Ejemplos:
+
+```bash
+node examples/node/floci-example.js
+python3 examples/python/floci-example.py
+```
+
 ## Metodologia
 
 Cada tema sigue una estructura simple:

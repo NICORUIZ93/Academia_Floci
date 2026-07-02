@@ -17,6 +17,10 @@ const requiredFiles = [
   'web/app-data.js',
   'web/app.js',
   'web/README.md',
+  'web/public/content/es/pasos.md',
+  'examples/node/floci-example.js',
+  'examples/python/floci-example.py',
+  'scripts/validate-floci.sh',
 ];
 
 for (const file of requiredFiles) {
@@ -28,6 +32,11 @@ for (const file of requiredFiles) {
 const html = fs.readFileSync('web/index.html', 'utf8');
 const data = fs.readFileSync('web/app-data.js', 'utf8');
 const app = fs.readFileSync('web/app.js', 'utf8');
+const pasos = fs.readFileSync('web/public/content/es/pasos.md', 'utf8');
+const compose = fs.readFileSync('docker-compose.yml', 'utf8');
+const flociNode = fs.readFileSync('examples/node/floci-example.js', 'utf8');
+const flociPython = fs.readFileSync('examples/python/floci-example.py', 'utf8');
+const flociScript = fs.readFileSync('scripts/validate-floci.sh', 'utf8');
 const linksAssets = html.includes('href="app.css"')
   && html.includes('src="app-data.js"')
   && html.includes('src="app.js"');
@@ -106,6 +115,48 @@ if (!linksAssets) {
 
 if (!app.includes('sourceStatus') || !app.includes('completeCurrentStep') || !app.includes('renderMethod')) {
   throw new Error('web/app.js debe manejar estado, progreso y metodologia');
+}
+
+for (const expected of [
+  'docker run -p 4566:4566 floci/floci:latest',
+  'curl http://localhost:4566/_localstack/health',
+  'aws configure set region us-east-1',
+  'aws s3 ls --endpoint-url http://localhost:4566',
+]) {
+  if (!pasos.includes(expected)) {
+    throw new Error(`pasos.md no contiene ${expected}`);
+  }
+}
+
+for (const expected of [
+  'floci/floci:latest',
+  'floci/stackport:latest',
+  'floci/floci-az:latest',
+  'floci/floci-gcp:latest',
+  '4566:4566',
+  '4567:4567',
+  '4577:4577',
+  '4588:4588',
+]) {
+  if (!compose.includes(expected)) {
+    throw new Error(`docker-compose.yml no contiene ${expected}`);
+  }
+}
+
+if (!flociNode.includes("require('aws-sdk')") || !flociNode.includes('http://localhost:4566')) {
+  throw new Error('examples/node/floci-example.js debe usar aws-sdk y endpoint Floci');
+}
+
+if (!flociPython.includes('boto3.client') || !flociPython.includes('http://localhost:4566')) {
+  throw new Error('examples/python/floci-example.py debe usar boto3 y endpoint Floci');
+}
+
+if (!flociScript.includes('curl -s http://localhost:4566/_localstack/health') || !flociScript.includes('aws s3 ls --endpoint-url http://localhost:4566')) {
+  throw new Error('scripts/validate-floci.sh debe validar Floci y AWS CLI');
+}
+
+if (!html.includes('id="floci-status"') || !app.includes('async function verificarFloci')) {
+  throw new Error('La web debe incluir verificacion de Floci');
 }
 
 if (fs.existsSync('index.html') || fs.existsSync('academia-floci-simple.html')) {

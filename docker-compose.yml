@@ -2,42 +2,31 @@ name: academia_cloud_local
 
 services:
   aws-local:
-    image: floci/floci:1.5.22-compat
+    image: floci/floci:latest
+    container_name: floci-aws
     ports:
       - "4566:4566"
     environment:
-      FLOCI_STORAGE_MODE: persistent
-      FLOCI_STORAGE_PERSISTENT_PATH: /app/data
+      - AWS_ACCESS_KEY_ID=test
+      - AWS_SECRET_ACCESS_KEY=test
+      - AWS_DEFAULT_REGION=us-east-1
     volumes:
-      - ./data:/app/data
-      - /var/run/docker.sock:/var/run/docker.sock
-    healthcheck:
-      test: ["CMD-SHELL", "aws sts get-caller-identity >/dev/null 2>&1"]
-      interval: 5s
-      timeout: 3s
-      retries: 20
+      - ./data/aws:/var/lib/floci
 
   stackport:
-    image: davireis/stackport:latest
-    depends_on:
-      - aws-local
+    image: floci/stackport:latest
+    container_name: floci-stackport
     ports:
-      - "8080:8080"
-    environment:
-      AWS_ENDPOINT_URL: http://aws-local:4566
-      AWS_ACCESS_KEY_ID: test
-      AWS_SECRET_ACCESS_KEY: test
-      AWS_REGION: us-east-1
-      STACKPORT_PORT: "8080"
+      - "4567:4567"
 
   azure-local:
     image: floci/floci-az:latest
+    container_name: floci-azure
     ports:
       - "4577:4577"
-      - "5672:5672" # Event Hubs AMQP
-      - "5673:5673" # Service Bus AMQP
 
   gcp-local:
     image: floci/floci-gcp:latest
+    container_name: floci-gcp
     ports:
       - "4588:4588"
