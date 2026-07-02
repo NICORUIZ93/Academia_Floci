@@ -45,6 +45,18 @@ button:focus-visible {
   outline: none;
 }
 
+button,
+.course-card,
+.lesson-list button {
+  transition: border-color 160ms ease, background 160ms ease, transform 160ms ease;
+}
+
+button:active,
+.course-card:active,
+.lesson-list button:active {
+  transform: translateY(1px);
+}
+
 button:disabled {
   color: #9b9b9b;
   cursor: not-allowed;
@@ -58,6 +70,11 @@ button:disabled {
   padding: 24px clamp(18px, 4vw, 48px);
   border-bottom: 1px solid var(--line);
   background: var(--surface);
+}
+
+.mobile-nav-button,
+.mobile-only {
+  display: none;
 }
 
 .eyebrow,
@@ -133,6 +150,8 @@ progress {
 }
 
 .sidebar-header,
+.sidebar-actions,
+.outline-header,
 .panel-header,
 .actions {
   display: flex;
@@ -161,6 +180,10 @@ progress {
   gap: 12px;
   text-align: left;
   background: var(--surface);
+}
+
+.course-card:hover {
+  transform: translateY(-1px);
 }
 
 .course-card.is-active {
@@ -392,6 +415,31 @@ ul {
   background: var(--accent-soft);
 }
 
+.lesson-list-hint {
+  padding: 8px 10px;
+  color: var(--muted);
+  font-size: 0.86rem;
+}
+
+.active-learning-panel label {
+  display: block;
+  margin-top: 14px;
+  color: var(--accent-strong);
+  font-weight: 700;
+}
+
+.active-learning-panel textarea {
+  width: 100%;
+  margin-top: 8px;
+  padding: 12px;
+  resize: vertical;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  color: var(--ink);
+  background: var(--surface);
+  font: inherit;
+}
+
 .hidden {
   display: none;
 }
@@ -412,6 +460,10 @@ ul {
 }
 
 @media (max-width: 760px) {
+  body {
+    overflow-x: hidden;
+  }
+
   .topbar,
   .floci-check,
   .layout {
@@ -419,12 +471,51 @@ ul {
     grid-template-columns: 1fr;
   }
 
+  .topbar {
+    padding: 18px 16px;
+  }
+
+  .mobile-nav-button,
+  .mobile-only {
+    display: inline-flex;
+  }
+
   .progress-box {
     width: 100%;
   }
 
   .sidebar {
+    position: fixed;
+    inset: 0 auto 0 0;
+    z-index: 20;
+    width: min(86vw, 340px);
+    padding: 18px;
+    overflow-y: auto;
+    background: var(--surface);
+    border-right: 1px solid var(--line);
+    box-shadow: 0 24px 60px rgb(0 0 0 / 18%);
+    transform: translateX(-105%);
+    transition: transform 180ms ease;
+  }
+
+  body.nav-open .sidebar {
+    transform: translateX(0);
+  }
+
+  .outline {
     position: static;
+  }
+
+  .lesson {
+    padding: 18px 16px;
+  }
+
+  .floci-check {
+    padding: 16px;
+  }
+
+  .diagram-card {
+    padding: 12px;
   }
 
   .actions button {

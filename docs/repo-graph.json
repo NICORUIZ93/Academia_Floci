@@ -240,7 +240,7 @@
     },
     {
       "path": "scripts/validate.sh",
-      "lines": 194,
+      "lines": 200,
       "kind": "automation-script",
       "symbols": [],
       "imports": [],
@@ -323,7 +323,7 @@
     },
     {
       "path": "web/app.css",
-      "lines": 434,
+      "lines": 525,
       "kind": "project-file",
       "symbols": [],
       "imports": [],
@@ -331,7 +331,7 @@
     },
     {
       "path": "web/app.js",
-      "lines": 329,
+      "lines": 410,
       "kind": "project-file",
       "symbols": [],
       "imports": [],
@@ -349,14 +349,17 @@
     },
     {
       "path": "web/index.html",
-      "lines": 156,
+      "lines": 173,
       "kind": "project-file",
       "symbols": [
         "progressLabel",
         "progressBar",
+        "toggleNav",
         "floci-status",
         "verifyFloci",
+        "courseNav",
         "resetProgress",
+        "closeNav",
         "courseList",
         "courseLabel",
         "difficultyBadge",
@@ -372,10 +375,7 @@
         "copyStatus",
         "breakdownList",
         "deepDiveText",
-        "errorsList",
-        "challengeText",
-        "expectedOutput",
-        "resourcesList"
+        "errorsList"
       ],
       "imports": [],
       "headings": []

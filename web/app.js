@@ -2,6 +2,8 @@ let steps = fallbackSteps;
 let progressStep = readProgress();
 let viewStep = Math.min(progressStep, steps.length);
 const NOTES_KEY = "academia-master-notes";
+const ACTIVE_KEY = "academia-master-active-learning";
+let showAllLessons = false;
 
 const $ = (id) => document.getElementById(id);
 
@@ -30,6 +32,9 @@ const elements = {
   progressLabel: $("progressLabel"),
   progressBar: $("progressBar"),
   sourceStatus: $("sourceStatus"),
+  toggleAllLessons: $("toggleAllLessons"),
+  toggleNav: $("toggleNav"),
+  closeNav: $("closeNav"),
   previousStep: $("previousStep"),
   nextStep: $("nextStep"),
   completeStep: $("completeStep"),
@@ -37,6 +42,9 @@ const elements = {
   noteText: $("noteText"),
   noteStatus: $("noteStatus"),
   saveNote: $("saveNote"),
+  predictionText: $("predictionText"),
+  explanationText: $("explanationText"),
+  activeStatus: $("activeStatus"),
 };
 
 // Cambio P2: verificacion visual del laboratorio local desde la interfaz.
@@ -82,6 +90,18 @@ function readNotes() {
 
 function saveNotes(notes) {
   localStorage.setItem(NOTES_KEY, JSON.stringify(notes));
+}
+
+function readActiveResponses() {
+  try {
+    return JSON.parse(localStorage.getItem(ACTIVE_KEY)) || {};
+  } catch {
+    return {};
+  }
+}
+
+function saveActiveResponses(responses) {
+  localStorage.setItem(ACTIVE_KEY, JSON.stringify(responses));
 }
 
 function courseForStep(stepNumber) {
@@ -130,6 +150,7 @@ function render() {
   renderCourses(currentCourse);
   renderLessons(currentCourse);
   renderNote(current);
+  renderActiveResponses(current);
   renderActions();
 }
 
@@ -231,11 +252,33 @@ function renderNote(current) {
   elements.noteStatus.textContent = notes[current.number] ? "Nota guardada para este paso." : "Sin nota guardada.";
 }
 
+function renderActiveResponses(current) {
+  const responses = readActiveResponses();
+  const currentResponses = responses[current.number] || {};
+  elements.predictionText.value = currentResponses.prediction || "";
+  elements.explanationText.value = currentResponses.explanation || "";
+  elements.activeStatus.textContent = isActiveResponseComplete(current.number)
+    ? "Prediccion y explicacion guardadas."
+    : "Completa prediccion y explicacion para marcar el paso como aprendido.";
+}
+
+function isActiveResponseComplete(stepNumber) {
+  const responses = readActiveResponses()[stepNumber] || {};
+  return Boolean(responses.prediction?.trim() && responses.explanation?.trim());
+}
+
 function renderLessons(currentCourse) {
   elements.outlineTitle.textContent = `Temario: ${currentCourse.title}`;
   elements.lessonList.replaceChildren();
 
-  stepsForCourse(currentCourse).forEach((item) => {
+  const courseLessons = stepsForCourse(currentCourse);
+  const visibleLessons = showAllLessons
+    ? courseLessons
+    : courseLessons.filter((item) => Math.abs(item.number - viewStep) <= 3);
+
+  elements.toggleAllLessons.textContent = showAllLessons ? "Ver cercanos" : "Ver todos";
+
+  visibleLessons.forEach((item) => {
     const li = document.createElement("li");
     const button = document.createElement("button");
     const marker = document.createElement("span");
@@ -252,6 +295,13 @@ function renderLessons(currentCourse) {
     li.appendChild(button);
     elements.lessonList.appendChild(li);
   });
+
+  if (!showAllLessons && visibleLessons.length < courseLessons.length) {
+    const li = document.createElement("li");
+    li.className = "lesson-list-hint";
+    li.textContent = `Mostrando ${visibleLessons.length} pasos cercanos de ${courseLessons.length}.`;
+    elements.lessonList.appendChild(li);
+  }
 }
 
 function renderActions() {
@@ -271,6 +321,12 @@ function showStep(number) {
 }
 
 function completeCurrentStep() {
+  if (!isActiveResponseComplete(viewStep)) {
+    elements.activeStatus.textContent = "Antes de completar: escribe tu prediccion y tu explicacion.";
+    elements.predictionText.focus();
+    return;
+  }
+
   if (viewStep >= progressStep) {
     progressStep = Math.min(viewStep + 1, steps.length + 1);
     saveProgress();
@@ -289,6 +345,23 @@ function saveCurrentNote() {
   }
   saveNotes(notes);
   elements.noteStatus.textContent = value ? "Nota guardada." : "Nota eliminada.";
+}
+
+function saveActiveResponse() {
+  const responses = readActiveResponses();
+  responses[viewStep] = {
+    prediction: elements.predictionText.value.trim(),
+    explanation: elements.explanationText.value.trim(),
+  };
+  saveActiveResponses(responses);
+  elements.activeStatus.textContent = isActiveResponseComplete(viewStep)
+    ? "Prediccion y explicacion guardadas."
+    : "Completa ambos campos para marcar el paso como aprendido.";
+}
+
+function toggleNavigation(open) {
+  document.body.classList.toggle("nav-open", open);
+  elements.toggleNav.setAttribute("aria-expanded", String(open));
 }
 
 function resetProgress() {
@@ -322,6 +395,14 @@ $("previousStep").addEventListener("click", () => showStep(viewStep - 1));
 $("nextStep").addEventListener("click", () => showStep(viewStep + 1));
 $("resetProgress").addEventListener("click", resetProgress);
 $("saveNote").addEventListener("click", saveCurrentNote);
+$("predictionText").addEventListener("input", saveActiveResponse);
+$("explanationText").addEventListener("input", saveActiveResponse);
+$("toggleAllLessons").addEventListener("click", () => {
+  showAllLessons = !showAllLessons;
+  render();
+});
+$("toggleNav").addEventListener("click", () => toggleNavigation(!document.body.classList.contains("nav-open")));
+$("closeNav").addEventListener("click", () => toggleNavigation(false));
 
 render();
 elements.sourceStatus.textContent = `${courses.length} modulos · ${steps.length} lecciones generadas.`;

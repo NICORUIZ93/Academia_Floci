@@ -171,15 +171,21 @@ if (!html.includes('id="floci-status"') || !app.includes('async function verific
   throw new Error('La web debe incluir verificacion de Floci');
 }
 
-for (const expected of ['id="noteText"', 'id="saveNote"', 'id="difficultyBadge"', 'id="timeBadge"', 'diagram-card']) {
+for (const expected of ['id="noteText"', 'id="saveNote"', 'id="difficultyBadge"', 'id="timeBadge"', 'diagram-card', 'id="predictionText"', 'id="explanationText"', 'id="toggleNav"', 'id="toggleAllLessons"']) {
   if (!html.includes(expected)) {
     throw new Error(`web/index.html no contiene ${expected}`);
   }
 }
 
-for (const expected of ['saveCurrentNote', 'highlightCommand', 'token-command']) {
+for (const expected of ['saveCurrentNote', 'highlightCommand', 'token-command', 'saveActiveResponse', 'isActiveResponseComplete', 'toggleNavigation', 'showAllLessons']) {
   if (!app.includes(expected)) {
     throw new Error(`web/app.js no contiene ${expected}`);
+  }
+}
+
+for (const expected of ['@media (max-width: 760px)', 'body.nav-open .sidebar', '.mobile-nav-button', '.active-learning-panel']) {
+  if (!fs.readFileSync('web/app.css', 'utf8').includes(expected)) {
+    throw new Error(`web/app.css no contiene ${expected}`);
   }
 }
 

@@ -16,6 +16,7 @@
       <span id="progressLabel">Paso 1 de 45</span>
       <progress id="progressBar" value="1" max="45"></progress>
     </div>
+    <button id="toggleNav" class="mobile-nav-button" type="button" aria-expanded="false" aria-controls="courseNav">Menu</button>
   </header>
 
   <section class="floci-check" aria-label="Verificacion de Floci">
@@ -27,10 +28,13 @@
   </section>
 
   <div class="layout">
-    <nav class="sidebar" aria-label="Cursos">
+    <nav id="courseNav" class="sidebar" aria-label="Cursos">
       <div class="sidebar-header">
         <h2>Cursos</h2>
-        <button id="resetProgress" class="ghost-button" type="button">Reiniciar</button>
+        <div class="sidebar-actions">
+          <button id="resetProgress" class="ghost-button" type="button">Reiniciar</button>
+          <button id="closeNav" class="ghost-button mobile-only" type="button">Cerrar</button>
+        </div>
       </div>
       <div id="courseList" class="course-list"></div>
     </nav>
@@ -100,6 +104,16 @@
         <p id="controlQuestion"></p>
       </section>
 
+      <!-- Cambio P1: metodologia activa. El estudiante predice y explica antes de completar. -->
+      <section class="panel active-learning-panel">
+        <h3>Lee -> Predice -> Haz -> Observa -> Explica</h3>
+        <label for="predictionText">Prediccion antes de ejecutar</label>
+        <textarea id="predictionText" rows="4" placeholder="Antes de mirar la salida esperada, escribe que crees que pasara y por que."></textarea>
+        <label for="explanationText">Explicacion despues de observar</label>
+        <textarea id="explanationText" rows="4" placeholder="Despues de practicar, explica con tus palabras que ocurrio y que aprendiste."></textarea>
+        <p id="activeStatus" class="status-text"></p>
+      </section>
+
       <!-- Cambio P1: cuaderno integrado para guardar notas por paso en localStorage. -->
       <section class="panel notebook-panel">
         <div class="panel-header">
@@ -143,7 +157,10 @@
     </main>
 
     <aside class="outline" aria-label="Temario">
-      <h2 id="outlineTitle">Temario</h2>
+      <div class="outline-header">
+        <h2 id="outlineTitle">Temario</h2>
+        <button id="toggleAllLessons" class="ghost-button" type="button">Ver todos</button>
+      </div>
       <ol id="lessonList" class="lesson-list"></ol>
       <p id="sourceStatus" class="status-text"></p>
     </aside>
