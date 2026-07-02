@@ -6,17 +6,17 @@ cd "$ROOT"
 
 node <<'NODE'
 const fs = require('fs');
+const vm = require('vm');
 
 const requiredFiles = [
   'README.md',
   'docker-compose.yml',
   '.env.example',
   'web/index.html',
+  'web/app.css',
+  'web/app-data.js',
+  'web/app.js',
   'web/README.md',
-  'web/public/content/es/pasos.md',
-  'web/public/content/es/cuaderno-progreso.md',
-  'web/public/content/es/guia-completa.md',
-  'web/public/content/manifest.json',
 ];
 
 for (const file of requiredFiles) {
@@ -25,46 +25,94 @@ for (const file of requiredFiles) {
   }
 }
 
-const manifest = JSON.parse(fs.readFileSync('web/public/content/manifest.json', 'utf8'));
-if (!manifest.some((entry) => entry.path === 'content/es/pasos.md')) {
-  throw new Error('manifest.json no referencia content/es/pasos.md');
-}
-
 const html = fs.readFileSync('web/index.html', 'utf8');
-const htmlSteps = [...html.matchAll(/step\((\d+),/g)].map((match) => Number(match[1]));
-const htmlCourses = [...html.matchAll(/\{\s*id:\s*"[^"]+",\s*code:\s*"[^"]+",\s*title:/g)];
-const loadsMarkdown = html.includes('fetch("public/content/es/pasos.md"');
-const hasFallback = html.includes('const fallbackSteps = [');
-const markdown = fs.readFileSync('web/public/content/es/pasos.md', 'utf8');
-const markdownSteps = [...markdown.matchAll(/^## Paso (\d+):/gm)].map((match) => Number(match[1]));
-const notebook = fs.readFileSync('web/public/content/es/cuaderno-progreso.md', 'utf8');
-const notebookSteps = [...notebook.matchAll(/^- \[ \] Paso (\d+):/gm)].map((match) => Number(match[1]));
+const data = fs.readFileSync('web/app-data.js', 'utf8');
+const app = fs.readFileSync('web/app.js', 'utf8');
+const linksAssets = html.includes('href="app.css"')
+  && html.includes('src="app-data.js"')
+  && html.includes('src="app.js"');
+
+const { courseBlueprints, courses, fallbackSteps, method } = vm.runInNewContext(`${data}
+({
+  courseBlueprints: COURSE_BLUEPRINTS,
+  courses,
+  fallbackSteps,
+  method: METHOD,
+})`);
 
 function assertFullRoute(label, values) {
   const missing = [];
-  for (let i = 1; i <= 45; i += 1) {
+  for (let i = 1; i <= values.length; i += 1) {
     if (!values.includes(i)) missing.push(i);
   }
-  if (values.length !== 45 || missing.length) {
-    throw new Error(`${label} debe tener 45 pasos. Encontrados=${values.length}, faltan=${missing.join(', ')}`);
+  if (missing.length) {
+    throw new Error(`${label} debe tener pasos consecutivos. Encontrados=${values.length}, faltan=${missing.join(', ')}`);
   }
 }
 
-assertFullRoute('web/index.html', htmlSteps);
-assertFullRoute('pasos.md', markdownSteps);
-assertFullRoute('cuaderno-progreso.md', notebookSteps);
+assertFullRoute('web/app-data.js', fallbackSteps.map((step) => step.number));
 
-if (htmlCourses.length !== 8) {
-  throw new Error(`web/index.html debe tener 8 cursos. Encontrados=${htmlCourses.length}`);
+if (courses.length !== 8) {
+  throw new Error(`web/app-data.js debe tener 8 modulos. Encontrados=${courses.length}`);
 }
 
-if (!loadsMarkdown || !hasFallback) {
-  throw new Error('web/index.html debe cargar pasos.md por HTTP y conservar respaldo embebido');
+if (fallbackSteps.length < 150) {
+  throw new Error(`El curriculo debe tener al menos 150 lecciones. Encontradas=${fallbackSteps.length}`);
+}
+
+const subtopicCount = courseBlueprints.reduce(
+  (sum, course) => sum + course.levels.reduce(
+    (levelSum, level) => levelSum + level.topics.reduce(
+      (topicSum, topic) => topicSum + topic.subtopics.length,
+      0,
+    ),
+    0,
+  ),
+  0,
+);
+if (subtopicCount < 900) {
+  throw new Error(`El curriculo debe aplicar al menos 900 subtemas. Encontrados=${subtopicCount}`);
+}
+
+if (method.length !== 7) {
+  throw new Error(`La metodologia debe tener 7 pasos. Encontrados=${method.length}`);
+}
+
+for (const lesson of fallbackSteps) {
+  const required = ['objective', 'theory', 'command', 'deepDive', 'challenge', 'output'];
+  for (const field of required) {
+    if (!lesson[field]) {
+      throw new Error(`La leccion ${lesson.number} no tiene ${field}`);
+    }
+  }
+  if (!Array.isArray(lesson.commonErrors) || lesson.commonErrors.length < 3) {
+    throw new Error(`La leccion ${lesson.number} debe tener errores comunes`);
+  }
+  if (!Array.isArray(lesson.resources) || lesson.resources.length < 3) {
+    throw new Error(`La leccion ${lesson.number} debe tener recursos`);
+  }
+}
+
+for (const course of courses) {
+  const courseSteps = fallbackSteps.filter((step) => step.number >= course.start && step.number <= course.end);
+  if (!courseSteps.length) {
+    throw new Error(`El modulo ${course.title} no tiene lecciones`);
+  }
+}
+
+if (!linksAssets) {
+  throw new Error('web/index.html debe enlazar app.css, app-data.js y app.js');
+}
+
+if (!app.includes('sourceStatus') || !app.includes('completeCurrentStep') || !app.includes('renderMethod')) {
+  throw new Error('web/app.js debe manejar estado, progreso y metodologia');
 }
 
 if (fs.existsSync('index.html') || fs.existsSync('academia-floci-simple.html')) {
   throw new Error('No debe haber HTML duplicado en la raiz. Usa web/index.html.');
 }
 
-console.log('Validacion OK: 8 cursos, 45 pasos, pasos.md y respaldo correctos.');
+console.log(`Validacion OK: app estatica, ${courses.length} modulos, ${fallbackSteps.length} lecciones, ${subtopicCount} subtemas aplicados.`);
 NODE
+
+python3 scripts/build_repo_graph.py --check

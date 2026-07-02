@@ -1,22 +1,23 @@
 # Web
 
-La página principal del curso es `index.html`.
+La pagina principal de la academia es `index.html`.
 
-No usa Angular, componentes, TypeScript ni librerías externas. Es un solo archivo
-HTML con CSS y JavaScript embebidos.
+No usa Angular, TypeScript ni librerias externas. Es una app estatica:
+HTML para estructura, CSS para interfaz, `app-data.js` para curriculo y `app.js`
+para navegacion, progreso y copiado de practicas.
 
-## Abrir el curso
+## Abrir la academia
 
-Opción directa en tu computador:
+Opcion directa:
 
 ```text
 web/index.html
 ```
 
-Si estás viendo el archivo desde GitHub, el navegador mostrará el código del
-HTML. Para estudiar, descarga o clona el repo y abre el archivo localmente.
+Si estas viendo el archivo desde GitHub, el navegador mostrara el codigo. Para
+estudiar, descarga o clona el repo y abre el archivo localmente.
 
-También puedes servir la carpeta con cualquier servidor estático:
+Tambien puedes servir la carpeta con cualquier servidor estatico:
 
 ```bash
 cd web
@@ -25,48 +26,30 @@ python3 -m http.server 8081
 
 Luego abre `http://localhost:8081`.
 
-## Qué contiene
+## Que contiene
 
-- Catálogo de cursos tipo Udemy, pero simple.
-- 45 pasos numerados.
-- Una sola lección visible a la vez.
-- Temario del curso activo.
-- Botón para copiar comandos.
+- 8 modulos: JavaScript, Node.js, Angular, React, Java, Spring Boot, DevOps y Cloud.
+- Niveles de fundamentos, intermedio, avanzado y master.
+- 213 lecciones generadas desde el libro ampliado.
+- Mas de 900 subtemas visibles dentro de las lecciones.
+- Secciones de objetivo, teoria, practica, profundizacion, errores comunes, reto y recursos.
+- Temario del modulo activo.
+- Boton para copiar practicas.
 - Progreso guardado en `localStorage`.
-- Diseño blanco, simple y sin distracciones.
+- Layout responsivo sin build step.
 
-Cuando se sirve por HTTP, `index.html` carga las lecciones desde
-`public/content/es/pasos.md`. Si se abre directo como archivo local, usa el
-respaldo embebido en el HTML para seguir funcionando.
+## Archivos principales
 
-## Contenido de referencia
-
-- `public/content/es/pasos.md`: los mismos 45 pasos en Markdown.
-- `public/content/es/cuaderno-progreso.md`: plantilla para evidencias.
-- `public/content/es/guia-completa.md`: manual de consulta.
+- `index.html`: estructura de la aplicacion.
+- `app.css`: estilos responsivos.
+- `app-data.js`: modulos, niveles y lecciones generadas.
+- `app.js`: navegacion, progreso y renderizado.
+- `../scripts/build_curriculum.py`: regenera el curriculo desde el esquema del libro.
 
 ## Validar cambios
 
-Desde la raíz del repositorio:
+Desde la raiz del repositorio:
 
 ```bash
 ./scripts/validate.sh
 ```
-
-## Cursos
-
-| Curso | Pasos | Tema |
-|---|---:|---|
-| Inicio y ambiente | 1-7 | Docker, Floci y AWS CLI |
-| Almacenamiento S3 | 8-14 | Buckets, archivos y limpieza |
-| Colas SQS | 15-20 | Mensajes, recepción y borrado |
-| Base NoSQL DynamoDB | 21-27 | Tabla, items, lectura y limpieza |
-| Funciones Lambda | 28-32 | Crear, invocar, actualizar y borrar |
-| API Gateway | 33-36 | API REST, recurso, método y despliegue |
-| Permisos IAM | 37-40 | Usuario, política y asignación |
-| Proyecto final | 41-45 | CRUD de tareas con servicios locales |
-
-## Angular
-
-`src/` conserva la app Angular anterior como referencia técnica. No es la ruta
-principal de estudio porque tiene más navegación y estructura de la necesaria.

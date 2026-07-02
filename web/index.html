@@ -3,667 +3,105 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Academia Floci</title>
-  <style>
-    * { box-sizing: border-box; }
-    html {
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      font-size: 18px;
-      line-height: 1.6;
-      color: #1a1a1a;
-      background: #ffffff;
-    }
-    body {
-      margin: 0;
-      color: #1a1a1a;
-      background: #ffffff;
-      overflow-x: hidden;
-    }
-    .topbar {
-      display: flex;
-      justify-content: space-between;
-      gap: 24px;
-      padding: 24px 40px;
-      border-bottom: 1px solid #dddddd;
-    }
-    .brand, .progress {
-      margin: 0;
-      font-weight: 700;
-    }
-    .brand { font-size: 24px; }
-    .progress { white-space: nowrap; }
-    .app-shell {
-      width: 100%;
-      max-width: 1400px;
-      margin: 0 auto;
-      padding: 40px;
-      display: grid;
-      grid-template-columns: 300px minmax(0, 1fr) 340px;
-      gap: 32px;
-      align-items: start;
-    }
-    main, aside, nav { min-width: 0; }
-    .courses-panel {
-      border-right: 1px solid #dddddd;
-      padding-right: 24px;
-    }
-    .outline-panel {
-      border-left: 1px solid #dddddd;
-      padding-left: 24px;
-    }
-    .panel-title {
-      margin: 0 0 16px;
-      font-size: 20px;
-      line-height: 1.3;
-    }
-    h1 {
-      margin: 0 0 24px;
-      font-size: 36px;
-      line-height: 1.2;
-      letter-spacing: 0;
-      overflow-wrap: break-word;
-    }
-    h2 {
-      margin: 36px 0 12px;
-      font-size: 22px;
-      line-height: 1.3;
-      letter-spacing: 0;
-      overflow-wrap: break-word;
-    }
-    p {
-      margin: 0 0 18px;
-      overflow-wrap: break-word;
-    }
-    ul {
-      margin: 0;
-      padding-left: 24px;
-    }
-    li {
-      margin: 8px 0;
-      overflow-wrap: break-word;
-    }
-    pre {
-      max-width: 100%;
-      margin: 0;
-      padding: 20px;
-      color: #1a1a1a;
-      background: #f0f0f0;
-      border: 1px solid #dddddd;
-      border-radius: 0;
-      overflow-x: auto;
-      white-space: pre-wrap;
-      overflow-wrap: anywhere;
-      word-break: break-word;
-      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
-      font-size: 16px;
-    }
-    button {
-      font: inherit;
-      color: #1a1a1a;
-      background: #ffffff;
-      border: 1px solid #1a1a1a;
-      border-radius: 0;
-      padding: 10px 16px;
-      cursor: pointer;
-    }
-    button:hover, button:focus-visible { background: #f0f0f0; }
-    button:disabled {
-      color: #777777;
-      border-color: #cccccc;
-      cursor: not-allowed;
-      background: #ffffff;
-    }
-    .command-title {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 16px;
-      margin: 36px 0 12px;
-    }
-    .command-title h2 { margin: 0; }
-    .copy-status {
-      min-height: 24px;
-      margin: 8px 0 0;
-      color: #555555;
-      font-size: 16px;
-    }
-    .question {
-      margin-top: 36px;
-      padding-left: 18px;
-      border-left: 4px solid #1a1a1a;
-    }
-    .course-list {
-      display: grid;
-      gap: 12px;
-    }
-    .course-card {
-      width: 100%;
-      min-height: 116px;
-      display: grid;
-      grid-template-columns: 44px minmax(0, 1fr);
-      gap: 12px;
-      align-items: start;
-      padding: 14px;
-      text-align: left;
-      border: 1px solid #dddddd;
-      background: #ffffff;
-    }
-    .course-card:hover,
-    .course-card:focus-visible {
-      background: #f0f0f0;
-    }
-    .course-card.active {
-      border-color: #005bbb;
-      border-left: 6px solid #005bbb;
-      padding-left: 9px;
-    }
-    .course-card.completed {
-      border-color: #0f7a34;
-    }
-    .course-icon {
-      width: 44px;
-      height: 44px;
-      display: grid;
-      place-items: center;
-      color: #ffffff;
-      background: #1a1a1a;
-      font-weight: 700;
-      font-size: 15px;
-    }
-    .course-card.active .course-icon { background: #005bbb; }
-    .course-card.completed .course-icon { background: #0f7a34; }
-    .course-name {
-      display: block;
-      font-weight: 700;
-      line-height: 1.25;
-      overflow-wrap: break-word;
-    }
-    .course-meta,
-    .course-summary,
-    .lesson-meta {
-      display: block;
-      margin-top: 4px;
-      color: #555555;
-      font-size: 15px;
-      line-height: 1.35;
-      overflow-wrap: break-word;
-    }
-    .course-label {
-      margin: 0 0 10px;
-      color: #005bbb;
-      font-size: 16px;
-      font-weight: 700;
-    }
-    .lesson-list {
-      list-style: none;
-      padding: 0;
-      margin: 0;
-    }
-    .lesson-list button {
-      width: 100%;
-      min-width: 0;
-      display: grid;
-      grid-template-columns: 28px minmax(0, 1fr);
-      gap: 8px;
-      align-items: start;
-      text-align: left;
-      border: 0;
-      border-left: 4px solid transparent;
-      padding: 10px 8px;
-      background: #ffffff;
-    }
-    .lesson-list button:hover,
-    .lesson-list button:focus-visible {
-      background: #f0f0f0;
-    }
-    .lesson-list .completed { color: #0f7a34; }
-    .lesson-list .active {
-      color: #005bbb;
-      border-left-color: #005bbb;
-      font-weight: 700;
-    }
-    .lesson-list span {
-      min-width: 0;
-      overflow-wrap: break-word;
-    }
-    .actions {
-      display: flex;
-      justify-content: space-between;
-      flex-wrap: wrap;
-      gap: 12px;
-      margin-top: 40px;
-      padding-top: 24px;
-      border-top: 1px solid #dddddd;
-    }
-    .done {
-      color: #0f7a34;
-      border-color: #0f7a34;
-      font-weight: 700;
-    }
-    .done:hover, .done:focus-visible { background: #eaf7ee; }
-    .nav {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 12px;
-    }
-    .status {
-      margin-top: 16px;
-      color: #555555;
-      font-size: 16px;
-    }
-    .hidden { display: none; }
-    @media (max-width: 860px) {
-      .topbar {
-        flex-direction: column;
-        padding: 20px;
-      }
-      .app-shell {
-        grid-template-columns: 1fr;
-        padding: 28px 20px;
-      }
-      .courses-panel,
-      .outline-panel {
-        border-left: 0;
-        border-right: 0;
-        border-top: 1px solid #dddddd;
-        padding: 28px 0 0;
-      }
-      h1 { font-size: 30px; }
-    }
-  </style>
+  <title>Academia Master Hacker</title>
+  <link rel="stylesheet" href="app.css">
 </head>
 <body>
   <header class="topbar">
-    <p class="brand">Academia Floci</p>
-    <p id="progress" class="progress">Paso 1 de 45</p>
+    <div>
+      <p class="eyebrow">Ruta profesional de cero a avanzado</p>
+      <h1>Academia Master Hacker</h1>
+    </div>
+    <div class="progress-box" aria-live="polite">
+      <span id="progressLabel">Paso 1 de 45</span>
+      <progress id="progressBar" value="1" max="45"></progress>
+    </div>
   </header>
 
-  <div class="app-shell">
-    <nav class="courses-panel" aria-label="Cursos">
-      <h2 class="panel-title">Cursos</h2>
+  <div class="layout">
+    <nav class="sidebar" aria-label="Cursos">
+      <div class="sidebar-header">
+        <h2>Cursos</h2>
+        <button id="resetProgress" class="ghost-button" type="button">Reiniciar</button>
+      </div>
       <div id="courseList" class="course-list"></div>
     </nav>
 
-    <main>
+    <main class="lesson" tabindex="-1">
       <p id="courseLabel" class="course-label"></p>
-      <h1 id="title">Paso 1: Cargando...</h1>
-      <p id="explanation"></p>
-      <p id="analogy"></p>
+      <h2 id="lessonTitle">Cargando...</h2>
+      <p id="lessonText" class="lesson-text"></p>
+      <p id="lessonHint" class="lesson-hint"></p>
 
-      <section id="commandSection">
-        <div class="command-title">
-          <h2>Comando</h2>
-          <button id="copy" type="button">Copiar</button>
+      <section class="panel method-panel">
+        <h3>Objetivo</h3>
+        <p id="objectiveText"></p>
+      </section>
+
+      <section class="panel">
+        <h3>Teoria</h3>
+        <p id="theoryText"></p>
+      </section>
+
+      <section id="commandPanel" class="panel">
+        <div class="panel-header">
+          <h3>Practica</h3>
+          <button id="copyCommand" type="button">Copiar practica</button>
         </div>
-        <pre><code id="command"></code></pre>
-        <p id="copyStatus" class="copy-status"></p>
+        <pre><code id="commandText"></code></pre>
+        <p id="copyStatus" class="status-text"></p>
       </section>
 
-      <section>
-        <h2>Desglose del comando</h2>
-        <ul id="breakdown"></ul>
+      <section class="panel">
+        <h3>Aprenderas</h3>
+        <ul id="breakdownList"></ul>
       </section>
 
-      <section>
-        <h2>Salida esperada</h2>
-        <pre><code id="output"></code></pre>
+      <section class="panel">
+        <h3>Profundizacion</h3>
+        <p id="deepDiveText"></p>
       </section>
 
-      <section class="question">
-        <h2>Pregunta de control</h2>
-        <p id="question"></p>
+      <section class="panel">
+        <h3>Errores comunes</h3>
+        <ul id="errorsList"></ul>
+      </section>
+
+      <section class="panel">
+        <h3>Reto</h3>
+        <p id="challengeText"></p>
+      </section>
+
+      <section class="panel">
+        <h3>Resultado esperado</h3>
+        <pre><code id="expectedOutput"></code></pre>
+      </section>
+
+      <section class="panel">
+        <h3>Recursos</h3>
+        <ul id="resourcesList"></ul>
+      </section>
+
+      <section class="panel check-panel">
+        <h3>Pregunta de control</h3>
+        <p id="controlQuestion"></p>
       </section>
 
       <div class="actions">
-        <button id="done" class="done" type="button">✅ Ya lo ejecuté</button>
-        <div class="nav">
-          <button id="prev" type="button">← Anterior</button>
-          <button id="next" type="button">Siguiente →</button>
-        </div>
+        <button id="previousStep" type="button">Anterior</button>
+        <button id="completeStep" class="primary-button" type="button">Marcar completado</button>
+        <button id="nextStep" type="button">Siguiente</button>
       </div>
     </main>
 
-    <aside class="outline-panel">
-      <h2 id="outlineTitle" class="panel-title">Temario</h2>
-      <ul id="lessonList" class="lesson-list"></ul>
-      <p id="status" class="status"></p>
+    <aside class="outline" aria-label="Temario">
+      <h2 id="outlineTitle">Temario</h2>
+      <ol id="lessonList" class="lesson-list"></ol>
+      <p id="sourceStatus" class="status-text"></p>
     </aside>
   </div>
 
-  <script>
-    const STORAGE_KEY = "academia-floci-paso-actual";
-
-    const step = (number, title, explanation, command, breakdown, output) => ({
-      number,
-      title,
-      explanation,
-      command,
-      breakdown: Array.isArray(breakdown) ? breakdown : [breakdown],
-      output
-    });
-
-    const fallbackSteps = [
-      step(1, "¿Qué es Docker?", "Docker es una herramienta que ejecuta programas en contenedores. Es como tener una caja mágica donde metes cualquier programa y funciona en cualquier computadora.", `docker --version`, [`"docker" es el programa`, `"--version" pregunta qué versión tienes`], "Docker version 24.0.7"),
-      step(2, "Instalar Docker", "Ve a docker.com, descarga Docker para tu sistema (Windows, Mac o Linux) e instálalo. Después de instalar, reinicia tu terminal.", "", "No aplica.", "No aplica."),
-      step(3, "Verificar Docker", "Vamos a comprobar que Docker se instaló bien.", `docker --version`, [`"docker" ejecuta el programa`, `"--version" muestra la versión`], "Docker version 24.0.7, build afdd53b"),
-      step(4, "Levantar Floci", "Floci es un emulador de AWS que corre en tu computadora. Es como tener un mini AWS en tu PC sin pagar ni crear cuentas.", `docker run -p 4566:4566 floci/floci:latest`, [`"docker run" ejecuta un contenedor`, `"-p 4566:4566" conecta el puerto`, `"floci/floci:latest" es la imagen`], "Floci started on port 4566"),
-      step(5, "Verificar Floci", "Vamos a comprobar que Floci está funcionando.", `curl http://localhost:4566/_localstack/health`, [`"curl" hace una petición web`, `"http://localhost:4566" es la dirección de Floci`], `{"status":"running","services":{"s3":"available"}}`),
-      step(6, "Configurar AWS CLI", "AWS CLI es la herramienta para hablar con AWS. Vamos a configurarla para que hable con Floci.", `aws configure set region us-east-1`, [`"aws configure" configura AWS`, `"set region us-east-1" establece la región`], "No hay salida visible."),
-      step(7, "Probar AWS CLI", "Vamos a probar que AWS CLI funciona con Floci.", `aws s3 ls --endpoint-url=http://localhost:4566`, [`"aws s3 ls" lista buckets`, `"--endpoint-url" usa Floci`], "Lista vacía, sin errores."),
-      step(8, "¿Qué es S3?", "S3 es el servicio de almacenamiento de AWS. Es como un disco duro en la nube donde guardas archivos.", "", "No aplica.", "No aplica."),
-      step(9, "Crear un bucket S3", "Vamos a crear nuestro primer bucket.", `aws s3 mb s3://mi-bucket --endpoint-url http://localhost:4566`, [`"aws s3 mb" = make bucket`, `"s3://mi-bucket" es el nombre`], "make_bucket: mi-bucket"),
-      step(10, "Subir un archivo a S3", "Vamos a crear un archivo de prueba y subirlo al bucket.", `echo 'Hola mundo' > hola.txt && aws s3 cp hola.txt s3://mi-bucket/ --endpoint-url http://localhost:4566`, [`"echo" crea el archivo`, `"aws s3 cp" sube el archivo`], "upload: ./hola.txt to s3://mi-bucket/hola.txt"),
-      step(11, "Listar archivos en S3", "Vamos a ver qué archivos hay en nuestro bucket.", `aws s3 ls s3://mi-bucket/ --endpoint-url http://localhost:4566`, `"aws s3 ls" lista archivos`, "2024-01-01 12:00:00 12 hola.txt"),
-      step(12, "Descargar un archivo de S3", "Vamos a descargar el archivo que subimos.", `aws s3 cp s3://mi-bucket/hola.txt ./hola-descargado.txt --endpoint-url http://localhost:4566`, `"aws s3 cp" copia, origen y destino`, "download: s3://mi-bucket/hola.txt to ./hola-descargado.txt"),
-      step(13, "Eliminar un archivo de S3", "Vamos a eliminar el archivo del bucket.", `aws s3 rm s3://mi-bucket/hola.txt --endpoint-url http://localhost:4566`, `"aws s3 rm" = remove (eliminar)`, "delete: s3://mi-bucket/hola.txt"),
-      step(14, "Eliminar el bucket S3", "Vamos a eliminar el bucket. Debe estar vacío.", `aws s3 rb s3://mi-bucket --endpoint-url http://localhost:4566`, `"aws s3 rb" = remove bucket`, "remove_bucket: mi-bucket"),
-      step(15, "¿Qué es SQS?", "SQS es un servicio de colas de mensajes. Es como una bandeja de correo donde dejas mensajes para que otros los recojan después.", "", "No aplica.", "No aplica."),
-      step(16, "Crear una cola SQS", "Vamos a crear una cola llamada mi-cola.", `aws sqs create-queue --queue-name mi-cola --endpoint-url http://localhost:4566`, [`"aws sqs create-queue" crea una cola`, `"--queue-name" es el nombre`], `{"QueueUrl": "http://localhost:4566/000000000000/mi-cola"}`),
-      step(17, "Enviar un mensaje a SQS", "Vamos a enviar un mensaje a la cola.", `aws sqs send-message --queue-url http://localhost:4566/000000000000/mi-cola --message-body "Hola mundo" --endpoint-url http://localhost:4566`, [`"send-message" envía`, `"--queue-url" es la dirección`, `"--message-body" es el contenido`], `{"MD5OfMessageBody": "...", "MessageId": "..."}`),
-      step(18, "Recibir mensajes de SQS", "Vamos a recibir los mensajes de la cola.", `aws sqs receive-message --queue-url http://localhost:4566/000000000000/mi-cola --endpoint-url http://localhost:4566`, `"receive-message" recibe mensaje`, `{"Messages": [{"MessageId": "...", "Body": "Hola mundo"}]}`),
-      step(19, "Eliminar un mensaje de SQS", "Después de recibir un mensaje, hay que eliminarlo de la cola.", `aws sqs delete-message --queue-url http://localhost:4566/000000000000/mi-cola --receipt-handle "..." --endpoint-url http://localhost:4566`, [`"delete-message" elimina`, `"--receipt-handle" es el identificador`], "No hay salida visible."),
-      step(20, "Eliminar la cola SQS", "Vamos a eliminar la cola.", `aws sqs delete-queue --queue-url http://localhost:4566/000000000000/mi-cola --endpoint-url http://localhost:4566`, `"delete-queue" elimina la cola`, "No hay salida visible."),
-      step(21, "¿Qué es DynamoDB?", "DynamoDB es una base de datos NoSQL. Es como una hoja de cálculo gigante donde guardas información.", "", "No aplica.", "No aplica."),
-      step(22, "Crear una tabla DynamoDB", "Vamos a crear una tabla para guardar tareas.", `aws dynamodb create-table --table-name tareas --attribute-definitions AttributeName=id,AttributeType=S --key-schema AttributeName=id,KeyType=HASH --billing-mode PAY_PER_REQUEST --endpoint-url http://localhost:4566`, [`"create-table" crea`, `"--table-name" es el nombre`, `"--attribute-definitions" define campos`], `{"TableDescription": {"TableName": "tareas", "TableStatus": "ACTIVE"}}`),
-      step(23, "Insertar un item en DynamoDB", "Vamos a guardar una tarea en la tabla.", `aws dynamodb put-item --table-name tareas --item '{"id":{"S":"1"},"nombre":{"S":"Aprender S3"}}' --endpoint-url http://localhost:4566`, [`"put-item" inserta`, `"--item" son los datos`], "No hay salida visible."),
-      step(24, "Obtener un item de DynamoDB", "Vamos a recuperar la tarea que guardamos.", `aws dynamodb get-item --table-name tareas --key '{"id":{"S":"1"}}' --endpoint-url http://localhost:4566`, [`"get-item" obtiene`, `"--key" es la clave`], `{"Item": {"id": {"S": "1"}, "nombre": {"S": "Aprender S3"}}}`),
-      step(25, "Consultar todos los items de DynamoDB", "Vamos a ver todas las tareas de la tabla.", `aws dynamodb scan --table-name tareas --endpoint-url http://localhost:4566`, `"scan" escanea toda la tabla`, `{"Count": 1, "Items": [{"id": {"S": "1"}, "nombre": {"S": "Aprender S3"}}]}`),
-      step(26, "Eliminar un item de DynamoDB", "Vamos a eliminar la tarea.", `aws dynamodb delete-item --table-name tareas --key '{"id":{"S":"1"}}' --endpoint-url http://localhost:4566`, `"delete-item" elimina`, "No hay salida visible."),
-      step(27, "Eliminar la tabla DynamoDB", "Vamos a eliminar la tabla.", `aws dynamodb delete-table --table-name tareas --endpoint-url http://localhost:4566`, `"delete-table" elimina la tabla`, `{"TableDescription": {"TableName": "tareas", "TableStatus": "DELETING"}}`),
-      step(28, "¿Qué es Lambda?", "Lambda ejecuta código sin servidores. Escribes una función, la subes, y Lambda la ejecuta cuando la llamas.", "", "No aplica.", "No aplica."),
-      step(29, "Crear una función Lambda", "Vamos a crear una función simple que devuelve un mensaje.", `# Crea index.js, comprime y sube\ncat > index.js <<'JS'\nexports.handler = async (event) => {\n  return { statusCode: 200, body: JSON.stringify({ mensaje: 'Hola desde Lambda' }) };\n};\nJS\nzip function.zip index.js\naws lambda create-function --function-name mi-funcion --runtime nodejs20.x --handler index.handler --zip-file fileb://function.zip --role arn:aws:iam::000000000000:role/lambda-role --endpoint-url http://localhost:4566`, [`"zip" comprime`, `"create-function" crea la función`], `{"FunctionName": "mi-funcion", "Runtime": "nodejs20.x"}`),
-      step(30, "Invocar la función Lambda", "Vamos a ejecutar la función Lambda.", `aws lambda invoke --function-name mi-funcion --payload '{"nombre":"Mundo"}' output.json --endpoint-url http://localhost:4566`, [`"invoke" ejecuta`, `"--payload" son los datos`], "El archivo output.json contiene la respuesta."),
-      step(31, "Actualizar la función Lambda", "Vamos a cambiar el código de la función.", `aws lambda update-function-code --function-name mi-funcion --zip-file fileb://function.zip --endpoint-url http://localhost:4566`, `"update-function-code" actualiza el código`, `{"FunctionName": "mi-funcion", "LastModified": "..."}`),
-      step(32, "Eliminar la función Lambda", "Vamos a eliminar la función Lambda.", `aws lambda delete-function --function-name mi-funcion --endpoint-url http://localhost:4566`, `"delete-function" elimina`, "No hay salida visible."),
-      step(33, "¿Qué es API Gateway?", "API Gateway es una puerta de entrada para tus APIs.", "", "No aplica.", "No aplica."),
-      step(34, "Crear una API REST", "Vamos a crear una API REST.", `aws apigateway create-rest-api --name mi-api --endpoint-url http://localhost:4566`, `"create-rest-api" crea una API`, `{"id": "api123", "name": "mi-api"}`),
-      step(35, "Crear un recurso y método en API Gateway", "Vamos a crear un endpoint /hola con método GET.", `# Obtén el ID de la API y ejecuta\naws apigateway get-resources --rest-api-id <api-id> --endpoint-url http://localhost:4566\naws apigateway create-resource --rest-api-id <api-id> --parent-id <root-id> --path-part hola --endpoint-url http://localhost:4566\naws apigateway put-method --rest-api-id <api-id> --resource-id <resource-id> --http-method GET --authorization-type NONE --endpoint-url http://localhost:4566`, [`"get-resources" lista`, `"create-resource" crea`, `"put-method" crea el método`], `{"id": "resource123", "pathPart": "hola"}`),
-      step(36, "Desplegar la API", "Vamos a desplegar la API para que esté disponible.", `aws apigateway create-deployment --rest-api-id <api-id> --stage-name prod --endpoint-url http://localhost:4566`, `"create-deployment" despliega`, `{"id": "deployment123"}`),
-      step(37, "¿Qué es IAM?", "IAM controla quién puede hacer qué en AWS.", "", "No aplica.", "No aplica."),
-      step(38, "Crear un usuario en IAM", "Vamos a crear un usuario llamado mi-usuario.", `aws iam create-user --user-name mi-usuario --endpoint-url http://localhost:4566`, `"create-user" crea un usuario`, `{"User": {"UserName": "mi-usuario"}}`),
-      step(39, "Crear una política en IAM", "Una política define qué permisos tiene un usuario.", `aws iam create-policy --policy-name mi-policy --policy-document '{"Version":"2012-10-17","Statement":[{"Effect":"Allow","Action":"s3:*","Resource":"*"}]}' --endpoint-url http://localhost:4566`, `"create-policy" crea la política`, `{"Policy": {"PolicyName": "mi-policy"}}`),
-      step(40, "Asignar la política al usuario", "Vamos a darle los permisos al usuario.", `aws iam attach-user-policy --user-name mi-usuario --policy-arn arn:aws:iam::000000000000:policy/mi-policy --endpoint-url http://localhost:4566`, `"attach-user-policy" asigna la política`, "No hay salida visible."),
-      step(41, "Proyecto Final - Crear tabla DynamoDB", "Vamos a crear una tabla para nuestro proyecto final.", `aws dynamodb create-table --table-name proyecto-tareas --attribute-definitions AttributeName=id,AttributeType=S --key-schema AttributeName=id,KeyType=HASH --billing-mode PAY_PER_REQUEST --endpoint-url http://localhost:4566`, "Igual al Paso 22.", `{"TableDescription": {"TableName": "proyecto-tareas"}}`),
-      step(42, "Proyecto Final - Crear Lambda para tareas", "Vamos a crear una Lambda que gestione tareas CRUD.", `Crear index.js con funciones CRUD y subirlo.`, "Igual al Paso 29.", `{"FunctionName": "tareas-lambda"}`),
-      step(43, "Proyecto Final - Crear API Gateway", "Vamos a exponer la Lambda con API Gateway.", `Usar comandos de API Gateway para crear endpoints.`, "Igual a Pasos 34-36.", "URL de la API desplegada."),
-      step(44, "Probar el sistema completo", "Vamos a probar todo el sistema: crear, listar, actualizar y eliminar tareas.", `Usar curl para probar cada endpoint.`, "Cada comando prueba una función.", "Respuestas de la API."),
-      step(45, "¡Felicidades! Has completado el curso", "Has completado el curso. Ahora sabes usar Floci para emular AWS localmente.", "", "No aplica.", "No aplica.")
-    ];
-
-    let steps = fallbackSteps;
-
-    const courses = [
-      { id: "inicio", code: "01", title: "Inicio y ambiente", description: "Docker, Floci y AWS CLI", start: 1, end: 7 },
-      { id: "s3", code: "02", title: "Almacenamiento S3", description: "Buckets, archivos y limpieza", start: 8, end: 14 },
-      { id: "sqs", code: "03", title: "Colas SQS", description: "Mensajes, recepción y borrado", start: 15, end: 20 },
-      { id: "dynamodb", code: "04", title: "Base NoSQL DynamoDB", description: "Tabla, items, lectura y limpieza", start: 21, end: 27 },
-      { id: "lambda", code: "05", title: "Funciones Lambda", description: "Crear, invocar, actualizar y borrar", start: 28, end: 32 },
-      { id: "api", code: "06", title: "API Gateway", description: "API REST, recurso, método y despliegue", start: 33, end: 36 },
-      { id: "iam", code: "07", title: "Permisos IAM", description: "Usuario, política y asignación", start: 37, end: 40 },
-      { id: "proyecto", code: "08", title: "Proyecto final", description: "CRUD de tareas con servicios locales", start: 41, end: 45 },
-    ];
-
-    let progressStep = readProgress();
-    let viewStep = Math.min(progressStep, steps.length);
-
-    const $ = (id) => document.getElementById(id);
-    const courseList = $("courseList");
-    const courseLabel = $("courseLabel");
-    const title = $("title");
-    const explanation = $("explanation");
-    const analogy = $("analogy");
-    const commandSection = $("commandSection");
-    const command = $("command");
-    const copyStatus = $("copyStatus");
-    const breakdown = $("breakdown");
-    const output = $("output");
-    const question = $("question");
-    const outlineTitle = $("outlineTitle");
-    const lessonList = $("lessonList");
-
-    function readProgress() {
-      const saved = Number(localStorage.getItem(STORAGE_KEY));
-      if (!Number.isInteger(saved) || saved < 1) return 1;
-      if (saved > steps.length + 1) return steps.length + 1;
-      return saved;
-    }
-
-    function saveProgress() {
-      localStorage.setItem(STORAGE_KEY, String(progressStep));
-    }
-
-    function courseForStep(stepNumber) {
-      return courses.find((course) => stepNumber >= course.start && stepNumber <= course.end) || courses[0];
-    }
-
-    function stepsForCourse(course) {
-      return steps.filter((item) => item.number >= course.start && item.number <= course.end);
-    }
-
-    function completedInCourse(course) {
-      return stepsForCourse(course).filter((item) => item.number < progressStep).length;
-    }
-
-    function firstAvailableStep(course) {
-      const pending = stepsForCourse(course).find((item) => item.number >= progressStep);
-      return pending ? pending.number : course.start;
-    }
-
-    function render() {
-      const current = steps[viewStep - 1];
-      const currentCourse = courseForStep(current.number);
-      const courseSteps = stepsForCourse(currentCourse);
-      const lessonPosition = courseSteps.findIndex((item) => item.number === current.number) + 1;
-
-      $("progress").textContent = `Curso ${courses.indexOf(currentCourse) + 1} de ${courses.length} · Paso ${current.number} de ${steps.length}`;
-      courseLabel.textContent = `${currentCourse.title} · Lección ${lessonPosition} de ${courseSteps.length}`;
-      title.textContent = `Paso ${current.number}: ${current.title}`;
-      explanation.textContent = current.explanation;
-      analogy.textContent = current.command
-        ? "Lee primero la explicación, luego copia el comando, ejecútalo en tu terminal y compara la salida."
-        : "Este paso es conceptual: explícalo con tus palabras antes de avanzar.";
-      copyStatus.textContent = "";
-
-      if (current.command) {
-        commandSection.classList.remove("hidden");
-        command.textContent = current.command;
-      } else {
-        commandSection.classList.add("hidden");
-        command.textContent = "";
-      }
-
-      breakdown.innerHTML = "";
-      current.breakdown.forEach((item) => {
-        const li = document.createElement("li");
-        li.textContent = item;
-        breakdown.appendChild(li);
-      });
-
-      output.textContent = current.output;
-      question.textContent = current.command
-        ? "Antes de avanzar: ¿qué hace este comando y qué salida esperas ver?"
-        : "Antes de avanzar: explica este concepto con tus palabras.";
-
-      $("prev").disabled = viewStep === 1;
-      $("next").disabled = viewStep === steps.length;
-      $("done").disabled = progressStep > steps.length && viewStep === steps.length;
-      $("done").textContent = progressStep > steps.length && viewStep === steps.length ? "Ruta completada" : "✓ Ya lo completé";
-
-      renderCourses(currentCourse);
-      renderLessons(currentCourse);
-      $("status").textContent = progressStep > steps.length
-        ? "Ruta completa. Todos los cursos están terminados."
-        : `Siguiente paso pendiente: ${progressStep}.`;
-    }
-
-    function renderCourses(currentCourse) {
-      courseList.innerHTML = "";
-
-      courses.forEach((course) => {
-        const total = course.end - course.start + 1;
-        const completed = completedInCourse(course);
-        const isActive = course.id === currentCourse.id;
-        const isCompleted = completed === total;
-        const button = document.createElement("button");
-        const icon = document.createElement("span");
-        const body = document.createElement("span");
-        const name = document.createElement("span");
-        const summary = document.createElement("span");
-        const meta = document.createElement("span");
-
-        button.type = "button";
-        button.className = `course-card${isActive ? " active" : ""}${isCompleted ? " completed" : ""}`;
-        icon.className = "course-icon";
-        icon.textContent = course.code;
-        name.className = "course-name";
-        name.textContent = course.title;
-        summary.className = "course-summary";
-        summary.textContent = course.description;
-        meta.className = "course-meta";
-        meta.textContent = `${completed}/${total} lecciones · pasos ${course.start}-${course.end}`;
-
-        body.append(name, summary, meta);
-        button.append(icon, body);
-        button.addEventListener("click", () => {
-          viewStep = firstAvailableStep(course);
-          render();
-          scrollTo({ top: 0, behavior: "smooth" });
-        });
-        courseList.appendChild(button);
-      });
-    }
-
-    function renderLessons(currentCourse) {
-      outlineTitle.textContent = `Temario: ${currentCourse.title}`;
-      lessonList.innerHTML = "";
-
-      stepsForCourse(currentCourse).forEach((item) => {
-        const isCompleted = item.number < progressStep;
-        const isActive = item.number === viewStep;
-        const li = document.createElement("li");
-        const button = document.createElement("button");
-        const icon = document.createElement("span");
-        const label = document.createElement("span");
-
-        button.type = "button";
-        button.className = `${isCompleted ? "completed" : ""} ${isActive ? "active" : ""}`.trim();
-        icon.textContent = isCompleted ? "✓" : isActive ? "●" : "○";
-        label.textContent = `Paso ${item.number}: ${item.title}`;
-        button.append(icon, label);
-        button.addEventListener("click", () => {
-          viewStep = item.number;
-          render();
-          scrollTo({ top: 0, behavior: "smooth" });
-        });
-        li.appendChild(button);
-        lessonList.appendChild(li);
-      });
-    }
-
-    async function copyCommand() {
-      const current = steps[viewStep - 1];
-      if (!current.command) return;
-      try {
-        await navigator.clipboard.writeText(current.command);
-      } catch {
-        const textarea = document.createElement("textarea");
-        textarea.value = current.command;
-        document.body.appendChild(textarea);
-        textarea.select();
-        document.execCommand("copy");
-        textarea.remove();
-      }
-      copyStatus.textContent = "Comando copiado.";
-    }
-
-    function completeStep() {
-      if (viewStep >= progressStep) {
-        progressStep = Math.min(viewStep + 1, steps.length + 1);
-        saveProgress();
-      }
-      if (viewStep < steps.length) {
-        viewStep += 1;
-      }
-      if (progressStep <= steps.length) {
-        viewStep = Math.max(viewStep, progressStep);
-      }
-      render();
-      scrollTo({ top: 0, behavior: "smooth" });
-    }
-
-    function move(delta) {
-      viewStep = Math.min(Math.max(1, viewStep + delta), steps.length);
-      render();
-      scrollTo({ top: 0, behavior: "smooth" });
-    }
-
-    function textBetween(source, startLabel, endLabel) {
-      const start = source.indexOf(startLabel);
-      if (start === -1) return "";
-      const contentStart = start + startLabel.length;
-      const end = endLabel ? source.indexOf(endLabel, contentStart) : source.length;
-      return source.slice(contentStart, end === -1 ? source.length : end).trim();
-    }
-
-    function parseMarkdownSteps(markdown) {
-      return markdown
-        .split(/\n(?=## Paso \d+:)/)
-        .filter((section) => section.startsWith("## Paso "))
-        .map((section) => {
-          const heading = section.match(/^## Paso (\d+): (.+)$/m);
-          if (!heading) return null;
-
-          const commandText = textBetween(section, "**Comando:**", "**Desglose:**");
-          const commandBlock = commandText.match(/```(?:bash|text)?\n([\s\S]*?)\n```/);
-          const command = commandBlock ? commandBlock[1].trim() : "";
-          const breakdownText = textBetween(section, "**Desglose:**", "**Salida esperada:**");
-          const breakdown = breakdownText
-            .split("\n")
-            .map((line) => line.match(/^- (.+)$/))
-            .filter(Boolean)
-            .map((match) => match[1].trim());
-          const outputText = textBetween(section, "**Salida esperada:**", "**Pregunta de control:**");
-          const outputBlock = outputText.match(/```text\n([\s\S]*?)\n```/);
-
-          return step(
-            Number(heading[1]),
-            heading[2].trim(),
-            (section.match(/\*\*Explicación:\*\*\s*(.+)/) || [])[1] || "",
-            /No hay comando\./.test(commandText) ? "" : command,
-            breakdown.length ? breakdown : ["No aplica."],
-            outputBlock ? outputBlock[1].trim() : outputText.replace(/```/g, "").trim(),
-          );
-        })
-        .filter(Boolean)
-        .sort((a, b) => a.number - b.number);
-    }
-
-    async function loadMarkdownSteps() {
-      if (window.location.protocol === "file:") return;
-
-      const response = await fetch("public/content/es/pasos.md", { cache: "no-store" });
-      if (!response.ok) throw new Error("No se pudo cargar pasos.md");
-
-      const parsedSteps = parseMarkdownSteps(await response.text());
-      if (parsedSteps.length !== 45) throw new Error("pasos.md no contiene 45 pasos");
-
-      steps = parsedSteps;
-      progressStep = readProgress();
-      viewStep = Math.min(Math.max(1, viewStep), steps.length);
-      document.documentElement.dataset.stepsSource = "pasos.md";
-      render();
-    }
-
-    $("copy").addEventListener("click", copyCommand);
-    $("done").addEventListener("click", completeStep);
-    $("prev").addEventListener("click", () => move(-1));
-    $("next").addEventListener("click", () => move(1));
-
-    render();
-    loadMarkdownSteps().catch(() => {
-      steps = fallbackSteps;
-      render();
-    });
-  </script>
+  <script src="app-data.js"></script>
+  <script src="app.js"></script>
 </body>
 </html>
