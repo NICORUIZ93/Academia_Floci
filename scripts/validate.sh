@@ -194,22 +194,27 @@ if (!html.includes('id="floci-status"') || !app.includes('async function verific
   throw new Error('La web debe incluir verificacion de Floci');
 }
 
-for (const expected of ['id="noteText"', 'id="saveNote"', 'id="difficultyBadge"', 'id="timeBadge"', 'diagram-card', 'class="mermaid"', 'service-icon', 'id="predictionText"', 'id="explanationText"', 'id="toggleNav"', 'id="toggleAllLessons"', 'id="fullOutlineDialog"', 'id="fullLessonList"']) {
+for (const expected of ['id="noteText"', 'id="saveNote"', 'id="difficultyBadge"', 'id="timeBadge"', 'diagram-card', 'class="mermaid"', 'service-icon', 'id="predictionText"', 'id="explanationText"', 'id="toggleNav"', 'id="toggleAllLessons"', 'id="fullOutlineDialog"', 'id="fullLessonList"', 'id="cloudLabDialog"', 'id="openCloudLab"']) {
   if (!html.includes(expected)) {
     throw new Error(`web/index.html no contiene ${expected}`);
   }
 }
 
-for (const expected of ['saveCurrentNote', 'highlightCommand', 'token-command', 'saveActiveResponse', 'isActiveResponseComplete', 'toggleNavigation', 'NEARBY_LESSON_WINDOW = 2', 'renderFullOutline', 'openFullOutline', '✅']) {
+for (const expected of ['saveCurrentNote', 'highlightCommand', 'token-command', 'saveActiveResponse', 'isActiveResponseComplete', 'toggleNavigation', 'NEARBY_LESSON_WINDOW = 2', 'renderFullOutline', 'openFullOutline', 'openCloudLab', '✅']) {
   if (!app.includes(expected)) {
     throw new Error(`web/app.js no contiene ${expected}`);
   }
 }
 
-for (const expected of ['@media (max-width: 760px)', 'body.nav-open .sidebar', '.mobile-nav-button', '.active-learning-panel', 'position: sticky', 'bottom: 0', '.service-icons', '#16a34a', '.outline-dialog', '.full-course-lessons']) {
+for (const expected of ['@media (max-width: 760px)', 'body.nav-open .sidebar', '.mobile-nav-button', '.active-learning-panel', 'position: sticky', 'bottom: 0', '.service-icons', '#16a34a', '.outline-dialog', '.full-course-lessons', '.cloud-dialog', '.topbar-actions']) {
   if (!fs.readFileSync('web/app.css', 'utf8').includes(expected)) {
     throw new Error(`web/app.css no contiene ${expected}`);
   }
+}
+
+const mainLessonHtml = html.slice(html.indexOf('<main class="lesson"'), html.indexOf('<div class="actions">'));
+if (mainLessonHtml.includes('floci-status') || mainLessonHtml.includes('Diagramas Cloud') || mainLessonHtml.includes('Arquitectura Floci')) {
+  throw new Error('La vista principal del curso no debe mezclar Floci/Cloud dentro de la leccion.');
 }
 
 for (const expected of ['flowchart LR', 'sequenceDiagram', 'AWS local :4566', 'Azure local :4577', 'GCP local :4588']) {

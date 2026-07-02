@@ -27,20 +27,15 @@
       <p class="eyebrow">Ruta profesional de cero a avanzado</p>
       <h1>Academia Master Hacker</h1>
     </div>
-    <div class="progress-box" aria-live="polite">
-      <span id="progressLabel">Paso 1 de 45</span>
-      <progress id="progressBar" value="1" max="45"></progress>
+    <div class="topbar-actions">
+      <div class="progress-box" aria-live="polite">
+        <span id="progressLabel">Paso 1 de 45</span>
+        <progress id="progressBar" value="1" max="45"></progress>
+      </div>
+      <button id="openCloudLab" type="button">Laboratorio Cloud</button>
     </div>
     <button id="toggleNav" class="mobile-nav-button" type="button" aria-expanded="false" aria-controls="courseNav">☰ Pasos</button>
   </header>
-
-  <section class="floci-check" aria-label="Verificacion de Floci">
-    <div>
-      <h2>Laboratorio Floci</h2>
-      <p id="floci-status">Verificando Floci...</p>
-    </div>
-    <button id="verifyFloci" type="button" onclick="verificarFloci()">Verificar Floci</button>
-  </section>
 
   <div class="layout">
     <nav id="courseNav" class="sidebar" aria-label="Cursos">
@@ -139,59 +134,6 @@
         <p id="noteStatus" class="status-text"></p>
       </section>
 
-      <!-- Cambio P2: diagramas clave para que la arquitectura no sea solo texto. -->
-      <section class="panel visuals-panel" aria-label="Diagramas clave">
-        <h3>Diagramas clave</h3>
-        <div class="service-icons" aria-label="Conceptos principales">
-          <span class="service-icon service-icon-docker">Docker</span>
-          <span class="service-icon service-icon-s3">S3</span>
-          <span class="service-icon service-icon-lambda">Lambda</span>
-          <span class="service-icon service-icon-queue">SQS</span>
-          <span class="service-icon service-icon-db">DynamoDB</span>
-        </div>
-        <div class="diagram-grid">
-          <article class="diagram-card">
-            <h4>Arquitectura Floci</h4>
-            <pre class="mermaid">
-flowchart LR
-  Dev["PC local"] --> Docker["Docker Compose"]
-  Docker --> AWS["AWS local :4566"]
-  Docker --> Azure["Azure local :4577"]
-  Docker --> GCP["GCP local :4588"]
-  AWS --> Stackport["Stackport :4567"]
-            </pre>
-          </article>
-          <article class="diagram-card">
-            <h4>Peticion AWS local</h4>
-            <pre class="mermaid">
-sequenceDiagram
-  participant Alumno
-  participant CLI as AWS CLI
-  participant Floci as Floci AWS
-  participant S3
-  Alumno->>CLI: aws s3 ls --endpoint-url
-  CLI->>Floci: Firma test + region us-east-1
-  Floci->>S3: Lista buckets locales
-  S3-->>Floci: Buckets simulados
-  Floci-->>CLI: Respuesta compatible AWS
-  CLI-->>Alumno: Salida en terminal
-            </pre>
-          </article>
-          <article class="diagram-card">
-            <h4>AWS vs Azure vs GCP</h4>
-            <pre class="mermaid">
-flowchart TB
-  Cloud["Practica local multi-cloud"] --> AWS["AWS: S3, SQS, Lambda, DynamoDB"]
-  Cloud --> Azure["Azure: Storage, Functions, Queues"]
-  Cloud --> GCP["GCP: Storage, Pub/Sub, Cloud Functions"]
-  AWS --> Skill["Mismo metodo: predice, ejecuta, observa, explica"]
-  Azure --> Skill
-  GCP --> Skill
-            </pre>
-          </article>
-        </div>
-      </section>
-
       <div class="actions">
         <button id="previousStep" type="button">Anterior</button>
         <button id="completeStep" class="primary-button" type="button">Marcar completado</button>
@@ -218,6 +160,76 @@ flowchart TB
       <button id="closeFullOutline" class="ghost-button" type="button">Cerrar</button>
     </div>
     <ol id="fullLessonList" class="full-lesson-list"></ol>
+  </dialog>
+
+  <dialog id="cloudLabDialog" class="cloud-dialog" aria-labelledby="cloudLabTitle">
+    <div class="dialog-header">
+      <div>
+        <p class="eyebrow">Separado del curso actual</p>
+        <h2 id="cloudLabTitle">Laboratorio Cloud y Floci</h2>
+      </div>
+      <button id="closeCloudLab" class="ghost-button" type="button">Cerrar</button>
+    </div>
+
+    <section class="floci-check" aria-label="Verificacion de Floci">
+      <div>
+        <h3>Estado de Floci</h3>
+        <p id="floci-status">Abre el laboratorio y verifica Floci cuando lo necesites.</p>
+      </div>
+      <button id="verifyFloci" type="button" onclick="verificarFloci()">Verificar Floci</button>
+    </section>
+
+    <section class="visuals-panel" aria-label="Diagramas Cloud">
+      <h3>Diagramas Cloud</h3>
+      <div class="service-icons" aria-label="Conceptos principales">
+        <span class="service-icon service-icon-docker">Docker</span>
+        <span class="service-icon service-icon-s3">S3</span>
+        <span class="service-icon service-icon-lambda">Lambda</span>
+        <span class="service-icon service-icon-queue">SQS</span>
+        <span class="service-icon service-icon-db">DynamoDB</span>
+      </div>
+      <div class="diagram-grid">
+        <article class="diagram-card">
+          <h4>Arquitectura Floci</h4>
+          <pre class="mermaid">
+flowchart LR
+  Dev["PC local"] --> Docker["Docker Compose"]
+  Docker --> AWS["AWS local :4566"]
+  Docker --> Azure["Azure local :4577"]
+  Docker --> GCP["GCP local :4588"]
+  AWS --> Stackport["Stackport :4567"]
+          </pre>
+        </article>
+        <article class="diagram-card">
+          <h4>Peticion AWS local</h4>
+          <pre class="mermaid">
+sequenceDiagram
+  participant Alumno
+  participant CLI as AWS CLI
+  participant Floci as Floci AWS
+  participant S3
+  Alumno->>CLI: aws s3 ls --endpoint-url
+  CLI->>Floci: Firma test + region us-east-1
+  Floci->>S3: Lista buckets locales
+  S3-->>Floci: Buckets simulados
+  Floci-->>CLI: Respuesta compatible AWS
+  CLI-->>Alumno: Salida en terminal
+          </pre>
+        </article>
+        <article class="diagram-card">
+          <h4>AWS vs Azure vs GCP</h4>
+          <pre class="mermaid">
+flowchart TB
+  Cloud["Practica local multi-cloud"] --> AWS["AWS: S3, SQS, Lambda, DynamoDB"]
+  Cloud --> Azure["Azure: Storage, Functions, Queues"]
+  Cloud --> GCP["GCP: Storage, Pub/Sub, Cloud Functions"]
+  AWS --> Skill["Mismo metodo: predice, ejecuta, observa, explica"]
+  Azure --> Skill
+  GCP --> Skill
+          </pre>
+        </article>
+      </div>
+    </section>
   </dialog>
 
   <script src="app-data.js"></script>

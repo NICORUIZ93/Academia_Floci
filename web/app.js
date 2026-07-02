@@ -30,12 +30,15 @@ const elements = {
   lessonList: $("lessonList"),
   fullOutlineDialog: $("fullOutlineDialog"),
   fullLessonList: $("fullLessonList"),
+  cloudLabDialog: $("cloudLabDialog"),
   outlineTitle: $("outlineTitle"),
   progressLabel: $("progressLabel"),
   progressBar: $("progressBar"),
   sourceStatus: $("sourceStatus"),
   toggleAllLessons: $("toggleAllLessons"),
   closeFullOutline: $("closeFullOutline"),
+  openCloudLab: $("openCloudLab"),
+  closeCloudLab: $("closeCloudLab"),
   toggleNav: $("toggleNav"),
   closeNav: $("closeNav"),
   previousStep: $("previousStep"),
@@ -406,6 +409,14 @@ function openFullOutline() {
   }
 }
 
+function openCloudLab() {
+  if (typeof elements.cloudLabDialog.showModal === "function") {
+    elements.cloudLabDialog.showModal();
+  } else {
+    elements.cloudLabDialog.setAttribute("open", "");
+  }
+}
+
 function resetProgress() {
   progressStep = 1;
   viewStep = 1;
@@ -441,9 +452,10 @@ $("predictionText").addEventListener("input", saveActiveResponse);
 $("explanationText").addEventListener("input", saveActiveResponse);
 $("toggleAllLessons").addEventListener("click", openFullOutline);
 $("closeFullOutline").addEventListener("click", () => elements.fullOutlineDialog.close());
+$("openCloudLab").addEventListener("click", openCloudLab);
+$("closeCloudLab").addEventListener("click", () => elements.cloudLabDialog.close());
 $("toggleNav").addEventListener("click", () => toggleNavigation(!document.body.classList.contains("nav-open")));
 $("closeNav").addEventListener("click", () => toggleNavigation(false));
 
 render();
 elements.sourceStatus.textContent = `${courses.length} modulos · ${steps.length} lecciones generadas.`;
-verificarFloci();

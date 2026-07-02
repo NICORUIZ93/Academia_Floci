@@ -68,10 +68,17 @@ button:disabled {
 .topbar {
   display: flex;
   justify-content: space-between;
+  align-items: center;
   gap: 24px;
   padding: 24px clamp(18px, 4vw, 48px);
   border-bottom: 1px solid var(--line);
   background: var(--surface);
+}
+
+.topbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
 }
 
 .mobile-nav-button,
@@ -118,8 +125,6 @@ progress {
 }
 
 .floci-check {
-  width: min(1500px, 100%);
-  margin: 0 auto;
   padding: 18px clamp(16px, 3vw, 36px);
   display: flex;
   align-items: center;
@@ -129,7 +134,8 @@ progress {
   background: var(--accent-soft);
 }
 
-.floci-check h2 {
+.floci-check h2,
+.floci-check h3 {
   margin: 0 0 4px;
   font-size: 1rem;
 }
@@ -460,7 +466,8 @@ ul {
   background: var(--complete);
 }
 
-.outline-dialog {
+.outline-dialog,
+.cloud-dialog {
   width: min(980px, calc(100vw - 32px));
   max-height: min(840px, calc(100vh - 32px));
   padding: 0;
@@ -470,7 +477,8 @@ ul {
   box-shadow: 0 28px 80px rgb(0 0 0 / 22%);
 }
 
-.outline-dialog::backdrop {
+.outline-dialog::backdrop,
+.cloud-dialog::backdrop {
   background: rgb(32 33 36 / 50%);
 }
 
@@ -530,6 +538,15 @@ ul {
   background: var(--complete);
 }
 
+.cloud-dialog .floci-check {
+  margin: 0;
+  padding: 18px;
+}
+
+.cloud-dialog .visuals-panel {
+  padding: 18px;
+}
+
 .lesson-list-hint {
   padding: 8px 10px;
   color: var(--muted);
@@ -580,7 +597,6 @@ ul {
   }
 
   .topbar,
-  .floci-check,
   .layout {
     display: grid;
     grid-template-columns: 1fr;
@@ -596,6 +612,12 @@ ul {
   }
 
   .progress-box {
+    width: 100%;
+  }
+
+  .topbar-actions {
+    display: grid;
+    grid-template-columns: 1fr;
     width: 100%;
   }
 
@@ -623,10 +645,6 @@ ul {
 
   .lesson {
     padding: 18px 16px;
-  }
-
-  .floci-check {
-    padding: 16px;
   }
 
   .diagram-card {

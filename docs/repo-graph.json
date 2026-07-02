@@ -240,7 +240,7 @@
     },
     {
       "path": "scripts/validate.sh",
-      "lines": 229,
+      "lines": 234,
       "kind": "automation-script",
       "symbols": [],
       "imports": [],
@@ -323,7 +323,7 @@
     },
     {
       "path": "web/app.css",
-      "lines": 649,
+      "lines": 667,
       "kind": "project-file",
       "symbols": [],
       "imports": [],
@@ -331,7 +331,7 @@
     },
     {
       "path": "web/app.js",
-      "lines": 450,
+      "lines": 462,
       "kind": "project-file",
       "symbols": [],
       "imports": [],
@@ -349,14 +349,13 @@
     },
     {
       "path": "web/index.html",
-      "lines": 227,
+      "lines": 239,
       "kind": "project-file",
       "symbols": [
         "progressLabel",
         "progressBar",
+        "openCloudLab",
         "toggleNav",
-        "floci-status",
-        "verifyFloci",
         "courseNav",
         "resetProgress",
         "closeNav",
@@ -375,7 +374,8 @@
         "copyStatus",
         "breakdownList",
         "deepDiveText",
-        "errorsList"
+        "errorsList",
+        "challengeText"
       ],
       "imports": [],
       "headings": []
