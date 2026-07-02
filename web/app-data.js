@@ -2348,7 +2348,7 @@ function step(number, course, level, topic) {
     ],
     challenge: `Reto: aplica ${topic.title} en una pieza pequena del proyecto "${course.project}" y documenta la decision tecnica.`,
     resources: [
-      "Documentacion oficial de la tecnologia.",
+      officialResourceForCourse(course.id),
       "Roadmap del modulo y ejemplos del proyecto.",
       "Pruebas, logs o mediciones que demuestren que funciona.",
     ],
@@ -2369,4 +2369,20 @@ function normalizeLevel(title) {
   if (title === "Intermedio") return "Intermedio";
   if (title === "Avanzado") return "Avanzado";
   return "Master";
+}
+
+function officialResourceForCourse(courseId) {
+  const resources = {
+    javascript: "Documentacion oficial: MDN JavaScript - https://developer.mozilla.org/docs/Web/JavaScript",
+    node: "Documentacion oficial: Node.js - https://nodejs.org/docs/latest/api/",
+    htmlcss: "Documentacion oficial: MDN HTML/CSS - https://developer.mozilla.org/docs/Learn",
+    angular: "Documentacion oficial: Angular - https://angular.dev/overview",
+    react: "Documentacion oficial: React - https://react.dev/learn",
+    java: "Documentacion oficial: Java - https://docs.oracle.com/en/java/",
+    spring: "Documentacion oficial: Spring Boot - https://docs.spring.io/spring-boot/",
+    devops: "Documentacion oficial: Docker, Kubernetes y Terraform - https://docs.docker.com/ | https://kubernetes.io/docs/ | https://developer.hashicorp.com/terraform/docs",
+    cloud: "Documentacion oficial: AWS, Azure y GCP - https://docs.aws.amazon.com/ | https://learn.microsoft.com/azure/ | https://cloud.google.com/docs",
+    mobile: "Documentacion oficial: Android, iOS y React Native - https://developer.android.com/docs | https://developer.apple.com/documentation/ | https://reactnative.dev/docs/getting-started",
+  };
+  return resources[courseId] || "Documentacion oficial de la tecnologia principal.";
 }

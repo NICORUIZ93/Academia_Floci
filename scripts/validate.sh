@@ -20,6 +20,9 @@ const requiredFiles = [
   'web/public/content/es/pasos.md',
   'examples/node/floci-example.js',
   'examples/python/floci-example.py',
+  'examples/java/FlociS3Example.java',
+  'examples/go/floci_s3_example.go',
+  'examples/rust/floci_s3_example.rs',
   'scripts/validate-floci.sh',
 ];
 
@@ -38,6 +41,9 @@ const flociNode = fs.readFileSync('examples/node/floci-example.js', 'utf8');
 const flociPython = fs.readFileSync('examples/python/floci-example.py', 'utf8');
 const demoNode = fs.readFileSync('examples/node/demo.mjs', 'utf8');
 const demoPython = fs.readFileSync('examples/python/demo.py', 'utf8');
+const demoJava = fs.readFileSync('examples/java/FlociS3Example.java', 'utf8');
+const demoGo = fs.readFileSync('examples/go/floci_s3_example.go', 'utf8');
+const demoRust = fs.readFileSync('examples/rust/floci_s3_example.rs', 'utf8');
 const flociScript = fs.readFileSync('scripts/validate-floci.sh', 'utf8');
 const linksAssets = html.includes('href="app.css"')
   && html.includes('src="app-data.js"')
@@ -110,6 +116,9 @@ for (const lesson of fallbackSteps) {
   }
   if (!lesson.breakdown.some((item) => item.includes('Opciones y flags'))) {
     throw new Error(`La leccion ${lesson.number} debe desglosar opciones y flags`);
+  }
+  if (!lesson.resources.some((item) => item.includes('https://'))) {
+    throw new Error(`La leccion ${lesson.number} debe incluir documentacion oficial`);
   }
 }
 
@@ -190,23 +199,47 @@ for (const expected of ['practicar S3, SQS y DynamoDB', 'endpoint_url fuerza', '
   }
 }
 
+for (const expected of ['NoSuchBucket', 'ECONNREFUSED', 'SignatureDoesNotMatch']) {
+  if (!demoNode.includes(expected)) {
+    throw new Error(`examples/node/demo.mjs debe documentar el error: ${expected}`);
+  }
+}
+
+for (const expected of ['NoSuchBucket', 'EndpointConnectionError', 'ResourceNotFoundException']) {
+  if (!demoPython.includes(expected)) {
+    throw new Error(`examples/python/demo.py debe documentar el error: ${expected}`);
+  }
+}
+
+for (const [file, content] of [
+  ['examples/java/FlociS3Example.java', demoJava],
+  ['examples/go/floci_s3_example.go', demoGo],
+  ['examples/rust/floci_s3_example.rs', demoRust],
+]) {
+  for (const expected of ['http://localhost:4566', 'curso-cloud-local', 'Fallo controlado']) {
+    if (!content.includes(expected)) {
+      throw new Error(`${file} debe contener ${expected}`);
+    }
+  }
+}
+
 if (!html.includes('id="floci-status"') || !app.includes('async function verificarFloci')) {
   throw new Error('La web debe incluir verificacion de Floci');
 }
 
-for (const expected of ['id="noteText"', 'id="saveNote"', 'id="difficultyBadge"', 'id="timeBadge"', 'diagram-card', 'class="mermaid"', 'service-icon', 'id="predictionText"', 'id="explanationText"', 'id="toggleNav"', 'id="toggleAllLessons"', 'id="fullOutlineDialog"', 'id="fullLessonList"', 'id="cloudLabDialog"', 'id="openCloudLab"']) {
+for (const expected of ['id="noteText"', 'id="saveNote"', 'id="difficultyBadge"', 'id="timeBadge"', 'diagram-card', 'class="mermaid"', 'service-icon', 'id="predictionText"', 'id="explanationText"', 'id="exerciseEvidence"', 'id="validateExercise"', 'id="exerciseStatus"', 'id="toggleNav"', 'id="toggleAllLessons"', 'id="fullOutlineDialog"', 'id="fullLessonList"', 'id="cloudLabDialog"', 'id="openCloudLab"']) {
   if (!html.includes(expected)) {
     throw new Error(`web/index.html no contiene ${expected}`);
   }
 }
 
-for (const expected of ['saveCurrentNote', 'highlightCommand', 'token-command', 'saveActiveResponse', 'isActiveResponseComplete', 'toggleNavigation', 'NEARBY_LESSON_WINDOW = 2', 'renderFullOutline', 'openFullOutline', 'openCloudLab', '✅']) {
+for (const expected of ['saveCurrentNote', 'highlightCommand', 'token-command', 'saveActiveResponse', 'isActiveResponseComplete', 'saveExerciseResponse', 'validateCurrentExercise', 'EXERCISE_KEY', 'toggleNavigation', 'NEARBY_LESSON_WINDOW = 2', 'renderFullOutline', 'openFullOutline', 'openCloudLab', '✅']) {
   if (!app.includes(expected)) {
     throw new Error(`web/app.js no contiene ${expected}`);
   }
 }
 
-for (const expected of ['@media (max-width: 760px)', 'body.nav-open .sidebar', '.mobile-nav-button', '.active-learning-panel', 'position: sticky', 'bottom: 0', '.service-icons', '#16a34a', '.outline-dialog', '.full-course-lessons', '.cloud-dialog', '.topbar-actions']) {
+for (const expected of ['@media (max-width: 760px)', 'body.nav-open .sidebar', '.mobile-nav-button', '.active-learning-panel', '.exercise-check-panel', 'position: sticky', 'bottom: 0', 'overflow-x: auto', 'white-space: pre', '.service-icons', '#16a34a', '.outline-dialog', '.full-course-lessons', '.cloud-dialog', '.topbar-actions']) {
   if (!fs.readFileSync('web/app.css', 'utf8').includes(expected)) {
     throw new Error(`web/app.css no contiene ${expected}`);
   }

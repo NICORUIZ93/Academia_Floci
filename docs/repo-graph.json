@@ -55,7 +55,7 @@
     },
     {
       "path": "examples/README.md",
-      "lines": 15,
+      "lines": 17,
       "kind": "example",
       "symbols": [],
       "imports": [],
@@ -73,7 +73,7 @@
     },
     {
       "path": "examples/node/demo.mjs",
-      "lines": 68,
+      "lines": 93,
       "kind": "example",
       "symbols": [],
       "imports": [
@@ -100,12 +100,15 @@
     },
     {
       "path": "examples/python/demo.py",
-      "lines": 68,
+      "lines": 90,
       "kind": "example",
-      "symbols": [],
+      "symbols": [
+        "explain_error"
+      ],
       "imports": [
         "json",
-        "boto3"
+        "boto3",
+        "botocore.exceptions"
       ],
       "headings": []
     },
@@ -240,7 +243,7 @@
     },
     {
       "path": "scripts/validate.sh",
-      "lines": 234,
+      "lines": 267,
       "kind": "automation-script",
       "symbols": [],
       "imports": [],
@@ -310,7 +313,7 @@
     },
     {
       "path": "web/app-data.js",
-      "lines": 2373,
+      "lines": 2389,
       "kind": "project-file",
       "symbols": [],
       "imports": [
@@ -323,7 +326,7 @@
     },
     {
       "path": "web/app.css",
-      "lines": 667,
+      "lines": 698,
       "kind": "project-file",
       "symbols": [],
       "imports": [],
@@ -331,7 +334,7 @@
     },
     {
       "path": "web/app.js",
-      "lines": 462,
+      "lines": 535,
       "kind": "project-file",
       "symbols": [],
       "imports": [],
@@ -349,7 +352,7 @@
     },
     {
       "path": "web/index.html",
-      "lines": 239,
+      "lines": 249,
       "kind": "project-file",
       "symbols": [
         "progressLabel",

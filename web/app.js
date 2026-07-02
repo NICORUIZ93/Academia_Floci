@@ -3,6 +3,7 @@ let progressStep = readProgress();
 let viewStep = Math.min(progressStep, steps.length);
 const NOTES_KEY = "academia-master-notes";
 const ACTIVE_KEY = "academia-master-active-learning";
+const EXERCISE_KEY = "academia-master-exercise-evidence";
 const NEARBY_LESSON_WINDOW = 2;
 
 const $ = (id) => document.getElementById(id);
@@ -24,6 +25,9 @@ const elements = {
   deepDiveText: $("deepDiveText"),
   errorsList: $("errorsList"),
   challengeText: $("challengeText"),
+  exerciseEvidence: $("exerciseEvidence"),
+  exerciseStatus: $("exerciseStatus"),
+  validateExercise: $("validateExercise"),
   expectedOutput: $("expectedOutput"),
   resourcesList: $("resourcesList"),
   controlQuestion: $("controlQuestion"),
@@ -110,6 +114,18 @@ function saveActiveResponses(responses) {
   localStorage.setItem(ACTIVE_KEY, JSON.stringify(responses));
 }
 
+function readExerciseEvidence() {
+  try {
+    return JSON.parse(localStorage.getItem(EXERCISE_KEY)) || {};
+  } catch {
+    return {};
+  }
+}
+
+function saveExerciseEvidence(evidence) {
+  localStorage.setItem(EXERCISE_KEY, JSON.stringify(evidence));
+}
+
 function courseForStep(stepNumber) {
   return courses.find((course) => stepNumber >= course.start && stepNumber <= course.end) || courses[0];
 }
@@ -157,6 +173,7 @@ function render() {
   renderLessons(currentCourse);
   renderNote(current);
   renderActiveResponses(current);
+  renderExerciseEvidence(current);
   renderActions();
 }
 
@@ -266,6 +283,14 @@ function renderActiveResponses(current) {
   elements.activeStatus.textContent = isActiveResponseComplete(current.number)
     ? "Prediccion y explicacion guardadas."
     : "Completa prediccion y explicacion para marcar el paso como aprendido.";
+}
+
+function renderExerciseEvidence(current) {
+  const evidence = readExerciseEvidence();
+  elements.exerciseEvidence.value = evidence[current.number] || "";
+  elements.exerciseStatus.textContent = evidence[current.number]
+    ? "Evidencia guardada. Puedes volver a validar cuando actualices tu practica."
+    : "Pega una evidencia antes de validar el ejercicio.";
 }
 
 function isActiveResponseComplete(stepNumber) {
@@ -395,6 +420,52 @@ function saveActiveResponse() {
     : "Completa ambos campos para marcar el paso como aprendido.";
 }
 
+function saveExerciseResponse() {
+  const evidence = readExerciseEvidence();
+  const value = elements.exerciseEvidence.value.trim();
+  if (value) {
+    evidence[viewStep] = value;
+  } else {
+    delete evidence[viewStep];
+  }
+  saveExerciseEvidence(evidence);
+  elements.exerciseStatus.textContent = value ? "Evidencia guardada." : "Evidencia eliminada.";
+}
+
+function validateCurrentExercise() {
+  const current = currentStep();
+  const evidence = elements.exerciseEvidence.value.trim();
+  const hasActiveReflection = isActiveResponseComplete(viewStep);
+  const expectedTokens = current.title
+    .toLowerCase()
+    .split(/[^a-z0-9áéíóúñ]+/i)
+    .filter((token) => token.length > 4)
+    .slice(0, 3);
+  const mentionsTopic = expectedTokens.length === 0
+    || expectedTokens.some((token) => evidence.toLowerCase().includes(token));
+
+  if (evidence.length < 80) {
+    elements.exerciseStatus.textContent = "Validacion incompleta: agrega al menos 80 caracteres de evidencia concreta.";
+    elements.exerciseEvidence.focus();
+    return;
+  }
+
+  if (!mentionsTopic) {
+    elements.exerciseStatus.textContent = "Validacion incompleta: menciona el concepto del paso o el resultado observado.";
+    elements.exerciseEvidence.focus();
+    return;
+  }
+
+  if (!hasActiveReflection) {
+    elements.exerciseStatus.textContent = "Validacion incompleta: completa tambien prediccion y explicacion.";
+    elements.predictionText.focus();
+    return;
+  }
+
+  saveExerciseResponse();
+  elements.exerciseStatus.textContent = "Ejercicio validado: tienes evidencia, relacion con el tema y reflexion activa.";
+}
+
 function toggleNavigation(open) {
   document.body.classList.toggle("nav-open", open);
   elements.toggleNav.setAttribute("aria-expanded", String(open));
@@ -450,6 +521,8 @@ $("resetProgress").addEventListener("click", resetProgress);
 $("saveNote").addEventListener("click", saveCurrentNote);
 $("predictionText").addEventListener("input", saveActiveResponse);
 $("explanationText").addEventListener("input", saveActiveResponse);
+$("exerciseEvidence").addEventListener("input", saveExerciseResponse);
+$("validateExercise").addEventListener("click", validateCurrentExercise);
 $("toggleAllLessons").addEventListener("click", openFullOutline);
 $("closeFullOutline").addEventListener("click", () => elements.fullOutlineDialog.close());
 $("openCloudLab").addEventListener("click", openCloudLab);

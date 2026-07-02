@@ -235,6 +235,7 @@ progress {
 
 .lesson {
   padding: clamp(18px, 3vw, 34px);
+  overflow: hidden;
   border: 1px solid var(--line);
   border-radius: 8px;
   background: var(--surface);
@@ -294,19 +295,25 @@ progress {
 }
 
 pre {
+  max-width: 100%;
   margin: 12px 0 0;
   padding: 16px;
-  overflow: auto;
+  overflow-x: auto;
+  overflow-y: hidden;
   border-radius: 8px;
   color: #f4f7fb;
   background: var(--code);
-  white-space: pre-wrap;
-  overflow-wrap: anywhere;
+  white-space: pre;
 }
 
 code {
   font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
   font-size: 0.92rem;
+}
+
+pre code {
+  display: block;
+  min-width: 100%;
 }
 
 /* Cambio P2: resaltado de comandos sin cargar librerias externas. */
@@ -561,6 +568,30 @@ ul {
 }
 
 .active-learning-panel textarea {
+  width: 100%;
+  margin-top: 8px;
+  padding: 12px;
+  resize: vertical;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  color: var(--ink);
+  background: var(--surface);
+  font: inherit;
+}
+
+.exercise-check-panel {
+  border-left-color: var(--complete);
+  background: var(--complete-soft);
+}
+
+.exercise-check-panel label {
+  display: block;
+  margin-top: 14px;
+  color: var(--accent-strong);
+  font-weight: 700;
+}
+
+.exercise-check-panel textarea {
   width: 100%;
   margin-top: 8px;
   padding: 12px;
