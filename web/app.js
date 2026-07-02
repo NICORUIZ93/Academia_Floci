@@ -1,12 +1,15 @@
 let steps = fallbackSteps;
 let progressStep = readProgress();
 let viewStep = Math.min(progressStep, steps.length);
+const NOTES_KEY = "academia-master-notes";
 
 const $ = (id) => document.getElementById(id);
 
 const elements = {
   courseList: $("courseList"),
   courseLabel: $("courseLabel"),
+  difficultyBadge: $("difficultyBadge"),
+  timeBadge: $("timeBadge"),
   lessonTitle: $("lessonTitle"),
   lessonText: $("lessonText"),
   lessonHint: $("lessonHint"),
@@ -31,8 +34,12 @@ const elements = {
   nextStep: $("nextStep"),
   completeStep: $("completeStep"),
   flociStatus: $("floci-status"),
+  noteText: $("noteText"),
+  noteStatus: $("noteStatus"),
+  saveNote: $("saveNote"),
 };
 
+// Cambio P2: verificacion visual del laboratorio local desde la interfaz.
 async function verificarFloci() {
   if (!elements.flociStatus) return;
 
@@ -62,6 +69,19 @@ function readProgress() {
 
 function saveProgress() {
   localStorage.setItem(STORAGE_KEY, String(progressStep));
+}
+
+// Cambio P1: notas del cuaderno persistidas por numero de paso.
+function readNotes() {
+  try {
+    return JSON.parse(localStorage.getItem(NOTES_KEY)) || {};
+  } catch {
+    return {};
+  }
+}
+
+function saveNotes(notes) {
+  localStorage.setItem(NOTES_KEY, JSON.stringify(notes));
 }
 
 function courseForStep(stepNumber) {
@@ -97,6 +117,8 @@ function render() {
   elements.progressBar.value = completedCount;
   elements.progressBar.max = steps.length;
   elements.courseLabel.textContent = `Curso ${courseIndex}: ${currentCourse.title} · Lección ${lessonIndex} de ${courseSteps.length}`;
+  elements.difficultyBadge.textContent = `Nivel: ${current.difficulty || "General"}`;
+  elements.timeBadge.textContent = `Tiempo: ${current.estimatedTime || "10 min"}`;
   elements.lessonTitle.textContent = `Paso ${current.number}: ${current.title}`;
   elements.lessonText.textContent = current.explanation;
   elements.lessonHint.textContent = current.command
@@ -107,6 +129,7 @@ function render() {
   renderMethod(current);
   renderCourses(currentCourse);
   renderLessons(currentCourse);
+  renderNote(current);
   renderActions();
 }
 
@@ -128,7 +151,24 @@ function renderCommand(current) {
   }
 
   elements.commandPanel.classList.remove("hidden");
-  elements.commandText.textContent = current.command;
+  elements.commandText.innerHTML = highlightCommand(current.command);
+}
+
+// Cambio P2: resaltado ligero sin dependencias externas.
+function highlightCommand(command) {
+  return escapeHtml(command)
+    .replace(/\b(docker|aws|curl|python3?|node|npm|git|kubectl|terraform)\b/g, '<span class="token-command">$1</span>')
+    .replace(/(--[a-zA-Z0-9-]+)/g, '<span class="token-option">$1</span>')
+    .replace(/(http:\/\/[^\s]+)/g, '<span class="token-url">$1</span>');
+}
+
+function escapeHtml(value) {
+  return value
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
 }
 
 function renderMethod(current) {
@@ -176,13 +216,19 @@ function renderCourses(currentCourse) {
     name.className = "course-name";
     name.textContent = course.title;
     meta.className = "course-meta";
-    meta.textContent = `${course.description} · ${completed}/${total}`;
+    meta.textContent = `${course.description} · ${Math.round((completed / total) * 100)}% · ${completed}/${total}`;
 
     body.append(name, meta);
     button.append(code, body);
     button.addEventListener("click", () => showStep(firstUsefulStep(course)));
     elements.courseList.appendChild(button);
   });
+}
+
+function renderNote(current) {
+  const notes = readNotes();
+  elements.noteText.value = notes[current.number] || "";
+  elements.noteStatus.textContent = notes[current.number] ? "Nota guardada para este paso." : "Sin nota guardada.";
 }
 
 function renderLessons(currentCourse) {
@@ -232,6 +278,19 @@ function completeCurrentStep() {
   showStep(Math.min(viewStep + 1, steps.length));
 }
 
+// Cambio P1: guardar o eliminar la nota del paso actual.
+function saveCurrentNote() {
+  const notes = readNotes();
+  const value = elements.noteText.value.trim();
+  if (value) {
+    notes[viewStep] = value;
+  } else {
+    delete notes[viewStep];
+  }
+  saveNotes(notes);
+  elements.noteStatus.textContent = value ? "Nota guardada." : "Nota eliminada.";
+}
+
 function resetProgress() {
   progressStep = 1;
   viewStep = 1;
@@ -262,6 +321,7 @@ $("completeStep").addEventListener("click", completeCurrentStep);
 $("previousStep").addEventListener("click", () => showStep(viewStep - 1));
 $("nextStep").addEventListener("click", () => showStep(viewStep + 1));
 $("resetProgress").addEventListener("click", resetProgress);
+$("saveNote").addEventListener("click", saveCurrentNote);
 
 render();
 elements.sourceStatus.textContent = `${courses.length} modulos · ${steps.length} lecciones generadas.`;

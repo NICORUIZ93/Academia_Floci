@@ -1,6 +1,6 @@
 # Academia Floci Repo Graph
 
-Generated: 2026-07-02 15:12 UTC
+Generated: 2026-07-02 16:28 UTC
 Root: `Academia_Floci`
 Indexed files: 415
 Import edges: 26
@@ -44,11 +44,11 @@ For automated lookups, use `docs/repo-graph.json`.
 
 - `README.md` (170 lines, documentation)
   - headings: # Academia Master Hacker, ## Como empezar, ## Levantar Floci, # 1. Levantar todos los servicios, # 2. Verificar Floci AWS
-- `scripts/validate.sh` (170 lines, automation-script)
+- `scripts/validate.sh` (194 lines, automation-script)
 - `scripts/build_repo_graph.py` (434 lines, automation-script)
   - symbols: FileNode, repo_files, read_text, classify, parse_ts_symbols, parse_ts_imports, parse_python_symbols, parse_python_imports, parse_markdown_headings, unique
-- `web/index.html` (116 lines, project-file)
-  - symbols: progressLabel, progressBar, floci-status, verifyFloci, resetProgress, courseList, courseLabel, lessonTitle, lessonText, lessonHint
+- `web/index.html` (156 lines, project-file)
+  - symbols: progressLabel, progressBar, floci-status, verifyFloci, resetProgress, courseList, courseLabel, difficultyBadge, timeBadge, lessonTitle
 - `web/src/app/app.ts` (11 lines, angular-app)
   - symbols: App
 - `web/src/app/course-data.ts` (528 lines, angular-app)
@@ -142,12 +142,12 @@ For automated lookups, use `docs/repo-graph.json`.
 
 ### automation-script
 
-- `scripts/build_curriculum.py` (270 lines) - symbols: source_text, normalize_ascii, clean_module_name, parse_curriculum, js_string, render_app_data, main; imports: __future__, json, re, pathlib
+- `scripts/build_curriculum.py` (273 lines) - symbols: source_text, normalize_ascii, clean_module_name, parse_curriculum, js_string, render_app_data, main; imports: __future__, json, re, pathlib
 - `scripts/build_repo_graph.py` (434 lines) - symbols: FileNode, repo_files, read_text, classify, parse_ts_symbols, parse_ts_imports, parse_python_symbols, parse_python_imports; imports: __future__, argparse, ast, json, re, collections, dataclasses, datetime
 - `scripts/fix_lessons.py` (205 lines) - symbols: safe_print, iter_text_check_files, find_text_quality_issues, normalized_content, fix_content, check_http, main; imports: argparse, glob, os, re, urllib.request
 - `scripts/start.sh` (10 lines)
-- `scripts/validate-floci.sh` (28 lines)
-- `scripts/validate.sh` (170 lines)
+- `scripts/validate-floci.sh` (43 lines)
+- `scripts/validate.sh` (194 lines)
 
 ### course-content
 
@@ -198,10 +198,10 @@ For automated lookups, use `docs/repo-graph.json`.
 - `examples/README.md` (15 lines) - headings: # Ejemplos de referencia
 - `examples/init/ready.d/10-seed.sh` (20 lines)
 - `examples/node/demo.mjs` (43 lines) - imports: @aws-sdk/client-s3, @aws-sdk/client-sqs
-- `examples/node/floci-example.js` (19 lines)
+- `examples/node/floci-example.js` (134 lines)
 - `examples/node/package.json` (14 lines)
 - `examples/python/demo.py` (37 lines) - imports: json, boto3
-- `examples/python/floci-example.py` (13 lines) - imports: boto3
+- `examples/python/floci-example.py` (148 lines) - symbols: run_s3_example, run_sqs_example, wait_for_table, run_dynamodb_example, main; imports: time, boto3, botocore.exceptions
 - `examples/python/requirements.txt` (3 lines)
 
 ### local-infra
@@ -220,11 +220,11 @@ For automated lookups, use `docs/repo-graph.json`.
 - `web/.vscode/mcp.json` (10 lines)
 - `web/.vscode/tasks.json` (43 lines)
 - `web/angular.json` (80 lines)
-- `web/app-data.js` (2357 lines) - imports: ./Component.module.css, ./module, ./component, ./Component
-- `web/app.css` (339 lines)
-- `web/app.js` (269 lines)
+- `web/app-data.js` (2360 lines) - imports: ./Component.module.css, ./module, ./component, ./Component
+- `web/app.css` (434 lines)
+- `web/app.js` (329 lines)
 - `web/e2e/academy.spec.ts` (49 lines) - imports: @playwright/test
-- `web/index.html` (116 lines) - symbols: progressLabel, progressBar, floci-status, verifyFloci, resetProgress, courseList, courseLabel, lessonTitle
+- `web/index.html` (156 lines) - symbols: progressLabel, progressBar, floci-status, verifyFloci, resetProgress, courseList, courseLabel, difficultyBadge
 - `web/package.json` (42 lines)
 - `web/playwright.config.ts` (22 lines) - imports: @playwright/test
 - `web/scripts/.translation-cache.json` (1 lines)

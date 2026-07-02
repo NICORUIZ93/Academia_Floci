@@ -2333,6 +2333,9 @@ function step(number, course, level, topic) {
     objective: `Dominar ${topic.title} dentro de ${course.title} y conectarlo con el proyecto final.`,
     theory: `Estudia el concepto, identifica sus piezas y explica donde aparece en sistemas reales. Tema base: ${subtopics[0]}.`,
     command: `Practica: crea una nota, ejemplo o mini ejercicio sobre "${topic.title}" dentro del proyecto final: ${course.project}.`,
+    // Cambio P2: cada leccion generada recibe nivel y tiempo para badges visuales.
+    difficulty: level.title,
+    estimatedTime: level.title === "Fundamentos" ? "10 min" : level.title === "Intermedio" ? "15 min" : level.title === "Avanzado" ? "20 min" : "25 min",
     deepDive: `Profundiza revisando sus limites, costos, tradeoffs y relacion con otros temas del modulo ${course.title}.`,
     commonErrors: [
       "Memorizar nombres sin construir un ejemplo minimo.",

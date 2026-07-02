@@ -84,7 +84,7 @@
     },
     {
       "path": "examples/node/floci-example.js",
-      "lines": 19,
+      "lines": 134,
       "kind": "example",
       "symbols": [],
       "imports": [],
@@ -111,11 +111,19 @@
     },
     {
       "path": "examples/python/floci-example.py",
-      "lines": 13,
+      "lines": 148,
       "kind": "example",
-      "symbols": [],
+      "symbols": [
+        "run_s3_example",
+        "run_sqs_example",
+        "wait_for_table",
+        "run_dynamodb_example",
+        "main"
+      ],
       "imports": [
-        "boto3"
+        "time",
+        "boto3",
+        "botocore.exceptions"
       ],
       "headings": []
     },
@@ -137,7 +145,7 @@
     },
     {
       "path": "scripts/build_curriculum.py",
-      "lines": 270,
+      "lines": 273,
       "kind": "automation-script",
       "symbols": [
         "source_text",
@@ -224,7 +232,7 @@
     },
     {
       "path": "scripts/validate-floci.sh",
-      "lines": 28,
+      "lines": 43,
       "kind": "automation-script",
       "symbols": [],
       "imports": [],
@@ -232,7 +240,7 @@
     },
     {
       "path": "scripts/validate.sh",
-      "lines": 170,
+      "lines": 194,
       "kind": "automation-script",
       "symbols": [],
       "imports": [],
@@ -302,7 +310,7 @@
     },
     {
       "path": "web/app-data.js",
-      "lines": 2357,
+      "lines": 2360,
       "kind": "project-file",
       "symbols": [],
       "imports": [
@@ -315,7 +323,7 @@
     },
     {
       "path": "web/app.css",
-      "lines": 339,
+      "lines": 434,
       "kind": "project-file",
       "symbols": [],
       "imports": [],
@@ -323,7 +331,7 @@
     },
     {
       "path": "web/app.js",
-      "lines": 269,
+      "lines": 329,
       "kind": "project-file",
       "symbols": [],
       "imports": [],
@@ -341,7 +349,7 @@
     },
     {
       "path": "web/index.html",
-      "lines": 116,
+      "lines": 156,
       "kind": "project-file",
       "symbols": [
         "progressLabel",
@@ -351,6 +359,8 @@
         "resetProgress",
         "courseList",
         "courseLabel",
+        "difficultyBadge",
+        "timeBadge",
         "lessonTitle",
         "lessonText",
         "lessonHint",
@@ -365,9 +375,7 @@
         "errorsList",
         "challengeText",
         "expectedOutput",
-        "resourcesList",
-        "controlQuestion",
-        "previousStep"
+        "resourcesList"
       ],
       "imports": [],
       "headings": []

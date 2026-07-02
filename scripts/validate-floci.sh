@@ -3,10 +3,25 @@ set -e
 
 echo "Verificando Floci..."
 
+# Cambio P1: la validacion ahora cubre AWS, Azure y GCP.
 if curl -s http://localhost:4566/_localstack/health > /dev/null; then
     echo "Floci esta corriendo en http://localhost:4566"
 else
     echo "Floci no esta corriendo. Ejecuta: docker compose up -d"
+    exit 1
+fi
+
+if curl -s http://localhost:4577 > /dev/null; then
+    echo "Azure local esta corriendo en http://localhost:4577"
+else
+    echo "Azure local no responde. Ejecuta: docker compose up -d"
+    exit 1
+fi
+
+if curl -s http://localhost:4588 > /dev/null; then
+    echo "GCP local esta corriendo en http://localhost:4588"
+else
+    echo "GCP local no responde. Ejecuta: docker compose up -d"
     exit 1
 fi
 

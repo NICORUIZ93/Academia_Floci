@@ -37,6 +37,11 @@
 
     <main class="lesson" tabindex="-1">
       <p id="courseLabel" class="course-label"></p>
+      <!-- Cambio P2: badges visibles de dificultad y tiempo estimado por leccion. -->
+      <div class="lesson-badges" aria-label="Metadatos de la leccion">
+        <span id="difficultyBadge" class="badge">Nivel</span>
+        <span id="timeBadge" class="badge">Tiempo</span>
+      </div>
       <h2 id="lessonTitle">Cargando...</h2>
       <p id="lessonText" class="lesson-text"></p>
       <p id="lessonHint" class="lesson-hint"></p>
@@ -93,6 +98,41 @@
       <section class="panel check-panel">
         <h3>Pregunta de control</h3>
         <p id="controlQuestion"></p>
+      </section>
+
+      <!-- Cambio P1: cuaderno integrado para guardar notas por paso en localStorage. -->
+      <section class="panel notebook-panel">
+        <div class="panel-header">
+          <h3>Mi cuaderno</h3>
+          <button id="saveNote" type="button">Guardar nota</button>
+        </div>
+        <textarea id="noteText" rows="7" placeholder="Escribe tu prediccion, observacion, error encontrado o explicacion con tus palabras."></textarea>
+        <p id="noteStatus" class="status-text"></p>
+      </section>
+
+      <!-- Cambio P2: diagramas clave para que la arquitectura no sea solo texto. -->
+      <section class="panel visuals-panel" aria-label="Diagramas clave">
+        <h3>Diagramas clave</h3>
+        <div class="diagram-grid">
+          <article class="diagram-card">
+            <h4>Arquitectura Floci</h4>
+            <div class="diagram-flow">
+              <span>PC local</span><span>Docker</span><span>AWS 4566</span><span>Azure 4577</span><span>GCP 4588</span>
+            </div>
+          </article>
+          <article class="diagram-card">
+            <h4>Tareas Locales</h4>
+            <div class="diagram-flow">
+              <span>Frontend</span><span>API Gateway</span><span>Lambda</span><span>SQS</span><span>S3/DynamoDB</span>
+            </div>
+          </article>
+          <article class="diagram-card">
+            <h4>Metodo</h4>
+            <div class="diagram-flow">
+              <span>Lee</span><span>Predice</span><span>Haz</span><span>Observa</span><span>Explica</span><span>Repite</span>
+            </div>
+          </article>
+        </div>
       </section>
 
       <div class="actions">

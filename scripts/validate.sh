@@ -147,16 +147,40 @@ if (!flociNode.includes("require('aws-sdk')") || !flociNode.includes('http://loc
   throw new Error('examples/node/floci-example.js debe usar aws-sdk y endpoint Floci');
 }
 
+for (const expected of ['createBucket', 'putObject', 'getObject', 'deleteBucket', 'createQueue', 'sendMessage', 'receiveMessage', 'createTable', 'putItem', 'getItem', 'deleteTable']) {
+  if (!flociNode.includes(expected)) {
+    throw new Error(`examples/node/floci-example.js no contiene ${expected}`);
+  }
+}
+
 if (!flociPython.includes('boto3.client') || !flociPython.includes('http://localhost:4566')) {
   throw new Error('examples/python/floci-example.py debe usar boto3 y endpoint Floci');
 }
 
-if (!flociScript.includes('curl -s http://localhost:4566/_localstack/health') || !flociScript.includes('aws s3 ls --endpoint-url http://localhost:4566')) {
-  throw new Error('scripts/validate-floci.sh debe validar Floci y AWS CLI');
+for (const expected of ['create_bucket', 'put_object', 'get_object', 'delete_bucket', 'create_queue', 'send_message', 'receive_message', 'create_table', 'put_item', 'get_item', 'delete_table']) {
+  if (!flociPython.includes(expected)) {
+    throw new Error(`examples/python/floci-example.py no contiene ${expected}`);
+  }
+}
+
+if (!flociScript.includes('curl -s http://localhost:4566/_localstack/health') || !flociScript.includes('curl -s http://localhost:4577') || !flociScript.includes('curl -s http://localhost:4588') || !flociScript.includes('aws s3 ls --endpoint-url http://localhost:4566')) {
+  throw new Error('scripts/validate-floci.sh debe validar AWS, Azure, GCP y AWS CLI');
 }
 
 if (!html.includes('id="floci-status"') || !app.includes('async function verificarFloci')) {
   throw new Error('La web debe incluir verificacion de Floci');
+}
+
+for (const expected of ['id="noteText"', 'id="saveNote"', 'id="difficultyBadge"', 'id="timeBadge"', 'diagram-card']) {
+  if (!html.includes(expected)) {
+    throw new Error(`web/index.html no contiene ${expected}`);
+  }
+}
+
+for (const expected of ['saveCurrentNote', 'highlightCommand', 'token-command']) {
+  if (!app.includes(expected)) {
+    throw new Error(`web/app.js no contiene ${expected}`);
+  }
 }
 
 if (fs.existsSync('index.html') || fs.existsSync('academia-floci-simple.html')) {
