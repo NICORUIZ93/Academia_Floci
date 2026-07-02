@@ -133,6 +133,11 @@ interface StepSection {
   steps: CourseStep[];
 }
 
+interface CommandToken {
+  value: string;
+  type: 'cmd-token-tool' | 'cmd-token-flag' | 'cmd-token-url' | 'cmd-token-value' | 'cmd-token-text';
+}
+
 const STORAGE_KEY = 'cloud-local-study-progress-v2';
 const THEME_KEY = 'cloud-local-study-theme-v2';
 const ANSWERS_KEY = 'cloud-local-study-answers-v2';
@@ -141,6 +146,9 @@ const LAB_KEY = 'cloud-local-study-labs-v1';
 const STEP_KEY = 'cloud-local-guided-steps-v1';
 const STEP_ANSWERS_KEY = 'cloud-local-guided-step-answers-v1';
 const STEP_EDITORS_KEY = 'cloud-local-guided-step-editors-v1';
+const STEP_PREDICTIONS_KEY = 'cloud-local-guided-step-predictions-v1';
+const STEP_EXPLANATIONS_KEY = 'cloud-local-guided-step-explanations-v1';
+const STEP_EVIDENCE_KEY = 'cloud-local-guided-step-evidence-v1';
 
 const resources = [
   { label: 'Docker', url: 'https://docs.docker.com/' },
@@ -1272,10 +1280,16 @@ export class StudyPageComponent implements OnInit {
   editorDrafts: Record<string, string> = {};
   guidedAnswers: Record<number, string> = {};
   guidedEditors: Record<number, string> = {};
+  guidedPredictions: Record<number, string> = {};
+  guidedExplanations: Record<number, string> = {};
+  guidedEvidenceRecords: Record<number, string> = {};
   answer = '';
   editorCode = '';
   guidedAnswer = '';
   guidedEditor = '';
+  guidedPrediction = '';
+  guidedExplanation = '';
+  guidedEvidence = '';
   output = '';
   guidedOutput = '';
 
@@ -1289,6 +1303,9 @@ export class StudyPageComponent implements OnInit {
     this.editorDrafts = JSON.parse(localStorage.getItem(EDITOR_KEY) || '{}');
     this.guidedAnswers = JSON.parse(localStorage.getItem(STEP_ANSWERS_KEY) || '{}');
     this.guidedEditors = JSON.parse(localStorage.getItem(STEP_EDITORS_KEY) || '{}');
+    this.guidedPredictions = JSON.parse(localStorage.getItem(STEP_PREDICTIONS_KEY) || '{}');
+    this.guidedExplanations = JSON.parse(localStorage.getItem(STEP_EXPLANATIONS_KEY) || '{}');
+    this.guidedEvidenceRecords = JSON.parse(localStorage.getItem(STEP_EVIDENCE_KEY) || '{}');
     this.dark = localStorage.getItem(THEME_KEY) === 'dark';
     this.answer = this.answers[this.selectedTopicId] ?? '';
     this.editorCode = this.editorDrafts[this.selectedTopicId] ?? this.selectedTopic.code;
@@ -1508,6 +1525,13 @@ export class StudyPageComponent implements OnInit {
   }
 
   toggleGuidedStepComplete(): void {
+    if (!this.guidedStepReadyToComplete()) {
+      this.guidedOutput = [
+        'No marques la clase todavía.',
+        'Completa Predicción, Explicación y Evidencia con al menos 20 caracteres cada una.',
+      ].join('\n');
+      return;
+    }
     if (this.completedGuidedSteps.has(this.currentStep.id)) {
       this.completedGuidedSteps.delete(this.currentStep.id);
     } else {
@@ -1520,13 +1544,81 @@ export class StudyPageComponent implements OnInit {
   saveGuidedStepState(): void {
     this.guidedAnswers[this.currentStep.id] = this.guidedAnswer;
     this.guidedEditors[this.currentStep.id] = this.guidedEditor;
+    this.guidedPredictions[this.currentStep.id] = this.guidedPrediction;
+    this.guidedExplanations[this.currentStep.id] = this.guidedExplanation;
+    this.guidedEvidenceRecords[this.currentStep.id] = this.guidedEvidence;
     localStorage.setItem(STEP_ANSWERS_KEY, JSON.stringify(this.guidedAnswers));
     localStorage.setItem(STEP_EDITORS_KEY, JSON.stringify(this.guidedEditors));
+    localStorage.setItem(STEP_PREDICTIONS_KEY, JSON.stringify(this.guidedPredictions));
+    localStorage.setItem(STEP_EXPLANATIONS_KEY, JSON.stringify(this.guidedExplanations));
+    localStorage.setItem(STEP_EVIDENCE_KEY, JSON.stringify(this.guidedEvidenceRecords));
   }
 
   loadGuidedStepState(): void {
     this.guidedAnswer = this.guidedAnswers[this.currentStep.id] ?? '';
     this.guidedEditor = this.guidedEditors[this.currentStep.id] ?? this.currentStep.command ?? '';
+    this.guidedPrediction = this.guidedPredictions[this.currentStep.id] ?? '';
+    this.guidedExplanation = this.guidedExplanations[this.currentStep.id] ?? '';
+    this.guidedEvidence = this.guidedEvidenceRecords[this.currentStep.id] ?? '';
+  }
+
+  guidedStepReadyToComplete(): boolean {
+    return [this.guidedPrediction, this.guidedExplanation, this.guidedEvidence]
+      .every(value => value.trim().length >= 20);
+  }
+
+  validateGuidedEvidence(): void {
+    this.saveGuidedStepState();
+    const normalizedEvidence = this.normalize(`${this.guidedEvidence} ${this.guidedExplanation}`);
+    const keywordMatches = this.currentStep.keywords.filter(keyword => normalizedEvidence.includes(this.normalize(keyword)));
+    if (!this.guidedStepReadyToComplete()) {
+      this.guidedOutput = 'Validación incompleta: escribe predicción, explicación y evidencia concreta antes de avanzar.';
+      return;
+    }
+    if (keywordMatches.length < Math.min(2, this.currentStep.keywords.length)) {
+      this.guidedOutput = `Validación incompleta: conecta tu evidencia con conceptos como ${this.currentStep.keywords.slice(0, 5).join(', ')}.`;
+      return;
+    }
+    this.guidedOutput = `Ejercicio validado. Evidencia conectada con: ${keywordMatches.join(', ')}.`;
+  }
+
+  commandTokens(command = ''): CommandToken[] {
+    return command.split(/(\s+)/).map(value => {
+      if (/^\s+$/.test(value)) return { value, type: 'cmd-token-text' };
+      if (/^(docker|aws|az|gcloud|curl|terraform|kubectl|sudo|npm|node|python3?|java|go|cargo)$/i.test(value)) {
+        return { value, type: 'cmd-token-tool' };
+      }
+      if (/^--?[a-z0-9-]+/i.test(value)) return { value, type: 'cmd-token-flag' };
+      if (/^https?:\/\//i.test(value) || value.includes('localhost')) return { value, type: 'cmd-token-url' };
+      if (/^[A-Z0-9_]+=/.test(value) || /^[0-9]+(:[0-9]+)?$/.test(value)) return { value, type: 'cmd-token-value' };
+      return { value, type: 'cmd-token-text' };
+    });
+  }
+
+  currentStepDiagram(): string[] {
+    const command = this.currentStep.command ?? '';
+    if (command.includes('docker')) return ['Terminal', 'Docker', 'Contenedor', 'Puerto local', 'Servicio listo'];
+    if (command.includes('aws s3')) return ['AWS CLI', 'Endpoint local', 'S3', 'Bucket', 'Objeto'];
+    if (command.includes('sqs')) return ['Productor', 'SQS local', 'Mensaje', 'Consumidor', 'Borrado'];
+    if (command.includes('dynamodb')) return ['Cliente', 'Tabla', 'Clave', 'Item', 'Consulta'];
+    if (command.includes('lambda')) return ['Código', 'ZIP', 'Lambda', 'Evento', 'Logs'];
+    if (command.includes('curl')) return ['Terminal', 'HTTP', 'localhost', 'Respuesta', 'Evidencia'];
+    return ['Concepto', 'Predicción', 'Práctica', 'Observación', 'Explicación'];
+  }
+
+  officialDocsForCurrentStep(): { label: string; url: string }[] {
+    const moduleName = this.currentStep.module.toLowerCase();
+    if (moduleName.includes('docker')) return [{ label: 'Docker Docs', url: 'https://docs.docker.com/' }];
+    if (moduleName.includes('s3') || this.currentStep.command?.includes('aws s3')) return [{ label: 'AWS S3 Docs', url: 'https://docs.aws.amazon.com/s3/' }];
+    if (moduleName.includes('sqs') || this.currentStep.command?.includes('sqs')) return [{ label: 'AWS SQS Docs', url: 'https://docs.aws.amazon.com/sqs/' }];
+    if (moduleName.includes('dynamodb') || this.currentStep.command?.includes('dynamodb')) return [{ label: 'AWS DynamoDB Docs', url: 'https://docs.aws.amazon.com/dynamodb/' }];
+    if (moduleName.includes('azure')) return [{ label: 'Azure Docs', url: 'https://learn.microsoft.com/azure/' }];
+    if (moduleName.includes('gcp')) return [{ label: 'Google Cloud Docs', url: 'https://cloud.google.com/docs' }];
+    return [
+      { label: 'AWS Docs', url: 'https://docs.aws.amazon.com/' },
+      { label: 'Azure Docs', url: 'https://learn.microsoft.com/azure/' },
+      { label: 'Google Cloud Docs', url: 'https://cloud.google.com/docs' },
+    ];
   }
 
   runGuidedStep(): void {

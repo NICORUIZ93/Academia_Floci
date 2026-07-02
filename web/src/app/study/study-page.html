@@ -17,6 +17,9 @@
     </nav>
 
     <div class="top-actions">
+      <button class="mobile-menu-button" type="button" (click)="mobileSidebar = !mobileSidebar">
+        <lucide-icon [img]="icons.Layers" />Temario
+      </button>
       <div class="mini-progress" aria-label="Progreso de la ruta">
         <span>{{ guidedCompletionText }}</span>
         <div><i [style.width.%]="guidedStepProgress"></i></div>
@@ -31,11 +34,12 @@
   </header>
 
   <main class="academy-layout" id="inicio">
-    <aside class="course-sidebar" aria-label="Temario del curso">
+    <aside class="course-sidebar" [class.open]="mobileSidebar" aria-label="Temario del curso">
       <div class="sidebar-head">
         <span>Curso principal</span>
         <strong>Cloud local</strong>
         <p>{{ guidedSteps.length }} pasos guiados · {{ courseDuration() }} estimadas · AWS, Azure y GCP</p>
+        <button class="ghost sidebar-close" type="button" (click)="mobileSidebar = false">Cerrar temario</button>
       </div>
 
       <label class="search-box">
@@ -111,20 +115,34 @@
           </header>
 
           <div class="lesson-section">
-            <h3>1. Explicación clara</h3>
+            <h3>1. ¿Por qué es importante?</h3>
             <p>{{ currentStep.explanation }}</p>
             <p *ngIf="currentStep.analogy" class="analogy">{{ currentStep.analogy }}</p>
           </div>
 
+          <div class="lesson-section active-method">
+            <h3>2. Lee → Predice → Haz → Observa → Explica</h3>
+            <div class="active-grid">
+              <label>
+                <span>Predicción antes de ejecutar</span>
+                <textarea [(ngModel)]="guidedPrediction" (ngModelChange)="saveGuidedStepState()" placeholder="¿Qué crees que pasará y por qué?"></textarea>
+              </label>
+              <label>
+                <span>Explicación después de observar</span>
+                <textarea [(ngModel)]="guidedExplanation" (ngModelChange)="saveGuidedStepState()" placeholder="Explica con tus palabras qué ocurrió y qué aprendiste."></textarea>
+              </label>
+            </div>
+          </div>
+
           <div class="lesson-section method-grid">
             <div>
-              <h3>2. Lo que debes entender</h3>
+              <h3>3. Teoría y contexto</h3>
               <ul>
                 <li *ngFor="let note of stepDeepNotes()">{{ note }}</li>
               </ul>
             </div>
             <div>
-              <h3>3. Cómo saber que vas bien</h3>
+              <h3>4. Cómo saber que vas bien</h3>
               <ul>
                 <li *ngFor="let item of stepChecklist()">{{ item }}</li>
               </ul>
@@ -132,8 +150,8 @@
           </div>
 
           <div class="lesson-section">
-            <h3>4. Comando o acción</h3>
-            <pre *ngIf="currentStep.command; else noCommand"><code>{{ currentStep.command }}</code></pre>
+            <h3>5. Comando o acción</h3>
+            <pre class="command-block" *ngIf="currentStep.command; else noCommand"><code><ng-container *ngFor="let token of commandTokens(currentStep.command)"><span [class]="token.type">{{ token.value }}</span></ng-container></code></pre>
             <ng-template #noCommand>
               <p class="muted">Esta clase es conceptual. Lee, escribe tu explicación y responde la pregunta.</p>
             </ng-template>
@@ -144,33 +162,43 @@
 
           <div class="lesson-section method-grid">
             <div>
-              <h3>5. Desglose</h3>
+              <h3>6. Desglose</h3>
               <ul>
                 <li *ngFor="let item of currentStep.breakdown">{{ item }}</li>
               </ul>
             </div>
             <div>
-              <h3>6. Errores comunes</h3>
+              <h3>7. Errores comunes</h3>
               <ul>
                 <li *ngFor="let mistake of stepCommonMistakes()">{{ mistake }}</li>
               </ul>
             </div>
           </div>
 
+          <div class="lesson-section visual-lesson">
+            <h3>8. Diagrama visual del paso</h3>
+            <div class="flow-diagram" aria-label="Diagrama visual de la clase actual">
+              <span *ngFor="let node of currentStepDiagram(); let last = last">
+                <strong>{{ node }}</strong>
+                <i *ngIf="!last">→</i>
+              </span>
+            </div>
+          </div>
+
           <div class="lesson-section">
-            <h3>7. Salida esperada</h3>
+            <h3>9. Salida esperada</h3>
             <pre><code>{{ currentStep.expectedOutput }}</code></pre>
           </div>
 
           <div class="lesson-section lab-work">
             <div>
-              <h3>8. Práctica del alumno</h3>
+              <h3>10. Práctica del alumno</h3>
               <p>{{ currentStep.practice }}</p>
               <textarea class="code-editor" [(ngModel)]="guidedEditor" (ngModelChange)="saveGuidedStepState()" spellcheck="false"></textarea>
               <button class="primary" type="button" (click)="runGuidedStep()"><lucide-icon [img]="icons.Terminal" />Ejecutar simulación</button>
             </div>
             <div>
-              <h3>9. Pregunta de control</h3>
+              <h3>11. Pregunta de control</h3>
               <p>{{ currentStep.question }}</p>
               <textarea class="answer-box" [(ngModel)]="guidedAnswer" (ngModelChange)="saveGuidedStepState()" placeholder="Responde con tus palabras..."></textarea>
               <details class="answer-guide">
@@ -178,6 +206,24 @@
                 <p>{{ currentStep.expectedAnswer }}</p>
               </details>
               <button class="primary" type="button" (click)="verifyGuidedAnswer()"><lucide-icon [img]="icons.CheckCircle2" />Verificar respuesta</button>
+            </div>
+          </div>
+
+          <div class="lesson-section verification-panel">
+            <h3>12. Evidencia y verificación</h3>
+            <p>Pega una salida, error, comando ejecutado o conclusión. La clase solo se puede marcar como completa si hay predicción, explicación y evidencia.</p>
+            <textarea [(ngModel)]="guidedEvidence" (ngModelChange)="saveGuidedStepState()" placeholder="Ejemplo: ejecuté docker --version, obtuve Docker version..., y entiendo que valida que el CLI responde localmente."></textarea>
+            <div class="inline-actions">
+              <button class="primary" type="button" (click)="validateGuidedEvidence()"><lucide-icon [img]="icons.CheckCircle2" />Validar evidencia</button>
+            </div>
+          </div>
+
+          <div class="lesson-section docs-panel">
+            <h3>13. Documentación oficial</h3>
+            <div class="resource-links">
+              <a *ngFor="let resource of officialDocsForCurrentStep()" [href]="resource.url" target="_blank" rel="noreferrer">
+                <lucide-icon [img]="icons.BookOpen" />{{ resource.label }}
+              </a>
             </div>
           </div>
 

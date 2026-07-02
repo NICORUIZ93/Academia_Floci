@@ -33,6 +33,9 @@ for (const file of requiredFiles) {
 }
 
 const html = fs.readFileSync('web/index.html', 'utf8');
+const angularStudyHtml = fs.readFileSync('web/src/app/study/study-page.html', 'utf8');
+const angularStudyScss = fs.readFileSync('web/src/app/study/study-page.scss', 'utf8');
+const angularStudyTs = fs.readFileSync('web/src/app/study/study-page.ts', 'utf8');
 const data = fs.readFileSync('web/app-data.js', 'utf8');
 const app = fs.readFileSync('web/app.js', 'utf8');
 const pasos = fs.readFileSync('web/public/content/es/pasos.md', 'utf8');
@@ -253,6 +256,24 @@ if (mainLessonHtml.includes('floci-status') || mainLessonHtml.includes('Diagrama
 for (const expected of ['flowchart LR', 'sequenceDiagram', 'AWS local :4566', 'Azure local :4577', 'GCP local :4588']) {
   if (!html.includes(expected)) {
     throw new Error(`web/index.html no contiene el diagrama Mermaid: ${expected}`);
+  }
+}
+
+for (const expected of ['Predicción antes de ejecutar', 'Explicación después de observar', 'Validar evidencia', 'Diagrama visual del paso', 'Documentación oficial', 'commandTokens(currentStep.command)']) {
+  if (!angularStudyHtml.includes(expected)) {
+    throw new Error(`web/src/app/study/study-page.html no contiene ${expected}`);
+  }
+}
+
+for (const expected of ['guidedStepReadyToComplete', 'validateGuidedEvidence', 'commandTokens', 'currentStepDiagram', 'officialDocsForCurrentStep', 'STEP_PREDICTIONS_KEY', 'STEP_EVIDENCE_KEY']) {
+  if (!angularStudyTs.includes(expected)) {
+    throw new Error(`web/src/app/study/study-page.ts no contiene ${expected}`);
+  }
+}
+
+for (const expected of ['.mobile-menu-button', '.course-sidebar.open', 'position: sticky', 'bottom: 0', 'overflow-x: auto', '.cmd-token-tool', '.active-method', '.flow-diagram', '.verification-panel']) {
+  if (!angularStudyScss.includes(expected)) {
+    throw new Error(`web/src/app/study/study-page.scss no contiene ${expected}`);
   }
 }
 
