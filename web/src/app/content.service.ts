@@ -7,7 +7,8 @@ export class ContentService {
    *  (tracks nuevos cuyo contenido se redacta por etapas) en vez de lanzar un error. */
   async loadLessonHtml(trackId: string, moduleId: number): Promise<string | null> {
     try {
-      const response = await fetch(`/content/${trackId}/modulo-${moduleId}.md`);
+      const contentUrl = new URL(`content/${trackId}/modulo-${moduleId}.md`, document.baseURI);
+      const response = await fetch(contentUrl);
       if (!response.ok) return null;
       const raw = await response.text();
       const withoutRepeatedTitle = raw.replace(/^#{1,2}\s+[^\n]*\n+/, '');

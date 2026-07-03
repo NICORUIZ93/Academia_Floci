@@ -1,6 +1,6 @@
 # Academia Floci Repo Graph
 
-Generated: 2026-07-02 20:19 UTC
+Generated: 2026-07-03 20:21 UTC
 Root: `Academia_Floci`
 Indexed files: 415
 Import edges: 26
@@ -42,8 +42,8 @@ For automated lookups, use `docs/repo-graph.json`.
 
 ## High Signal Files
 
-- `README.md` (170 lines, documentation)
-  - headings: # Academia Master Hacker, ## Como empezar, ## Levantar Floci, # 1. Levantar todos los servicios, # 2. Verificar Floci AWS
+- `README.md` (195 lines, documentation)
+  - headings: # Academia_Floci, ## Como empezar, ## Levantar Floci, # 1. Levantar todos los servicios, # 2. Verificar Floci AWS
 - `scripts/validate.sh` (288 lines, automation-script)
 - `scripts/build_repo_graph.py` (434 lines, automation-script)
   - symbols: FileNode, repo_files, read_text, classify, parse_ts_symbols, parse_ts_imports, parse_python_symbols, parse_python_imports, parse_markdown_headings, unique
@@ -57,7 +57,7 @@ For automated lookups, use `docs/repo-graph.json`.
   - symbols: CourseCatalogComponent, cards, featuredTracks, foundationTracks, mobileTracks
 - `web/src/app/course/course-shell.ts` (38 lines, angular-app)
   - symbols: CourseShellComponent, track, sidebarOpen, percent
-- `web/src/app/course/lesson-viewer.ts` (133 lines, angular-app)
+- `web/src/app/course/lesson-viewer.ts` (127 lines, angular-app)
   - symbols: LessonViewerComponent, track, module, moduleIndex, previousModule, nextModule, tab, lessonHtml, lessonLoading, isComplete
 - `web/public/content/manifest.json` (707 lines, course-content)
 - `web/public/content/es/pasos.md` (1122 lines, course-content)
@@ -132,7 +132,7 @@ For automated lookups, use `docs/repo-graph.json`.
 - `web/src/app/command-palette.scss` (30 lines)
 - `web/src/app/command-palette.service.ts` (11 lines) - symbols: CommandPaletteService, isOpen; imports: @angular/core
 - `web/src/app/command-palette.ts` (78 lines) - symbols: CommandPaletteComponent, query, results; imports: @angular/common, @angular/core, @angular/forms, @angular/router, lucide-angular, ./course-data, ./command-palette.service
-- `web/src/app/content.service.ts` (20 lines) - symbols: ContentService; imports: @angular/core, marked
+- `web/src/app/content.service.ts` (21 lines) - symbols: ContentService; imports: @angular/core, marked
 - `web/src/app/course-data.ts` (528 lines) - symbols: ServiceGroup, CloudComparison, AltCloudGroup; imports: ./course-module.model, ./tracks/devops.track, ./tracks/javascript.track, ./tracks/node.track, ./tracks/angular.track, ./tracks/react.track, ./tracks/java.track, ./tracks/spring-boot.track
 - `web/src/app/course-module.model.ts` (34 lines) - symbols: CourseModule, Track
 - `web/src/app/course/course-shell.html` (35 lines)
@@ -173,8 +173,8 @@ For automated lookups, use `docs/repo-graph.json`.
 
 ### documentation
 
-- `README.md` (170 lines) - headings: # Academia Master Hacker, ## Como empezar, ## Levantar Floci, # 1. Levantar todos los servicios
-- `web/README.md` (56 lines) - headings: # Web, ## Abrir la academia, ## Que contiene, ## Archivos principales
+- `README.md` (195 lines) - headings: # Academia_Floci, ## Como empezar, ## Levantar Floci, # 1. Levantar todos los servicios
+- `web/README.md` (72 lines) - headings: # Web, ## Abrir la academia, ## Que contiene, ## Archivos principales
 - `web/scripts/source-docs-en/configuration/advanced/application-yml.md` (335 lines) - headings: # application.yml Reference, ## URL configuration, ## Full Reference, ### Initialization hooks
 - `web/scripts/source-docs-en/configuration/application-yml.md` (7 lines) - headings: # application.yml Reference
 - `web/scripts/source-docs-en/configuration/docker-compose.md` (184 lines) - headings: # Running with Docker, ## Quick Start, ## Docker Compose, ### Minimal (stateless)
@@ -211,7 +211,7 @@ For automated lookups, use `docs/repo-graph.json`.
 ### project-file
 
 - `.env.example` (8 lines)
-- `.github/workflows/ci.yml` (40 lines)
+- `.github/workflows/ci.yml` (42 lines)
 - `.gitignore` (24 lines)
 - `install.sh` (99 lines)
 - `web/.gitignore` (48 lines)

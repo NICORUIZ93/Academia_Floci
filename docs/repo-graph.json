@@ -10,7 +10,7 @@
     },
     {
       "path": ".github/workflows/ci.yml",
-      "lines": 40,
+      "lines": 42,
       "kind": "project-file",
       "symbols": [],
       "imports": [],
@@ -26,12 +26,12 @@
     },
     {
       "path": "README.md",
-      "lines": 170,
+      "lines": 195,
       "kind": "documentation",
       "symbols": [],
       "imports": [],
       "headings": [
-        "# Academia Master Hacker",
+        "# Academia_Floci",
         "## Como empezar",
         "## Levantar Floci",
         "# 1. Levantar todos los servicios",
@@ -291,7 +291,7 @@
     },
     {
       "path": "web/README.md",
-      "lines": 56,
+      "lines": 72,
       "kind": "documentation",
       "symbols": [],
       "imports": [],
@@ -5986,7 +5986,7 @@
     },
     {
       "path": "web/src/app/content.service.ts",
-      "lines": 20,
+      "lines": 21,
       "kind": "angular-app",
       "symbols": [
         "ContentService"
@@ -6090,7 +6090,7 @@
     },
     {
       "path": "web/src/app/course/lesson-viewer.ts",
-      "lines": 133,
+      "lines": 127,
       "kind": "angular-app",
       "symbols": [
         "LessonViewerComponent",
@@ -6109,7 +6109,6 @@
         "@angular/common",
         "@angular/core",
         "@angular/core/rxjs-interop",
-        "@angular/platform-browser",
         "@angular/router",
         "lucide-angular",
         "rxjs",

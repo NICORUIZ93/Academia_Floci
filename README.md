@@ -1,11 +1,14 @@
-# Academia Master Hacker
+# Academia_Floci
 
-Ruta estatica en español para estudiar desarrollo profesional desde cero:
-JavaScript, Node.js, Angular, React, Java, Spring Boot, DevOps y Cloud. El
-curriculo ampliado aplica 213 temas y mas de 900 subtemas en formato de libro.
+Academia en espanol para estudiar desarrollo profesional y cloud local. El repo
+mantiene dos experiencias:
 
-La entrada principal es `web/index.html`. La app no necesita build ni backend:
-puedes abrirla desde disco o servir la carpeta `web` como sitio estatico.
+- `web/index.html`: version estatica, sin build ni backend.
+- `web/src`: version Angular "Academia Cloud Local", usada por build, unit tests
+  y e2e.
+
+El curriculo ampliado aplica 213 temas y mas de 900 subtemas en formato de
+libro.
 
 - [Abrir la academia](web/index.html)
 - [Guia web](web/README.md)
@@ -29,6 +32,16 @@ Si prefieres servirlo por HTTP:
 ```
 
 Luego abre `http://localhost:8081`.
+
+Para trabajar con la version Angular:
+
+```bash
+cd web
+npm ci
+npm start
+```
+
+Luego abre `http://localhost:4200`.
 
 ## Levantar Floci
 
@@ -70,6 +83,8 @@ Ejemplos:
 node examples/node/floci-example.js
 python3 examples/python/floci-example.py
 ```
+
+Tambien hay ejemplos base en Java, Go y Rust dentro de `examples/`.
 
 ## Metodologia
 
@@ -133,6 +148,7 @@ Academia_Floci/
     ├── app.css
     ├── app-data.js
     ├── app.js
+    ├── src/
     ├── README.md
     └── public/content/
 ```
@@ -148,6 +164,15 @@ Antes de subir cambios, ejecuta:
 La validacion comprueba que la app estatica exista, que tenga 8 modulos, que el
 curriculo genere lecciones consecutivas, que aplique los subtemas del libro y
 que el mapa del repo este actualizado.
+
+El CI tambien ejecuta build y tests de Angular:
+
+```bash
+cd web
+npm run build --silent
+npm test -- --watch=false
+npm run e2e
+```
 
 ## Mapa compacto para asistentes de IA
 

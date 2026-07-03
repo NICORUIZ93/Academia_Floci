@@ -1,10 +1,12 @@
 # Web
 
-La pagina principal de la academia es `index.html`.
+La carpeta `web` contiene dos superficies:
 
-No usa Angular, TypeScript ni librerias externas. Es una app estatica:
-HTML para estructura, CSS para interfaz, `app-data.js` para curriculo y `app.js`
-para navegacion, progreso y copiado de practicas.
+- `index.html`, `app.css`, `app-data.js` y `app.js`: app estatica que se puede
+  abrir desde disco o servir por HTTP.
+- `src/`: app Angular "Academia Cloud Local", usada por build, unit tests y e2e.
+
+La app estatica usa Mermaid desde CDN para diagramas visuales.
 
 ## Abrir la academia
 
@@ -26,6 +28,15 @@ python3 -m http.server 8081
 
 Luego abre `http://localhost:8081`.
 
+Opcion Angular:
+
+```bash
+npm ci
+npm start
+```
+
+Luego abre `http://localhost:4200`.
+
 ## Que contiene
 
 - 8 modulos: JavaScript, Node.js, Angular, React, Java, Spring Boot, DevOps y Cloud.
@@ -37,6 +48,7 @@ Luego abre `http://localhost:8081`.
 - Boton para copiar practicas.
 - Progreso guardado en `localStorage`.
 - Layout responsivo sin build step.
+- Diagramas Mermaid y paneles de aprendizaje activo.
 
 ## Archivos principales
 
@@ -44,6 +56,7 @@ Luego abre `http://localhost:8081`.
 - `app.css`: estilos responsivos.
 - `app-data.js`: modulos, niveles y lecciones generadas.
 - `app.js`: navegacion, progreso y renderizado.
+- `src/`: aplicacion Angular.
 - `../scripts/build_curriculum.py`: regenera el curriculo desde el esquema del libro.
 
 ## Validar cambios
@@ -52,4 +65,7 @@ Desde la raiz del repositorio:
 
 ```bash
 ./scripts/validate.sh
+cd web && npm run build --silent
+cd web && npm test -- --watch=false
+cd web && npm run e2e
 ```
