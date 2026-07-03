@@ -169,7 +169,7 @@
     },
     {
       "path": "scripts/build_repo_graph.py",
-      "lines": 434,
+      "lines": 437,
       "kind": "automation-script",
       "symbols": [
         "FileNode",
@@ -6361,14 +6361,6 @@
       "path": "web/src/styles.scss",
       "lines": 16,
       "kind": "angular-app",
-      "symbols": [],
-      "imports": [],
-      "headings": []
-    },
-    {
-      "path": "web/test-results/.last-run.json",
-      "lines": 4,
-      "kind": "project-file",
       "symbols": [],
       "imports": [],
       "headings": []

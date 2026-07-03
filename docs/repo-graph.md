@@ -1,8 +1,8 @@
 # Academia Floci Repo Graph
 
-Generated: 2026-07-03 20:21 UTC
+Generated: 2026-07-03 20:30 UTC
 Root: `Academia_Floci`
-Indexed files: 415
+Indexed files: 414
 Import edges: 26
 
 Use this file as the first, compact context for AI assistants. Refresh it with:
@@ -21,13 +21,13 @@ For automated lookups, use `docs/repo-graph.json`.
 - `documentation`: 78 files
 - `example`: 8 files
 - `local-infra`: 1 files
-- `project-file`: 25 files
+- `project-file`: 24 files
 
 ## File Types
 
 - `.md`: 321
 - `.ts`: 30
-- `.json`: 15
+- `.json`: 14
 - `.html`: 9
 - `.py`: 8
 - `.scss`: 8
@@ -45,7 +45,7 @@ For automated lookups, use `docs/repo-graph.json`.
 - `README.md` (195 lines, documentation)
   - headings: # Academia_Floci, ## Como empezar, ## Levantar Floci, # 1. Levantar todos los servicios, # 2. Verificar Floci AWS
 - `scripts/validate.sh` (288 lines, automation-script)
-- `scripts/build_repo_graph.py` (434 lines, automation-script)
+- `scripts/build_repo_graph.py` (437 lines, automation-script)
   - symbols: FileNode, repo_files, read_text, classify, parse_ts_symbols, parse_ts_imports, parse_python_symbols, parse_python_imports, parse_markdown_headings, unique
 - `web/index.html` (249 lines, project-file)
   - symbols: progressLabel, progressBar, openCloudLab, toggleNav, courseNav, resetProgress, closeNav, courseList, courseLabel, difficultyBadge
@@ -143,7 +143,7 @@ For automated lookups, use `docs/repo-graph.json`.
 ### automation-script
 
 - `scripts/build_curriculum.py` (273 lines) - symbols: source_text, normalize_ascii, clean_module_name, parse_curriculum, js_string, render_app_data, main; imports: __future__, json, re, pathlib
-- `scripts/build_repo_graph.py` (434 lines) - symbols: FileNode, repo_files, read_text, classify, parse_ts_symbols, parse_ts_imports, parse_python_symbols, parse_python_imports; imports: __future__, argparse, ast, json, re, collections, dataclasses, datetime
+- `scripts/build_repo_graph.py` (437 lines) - symbols: FileNode, repo_files, read_text, classify, parse_ts_symbols, parse_ts_imports, parse_python_symbols, parse_python_imports; imports: __future__, argparse, ast, json, re, collections, dataclasses, datetime
 - `scripts/fix_lessons.py` (205 lines) - symbols: safe_print, iter_text_check_files, find_text_quality_issues, normalized_content, fix_content, check_http, main; imports: argparse, glob, os, re, urllib.request
 - `scripts/start.sh` (10 lines)
 - `scripts/validate-floci.sh` (43 lines)
@@ -228,4 +228,4 @@ For automated lookups, use `docs/repo-graph.json`.
 - `web/package.json` (42 lines)
 - `web/playwright.config.ts` (22 lines) - imports: @playwright/test
 - `web/scripts/.translation-cache.json` (1 lines)
-- ... 7 more files
+- ... 6 more files

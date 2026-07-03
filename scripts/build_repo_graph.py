@@ -29,8 +29,11 @@ SKIP_DIRS = {
     ".git",
     ".venv",
     "__pycache__",
+    "coverage",
     "dist",
     "node_modules",
+    "playwright-report",
+    "test-results",
 }
 
 SKIP_EXTENSIONS = {
