@@ -11,7 +11,7 @@
 
     <section class="lesson-panel">
       <div *ngIf="lessonLoading()" class="lesson-skeleton">Cargando lección…</div>
-      <div *ngIf="!lessonLoading() && lessonHtml() as html" class="lesson-markdown" [innerHTML]="sanitizedLesson(html)"></div>
+      <div *ngIf="!lessonLoading() && lessonHtml() as html" class="lesson-markdown" [innerHTML]="html"></div>
       <ng-container *ngIf="!lessonLoading() && !lessonHtml()">
         <div class="structured-lesson">
           <section>

@@ -1,7 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, computed, effect, inject, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { DomSanitizer } from '@angular/platform-browser';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { CircleCheck, ChevronLeft, ChevronRight, LucideAngularModule } from 'lucide-angular';
 import { map } from 'rxjs';
@@ -26,7 +25,6 @@ export class LessonViewerComponent {
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
   private readonly contentService = inject(ContentService);
-  private readonly sanitizer = inject(DomSanitizer);
   readonly progressService = inject(ProgressService);
 
   private readonly trackId = toSignal(
@@ -68,10 +66,6 @@ export class LessonViewerComponent {
         this.lessonLoading.set(false);
       });
     });
-  }
-
-  sanitizedLesson(html: string) {
-    return this.sanitizer.bypassSecurityTrustHtml(html);
   }
 
   toggleComplete(): void {

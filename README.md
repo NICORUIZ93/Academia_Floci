@@ -1,32 +1,29 @@
-# Academia Floci
+# Academia_Floci
 
-Curso simple en español para aprender cloud local con Floci, organizado por
-cursos cortos y lecciones paso a paso.
+Academia en espanol para estudiar desarrollo profesional y cloud local. El repo
+mantiene dos experiencias:
 
-La entrada principal es una página HTML de un solo archivo. En GitHub el enlace
-puede mostrarse como código; para usar el curso, abre el archivo localmente o
-sirve la carpeta `web` como sitio estático.
+- `web/index.html`: version estatica, sin build ni backend.
+- `web/src`: version Angular "Academia Cloud Local", usada por build, unit tests
+  y e2e.
 
-- [Archivo del curso paso a paso](web/index.html)
-- [Ver los 45 pasos en Markdown](web/public/content/es/pasos.md)
-- [Cuaderno de progreso](web/public/content/es/cuaderno-progreso.md)
-- [Manual de consulta](web/public/content/es/guia-completa.md)
+El curriculo ampliado aplica 213 temas y mas de 900 subtemas en formato de
+libro.
 
-## Cómo empezar
+- [Abrir la academia](web/index.html)
+- [Guia web](web/README.md)
+- [Mapa compacto del repo](docs/repo-graph.md)
+
+## Como empezar
 
 1. Abre `web/index.html` en tu navegador.
-2. Elige un curso en el panel izquierdo.
-3. Lee una sola lección.
-4. Ejecuta el comando en tu terminal si la lección lo pide.
-5. Compara tu salida con la salida esperada.
-6. Marca `Ya lo completé` para avanzar.
+2. Elige un modulo en el panel izquierdo.
+3. Estudia objetivo, teoria, practica, profundizacion, errores, reto y recursos.
+4. Haz la practica propuesta.
+5. Escribe una nota con lo que entendiste.
+6. Marca la leccion como completada.
 
 El progreso se guarda localmente en tu navegador con `localStorage`.
-
-Cuando sirves la carpeta `web` por HTTP, la página carga las lecciones desde
-`web/public/content/es/pasos.md`. Si abres `web/index.html` directo desde el
-disco, usa los mismos pasos embebidos como respaldo para evitar bloqueos de
-seguridad del navegador con archivos locales.
 
 Si prefieres servirlo por HTTP:
 
@@ -36,47 +33,105 @@ Si prefieres servirlo por HTTP:
 
 Luego abre `http://localhost:8081`.
 
-## Requisitos
-
-- Docker instalado y abierto.
-- AWS CLI instalada para los pasos de AWS.
-- Terminal disponible: Terminal en macOS/Linux, PowerShell o WSL en Windows.
-
-## Laboratorio local
-
-Puedes levantar los servicios locales con Docker Compose:
+Para trabajar con la version Angular:
 
 ```bash
-cp .env.example .env
-docker compose up -d aws-local stackport
+cd web
+npm ci
+npm start
 ```
 
-StackPort queda disponible en `http://localhost:8080` para inspeccionar recursos
-AWS locales. Floci/AWS local escucha en `http://localhost:4566`.
+Luego abre `http://localhost:4200`.
 
-En Windows PowerShell:
+## Levantar Floci
 
-```powershell
-docker compose up -d aws-local stackport
-$env:AWS_ENDPOINT_URL="http://localhost:4566"
-$env:AWS_ACCESS_KEY_ID="test"
-$env:AWS_SECRET_ACCESS_KEY="test"
-$env:AWS_DEFAULT_REGION="us-east-1"
-aws sts get-caller-identity
+```bash
+# 1. Levantar todos los servicios
+docker compose up -d
+
+# 2. Verificar Floci AWS
+curl http://localhost:4566/_localstack/health
+
+# 3. Verificar Azure
+curl http://localhost:4577
+
+# 4. Verificar GCP
+curl http://localhost:4588
+
+# 5. Validar todo el entorno
+./scripts/validate-floci.sh
 ```
 
-## Cursos
+Servicios locales:
 
-| Curso | Pasos | Tema |
-|---|---:|---|
-| Inicio y ambiente | 1-7 | Docker, Floci y AWS CLI |
-| Almacenamiento S3 | 8-14 | Buckets, archivos y limpieza |
-| Colas SQS | 15-20 | Mensajes, recepción y borrado |
-| Base NoSQL DynamoDB | 21-27 | Tabla, items, lectura y limpieza |
-| Funciones Lambda | 28-32 | Crear, invocar, actualizar y borrar |
-| API Gateway | 33-36 | API REST, recurso, método y despliegue |
-| Permisos IAM | 37-40 | Usuario, política y asignación |
-| Proyecto final | 41-45 | CRUD de tareas con servicios locales |
+- AWS local: `http://localhost:4566`
+- StackPort: `http://localhost:4567`
+- Azure local: `http://localhost:4577`
+- GCP local: `http://localhost:4588`
+
+Credenciales locales para AWS CLI y SDKs:
+
+```bash
+aws configure set region us-east-1
+aws configure set aws_access_key_id test
+aws configure set aws_secret_access_key test
+```
+
+Ejemplos:
+
+```bash
+node examples/node/floci-example.js
+python3 examples/python/floci-example.py
+```
+
+Tambien hay ejemplos base en Java, Go y Rust dentro de `examples/`.
+
+## Metodologia
+
+Cada tema sigue una estructura simple:
+
+- Objetivo claro.
+- Teoria breve con analogias.
+- Practica ejecutable o mini ejercicio.
+- Profundizacion.
+- Errores comunes.
+- Reto.
+- Recursos para seguir.
+
+## Modulos
+
+| Modulo | Enfoque | Proyecto final |
+|---|---|---|
+| JavaScript | Lenguaje, DOM, asincronia, rendimiento y seguridad web defensiva | Juego Adivina el numero |
+| Node.js | Backend, APIs, bases de datos, observabilidad y arquitectura | API REST de tareas con JWT |
+| Angular | TypeScript, Signals, routing, SSR, NgRx e internals | Panel de administracion |
+| React | Hooks, state management, Next.js, testing y accesibilidad | E-commerce con carrito |
+| Java | OOP, collections, concurrencia, JVM y testing | Biblioteca por consola |
+| Spring Boot | REST, JPA, seguridad, cloud, WebFlux y arquitectura hexagonal | API de reservas |
+| DevOps | Linux, Git, Docker, Kubernetes, IaC, GitOps y DevSecOps | Pipeline CI/CD |
+| Cloud | AWS, Azure, GCP, Floci, seguridad, observabilidad e IaC | Sistema desplegado en Floci |
+
+## Contenido aplicado
+
+El archivo `web/app-data.js` se genera desde el esquema ampliado del libro con:
+
+- 8 modulos.
+- 213 lecciones tematicas.
+- Mas de 900 subtemas aplicados dentro de las lecciones.
+- 7 secciones por leccion: objetivo, teoria, practica, profundizacion, errores
+  comunes, reto y recursos.
+
+Para regenerar el curriculo desde el texto fuente disponible en esta sesion:
+
+```bash
+python3 scripts/build_curriculum.py
+```
+
+## Seguridad
+
+Los temas de seguridad se tratan desde una practica defensiva y autorizada:
+entender riesgos, proteger sistemas propios, validar configuraciones y construir
+software mas robusto. No incluye instrucciones para atacar sistemas de terceros.
 
 ## Estructura
 
@@ -85,22 +140,18 @@ Academia_Floci/
 ├── README.md
 ├── docker-compose.yml
 ├── .env.example
+├── docs/
 ├── examples/
 ├── scripts/
 └── web/
     ├── index.html
+    ├── app.css
+    ├── app-data.js
+    ├── app.js
+    ├── src/
     ├── README.md
-    └── public/content/es/
-        ├── pasos.md
-        ├── cuaderno-progreso.md
-        └── guia-completa.md
+    └── public/content/
 ```
-
-## Nota sobre la app Angular
-
-La carpeta `web/src` conserva la versión Angular anterior como referencia de
-desarrollo, pero no es la ruta recomendada para estudiar. Para aprender sin
-perderse, usa `web/index.html`.
 
 ## Validar el repositorio
 
@@ -110,15 +161,34 @@ Antes de subir cambios, ejecuta:
 ./scripts/validate.sh
 ```
 
-La validación comprueba que existan los archivos principales, que `web/index.html`
-tenga 8 cursos, que `web/index.html` y `pasos.md` tengan 45 pasos, que el
-manifest sea JSON válido y que no vuelvan a aparecer páginas HTML duplicadas en
-la raíz.
+La validacion comprueba que la app estatica exista, que tenga 8 modulos, que el
+curriculo genere lecciones consecutivas, que aplique los subtemas del libro y
+que el mapa del repo este actualizado.
 
-## Contribuir
+El CI tambien ejecuta build y tests de Angular:
 
-Si encuentras errores o quieres sugerir mejoras:
+```bash
+cd web
+npm run build --silent
+npm test -- --watch=false
+npm run e2e
+```
 
-1. Abre un issue en GitHub.
-2. Describe el problema con el paso, comando o archivo afectado.
-3. Si puedes, propone una corrección pequeña y comprobable.
+## Mapa compacto para asistentes de IA
+
+Para reducir exploracion repetida del repositorio, este proyecto incluye:
+
+- `docs/repo-graph.md`: snapshot legible para asistentes.
+- `docs/repo-graph.json`: indice estructurado para herramientas.
+
+Actualizalo cuando cambie la estructura:
+
+```bash
+python3 scripts/build_repo_graph.py
+```
+
+Comprueba sincronizacion:
+
+```bash
+python3 scripts/build_repo_graph.py --check
+```

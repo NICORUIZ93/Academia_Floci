@@ -1,13 +1,13 @@
 {
   "name": "cloud-local-guia-ejemplo",
   "private": true,
-  "type": "module",
   "scripts": {
-    "demo": "node demo.mjs"
+    "demo": "node demo.mjs",
+    "floci": "node floci-example.js"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.0.0",
-    "@aws-sdk/client-sqs": "^3.0.0"
+    "@aws-sdk/client-sqs": "^3.0.0",
+    "aws-sdk": "^2.1692.0"
   }
 }
-
