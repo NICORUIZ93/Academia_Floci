@@ -2,12 +2,11 @@ import { Injectable, signal } from '@angular/core';
 
 export interface TrackProgress {
   completedModules: number[];
-  completedChallenges: Record<string, boolean>;
 }
 
 type ProgressState = Record<string, TrackProgress>;
 
-const EMPTY_TRACK_PROGRESS: TrackProgress = { completedModules: [], completedChallenges: {} };
+const EMPTY_TRACK_PROGRESS: TrackProgress = { completedModules: [] };
 const STORAGE_KEY = 'academia-progress-v2';
 const LEGACY_CLOUD_KEY = 'cloud-local-academy-progress';
 
@@ -32,10 +31,7 @@ export class ProgressService {
       if (!legacyRaw) return {};
       const legacy = JSON.parse(legacyRaw) as Partial<TrackProgress>;
       const migrated: ProgressState = {
-        cloud: {
-          completedModules: legacy.completedModules ?? [],
-          completedChallenges: legacy.completedChallenges ?? {},
-        },
+        cloud: { completedModules: legacy.completedModules ?? [] },
       };
       localStorage.setItem(STORAGE_KEY, JSON.stringify(migrated));
       return migrated;
@@ -49,7 +45,7 @@ export class ProgressService {
   }
 
   trackProgress(trackId: string): TrackProgress {
-    return this.state()[trackId] ?? EMPTY_TRACK_PROGRESS;
+    return { ...EMPTY_TRACK_PROGRESS, ...(this.state()[trackId] ?? {}) };
   }
 
   isModuleComplete(trackId: string, moduleId: number): boolean {
@@ -67,24 +63,6 @@ export class ProgressService {
       ? current.completedModules.filter(id => id !== moduleId)
       : [...current.completedModules, moduleId];
     this.state.update(s => ({ ...s, [trackId]: { ...current, completedModules } }));
-    this.persist();
-  }
-
-  challengeKey(moduleId: number, challengeIndex: number): string {
-    return `${moduleId}-${challengeIndex}`;
-  }
-
-  isChallengeComplete(trackId: string, moduleId: number, challengeIndex: number): boolean {
-    return !!this.trackProgress(trackId).completedChallenges[this.challengeKey(moduleId, challengeIndex)];
-  }
-
-  toggleChallenge(trackId: string, moduleId: number, challengeIndex: number): void {
-    const current = this.trackProgress(trackId);
-    const key = this.challengeKey(moduleId, challengeIndex);
-    this.state.update(s => ({
-      ...s,
-      [trackId]: { ...current, completedChallenges: { ...current.completedChallenges, [key]: !current.completedChallenges[key] } },
-    }));
     this.persist();
   }
 

@@ -1,30 +1,35 @@
 // ── Tokens compartidos por toda la app (catálogo, lector de libro, cloud clásico) ──
-$p:   #0f766e; // primary teal
-$ph:  #0b5f59; // primary hover
-$pl:  #e7f4f1; // primary light bg
-$pm:  #a8d8d1; // primary mid (border)
-$g:   #059669; // green (success)
-$gl:  #d1fae5; // green light
-$gm:  #6ee7b7; // green mid
-$a:   #b45309; // amber (warning)
-$al:  #fef3c7; // amber light
-$r:   #dc2626; // red (error)
-$ink: #162321; // darkest text
-$i2:  #243331;
-$i3:  #364845;
-$mu:  #64748b; // muted text
-$mul: #94a3b8; // muted light
-$bd:  #dce5e2; // border
-$bd2: #c5d4d0; // border darker
-$bg:  #f5f7f5; // page background
-$bg2: #edf3f0; // subtle bg
-$wh:  #ffffff;
+// Apuntan a las variables CSS definidas en src/styles.scss ([data-theme]),
+// así que heredan modo claro/oscuro automáticamente sin tocar cada componente.
+$p:   var(--accent);        // primary (antes teal #0f766e, ahora azul #2563eb/#3b82f6)
+$ph:  var(--accent-hover);  // primary hover
+$pl:  var(--accent-soft);   // primary light bg
+$pm:  var(--border-strong); // primary mid (border)
+$g:   var(--success);       // green (success)
+$gl:  var(--success-soft);  // green light
+$gm:  var(--success);       // green mid
+$a:   var(--warning);       // amber (warning)
+$al:  var(--warning-soft);  // amber light
+$r:   var(--error);         // red (error)
+$ink: var(--text);          // darkest text
+$i2:  var(--text);
+$i3:  var(--text-secondary);
+$mu:  var(--text-secondary); // muted text
+$mul: var(--text-secondary); // muted light
+$bd:  var(--border);        // border
+$bd2: var(--border-strong); // border darker
+$bg:  var(--bg);            // page background
+$bg2: var(--bg-subtle);     // subtle bg
+$wh:  var(--bg-elevated);
 $sw:  240px;   // sidebar width
 $th:  58px;    // topbar height
 $rr:  8px;     // radius card
 $rs:  6px;     // radius small
 $rl:  12px;    // radius large
-$sh:  0 1px 3px rgba(0,0,0,.06),0 1px 2px rgba(0,0,0,.04);
-$shm: 0 4px 6px -1px rgba(0,0,0,.07),0 2px 4px rgba(0,0,0,.05);
-$shl: 0 10px 25px -3px rgba(0,0,0,.1),0 4px 6px -4px rgba(0,0,0,.05);
+$sh:  var(--shadow-sm);
+$shm: var(--shadow-md);
+$shl: var(--shadow-lg);
 $reading-width: 720px; // ancho máximo de la columna de lectura del lector tipo libro
+$transition: var(--transition, .3s ease);
+$code-bg: var(--code-bg);   // fondo de bloques de código (oscuro en ambos temas)
+$code-text: var(--code-text);

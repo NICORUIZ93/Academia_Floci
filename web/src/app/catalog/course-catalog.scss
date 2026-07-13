@@ -1,19 +1,19 @@
 @use '../../styles/tokens' as *;
 
+// ── Biblioteca de cursos: solo la lista de "libros" (tracks), sin secciones
+// de marketing/metodología. ──
+
 :host {
   display: block;
   min-height: 100vh;
-  background: #f6f8fb;
-  color: #16202a;
+  background: $bg;
+  color: $ink;
+  transition: background $transition, color $transition;
 }
 
-* {
-  box-sizing: border-box;
-}
+* { box-sizing: border-box; }
 
-.catalog-page {
-  min-height: 100vh;
-}
+.catalog-page { min-height: 100vh; }
 
 .catalog-topbar {
   position: sticky;
@@ -25,25 +25,35 @@
   gap: 22px;
   min-height: 72px;
   padding: 0 30px;
-  border-bottom: 1px solid #d9e3e2;
-  background: rgba(255, 255, 255, .95);
+  border-bottom: 1px solid $bd;
+  background: $wh;
   backdrop-filter: blur(14px);
+  transition: background $transition, border-color $transition;
 }
 
+.theme-toggle {
+  flex-shrink: 0;
+  width: 38px;
+  height: 38px;
+  display: grid;
+  place-items: center;
+  border: 1px solid $bd;
+  background: $bg;
+  color: $ink;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background $transition, transform $transition;
+}
+.theme-toggle:hover { transform: scale(1.05); }
+
 .brand,
-.catalog-topbar nav,
-.hero-actions,
 .track-card-main,
 .track-card-meta {
   display: flex;
   align-items: center;
 }
 
-.brand {
-  gap: 12px;
-  color: inherit;
-  text-decoration: none;
-}
+.brand { gap: 12px; color: inherit; text-decoration: none; }
 
 .brand-mark {
   width: 38px;
@@ -52,51 +62,14 @@
   place-items: center;
   border-radius: 8px;
   color: #ffffff;
-  background: #137c8b;
+  background: $p;
 }
 
-lucide-icon {
-  width: 18px;
-  height: 18px;
-  display: inline-grid;
-}
+lucide-icon { width: 18px; height: 18px; display: inline-grid; }
 
-.brand strong,
-.brand small {
-  display: block;
-}
-
-.brand strong {
-  font-size: 15px;
-  line-height: 1.15;
-}
-
-.brand small {
-  margin-top: 2px;
-  color: #617487;
-  font-size: 12px;
-  font-weight: 750;
-}
-
-.catalog-topbar nav {
-  gap: 6px;
-  flex-wrap: wrap;
-  justify-content: flex-end;
-}
-
-.catalog-topbar nav a {
-  padding: 9px 11px;
-  border-radius: 7px;
-  color: #4d5f73;
-  font-size: 13px;
-  font-weight: 850;
-  text-decoration: none;
-}
-
-.catalog-topbar nav a:hover {
-  color: #0f5964;
-  background: #e7f4f1;
-}
+.brand strong, .brand small { display: block; }
+.brand strong { font-size: 15px; line-height: 1.15; }
+.brand small { margin-top: 2px; color: $mu; font-size: 12px; font-weight: 750; }
 
 main {
   max-width: 1240px;
@@ -104,362 +77,31 @@ main {
   padding: 28px 30px 72px;
 }
 
-.catalog-hero,
-.route-section,
-.cloud-section,
-.method-section,
-.setup-section,
-.project-section,
 .tracks-section {
-  margin-bottom: 24px;
-  border: 1px solid #d9e3e2;
+  border: 1px solid $bd;
   border-radius: 8px;
-  background: #ffffff;
-  box-shadow: 0 16px 42px rgba(33, 50, 58, .06);
-}
-
-.catalog-hero {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) 340px;
-  gap: 28px;
-  align-items: stretch;
-  padding: 34px;
-  background:
-    linear-gradient(135deg, rgba(19, 124, 139, .08), rgba(184, 93, 44, .07)),
-    #ffffff;
-}
-
-.eyebrow,
-.section-heading span,
-.project-section span {
-  display: block;
-  margin-bottom: 8px;
-  color: #137c8b;
-  font-size: 11px;
-  font-weight: 950;
-  text-transform: uppercase;
-}
-
-.hero-copy h1,
-.section-heading h2,
-.project-section h2 {
-  margin: 0;
-  color: #12202f;
-  line-height: 1.08;
-  overflow-wrap: anywhere;
-}
-
-.hero-copy h1 {
-  max-width: 800px;
-  font-size: 44px;
-}
-
-.hero-copy p,
-.section-heading p,
-.project-section p,
-.learning-card li,
-.route-steps p,
-.cloud-levels dd,
-.provider-matrix li,
-.method-grid p,
-.setup-grid li,
-.project-list span,
-.track-card p,
-.track-topics li {
-  color: #475c70;
-  font-size: 14px;
-  line-height: 1.65;
-}
-
-.hero-copy p {
-  max-width: 760px;
-  margin: 18px 0 0;
-  font-size: 16px;
-}
-
-.hero-actions {
-  flex-wrap: wrap;
-  gap: 12px;
-  margin-top: 24px;
-}
-
-.hero-actions a {
-  min-height: 42px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0 16px;
-  border-radius: 8px;
-  color: #ffffff;
-  background: #137c8b;
-  text-decoration: none;
-  font-size: 13px;
-  font-weight: 900;
-}
-
-.hero-actions a.secondary {
-  border: 1px solid #cbd8dc;
-  color: #24374a;
-  background: #ffffff;
-}
-
-.learning-card {
-  padding: 22px;
-  border: 1px solid #d9e3e2;
-  border-radius: 8px;
-  background: #f7fafb;
-}
-
-.learning-card strong {
-  display: block;
-  margin-bottom: 12px;
-  font-size: 18px;
-}
-
-.learning-card ol {
-  margin: 0;
-  padding-left: 20px;
-}
-
-.route-section,
-.cloud-section,
-.method-section,
-.setup-section,
-.project-section,
-.tracks-section {
+  background: $wh;
+  box-shadow: $sh;
   padding: 28px;
 }
 
-.section-heading {
-  max-width: 850px;
-  margin-bottom: 20px;
-}
+.track-group + .track-group { margin-top: 28px; }
+.track-group h2 { margin: 0 0 14px; font-size: 21px; color: $ink; }
 
-.section-heading h2,
-.project-section h2 {
-  font-size: 30px;
-}
-
-.section-heading p,
-.project-section p {
-  margin: 10px 0 0;
-}
-
-.route-steps {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 12px;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
-.route-steps li {
-  display: grid;
-  grid-template-columns: 34px minmax(0, 1fr);
-  gap: 12px;
-  min-width: 0;
-  padding: 16px;
-  border: 1px solid #e0e8ea;
-  border-radius: 8px;
-  background: #fbfdfe;
-}
-
-.route-steps li > span {
-  width: 34px;
-  height: 34px;
-  display: grid;
-  place-items: center;
-  border-radius: 8px;
-  color: #ffffff;
-  background: #137c8b;
-  font-weight: 950;
-}
-
-.route-steps p {
-  margin: 0;
-}
-
-.cloud-levels {
-  display: grid;
-  gap: 12px;
-}
-
-.cloud-levels article {
-  display: grid;
-  grid-template-columns: 220px minmax(0, 1fr);
-  gap: 18px;
-  padding: 18px;
-  border: 1px solid #e0e8ea;
-  border-radius: 8px;
-  background: #fbfdfe;
-}
-
-.cloud-levels header span {
-  display: inline-flex;
-  align-items: center;
-  min-height: 24px;
-  padding: 0 9px;
-  border-radius: 999px;
-  color: #0f5964;
-  background: #e7f4f1;
-  font-size: 11px;
-  font-weight: 950;
-}
-
-.cloud-levels h3 {
-  margin: 10px 0 0;
-  font-size: 18px;
-  line-height: 1.25;
-}
-
-.cloud-levels dl {
-  display: grid;
-  gap: 8px;
-  margin: 0;
-}
-
-.cloud-levels dl div {
-  display: grid;
-  grid-template-columns: 88px minmax(0, 1fr);
-  gap: 10px;
-  padding-bottom: 8px;
-  border-bottom: 1px solid #e0e8ea;
-}
-
-.cloud-levels dl div:last-child {
-  border-bottom: 0;
-  padding-bottom: 0;
-}
-
-.cloud-levels dt {
-  color: #137c8b;
-  font-size: 11px;
-  font-weight: 950;
-  text-transform: uppercase;
-}
-
-.cloud-levels dd {
-  margin: 0;
-  overflow-wrap: anywhere;
-}
-
-.provider-matrix,
-.method-grid,
-.setup-grid,
-.catalog-grid {
-  display: grid;
-  gap: 14px;
-}
-
-.provider-matrix {
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  margin-top: 16px;
-}
-
-.provider-matrix article,
-.method-grid article,
-.setup-grid article,
-.track-card {
-  min-width: 0;
-  padding: 18px;
-  border: 1px solid #e0e8ea;
-  border-radius: 8px;
-  background: #fbfdfe;
-}
-
-.provider-matrix strong,
-.method-grid strong,
-.setup-grid strong,
-.track-outcome strong {
-  display: block;
-  margin-bottom: 10px;
-  font-size: 15px;
-}
-
-.provider-matrix ul,
-.setup-grid ul,
-.track-topics ol {
-  margin: 0;
-  padding-left: 18px;
-}
-
-.method-grid {
-  grid-template-columns: repeat(5, minmax(0, 1fr));
-}
-
-.method-grid span {
-  display: block;
-  color: #137c8b;
-  font-size: 13px;
-  font-weight: 900;
-}
-
-.method-grid small {
-  display: inline-block;
-  margin-top: 10px;
-  color: #607284;
-  font-size: 12px;
-  font-weight: 850;
-}
-
-.setup-grid {
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-}
-
-.project-section {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(360px, .8fr);
-  gap: 28px;
-  border-left: 5px solid #b85d2c;
-}
-
-.project-list {
-  display: grid;
-  gap: 10px;
-}
-
-.project-list span {
-  margin: 0;
-  padding: 12px 14px;
-  border-radius: 8px;
-  background: #f7fafb;
-}
-
-.track-group {
-  margin-top: 24px;
-}
-
-.track-group > header {
-  margin-bottom: 12px;
-}
-
-.track-group h3 {
-  margin: 0;
-  font-size: 21px;
-}
-
-.track-group > header p {
-  margin: 6px 0 0;
-  color: #607284;
-  font-size: 14px;
-}
-
-.catalog-grid {
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-}
+.catalog-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
 
 .track-card {
   display: grid;
   gap: 13px;
+  min-width: 0;
+  padding: 18px;
+  border: 1px solid $bd;
   border-top: 4px solid var(--track-color);
+  border-radius: 8px;
+  background: $bg2;
 }
 
-.track-card-main {
-  gap: 12px;
-  color: inherit;
-  text-decoration: none;
-}
+.track-card-main { gap: 12px; color: inherit; text-decoration: none; }
 
 .track-card-icon {
   width: 42px;
@@ -469,134 +111,42 @@ main {
   flex: 0 0 auto;
   border-radius: 8px;
   color: var(--track-color);
-  background: #eef8f5;
+  background: $pl;
 }
 
-.track-card h4 {
-  margin: 0 0 5px;
-  font-size: 17px;
-  line-height: 1.25;
-  overflow-wrap: anywhere;
-}
+.track-card h4 { margin: 0 0 5px; font-size: 17px; line-height: 1.25; overflow-wrap: anywhere; }
+.track-card p { margin: 0; overflow-wrap: anywhere; color: $mu; font-size: 14px; line-height: 1.65; }
 
-.track-card p {
-  margin: 0;
-  overflow-wrap: anywhere;
-}
-
-.track-card-meta {
-  flex-wrap: wrap;
-  gap: 8px;
-}
-
+.track-card-meta { flex-wrap: wrap; gap: 8px; }
 .track-card-meta span {
   padding: 4px 7px;
   border-radius: 999px;
-  color: #4d5f73;
-  background: #edf3f5;
+  color: $mu;
+  background: $wh;
   font-size: 11px;
   font-weight: 850;
 }
 
-.track-card-progress {
-  height: 7px;
-  overflow: hidden;
-  border-radius: 999px;
-  background: #dde7ea;
-}
+.track-card-progress { height: 7px; overflow: hidden; border-radius: 999px; background: $bd; }
+.track-card-progress span { display: block; height: 100%; border-radius: inherit; background: var(--track-color); }
 
-.track-card-progress span {
-  display: block;
-  height: 100%;
-  border-radius: inherit;
-  background: var(--track-color);
-}
+.track-levels { color: $ph; font-size: 12px; font-weight: 900; }
 
-.track-levels {
-  color: #137c8b;
-  font-size: 12px;
-  font-weight: 900;
-}
+.track-topics { color: $i3; font-size: 13px; }
+.track-topics summary { cursor: pointer; font-weight: 900; }
+.track-topics ol { display: grid; gap: 4px; margin: 8px 0 0; padding-left: 18px; color: $mu; font-size: 14px; line-height: 1.65; }
 
-.track-topics {
-  color: #24374a;
-  font-size: 13px;
-}
-
-.track-topics summary {
-  cursor: pointer;
-  font-weight: 900;
-}
-
-.track-topics ol {
-  display: grid;
-  gap: 4px;
-  margin-top: 8px;
-}
-
-.track-outcome {
-  padding-top: 12px;
-  border-top: 1px solid #e0e8ea;
-}
+.track-outcome { padding-top: 12px; border-top: 1px solid $bd; }
+.track-outcome strong { display: block; margin-bottom: 6px; font-size: 15px; }
+.track-outcome p { margin: 0; color: $mu; font-size: 14px; line-height: 1.65; }
 
 @media (max-width: 1080px) {
-  .catalog-hero,
-  .project-section {
-    grid-template-columns: 1fr;
-  }
-
-  .route-steps,
-  .provider-matrix,
-  .method-grid,
-  .catalog-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
+  .catalog-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 
 @media (max-width: 760px) {
-  .catalog-topbar {
-    align-items: flex-start;
-    flex-direction: column;
-    padding: 14px 18px;
-  }
-
-  .catalog-topbar nav {
-    justify-content: flex-start;
-  }
-
-  main {
-    padding: 18px;
-  }
-
-  .catalog-hero,
-  .route-section,
-  .cloud-section,
-  .method-section,
-  .setup-section,
-  .project-section,
-  .tracks-section {
-    padding: 22px;
-  }
-
-  .hero-copy h1 {
-    font-size: 32px;
-  }
-
-  .route-steps,
-  .cloud-levels article,
-  .cloud-levels dl div,
-  .provider-matrix,
-  .method-grid,
-  .setup-grid,
-  .catalog-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .hero-actions {
-    display: grid;
-  }
-
-  .hero-actions a {
-    width: 100%;
-  }
+  .catalog-topbar { padding: 14px 18px; }
+  main { padding: 18px; }
+  .tracks-section { padding: 22px; }
+  .catalog-grid { grid-template-columns: 1fr; }
 }

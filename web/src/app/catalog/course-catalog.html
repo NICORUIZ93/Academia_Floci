@@ -3,147 +3,19 @@
     <a class="brand" routerLink="/">
       <span class="brand-mark"><lucide-icon [img]="brandIcon" /></span>
       <span>
-        <strong>Academia Cloud Local</strong>
-        <small>Catálogo de rutas</small>
+        <strong>Academia Floci</strong>
+        <small>Biblioteca de cursos</small>
       </span>
     </a>
-    <nav aria-label="Catálogo">
-      <a href="#ruta">Ruta recomendada</a>
-      <a href="#cloud">Cloud local</a>
-      <a href="#metodo">Método</a>
-      <a href="#cursos">Cursos</a>
-    </nav>
+    <button class="theme-toggle" (click)="themeService.toggle()" [title]="themeService.isDark() ? 'Modo claro' : 'Modo oscuro'">
+      <lucide-icon [img]="themeService.isDark() ? icons.Sun : icons.Moon" />
+    </button>
   </header>
 
   <main>
-    <section class="catalog-hero">
-      <div class="hero-copy">
-        <span class="eyebrow">Plataforma de estudio en español latino</span>
-        <h1>Escoge una ruta, estudia por módulos y construye evidencia real</h1>
-        <p>
-          El catálogo organiza todo como un LMS: ruta recomendada, módulo cloud,
-          lenguajes populares, backend, frontend, móvil, DevOps y proyecto final.
-          Cada curso tiene temas visibles, entregable y progreso.
-        </p>
-        <div class="hero-actions">
-          <a routerLink="/curso/cloud">Empezar Cloud Local</a>
-          <a routerLink="/" class="secondary">Ir al aula principal</a>
-        </div>
-      </div>
-
-      <aside class="learning-card">
-        <strong>Formato de cada curso</strong>
-        <ol>
-          <li>Introducción y objetivos.</li>
-          <li>Conceptos esenciales.</li>
-          <li>Ejemplo guiado.</li>
-          <li>Reto verificable.</li>
-          <li>Proyecto o entregable.</li>
-        </ol>
-      </aside>
-    </section>
-
-    <section class="route-section" id="ruta">
-      <div class="section-heading">
-        <span>Ruta recomendada</span>
-        <h2>De cero a producto completo</h2>
-        <p>Esta ruta evita que el alumno salte temas sin base. Primero consola y fundamentos, luego código, después cloud y proyecto.</p>
-      </div>
-      <ol class="route-steps">
-        <li *ngFor="let step of primaryRoute; let i = index">
-          <span>{{ i + 1 }}</span>
-          <p>{{ step }}</p>
-        </li>
-      </ol>
-    </section>
-
-    <section class="cloud-section" id="cloud">
-      <div class="section-heading">
-        <span>Módulo principal</span>
-        <h2>Cloud local de básico a master</h2>
-        <p>AWS, Azure y GCP se estudian por problema: storage, colas, bases de datos, funciones, APIs, eventos, observabilidad, IaC y proyecto.</p>
-      </div>
-
-      <div class="cloud-levels">
-        <article *ngFor="let item of cloudLocalLevels">
-          <header>
-            <span>{{ item.level }}</span>
-            <h3>{{ item.title }}</h3>
-          </header>
-          <dl>
-            <div><dt>Qué</dt><dd>{{ item.what }}</dd></div>
-            <div><dt>Cómo</dt><dd>{{ item.how }}</dd></div>
-            <div><dt>Por qué</dt><dd>{{ item.why }}</dd></div>
-            <div><dt>Problema</dt><dd>{{ item.problem }}</dd></div>
-            <div><dt>Master</dt><dd>{{ item.master }}</dd></div>
-          </dl>
-        </article>
-      </div>
-
-      <div class="provider-matrix">
-        <article *ngFor="let provider of providerServices">
-          <strong>{{ provider.provider }}</strong>
-          <ul>
-            <li *ngFor="let group of provider.groups">{{ group }}</li>
-          </ul>
-        </article>
-      </div>
-    </section>
-
-    <section class="method-section" id="metodo">
-      <div class="section-heading">
-        <span>Metodología</span>
-        <h2>El mismo orden en cada tema</h2>
-        <p>La página no debe obligarte a buscar. Cada módulo te dice qué leer, qué ejecutar, qué romper, qué responder y qué entregar.</p>
-      </div>
-      <div class="method-grid">
-        <article *ngFor="let layer of learningLayers">
-          <strong>{{ layer.title }}</strong>
-          <span>{{ layer.goal }}</span>
-          <p>{{ layer.detail }}</p>
-          <small>{{ layer.time }} del módulo</small>
-        </article>
-      </div>
-    </section>
-
-    <section class="setup-section">
-      <div class="section-heading">
-        <span>Antes de iniciar</span>
-        <h2>Preparación por sistema operativo</h2>
-      </div>
-      <div class="setup-grid">
-        <article *ngFor="let guide of setupGuides">
-          <strong>{{ guide.os }}</strong>
-          <ul>
-            <li *ngFor="let step of guide.steps">{{ step }}</li>
-          </ul>
-        </article>
-      </div>
-    </section>
-
-    <section class="project-section">
-      <div>
-        <span>Proyecto integrador</span>
-        <h2>E-commerce Flutter + Spring Boot + Cloud Local</h2>
-        <p>El proyecto obliga a implementar cada bloque: móvil, API, datos, storage, colas, secretos, logs, pruebas, Docker y CI/CD.</p>
-      </div>
-      <div class="project-list">
-        <span *ngFor="let step of ecommercePath">{{ step }}</span>
-      </div>
-    </section>
-
-    <section class="tracks-section" id="cursos">
-      <div class="section-heading">
-        <span>Todos los cursos</span>
-        <h2>Rutas completas con módulos visibles</h2>
-        <p>Las tarjetas muestran nivel, duración, progreso, temas y entregable para que no tengas que adivinar qué estás estudiando.</p>
-      </div>
-
+    <section class="tracks-section">
       <div class="track-group" *ngFor="let group of trackGroups()">
-        <header>
-          <h3>{{ group.title }}</h3>
-          <p>{{ group.description }}</p>
-        </header>
+        <h2>{{ group.title }}</h2>
 
         <div class="catalog-grid">
           <article class="track-card" *ngFor="let card of group.cards" [style.--track-color]="card.color">

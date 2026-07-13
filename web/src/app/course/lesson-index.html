@@ -4,11 +4,13 @@
     <a
       *ngFor="let module of group.modules"
       class="lesson-index-item"
-      [class.done]="isDone(module.id)"
+      [class.done]="status(module.id) === 'done'"
+      [class.current]="status(module.id) === 'current'"
       [routerLink]="['/curso', trackId, module.id]"
       routerLinkActive="active"
     >
-      <span class="lesson-index-check"><lucide-icon *ngIf="isDone(module.id)" [img]="icons.CircleCheck" /></span>
+      <span class="status-dot" [class.done]="status(module.id) === 'done'" [class.current]="status(module.id) === 'current'" [class.pending]="status(module.id) === 'pending'" aria-hidden="true"></span>
+      <span class="sr-only">{{ status(module.id) === 'done' ? 'Completado' : status(module.id) === 'current' ? 'Módulo actual' : 'Pendiente' }}</span>
       <span class="lesson-index-title">{{ module.shortTitle }}</span>
     </a>
   </div>

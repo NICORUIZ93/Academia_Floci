@@ -2,11 +2,12 @@ import { CommonModule } from '@angular/common';
 import { Component, computed, inject, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, RouterLink, RouterOutlet } from '@angular/router';
-import { ArrowLeft, LucideAngularModule, Menu, Search, X } from 'lucide-angular';
+import { ArrowLeft, LucideAngularModule, Menu, Moon, Search, Sun, X } from 'lucide-angular';
 import { map } from 'rxjs';
 import { findTrack } from '../course-data';
 import { CommandPaletteService } from '../command-palette.service';
 import { ProgressService } from '../progress.service';
+import { ThemeService } from '../theme.service';
 import { LessonIndexComponent } from './lesson-index';
 
 @Component({
@@ -16,9 +17,10 @@ import { LessonIndexComponent } from './lesson-index';
   styleUrl: './course-shell.scss',
 })
 export class CourseShellComponent {
-  readonly icons = { ArrowLeft, Menu, Search, X };
+  readonly icons = { ArrowLeft, Menu, Search, X, Sun, Moon };
   readonly progressService = inject(ProgressService);
   readonly paletteService = inject(CommandPaletteService);
+  readonly themeService = inject(ThemeService);
   private readonly route = inject(ActivatedRoute);
 
   // Reactivo (no snapshot): Angular reutiliza esta instancia al navegar entre tracks hermanos

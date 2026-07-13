@@ -3,115 +3,32 @@
     <div class="lesson-breadcrumb">
       <span>{{ track()?.name }}</span>
       <span class="sep">/</span>
-      <span>Módulo {{ moduleIndex() + 1 }} de {{ track()?.modules?.length }} · {{ m.level }} · {{ m.duration }}</span>
+      <span>Capítulo {{ moduleIndex() + 1 }} de {{ track()?.modules?.length }} · {{ m.level }} · {{ m.duration }}</span>
     </div>
 
     <h1>{{ m.title }}</h1>
     <p class="lesson-description">{{ m.description }}</p>
 
-    <section class="lesson-overview" aria-label="Resumen del módulo">
-      <article>
-        <span>Nivel</span>
-        <strong>{{ m.level }}</strong>
-      </article>
-      <article>
-        <span>Duración</span>
-        <strong>{{ m.duration }}</strong>
-      </article>
-      <article>
-        <span>Servicios</span>
-        <strong>{{ m.services.length || 'Base' }}</strong>
-      </article>
-      <article>
-        <span>Retos</span>
-        <strong>{{ m.challenges.length }}</strong>
-      </article>
-    </section>
-
-    <section class="lesson-method" aria-label="Método de estudio del módulo">
-      <div class="lesson-method-head">
-        <span>Método aplicado a este módulo</span>
-        <strong>Lee, ejecuta, rompe, explica y enseña</strong>
-      </div>
-      <div class="lesson-method-grid">
-        <article *ngFor="let layer of studyLayers()">
-          <strong>{{ layer.title }}</strong>
-          <span>{{ layer.label }}</span>
-          <p>{{ layer.detail }}</p>
-          <ul>
-            <li *ngFor="let item of layer.items">{{ item }}</li>
-          </ul>
-        </article>
-      </div>
-    </section>
-
-    <div class="lesson-tabs">
-      <button [class.active]="tab() === 'teoria'" (click)="setTab('teoria')">Teoría</button>
-      <button [class.active]="tab() === 'retos'" (click)="setTab('retos')">Retos<small *ngIf="m.challenges.length">{{ m.challenges.length }}</small></button>
-      <button [class.active]="tab() === 'preguntas'" (click)="setTab('preguntas')">Preguntas<small *ngIf="m.questions.length">{{ m.questions.length }}</small></button>
-    </div>
-
-    <section class="lesson-panel" *ngIf="tab() === 'teoria'">
+    <section class="lesson-panel">
       <div *ngIf="lessonLoading()" class="lesson-skeleton">Cargando lección…</div>
       <div *ngIf="!lessonLoading() && lessonHtml() as html" class="lesson-markdown" [innerHTML]="sanitizedLesson(html)"></div>
       <ng-container *ngIf="!lessonLoading() && !lessonHtml()">
         <div class="structured-lesson">
           <section>
             <h2>Qué vas a dominar</h2>
-            <p>{{ m.description }}</p>
             <div class="concept-chips">
               <span *ngFor="let concept of m.concepts">{{ concept }}</span>
             </div>
           </section>
-
-          <section>
-            <h2>Servicios y herramientas</h2>
-            <p>Estos son los servicios que aparecen en el módulo. No los memorices como nombres sueltos: relaciónalos con el problema que resuelven.</p>
-            <ul class="lesson-concepts">
-              <li *ngFor="let service of m.services">{{ service }}</li>
-              <li *ngIf="!m.services.length">Fundamentos, terminal, Docker, CLI y documentación oficial.</li>
-            </ul>
-          </section>
-
-          <section>
-            <h2>Cómo estudiar este módulo</h2>
-            <ol class="study-order">
-              <li>Lee la descripción y escribe con tus palabras qué problema resuelve.</li>
-              <li>Ejecuta el primer reto sin copiar todo de una vez.</li>
-              <li>Guarda la salida importante como evidencia.</li>
-              <li>Rompe un parámetro pequeño y documenta el error.</li>
-              <li>Vuelve a ejecutar hasta poder explicarlo sin mirar la guía.</li>
-            </ol>
-          </section>
-
           <p class="lesson-deliverable"><strong>Entregable previsto:</strong> {{ m.deliverable }}</p>
         </div>
       </ng-container>
     </section>
 
-    <section class="lesson-panel" *ngIf="tab() === 'retos'">
-      <ul class="lesson-challenges" *ngIf="m.challenges.length; else challengesSoon">
-        <li *ngFor="let challenge of m.challenges; let i = index">
-          <button class="challenge-check" [class.done]="isChallengeComplete(i)" (click)="toggleChallenge(i)">
-            <lucide-icon *ngIf="isChallengeComplete(i)" [img]="icons.CircleCheck" />
-          </button>
-          <span>{{ challenge }}</span>
-        </li>
-      </ul>
-      <ng-template #challengesSoon><p class="lesson-soon">Los retos prácticos de este módulo todavía no están redactados.</p></ng-template>
-    </section>
-
-    <section class="lesson-panel" *ngIf="tab() === 'preguntas'">
-      <ol class="lesson-questions" *ngIf="m.questions.length; else questionsSoon">
-        <li *ngFor="let question of m.questions">{{ question }}</li>
-      </ol>
-      <ng-template #questionsSoon><p class="lesson-soon">Las preguntas de comprobación de este módulo todavía no están redactadas.</p></ng-template>
-    </section>
-
     <footer class="lesson-footer">
       <button class="complete-toggle" [class.done]="isComplete()" (click)="toggleComplete()">
         <lucide-icon [img]="icons.CircleCheck" />
-        <span>{{ isComplete() ? 'Módulo completado' : 'Marcar módulo como completado' }}</span>
+        <span>{{ isComplete() ? 'Capítulo completado' : 'Marcar capítulo como completado' }}</span>
       </button>
       <div class="lesson-nav">
         <button *ngIf="previousModule() as prev" (click)="goToModule(prev.id)"><lucide-icon [img]="icons.ChevronLeft" /><span>{{ prev.shortTitle }}</span></button>
@@ -123,7 +40,7 @@
 
 <ng-template #notFound>
   <div class="lesson-missing">
-    <p>No encontramos este módulo.</p>
-    <a [routerLink]="['/curso', track()?.id]">Volver al índice del curso</a>
+    <p>No encontramos este capítulo.</p>
+    <a [routerLink]="['/curso', track()?.id]">Volver al índice del libro</a>
   </div>
 </ng-template>

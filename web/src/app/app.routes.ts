@@ -3,7 +3,7 @@ import { Routes } from '@angular/router';
 export const routes: Routes = [
   {
     path: '',
-    loadComponent: () => import('./study/study-page').then(m => m.StudyPageComponent),
+    loadComponent: () => import('./catalog/course-catalog').then(m => m.CourseCatalogComponent),
   },
   {
     path: 'catalogo',

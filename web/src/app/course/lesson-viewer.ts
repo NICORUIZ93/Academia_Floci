@@ -9,9 +9,11 @@ import { findTrack } from '../course-data';
 import { ContentService } from '../content.service';
 import { ProgressService } from '../progress.service';
 
-type LessonTab = 'teoria' | 'retos' | 'preguntas';
-type StudyLayer = { title: string; label: string; detail: string; items: string[] };
-
+/**
+ * Vista de lectura tipo libro: título, teoría y navegación simple al
+ * capítulo/módulo anterior y siguiente. Sin retos, preguntas ni paneles
+ * de gamificación.
+ */
 @Component({
   selector: 'app-lesson-viewer',
   imports: [CommonModule, RouterLink, LucideAngularModule],
@@ -50,53 +52,15 @@ export class LessonViewerComponent {
     return track && index >= 0 && index < track.modules.length - 1 ? track.modules[index + 1] : null;
   });
 
-  readonly tab = signal<LessonTab>('teoria');
   readonly lessonHtml = signal<string | null>(null);
   readonly lessonLoading = signal(true);
 
   readonly isComplete = computed(() => this.progressService.isModuleComplete(this.trackId(), this.moduleId()));
-  readonly studyLayers = computed<StudyLayer[]>(() => {
-    const module = this.module();
-    if (!module) return [];
-    return [
-      {
-        title: '1. El qué',
-        label: 'Conceptos que debes entender',
-        detail: module.description,
-        items: module.concepts.slice(0, 5),
-      },
-      {
-        title: '2. El cómo',
-        label: 'Primeras acciones prácticas',
-        detail: 'Escribe los comandos o el código con tus manos. No copies sin leer.',
-        items: module.challenges.slice(0, 4),
-      },
-      {
-        title: '3. El por qué',
-        label: 'Preguntas para razonar',
-        detail: 'Estas preguntas evitan que aprendas de memoria sin entender decisiones técnicas.',
-        items: module.questions.slice(0, 3),
-      },
-      {
-        title: '4. El problema',
-        label: 'Reto verificable',
-        detail: 'Construye algo pequeño, rómpelo a propósito y documenta cómo lo arreglaste.',
-        items: [module.deliverable],
-      },
-      {
-        title: '5. El maestro',
-        label: 'Explicación profesional',
-        detail: 'Antes de marcar el módulo como completo, explica el tema como si estuvieras en una entrevista técnica.',
-        items: ['Qué problema resuelve', 'Qué errores aparecen normalmente', 'Cuándo usarlo y cuándo no', 'Cómo lo probarías en un proyecto real'],
-      },
-    ];
-  });
 
   constructor() {
     effect(() => {
       const trackId = this.trackId();
       const module = this.module();
-      this.tab.set('teoria');
       if (!module) return;
       this.lessonLoading.set(true);
       this.contentService.loadLessonHtml(trackId, module.id).then(html => {
@@ -110,20 +74,8 @@ export class LessonViewerComponent {
     return this.sanitizer.bypassSecurityTrustHtml(html);
   }
 
-  setTab(tab: LessonTab): void {
-    this.tab.set(tab);
-  }
-
   toggleComplete(): void {
     this.progressService.toggleModuleComplete(this.trackId(), this.moduleId());
-  }
-
-  toggleChallenge(challengeIndex: number): void {
-    this.progressService.toggleChallenge(this.trackId(), this.moduleId(), challengeIndex);
-  }
-
-  isChallengeComplete(challengeIndex: number): boolean {
-    return this.progressService.isChallengeComplete(this.trackId(), this.moduleId(), challengeIndex);
   }
 
   goToModule(moduleId: number): void {

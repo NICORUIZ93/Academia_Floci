@@ -3,7 +3,7 @@ import { provideRouter } from '@angular/router';
 import { RouterTestingHarness } from '@angular/router/testing';
 import { App } from './app';
 import { routes } from './app.routes';
-import { StudyPageComponent } from './study/study-page';
+import { CourseCatalogComponent } from './catalog/course-catalog';
 
 describe('App', () => {
   beforeEach(async () => {
@@ -19,16 +19,13 @@ describe('App', () => {
     expect(app).toBeTruthy();
   });
 
-  it('renders the clean study page at the root route', async () => {
+  it('renders the library catalog at the root route', async () => {
     const harness = await RouterTestingHarness.create();
-    await harness.navigateByUrl('/', StudyPageComponent);
+    await harness.navigateByUrl('/', CourseCatalogComponent);
     harness.detectChanges();
     const text = harness.routeNativeElement?.textContent ?? '';
-    expect(text).toContain('Academia Cloud Local');
-    expect(text).toContain('Aprende cloud local con orden, práctica y evidencia');
-    expect(text).toContain('Clase 1: Qué es Docker y por qué lo necesitas');
-    expect(text).toContain('Siguiente clase');
-    expect(text).toContain('Progreso cercano');
-    expect(harness.routeNativeElement?.querySelectorAll('.player-aside button').length).toBe(5);
+    expect(text).toContain('Academia Floci');
+    expect(text).toContain('Biblioteca de cursos');
+    expect(harness.routeNativeElement?.querySelectorAll('.track-card').length).toBeGreaterThan(0);
   });
 });

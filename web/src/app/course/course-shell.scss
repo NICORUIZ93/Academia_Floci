@@ -17,7 +17,7 @@
 .back-link:hover { color:$p; }
 .back-link lucide-icon { width:15px; }
 .shell-title { flex:1; min-width:0; }
-.shell-title strong { display:block; font:700 14px Manrope, sans-serif; color:$ink; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.shell-title strong { display:block; font:700 14px Inter, sans-serif; color:$ink; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
 .shell-progress { height:3px; border-radius:3px; background:$bg2; margin-top:4px; max-width:240px; overflow:hidden; }
 .shell-progress span { display:block; height:100%; background:var(--track-color); }
 .search-trigger {
@@ -25,7 +25,8 @@
   border-radius:$rs; padding:7px 10px; font-size:12.5px; cursor:pointer; flex-shrink:0;
 }
 .search-trigger:hover { border-color:$pm; color:$ph; }
-.search-trigger kbd { font:600 10px Manrope, sans-serif; background:$wh; border:1px solid $bd; border-radius:4px; padding:1px 5px; }
+.search-trigger kbd { font:600 10px Inter, sans-serif; background:$wh; border:1px solid $bd; border-radius:4px; padding:1px 5px; }
+.theme-toggle { border:1px solid $bd; }
 
 .shell-body { flex:1; display:flex; min-height:0; }
 .shell-sidebar {

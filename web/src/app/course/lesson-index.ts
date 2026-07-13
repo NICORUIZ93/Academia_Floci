@@ -1,7 +1,9 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input, computed } from '@angular/core';
-import { RouterLink, RouterLinkActive } from '@angular/router';
-import { CircleCheck, LucideAngularModule } from 'lucide-angular';
+import { Component, Input, computed, inject } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { NavigationEnd, Router, RouterLink, RouterLinkActive } from '@angular/router';
+import { LucideAngularModule } from 'lucide-angular';
+import { filter, map, startWith } from 'rxjs';
 import { CourseModule, findTrack } from '../course-data';
 import { ProgressService } from '../progress.service';
 
@@ -9,6 +11,8 @@ interface LevelGroup {
   level: CourseModule['level'];
   modules: CourseModule[];
 }
+
+export type ModuleStatus = 'done' | 'current' | 'pending';
 
 const LEVEL_ORDER: CourseModule['level'][] = ['Fundamentos', 'Aplicación', 'Integración', 'Experto'];
 
@@ -19,9 +23,9 @@ const LEVEL_ORDER: CourseModule['level'][] = ['Fundamentos', 'Aplicación', 'Int
   styleUrl: './lesson-index.scss',
 })
 export class LessonIndexComponent {
-  readonly icons = { CircleCheck };
-
   @Input({ required: true }) trackId!: string;
+
+  private readonly router = inject(Router);
 
   readonly track = computed(() => findTrack(this.trackId));
 
@@ -32,9 +36,30 @@ export class LessonIndexComponent {
       .filter(group => group.modules.length > 0);
   });
 
+  /** Módulo actualmente abierto, derivado de la URL (/curso/:trackId/:moduleId). */
+  private readonly currentModuleId = toSignal(
+    this.router.events.pipe(
+      filter((event): event is NavigationEnd => event instanceof NavigationEnd),
+      map(() => this.extractModuleId(this.router.url)),
+      startWith(this.extractModuleId(this.router.url)),
+    ),
+    { initialValue: this.extractModuleId(this.router.url) },
+  );
+
   constructor(readonly progressService: ProgressService) {}
+
+  private extractModuleId(url: string): number | null {
+    const match = url.match(/\/curso\/[^/]+\/(\d+)/);
+    return match ? Number(match[1]) : null;
+  }
 
   isDone(moduleId: number): boolean {
     return this.progressService.isModuleComplete(this.trackId, moduleId);
+  }
+
+  status(moduleId: number): ModuleStatus {
+    if (this.isDone(moduleId)) return 'done';
+    if (this.currentModuleId() === moduleId) return 'current';
+    return 'pending';
   }
 }

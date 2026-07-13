@@ -9,6 +9,9 @@
     <button class="search-trigger" (click)="paletteService.open()">
       <lucide-icon [img]="icons.Search" /><span>Buscar</span><kbd>⌘K</kbd>
     </button>
+    <button class="icon-button theme-toggle" (click)="themeService.toggle()" [title]="themeService.isDark() ? 'Modo claro' : 'Modo oscuro'">
+      <lucide-icon [img]="themeService.isDark() ? icons.Sun : icons.Moon" />
+    </button>
   </header>
 
   <div class="shell-body">
