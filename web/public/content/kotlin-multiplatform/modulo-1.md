@@ -1,27 +1,90 @@
-## Funciones de orden superior
+# Módulo 1: Programación funcional en Kotlin
+
+## Sílabo
+
+**Objetivo general**
+
+Tratar las funciones como ciudadanos de primera clase en Kotlin, dominando lambdas, funciones de orden superior, scope functions, sealed classes para modelar estados, y colecciones funcionales.
+
+**Objetivos específicos**
+
+1. Escribir funciones de orden superior que reciban lambdas como parámetros.
+2. Usar `let`, `run`, `apply` y `also` apropiadamente según el caso.
+3. Modelar estados de UI con sealed classes y `when` exhaustivo.
+4. Encadenar `map`/`filter`/`fold` de forma idiomática.
+
+**Contenido**
+
+- Lambdas y funciones de orden superior.
+- Scope functions (`let`, `run`, `apply`, `also`).
+- Sealed classes para modelar estados.
+- Colecciones: map/filter/fold idiomático.
+
+**Evaluación**
+
+Modelo de estado (loading/success/error) con sealed classes manejado exhaustivamente, más tres ejercicios de evaluación.
+
+---
+
+## Contenido teórico
+
+### Tema 1: Funciones de orden superior
+
+**Conceptos clave:** funciones como parámetros, sintaxis de lambda al final.
+
+`fun procesarLista(lista: List<Int>, accion: (Int) -> Unit) { lista.forEach { accion(it) } }` declara una función de orden superior que recibe otra función como parámetro (`accion`, de tipo `(Int) -> Unit`, indicando que recibe un `Int` y no devuelve nada relevante), permitiendo que quien invoca `procesarLista` proporcione un comportamiento personalizado para aplicar a cada elemento sin que `procesarLista` en sí necesite conocer de antemano qué acción específica se ejecutará: `procesarLista(listOf(1, 2, 3)) { numero -> println(numero * 2) }` demuestra la sintaxis idiomática de Kotlin donde, si el último parámetro de una función es una lambda, puede escribirse fuera de los paréntesis directamente después de la llamada, produciendo una sintaxis que se lee casi como una construcción de lenguaje nativa en vez de una llamada a función ordinaria.
+
+Esta capacidad de tratar funciones como valores de primera clase (que pueden pasarse como argumentos, devolverse como resultados, o almacenarse en variables) es la misma capacidad estudiada de forma más general para JavaScript en el Módulo 4 del track de JavaScript, aquí combinada con el tipado estático de Kotlin: la firma de tipo `(Int) -> Unit` documenta explícitamente, verificado por el compilador, exactamente qué forma debe tener cualquier función pasada como argumento, detectando en tiempo de compilación un error si se intenta pasar una función con una firma incompatible.
+
+**Analogía:** una función de orden superior es como una máquina de procesamiento genérica que acepta una herramienta intercambiable específica para aplicar a cada pieza que pasa por ella, sin que la máquina misma necesite saber de antemano qué herramienta específica se usará, solo que debe encajar en la ranura de conexión esperada (la firma de tipo de la función).
+
+**¿Por qué es importante?** Las funciones de orden superior permiten personalizar comportamiento sin que la función que las recibe conozca de antemano ese comportamiento específico, con el compilador verificando que la firma de la función pasada sea compatible.
+
+**Diagrama:**
 
 ```kotlin
 fun procesarLista(lista: List<Int>, accion: (Int) -> Unit) {
     lista.forEach { accion(it) }
 }
-
 procesarLista(listOf(1, 2, 3)) { numero -> println(numero * 2) }
 ```
 
-## Scope functions
+### Tema 2: Scope functions
+
+**Conceptos clave:** `let`, `run`, `apply`, `also` y su propósito específico distinto.
+
+`usuario?.let { u -> println("Hola ${u.nombre}") }` ejecuta el bloque únicamente si `usuario` no es `null` (Módulo 0), combinando el safe call con una scope function para expresar de forma concisa "si existe, hacer algo con ello", evitando un `if` explícito de verificación de null; `val config = Config().apply { timeout = 30; reintentos = 3 }` configura un objeto recién creado y devuelve ese mismo objeto ya configurado como resultado de la expresión completa, apropiado específicamente para inicialización fluida de un objeto en una única expresión; `val resultado = obtenerDatos().run { procesar(this) }` ejecuta un bloque de código en el contexto del objeto receptor y devuelve el resultado de ese bloque (no el objeto original), apropiado cuando se necesita tanto acceso al receptor como transformarlo en un resultado distinto.
+
+`also` (no mostrado explícitamente en los ejemplos anteriores pero parte del mismo conjunto) es similar a `apply` en que devuelve el objeto receptor original, pero recibe ese receptor como parámetro explícito (`it`) en vez de como receptor implícito (`this`), apropiado para efectos secundarios como logging que no deberían modificar el objeto en sí (`objeto.also { println("Creado: $it") }`). La diferencia práctica entre las cuatro se resume en dos ejes: qué devuelven (el objeto receptor original, en `apply`/`also`; el resultado del bloque, en `let`/`run`) y cómo se referencia el receptor dentro del bloque (`this` implícito en `run`/`apply`; `it` explícito en `let`/`also`).
+
+**Analogía:** las scope functions son como distintas formas de interactuar brevemente con un objeto para un propósito específico: `apply` es como personalizar un producto y quedarte con el mismo producto ya personalizado; `run` es como consultar algo sobre el producto y quedarte con la respuesta de esa consulta, no con el producto en sí; `let` es como decidir hacer algo con un objeto solo si efectivamente existe; `also` es como registrar de paso una nota sobre el objeto sin alterarlo en absoluto.
+
+**¿Por qué es importante?** Cada scope function tiene un propósito específico distinto según qué se necesita devolver (el receptor original o el resultado de un bloque) y cómo se referencia el receptor, eligiendo la apropiada según el caso produce código más idiomático y expresivo.
+
+**Diagrama:**
 
 ```kotlin
 usuario?.let { u -> println("Hola ${u.nombre}") }  // solo ejecuta si usuario no es null
-
 val config = Config().apply {                        // configura y devuelve el mismo objeto
     timeout = 30
     reintentos = 3
 }
-
 val resultado = obtenerDatos().run { procesar(this) } // ejecuta un bloque y devuelve su resultado
 ```
 
-## Sealed classes para estados
+### Tema 3: Sealed classes y colecciones funcionales
+
+**Conceptos clave:** modelado exhaustivo de estados, transformaciones encadenadas.
+
+`sealed class EstadoUI { object Cargando : EstadoUI(); data class Exito(val datos: List<Tarea>) : EstadoUI(); data class Error(val mensaje: String) : EstadoUI() }` modela el conjunto completo y cerrado de estados posibles de una pantalla (cargando, éxito con datos, o error con un mensaje), de forma directamente análoga a las sealed interfaces de Java (Módulo 7 del track de Java), permitiendo que un `when (estado) { is EstadoUI.Cargando -> ...; is EstadoUI.Exito -> ...; is EstadoUI.Error -> ... }` sea verificado exhaustivamente por el compilador sin necesidad de una rama `else`, garantizando que agregar un nuevo estado posible en el futuro y olvidar manejarlo en algún `when` existente produzca un error de compilación inmediato, no un bug silencioso descubierto más tarde.
+
+`val nombres = personas.filter { it.edad >= 18 }.map { it.nombre }` encadena transformaciones funcionales sobre una colección de forma declarativa (filtrar primero, transformar después), el mismo estilo de encadenamiento de Streams estudiado en el Módulo 4 del track de Java, aquí con sintaxis nativa de Kotlin sin necesidad de una API de streams separada (las colecciones de Kotlin soportan estas operaciones funcionales directamente); `fold` (`pedidos.fold(0.0) { acumulado, pedido -> acumulado + pedido.monto }`) acumula un resultado combinando cada elemento con un valor inicial explícito, apropiado para agregaciones como sumas o construcciones de resultados complejos a partir de una colección completa.
+
+**Analogía:** una sealed class para modelar estados es como un semáforo con exactamente tres estados posibles conocidos de antemano, donde cualquier sistema que reaccione a ese semáforo puede garantizar que maneja los tres estados sin dejar ninguno sin cubrir; encadenar `filter`+`map` es como una línea de producción donde primero se descartan las piezas que no cumplen cierto criterio, y luego se transforman las restantes, cada estación con una responsabilidad clara y secuencial.
+
+**¿Por qué es importante?** Las sealed classes garantizan, verificado por el compilador, que todos los estados posibles de un modelo se manejen exhaustivamente; encadenar operaciones funcionales sobre colecciones expresa transformaciones de datos de forma declarativa y legible.
+
+**Diagrama:**
 
 ```kotlin
 sealed class EstadoUI {
@@ -29,7 +92,6 @@ sealed class EstadoUI {
     data class Exito(val datos: List<Tarea>) : EstadoUI()
     data class Error(val mensaje: String) : EstadoUI()
 }
-
 when (estado) {
     is EstadoUI.Cargando -> mostrarSpinner()
     is EstadoUI.Exito -> mostrarLista(estado.datos)
@@ -38,9 +100,83 @@ when (estado) {
 }
 ```
 
-## Colecciones funcionales
+---
 
-```kotlin
-val nombres = personas.filter { it.edad >= 18 }.map { it.nombre }
-val total = pedidos.fold(0.0) { acumulado, pedido -> acumulado + pedido.monto }
-```
+## Laboratorio práctico
+
+**Objetivo del laboratorio:** modelar un estado de UI (loading/success/error) con sealed classes manejado exhaustivamente.
+
+**Requisitos previos:** Módulo 0 completado.
+
+| Paso | Acción | Código | Explicación |
+|---|---|---|---|
+| 1 | Escribir una función de orden superior | Ver Tema 1 | Recibe una lambda y la aplica a cada elemento |
+| 2 | Usar `let` para una variable nullable | Ver Tema 2 | Sin un `if` explícito |
+| 3 | Usar `apply` para configurar un objeto | Ver Tema 2 | En una sola expresión |
+| 4 | Modelar `EstadoUI` con sealed class | Ver Tema 3 | Maneja todos los casos con `when` exhaustivo |
+| 5 | Encadenar `map`/`filter`/`fold` | Ver Tema 3 | En una sola expresión |
+
+**Verificación:** el laboratorio se considera exitoso si el `when` sobre `EstadoUI` compila sin rama `else` y sigue siendo exhaustivo, y si puedes explicar la diferencia práctica entre las cuatro scope functions con un ejemplo propio de cada una.
+
+**Errores comunes y soluciones**
+
+- **Confundir cuándo usar `apply` frente a `run`.** `apply` devuelve el receptor original; `run` devuelve el resultado del bloque.
+- **Agregar una rama `else` innecesaria a un `when` exhaustivo sobre sealed class.** Omítela para que el compilador verifique exhaustividad real.
+- **Escribir un bucle manual en vez de `map`/`filter`/`fold`.** Prefiere las operaciones funcionales encadenadas para mayor legibilidad declarativa.
+
+---
+
+## Ejercicios de evaluación
+
+### Ejercicio 1: Diferencia práctica entre let, run, apply y also
+
+**Enunciado:** ¿qué diferencia práctica hay entre `let`, `run`, `apply` y `also`?
+
+**Solución esperada:** se diferencian en qué devuelven (`apply`/`also` devuelven el objeto receptor original; `let`/`run` devuelven el resultado del bloque ejecutado) y en cómo se referencia el receptor dentro del bloque (`this` implícito en `run`/`apply`; `it` explícito en `let`/`also`).
+
+**Criterios de éxito:**
+- Explica correctamente ambos ejes de diferenciación (qué devuelven y cómo referencian el receptor).
+
+### Ejercicio 2: Exhaustividad sin else
+
+**Enunciado:** ¿por qué `when` sobre una sealed class no necesita una rama `else` para ser exhaustivo?
+
+**Solución esperada:** una sealed class restringe explícitamente el conjunto completo y cerrado de subtipos posibles; el compilador conoce ese conjunto y puede verificar que el `when` cubre absolutamente todos los casos posibles sin necesidad de una rama `else` genérica de respaldo.
+
+**Criterios de éxito:**
+- Explica correctamente la restricción del conjunto de subtipos como razón de la exhaustividad verificable sin `else`.
+
+### Ejercicio 3: Encadenar operaciones funcionales
+
+**Enunciado:** reescribe con `filter` y `map` encadenados un bucle manual que recorre una lista de personas, filtra las mayores de edad, y extrae solo sus nombres.
+
+**Solución esperada:** `val nombres = personas.filter { it.edad >= 18 }.map { it.nombre }`, expresando declarativamente en una única expresión encadenada exactamente la misma transformación que el bucle manual realizaría de forma imperativa y más verbosa.
+
+**Criterios de éxito:**
+- Escribe correctamente la cadena `filter` + `map` equivalente al bucle manual descrito.
+
+---
+
+## Resumen del módulo
+
+**Puntos clave**
+
+- Las funciones de orden superior reciben otras funciones como parámetros, con la firma de tipo verificada por el compilador.
+- Las scope functions (`let`, `run`, `apply`, `also`) se diferencian por qué devuelven y cómo referencian el receptor.
+- Las sealed classes garantizan manejo exhaustivo de estados verificado por el compilador.
+- Las colecciones de Kotlin soportan operaciones funcionales encadenadas (`map`/`filter`/`fold`) nativamente.
+
+**Conceptos aprendidos**
+
+- Lambdas y funciones de orden superior.
+- Scope functions.
+- Sealed classes para modelar estados.
+- Colecciones funcionales.
+
+**Próximos pasos**
+
+En el Módulo 2 aprenderás coroutines y Flow: `suspend` functions, concurrencia estructurada, y Flow/StateFlow/SharedFlow.
+
+**Recursos adicionales**
+
+- Documentación oficial de Kotlin (kotlinlang.org/docs): "Higher-Order Functions and Lambdas" y "Scope Functions".

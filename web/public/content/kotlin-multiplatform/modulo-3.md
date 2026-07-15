@@ -1,4 +1,46 @@
-## Source sets
+# Módulo 3: Arquitectura de un proyecto KMP
+
+## Sílabo
+
+**Objetivo general**
+
+Entender cómo un mismo código Kotlin termina ejecutándose en Android e iOS, dominando source sets, el mecanismo `expect`/`actual`, y la configuración de Gradle multiplataforma.
+
+**Objetivos específicos**
+
+1. Explorar la estructura de carpetas de un proyecto KMP (`commonMain`, `androidMain`, `iosMain`).
+2. Declarar una función `expect` en código común e implementarla como `actual` por plataforma.
+3. Configurar Gradle multiplataforma con los targets necesarios.
+4. Explicar por qué el código en `commonMain` no puede usar APIs específicas de plataforma directamente.
+
+**Contenido**
+
+- Source sets: `commonMain`, `androidMain`, `iosMain`.
+- `expect`/`actual`: declarar e implementar por plataforma.
+- Gradle multiplataforma.
+- Targets disponibles (JVM, Native, JS).
+
+**Evaluación**
+
+Proyecto KMP con un módulo compartido que compila para Android e iOS, más tres ejercicios de evaluación.
+
+---
+
+## Contenido teórico
+
+### Tema 1: Source sets
+
+**Conceptos clave:** código compartido frente a específico de plataforma, misma jerarquía de compilación.
+
+Un proyecto KMP organiza su código en source sets distintos según su alcance de compilación: `commonMain` contiene código compilado para absolutamente todas las plataformas de destino configuradas, sin ninguna dependencia de APIs específicas de una plataforma particular; `androidMain` e `iosMain` contienen código que se compila únicamente para su plataforma correspondiente, pudiendo usar libremente APIs específicas de esa plataforma (clases de Android SDK en `androidMain`, o Foundation/UIKit de iOS en `iosMain`) que simplemente no existen ni tienen sentido en las demás plataformas de destino.
+
+Esta separación estructural refleja directamente el propósito central de KMP: maximizar la cantidad de código que vive en `commonMain` (lógica de negocio, modelos de dominio, casos de uso, que no tienen ninguna razón real para diferir entre plataformas) mientras se aísla en los source sets específicos de plataforma únicamente el código que genuinamente necesita interactuar con APIs nativas particulares de cada sistema operativo (acceso a sensores, notificaciones push nativas, ciertos widgets de UI del sistema).
+
+**Analogía:** los source sets son como plantas de un edificio con distinto alcance de acceso: la planta baja (`commonMain`) es accesible y compartida por todos los visitantes sin importar a qué departamento específico se dirijan después; los pisos superiores específicos (`androidMain`, `iosMain`) contienen recursos particulares accesibles únicamente para quienes efectivamente necesitan esos recursos específicos de ese departamento particular.
+
+**¿Por qué es importante?** Maximizar el código en `commonMain` y aislar en source sets específicos solo lo que genuinamente necesita APIs de plataforma particular es el mecanismo estructural central que permite a KMP compartir la mayor cantidad posible de lógica entre plataformas.
+
+**Diagrama:**
 
 ```
 shared/src/
@@ -7,7 +49,19 @@ shared/src/
   iosMain/        ← código específico de iOS
 ```
 
-## expect/actual
+### Tema 2: expect/actual
+
+**Conceptos clave:** declarar el contrato en común, implementarlo por plataforma.
+
+`expect fun nombrePlataforma(): String` (declarado en `commonMain`) establece un contrato: código en `commonMain` puede llamar a esta función confiando en que existe una implementación concreta, sin necesitar saber cómo se implementa específicamente en cada plataforma; `actual fun nombrePlataforma(): String = "Android ${android.os.Build.VERSION.SDK_INT}"` (en `androidMain`) y `actual fun nombrePlataforma(): String = UIDevice.currentDevice.systemName()` (en `iosMain`) proporcionan la implementación real y específica para cada plataforma respectiva, cada una usando libremente APIs propias de su plataforma que no estarían disponibles en `commonMain`.
+
+Este mecanismo resuelve un problema que una simple interfaz común no resolvería igual de bien: una interfaz normal requeriría que alguna capa superior decida explícitamente, en tiempo de ejecución o mediante inyección de dependencias, qué implementación concreta usar; `expect`/`actual` es resuelto directamente por el compilador de Kotlin en tiempo de compilación específico para cada target, sin ninguna ceremonia adicional de selección de implementación en tiempo de ejecución — al compilar para Android, el compilador automáticamente vincula cada declaración `expect` con su `actual` correspondiente de `androidMain`, y análogamente para iOS, de forma transparente y sin overhead adicional de indirección en tiempo de ejecución.
+
+**Analogía:** `expect`/`actual` es como una especificación técnica universal de un enchufe eléctrico que cada país implementa físicamente según su propio estándar local, sin que el aparato que usa ese enchufe (el código en `commonMain`) necesite saber ni importarle los detalles específicos de la implementación eléctrica de cada país particular, simplemente confía en que el enchufe correcto para su ubicación actual estará disponible.
+
+**¿Por qué es importante?** `expect`/`actual` resuelve la vinculación entre contrato e implementación específica de plataforma en tiempo de compilación, sin la ceremonia de selección en tiempo de ejecución que una interfaz común con inyección de dependencias requeriría.
+
+**Diagrama:**
 
 ```kotlin
 // commonMain
@@ -20,15 +74,24 @@ actual fun nombrePlataforma(): String = "Android ${android.os.Build.VERSION.SDK_
 actual fun nombrePlataforma(): String = UIDevice.currentDevice.systemName()
 ```
 
-`commonMain` declara QUÉ necesita sin saber CÓMO se resuelve en cada plataforma — cada plataforma provee su propia implementación `actual`.
+### Tema 3: Gradle multiplataforma y targets disponibles
 
-## build.gradle.kts multiplataforma
+**Conceptos clave:** configuración de targets, alcance más allá de Android/iOS.
+
+`kotlin { androidTarget(); iosX64(); iosArm64(); iosSimulatorArm64(); sourceSets { commonMain.dependencies { implementation("io.ktor:ktor-client-core:2.3.0") } } }` configura explícitamente qué targets de compilación están habilitados para el proyecto (Android, y las tres variantes de iOS necesarias para cubrir dispositivos físicos de distintas arquitecturas y el simulador), además de declarar dependencias específicamente en el bloque `commonMain.dependencies`, garantizando que esa dependencia (Ktor, Módulo 5) esté disponible para todo el código compartido, no solo para una plataforma particular.
+
+KMP no se limita conceptualmente a la combinación Android/iOS: también puede compilar a JVM (útil para compartir lógica con un backend Spring Boot, por ejemplo), a JS/WebAssembly (para ejecutarse en un navegador web), y a Native para sistemas de escritorio (Linux, Windows, macOS), lo que significa que, en teoría, la misma lógica de negocio escrita una única vez en `commonMain` podría alimentar simultáneamente un backend, una aplicación web, y dos aplicaciones móviles nativas, aunque en la práctica cada proyecto real elige específicamente qué combinación de targets tiene sentido según sus necesidades concretas, no necesariamente todos los targets disponibles simultáneamente.
+
+**Analogía:** configurar los targets de Gradle es como decidir para qué mercados específicos se fabricará un producto (definiendo qué adaptaciones regionales concretas son necesarias), mientras que el diseño central del producto (el código en `commonMain`) permanece el mismo sin importar cuántos mercados distintos finalmente se decida atender.
+
+**¿Por qué es importante?** KMP no se limita a Android/iOS; puede compilar a JVM, JS/Wasm y Native para escritorio, permitiendo en principio que la misma lógica de negocio alimente backend, web y múltiples aplicaciones móviles nativas desde un único código fuente compartido.
+
+**Diagrama:**
 
 ```kotlin
 kotlin {
     androidTarget()
     iosX64(); iosArm64(); iosSimulatorArm64()
-
     sourceSets {
         commonMain.dependencies {
             implementation("io.ktor:ktor-client-core:2.3.0")
@@ -37,6 +100,83 @@ kotlin {
 }
 ```
 
-## Targets disponibles
+---
 
-KMP no se limita a Android/iOS: también compila a JVM (backend), JS/Wasm (web) y Native para Linux/Windows/macOS — la misma lógica de negocio puede, en teoría, alimentar un backend, una web y dos apps móviles.
+## Laboratorio práctico
+
+**Objetivo del laboratorio:** construir un proyecto KMP con un módulo compartido que compila para Android e iOS.
+
+**Requisitos previos:** Módulos 0-2 completados.
+
+| Paso | Acción | Código | Explicación |
+|---|---|---|---|
+| 1 | Crear un proyecto KMP desde la plantilla oficial | — | Explora `commonMain`/`androidMain`/`iosMain` |
+| 2 | Escribir una función `expect` en `commonMain` | Ver Tema 2 | Que dependa de una implementación por plataforma |
+| 3 | Implementar `actual` en `androidMain` e `iosMain` | Ver Tema 2 | Con código distinto en cada una |
+| 4 | Compilar para el target Android | — | Verifica el `.aar` generado |
+| 5 | Compilar para el target iOS | — | Verifica el `.framework` generado |
+
+**Verificación:** el laboratorio se considera exitoso si el proyecto compila correctamente para ambos targets, y si la función `expect`/`actual` devuelve el valor correcto y específico de cada plataforma al ejecutarse en cada una.
+
+**Errores comunes y soluciones**
+
+- **Intentar usar una API específica de Android directamente en `commonMain`.** Ese código no compilaría para iOS; usa `expect`/`actual` para aislar lo específico de plataforma.
+- **Olvidar declarar todos los targets de iOS necesarios (x64, arm64, simulador).** Cada uno cubre un caso distinto (dispositivo físico de arquitecturas distintas, simulador).
+- **Declarar una dependencia solo en un source set específico cuando se necesita en `commonMain`.** Verifica en qué bloque de `sourceSets` corresponde declarar cada dependencia según su alcance.
+
+---
+
+## Ejercicios de evaluación
+
+### Ejercicio 1: Qué resuelve expect/actual mejor que una interfaz común
+
+**Enunciado:** ¿qué resuelve `expect`/`actual` que una simple interfaz común no resolvería igual de bien?
+
+**Solución esperada:** `expect`/`actual` vincula el contrato con su implementación específica de plataforma directamente en tiempo de compilación para cada target, sin la ceremonia adicional de selección en tiempo de ejecución (como inyección de dependencias) que una interfaz común normalmente requeriría para decidir qué implementación concreta usar.
+
+**Criterios de éxito:**
+- Explica correctamente la vinculación en tiempo de compilación sin ceremonia de selección en tiempo de ejecución.
+
+### Ejercicio 2: Por qué commonMain no puede usar APIs específicas
+
+**Enunciado:** ¿por qué el código en `commonMain` no puede usar APIs específicas de Android o iOS directamente?
+
+**Solución esperada:** `commonMain` se compila para todas las plataformas de destino configuradas simultáneamente; una API específica de Android (como `android.os.Build`) simplemente no existe en el entorno de compilación de iOS, por lo que el compilador rechazaría ese código si estuviera en `commonMain`, dado que no podría producir una compilación válida para todos los targets configurados.
+
+**Criterios de éxito:**
+- Explica correctamente que las APIs específicas de plataforma no existen en el entorno de compilación de las demás plataformas.
+
+### Ejercicio 3: Targets más allá de Android/iOS
+
+**Enunciado:** ¿a qué otros targets, además de Android e iOS, puede compilar un proyecto KMP?
+
+**Solución esperada:** JVM (útil para compartir lógica con un backend), JS/WebAssembly (para ejecutarse en un navegador web), y Native para sistemas de escritorio como Linux, Windows y macOS.
+
+**Criterios de éxito:**
+- Menciona correctamente al menos dos de los tres targets adicionales (JVM, JS/Wasm, Native de escritorio).
+
+---
+
+## Resumen del módulo
+
+**Puntos clave**
+
+- Los source sets (`commonMain`, `androidMain`, `iosMain`) separan código compartido de código específico de plataforma.
+- `expect`/`actual` vincula un contrato declarado en común con su implementación específica de plataforma en tiempo de compilación.
+- Gradle multiplataforma configura explícitamente qué targets de compilación están habilitados.
+- KMP no se limita a Android/iOS; también compila a JVM, JS/Wasm y Native de escritorio.
+
+**Conceptos aprendidos**
+
+- Source sets de un proyecto KMP.
+- `expect`/`actual`.
+- Configuración de Gradle multiplataforma.
+- Targets disponibles más allá de Android/iOS.
+
+**Próximos pasos**
+
+En el Módulo 4 aprenderás lógica de negocio compartida: modelos de dominio, casos de uso, repositorios con interfaces comunes, e inyección de dependencias con Koin.
+
+**Recursos adicionales**
+
+- Documentación oficial de Kotlin Multiplatform (kotlinlang.org/docs/multiplatform.html).
