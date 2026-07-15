@@ -1,8 +1,68 @@
-## Medir antes de optimizar
+# Módulo 9: Performance en React
 
-React DevTools Profiler graba una interacción y muestra exactamente qué componentes se renderizaron y por qué (props cambiadas, estado cambiado, o el padre simplemente se re-renderizó). Optimizar sin esta información casi siempre es esfuerzo desperdiciado en el lugar equivocado.
+## Sílabo
 
-## React.memo con criterio
+**Objetivo general**
+
+Identificar y corregir renders innecesarios midiendo primero con el Profiler, aplicando `memo`/`useMemo`/`useCallback` con criterio, virtualizando listas largas, y usando las APIs de concurrencia (`useTransition`, `useDeferredValue`) para mantener la interfaz responsiva.
+
+**Objetivos específicos**
+
+1. Usar React DevTools Profiler para identificar renders innecesarios.
+2. Aplicar `React.memo` correctamente y verificar su efecto con el Profiler.
+3. Virtualizar una lista larga con `react-window`.
+4. Dividir un bundle con `React.lazy`.
+5. Explicar el rol de Fiber y la reconciliación en el algoritmo de diff de React.
+
+**Contenido**
+
+- React DevTools Profiler.
+- `memo`, `useMemo` y `useCallback` con criterio.
+- Code-splitting con `lazy`/`Suspense`.
+- Virtualización de listas largas.
+- `useTransition`, `useDeferredValue` y `startTransition`.
+- Fiber architecture y Reconciliation.
+
+**Evaluación**
+
+Optimización medible (antes/después con el Profiler) de una vista con listas largas, más tres ejercicios de evaluación.
+
+---
+
+## Contenido teórico
+
+### Tema 1: Medir antes de optimizar
+
+**Conceptos clave:** React DevTools Profiler, evidencia antes que intuición.
+
+React DevTools Profiler graba una interacción específica de la aplicación (un clic, escribir en un input, navegar entre vistas) y muestra exactamente qué componentes se re-renderizaron durante esa interacción y por qué (props que cambiaron, estado que cambió, o simplemente que su componente padre se re-renderizó, arrastrando consigo un re-render del hijo aunque sus props sean idénticas), información concreta y medible que reemplaza la intuición o suposición sobre qué parte del código podría estar causando lentitud.
+
+Optimizar código sin esta información concreta es, en la inmensa mayoría de los casos, esfuerzo desperdiciado en el lugar equivocado: es común intuir que cierto componente "parece pesado" y envolverlo preventivamente en `React.memo` (Tema 2), cuando en realidad el componente que efectivamente causa el problema de rendimiento percibido es otro completamente distinto, identificable únicamente inspeccionando el Profiler durante la interacción real que el usuario reporta como lenta, en vez de adivinar basándose en una impresión general del código.
+
+**Analogía:** optimizar sin el Profiler es como intentar reparar un motor de auto basándose únicamente en la intuición de qué pieza "suena mal", en vez de conectar un diagnóstico real que muestre exactamente qué componente específico está fallando y por qué.
+
+**¿Por qué es importante?** El Profiler proporciona evidencia concreta de qué componentes se re-renderizan innecesariamente y por qué, evitando esfuerzo de optimización desperdiciado en suposiciones incorrectas sobre dónde está el problema real.
+
+**Diagrama:**
+
+```
+Profiler graba una interacción → muestra QUÉ componentes se re-renderizaron y POR QUÉ
+(props cambiadas / estado cambiado / re-render heredado del padre)
+```
+
+### Tema 2: React.memo con criterio
+
+**Conceptos clave:** comparación superficial de props, overhead de comparación, cuándo realmente ayuda.
+
+`React.memo(function Fila({ item }) { return <li>{item.nombre}</li>; })` envuelve un componente para que React realice una comparación superficial de sus props entre el render anterior y el actual antes de volver a ejecutar la función del componente: si todas las props son referencialmente iguales al render anterior, React se salta completamente la re-ejecución de ese componente y reutiliza el resultado anterior, en vez de volver a calcular un árbol de elementos idéntico innecesariamente.
+
+`React.memo` solo aporta un beneficio real cuando el componente efectivamente recibe las mismas props en renders sucesivos con una frecuencia significativa (por ejemplo, una fila de una lista larga que se re-renderiza cada vez que el componente padre se actualiza por una razón no relacionada con esa fila específica): envolver absolutamente todos los componentes de la aplicación con `React.memo` de forma indiscriminada agrega el overhead de esa comparación superficial de props en cada render, sin ningún beneficio real en componentes que de todas formas reciben props distintas en la mayoría de sus renders (donde la comparación superficial siempre determinaría que sí hay que re-renderizar, agregando el costo de la comparación sin evitar ningún trabajo real).
+
+**Analogía:** `React.memo` es como un guardia que compara una lista de invitados exacta antes de dejar pasar a un evento que ya ocurrió con la misma lista, ahorrando repetir el mismo trabajo; pedirle a ese guardia que revise la lista incluso cuando la lista prácticamente siempre cambia agrega el costo de la revisión sin ahorrar ningún trabajo real, dado que casi siempre habrá que dejar pasar de todas formas.
+
+**¿Por qué es importante?** `React.memo` solo ayuda cuando un componente recibe las mismas props con frecuencia significativa; aplicarlo indiscriminadamente agrega overhead de comparación sin beneficio real en componentes que de todas formas cambian de props frecuentemente.
+
+**Diagrama:**
 
 ```jsx
 const Fila = React.memo(function Fila({ item }) {
@@ -10,23 +70,126 @@ const Fila = React.memo(function Fila({ item }) {
 }); // solo se re-renderiza si `item` cambia (comparación superficial)
 ```
 
-`React.memo` solo ayuda si el componente realmente recibe las mismas props en renders sucesivos — envolver TODO con memo agrega overhead de comparación sin beneficio.
+### Tema 3: Virtualización y code-splitting
 
-## Virtualización
+**Conceptos clave:** renderizar solo lo visible, dividir el bundle en chunks.
+
+Renderizar una lista de 10,000 elementos completos en el DOM, incluso si la mayoría no son visibles en la pantalla en un momento dado, es costoso tanto en tiempo de renderizado inicial como en memoria consumida por nodos DOM que el usuario nunca ve directamente; la virtualización (`<FixedSizeList height={600} itemCount={10000} itemSize={40}>{({ index, style }) => <div style={style}>{datos[index].nombre}</div>}</FixedSizeList>` con `react-window`) renderiza únicamente los elementos actualmente visibles en el viewport (más un pequeño margen para un scroll suave), reciclando los mismos nodos DOM a medida que el usuario hace scroll, en vez de mantener los 10,000 nodos completos existiendo simultáneamente en el DOM real.
+
+`React.lazy(() => import('./Reportes'))` combinado con `Suspense` (estudiado en profundidad en el Módulo 5 para code-splitting por ruta) divide el bundle de JavaScript en chunks separados descargados bajo demanda, reduciendo el tamaño del bundle inicial que la aplicación necesita descargar y ejecutar antes de volverse interactiva, una técnica de reducción de trabajo inicial complementaria (pero distinta) a la virtualización, que reduce el trabajo de renderizado continuo de listas largas ya cargadas.
+
+**Analogía:** la virtualización es como un teatro que solo construye físicamente los asientos de la sección actualmente visible desde donde alguien mira, en vez de construir las 10,000 butacas completas de un estadio entero de una sola vez; el code-splitting es como entregar solo el capítulo del manual que el usuario necesita en este momento, en vez del libro completo de antemano.
+
+**¿Por qué es importante?** La virtualización reduce drásticamente el costo de renderizar listas largas al mantener en el DOM solo los elementos visibles; el code-splitting reduce el bundle inicial descargado, mejorando el tiempo hasta que la aplicación se vuelve interactiva.
+
+**Diagrama:**
 
 ```jsx
 import { FixedSizeList } from 'react-window';
-
 <FixedSizeList height={600} itemCount={10000} itemSize={40}>
   {({ index, style }) => <div style={style}>{datos[index].nombre}</div>}
 </FixedSizeList>
-```
 
-Solo renderiza los elementos visibles en pantalla (más un margen) en vez de los 10,000 elementos completos — esencial para listas largas.
-
-## Code-splitting
-
-```jsx
 const Reportes = lazy(() => import('./Reportes'));
 <Suspense fallback={<Spinner />}><Reportes /></Suspense>
 ```
+
+### Tema 4: useTransition, useDeferredValue y Fiber
+
+**Conceptos clave:** actualizaciones no urgentes, arquitectura de trabajo interrumpible.
+
+`useTransition` permite marcar ciertas actualizaciones de estado como "de transición" (no urgentes), indicándole a React que puede posponer o interrumpir ese trabajo de renderizado específico en favor de actualizaciones más urgentes que ocurran mientras tanto (como seguir respondiendo instantáneamente a la escritura del usuario en un input, mientras una lista de resultados derivados de ese input, potencialmente costosa de recalcular, se actualiza en segundo plano con menor prioridad); `useDeferredValue` ofrece un mecanismo relacionado, proporcionando una versión "retrasada" de un valor que se actualiza con menor prioridad que el valor original, útil para mantener la interfaz responsiva mientras un cálculo derivado costoso se pone al día en segundo plano.
+
+Estas APIs son posibles gracias a Fiber, la arquitectura interna de React (introducida como reescritura completa del motor de reconciliación) que representa el árbol de trabajo de renderizado como una estructura de datos que puede pausarse, reanudarse y priorizarse de forma incremental, en vez del algoritmo de reconciliación anterior (previo a Fiber), que ejecutaba el trabajo de renderizado de forma síncrona e ininterrumpible de principio a fin una vez iniciado. Reconciliation es el proceso mediante el cual React compara el árbol de elementos anterior con el nuevo (Módulo 1, Tema 2) para determinar el conjunto mínimo de cambios reales que aplicar al DOM, y Fiber es la arquitectura que permite que ese proceso de comparación se ejecute de forma interrumpible y priorizable, en vez de bloquear el hilo principal del navegador de forma ininterrumpida durante actualizaciones costosas.
+
+**Analogía:** `useTransition` es como decirle a un asistente "esto puede esperar, atiende primero cualquier solicitud urgente que llegue mientras tanto"; Fiber es como reorganizar el flujo de trabajo de ese asistente para que pueda pausar una tarea larga en curso, atender algo urgente que acaba de llegar, y luego retomar exactamente donde la había dejado, en vez de tener que completar obligatoriamente la tarea larga en curso antes de poder atender cualquier otra cosa.
+
+**¿Por qué es importante?** `useTransition`/`useDeferredValue` mantienen la interfaz responsiva ante actualizaciones costosas al priorizar el trabajo urgente sobre el no urgente, una capacidad habilitada estructuralmente por la arquitectura Fiber, que hace que el trabajo de renderizado sea interrumpible y priorizable.
+
+**Diagrama:**
+
+```
+Fiber: árbol de trabajo interrumpible y priorizable (reemplaza el reconciliador síncrono anterior)
+useTransition: marca una actualización como no urgente, interrumpible por trabajo más urgente
+useDeferredValue: ofrece una versión "retrasada" de un valor, actualizada con menor prioridad
+```
+
+---
+
+## Laboratorio práctico
+
+**Objetivo del laboratorio:** medir con el Profiler, aplicar `React.memo` con criterio, y virtualizar una lista larga.
+
+**Requisitos previos:** Módulos 0-8 completados.
+
+| Paso | Acción | Código | Explicación |
+|---|---|---|---|
+| 1 | Grabar una interacción con el Profiler | — | Encuentra un componente que se re-renderiza sin necesidad |
+| 2 | Envolver ese componente con `React.memo` | Ver Tema 2 | Confirma con el Profiler que el render innecesario desaparece |
+| 3 | Virtualizar una lista de 10,000 elementos | Ver Tema 3 | Compara el rendimiento de scroll antes/después |
+| 4 | Dividir un bundle grande con `React.lazy` | Ver Tema 3 | Verifica la mejora en el tiempo de carga inicial |
+
+**Verificación:** el laboratorio se considera exitoso si puedes mostrar una comparación concreta antes/después con el Profiler del componente optimizado, y si la lista virtualizada mantiene un scroll fluido con 10,000 elementos donde la versión sin virtualizar no lo hacía.
+
+**Errores comunes y soluciones**
+
+- **Optimizar sin medir primero con el Profiler.** Identifica el componente problemático real antes de aplicar cualquier optimización.
+- **Envolver todo con `React.memo` sin criterio.** Solo aplícalo donde el componente recibe las mismas props con frecuencia significativa.
+- **Renderizar listas largas sin virtualizar.** Usa `react-window` u otra librería de virtualización para listas de miles de elementos.
+
+---
+
+## Ejercicios de evaluación
+
+### Ejercicio 1: Por qué medir antes de optimizar
+
+**Enunciado:** explica por qué optimizar sin medir primero con el Profiler suele ser tiempo perdido.
+
+**Solución esperada:** sin el Profiler, la identificación del componente problemático se basa en intuición o suposición, que frecuentemente apunta al componente equivocado; el Profiler proporciona evidencia concreta de qué componentes se re-renderizan y por qué, dirigiendo el esfuerzo de optimización exactamente al lugar donde efectivamente existe un problema medible.
+
+**Criterios de éxito:**
+- Explica correctamente el riesgo de optimizar el componente equivocado sin evidencia concreta del Profiler.
+
+### Ejercicio 2: Cuándo virtualizar es necesario
+
+**Enunciado:** ¿cuándo virtualizar una lista es necesario, y cuándo es over-engineering?
+
+**Solución esperada:** virtualizar es necesario cuando la lista tiene un número grande de elementos (típicamente miles) que causan un costo mensurable de renderizado inicial o de memoria si se renderizan todos simultáneamente; es over-engineering aplicarlo a listas pequeñas (decenas de elementos) donde el costo de renderizar todos los elementos completos es insignificante, agregando la complejidad de virtualización sin ningún beneficio real medible.
+
+**Criterios de éxito:**
+- Distingue correctamente el caso de listas grandes (virtualización necesaria) del caso de listas pequeñas (over-engineering).
+
+### Ejercicio 3: Fiber y trabajo interrumpible
+
+**Enunciado:** ¿qué capacidad habilita la arquitectura Fiber que el reconciliador anterior de React no tenía?
+
+**Solución esperada:** Fiber representa el árbol de trabajo de renderizado como una estructura que puede pausarse, reanudarse y priorizarse de forma incremental, permitiendo que React interrumpa trabajo de renderizado no urgente en favor de actualizaciones más urgentes (como `useTransition`/`useDeferredValue`), algo que el reconciliador síncrono e ininterrumpible anterior no permitía.
+
+**Criterios de éxito:**
+- Explica correctamente la interrupción y priorización del trabajo de renderizado como la capacidad habilitada por Fiber.
+
+---
+
+## Resumen del módulo
+
+**Puntos clave**
+
+- El Profiler proporciona evidencia concreta de qué re-renderiza y por qué, evitando optimización a ciegas.
+- `React.memo` solo ayuda cuando un componente recibe las mismas props con frecuencia significativa.
+- La virtualización y el code-splitting reducen el costo de renderizar listas largas y el bundle inicial respectivamente.
+- Fiber habilita trabajo de renderizado interrumpible y priorizable, sustentando `useTransition`/`useDeferredValue`.
+
+**Conceptos aprendidos**
+
+- React DevTools Profiler.
+- `React.memo`, `useMemo`, `useCallback` con criterio.
+- Virtualización y code-splitting.
+- `useTransition`, `useDeferredValue` y Fiber.
+
+**Próximos pasos**
+
+En el Módulo 10 aprenderás Server Components y Next.js: renderizado en servidor por defecto, App Router, streaming y Server Actions.
+
+**Recursos adicionales**
+
+- Documentación oficial de React (react.dev): "React DevTools Profiler" y "Concurrent Features".

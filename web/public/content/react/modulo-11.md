@@ -1,4 +1,47 @@
-## Tipado de props
+# Módulo 11: TypeScript con React
+
+## Sílabo
+
+**Objetivo general**
+
+Tipar props, estado, hooks personalizados y eventos de React para detectar errores en tiempo de compilación en vez de en ejecución, incluyendo componentes polimórficos correctamente tipados.
+
+**Objetivos específicos**
+
+1. Tipar props de un componente con una interface, incluyendo `children`.
+2. Escribir un hook personalizado genérico reutilizable para cualquier tipo de dato.
+3. Tipar correctamente eventos sintéticos de React.
+4. Migrar un componente a TypeScript estricto sin usar `any`.
+5. Explicar cómo tipar un componente polimórfico.
+
+**Contenido**
+
+- Tipado de props y `children`.
+- Generics en hooks personalizados.
+- Tipado de eventos sintéticos.
+- Componentes polimórficos tipados.
+
+**Evaluación**
+
+Migración de un componente complejo a TypeScript estricto sin `any`, más tres ejercicios de evaluación.
+
+---
+
+## Contenido teórico
+
+### Tema 1: Tipado de props y children
+
+**Conceptos clave:** `interface`, `React.ReactNode`, props opcionales.
+
+Tipar las props de un componente con una interface (`interface TarjetaProps { titulo: string; children: React.ReactNode; onSeleccionar?: () => void; }`) declara explícitamente qué forma deben tener los datos que el componente espera recibir, permitiendo que TypeScript detecte en tiempo de compilación errores como olvidar una prop obligatoria, pasar un tipo incorrecto, o invocar una función opcional sin verificar primero que efectivamente fue proporcionada, exactamente el mismo beneficio general de tipado estático estudiado a lo largo del track de TypeScript, aplicado aquí específicamente a la superficie de props de un componente React.
+
+`React.ReactNode` es el tipo apropiado para `children` (y para cualquier prop que reciba contenido renderizable arbitrario), dado que abarca correctamente todo lo que React puede renderizar válidamente: elementos JSX, strings, números, arreglos de esos elementos, o incluso `null`/`undefined` (que React simplemente no renderiza), un tipo deliberadamente más amplio que `React.ReactElement` (que representa específicamente un elemento JSX único, sin abarcar strings o arreglos sueltos), siendo importante elegir el tipo correcto según qué tan restrictivo debe ser realmente el contenido aceptado por ese componente específico.
+
+**Analogía:** tipar las props de un componente es como especificar exactamente qué ingredientes y en qué formato acepta una receta antes de intentar prepararla, detectando de antemano si falta un ingrediente obligatorio o si el formato de alguno no es el esperado, en vez de descubrirlo a mitad de la preparación real.
+
+**¿Por qué es importante?** Tipar las props detecta en tiempo de compilación errores de uso del componente (props faltantes, tipos incorrectos) que de otro modo solo se manifestarían como errores en tiempo de ejecución, potencialmente en producción.
+
+**Diagrama:**
 
 ```tsx
 interface TarjetaProps {
@@ -12,7 +55,19 @@ function Tarjeta({ titulo, children, onSeleccionar }: TarjetaProps) {
 }
 ```
 
-## Hooks genéricos
+### Tema 2: Hooks genéricos
+
+**Conceptos clave:** parámetro de tipo `<T>`, reutilización para cualquier tipo de dato.
+
+Un hook personalizado genérico (`function useLocalStorage<T>(clave: string, valorInicial: T) {...}`) usa un parámetro de tipo (`T`) para permanecer reutilizable para cualquier tipo de dato concreto que se le pase, en vez de fijar de antemano un tipo específico (por ejemplo, `string` únicamente) que limitaría su reutilización a ese único caso: al invocarlo como `useLocalStorage<'claro' | 'oscuro'>('tema', 'claro')`, TypeScript infiere (o recibe explícitamente) que `T` es el tipo unión `'claro' | 'oscuro'` para esa invocación específica, tipando correctamente tanto el valor devuelto como el setter correspondiente según ese tipo concreto, sin que el hook en sí tenga que conocer de antemano cuál será ese tipo específico en cada uso particular.
+
+Este mismo principio de generics aplicado a hooks es exactamente el mismo concepto de generics estudiado de forma más general para funciones y clases en el track de TypeScript, aplicado aquí específicamente al caso de hooks personalizados de React: el hook define su comportamiento una única vez de forma abstracta sobre un tipo `T` no especificado todavía, y cada punto de uso concreto especifica (o permite que TypeScript infiera) cuál es ese tipo específico para esa invocación particular, obteniendo tipado preciso sin necesidad de duplicar la implementación del hook para cada tipo de dato distinto que pudiera necesitarse.
+
+**Analogía:** un hook genérico es como un molde ajustable que puede producir piezas de distintas formas específicas según el parámetro que se le indique, en vez de tener que fabricar un molde completamente nuevo y separado para cada forma específica de pieza que se necesite producir.
+
+**¿Por qué es importante?** Un hook genérico se escribe una única vez y se reutiliza correctamente tipado para cualquier tipo de dato concreto, evitando duplicar la implementación para cada tipo específico que pudiera necesitarse.
+
+**Diagrama:**
 
 ```tsx
 function useLocalStorage<T>(clave: string, valorInicial: T) {
@@ -27,21 +82,108 @@ function useLocalStorage<T>(clave: string, valorInicial: T) {
 const [tema, setTema] = useLocalStorage<'claro' | 'oscuro'>('tema', 'claro');
 ```
 
-## Eventos tipados
+### Tema 3: Eventos tipados y componentes polimórficos
+
+**Conceptos clave:** `React.ChangeEvent<T>`, componentes que renderizan como elemento configurable.
+
+Tipar el parámetro de un manejador de eventos con el tipo específico correspondiente (`function manejarCambio(e: React.ChangeEvent<HTMLInputElement>) { console.log(e.target.value); }`) permite que TypeScript sepa exactamente qué propiedades existen en `e.target` según el tipo de elemento involucrado (`.value` existe en un `HTMLInputElement`, pero no necesariamente de la misma forma en otros tipos de elementos), detectando en tiempo de compilación el acceso a una propiedad que no existiría realmente en ese tipo específico de evento, en vez de descubrir ese error únicamente en tiempo de ejecución con un valor `undefined` inesperado.
+
+Un componente polimórfico es aquel que puede renderizarse como distintos elementos HTML o componentes subyacentes según una prop `as` (`<Boton as="a" href="/inicio">Ir</Boton>` renderizando un `<a>` en vez de un `<button>`), y tiparlo correctamente (`type BotonProps<T extends React.ElementType> = { as?: T } & React.ComponentPropsWithoutRef<T>`) requiere que TypeScript infiera dinámicamente qué props son válidas según el elemento específico indicado en `as` (aceptando `href` cuando `as="a"`, pero rechazándolo cuando `as` es el valor por defecto `'button'`, dado que un `<button>` no tiene una prop `href` válida), un patrón de tipado avanzado que preserva la seguridad de tipos incluso para componentes deliberadamente flexibles en cuanto a qué elemento final renderizan.
+
+**Analogía:** un componente polimórfico correctamente tipado es como un formulario de pedido que ajusta automáticamente qué campos son válidos y obligatorios según qué producto específico se seleccione, en vez de mostrar siempre el mismo conjunto fijo de campos sin importar qué producto realmente se está pidiendo.
+
+**¿Por qué es importante?** Tipar eventos sintéticos correctamente detecta accesos inválidos a propiedades del evento en tiempo de compilación; tipar componentes polimórficos preserva la seguridad de tipos incluso cuando el elemento final renderizado es configurable dinámicamente.
+
+**Diagrama:**
 
 ```tsx
 function manejarCambio(e: React.ChangeEvent<HTMLInputElement>) {
   console.log(e.target.value); // TypeScript sabe que .value existe
 }
-```
 
-## Componentes polimórficos
-
-```tsx
 type BotonProps<T extends React.ElementType> = { as?: T } & React.ComponentPropsWithoutRef<T>;
-
 function Boton<T extends React.ElementType = 'button'>({ as, ...props }: BotonProps<T>) {
   const Componente = as || 'button';
   return <Componente {...props} />;
 }
 ```
+
+---
+
+## Laboratorio práctico
+
+**Objetivo del laboratorio:** migrar un componente existente a TypeScript estricto, incluyendo un hook genérico y un componente polimórfico.
+
+**Requisitos previos:** Módulos 0-10 completados, conocimientos de TypeScript.
+
+| Paso | Acción | Código | Explicación |
+|---|---|---|---|
+| 1 | Tipar las props de un componente existente | Ver Tema 1 | Incluye `children: React.ReactNode` |
+| 2 | Escribir `useLocalStorage<T>` genérico | Ver Tema 2 | Verifica que funciona para distintos tipos |
+| 3 | Tipar correctamente un evento de input | Ver Tema 3 | `React.ChangeEvent<HTMLInputElement>` |
+| 4 | Migrar el componente completo sin `any` | — | Verifica con `tsc --noEmit` en modo estricto |
+
+**Verificación:** el laboratorio se considera exitoso si el componente migrado compila en modo estricto sin ningún `any`, y si el hook genérico funciona correctamente para al menos dos tipos de datos distintos en distintos puntos de uso.
+
+**Errores comunes y soluciones**
+
+- **Usar `any` para evitar un error de tipado difícil.** Investiga el tipo correcto específico en vez de recurrir a `any`, que anula la verificación de tipos.
+- **Tipar `children` como `React.ReactElement` en vez de `React.ReactNode`.** Usa `React.ReactNode` si el componente acepta contenido renderizable arbitrario, no solo un único elemento JSX.
+- **Olvidar el parámetro de tipo al invocar un hook genérico.** Especifícalo explícitamente cuando TypeScript no pueda inferirlo del contexto.
+
+---
+
+## Ejercicios de evaluación
+
+### Ejercicio 1: Beneficio de tipar props
+
+**Enunciado:** ¿qué gana tu equipo al tipar las props de un componente en vez de confiar en PropTypes (validación en tiempo de ejecución) o en nada?
+
+**Solución esperada:** tipar las props con TypeScript detecta errores de uso del componente (props faltantes, tipos incorrectos) en tiempo de compilación, antes de que el código llegue a producción; PropTypes valida en tiempo de ejecución, detectando el error solo cuando efectivamente se ejecuta el código con datos incorrectos, potencialmente ya en producción.
+
+**Criterios de éxito:**
+- Explica correctamente la diferencia entre detección en tiempo de compilación (TypeScript) y en tiempo de ejecución (PropTypes).
+
+### Ejercicio 2: Por qué un hook genérico es más reutilizable
+
+**Enunciado:** ¿por qué un hook genérico como `useLocalStorage<T>` es más reutilizable que uno con un tipo fijo como `useLocalStorage` tipado únicamente para `string`?
+
+**Solución esperada:** un hook genérico se escribe una única vez de forma abstracta sobre un tipo `T` no especificado todavía, permitiendo reutilizarlo correctamente tipado para cualquier tipo de dato concreto en cada punto de uso; un hook con un tipo fijo solo funcionaría correctamente tipado para ese único tipo específico, requiriendo duplicar la implementación para cualquier otro tipo de dato necesario.
+
+**Criterios de éxito:**
+- Explica correctamente la reutilización sin duplicación que ofrece el parámetro de tipo genérico.
+
+### Ejercicio 3: Componentes polimórficos
+
+**Enunciado:** explica qué problema de tipado resuelve un componente polimórfico correctamente tipado que uno sin ese tipado no resolvería.
+
+**Solución esperada:** un componente polimórfico correctamente tipado ajusta dinámicamente qué props son válidas según el elemento indicado en `as` (por ejemplo, aceptando `href` solo cuando `as="a"`); sin ese tipado dinámico, o bien se aceptarían props inválidas para el elemento actual sin ninguna advertencia de TypeScript, o bien habría que fijar de antemano un único elemento posible, perdiendo la flexibilidad del componente.
+
+**Criterios de éxito:**
+- Explica correctamente la validación dinámica de props según el elemento indicado en `as`.
+
+---
+
+## Resumen del módulo
+
+**Puntos clave**
+
+- Tipar props con una interface detecta errores de uso del componente en tiempo de compilación.
+- `React.ReactNode` es el tipo apropiado para `children` y contenido renderizable arbitrario.
+- Un hook genérico se reutiliza correctamente tipado para cualquier tipo de dato sin duplicar su implementación.
+- Los componentes polimórficos correctamente tipados ajustan dinámicamente qué props son válidas según el elemento renderizado.
+
+**Conceptos aprendidos**
+
+- Tipado de props y `children`.
+- Hooks genéricos con parámetros de tipo.
+- Eventos sintéticos tipados.
+- Componentes polimórficos tipados.
+
+**Próximos pasos**
+
+En el Módulo 12, el proyecto integrador final, unirás routing, estado global y data fetching en una aplicación real con TypeScript.
+
+**Recursos adicionales**
+
+- Documentación oficial de TypeScript (typescriptlang.org) y de React (react.dev): "TypeScript" en la sección de referencia.
