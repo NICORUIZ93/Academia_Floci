@@ -1,19 +1,73 @@
-## Inversión de control
+# Módulo 0: Fundamentos de Spring — IoC y DI
 
-En vez de que una clase cree sus propias dependencias (`new RepositorioTareas()`), el contenedor de Spring las crea y las "inyecta" — la clase solo declara qué necesita, sin saber cómo se construye.
+## Sílabo
+
+**Objetivo general**
+
+Entender el contenedor de Spring como gestor del ciclo de vida de los objetos de la aplicación, dominando inversión de control, inyección de dependencias por constructor, y qué significa realmente la autoconfiguración de "Boot".
+
+**Objetivos específicos**
+
+1. Explicar qué problema resuelve la inversión de control.
+2. Aplicar inyección por constructor y explicar por qué es preferible a la inyección por campo.
+3. Diferenciar `@Component`, `@Service` y `@Repository`.
+4. Explicar qué hace realmente la autoconfiguración de Spring Boot.
+5. Usar `@Scope`, `@Qualifier` y `@Primary` apropiadamente.
+
+**Contenido**
+
+- Inversión de control y el contenedor de Spring.
+- Inyección por constructor vs por campo.
+- `@Component`, `@Service`, `@Repository`.
+- Autoconfiguración: qué hace realmente "Boot".
+- `@Scope`: singleton, prototype, request, session.
+- `@Qualifier` y `@Primary` cuando hay varias implementaciones.
+
+**Evaluación**
+
+Aplicación Spring Boot mínima con dos beans inyectados por constructor, más tres ejercicios de evaluación.
+
+---
+
+## Contenido teórico
+
+### Tema 1: Inversión de control y el contenedor de Spring
+
+**Conceptos clave:** el framework crea y conecta objetos, no el propio código de la aplicación.
+
+En código sin un contenedor de inversión de control, una clase que necesita colaboradores típicamente los crea ella misma directamente (`new RepositorioTareas()`), acoplándose fuertemente a una implementación concreta específica y haciendo que cambiar esa implementación, o sustituirla por una versión de prueba durante los tests, requiera modificar el código interno de la propia clase que la crea. La inversión de control invierte esa responsabilidad: en vez de que cada clase cree sus propias dependencias, un contenedor externo (el contenedor de Spring) las crea centralizadamente y las "inyecta" en cada clase que las declara como necesarias, de modo que la clase consumidora solo declara qué necesita (a través de su constructor, típicamente), sin saber ni importarle cómo esa dependencia concreta se construye ni de dónde proviene.
+
+`@Service public class ServicioTareas { private final RepositorioTareas repositorio; public ServicioTareas(RepositorioTareas repositorio) { this.repositorio = repositorio; } }` declara que `ServicioTareas` necesita un `RepositorioTareas`, y el contenedor de Spring, al detectar esta clase como un bean gestionado, se encarga de encontrar (o crear) una instancia de `RepositorioTareas` y pasarla automáticamente al constructor en el momento de instanciar `ServicioTareas`, sin que ningún código de la aplicación tenga que escribir explícitamente esa conexión.
+
+**Analogía:** sin inversión de control, cada empleado de una empresa tendría que fabricar personalmente cada herramienta que necesita para su trabajo; con inversión de control, un departamento central de suministros (el contenedor de Spring) entrega automáticamente a cada empleado exactamente las herramientas que declaró necesitar, sin que el empleado tenga que saber de dónde vienen ni cómo se fabricaron.
+
+**¿Por qué es importante?** La inversión de control desacopla a cada clase de cómo se construyen sus dependencias, permitiendo sustituir implementaciones (por ejemplo, con mocks durante tests) sin modificar el código de la clase consumidora.
+
+**Diagrama:**
 
 ```java
 @Service
 public class ServicioTareas {
     private final RepositorioTareas repositorio;
-
     public ServicioTareas(RepositorioTareas repositorio) { // inyección por constructor
         this.repositorio = repositorio;
     }
 }
 ```
 
-## Por qué inyección por constructor
+### Tema 2: Inyección por constructor vs por campo
+
+**Conceptos clave:** inmutabilidad, testabilidad sin el contenedor.
+
+`@Autowired private RepositorioTareas repositorio;` (inyección por campo) es sintácticamente más corta, pero tiene desventajas concretas frente a la inyección por constructor: el campo no puede declararse `final`, permitiendo en teoría que se reasigne después de la construcción inicial (aunque en la práctica Spring solo lo asigna una vez, el propio lenguaje no impone esa garantía de inmutabilidad); y, más importante en la práctica diaria, escribir un test unitario de esa clase sin levantar el contenedor completo de Spring se vuelve más difícil, dado que no existe una forma directa de "pasarle" el mock al campo privado sin usar reflexión o alguna utilidad especial de testing.
+
+Con inyección por constructor, el campo puede declararse `final` (garantizando inmutabilidad real, verificada por el compilador, no solo por convención), y en un test unitario basta con escribir directamente `new ServicioTareas(repositorioMockeado)`, pasando el mock explícitamente como argumento del constructor, sin ninguna necesidad de levantar el contenedor de Spring completo para esa prueba específica, haciendo la prueba considerablemente más rápida y simple de escribir.
+
+**Analogía:** la inyección por campo es como recibir una herramienta a través de una ranura oculta después de que ya empezaste a trabajar, sin que quede completamente claro ni garantizado en qué momento exacto llegó ni si podría cambiar después; la inyección por constructor es como recibir todas las herramientas necesarias en tus manos directamente al comenzar tu turno de trabajo, con la garantía explícita de que las tienes desde el primer momento y de que no cambiarán después.
+
+**¿Por qué es importante?** La inyección por constructor permite declarar dependencias como `final` (inmutabilidad real) y facilita escribir tests unitarios simples con `new` directo, sin necesidad de levantar el contenedor de Spring.
+
+**Diagrama:**
 
 ```java
 // Evita: campo mutable, difícil de testear sin el contenedor de Spring
@@ -21,12 +75,103 @@ public class ServicioTareas {
 private RepositorioTareas repositorio;
 ```
 
-Con inyección por constructor, el campo puede ser `final` (inmutable), y en un test unitario puedes simplemente hacer `new ServicioTareas(repositorioMockeado)` sin necesidad de levantar el contexto de Spring.
+### Tema 3: Estereotipos, autoconfiguración y scopes
 
-## Estereotipos: @Component, @Service, @Repository
+**Conceptos clave:** `@Component`/`@Service`/`@Repository`, autoconfiguración de starters, ciclo de vida de un bean.
 
-Las tres son variantes de `@Component` (le dicen a Spring "gestiona esta clase como un bean"), con semántica adicional: `@Repository` traduce excepciones de persistencia a excepciones de Spring; `@Service` documenta intención (capa de lógica de negocio).
+`@Component`, `@Service` y `@Repository` son todas variantes especializadas de la misma anotación base `@Component`, que le indica a Spring "gestiona esta clase como un bean dentro del contenedor"; la diferencia entre ellas es principalmente semántica y documental, con una excepción funcional concreta: `@Repository` traduce automáticamente excepciones específicas de la tecnología de persistencia subyacente (por ejemplo, excepciones específicas de JDBC) a una jerarquía de excepciones propia y consistente de Spring, independiente de la tecnología concreta usada por debajo; `@Service` no agrega ningún comportamiento funcional adicional respecto a `@Component`, pero documenta claramente la intención de que esa clase pertenece a la capa de lógica de negocio.
 
-## Qué hace "Boot"
+`spring-boot-starter-web`, al agregarse como dependencia, trae automáticamente un servidor Tomcat embebido, Jackson para serialización JSON, y Spring MVC, y crucialmente los autoconfigura con valores por defecto sensatos para el caso común, sin requerir la configuración XML extensa y manual que el Spring clásico (previo a Spring Boot) exigía — esta autoconfiguración inteligente basada en qué dependencias están presentes en el classpath es precisamente lo que "Boot" agrega sobre el Spring Framework original. `@Scope` controla el ciclo de vida de un bean: `singleton` (por defecto, una única instancia compartida por todo el contenedor), `prototype` (una nueva instancia cada vez que se solicita), `request`/`session` (una instancia por petición HTTP o por sesión de usuario, respectivamente, en aplicaciones web). `@Qualifier` y `@Primary` resuelven la ambigüedad cuando existen múltiples implementaciones candidatas de una misma interfaz: `@Primary` marca una implementación como la opción por defecto quando no se especifica otra cosa, mientras `@Qualifier("nombreEspecifico")` permite pedir explícitamente una implementación concreta distinta de la marcada como primaria.
 
-`spring-boot-starter-web` trae Tomcat embebido, Jackson para JSON, y Spring MVC — y los **autoconfigura** con valores sensatos por defecto, sin que escribas XML ni configuración manual extensa como en el Spring clásico.
+**Analogía:** los estereotipos son como distintos uniformes de un mismo tipo de empleado (todos "gestionados" por la empresa), donde el uniforme de `@Repository` además incluye una traducción automática de idioma específica para comunicarse con sistemas externos de almacenamiento; la autoconfiguración es como recibir automáticamente el equipo estándar apropiado según qué departamento declaraste unirte, sin tener que solicitar cada pieza manualmente.
+
+**¿Por qué es importante?** Entender que `@Service`/`@Repository` son variantes de `@Component` con semántica adicional (y en el caso de `@Repository`, traducción de excepciones) aclara su propósito real; la autoconfiguración de Boot es lo que elimina la configuración XML manual extensa del Spring clásico.
+
+**Diagrama:**
+
+```
+@Component / @Service / @Repository: variantes de la misma anotación base, con semántica adicional
+spring-boot-starter-web → Tomcat + Jackson + Spring MVC, autoconfigurados con valores sensatos
+@Scope: singleton (por defecto) | prototype | request | session
+```
+
+---
+
+## Laboratorio práctico
+
+**Objetivo del laboratorio:** construir una aplicación Spring Boot mínima con dos beans inyectados por constructor.
+
+**Requisitos previos:** conocimientos de Java (track de Java) recomendados.
+
+| Paso | Acción | Código | Explicación |
+|---|---|---|---|
+| 1 | Crear un proyecto con start.spring.io y arrancarlo | `./mvnw spring-boot:run` | Verifica el arranque |
+| 2 | Definir `@Service` y `@Repository` con inyección por constructor | Ver Tema 1 | Verifica la conexión automática |
+| 3 | Cambiar a `@Autowired` por campo y comparar | Ver Tema 2 | Documenta la diferencia de testabilidad |
+| 4 | Observar cuándo el contenedor instancia el bean | — | `println` en el constructor |
+| 5 | Investigar qué autoconfigura `spring-boot-starter-web` | Ver Tema 3 | Documenta las dependencias que trae |
+
+**Verificación:** el laboratorio se considera exitoso si el servicio y el repositorio se conectan correctamente por inyección de constructor, y si puedes explicar concretamente por qué esa forma facilita escribir un test unitario sin levantar el contenedor.
+
+**Errores comunes y soluciones**
+
+- **Usar inyección por campo por costumbre.** Prefiere inyección por constructor para inmutabilidad y testabilidad.
+- **Confundir `@Service` con una anotación funcionalmente distinta de `@Component`.** Solo `@Repository` agrega comportamiento funcional adicional (traducción de excepciones).
+- **No declarar `@Primary` ni `@Qualifier` con múltiples implementaciones.** Sin ninguno de los dos, Spring falla al arrancar por ambigüedad.
+
+---
+
+## Ejercicios de evaluación
+
+### Ejercicio 1: Problema resuelto por la inversión de control
+
+**Enunciado:** ¿qué problema resuelve la inversión de control frente a que cada clase cree sus propias dependencias?
+
+**Solución esperada:** evita el acoplamiento fuerte de una clase a una implementación concreta específica de sus dependencias, permitiendo sustituir esas implementaciones (por ejemplo, con mocks en tests, o con una implementación alternativa en producción) sin modificar el código interno de la clase consumidora.
+
+**Criterios de éxito:**
+- Explica correctamente el desacoplamiento de la construcción de dependencias como el problema resuelto.
+
+### Ejercicio 2: Por qué la inyección por constructor facilita tests
+
+**Enunciado:** ¿por qué la inyección por constructor facilita escribir tests sin levantar el contenedor de Spring?
+
+**Solución esperada:** con inyección por constructor, basta con invocar directamente `new ServicioTareas(repositorioMockeado)`, pasando explícitamente un mock como argumento, sin necesidad de ningún mecanismo especial del contenedor de Spring para lograrlo; con inyección por campo, no existe una forma directa de asignar el mock al campo privado sin recurrir a reflexión o utilidades especiales.
+
+**Criterios de éxito:**
+- Explica correctamente la posibilidad de usar `new` directo con un mock como argumento del constructor.
+
+### Ejercicio 3: Diferencia funcional de @Repository
+
+**Enunciado:** ¿qué comportamiento funcional adicional tiene `@Repository` que `@Service` no tiene?
+
+**Solución esperada:** `@Repository` traduce automáticamente excepciones específicas de la tecnología de persistencia subyacente a una jerarquía de excepciones propia y consistente de Spring, independiente de esa tecnología concreta; `@Service` no agrega ningún comportamiento funcional adicional respecto a `@Component`, solo documenta intención.
+
+**Criterios de éxito:**
+- Identifica correctamente la traducción de excepciones como el comportamiento funcional adicional de `@Repository`.
+
+---
+
+## Resumen del módulo
+
+**Puntos clave**
+
+- La inversión de control delega la creación y conexión de dependencias al contenedor de Spring, desacoplando a cada clase de cómo se construyen sus colaboradores.
+- La inyección por constructor permite inmutabilidad real y tests unitarios simples sin levantar el contenedor.
+- `@Service`/`@Repository` son variantes de `@Component`, con `@Repository` agregando traducción de excepciones.
+- La autoconfiguración de Boot elimina la configuración XML manual extensa del Spring clásico.
+
+**Conceptos aprendidos**
+
+- Inversión de control y el contenedor de Spring.
+- Inyección por constructor vs por campo.
+- Estereotipos de Spring y autoconfiguración.
+- `@Scope`, `@Qualifier` y `@Primary`.
+
+**Próximos pasos**
+
+En el Módulo 1 aprenderás la estructura de proyecto de Spring Boot: Spring Initializr, `application.yml`, y perfiles por entorno.
+
+**Recursos adicionales**
+
+- Documentación oficial de Spring Framework (docs.spring.io/spring-framework) y Spring Boot (docs.spring.io/spring-boot).
