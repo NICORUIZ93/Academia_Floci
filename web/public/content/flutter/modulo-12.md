@@ -1,4 +1,39 @@
-## Arquitectura por features
+# Módulo 12: Proyecto integrador: app Flutter completa
+
+## Sílabo
+
+**Objetivo general**
+
+Unir widgets, estado, networking y persistencia en una app real multiplataforma, organizando el proyecto por features con Clean Architecture (Domain, Data, Presentation), gestión de estado completa con Riverpod o Bloc, persistencia offline-first, tests de widgets clave, e internacionalización.
+
+**Objetivos específicos**
+
+1. Organizar el proyecto por features en vez de por tipo de archivo.
+2. Implementar gestión de estado completa con Riverpod o Bloc, sin `setState` disperso.
+3. Implementar persistencia offline-first sincronizada con una API real.
+4. Escribir widget tests de las pantallas más críticas.
+5. Generar los builds de release para Android e iOS.
+
+**Contenido**
+
+- Arquitectura por features.
+- Gestión de estado con Riverpod/Bloc.
+- Persistencia offline-first.
+- Tests de widgets clave.
+- Clean Architecture: capas Domain, Data y Presentation.
+- Internacionalización con `intl` y `flutter_localizations`.
+
+**Evaluación**
+
+App Flutter con datos reales, persistencia offline y tests, corriendo en Android e iOS, más tres ejercicios de evaluación.
+
+---
+
+## Contenido teórico
+
+### Tema 1: Arquitectura por features y Clean Architecture
+
+**Conceptos clave:** organización por dominio de negocio, no por tipo técnico de archivo.
 
 ```
 lib/
@@ -13,9 +48,26 @@ lib/
     theme.dart
 ```
 
-## Uniendo los módulos del track
+Organizar el proyecto por feature (`lib/features/tareas/`, `lib/features/auth/`) en vez de por tipo de archivo (una carpeta única `widgets/` con todos los widgets de la app mezclados, otra `models/` con todos los modelos mezclados) agrupa todo el código relacionado con una funcionalidad específica en un único lugar cohesivo, facilitando enormemente que un desarrollador entienda o modifique una feature completa sin necesidad de saltar entre carpetas dispersas por todo el proyecto que agrupan archivos por su naturaleza técnica en vez de por su propósito de negocio.
 
-Este proyecto integra: navegación declarativa con go_router y rutas protegidas (módulo 3), gestión de estado completa con Riverpod o Bloc sin setState disperso (módulo 4), networking con dio y estados explícitos (módulo 5), persistencia offline-first con Hive o sqflite (módulo 6), y widget tests de las pantallas más críticas (módulo 9).
+Dentro de cada feature, las capas de Clean Architecture (`domain/` con modelos y lógica de negocio pura sin dependencias externas, `data/` con la implementación concreta de repositorios que sí dependen de `dio` y Hive, `presentation/` con los widgets y providers que consumen esas capas inferiores) establecen un flujo de dependencia estricto y unidireccional: la capa `presentation` depende de `domain`, y `data` implementa las interfaces definidas en `domain`, pero `domain` nunca depende de `data` ni de `presentation` directamente, permitiendo que la lógica de negocio central permanezca completamente aislada y testeable sin ninguna dependencia de frameworks externos o detalles de infraestructura específicos.
+
+**Analogía:** organizar por features es como organizar un edificio de oficinas por departamento funcional completo (cada departamento con su propia recepción, archivo y sala de reuniones) en vez de agrupar todas las recepciones de todos los departamentos en un piso, todos los archivos en otro piso distinto: la primera organización mantiene junto todo lo relacionado con un mismo propósito de negocio, facilitando encontrar y modificar cualquier cosa relacionada con ese departamento específico sin recorrer todo el edificio.
+
+**¿Por qué es importante?** Organizar por feature agrupa código relacionado por propósito de negocio en vez de por tipo técnico de archivo, facilitando el mantenimiento; Clean Architecture con capas Domain/Data/Presentation mantiene la lógica de negocio central aislada de detalles de infraestructura, altamente testeable.
+
+**Diagrama:**
+
+```
+lib/features/tareas/
+  domain/         ← modelos y lógica pura, SIN dependencias externas
+  data/           ← implementa interfaces de domain, SÍ depende de dio/Hive
+  presentation/   ← widgets + providers, depende de domain
+```
+
+### Tema 2: Uniendo los módulos del track
+
+**Conceptos clave:** cada concepto estudiado por separado encaja como parte de un sistema mayor.
 
 ```dart
 final tareasProvider = FutureProvider<List<Tarea>>((ref) async {
@@ -35,6 +87,124 @@ class ListaTareasScreen extends ConsumerWidget {
 }
 ```
 
-## Cierre del track
+Este proyecto integra directamente cada módulo estudiado a lo largo del track en un único sistema coherente: navegación declarativa con go_router y rutas protegidas (Módulo 3), gestión de estado completa con Riverpod o Bloc sin `setState` disperso (Módulo 4), networking con `dio` y estados explícitos modelados con sealed classes (Módulo 5), persistencia offline-first con Hive o `sqflite` (Módulo 6), y widget tests de las pantallas más críticas (Módulo 9); el método `.when(data:, loading:, error:)` de `AsyncValue` en Riverpod es la forma idiomática de manejar exhaustivamente los tres estados posibles de una operación asíncrona directamente en la UI, reflejando el mismo principio de estados explícitos modelados como un conjunto cerrado ya estudiado en el Módulo 5.
 
-Flutter cumple su promesa central: una sola base de código Dart, con widgets propios (no wrappers sobre componentes nativos), corriendo con apariencia y rendimiento consistentes en Android e iOS — el costo es aprender un ecosistema de widgets propio, distinto tanto de la web como de cada plataforma nativa.
+La internacionalización con `intl` y `flutter_localizations` (mencionada en el contenido de este módulo integrador) permite que la app soporte múltiples idiomas de forma estructurada, generando código a partir de archivos de traducción declarativos, un aspecto adicional de pulido profesional que completa una app lista para un público potencialmente internacional, más allá de la funcionalidad central ya integrada del resto del track.
+
+**Analogía:** el proyecto integrador es como el ensamblaje final de un producto donde cada componente estudiado por separado en su propio módulo (navegación, estado, networking, persistencia, testing) se integra en un sistema funcional completo, demostrando que cada pieza individual efectivamente encaja con las demás tal como se diseñó.
+
+**¿Por qué es importante?** Integrar cada módulo del track en un proyecto real demuestra que los conceptos estudiados por separado (navegación, estado, networking, persistencia, testing) se combinan naturalmente en un sistema coherente, reflejando cómo se construyen apps Flutter profesionales reales.
+
+**Diagrama:**
+
+```dart
+tareasAsync.when(
+  data: (tareas) => ListView(...),
+  loading: () => CircularProgressIndicator(),
+  error: (e, _) => Text('Error: $e'),
+)
+```
+
+### Tema 3: Cierre del track
+
+**Conceptos clave:** una sola base de código, apariencia y rendimiento consistentes, el costo de un ecosistema propio.
+
+Flutter cumple su promesa central de forma bastante directa: una sola base de código Dart, con widgets propios que Flutter renderiza directamente con su propio motor gráfico (Skia, el mismo motor mencionado en Compose Multiplatform, Módulo 7 del track de Kotlin Multiplatform), en vez de simplemente envolver componentes nativos de cada plataforma (a diferencia de otros frameworks multiplataforma históricos que traducían hacia widgets nativos subyacentes), corriendo con apariencia y rendimiento consistentes en Android e iOS sin las diferencias sutiles de comportamiento que podrían surgir de depender de implementaciones nativas distintas por plataforma.
+
+El costo de esta consistencia es aprender un ecosistema de widgets completamente propio de Flutter, distinto tanto de las tecnologías web (HTML/CSS/JavaScript) como de cada plataforma nativa (UIKit/SwiftUI en iOS, Views/Compose en Android): un desarrollador que ya domina Compose o SwiftUI reconocerá los mismos principios conceptuales de UI declarativa (estado como fuente de verdad, composición de widgets, reconstrucción en respuesta a cambios), pero necesitará aprender la sintaxis y las convenciones específicas del ecosistema de widgets propio de Flutter para aplicarlos efectivamente.
+
+**Analogía:** Flutter es como un sistema de construcción modular propio que garantiza resultados idénticos sin importar en qué terreno geográfico se construya (renderizado propio consistente), a diferencia de adaptar los materiales de construcción disponibles localmente en cada región (envolver componentes nativos), a cambio de que los constructores deban aprender ese sistema modular específico en vez de reutilizar directamente sus conocimientos previos de construcción tradicional de cada región.
+
+**¿Por qué es importante?** Flutter logra apariencia y rendimiento consistentes en ambas plataformas gracias a renderizar con su propio motor gráfico en vez de envolver componentes nativos, a costa de requerir aprender un ecosistema de widgets propio distinto de la web y de cada plataforma nativa.
+
+**Diagrama:**
+
+```
+Flutter = una base de código Dart
+        + motor gráfico propio (Skia)
+        + widgets propios (NO wrappers de componentes nativos)
+        = apariencia y rendimiento consistentes en Android e iOS
+```
+
+---
+
+## Laboratorio práctico
+
+**Objetivo del laboratorio:** construir una app Flutter con datos reales, persistencia offline y tests, corriendo en Android e iOS.
+
+**Requisitos previos:** Módulos 0-11 completados.
+
+| Paso | Acción | Código | Explicación |
+|---|---|---|---|
+| 1 | Organizar el proyecto por features | Ver Tema 1 | `lib/features/tareas/`, `lib/features/auth/` |
+| 2 | Implementar gestión de estado completa | Ver Tema 2 | Riverpod o Bloc, sin `setState` disperso |
+| 3 | Implementar persistencia offline-first | Ver Módulo 6 | Sincronizada con una API real |
+| 4 | Escribir widget tests de las 2 pantallas más críticas | Ver Módulo 9 | Verificación de comportamiento clave |
+| 5 | Generar los builds de release | Ver Módulo 11 | Android e iOS |
+
+**Verificación:** el proyecto se considera exitoso si la app funciona correctamente sin conexión (mostrando el último caché sincronizado), si toda la gestión de estado pasa por Riverpod o Bloc sin `setState` disperso fuera de casos puramente locales, y si los widget tests de las pantallas críticas pasan consistentemente.
+
+**Errores comunes y soluciones**
+
+- **Organizar el proyecto por tipo de archivo en vez de por feature en una app de tamaño real.** Dificulta el mantenimiento; organiza por feature con Clean Architecture interna.
+- **Dejar `setState` disperso en features que ya deberían usar Riverpod/Bloc de forma consistente.** Migra toda la gestión de estado compartido al enfoque elegido.
+- **Omitir tests de las pantallas más críticas confiando solo en pruebas manuales.** Los widget tests dan confianza repetible antes de cada release.
+
+---
+
+## Ejercicios de evaluación
+
+### Ejercicio 1: Decisión de arquitectura ante un equipo creciente
+
+**Enunciado:** ¿qué decisión de arquitectura cambiarías si el equipo creciera a 5 personas trabajando en paralelo?
+
+**Solución esperada:** una respuesta razonable menciona reforzar los límites entre features (evitando dependencias cruzadas no declaradas entre `features/tareas` y `features/auth`), adoptar convenciones más estrictas de Clean Architecture para minimizar conflictos de merge, o considerar Bloc sobre Riverpod si el equipo valora la estructura explícita basada en eventos para coordinar trabajo paralelo de forma más predecible.
+
+**Criterios de éxito:**
+- Propone una consideración arquitectónica razonable relacionada con límites de features o consistencia de convenciones a mayor escala de equipo.
+
+### Ejercicio 2: Parte del ecosistema más distinta a lo conocido
+
+**Enunciado:** ¿qué parte del ecosistema Flutter (widgets, estado, platform channels) te resultó más distinta a lo que conocías de otros frameworks?
+
+**Solución esperada:** una respuesta válida identifica un aspecto específico de Flutter (por ejemplo, el modelo de constraints "go down, sizes go up" del Módulo 2, o la necesidad de `MethodChannel` para integraciones nativas que en otros frameworks podría estar más abstraída) y lo compara razonadamente con el enfoque equivalente en otro framework conocido.
+
+**Criterios de éxito:**
+- Identifica un aspecto concreto de Flutter y lo compara de forma razonada con otro framework.
+
+### Ejercicio 3: Costo de la consistencia de Flutter
+
+**Enunciado:** ¿cuál es el costo principal de que Flutter logre apariencia y rendimiento consistentes entre Android e iOS?
+
+**Solución esperada:** requiere aprender un ecosistema de widgets completamente propio de Flutter, distinto tanto de las tecnologías web como de cada plataforma nativa, dado que Flutter renderiza con su propio motor gráfico en vez de envolver componentes nativos de cada sistema operativo.
+
+**Criterios de éxito:**
+- Menciona correctamente el aprendizaje de un ecosistema de widgets propio como el costo principal.
+
+---
+
+## Resumen del módulo
+
+**Puntos clave**
+
+- Organizar por feature con Clean Architecture (Domain, Data, Presentation) agrupa código por propósito de negocio, manteniendo la lógica central aislada y testeable.
+- El proyecto integrador combina navegación, estado, networking, persistencia y testing en un único sistema coherente.
+- Flutter logra apariencia y rendimiento consistentes renderizando con su propio motor gráfico, en vez de envolver componentes nativos.
+- El costo de esa consistencia es aprender un ecosistema de widgets propio, distinto de la web y de cada plataforma nativa.
+
+**Conceptos aprendidos**
+
+- Arquitectura por features.
+- Gestión de estado con Riverpod/Bloc.
+- Persistencia offline-first.
+- Tests de widgets clave.
+- Clean Architecture.
+- Internacionalización con `intl` y `flutter_localizations`.
+
+**Próximos pasos**
+
+Con el track de Flutter completo, los mismos principios de arquitectura (estado predecible, offline-first, testing en capas) reaparecerán en cualquier framework de UI declarativa que explores en el futuro, ya sea nativo o multiplataforma.
+
+**Recursos adicionales**
+
+- Guía oficial de arquitectura de apps en Flutter (docs.flutter.dev/app-architecture).
