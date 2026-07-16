@@ -25,7 +25,7 @@ detect_platform() {
         *)
             echo "Unsupported OS: $OS" >&2
             echo "Windows users: run this installer from WSL/Git Bash, or use Docker Compose:" >&2
-            echo "  docker compose up -d floci stackport" >&2
+            echo "  docker compose up -d aws-local stackport" >&2
             exit 1
             ;;
     esac
@@ -54,7 +54,7 @@ main() {
         echo "Could not download ${DOWNLOAD_URL}" >&2
         echo "If you are on Windows and this release has no native CLI asset, use WSL or Docker Compose:" >&2
         echo "  wsl -d kali-linux -e bash -c \"curl -fsSL https://floci.io/install.sh | sh\"" >&2
-        echo "  docker compose up -d floci stackport" >&2
+        echo "  docker compose up -d aws-local stackport" >&2
         exit 1
     fi
     chmod +x "$TMP"

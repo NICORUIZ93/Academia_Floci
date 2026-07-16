@@ -153,11 +153,11 @@ for (const expected of [
 
 for (const expected of [
   'floci/floci:latest',
-  'floci/stackport:latest',
+  'davireis/stackport:latest',
   'floci/floci-az:latest',
   'floci/floci-gcp:latest',
   '4566:4566',
-  '4567:4567',
+  '8080:8080',
   '4577:4577',
   '4588:4588',
 ]) {

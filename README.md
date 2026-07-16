@@ -65,7 +65,7 @@ curl http://localhost:4588
 Servicios locales:
 
 - AWS local: `http://localhost:4566`
-- StackPort: `http://localhost:4567`
+- StackPort: `http://localhost:8080`
 - Azure local: `http://localhost:4577`
 - GCP local: `http://localhost:4588`
 
