@@ -1,0 +1,193 @@
+# Módulo 19: Analítica de datos con Athena y Glue
+
+## Sílabo
+
+**Objetivo general**
+
+Consultar terabytes de datos almacenados en S3 con SQL directamente, sin moverlos ni cargarlos en una base de datos tradicional, entendiendo el modelo de data lake, el catálogo de esquemas de Glue, y cómo las particiones y el formato de archivo afectan drásticamente el costo y rendimiento de una consulta.
+
+**Objetivos específicos**
+
+1. Crear una base de datos y una tabla en Glue Catalog apuntando a datos en S3.
+2. Ejecutar un Glue Crawler para descubrir el esquema automáticamente.
+3. Ejecutar consultas SQL con Athena sobre esos datos.
+4. Comparar el rendimiento y costo entre JSON/CSV y Parquet, con y sin particiones.
+
+**Contenido**
+
+- Data lake.
+- Parquet vs CSV.
+- Glue Catalog.
+- Glue Crawler.
+- Athena Workgroup.
+- Partition pruning.
+- Compresión.
+
+**Evaluación**
+
+Query SQL que analiza 100k registros en S3 y devuelve el top 10 de clientes en menos de 1 segundo, más tres ejercicios de evaluación.
+
+---
+
+## Contenido teórico
+
+### Tema 1: Data lake y Glue Catalog
+
+**Conceptos clave:** los datos permanecen en su ubicación original de almacenamiento de objetos, el esquema se define por separado.
+
+```bash
+aws glue create-database --database-input '{"Name":"tienda"}'
+aws glue create-table --database-name tienda --table-input '{"Name":"pedidos","StorageDescriptor":{...}}'
+```
+
+Un data lake almacena datos en su formato original (crudo o semi-procesado) directamente en almacenamiento de objetos como S3, sin cargarlos primero hacia una base de datos estructurada tradicional (un data warehouse), difiriendo la definición de esquema hasta el momento de la consulta ("schema-on-read") en vez de exigir un esquema rígido predefinido antes de poder almacenar cualquier dato ("schema-on-write", el modelo tradicional de bases de datos relacionales); esta flexibilidad permite almacenar datos de fuentes y formatos heterogéneos sin necesidad de transformarlos todos hacia un esquema único común de antemano, a costa de requerir herramientas adicionales (como Athena) para consultar esos datos de forma estructurada cuando sea necesario.
+
+Glue Catalog actúa como el catálogo centralizado de metadatos que describe el esquema de los datos almacenados en S3 (qué columnas tiene una tabla lógica, en qué formato están los archivos, dónde exactamente en S3 se ubican), sin mover ni duplicar los datos reales: es simplemente una capa de metadatos que permite a herramientas como Athena saber cómo interpretar los archivos crudos almacenados en S3 como si fueran una tabla estructurada consultable con SQL.
+
+**Analogía:** un data lake es como un gran almacén que acepta mercancía de cualquier tipo y formato sin exigir una clasificación previa estricta al momento de recibirla, difiriendo esa clasificación hasta el momento en que alguien efectivamente necesita buscar algo específico; Glue Catalog es como el índice centralizado de ese almacén que describe dónde está cada tipo de mercancía y cómo interpretarla, sin mover físicamente ningún artículo de su ubicación original.
+
+**¿Por qué es importante?** Un data lake permite almacenar datos heterogéneos sin esquema rígido predefinido de antemano (schema-on-read), difiriendo esa estructuración hasta el momento de la consulta; Glue Catalog provee los metadatos necesarios para que herramientas como Athena consulten esos datos crudos como tablas estructuradas sin moverlos.
+
+**Diagrama:**
+
+```
+Data lake (S3, datos crudos, cualquier formato)
+        ↑
+Glue Catalog (metadatos: esquema, formato, ubicación)
+        ↑
+Athena (consulta SQL usando esos metadatos, sin mover los datos)
+```
+
+### Tema 2: Glue Crawler y Athena
+
+**Conceptos clave:** descubrimiento automático de esquema, consulta SQL directa sobre archivos en S3.
+
+```bash
+aws glue create-crawler --name crawler-pedidos --targets '{"S3Targets":[{"Path":"s3://analytics-bucket/pedidos"}]}' --database-name tienda
+aws glue start-crawler --name crawler-pedidos
+```
+
+Un Glue Crawler examina automáticamente los archivos almacenados en una ubicación de S3, infiere el esquema (nombres y tipos de columnas) a partir de su contenido real, y registra esa definición de tabla en Glue Catalog sin que un humano tenga que declarar manualmente cada columna y tipo, especialmente valioso cuando el formato exacto de los datos no se conoce de antemano con precisión o cuando evoluciona con el tiempo (agregando nuevas columnas que el crawler puede detectar en ejecuciones sucesivas).
+
+```bash
+aws athena start-query-execution --query-string "SELECT cliente, SUM(monto) as total FROM tienda.pedidos GROUP BY cliente ORDER BY total DESC" --result-configuration OutputLocation=s3://analytics-bucket/resultados/
+```
+
+Athena ejecuta SQL estándar directamente sobre los datos en S3 usando el esquema registrado en Glue Catalog, sin requerir ningún servidor de base de datos persistente corriendo continuamente: cada consulta se ejecuta bajo demanda como un job serverless, escaneando únicamente los archivos relevantes de S3 según el esquema y las particiones definidas, con el resultado de la consulta escrito de vuelta hacia una ubicación de S3 especificada; un Athena Workgroup permite aislar y controlar los costos de consultas de distintos equipos o propósitos (por ejemplo, limitando cuántos bytes puede escanear un workgroup específico por consulta, previniendo consultas descontroladamente costosas).
+
+**Analogía:** un Glue Crawler es como un inspector que examina automáticamente el contenido de cajas sin etiquetar en un almacén y genera una ficha catalográfica describiendo su contenido, sin que un empleado tenga que abrir y catalogar manualmente cada caja una por una; Athena es como un servicio de consulta bajo demanda que responde preguntas específicas sobre el contenido del almacén completo usando esas fichas catalográficas, cobrando únicamente por la cantidad de cajas efectivamente revisadas para responder cada pregunta específica.
+
+**¿Por qué es importante?** El Glue Crawler descubre automáticamente el esquema de datos sin declaración manual, especialmente valioso cuando el formato evoluciona con el tiempo; Athena consulta esos datos con SQL estándar sin servidor persistente, cobrando por consulta según los bytes efectivamente escaneados.
+
+**Diagrama:**
+
+```bash
+aws glue start-crawler --name crawler-pedidos
+# → descubre esquema automáticamente y lo registra en Glue Catalog
+
+aws athena start-query-execution --query-string "SELECT ... FROM tienda.pedidos ..."
+# → consulta SQL directa sobre los archivos en S3, usando ese esquema
+```
+
+### Tema 3: Parquet vs CSV, y partition pruning
+
+**Conceptos clave:** el formato de archivo y la organización en particiones determinan drásticamente el costo de cada consulta.
+
+Parquet es un formato de almacenamiento columnar (organiza los datos por columna en vez de por fila, como CSV/JSON) que permite a Athena leer únicamente las columnas efectivamente referenciadas en una consulta específica (en vez de tener que leer el archivo completo fila por fila, extrayendo todas las columnas incluso las no relevantes para esa consulta particular como ocurre inevitablemente con CSV), además de aplicar compresión considerablemente más eficiente gracias a que valores similares del mismo tipo de columna quedan almacenados contiguos entre sí; esta combinación hace que Parquet sea típicamente 10 veces más eficiente en bytes escaneados (y por lo tanto en costo, dado que Athena cobra según bytes escaneados) que CSV para consultas analíticas típicas que solo necesitan un subconjunto de columnas de una tabla ancha.
+
+Particionar los datos por una columna de alta relevancia para el patrón de consulta habitual (por ejemplo, por fecha, organizando los archivos físicamente en carpetas separadas de S3 según el año/mes) permite a Athena aplicar "partition pruning": si una consulta filtra explícitamente por un rango de fechas específico, Athena puede ignorar por completo las particiones (carpetas) que quedan fuera de ese rango sin siquiera necesitar leerlas, reduciendo drásticamente los bytes escaneados y por lo tanto el costo y la latencia de la consulta, comparado con escanear la tabla completa sin ningún criterio de exclusión física previo basado en la organización de los archivos.
+
+**Analogía:** Parquet es como un archivo organizado por categoría temática en vez de por orden cronológico mezclado, permitiendo extraer directamente solo la categoría de interés sin hojear documentos irrelevantes de por medio; particionar por fecha con partition pruning es como tener carpetas físicas separadas por año en un archivo, permitiendo ignorar por completo las carpetas de años no solicitados sin siquiera abrirlas, en vez de revisar cada documento individual del archivo completo para determinar si corresponde al período de interés.
+
+**¿Por qué es importante?** Parquet es hasta 10 veces más eficiente que CSV para analítica porque permite leer solo las columnas relevantes con mejor compresión; las particiones con partition pruning reducen drásticamente los bytes escaneados al ignorar por completo carpetas fuera del rango de filtro de la consulta, reduciendo costo y latencia de forma significativa.
+
+**Diagrama:**
+
+```
+Sin particiones: Athena escanea TODOS los archivos de la tabla, filtra después
+Con particiones + partition pruning: Athena IGNORA por completo las carpetas fuera del filtro, sin leerlas
+```
+
+---
+
+## Laboratorio práctico
+
+**Objetivo del laboratorio:** construir una query SQL que analiza 100k registros en S3 y devuelve el top 10 de clientes en menos de 1 segundo.
+
+**Requisitos previos:** Módulo 18 completado.
+
+| Paso | Acción | Comando | Explicación |
+|---|---|---|---|
+| 1 | Subir datos de prueba a S3 | `aws s3 cp orders.json s3://analytics-bucket/pedidos/2024/01/` | Estructura particionada por fecha |
+| 2 | Crear la base de datos y tabla en Glue Catalog | `aws glue create-database` + `create-table` | Con `PartitionKeys` |
+| 3 | Ejecutar un Glue Crawler | `aws glue create-crawler` + `start-crawler` | Descubre el esquema |
+| 4 | Ejecutar la query con Athena | `aws athena start-query-execution` | Top 10 clientes por monto |
+| 5 | Comparar rendimiento JSON vs Parquet, con y sin particiones | Ver Temas 2-3 | Bytes escaneados |
+
+**Verificación:** el laboratorio se considera exitoso si la query devuelve el top 10 de clientes correctamente, y si la comparación demuestra una reducción medible de bytes escaneados al usar Parquet y particiones frente a JSON sin particionar.
+
+**Errores comunes y soluciones**
+
+- **Almacenar datos analíticos en CSV/JSON sin considerar Parquet.** Convierte a Parquet para reducir drásticamente bytes escaneados y costo.
+- **No particionar datos consultados frecuentemente por un criterio como fecha.** Particiona por esa columna para habilitar partition pruning.
+- **Declarar manualmente el esquema de una tabla con formato de datos desconocido o cambiante.** Usa un Glue Crawler para descubrimiento automático.
+
+---
+
+## Ejercicios de evaluación
+
+### Ejercicio 1: Diferencia entre data lake y data warehouse
+
+**Enunciado:** ¿qué diferencia hay entre un data lake y un data warehouse?
+
+**Solución esperada:** un data lake almacena datos en su formato original directamente en almacenamiento de objetos, difiriendo la definición de esquema hasta el momento de la consulta (schema-on-read); un data warehouse tradicional exige un esquema estructurado predefinido antes de cargar los datos (schema-on-write), típicamente en una base de datos relacional optimizada para consultas analíticas.
+
+**Criterios de éxito:**
+- Distingue correctamente schema-on-read (data lake) de schema-on-write (data warehouse tradicional).
+
+### Ejercicio 2: Por qué Parquet es más eficiente que CSV
+
+**Enunciado:** ¿por qué Parquet es 10x más eficiente que CSV para analítica?
+
+**Solución esperada:** Parquet organiza los datos por columna, permitiendo leer únicamente las columnas efectivamente referenciadas en una consulta, con compresión considerablemente más eficiente al agrupar valores similares del mismo tipo contiguos entre sí; CSV requiere leer el archivo completo fila por fila incluyendo columnas irrelevantes para la consulta.
+
+**Criterios de éxito:**
+- Explica correctamente el almacenamiento columnar y la lectura selectiva de columnas como razón de la eficiencia.
+
+### Ejercicio 3: Cómo reducir el costo de Athena con particiones
+
+**Enunciado:** ¿cómo reduces el costo de Athena con particiones?
+
+**Solución esperada:** organizando los datos físicamente en carpetas separadas de S3 según una columna de alta relevancia para el patrón de consulta habitual (como fecha), permitiendo que Athena aplique partition pruning e ignore por completo las particiones fuera del rango de filtro de la consulta, reduciendo drásticamente los bytes escaneados.
+
+**Criterios de éxito:**
+- Explica correctamente el partition pruning y la reducción de bytes escaneados como el mecanismo de reducción de costo.
+
+---
+
+## Resumen del módulo
+
+**Puntos clave**
+
+- Un data lake almacena datos crudos en S3 con schema-on-read; Glue Catalog provee los metadatos necesarios para consultarlos estructuradamente.
+- Un Glue Crawler descubre automáticamente el esquema de los datos, especialmente valioso cuando el formato evoluciona con el tiempo.
+- Athena ejecuta SQL directamente sobre S3 sin servidor persistente, cobrando según los bytes efectivamente escaneados.
+- Parquet (columnar, comprimido) y las particiones con partition pruning reducen drásticamente el costo y latencia de las consultas analíticas.
+
+**Conceptos aprendidos**
+
+- Data lake.
+- Parquet vs CSV.
+- Glue Catalog.
+- Glue Crawler.
+- Athena Workgroup.
+- Partition pruning.
+- Compresión.
+
+**Próximos pasos**
+
+En el Módulo 20 aprenderás IA generativa y procesamiento de documentos con Bedrock, Textract y Transcribe, entendiendo cómo probar contratos de IA sin depender de un modelo real.
+
+**Recursos adicionales**
+
+- Documentación oficial de Amazon Athena (docs.aws.amazon.com/athena).

@@ -1,0 +1,183 @@
+# Módulo 17: Streaming: Kinesis, MSK (Kafka) y Pub/Sub avanzado
+
+## Sílabo
+
+**Objetivo general**
+
+Procesar flujos de millones de eventos por segundo, entendiendo la diferencia fundamental entre colas (SQS, un mensaje consumido y eliminado) y streams (Kinesis/Kafka, un registro persistente que múltiples consumidores pueden leer independientemente manteniendo su propia posición).
+
+**Objetivos específicos**
+
+1. Crear un data stream de Kinesis con múltiples shards y producir/consumir registros.
+2. Crear un cluster MSK (Kafka gestionado) y producir/consumir mensajes.
+3. Comparar los períodos de retención y garantías de orden de Kinesis frente a SQS.
+4. Implementar un consumidor que mantiene su posición (offset) en Kafka.
+
+**Contenido**
+
+- Shard.
+- Partition key.
+- Consumer group.
+- Offset.
+- Retention period.
+- Compaction.
+- Backpressure.
+
+**Evaluación**
+
+Pipeline de streaming que ingiere eventos de Kinesis, los procesa con Lambda y los almacena en S3, más tres ejercicios de evaluación.
+
+---
+
+## Contenido teórico
+
+### Tema 1: Streams vs colas
+
+**Conceptos clave:** un registro persistente leído por múltiples consumidores independientes, no un mensaje que se elimina al consumirse.
+
+```bash
+aws kinesis create-stream --stream-name mi-stream --shard-count 2
+aws kinesis put-record --stream-name mi-stream --partition-key user-001 --data $(echo -n "evento-1" | base64)
+```
+
+Kinesis (y Kafka de forma conceptualmente similar) retiene los registros publicados durante un período de retención configurado (hasta 7 días en Kinesis, comparado con hasta 14 días en SQS), y **múltiples consumidores independientes pueden leer el mismo stream completo, cada uno manteniendo su propia posición de lectura (offset) sin afectar a los demás consumidores**; esto contrasta fundamentalmente con SQS, donde un mensaje se elimina de la cola una vez que un consumidor lo procesa exitosamente, de modo que dos consumidores distintos compiten por los mismos mensajes en vez de poder leer independientemente el stream completo desde su propio punto de referencia.
+
+Un shard es la unidad de capacidad de un stream de Kinesis (cada shard soporta un throughput específico de escritura y lectura); la `partition-key` determina a qué shard específico se enruta cada registro (registros con la misma partition key van consistentemente al mismo shard, preservando el orden relativo entre ellos), de forma análoga al concepto de partición en Kafka, donde el orden se garantiza dentro de una partición específica, no a través del stream completo.
+
+**Analogía:** una cola SQS es como una fila de atención al público donde cada solicitud es atendida por un único empleado y luego desaparece de la fila; un stream de Kinesis/Kafka es como una grabación de video que múltiples espectadores independientes pueden reproducir desde el punto donde cada uno se quedó, sin que un espectador "consuma" o elimine el video para los demás.
+
+**¿Por qué es importante?** Kinesis/Kafka permiten que múltiples consumidores independientes lean el mismo stream completo manteniendo su propia posición, a diferencia de SQS donde un mensaje se elimina al ser consumido por un único consumidor competitivo, una diferencia fundamental de modelo que determina cuándo cada uno es la herramienta correcta.
+
+**Diagrama:**
+
+```
+SQS: mensaje consumido por UN consumidor → eliminado de la cola
+Kinesis/Kafka: registro persiste durante el retention period → múltiples consumidores leen independientemente, cada uno con su propio offset
+```
+
+### Tema 2: MSK (Kafka gestionado) y consumer groups
+
+**Conceptos clave:** posición de lectura persistida por grupo de consumidores, no por consumidor individual aislado.
+
+```bash
+aws kafka create-cluster --cluster-name mi-kafka --broker-node-group-info '{"InstanceType":"kafka.m5.large", ...}' --number-of-broker-nodes 1 --kafka-version "3.5.1"
+```
+
+MSK (Managed Streaming for Kafka) gestiona un cluster de Kafka real como servicio administrado, ahorrando la operación manual de brokers Kafka propios; un consumer group es un conjunto de consumidores que colaboran para procesar las particiones de un topic de Kafka, cada partición asignada exclusivamente a un único consumidor dentro de ese grupo específico en un momento dado (permitiendo paralelizar el procesamiento entre múltiples consumidores del mismo grupo), mientras que el offset (la posición de lectura) se rastrea por consumer group, permitiendo que un consumidor que se reinicia recupere su posición exacta de lectura anterior dentro de ese grupo, sin reprocesar mensajes ya consumidos ni saltarse mensajes pendientes.
+
+Un consumer group existe precisamente para permitir escalar horizontalmente el procesamiento de un stream de alto volumen distribuyendo las particiones entre múltiples instancias de consumidor que trabajan en paralelo dentro del mismo grupo lógico, mientras distintos consumer groups completamente independientes pueden leer el mismo topic de forma totalmente aislada entre sí (por ejemplo, un grupo procesa eventos para analítica mientras otro grupo completamente separado los procesa para notificaciones, sin que ninguno de los dos afecte la posición de lectura del otro).
+
+**Analogía:** un consumer group es como un equipo de trabajadores que se dividen las secciones de un archivo extenso para procesarlo en paralelo, cada trabajador recordando exactamente hasta dónde llegó en su sección asignada específica, de modo que si un trabajador se detiene y reanuda su tarea más tarde, continúa exactamente desde donde se quedó sin repetir ni saltarse trabajo, sin interferir con otros equipos completamente distintos que procesan el mismo archivo original con un propósito diferente.
+
+**¿Por qué es importante?** El offset rastreado por consumer group permite que un consumidor que se reinicia recupere exactamente su posición de lectura anterior sin reprocesar ni saltarse mensajes, y permite paralelizar el procesamiento entre múltiples consumidores del mismo grupo mientras distintos grupos leen el mismo topic de forma completamente independiente.
+
+**Diagrama:**
+
+```
+Topic con 3 particiones
+Consumer Group A: Consumidor 1 (partición 0), Consumidor 2 (partición 1,2)
+Consumer Group B (independiente): lee las mismas particiones con su propio offset, sin afectar al Group A
+```
+
+### Tema 3: Kinesis Data Streams vs Firehose, y GCP Managed Kafka
+
+**Conceptos clave:** streaming de bajo nivel con control fino frente a entrega automatizada hacia un destino final.
+
+Kinesis Data Streams (lo estudiado en este módulo) da control de bajo nivel sobre cómo se leen y procesan los registros, apropiado cuando la aplicación necesita lógica de procesamiento personalizada en tiempo real sobre cada evento; Kinesis Data Firehose, en cambio, es un servicio de entrega completamente gestionado que automáticamente transporta registros desde un stream hacia un destino final (S3, un data warehouse, un servicio de búsqueda) con transformaciones opcionales configurables, sin que el desarrollador escriba código de consumidor personalizado para ese caso de uso específico de "simplemente mover datos de A a B con alguna transformación estándar", una distinción similar a la de "control fino vs conveniencia gestionada" ya vista entre EC2/contenedores y Lambda.
+
+GCP Managed Kafka (basado en Redpanda, una implementación compatible con el protocolo de Kafka) ofrece un servicio conceptualmente equivalente en el ecosistema GCP, reforzando que streaming de alto volumen con consumer groups y particiones es un patrón universal de la industria, disponible con implementaciones específicas en cada proveedor cloud mayor, aunque los detalles operativos y de API varíen entre ellos.
+
+**Analogía:** Kinesis Data Streams es como recibir directamente el flujo de correspondencia entrante para procesarla personalmente según reglas propias específicas; Kinesis Data Firehose es como contratar un servicio de reenvío automático que entrega esa misma correspondencia directamente a un archivo final predeterminado sin necesidad de procesarla manualmente en el camino, apropiado cuando el objetivo es simplemente el almacenamiento final, no un procesamiento personalizado intermedio.
+
+**¿Por qué es importante?** Kinesis Data Streams ofrece control fino de bajo nivel para procesamiento personalizado en tiempo real; Kinesis Data Firehose automatiza la entrega hacia un destino final sin código de consumidor personalizado, apropiado cuando el objetivo es simplemente transportar datos con alguna transformación estándar.
+
+**Diagrama:**
+
+```
+Kinesis Data Streams  → control fino, procesamiento personalizado en tiempo real
+Kinesis Data Firehose → entrega automatizada gestionada hacia S3/warehouse, sin código de consumidor propio
+```
+
+---
+
+## Laboratorio práctico
+
+**Objetivo del laboratorio:** construir un pipeline de streaming que ingiere eventos de Kinesis, los procesa con Lambda y los almacena en S3.
+
+**Requisitos previos:** Módulo 16 completado.
+
+| Paso | Acción | Comando | Explicación |
+|---|---|---|---|
+| 1 | Crear un data stream con 2 shards | `aws kinesis create-stream --shard-count 2` | Unidad de capacidad |
+| 2 | Producir y consumir registros | `put-record` + `get-shard-iterator` + `get-records` | Con partition key |
+| 3 | Crear un cluster MSK | `aws kafka create-cluster` | Kafka gestionado |
+| 4 | Producir/consumir con consumer group | `kafka-console-producer`/`consumer` | Mantiene su offset |
+| 5 | Comparar retención y orden Kinesis vs SQS | Ver Tema 1 | Documenta las diferencias |
+
+**Verificación:** el laboratorio se considera exitoso si el pipeline procesa correctamente eventos desde Kinesis hacia S3 vía Lambda, y si el consumidor de Kafka recupera correctamente su posición (offset) tras reiniciarse, sin reprocesar ni saltarse mensajes.
+
+**Errores comunes y soluciones**
+
+- **Usar SQS cuando múltiples consumidores independientes necesitan leer el mismo flujo completo de eventos.** Usa Kinesis/Kafka para ese caso.
+- **No mantener el offset del consumidor, perdiendo la posición de lectura tras un reinicio.** Usa consumer groups para persistir esa posición correctamente.
+- **Escribir un consumidor personalizado cuando Kinesis Data Firehose ya resolvería la entrega automatizada necesaria.** Considera Firehose para casos de simple transporte sin procesamiento personalizado.
+
+---
+
+## Ejercicios de evaluación
+
+### Ejercicio 1: Cuándo usar Kinesis sobre SQS
+
+**Enunciado:** ¿cuándo usar Kinesis sobre SQS?
+
+**Solución esperada:** cuando múltiples consumidores independientes necesitan leer el mismo flujo completo de eventos manteniendo cada uno su propia posición, sin que el consumo de uno afecte a los demás, a diferencia de SQS donde un mensaje se elimina al ser consumido por un único consumidor competitivo entre varios.
+
+**Criterios de éxito:**
+- Explica correctamente la lectura independiente por múltiples consumidores como razón de elegir Kinesis sobre SQS.
+
+### Ejercicio 2: Qué es un consumer group y por qué existe
+
+**Enunciado:** ¿qué es un consumer group en Kafka y por qué existe?
+
+**Solución esperada:** es un conjunto de consumidores que colaboran para procesar en paralelo las particiones de un topic, con el offset rastreado por grupo para permitir recuperar la posición de lectura exacta tras un reinicio; existe para permitir escalar horizontalmente el procesamiento distribuyendo particiones entre múltiples consumidores del mismo grupo lógico.
+
+**Criterios de éxito:**
+- Explica correctamente el paralelismo y la persistencia del offset por grupo como razón de existencia.
+
+### Ejercicio 3: Diferencia entre Kinesis Data Streams y Firehose
+
+**Enunciado:** ¿qué diferencia hay entre Kinesis Data Streams y Kinesis Data Firehose?
+
+**Solución esperada:** Data Streams ofrece control de bajo nivel para procesamiento personalizado en tiempo real por un consumidor propio; Data Firehose automatiza la entrega hacia un destino final (S3, warehouse) con transformaciones opcionales, sin necesidad de código de consumidor personalizado.
+
+**Criterios de éxito:**
+- Distingue correctamente el control fino (Streams) de la entrega automatizada gestionada (Firehose).
+
+---
+
+## Resumen del módulo
+
+**Puntos clave**
+
+- Los streams (Kinesis/Kafka) permiten que múltiples consumidores independientes lean el mismo flujo completo, a diferencia de las colas (SQS) donde un mensaje se elimina al ser consumido.
+- El offset rastreado por consumer group permite recuperar la posición de lectura exacta tras un reinicio, sin reprocesar ni saltarse mensajes.
+- Kinesis Data Streams da control fino para procesamiento personalizado; Firehose automatiza la entrega hacia un destino final.
+- MSK y GCP Managed Kafka gestionan Kafka real como servicio administrado, reforzando que streaming de alto volumen es un patrón universal de la industria.
+
+**Conceptos aprendidos**
+
+- Shard.
+- Partition key.
+- Consumer group.
+- Offset.
+- Retention period.
+- Compaction.
+- Backpressure.
+
+**Próximos pasos**
+
+En el Módulo 18 aprenderás autenticación de usuarios con Cognito, implementando registro, login y autorización sin construir tu propio sistema de autenticación.
+
+**Recursos adicionales**
+
+- Documentación oficial de Amazon Kinesis (docs.aws.amazon.com/kinesis).
