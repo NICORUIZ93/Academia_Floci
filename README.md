@@ -98,7 +98,7 @@ Cada tema sigue una estructura simple:
 - Reto.
 - Recursos para seguir.
 
-## Modulos
+## Modulos (app estatica, `web/index.html`)
 
 | Modulo | Enfoque | Proyecto final |
 |---|---|---|
@@ -111,7 +111,7 @@ Cada tema sigue una estructura simple:
 | DevOps | Linux, Git, Docker, Kubernetes, IaC, GitOps y DevSecOps | Pipeline CI/CD |
 | Cloud | AWS, Azure, GCP, Floci, seguridad, observabilidad e IaC | Sistema desplegado en Floci |
 
-## Contenido aplicado
+## Contenido aplicado (app estatica)
 
 El archivo `web/app-data.js` se genera desde el esquema ampliado del libro con:
 
@@ -120,6 +120,33 @@ El archivo `web/app-data.js` se genera desde el esquema ampliado del libro con:
 - Mas de 900 subtemas aplicados dentro de las lecciones.
 - 7 secciones por leccion: objetivo, teoria, practica, profundizacion, errores
   comunes, reto y recursos.
+
+## Tracks de la app Angular (`web/src`)
+
+La version Angular tiene su propio contenido, mas amplio, en formato Markdown
+(`web/public/content/<track>/modulo-N.md`), organizado en 12 tracks y 167
+modulos en total. Cada modulo sigue la misma plantilla: Silabo, Contenido
+teorico, Laboratorio practico, Ejercicios de evaluacion y Resumen. Cada track
+tiene ademas un cuestionario final de 10 preguntas (`/curso/<track>/quiz`).
+
+| Track | Modulos | Enfoque |
+|---|---|---|
+| Cloud Local | 22 | AWS, Azure y GCP en local con Floci (modulos 0-9 base + 10-21 avanzado) |
+| DevOps | 14 | Linux, Git, Docker, CI/CD, Kubernetes, IaC |
+| JavaScript | 13 | Lenguaje, DOM, asincronia, rendimiento |
+| Node.js | 13 | Backend, APIs, bases de datos, produccion |
+| Angular | 14 | Componentes, Signals, routing, SSR, zoneless |
+| React | 13 | Hooks, estado, data fetching, Next.js |
+| Java | 14 | POO, colecciones, concurrencia, JVM moderna |
+| Spring Boot | 13 | REST, JPA, seguridad, microservicios |
+| Kotlin Multiplatform | 12 | Logica compartida entre Android e iOS |
+| Android | 13 | Jetpack Compose, ciclo de vida, Room, Hilt |
+| iOS | 13 | SwiftUI, concurrencia moderna, SwiftData |
+| Flutter | 13 | Widgets, gestion de estado, plataformas nativas |
+
+`scripts/validate.sh` valida automaticamente que el numero de archivos
+Markdown de cada track coincida con los modulos declarados en su fuente
+TypeScript, y que cada cuestionario tenga exactamente 10 preguntas.
 
 Para regenerar el curriculo desde el texto fuente disponible en esta sesion:
 

@@ -24,6 +24,19 @@ const requiredFiles = [
   'examples/go/floci_s3_example.go',
   'examples/rust/floci_s3_example.rs',
   'scripts/validate-floci.sh',
+  'web/src/app/course/course-shell.html',
+  'web/src/app/course/lesson-viewer.ts',
+  'web/src/app/course/lesson-viewer.html',
+  'web/src/app/course/lesson-viewer.scss',
+  'web/src/app/course/lesson-index.html',
+  'web/src/app/course/lab-verification.ts',
+  'web/src/app/course/final-quiz.ts',
+  'web/src/app/course/final-quiz.html',
+  'web/src/app/content.service.ts',
+  'web/src/app/theme.service.ts',
+  'web/src/app/progress.service.ts',
+  'web/src/app/course-data.ts',
+  'web/src/app/course-module.model.ts',
 ];
 
 for (const file of requiredFiles) {
@@ -33,9 +46,19 @@ for (const file of requiredFiles) {
 }
 
 const html = fs.readFileSync('web/index.html', 'utf8');
-const angularStudyHtml = fs.readFileSync('web/src/app/study/study-page.html', 'utf8');
-const angularStudyScss = fs.readFileSync('web/src/app/study/study-page.scss', 'utf8');
-const angularStudyTs = fs.readFileSync('web/src/app/study/study-page.ts', 'utf8');
+// La app Angular se redisenio como lector tipo libro (commit 21d738b); las vistas
+// guiadas de "study-page" ya no existen. Se valida la estructura actual:
+// catalog/course-catalog, course/course-shell, course/lesson-viewer, course/lesson-index.
+const angularCourseShellHtml = fs.readFileSync('web/src/app/course/course-shell.html', 'utf8');
+const angularLessonViewerTs = fs.readFileSync('web/src/app/course/lesson-viewer.ts', 'utf8');
+const angularLessonViewerHtml = fs.readFileSync('web/src/app/course/lesson-viewer.html', 'utf8');
+const angularLessonViewerScss = fs.readFileSync('web/src/app/course/lesson-viewer.scss', 'utf8');
+const angularLabVerification = fs.readFileSync('web/src/app/course/lab-verification.ts', 'utf8');
+const angularFinalQuizTs = fs.readFileSync('web/src/app/course/final-quiz.ts', 'utf8');
+const angularContentService = fs.readFileSync('web/src/app/content.service.ts', 'utf8');
+const angularThemeService = fs.readFileSync('web/src/app/theme.service.ts', 'utf8');
+const angularProgressService = fs.readFileSync('web/src/app/progress.service.ts', 'utf8');
+const angularCourseData = fs.readFileSync('web/src/app/course-data.ts', 'utf8');
 const data = fs.readFileSync('web/app-data.js', 'utf8');
 const app = fs.readFileSync('web/app.js', 'utf8');
 const pasos = fs.readFileSync('web/public/content/es/pasos.md', 'utf8');
@@ -259,21 +282,48 @@ for (const expected of ['flowchart LR', 'sequenceDiagram', 'AWS local :4566', 'A
   }
 }
 
-for (const expected of ['Predicción antes de ejecutar', 'Explicación después de observar', 'Validar evidencia', 'Diagrama visual del paso', 'Documentación oficial', 'commandTokens(currentStep.command)']) {
-  if (!angularStudyHtml.includes(expected)) {
-    throw new Error(`web/src/app/study/study-page.html no contiene ${expected}`);
-  }
+// Modo claro/oscuro y buscador (paleta de comandos), visibles en la barra superior
+// del lector tipo libro.
+if (!angularThemeService.includes("localStorage") || !angularThemeService.includes('toggle')) {
+  throw new Error('web/src/app/theme.service.ts debe persistir el tema en localStorage y exponer toggle()');
+}
+if (!angularCourseShellHtml.includes('paletteService.open()') || !angularCourseShellHtml.includes('themeService.toggle()')) {
+  throw new Error('web/src/app/course/course-shell.html debe exponer buscador y modo claro/oscuro');
+}
+if (!angularProgressService.includes('localStorage') || !angularProgressService.includes('toggleModuleComplete')) {
+  throw new Error('web/src/app/progress.service.ts debe guardar el progreso en localStorage');
 }
 
-for (const expected of ['guidedStepReadyToComplete', 'validateGuidedEvidence', 'commandTokens', 'currentStepDiagram', 'officialDocsForCurrentStep', 'STEP_PREDICTIONS_KEY', 'STEP_EVIDENCE_KEY']) {
-  if (!angularStudyTs.includes(expected)) {
-    throw new Error(`web/src/app/study/study-page.ts no contiene ${expected}`);
-  }
+// Diagramas Mermaid: el contenido markdown se re-empaqueta como <pre class="mermaid">
+// y lesson-viewer.ts lo renderiza con mermaid.run() tras cada cambio de leccion.
+if (!angularContentService.includes('mermaid') || !angularContentService.includes('language-mermaid')) {
+  throw new Error('web/src/app/content.service.ts debe reempaquetar los bloques ```mermaid');
+}
+if (!angularLessonViewerTs.includes("from 'mermaid'") || !angularLessonViewerTs.includes('mermaid.run')) {
+  throw new Error('web/src/app/course/lesson-viewer.ts debe renderizar diagramas Mermaid');
+}
+if (!angularLessonViewerScss.includes('::ng-deep') || !angularLessonViewerScss.includes('pre.mermaid')) {
+  throw new Error('web/src/app/course/lesson-viewer.scss debe estilizar los diagramas Mermaid (con ::ng-deep, ya que el contenido se inserta via innerHTML)');
 }
 
-for (const expected of ['.mobile-menu-button', '.course-sidebar.open', 'position: sticky', 'bottom: 0', 'overflow-x: auto', '.cmd-token-tool', '.active-method', '.flow-diagram', '.verification-panel']) {
-  if (!angularStudyScss.includes(expected)) {
-    throw new Error(`web/src/app/study/study-page.scss no contiene ${expected}`);
+// Verificacion automatica de laboratorios: motor generico que se engancha a
+// cualquier seccion "## Laboratorio practico" con parrafo "Verificacion:".
+if (!angularLessonViewerTs.includes('applyLabVerification')) {
+  throw new Error('web/src/app/course/lesson-viewer.ts debe invocar applyLabVerification');
+}
+for (const expected of ['Verificación', 'lab-verify', 'Verificar', 'Incorrecto', 'Correcto']) {
+  if (!angularLabVerification.includes(expected)) {
+    throw new Error(`web/src/app/course/lab-verification.ts no contiene ${expected}`);
+  }
+}
+if (!angularLessonViewerScss.includes('.lab-verify')) {
+  throw new Error('web/src/app/course/lesson-viewer.scss debe estilizar el widget .lab-verify');
+}
+
+// Cuestionario final: 10 preguntas por track, ruta /curso/:trackId/quiz.
+for (const expected of ['readonly score', 'submit(): void', 'allAnswered']) {
+  if (!angularFinalQuizTs.includes(expected)) {
+    throw new Error(`web/src/app/course/final-quiz.ts no contiene ${expected}`);
   }
 }
 
@@ -281,7 +331,117 @@ if (fs.existsSync('index.html') || fs.existsSync('academia-floci-simple.html')) 
   throw new Error('No debe haber HTML duplicado en la raiz. Usa web/index.html.');
 }
 
+// ── App Angular (tracks universitarios) ──────────────────────────────────────
+// Por cada track real, el numero de archivos web/public/content/<track>/modulo-*.md
+// debe coincidir exactamente con el numero de modulos definidos en su fuente
+// TypeScript (cada uno declarado como m(<numero>, ...)), para detectar contenido
+// huerfano o modulos sin redactar.
+const TRACK_SOURCES = {
+  cloud: 'web/src/app/course-data.ts',
+  devops: 'web/src/app/tracks/devops.track.ts',
+  javascript: 'web/src/app/tracks/javascript.track.ts',
+  node: 'web/src/app/tracks/node.track.ts',
+  angular: 'web/src/app/tracks/angular.track.ts',
+  react: 'web/src/app/tracks/react.track.ts',
+  java: 'web/src/app/tracks/java.track.ts',
+  'spring-boot': 'web/src/app/tracks/spring-boot.track.ts',
+  'kotlin-multiplatform': 'web/src/app/tracks/kotlin-multiplatform.track.ts',
+  android: 'web/src/app/tracks/android.track.ts',
+  ios: 'web/src/app/tracks/ios.track.ts',
+  flutter: 'web/src/app/tracks/flutter.track.ts',
+};
+
+const trackIdsInData = [...angularCourseData.matchAll(/id:\s*'([a-z-]+)'/g)].map((m) => m[1]);
+for (const trackId of Object.keys(TRACK_SOURCES)) {
+  if (!trackIdsInData.includes(trackId)) {
+    throw new Error(`web/src/app/course-data.ts no registra el track '${trackId}' en TRACKS`);
+  }
+}
+if (trackIdsInData.length !== Object.keys(TRACK_SOURCES).length) {
+  throw new Error(`TRACKS debe tener ${Object.keys(TRACK_SOURCES).length} tracks. Encontrados=${trackIdsInData.length}`);
+}
+
+for (const [trackId, sourceFile] of Object.entries(TRACK_SOURCES)) {
+  const source = fs.readFileSync(sourceFile, 'utf8');
+  const definedModules = (source.match(/^\s*m\(\d+,/gm) || []).length;
+  const contentDir = `web/public/content/${trackId}`;
+  const moduleFiles = fs.existsSync(contentDir)
+    ? fs.readdirSync(contentDir).filter((f) => /^modulo-\d+\.md$/.test(f)).length
+    : 0;
+  if (definedModules === 0) {
+    throw new Error(`${sourceFile} no define ningun modulo m(...)`);
+  }
+  if (moduleFiles !== definedModules) {
+    throw new Error(`El track '${trackId}' define ${definedModules} modulos en ${sourceFile} pero tiene ${moduleFiles} archivos en ${contentDir}/`);
+  }
+  for (const [heading, required] of [
+    ['## Sílabo', true],
+    ['## Contenido teórico', true],
+    ['## Resumen del módulo', true],
+  ]) {
+    const missing = [];
+    for (let i = 0; i < moduleFiles; i += 1) {
+      const file = `${contentDir}/modulo-${i}.md`;
+      if (!fs.existsSync(file)) { missing.push(i); continue; }
+      const content = fs.readFileSync(file, 'utf8');
+      if (!content.includes(heading)) missing.push(i);
+    }
+    if (missing.length) {
+      throw new Error(`Track '${trackId}': faltan modulos sin '${heading}': ${missing.join(', ')}`);
+    }
+  }
+}
+
+// Cuestionario final: 10 preguntas por track, con las 12 tracks cubiertas.
+const TRACK_QUIZ_NAMES = {
+  cloud: 'CLOUD_QUIZ',
+  devops: 'DEVOPS_QUIZ',
+  javascript: 'JAVASCRIPT_QUIZ',
+  node: 'NODE_QUIZ',
+  angular: 'ANGULAR_QUIZ',
+  react: 'REACT_QUIZ',
+  java: 'JAVA_QUIZ',
+  'spring-boot': 'SPRING_BOOT_QUIZ',
+  'kotlin-multiplatform': 'KOTLIN_MULTIPLATFORM_QUIZ',
+  android: 'ANDROID_QUIZ',
+  ios: 'IOS_QUIZ',
+  flutter: 'FLUTTER_QUIZ',
+};
+
+let totalQuizQuestions = 0;
+for (const [trackId, quizName] of Object.entries(TRACK_QUIZ_NAMES)) {
+  if (!angularCourseData.includes(`quiz: ${quizName}`)) {
+    throw new Error(`El track '${trackId}' no tiene 'quiz: ${quizName}' asignado en TRACKS`);
+  }
+  const re = new RegExp(`export const ${quizName}: QuizQuestion\\[\\] = \\[([\\s\\S]*?)\\n\\];`);
+  const match = angularCourseData.match(re);
+  if (!match) {
+    throw new Error(`No se encontro la declaracion de ${quizName} en web/src/app/course-data.ts`);
+  }
+  const questionCount = (match[1].match(/\{\s*question:/g) || []).length;
+  if (questionCount !== 10) {
+    throw new Error(`${quizName} debe tener 10 preguntas. Encontradas=${questionCount}`);
+  }
+  totalQuizQuestions += questionCount;
+}
+
+// Los 3 diagramas Mermaid pedidos (arquitectura, flujo de peticion, comparativa)
+// deben existir en el contenido real del track Cloud.
+const cloudModulo0 = fs.readFileSync('web/public/content/cloud/modulo-0.md', 'utf8');
+const cloudModulo6 = fs.readFileSync('web/public/content/cloud/modulo-6.md', 'utf8');
+const cloudModulo8 = fs.readFileSync('web/public/content/cloud/modulo-8.md', 'utf8');
+if (!cloudModulo0.includes('```mermaid') || !cloudModulo0.includes('flowchart')) {
+  throw new Error('cloud/modulo-0.md debe incluir el diagrama Mermaid de arquitectura de Floci');
+}
+if (!cloudModulo6.includes('```mermaid') || !cloudModulo6.includes('sequenceDiagram')) {
+  throw new Error('cloud/modulo-6.md debe incluir el diagrama Mermaid de flujo de peticion');
+}
+if (!cloudModulo8.includes('| Categoría | AWS | Azure | GCP |')) {
+  throw new Error('cloud/modulo-8.md debe incluir la tabla comparativa AWS vs Azure vs GCP');
+}
+
 console.log(`Validacion OK: app estatica, ${courses.length} modulos, ${fallbackSteps.length} lecciones, ${subtopicCount} subtemas aplicados.`);
+console.log(`Validacion OK: app Angular, ${trackIdsInData.length} tracks, ${totalQuizQuestions} preguntas de cuestionario final.`);
 NODE
 
 python3 scripts/build_repo_graph.py --check
