@@ -1,0 +1,65 @@
+<ng-container *ngIf="track() as t; else notFound">
+  <article class="quiz">
+    <div class="quiz-breadcrumb">
+      <span>{{ t.name }}</span>
+      <span class="sep">/</span>
+      <span>Cuestionario final</span>
+    </div>
+
+    <h1>Cuestionario final</h1>
+    <p class="quiz-description">
+      {{ questions().length }} preguntas para comprobar lo que aprendiste en {{ t.shortName }}. Responde todas y
+      pulsa "Corregir" para ver tu resultado.
+    </p>
+
+    <ol class="quiz-questions">
+      <li *ngFor="let q of questions(); let qi = index" class="quiz-question" [class.correct]="submitted() && isCorrect(qi)" [class.incorrect]="submitted() && !isCorrect(qi)">
+        <p class="quiz-question-text">{{ qi + 1 }}. {{ q.question }}</p>
+        <ul class="quiz-options">
+          <li *ngFor="let option of q.options; let oi = index">
+            <button
+              type="button"
+              class="quiz-option"
+              [class.selected]="answers()[qi] === oi"
+              [class.answer-correct]="submitted() && oi === q.answer"
+              [class.answer-wrong]="submitted() && answers()[qi] === oi && oi !== q.answer"
+              [disabled]="submitted()"
+              (click)="select(qi, oi)"
+            >
+              {{ option }}
+            </button>
+          </li>
+        </ul>
+        <p *ngIf="submitted()" class="quiz-feedback">
+          <ng-container *ngIf="isCorrect(qi); else wrong">
+            <lucide-icon [img]="icons.CircleCheck" /> Correcto
+          </ng-container>
+          <ng-template #wrong>
+            <lucide-icon [img]="icons.CircleX" /> Incorrecto — la respuesta correcta es: {{ q.options[q.answer] }}
+          </ng-template>
+        </p>
+      </li>
+    </ol>
+
+    <footer class="quiz-footer">
+      <ng-container *ngIf="!submitted(); else result">
+        <button class="primary-button" type="button" [disabled]="!allAnswered()" (click)="submit()">Corregir</button>
+        <p *ngIf="!allAnswered()" class="quiz-hint">Responde todas las preguntas para poder corregir.</p>
+      </ng-container>
+      <ng-template #result>
+        <div class="quiz-score">
+          <strong>{{ score() }} / {{ questions().length }}</strong>
+          <span>{{ score() === questions().length ? '¡Puntuación perfecta!' : 'Sigue practicando para mejorar tu puntuación.' }}</span>
+        </div>
+        <button class="ghost-button" type="button" (click)="retry()"><lucide-icon [img]="icons.RotateCcw" /><span>Repetir cuestionario</span></button>
+      </ng-template>
+    </footer>
+  </article>
+</ng-container>
+
+<ng-template #notFound>
+  <div class="quiz-missing">
+    <p>No encontramos este curso.</p>
+    <a [routerLink]="['/curso', track()?.id]">Volver al índice del libro</a>
+  </div>
+</ng-template>

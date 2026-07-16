@@ -19,6 +19,7 @@ export const routes: Routes = [
     loadComponent: () => import('./course/course-shell').then(m => m.CourseShellComponent),
     children: [
       { path: '', pathMatch: 'full', redirectTo: '0' },
+      { path: 'quiz', loadComponent: () => import('./course/final-quiz').then(m => m.FinalQuizComponent) },
       { path: ':moduleId', loadComponent: () => import('./course/lesson-viewer').then(m => m.LessonViewerComponent) },
     ],
   },

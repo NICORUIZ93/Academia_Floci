@@ -15,17 +15,47 @@
 .lesson-panel { margin:0 0 34px; }
 .lesson-panel > h2 { font:700 19px Inter, sans-serif; color:$ink; margin:0 0 14px; }
 
+// Angular no estampa el atributo de encapsulación en los nodos insertados vía
+// [innerHTML] (el HTML de la lección) ni en los que crea lab-verification.ts con
+// el DOM nativo, así que los selectores descendientes necesitan ::ng-deep para
+// aplicarse: sin él, ninguna de estas reglas alcanzaría ese contenido.
 .lesson-markdown { font-size:15px; line-height:1.7; color:$i3; }
-.lesson-markdown :first-child { margin-top:0; }
-.lesson-markdown h2 { font:700 19px Inter, sans-serif; color:$ink; margin:26px 0 10px; }
-.lesson-markdown h3 { font:700 16px Inter, sans-serif; color:$ink; margin:20px 0 8px; }
-.lesson-markdown pre { background:$code-bg; color:$code-text; padding:14px 16px; border-radius:$rs; overflow-x:auto; font-size:13px; }
-.lesson-markdown code { font-family:'SFMono-Regular',Consolas,monospace; font-size:.92em; }
-.lesson-markdown :not(pre) > code { background:$bg2; padding:1px 5px; border-radius:4px; }
-.lesson-markdown a { color:$p; }
-.lesson-markdown table { width:100%; border-collapse:collapse; display:block; overflow-x:auto; }
-.lesson-markdown th,
-.lesson-markdown td { border:1px solid $bd; padding:8px 10px; text-align:left; vertical-align:top; }
+.lesson-markdown ::ng-deep :first-child { margin-top:0; }
+.lesson-markdown ::ng-deep h2 { font:700 19px Inter, sans-serif; color:$ink; margin:26px 0 10px; }
+.lesson-markdown ::ng-deep h3 { font:700 16px Inter, sans-serif; color:$ink; margin:20px 0 8px; }
+.lesson-markdown ::ng-deep pre { background:$code-bg; color:$code-text; padding:14px 16px; border-radius:$rs; overflow-x:auto; font-size:13px; }
+.lesson-markdown ::ng-deep code { font-family:'SFMono-Regular',Consolas,monospace; font-size:.92em; }
+.lesson-markdown ::ng-deep :not(pre) > code { background:$bg2; padding:1px 5px; border-radius:4px; }
+.lesson-markdown ::ng-deep a { color:$p; }
+.lesson-markdown ::ng-deep table { width:100%; border-collapse:collapse; display:block; overflow-x:auto; }
+.lesson-markdown ::ng-deep th,
+.lesson-markdown ::ng-deep td { border:1px solid $bd; padding:8px 10px; text-align:left; vertical-align:top; }
+
+.lesson-markdown ::ng-deep pre.mermaid {
+  background:$wh; border:1px solid $bd; padding:18px; display:flex; justify-content:center;
+  overflow-x:auto;
+}
+.lesson-markdown ::ng-deep pre.mermaid svg { max-width:100%; }
+
+// ── Verificación de laboratorios: widget inyectado dinámicamente sobre el
+// HTML ya renderizado (ver lab-verification.ts), no forma parte del template. ──
+.lesson-markdown ::ng-deep .lab-verify {
+  margin:18px 0; padding:16px 18px; border:1px solid $bd; border-radius:$rl; background:$bg2;
+}
+.lesson-markdown ::ng-deep .lab-verify h4 { margin:0 0 10px; font:700 14.5px Inter, sans-serif; color:$ink; }
+.lesson-markdown ::ng-deep .lab-verify label { display:block; font-size:12.5px; color:$i3; margin-bottom:6px; }
+.lesson-markdown ::ng-deep .lab-verify textarea {
+  display:block; width:100%; box-sizing:border-box; resize:vertical; border:1px solid $bd2; border-radius:$rs;
+  padding:9px 11px; font:13px/1.5 'SFMono-Regular',Consolas,monospace; color:$ink; background:$wh;
+}
+.lesson-markdown ::ng-deep .lab-verify button {
+  display:block; margin-top:10px; border:none; background:$p; color:#fff; font-size:13px; font-weight:700;
+  padding:9px 16px; border-radius:$rs; cursor:pointer;
+}
+.lesson-markdown ::ng-deep .lab-verify button:hover { background:$ph; }
+.lesson-markdown ::ng-deep .lab-verify-feedback { margin:12px 0 0; font-size:13.5px; line-height:1.5; }
+.lesson-markdown ::ng-deep .lab-verify-feedback.ok { color:$g; font-weight:600; }
+.lesson-markdown ::ng-deep .lab-verify-feedback.fail { color:$r; font-weight:600; }
 
 .lesson-skeleton { color:$mu; font-size:14px; }
 

@@ -119,6 +119,19 @@ Entender esta separación por proveedor desde el principio evita una confusión 
    Módulos 1-7          Módulo 8         Módulo 8
 ```
 
+**Diagrama interactivo — arquitectura de Floci corriendo en local:**
+
+```mermaid
+flowchart TB
+  Dev["Tu máquina (Docker Compose)"]
+  Dev --> AWS["Floci — AWS local :4566\nS3 · SQS · DynamoDB · Lambda · API Gateway · IAM"]
+  Dev --> Azure["floci-az — Azure local :4577\nBlob Storage · Queue Storage · Cosmos DB · Functions"]
+  Dev --> GCP["floci-gcp — GCP local :4588\nCloud Storage · Pub/Sub · Firestore · Cloud Functions"]
+  AWS --> Tools["AWS CLI / SDKs apuntando a --endpoint-url local"]
+  Azure --> Tools2["az CLI / SDKs apuntando al emulador local"]
+  GCP --> Tools3["gcloud CLI / SDKs apuntando al emulador local"]
+```
+
 ### Tema 4: Ventajas y limitaciones de practicar con un emulador local
 
 **Conceptos clave:** paridad de comportamiento, fidelidad parcial, límites del emulador, transferencia de conocimiento.

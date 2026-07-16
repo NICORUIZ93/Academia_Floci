@@ -122,6 +122,23 @@ Lambda debe devolver                            Lambda devuelve lo que sea,
 {statusCode, headers, body}                     otra plantilla VTL lo transforma
 ```
 
+**Diagrama interactivo — flujo completo de una petición (integrando lo visto en los Módulos 4 y 5):**
+
+```mermaid
+sequenceDiagram
+  participant Cliente
+  participant APIGW as API Gateway (Floci)
+  participant Lambda as Función Lambda
+  participant DynamoDB
+
+  Cliente->>APIGW: GET /tareas
+  APIGW->>Lambda: invoke (integración proxy, event = petición completa)
+  Lambda->>DynamoDB: get-item / query
+  DynamoDB-->>Lambda: item(s) encontrados
+  Lambda-->>APIGW: {statusCode: 200, body: JSON}
+  APIGW-->>Cliente: respuesta HTTP 200
+```
+
 ### Tema 4: Mapeo de entrada/salida y validación con modelos
 
 **Conceptos clave:** modelo (model), esquema JSON, validación de petición, mapeo de parámetros.

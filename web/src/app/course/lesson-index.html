@@ -14,4 +14,9 @@
       <span class="lesson-index-title">{{ module.shortTitle }}</span>
     </a>
   </div>
+
+  <a class="lesson-index-item lesson-index-quiz" [routerLink]="['/curso', trackId, 'quiz']" routerLinkActive="active">
+    <lucide-icon [img]="icons.CircleQuestionMark" />
+    <span class="lesson-index-title">Cuestionario final</span>
+  </a>
 </nav>

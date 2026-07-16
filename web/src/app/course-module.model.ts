@@ -14,6 +14,12 @@ export interface CourseModule {
   clouds?: ('aws' | 'azure' | 'gcp')[];
 }
 
+export interface QuizQuestion {
+  question: string;
+  options: string[];
+  answer: number;
+}
+
 export interface Track {
   id: string;
   name: string;
@@ -22,6 +28,7 @@ export interface Track {
   color: string;
   icon: string;
   modules: CourseModule[];
+  quiz: QuizQuestion[];
 }
 
 export const createModule = (

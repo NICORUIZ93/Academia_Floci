@@ -121,6 +121,35 @@ Serverless           Lambda           Azure Functions      Cloud Functions
                      (muy similares entre los tres en propuesta de valor central)
 ```
 
+**Tabla comparativa completa — servicio equivalente por categoría:**
+
+| Categoría | AWS | Azure | GCP |
+|---|---|---|---|
+| Almacenamiento de objetos | S3 (puerto 4566) | Blob Storage (puerto 4577) | Cloud Storage (puerto 4588) |
+| Colas de mensajes | SQS | Service Bus Queues (AMQP 5673) | Pub/Sub + Cloud Tasks |
+| Base de datos NoSQL | DynamoDB | Cosmos DB | Firestore / Datastore |
+| Secretos y credenciales | Secrets Manager + KMS | Key Vault (puerto 4577) | Secret Manager (puerto 4588) |
+| Cómputo serverless | Lambda | Azure Functions (HTTP + Timer) | Cloud Functions / Cloud Run |
+| API HTTP / REST | API Gateway v1 y v2 | API Management | Cloud Endpoints |
+| Notificaciones push (fan-out) | SNS | Event Grid | Pub/Sub Topics |
+| Bus de eventos de dominio | EventBridge | Event Hubs (AMQP 5672) | Eventarc |
+| Streaming en tiempo real | Kinesis + MSK (Kafka real) | Event Hubs + Kafka | Pub/Sub + Managed Kafka |
+| Observabilidad y logs | CloudWatch | Azure Monitor | Cloud Monitoring + Logging |
+| Base de datos relacional | RDS (PostgreSQL real) | Azure SQL / PostgreSQL Flexible | Cloud SQL / AlloyDB |
+| Contenedores gestionados | ECS / EKS (Docker real) | AKS / Container Apps | GKE Autopilot / Cloud Run |
+| Infraestructura como código | CloudFormation | Bicep / ARM Templates | Deployment Manager / Terraform |
+| Orquestación de flujos | Step Functions | Logic Apps / Durable Functions | Workflows |
+| Autenticación de usuarios | Cognito (OAuth 2.0 real) | Entra ID B2C | Identity Platform |
+| Consultas SQL analíticas | Athena (DuckDB local) | Synapse Serverless | BigQuery |
+| ETL y catálogo de datos | Glue Catalog + Crawler | Data Factory | Dataflow / Data Catalog |
+| IA generativa (LLMs) | Bedrock Runtime (stub local) | Azure OpenAI Service | Vertex AI / Gemini API |
+| OCR / Extracción de documentos | Textract | Document Intelligence | Document AI |
+| Registro de imágenes Docker | ECR | Container Registry | Artifact Registry |
+| Caché en memoria | ElastiCache (Redis real) | Azure Cache for Redis | Memorystore |
+| Configuración externalizada | SSM Parameter Store | App Configuration local | Runtime Configurator |
+| Correo electrónico transaccional | SES | Communication Services | Gmail API (Workspace) |
+| DNS gestionado | Route 53 | Azure DNS | Cloud DNS |
+
 ---
 
 ## Laboratorio práctico
