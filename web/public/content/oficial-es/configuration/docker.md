@@ -120,12 +120,63 @@ Los servicios individuales pueden anular la red con su propia configuración `do
 !!! propina
     En Docker Compose, el nombre de red predeterminado es `<project-name>_default`. Si su archivo de redacción está en un directorio llamado `myapp`, la red es `myapp_default`.
 
+## ejecutándose en Podman (sin raíz)
+
+Floci se ejecuta bajo Podman sin raíz, pero la topología de red de Podman necesita algunos
+configuraciones explícitas que Docker maneja automáticamente. La siguiente configuración
+se sabe que funciona:
+
+```bash
+podman network create floci-net
+
+podman run -d --name floci \
+  --network floci-net \
+  -p 4566:4566 \
+  -v /run/user/$(id -u)/podman/podman.sock:/var/run/docker.sock:z \
+  -e FLOCI_SERVICES_LAMBDA_DOCKER_NETWORK=floci-net \
+  -e FLOCI_HOSTNAME=floci \
+  floci/floci
+```
+
+Qué hace cada configuración y por qué es necesaria:
+
+- **Red con nombre (`floci-net`)**: el puente predeterminado sin raíz no asigna
+  IP accesibles entre contenedores, por lo que los contenedores Lambda generados no pueden alcanzar
+  Floci. Cree una red con nombre y coloque en ella tanto Floci como sus contenedores Lambda.
+- **`FLOCI_SERVICES_LAMBDA_DOCKER_NETWORK=floci-net`** — hace que Floci conecte el
+  Los contenedores Lambda se generan en la misma red con el mismo nombre.
+- **`FLOCI_HOSTNAME=floci`**: le da a Floci un nombre estable que los contenedores Lambda
+  resolver al volver a llamar al tiempo de ejecución API.
+- **`:z` en el soporte del zócalo**: vuelve a etiquetar el zócalo Podman para SELinux. sin
+  Al hacerlo, Floci no puede comunicarse con el socket Podman: creación de contenedor Lambda/ECR
+  errores con `java.io.IOException: Broken pipe` y el sidecar **Floci UI**
+  no se inicia con `java.net.BindException: Permission denied`. Utilice el
+  `:z` en minúsculas (nueva etiqueta compartida) en lugar de `:Z`: el zócalo Podman API está
+  compartido con el servicio Podman, y `:Z` aplica un SELinux privado de contenedor
+  etiqueta que puede impedir el acceso. Si `:z` aún no es suficiente en su host, caiga
+  volver a `--security-opt label=disable`.
+
+!!! consejo "Cuando aún no se puede acceder a la dirección Runtime API"
+    En algunas topologías de red Podman, la dirección Runtime API detectada automáticamente
+    (el host/IP que los contenedores Lambda usan para volver a llamar a Floci) sigue siendo incorrecto,
+    y las invocaciones fallan con `connect ECONNREFUSED <ip>:9200`. Establecer la dirección
+    explícitamente para evitar la detección automática:
+
+    ```bash
+    FLOCI_SERVICES_LAMBDA_DOCKER_HOST_OVERRIDE=floci
+    ```
+
+    Esto obliga a cada contenedor Lambda generado a alcanzar el tiempo de ejecución API en el
+    host dado (aquí el valor `FLOCI_HOSTNAME`), omitiendo el valor de Floci
+    detección automática por completo. Consulte los [documentos Lambda](../services/lambda.md#configuration)
+    para más detalles.
+
 ## Referencia completa
 
 | Variable de entorno | Predeterminado | Descripción |
 |---|---|---|
 | `FLOCI_DOCKER_DOCKER_HOST` | `unix:///var/run/docker.sock` | Zócalo de demonio Docker |
-| `FLOCI_DOCKER_DOCKER_CONFIG_PATH` | _(desarmado)_ | Ruta al directorio que contiene `config.json` |
+| `FLOCI_DOCKER_DOCKER_CONFIG_PATH` | _(desarmado)_ | Ruta al directorio que contiene `config.json` de Docker |
 | `FLOCI_DOCKER_REGISTRY_CREDENTIALS_0__SERVER` | _(desarmado)_ | Nombre de host del registro para la entrada de credenciales 0 |
 | `FLOCI_DOCKER_REGISTRY_CREDENTIALS_0__USERNAME` | _(desarmado)_ | Nombre de usuario para la entrada de credenciales 0 |
 | `FLOCI_DOCKER_REGISTRY_CREDENTIALS_0__PASSWORD` | _(desarmado)_ | Contraseña para entrada de credenciales 0 |

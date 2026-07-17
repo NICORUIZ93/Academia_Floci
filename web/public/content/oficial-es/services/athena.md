@@ -7,21 +7,29 @@ Floci emula Amazon Athena con **ejecución real de SQL** impulsada por un conten
 
 ## Acciones admitidas
 
+<!-- floci:actions:start -->
 | Acción | Descripción |
-|---|---|
+| --- | --- |
 | `StartQueryExecution` | Envía una consulta SQL; ejecutado de forma asincrónica a través de DuckDB |
 | `GetQueryExecution` | Devuelve el estado de la consulta (`QUEUED`, `RUNNING`, `SUCCEEDED`, `FAILED`) |
 | `GetQueryResults` | Devuelve el conjunto de resultados de una consulta completada |
 | `ListQueryExecutions` | Devuelve una lista de ejecuciones de consultas pasadas |
 | `StopQueryExecution` | Cancela una consulta en ejecución |
-| `CreateWorkGroup` | Crea un nuevo grupo de trabajo |
 | `GetWorkGroup` | Devuelve información sobre un grupo de trabajo |
 | `ListWorkGroups` | Lista todos los grupos de trabajo |
+| `CreateWorkGroup` | Crea un nuevo grupo de trabajo |
+| `ListDataCatalogs` | - |
+| `GetDataCatalog` | - |
+| `ListDatabases` | - |
+| `ListTableMetadata` | - |
+| `GetTableMetadata` | - |
+| `DeleteWorkGroup` | Elimina un grupo de trabajo |
+<!-- floci:actions:end -->
 
 ## Cómo funciona
 
 1. **Inicio diferido del sidecar**: en la primera llamada a `StartQueryExecution`, Floci busca una imagen local de `floci/floci-duck:latest` e inicia el contenedor. Las consultas posteriores reutilizan el contenedor en ejecución.
-2. **Inyección DDL Glue**: Floci lee todas las tablas Glue para la base de datos de destino y genera instrucciones `CREATE OR REPLACE VIEW` que asignan cada nombre de tabla a su ubicación S3 a través de DuckDB, `read_parquet`, `read_json_auto` o Funciones `read_csv_auto`: elegidas según la biblioteca de serialización `InputFormat` o SerDe de la tabla.
+2. **Inyección DDL Glue**: Floci lee todas las tablas Glue para la base de datos de destino y genera declaraciones `CREATE OR REPLACE VIEW` que asignan cada nombre de tabla a su ubicación S3 a través de `read_parquet`, `read_json_auto` o `read_parquet` de DuckDB. Funciones `read_csv_auto`: elegidas según la biblioteca de serialización `InputFormat` o SerDe de la tabla.
 3. **Ejecución de consulta**: el SQL del usuario se empaqueta en `COPY (...) TO 's3://...' (FORMAT CSV, HEADER)` y se ejecuta. Los resultados se escriben directamente en la ruta de salida S3.
 4. **Recuperación de resultados**: `GetQueryResults` lee el CSV de S3 y lo devuelve en la forma estándar Athena `ResultSet`.
 
@@ -41,7 +49,7 @@ La función de lectura DuckDB se elige del `StorageDescriptor` de la tabla Glue:
 | Propiedad | Predeterminado | Descripción |
 |---|---|---|
 | `FLOCI_SERVICES_ATHENA_MOCK` | `false` | Establezca en `true` para deshabilitar la ejecución de DuckDB: las consultas se realizan inmediatamente con resultados vacíos |
-| `FLOCI_SERVICES_DUCK_DEFAULT_IMAGE` | `floci/floci-duck:latest` | Imagen del sidecar DuckDB retirada en el primer uso |
+| `FLOCI_SERVICES_DUCK_DEFAULT_IMAGE` | `floci/floci-duck:latest` | Imagen del sidecar DuckDB eliminada en el primer uso |
 | `FLOCI_SERVICES_DUCK_URL` | *(desarmado)* | Apunte a una instancia floci-duck existente y omita la administración de contenedores |
 
 Ejemplo ##: consulta sencilla

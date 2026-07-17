@@ -1,15 +1,27 @@
 # Neptune
 
-**Protocolo:** Consulta (XML) para gestión API + Gremlin / HTTP para plano de datos
+**Protocolo:** Consulta (XML) para gestión API + Gremlin / HTTP / Bolt para plano de datos
 **Punto final de gestión:** `POST http://localhost:4566/`
-**Punto final de datos:** `localhost:<proxy-port>` (TCP / WebSocket)
+**Punto final de datos:** `localhost:<proxy-port>` (TCP / WebSocket / Bolt)
 
-Floci administra contenedores reales [Apache TinkerPop Gremlin Server](https://tinkerpop.apache.org/) Docker y conexiones proxy a ellos, proporcionando una emulación de Neptune compatible con API para desarrollo y pruebas locales.
+Floci administra contenedores Docker de bases de datos de gráficos reales y conexiones proxy a ellos, proporcionando una emulación de Neptune compatible con API para desarrollo y pruebas locales.
 
-## Acciones admitidas
+## Motor trasero (`db-type`)
 
+Neptune admite múltiples lenguajes de consulta. Floci respalda cada uno con un contenedor diferente y representa el protocolo de conexión coincidente, seleccionado globalmente a través de `FLOCI_SERVICES_NEPTUNE_DB_TYPE` (reflejando el `NEPTUNE_DB_TYPE` de LocalStack):
+
+| `db-type` | Imagen de fondo | Idioma de consulta | Protocolo de cable |
+|-----------|---------------|----------------|---------------|
+| `gremlin` _(predeterminado)_ | [Servidor Apache TinkerPop Gremlin](https://tinkerpop.apache.org/) | duendecillo | WebSocket |
+| `neo4j` | [Neo4j](https://neo4j.com/) | openCypher | Perno |
+
+El proxy es una retransmisión de bytes transparente, por lo que el rango de puertos del proxy orientado al host no cambia independientemente del motor; solo difiere el protocolo con el que se conecta. Conéctese al puerto proxy de un clúster (del rango `8182`–`8282`, devuelto por `DescribeDBClusters`), no al puerto nativo del backend. El backend de Neo4j se ejecuta con `NEO4J_AUTH=none`, coincidiendo con el modelo de autenticación de Neptune en el borde AWS (IAM) en lugar de en el protocolo gráfico; conecte su controlador Bolt/openCypher sin autenticación.
+
+## Acciones compatibles con
+
+<!-- floci:actions:start -->
 | Acción | Descripción |
-|--------|-------------|
+| --- | --- |
 | `CreateDBCluster` | Cree un clúster Neptune e inicie un contenedor de Gremlin Server |
 | `DescribeDBClusters` | Listar clústeres y sus detalles de conexión |
 | `DeleteDBCluster` | Detener y eliminar un clúster |
@@ -18,6 +30,7 @@ Floci administra contenedores reales [Apache TinkerPop Gremlin Server](https://t
 | `DescribeDBInstances` | Listar instancias |
 | `DeleteDBInstance` | Eliminar una instancia de un clúster |
 | `ModifyDBInstance` | Actualizar configuración de instancia |
+<!-- floci:actions:end -->
 
 ## Configuración
 
@@ -25,11 +38,13 @@ Floci administra contenedores reales [Apache TinkerPop Gremlin Server](https://t
 |----------|---------|-------------|
 | `FLOCI_SERVICES_NEPTUNE_ENABLED` | `true` | Activar o desactivar Neptune |
 | `FLOCI_SERVICES_NEPTUNE_PROXY_BASE_PORT` | `8182` | Primer puerto de host en el rango de proxy Gremlin |
-| `FLOCI_SERVICES_NEPTUNE_PROXY_MAX_PORT` | `8282` | Último puerto de host en el rango de proxy de Gremlin |
-| `FLOCI_SERVICES_NEPTUNE_DEFAULT_IMAGE` | `tinkerpop/gremlin-server:3.7.3` | Imagen del servidor Gremlin Docker |
+| `FLOCI_SERVICES_NEPTUNE_PROXY_MAX_PORT` | `8282` | Último puerto de host en el rango de proxy |
+| `FLOCI_SERVICES_NEPTUNE_DB_TYPE` | `gremlin` | Motor backend: `gremlin` (Gremlin/WebSocket) o `neo4j` (openCypher/Bolt) |
+| `FLOCI_SERVICES_NEPTUNE_DEFAULT_IMAGE` | `tinkerpop/gremlin-server:3.7.3` | Imagen utilizada cuando `db-type=gremlin` |
+| `FLOCI_SERVICES_NEPTUNE_DEFAULT_NEO4J_IMAGE` | `neo4j:5-community` | Imagen utilizada cuando `db-type=neo4j` |
 | `FLOCI_SERVICES_NEPTUNE_DOCKER_NETWORK` | _(valor predeterminado del host)_ | Red Docker para conectividad de contenedores |
 
-### Docker Componer
+### Docker Redactar
 
 Neptune requiere que el socket Docker y el rango de puertos proxy Gremlin estén expuestos. El primer grupo afirma `PROXY_BASE_PORT`; cada clúster adicional incrementa el puerto.
 
@@ -103,6 +118,25 @@ result = gremlin.submit("g.V().valueMap(true)").all().result()
 print(result)
 
 gremlin.close()
+```
+
+### Plano de datos gráficos: openCypher (Python + controlador neo4j)
+
+Inicie Floci con `FLOCI_SERVICES_NEPTUNE_DB_TYPE=neo4j`, luego conéctese con cualquier Bolt
+controlador y ejecute openCypher:
+
+```python
+from neo4j import GraphDatabase
+
+# Use the port returned by DescribeDBClusters; no auth (NEO4J_AUTH=none)
+driver = GraphDatabase.driver("bolt://localhost:8182", auth=None)
+
+with driver.session() as session:
+    session.run("CREATE (:Person {name: 'Alice'})")
+    count = session.run("MATCH (p:Person) RETURN count(p) AS c").single()["c"]
+    print(count)
+
+driver.close()
 ```
 
 ### Gestión API (Python / boto3)

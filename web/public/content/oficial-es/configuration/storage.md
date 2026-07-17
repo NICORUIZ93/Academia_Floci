@@ -46,6 +46,8 @@ Cuando no está configurado para un servicio, hereda `FLOCI_STORAGE_MODE`. Anule
 | `FLOCI_STORAGE_SERVICES_SECRETSMANAGER_FLUSH_INTERVAL_MS` | `5000` | Intervalo de descarga de Secrets Manager (ms) |
 | `FLOCI_STORAGE_SERVICES_ACM_MODE` | incumplimiento global | Modo de almacenamiento ACM |
 | `FLOCI_STORAGE_SERVICES_ACM_FLUSH_INTERVAL_MS` | `5000` | Intervalo de descarga ACM (ms) |
+| `FLOCI_STORAGE_SERVICES_APPSYNC_MODE` | incumplimiento global | Modo de almacenamiento AppSync |
+| `FLOCI_STORAGE_SERVICES_APPSYNC_FLUSH_INTERVAL_MS` | `5000` | Intervalo de descarga AppSync (ms) |
 | `FLOCI_STORAGE_SERVICES_OPENSEARCH_MODE` | incumplimiento global | Modo de almacenamiento OpenSearch |
 | `FLOCI_STORAGE_SERVICES_OPENSEARCH_FLUSH_INTERVAL_MS` | `5000` | Intervalo de descarga OpenSearch (ms) |
 | `FLOCI_STORAGE_SERVICES_RDS_MODE` | incumplimiento global | Modo de almacenamiento de metadatos RDS (ver nota a continuación) |

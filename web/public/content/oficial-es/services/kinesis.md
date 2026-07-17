@@ -5,8 +5,9 @@
 
 ## Acciones compatibles con
 
+<!-- floci:actions:start -->
 | Acción | Descripción |
-|---|---|
+| --- | --- |
 | `CreateStream` | Crear una transmisión |
 | `DeleteStream` | Eliminar una secuencia |
 | `ListStreams` | Listar todas las transmisiones |
@@ -17,19 +18,24 @@
 | `DescribeStreamConsumer` | Obtenga detalles del consumidor |
 | `ListStreamConsumers` | Listar consumidores para una transmisión |
 | `SubscribeToShard` | Suscríbase a un fragmento para una distribución mejorada |
+| `AddTagsToStream` | Etiquetar una transmisión |
+| `RemoveTagsFromStream` | Eliminar etiquetas |
+| `ListTagsForStream` | Etiquetas de lista |
+| `StartStreamEncryption` | Habilite el cifrado KMS |
+| `StopStreamEncryption` | Deshabilitar el cifrado |
+| `SplitShard` | Dividir un fragmento en dos |
+| `MergeShards` | Fusionar dos fragmentos adyacentes |
 | `PutRecord` | Escribir un solo registro |
 | `PutRecords` | Escribe hasta 500 registros |
 | `GetShardIterator` | Obtenga un iterador para leer |
 | `GetRecords` | Leer registros de un fragmento |
-| `SplitShard` | Dividir un fragmento en dos |
-| `MergeShards` | Fusionar dos fragmentos adyacentes |
-| `AddTagsToStream` | Etiquetar una transmisión |
-| `RemoveTagsFromStream` | Eliminar etiquetas |
-| `ListTagsForStream` | Etiquetas de lista |
+| `ListShards` | - |
 | `IncreaseStreamRetentionPeriod` | Incrementar la retención hasta 8760 horas (365 días) |
 | `DecreaseStreamRetentionPeriod` | Disminuye la retención hasta 24 horas |
-| `StartStreamEncryption` | Habilite el cifrado KMS |
-| `StopStreamEncryption` | Deshabilitar el cifrado |
+| `EnableEnhancedMonitoring` | - |
+| `DisableEnhancedMonitoring` | - |
+| `UpdateStreamMode` | - |
+<!-- floci:actions:end -->
 
 ## Direccionamiento de flujo
 

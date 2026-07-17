@@ -20,6 +20,21 @@ Una vez que se determina el ID de la cuenta, cada lectura y escritura de almacen
 !!! nota "La misma convención que LocalStack"
     Esta regla de ID de cuenta AKID → de 12 dígitos coincide con el comportamiento de múltiples cuentas de LocalStack, por lo que las configuraciones de prueba de múltiples cuentas existentes funcionan sin cambios.
 
+## Credenciales temporales (AssumeRole)
+
+Las credenciales temporales de STS también se enrutan a la cuenta correcta. Cuando llama a `AssumeRole` (o `AssumeRoleWithWebIdentity`, `AssumeRoleWithSAML`, `GetFederationToken`), Floci emite una clave de acceso temporal a `ASIA…` y recuerda a qué cuenta pertenece:
+
+- **`AssumeRole` / identidad-web / SAML / federación** → la cuenta en el rol (o usuario federado) ARN. Suponiendo que `arn:aws:iam::222222222222:role/Deployer` de la cuenta `111111111111` genera credenciales que se resuelven en **`222222222222`**, por lo que los recursos creados con ellas aterrizan en el espacio de nombres de la cuenta B.
+- **`GetSessionToken`** → la cuenta de la persona que llama (estas credenciales no tienen ningún rol), por lo que permanecen en la misma cuenta.
+
+```
+Account 111111111111 ──AssumeRole arn:aws:iam::222222222222:role/Deployer──▶ ASIA… temp key
+                                                                              │
+ASIA… temp key ──CreateTable orders──▶ stored as 222222222222/...::orders  ◀──┘
+```
+
+Esto hace que el patrón de aprovisionamiento y luego `AssumeRole` entre cuentas (por ejemplo, implementación de CloudFormation en una cuenta de destino) funcione localmente exactamente como lo hace en AWS. La prioridad de resolución es: **AKID de 12 dígitos → ID de cuenta; de lo contrario, búsqueda de sesión temporal → `FLOCI_DEFAULT_ACCOUNT_ID`.**
+
 ## Comportamiento predeterminado de (cuenta única)
 
 Si utiliza credenciales que no sean de 12 dígitos (por ejemplo, `test`, `AKIA…`), todas las solicitudes se resuelven en el ID de cuenta predeterminado:

@@ -5,11 +5,19 @@
 
 ## Acciones compatibles con
 
+<!-- floci:actions:start -->
 | Acción | Descripción |
-|---|---|
+| --- | --- |
 | `CreateKey` | Cree una nueva clave KMS |
+| `GenerateRandom` | Generar bytes aleatorios |
+| `GetPublicKey` | Obtenga material de clave pública para claves asimétricas |
 | `DescribeKey` | Obtener metadatos clave |
 | `ListKeys` | Listar todas las claves |
+| `CreateGrant` | Crear una concesión para una clave KMS |
+| `ListGrants` | Lista de subvenciones para una clave KMS |
+| `ListRetirableGrants` | Lista de subvenciones retirables por un principal |
+| `RevokeGrant` | Revocar (eliminar administrativamente) una concesión |
+| `RetireGrant` | Retirar una subvención (basada en token o clave+subvención) |
 | `Encrypt` | Cifrar texto sin formato con una clave |
 | `Decrypt` | Descifrar texto cifrado |
 | `ReEncrypt` | Volver a cifrar con una clave diferente |
@@ -17,6 +25,8 @@
 | `GenerateDataKeyWithoutPlaintext` | Generar sólo la clave de datos cifrados |
 | `Sign` | Firmar un mensaje con clave asimétrica |
 | `Verify` | Verificar una firma |
+| `GenerateMac` | Generar una MAC con una clave HMAC |
+| `VerifyMac` | Verificar una MAC con una clave HMAC |
 | `CreateAlias` | Crear un nombre descriptivo para una clave |
 | `DeleteAlias` | Eliminar un alias |
 | `ListAliases` | Listar todos los alias |
@@ -27,15 +37,14 @@
 | `ListResourceTags` | Etiquetas de lista |
 | `GetKeyPolicy` | Obtenga la política de recursos de una clave |
 | `PutKeyPolicy` | Actualizar la política de recursos de una clave |
+| `UpdateKeyDescription` | Actualizar la descripción de una clave |
 | `GetKeyRotationStatus` | Compruebe si la rotación automática de claves está habilitada |
 | `EnableKeyRotation` | Habilitar la rotación automática de claves (solo claves simétricas) |
 | `DisableKeyRotation` | Desactivar la rotación automática de claves |
+| `EnableKey` | Habilitar una clave |
+| `DisableKey` | Deshabilitar una clave |
 | `RotateKeyOnDemand` | Rotar el material de clave según demanda (solo claves simétricas) |
-| `CreateGrant` | Crear una concesión para una clave KMS |
-| `ListGrants` | Lista de subvenciones para una clave KMS |
-| `ListRetirableGrants` | Lista de subvenciones retirables por un principal |
-| `RevokeGrant` | Revocar (eliminar administrativamente) una concesión |
-| `RetireGrant` | Retirar una subvención (basada en token o clave+subvención) |
+<!-- floci:actions:end -->
 
 ## Alcance del soporte de subvención
 

@@ -81,7 +81,7 @@ Floci emula tuberías EventBridge con los siguientes tipos de origen y destino a
 - Colas de Amazon SQS
 - Transmisiones de Amazon Kinesis
 - Transmisiones de Amazon DynamoDB
-- Temas Kafka (MSK)
+- Temas Kafka (MSK y autogestionados vía `smk://`)
 
 **Objetivos:**
 - Funciones Lambda
@@ -89,3 +89,21 @@ Floci emula tuberías EventBridge con los siguientes tipos de origen y destino a
 - Temas SNS
 - transmisiones Kinesis
 - Máquinas de estado de funciones de paso
+
+## Enriquecimiento
+
+El paso de enriquecimiento opcional de una tubería (`source → filter → enrichment → target`) se emula para
+Enriquecimientos **Lambda**: el lote filtrado se invoca de forma sincrónica (`RequestResponse`) y el
+la respuesta se convierte en la entrada objetivo.
+
+- **Las respuestas vacías omiten el objetivo**, coinciden con AWS: un cuerpo vacío, `null`, `{}` o `[]` consume
+  los registros de origen sin invocar el destino. Una matriz no vacía como `[{}]` todavía invoca el
+  objetivo (con un elemento de carga útil vacío).
+- **Un enriquecimiento de Lambda `FunctionError` falla en el lote**: los registros de origen se enrutan al
+  cola de mensajes fallidos de Pipe en lugar de consumirse silenciosamente.
+- **Tipos de enriquecimiento que no son Lambda** (destinos API, puerta de enlace API, Step Functions Express) son válidos
+  en AWS pero no emulado; una tubería configurada con uno falla el lote al DLQ en lugar de
+  entregando la carga útil no enriquecida.
+- **El enriquecimiento se aplica actualmente solo en la ruta de origen SQS.** Kinesis, DynamoDB Streams y
+  Las fuentes Kafka entregan registros filtrados directamente al destino; un enriquecimiento configurado en aquellos
+  fuentes aún no se ha aplicado.

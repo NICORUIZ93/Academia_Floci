@@ -31,7 +31,7 @@ Floci expone la consulta clásica de Amazon SES API utilizada por los comandos `
 | `UpdateAccountSendingEnabled` | Activar o desactivar el envío a toda la cuenta |
 | `ListVerifiedEmailAddresses` | Listar identidades de correo electrónico verificadas |
 | `DeleteVerifiedEmailAddress` | Eliminar una identidad de correo electrónico verificada |
-| `SetIdentityNotificationTopic` | Almacenar ARN del tema de notificación SNS para una identidad |
+| `SetIdentityNotificationTopic` | Establecer el tema SNS para las notificaciones de rebote/queja/entrega de una identidad |
 | `GetIdentityNotificationAttributes` | Leer la configuración del tema de notificación almacenado |
 | `SetIdentityFeedbackForwardingEnabled` | Alternar reenvío de comentarios para una identidad |
 | `SetIdentityHeadersInNotificationsEnabled` | Alternar encabezados en notificaciones por tipo de notificación |
@@ -45,6 +45,12 @@ Floci expone la consulta clásica de Amazon SES API utilizada por los comandos `
 | `CreateConfigurationSetEventDestination` | Adjuntar un destino de evento a un conjunto de configuración |
 | `UpdateConfigurationSetEventDestination` | Actualizar un destino de evento existente en un conjunto de configuración |
 | `DeleteConfigurationSetEventDestination` | Eliminar un destino de evento de un conjunto de configuración |
+| `UpdateConfigurationSetSendingEnabled` | Habilitar o deshabilitar el envío de correo electrónico a través de un conjunto de configuración |
+| `CreateConfigurationSetTrackingOptions` | Establecer el dominio de redireccionamiento personalizado de seguimiento de aperturas/clics |
+| `UpdateConfigurationSetTrackingOptions` | Cambiar el dominio de redireccionamiento de seguimiento personalizado |
+| `DeleteConfigurationSetTrackingOptions` | Eliminar el dominio de redireccionamiento de seguimiento personalizado |
+| `UpdateConfigurationSetReputationMetricsEnabled` | Habilitar o deshabilitar métricas de reputación para un conjunto de configuración |
+| `PutConfigurationSetDeliveryOptions` | Establecer la política TLS (opciones de entrega) para un conjunto de configuración |
 
 ## Configuración
 
@@ -149,8 +155,7 @@ curl $AWS_ENDPOINT_URL/_aws/ses
 
 - La verificación de identidad se realiza de inmediato; no se requiere ningún DNS real ni un flujo de verificación de la bandeja de entrada.
 - `SendEmail` almacena el cuerpo del texto o el cuerpo HTML como el cuerpo del mensaje capturado.
-- `SetIdentityNotificationTopic` almacena los ARN de los temas SNS y los devuelve a través de `GetIdentityNotificationAttributes`.
-- Los temas de notificación son solo metadatos de configuración; Los eventos de entrega, rebote o queja de SES no se emiten automáticamente.
+- `SetIdentityNotificationTopic` publica en el tema configurado en un evento de rebote/queja/entrega (activado a través de las direcciones del simulador de buzones o la lista de supresión), independientemente de cualquier conjunto de configuración. La carga útil utiliza el formato heredado (`notificationType`, sin `mail.tags`, encabezados solo cuando `SetIdentityHeadersInNotificationsEnabled` está activado).
 - Para REST JSON API, consulte [SES v2](#v2) a continuación.
 
 ## SES v2 (REST JSON) {#v2}
@@ -171,6 +176,7 @@ Además de la consulta clásica API, Floci implementa un subconjunto de SES v2 R
 | `PUT` | `/v2/email/identities/{emailIdentity}/dkim` | `PutEmailIdentityDkimAttributes` |
 | `PUT` | `/v2/email/identities/{emailIdentity}/feedback` | `PutEmailIdentityFeedbackAttributes` |
 | `PUT` | `/v2/email/identities/{emailIdentity}/mail-from` | `PutEmailIdentityMailFromAttributes` |
+| `PUT` | `/v2/email/identities/{emailIdentity}/configuration-set` | `PutEmailIdentityConfigurationSetAttributes` |
 | `POST` | `/v2/email/outbound-emails` | `SendEmail` (simple/sin formato/con plantilla) |
 | `POST` | `/v2/email/outbound-bulk-emails` | `SendBulkEmail` (con plantilla, múltiples destinos) |
 | `GET` | `/v2/email/account` | `GetAccount` |
@@ -191,6 +197,26 @@ Además de la consulta clásica API, Floci implementa un subconjunto de SES v2 R
 | `PUT` | `/v2/email/configuration-sets/{name}/event-destinations/{eventDestinationName}` | `UpdateConfigurationSetEventDestination` |
 | `DELETE` | `/v2/email/configuration-sets/{name}/event-destinations/{eventDestinationName}` | `DeleteConfigurationSetEventDestination` |
 | `PUT` | `/v2/email/configuration-sets/{name}/suppression-options` | `PutConfigurationSetSuppressionOptions` |
+| `PUT` | `/v2/email/configuration-sets/{name}/sending` | `PutConfigurationSetSendingOptions` |
+| `PUT` | `/v2/email/configuration-sets/{name}/reputation-options` | `PutConfigurationSetReputationOptions` |
+| `PUT` | `/v2/email/configuration-sets/{name}/tracking-options` | `PutConfigurationSetTrackingOptions` |
+| `PUT` | `/v2/email/configuration-sets/{name}/delivery-options` | `PutConfigurationSetDeliveryOptions` |
+| `PUT` | `/v2/email/configuration-sets/{name}/archiving-options` | `PutConfigurationSetArchivingOptions` |
+| `PUT` | `/v2/email/configuration-sets/{name}/vdm-options` | `PutConfigurationSetVdmOptions` |
+| `POST` | `/v2/email/dedicated-ip-pools` | `CreateDedicatedIpPool` |
+| `GET` | `/v2/email/dedicated-ip-pools` | `ListDedicatedIpPools` |
+| `GET` | `/v2/email/dedicated-ip-pools/{PoolName}` | `GetDedicatedIpPool` |
+| `DELETE` | `/v2/email/dedicated-ip-pools/{PoolName}` | `DeleteDedicatedIpPool` |
+| `POST` | `/v2/email/contact-lists` | `CreateContactList` |
+| `GET` | `/v2/email/contact-lists` | `ListContactLists` |
+| `GET` | `/v2/email/contact-lists/{ContactListName}` | `GetContactList` |
+| `PUT` | `/v2/email/contact-lists/{ContactListName}` | `UpdateContactList` |
+| `DELETE` | `/v2/email/contact-lists/{ContactListName}` | `DeleteContactList` |
+| `POST` | `/v2/email/contact-lists/{ContactListName}/contacts` | `CreateContact` |
+| `POST` | `/v2/email/contact-lists/{ContactListName}/contacts/list` | `ListContacts` |
+| `GET` | `/v2/email/contact-lists/{ContactListName}/contacts/{EmailAddress}` | `GetContact` |
+| `PUT` | `/v2/email/contact-lists/{ContactListName}/contacts/{EmailAddress}` | `UpdateContact` |
+| `DELETE` | `/v2/email/contact-lists/{ContactListName}/contacts/{EmailAddress}` | `DeleteContact` |
 | `PUT` | `/v2/email/suppression/addresses` | `PutSuppressedDestination` |
 | `GET` | `/v2/email/suppression/addresses/{EmailAddress}` | `GetSuppressedDestination` |
 | `DELETE` | `/v2/email/suppression/addresses/{EmailAddress}` | `DeleteSuppressedDestination` |
@@ -201,7 +227,7 @@ Además de la consulta clásica API, Floci implementa un subconjunto de SES v2 R
 
 Los destinos de eventos del conjunto de configuración se almacenan como configuración. La existencia del objetivo no está validada; Los objetivos faltantes hacen que Floci registre una advertencia y omita ese destino. Cada destino de evento debe especificar exactamente un tipo de destino y al menos un tipo de evento coincidente. Un destino CloudWatch requiere una lista de configuración de dimensiones que no esté vacía y un destino Pinpoint requiere una aplicación ARN.
 
-Floci publica eventos SES en `SnsDestination` solo en esta versión (`KinesisFirehoseDestination` / `EventBridgeDestination` / `CloudWatchDestination` / `PinpointDestination` registran una advertencia y omiten). La carga útil publicada coincide con el formato de notificación AWS SES SNS con un `eventType` externo más `mail` y bloques específicos del tipo de evento. Los eventos se activan cada vez que un conjunto de configuración tiene al menos un destino de evento que coincide con el tipo de evento: deshabilite por destino a través de `EventDestination.Enabled=false` o elimine el destino por completo.
+Floci publica eventos SES en `SnsDestination`, `KinesisFirehoseDestination`, `EventBridgeDestination` y `CloudWatchDestination`. `PinpointDestination` registra una advertencia y la omite. La carga útil publicada sigue el [formato de notificación AWS SES SNS](https://docs.aws.amazon.com/ses/latest/dg/event-publishing-retrieving-sns-contents.html) con un `eventType` externo más `mail` y bloques específicos del tipo de evento. Los eventos se activan cada vez que un conjunto de configuración tiene al menos un destino de evento que coincide con el tipo de evento: deshabilite por destino a través de `EventDestination.Enabled=false` o elimine el destino por completo.
 
 Floci reconoce las [direcciones del simulador de buzones de correo] AWS (https://docs.aws.amazon.com/ses/latest/dg/send-an-email-from-console.html#send-email-simulator) para una emisión determinista de tipo de evento:
 
@@ -214,9 +240,9 @@ Floci reconoce las [direcciones del simulador de buzones de correo] AWS (https:/
 
 Un envío exitoso sin un destinatario de dirección de simulador emite solo el evento `Send`.
 
-Las entradas de la lista de supresión se almacenan por región con `Reason` ∈ {`BOUNCE`, `COMPLAINT`}. En el momento del envío, un destinatario se suprime cuando aparece en la lista de supresión AND. Su `Reason` almacenado está contenido en el `SuppressedReasons` **efectivo** para el envío. La lista efectiva es `SuppressionOptions.SuppressedReasons` del conjunto de configuración (establecido a través de `PutConfigurationSetSuppressionOptions`) cuando está presente; una **lista vacía se conserva como un "filtro sin supresión explícito para este conjunto de configuración"**; de lo contrario, vuelve al nivel de cuenta `AccountSuppressionAttributes.SuppressedReasons` (establecido a través de `PutAccountSuppressionAttributes`, predeterminado `[BOUNCE, COMPLAINT]`). Tras el contrato AWS V2, no existe ninguna acción `GetConfigurationSetSuppressionOptions` dedicada; una vez configurado, el bloque se vuelve a leer a través de la respuesta de `GetConfigurationSet` (el campo se omite cuando la configuración establecida no tiene anulación).
+Las entradas de la lista de supresión se almacenan por región con `Reason` ∈ {`BOUNCE`, `COMPLAINT`}. En el momento del envío, un destinatario se suprime cuando aparece en la lista de supresión AND. Su `Reason` almacenado está contenido en el `SuppressedReasons` **efectivo** para el envío. La lista efectiva es `SuppressionOptions.SuppressedReasons` del conjunto de configuración (establecido a través de `PutConfigurationSetSuppressionOptions`) cuando está presente; una **lista vacía se conserva como un "filtrado sin supresión explícito para este conjunto de configuración"**; de lo contrario, vuelve al nivel de cuenta `AccountSuppressionAttributes.SuppressedReasons` (establecido a través de `PutAccountSuppressionAttributes`, predeterminado `[BOUNCE, COMPLAINT]`). Según el contrato AWS V2, no existe ninguna acción `GetConfigurationSetSuppressionOptions` dedicada; una vez configurado, el bloque se vuelve a leer a través de la respuesta de `GetConfigurationSet` (el campo se omite cuando la configuración establecida no tiene anulación).
 
-Los destinatarios suprimidos se filtran del paso de retransmisión SMTP (los destinatarios no suprimidos en el mismo envío aún llegan a la retransmisión normalmente) y los destinos de eventos del conjunto de configuración reciben un evento sintético `Bounce` o `Complaint` junto con el evento `Send` siempre emitido. La respuesta `SendEmail` API (`200` + `MessageId`), el `SentEmail` almacenado visible en `GET /_aws/ses` y el `mail.destination` del evento publicado conservan la lista de destinatarios original, que coincide con el contrato AWS de que el mensaje es "aceptado, pero no enviado" para suprimido. direcciones.
+Los destinatarios suprimidos se filtran del paso de retransmisión SMTP (los destinatarios no suprimidos en el mismo envío aún llegan a la retransmisión normalmente) y los destinos de eventos del conjunto de configuración reciben un evento sintético `Bounce` o `Complaint` junto con el evento `Send` siempre emitido. La respuesta `SendEmail` API (`200` + `MessageId`), el `SentEmail` almacenado visible en `GET /_aws/ses` y el `mail.destination` del evento publicado conservan la lista de destinatarios original, coincidiendo con el contrato AWS de que el mensaje es "aceptado, solo no enviado" para direcciones suprimidas.
 
 Las operaciones de etiquetas admiten estos formularios ARN: `arn:aws:ses:<region>:<account>:configuration-set/<name>`, `arn:aws:ses:<region>:<account>:template/<name>` y `arn:aws:ses:<region>:<account>:identity/<email-or-domain>`. Las etiquetas suministradas a `CreateConfigurationSet`, `CreateEmailTemplate` y `CreateEmailIdentity` son accesibles a través de `ListTagsForResource`; `UpdateEmailTemplate` no modifica etiquetas. Otros tipos de recursos devuelven `NotFoundException`.
 

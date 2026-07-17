@@ -24,9 +24,9 @@ Floci implementa EC2 Auto Scaling API: administración de estado almacenado para
 
 | Operación | Notas |
 |---|---|
-| `CreateAutoScalingGroup` | Crea un grupo con capacidad mínima/máxima/deseada, AZ y etiquetas; inicia ciclo de reconciliación de capacidad |
-| `DescribeAutoScalingGroups` | Filtrado por lista de nombres; devuelve todo si no hay filtro; incluye lista de instancias actuales con estado de ciclo de vida |
-| `UpdateAutoScalingGroup` | Actualiza límites de capacidad, tiempo de reutilización, configuración de lanzamiento, AZ |
+| `CreateAutoScalingGroup` | Crea un grupo con capacidad mínima/máxima/deseada, zonas de disponibilidad, etiquetas, configuración de lanzamiento, plantilla de lanzamiento o política de instancias mixtas; inicia ciclo de reconciliación de capacidad |
+| `DescribeAutoScalingGroups` | Filtrado por lista de nombres; devuelve todo si no hay filtro; incluye una lista de instancias actual con el estado del ciclo de vida y la forma de la política de instancias mixtas cuando se configura |
+| `UpdateAutoScalingGroup` | Actualiza los límites de capacidad, el tiempo de reutilización, la fuente de lanzamiento y las AZ |
 | `DeleteAutoScalingGroup` | `ForceDelete=true` finaliza todas las instancias antes de eliminarlas |
 
 ### Gestión de instancias
@@ -64,8 +64,8 @@ Floci implementa EC2 Auto Scaling API: administración de estado almacenado para
 
 | Operación | Notas |
 |---|---|
-| `PutScalingPolicy` | Crea o actualiza una política: `SimpleScaling`, `AdjustmentType`, `ScalingAdjustment`, `Cooldown` |
-| `DescribePolicies` | Enumera las políticas filtradas por grupo o nombre de política |
+| `PutScalingPolicy` | Crea o actualiza una política: campos `SimpleScaling` o `TargetTrackingScaling` con métrica predefinida, valor objetivo y calentamiento estimado |
+| `DescribePolicies` | Enumera las políticas filtradas por grupo o nombre de política, incluida la configuración de seguimiento de objetivos almacenados |
 | `DeletePolicy` | Elimina una política de escala |
 
 ### Actividades de
@@ -92,6 +92,22 @@ Floci ejecuta un reconciliador en segundo plano (velocidad fija de 10 s) que man
 - **Scale-out**: llama a `RunInstances` con la configuración de lanzamiento del grupo; las nuevas instancias se rastrean como `Pending` hasta que el estado de EC2 pasa a `running`, momento en el que pasan a `InService` y se registran con todos los grupos objetivo ELB v2 adjuntos.
 - **Ampliación horizontal**: selecciona instancias de InService que no están protegidas de la ampliación horizontal, las cancela del registro de los grupos objetivo y luego llama a `TerminateInstances`.
 - Los registros de actividad se escriben en cada evento de ampliación y ampliación.
+
+## Compatibilidad de fuente de lanzamiento
+
+Los grupos de Auto Scaling conservan una configuración de lanzamiento, una plantilla de lanzamiento de nivel superior o un `MixedInstancesPolicy`. Estas fuentes de lanzamiento son mutuamente excluyentes en las solicitudes de creación/actualización. Cuando se proporciona una política de instancias mixtas, Floci almacena y devuelve:
+
+- `LaunchTemplate.LaunchTemplateSpecification.LaunchTemplateId`
+- `LaunchTemplate.LaunchTemplateSpecification.LaunchTemplateName`
+- `LaunchTemplate.LaunchTemplateSpecification.Version`
+- `LaunchTemplate.Overrides.member.N.InstanceType`
+- `InstancesDistribution.OnDemandBaseCapacity`
+- `InstancesDistribution.OnDemandPercentageAboveBaseCapacity`
+- `InstancesDistribution.SpotAllocationStrategy`
+
+## Compatibilidad de políticas de escalamiento
+
+Las políticas de seguimiento de objetivos preservan `TargetTrackingConfiguration` para métricas predefinidas. `DescribePolicies` devuelve `PredefinedMetricSpecification.PredefinedMetricType`, `TargetValue` y `EstimatedInstanceWarmup` cuando están presentes.
 
 ## Configuración
 

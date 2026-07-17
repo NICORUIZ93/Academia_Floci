@@ -1,8 +1,8 @@
 # Academia Floci Repo Graph
 
-Generated: 2026-07-17 05:16 UTC
+Generated: 2026-07-17 19:14 UTC
 Root: `Academia_Floci`
-Indexed files: 576
+Indexed files: 604
 Import edges: 27
 
 Use this file as the first, compact context for AI assistants. Refresh it with:
@@ -17,15 +17,15 @@ For automated lookups, use `docs/repo-graph.json`.
 
 - `angular-app`: 46 files
 - `automation-script`: 6 files
-- `course-content`: 285 files
-- `documentation`: 80 files
+- `course-content`: 299 files
+- `documentation`: 94 files
 - `example`: 133 files
 - `local-infra`: 1 files
 - `project-file`: 25 files
 
 ## File Types
 
-- `.md`: 356
+- `.md`: 384
 - `.ts`: 32
 - `.py`: 31
 - `.js`: 30
@@ -62,7 +62,7 @@ For automated lookups, use `docs/repo-graph.json`.
   - symbols: CourseShellComponent, track, sidebarOpen, percent
 - `web/src/app/course/lesson-viewer.ts` (191 lines, angular-app)
   - symbols: LessonViewerComponent, TocItem, track, module, moduleIndex, previousModule, nextModule, lessonHtml, lessonLoading, tocItems
-- `web/public/content/manifest.json` (707 lines, course-content)
+- `web/public/content/manifest.json` (819 lines, course-content)
 - `web/public/content/es/pasos.md` (1122 lines, course-content)
   - headings: # 45 pasos de Academia Floci, ## Cursos, ## Paso 1: ¿Qué es Docker?, ## Paso 2: Instalar Docker, ## Paso 3: Verificar Docker
 
@@ -173,7 +173,7 @@ For automated lookups, use `docs/repo-graph.json`.
 - `web/public/content/angular/modulo-0.md` (214 lines) - headings: # Módulo 0: Fundamentos y Angular CLI, ## Sílabo, ## Contenido teórico, ### Tema 1: El CLI ya no genera NgModules
 - `web/public/content/angular/modulo-1.md` (238 lines) - headings: # Módulo 1: Componentes, plantillas y data binding, ## Sílabo, ## Contenido teórico, ### Tema 1: input()/output() basados en signals
 - `web/public/content/angular/modulo-10.md` (189 lines) - headings: # Módulo 10: Testing en Angular, ## Sílabo, ## Contenido teórico, ### Tema 1: TestBed y componentes standalone
-- ... 267 more files
+- ... 281 more files
 
 ### documentation
 
@@ -181,21 +181,21 @@ For automated lookups, use `docs/repo-graph.json`.
 - `docs/METODOLOGIA.md` (67 lines) - headings: # Metodología de Aprendizaje — Academia Floci, ## 1. Principios (basados en evidencia), ## 2. El ciclo de cada lección (regla 20/60/20), ## 3. Ruta por perfil
 - `docs/PLANTILLA-LECCION.md` (110 lines) - headings: # Plantilla de Lección — Prompt Maestro para Claude / Codex, ## PROMPT MAESTRO (copiar desde aquí), ## DATOS DE LA LECCIÓN, ## REGLAS DE ESTILO
 - `web/README.md` (72 lines) - headings: # Web, ## Abrir la academia, ## Que contiene, ## Archivos principales
-- `web/scripts/source-docs-en/configuration/advanced/application-yml.md` (335 lines) - headings: # application.yml Reference, ## URL configuration, ## Full Reference, ### Initialization hooks
+- `web/scripts/source-docs-en/configuration/advanced/application-yml.md` (356 lines) - headings: # application.yml Reference, ## URL configuration, ## Full Reference, ### Initialization hooks
 - `web/scripts/source-docs-en/configuration/application-yml.md` (7 lines) - headings: # application.yml Reference
 - `web/scripts/source-docs-en/configuration/docker-compose.md` (184 lines) - headings: # Running with Docker, ## Quick Start, ## Docker Compose, ### Minimal (stateless)
 - `web/scripts/source-docs-en/configuration/docker-images.md` (103 lines) - headings: # Docker Images, ## Axis 1 — Variant (what's inside), ## Axis 2 — Channel (how stable), ## Full Tag Matrix
-- `web/scripts/source-docs-en/configuration/docker.md` (135 lines) - headings: # Docker Configuration, ## Docker Daemon Socket, ## Private Registry Authentication, ### Mount the host Docker config
-- `web/scripts/source-docs-en/configuration/environment-variables.md` (422 lines) - headings: # Environment Variables Reference, ## Global, ## Authentication, ## Browser CORS
+- `web/scripts/source-docs-en/configuration/docker.md` (186 lines) - headings: # Docker Configuration, ## Docker Daemon Socket, ## Private Registry Authentication, ### Mount the host Docker config
+- `web/scripts/source-docs-en/configuration/environment-variables.md` (439 lines) - headings: # Environment Variables Reference, ## Global, ## Authentication, ## Browser CORS
 - `web/scripts/source-docs-en/configuration/initialization-hooks.md` (186 lines) - headings: # Initialization Hooks, ## Lifecycle Phases, ## Hook Directories, ## Script Types
-- `web/scripts/source-docs-en/configuration/multi-account.md` (161 lines) - headings: # Multi-Account Isolation, ## How It Works, ## Default Behavior (Single Account), ## Enabling Multi-Account Isolation
+- `web/scripts/source-docs-en/configuration/multi-account.md` (176 lines) - headings: # Multi-Account Isolation, ## How It Works, ## Temporary Credentials (AssumeRole), ## Default Behavior (Single Account)
 - `web/scripts/source-docs-en/configuration/ports.md` (165 lines) - headings: # Ports Reference, ## Port Overview, ## Why some ports don't need docker-compose mapping, ### Proxy-in-Floci (ElastiCache, RDS)
-- `web/scripts/source-docs-en/configuration/storage.md` (175 lines) - headings: # Storage Modes, ## Modes, ## Global Configuration, ## Per-Service Override
+- `web/scripts/source-docs-en/configuration/storage.md` (177 lines) - headings: # Storage Modes, ## Modes, ## Global Configuration, ## Per-Service Override
 - `web/scripts/source-docs-en/configuration/tls.md` (177 lines) - headings: # TLS / HTTPS, ## Quick Start, # AWS CLI, # Node.js
 - `web/scripts/source-docs-en/contributing.md` (104 lines) - headings: # Contributing, ## Ways to Help, ## Development Setup, # Clone
 - `web/scripts/source-docs-en/getting-started/aws-setup.md` (144 lines) - headings: # AWS CLI & SDK Setup, ## Environment Variables, ## AWS CLI Profile, ## SDK Configuration
 - `web/scripts/source-docs-en/getting-started/installation.md` (85 lines) - headings: # Installation, ## Docker (Recommended), ### Requirements, ## Image Tags
-- ... 62 more files
+- ... 76 more files
 
 ### example
 
@@ -221,7 +221,7 @@ For automated lookups, use `docs/repo-graph.json`.
 
 ### local-infra
 
-- `docker-compose.yml` (40 lines)
+- `docker-compose.yml` (47 lines)
 
 ### project-file
 

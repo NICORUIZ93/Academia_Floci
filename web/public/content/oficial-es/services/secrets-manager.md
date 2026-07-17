@@ -5,8 +5,9 @@
 
 ## Acciones admitidas por
 
+<!-- floci:actions:start -->
 | Acción | Descripción |
-|---|---|
+| --- | --- |
 | `CreateSecret` | Crear un nuevo secreto |
 | `GetSecretValue` | Recuperar el valor secreto actual |
 | `PutSecretValue` | Actualizar el valor secreto (nueva versión) |
@@ -14,16 +15,18 @@
 | `DescribeSecret` | Obtenga metadatos secretos e información de versión |
 | `ListSecrets` | Listar todos los secretos |
 | `DeleteSecret` | Eliminar un secreto (con ventana de recuperación) |
+| `RestoreSecret` | - |
 | `RotateSecret` | Activar la rotación secreta a través de un Lambda |
-| `ListSecretVersionIds` | Listar todas las versiones de un secreto |
-| `UpdateSecretVersionStage` | Mover una etiqueta provisional entre versiones |
-| `BatchGetSecretValue` | Recuperar múltiples valores secretos en una sola llamada |
-| `GetRandomPassword` | Generar una contraseña aleatoria |
-| `GetResourcePolicy` | Obtenga la política de recursos |
-| `PutResourcePolicy` | Adjuntar una política de recursos |
-| `DeleteResourcePolicy` | Eliminar la política de recursos |
 | `TagResource` | Etiqueta un secreto |
 | `UntagResource` | Eliminar etiquetas |
+| `ListSecretVersionIds` | Listar todas las versiones de un secreto |
+| `GetResourcePolicy` | Obtenga la política de recursos |
+| `GetRandomPassword` | Generar una contraseña aleatoria |
+| `BatchGetSecretValue` | Recuperar múltiples valores secretos en una sola llamada |
+| `DeleteResourcePolicy` | Eliminar la política de recursos |
+| `PutResourcePolicy` | Adjuntar una política de recursos |
+| `UpdateSecretVersionStage` | Mover una etiqueta provisional entre versiones |
+<!-- floci:actions:end -->
 
 ## Configuración
 

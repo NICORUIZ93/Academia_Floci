@@ -10,8 +10,15 @@ services:
       - AWS_ACCESS_KEY_ID=test
       - AWS_SECRET_ACCESS_KEY=test
       - AWS_DEFAULT_REGION=us-east-1
+      # Sin esto, Floci incrusta "localhost" en URLs de respuesta (p. ej. QueueUrl de SQS),
+      # que otros contenedores de este compose (como stackport) no pueden resolver.
+      - FLOCI_HOSTNAME=aws-local
+      # FLOCI_STORAGE_MODE=memory (por defecto) pierde los datos al reiniciar el contenedor.
+      # persistent + FLOCI_STORAGE_PERSISTENT_PATH activan el volumen de abajo.
+      - FLOCI_STORAGE_MODE=persistent
+      - FLOCI_STORAGE_PERSISTENT_PATH=/app/data
     volumes:
-      - ./data/aws:/var/lib/floci
+      - ./data/aws:/app/data
 
   stackport:
     image: davireis/stackport:latest

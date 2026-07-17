@@ -23,6 +23,8 @@ services:
 
 Las variables Floci establecidas explícitamente siempre ganan: la traducción solo completa los valores que no se han establecido. Para deshabilitar la traducción por completo, configure `LOCALSTACK_PARITY=false`.
 
+A menos que la paridad esté deshabilitada, el registro de inicio también termina con una línea `Ready.` estilo LocalStack (además del propio banner de Floci), por lo que las herramientas que observan el registro del contenedor para detectar el mensaje de preparación de LocalStack, como la estrategia de espera predeterminada de `LocalStackContainer` de Testcontainers, funcionan sin una espera personalizada.
+
 ## Migración paso a paso
 
 ### 1 — Cambiar la imagen
@@ -66,7 +68,7 @@ El puerto (`4566`), las credenciales (`test` / `test`) y la configuración de AW
 | `LAMBDA_REMOVE_CONTAINERS=1` | `FLOCI_SERVICES_LAMBDA_EPHEMERAL=true` | Eliminar contenedores Lambda después de la invocación |
 | `USE_SSL=1` | `FLOCI_TLS_ENABLED=true` | Habilite TLS/HTTPS: consulte [TLS / HTTPS](../configuration/tls.md) |
 | `CUSTOM_SSL_CERT_PATH` | `FLOCI_TLS_CERT_PATH` + `FLOCI_TLS_KEY_PATH` | LocalStack acepta un único PEM combinado; Floci lo acepta en ambos campos |
-| `SERVICES` | _(no es necesario)_ | Floci inicia los 41 servicios al instante; no se requiere selección |
+| `SERVICES` | _(no es necesario)_ | Floci inicia los 58 servicios al instante; no se requiere selección |
 | `LAMBDA_EXECUTOR` | _(no es necesario)_ | Floci siempre ejecuta Lambda en contenedores Docker |
 | `LAMBDA_REMOTE_DOCKER` | _(no compatible)_ | Utilice `S3Bucket=hot-reload` por función en su lugar; consulte [Lambda](../services/lambda.md) |
 
@@ -248,6 +250,6 @@ Consulte [S3 → Estilo alojado virtual](../services/s3.md#virtual-hosted-style)
 |---|---|---|
 | Ejecutor Lambda | Configurable (`LAMBDA_EXECUTOR`) | Siempre contenedores Docker |
 | `LAMBDA_REMOTE_DOCKER` | Apoyado | No compatible: utilice `S3Bucket=hot-reload` por función en su lugar |
-| Selección de servicios | `SERVICES=sqs,s3,...` | Los 41 servicios se inician automáticamente; sin selección |
+| Selección de servicios | `SERVICES=sqs,s3,...` | Los 58 servicios se inician automáticamente; sin selección |
 | Directorio de datos | `/var/lib/localstack` | `/app/data` |
 | Variable de registro | `LS_LOG` / `DEBUG` | `QUARKUS_LOG_LEVEL` |

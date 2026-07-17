@@ -4,7 +4,7 @@
 
 ## Modelo de ejecución de instancia
 
-`RunInstances` lanza un **contenedor Docker real** para cada instancia. El contenedor se mantiene activo con `tail -f /dev/null` para que cualquier imagen base funcione independientemente de su CMD predeterminado. El ciclo de vida se asigna directamente a Docker:
+`RunInstances` lanza un **contenedor Docker real** para cada instancia. De forma predeterminada, el contenedor se mantiene activo con `tail -f /dev/null`, por lo que cualquier imagen base funciona independientemente de su CMD predeterminado. Las entradas del catálogo que optan por el tiempo de ejecución invitado `systemd` inician `/sbin/init`, con los montajes Docker necesarios para un invitado de imagen en la nube basado en systemd.
 
 | Estado EC2 | Funcionamiento Docker |
 |---|---|
@@ -18,28 +18,85 @@ Las instancias terminadas permanecen consultables durante 1 hora (que coinciden 
 
 ## Mapeo de imágenes de AMI a Docker
 
-Floci resuelve los ID de AMI en imágenes Docker. Mapeos incorporados:
+Floci resuelve los ID de AMI en imágenes Docker del catálogo de imágenes EC2 en
+`src/main/resources/ec2/image-catalog.yaml`. El mismo catálogo almacena el
+imagen alternativa Docker, asignaciones de imágenes Docker por AMI y `DescribeImages`
+metadatos.
 
-| ID AMI | Imagen Docker |
-|---|---|
-| `ami-amazonlinux2023` | `public.ecr.aws/amazonlinux/amazonlinux:2023` |
-| `ami-amazonlinux2` | `public.ecr.aws/amazonlinux/amazonlinux:2` |
-| `ami-ubuntu2204` | `public.ecr.aws/docker/library/ubuntu:22.04` |
-| `ami-ubuntu2004` | `public.ecr.aws/docker/library/ubuntu:20.04` |
-| `ami-debian12` | `public.ecr.aws/docker/library/debian:12` |
-| `ami-alpine` | `public.ecr.aws/docker/library/alpine:latest` |
+| ID AMI | Alias ​​| Imagen Docker |
+|---|---|---|
+| `ami-0abcdef1234567890` | `ami-amazonlinux2` | `public.ecr.aws/amazonlinux/amazonlinux:2` |
+| `ami-0abcdef1234567891` | `ami-amazonlinux2023` | `public.ecr.aws/amazonlinux/amazonlinux:2023` |
+| `ami-0abcdef1234567892` | `ami-ubuntu2004` | `public.ecr.aws/docker/library/ubuntu:20.04` |
+| `ami-ubuntu2204` | | `public.ecr.aws/docker/library/ubuntu:22.04` |
+| `ami-ubuntu2404-arm64` | `ami-ubuntu2404` | `public.ecr.aws/docker/library/ubuntu:24.04` |
+| `ami-ubuntu2404-amd64` | | `public.ecr.aws/docker/library/ubuntu:24.04` |
+| `ami-ubuntu2404-cloud-arm64` | `ami-ubuntu2404-cloud` | `floci/ami-ubuntu:24.04-arm64` |
+| `ami-debian12` | | `public.ecr.aws/docker/library/debian:12` |
+| `ami-alpine` | | `public.ecr.aws/docker/library/alpine:latest` |
+| `ami-0abcdef1234567893` | | `public.ecr.aws/amazonlinux/amazonlinux:2023` |
 
-Cualquier ID de AMI no reconocida (incluidas las ID de AMI AWS reales como `ami-0abc12345678`) recurre a `public.ecr.aws/amazonlinux/amazonlinux:2023`.
+Cualquier ID de AMI no reconocido (incluidos los ID de AMI AWS reales como `ami-0abc12345678`) vuelve al catálogo `defaultDockerImage` (`public.ecr.aws/amazonlinux/amazonlinux:2023` de forma predeterminada).
+
+### Invitados AMI derivados de imágenes en la nube
+
+La entrada `ami-ubuntu2404-cloud` es una imagen invitada experimental de Ubuntu 24.04 creada a partir de artefactos de imágenes de nube de Canonical, no de la imagen `ubuntu:24.04` de la biblioteca Docker. Está destinado a flujos de trabajo EC2 que necesitan paquetes como `systemd` y `cloud-init` para coincidir más estrechamente con una imagen real de la nube de Ubuntu.
+
+Este modo se activa mediante la selección de AMI, no mediante un interruptor de configuración global.
+Las entradas de catálogo existentes, incluido `ami-ubuntu2404`, mantienen su estado actual.
+Mapeo de imágenes de biblioteca Docker y contenedor `tail -f /dev/null` predeterminado
+ciclo de vida. La entrada derivada de la imagen de la nube es un ID y un alias de AMI separados, por lo que
+`DescribeImages` puede anunciarlo mientras las personas que llaman continúan obteniendo el
+comportamiento anterior a menos que elijan `ami-ubuntu2404-cloud-arm64` o el
+Alias `ami-ubuntu2404-cloud`.
+
+El generador basado en metadatos Java se encuentra en `io.github.hectorvent.floci.tools.ami.AmiImageTool`. Su receta está registrada en `docker/ec2/ami-images/image-build-metadata.yaml` y el contexto/procedencia generado es predeterminado en `target/ami-images/<image-id>/`.
+
+```bash
+./mvnw -q -DskipTests compile exec:java \
+  -Dexec.mainClass=io.github.hectorvent.floci.tools.ami.AmiImageTool \
+  -Dexec.args="plan --image-id ubuntu-24.04-arm64"
+
+./mvnw -q -DskipTests compile exec:java \
+  -Dexec.mainClass=io.github.hectorvent.floci.tools.ami.AmiImageTool \
+  -Dexec.args="generate --image-id ubuntu-24.04-arm64"
+
+./mvnw -q -DskipTests compile exec:java \
+  -Dexec.mainClass=io.github.hectorvent.floci.tools.ami.AmiImageTool \
+  -Dexec.args="build --image-id ubuntu-24.04-arm64"
+
+./mvnw -q -DskipTests compile exec:java \
+  -Dexec.mainClass=io.github.hectorvent.floci.tools.ami.AmiImageTool \
+  -Dexec.args="smoke --image-id ubuntu-24.04-arm64"
+```
 
 ## Inyección de clave SSH
 
-Si se especifica `KeyName` en el inicio, Floci busca el material de clave pública del par de claves almacenado (configurado a través de `ImportKeyPair`) y lo copia en `/root/.ssh/authorized_keys` dentro del contenedor en el arranque. Luego intenta iniciar `sshd` si está presente. El puerto SSH (puerto de contenedor 22) está asignado a un puerto de host del rango configurado (predeterminado 2200–2299).
+Si se especifica `KeyName` en el inicio, Floci busca el material de clave pública del par de claves almacenado (configurado a través de `ImportKeyPair`) y lo copia en `/root/.ssh/authorized_keys` dentro del contenedor en el inicio. Luego intenta iniciar `sshd` si está presente. El puerto SSH (puerto de contenedor 22) está asignado a un puerto de host del rango configurado (predeterminado 2200–2299).
 
 Los pares de claves creados con `CreateKeyPair` contienen material de clave privada ficticia. Importe un par de claves reales con `ImportKeyPair` para permitir el acceso SSH funcional.
 
+## Publicación de puertos del grupo de seguridad
+
+Cuando los grupos de seguridad de una instancia abren un puerto TCP a una fuente CIDR, Floci publica ese puerto en el host para que pueda acceder a la aplicación desde `localhost`. Para cada puerto abierto, Floci inicia un pequeño contenedor sidecar `alpine/socat` que vincula un puerto de host asignado (rango predeterminado 30000–30999) y lo reenvía a la IP del contenedor de instancia. Esto funciona tanto para las reglas presentes en el lanzamiento como para las reglas agregadas posteriormente con `authorize-security-group-ingress`; revocar la regla elimina al delantero. La asignación (`app port -> host port`) se escribe en los registros:
+
+```
+Published EC2 instance i-0abc... app port 80 on host port 30000 (socat -> 172.17.0.3:80)
+```
+
+Notas y limitaciones:
+
+- La aplicación dentro de la instancia debe escuchar en `0.0.0.0` (no en `127.0.0.1`) para que el reenviado llegue a ella.
+- Solo se publican reglas TCP obtenidas con CIDR. Un puerto abierto solo para un grupo de seguridad al que se hace referencia (o mediante una lista de prefijos) no se publica y coincide con AWS: estos otorgan accesibilidad desde las IP privadas del grupo al que se hace referencia, no desde el host. El valor CIDR de origen en sí no se aplica, por lo que se puede acceder a un puerto de origen CIDR independientemente de que la regla sea `0.0.0.0/0` o más estrecha.
+- Los puertos se agregan en todos los grupos de seguridad de la instancia, SSH (22) nunca se reenvía y cualquier regla cuyo intervalo de puerto exceda `max-published-ports-per-instance` (predeterminado 20) se omite, por lo que un rango de permitir todo no puede generar miles de sidecars. El total publicado por instancia tiene un límite igual.
+- Detener una instancia derriba sus delanteros; iniciarlo de nuevo no los restaura automáticamente (vuelva a ejecutar `authorize-security-group-ingress` o vuelva a crear la instancia).
+- Configure `publish-security-group-ports: false` (`FLOCI_SERVICES_EC2_PUBLISH_SECURITY_GROUP_PORTS=false`) para mantener los grupos de seguridad solo como metadatos.
+
 ## UserData
 
-`UserData` debe estar codificado en base64 en la solicitud (que coincida con el formato de cable AWS). Floci lo decodifica, copia el script en `/tmp/user-data.sh` dentro del contenedor y lo ejecuta con `sh` después de la inyección de clave SSH. La salida se captura y registra.
+`UserData` debe estar codificado en base64 en la solicitud (que coincida con el formato de cable AWS). Floci lo decodifica, copia el script en `/tmp/user-data.sh` dentro del contenedor y ejecuta el script directamente después de la inyección de la clave SSH para que el script seleccione al intérprete. La salida se captura y registra.
+
+Los contenedores EC2 reciben llamadas de servicio `AWS_EC2_METADATA_SERVICE_ENDPOINT` para IMDS y `AWS_ENDPOINT_URL` para AWS y API a Floci.
 
 ## Servicio de metadatos de instancia (IMDS)
 
@@ -94,47 +151,195 @@ Floci genera los siguientes recursos en el primer uso en cada región para que l
 | Grupo de seguridad predeterminado | `sg-default` | `groupName=default`, salida para todo tráfico |
 | Puerta de enlace de Internet predeterminada | `igw-default` | Adjunto a la VPC predeterminada |
 | Tabla de ruta principal | `rtb-default` | Asociado con la VPC predeterminada |
+| ACL de red predeterminada | `acl-default` | Permitir todo, asociado con las subredes predeterminadas |
 
 ## Acciones admitidas
 
 ### Instancias
-`RunInstances` · `DescribeInstances` · `TerminateInstances` · `StartInstances` · `StopInstances` · `RebootInstances` · `DescribeInstanceStatus` · `DescribeInstanceAttribute` · `ModifyInstanceAttribute`
+
+| Acción | Descripción |
+|--------|-------------|
+| RunInstances | Crea una o más instancias locales de EC2, iniciando el tiempo de ejecución respaldado por Docker cuando no está en modo simulado. |
+| DescribeInstances | Enumera o devuelve instancias EC2 almacenadas. |
+| TerminateInstances | Finaliza instancias y actualiza su estado de ciclo de vida almacenado. |
+| StartInstances | Inicia instancias detenidas y su tiempo de ejecución local cuando corresponda. |
+| StopInstances | Detiene la ejecución de instancias y actualiza su estado de ciclo de vida almacenado. |
+| RebootInstances | Reinicia instancias a través del modelo de servicio local EC2. |
+| DescribeInstanceStatus | Devuelve registros de estado para instancias almacenadas. |
+| DescribeInstanceAttribute | Devuelve un atributo admitido para una instancia. |
+| ModifyInstanceAttribute | Las actualizaciones admitieron atributos mutables para una instancia. |
 
 ### VPC
-`CreateVpc` · `DescribeVpcs` · `DeleteVpc` · `ModifyVpcAttribute` · `DescribeVpcAttribute` · `CreateDefaultVpc` · `AssociateVpcCidrBlock` · `DisassociateVpcCidrBlock`
+
+| Acción | Descripción |
+|--------|-------------|
+| CreateVpc | Crea una VPC con el bloque CIDR solicitado. |
+| DescribeVpcs | Enumera o devuelve las VPC almacenadas. |
+| DeleteVpc | Elimina una VPC del almacén local EC2. |
+| ModifyVpcAttribute | Actualizaciones de atributos de VPC compatibles. |
+| DescribeVpcAttribute | Devuelve un atributo de VPC admitido. |
+| DescribeVpcEndpointServices | Devuelve un catálogo de servicios de punto final de VPC local vacío. |
+| CreateVpcEndpoint | Crea un registro de punto final de VPC. |
+| DescribeVpcEndpoints | Enumera o devuelve puntos finales de VPC almacenados. |
+| DeleteVpcEndpoints | Elimina registros de puntos de enlace de VPC. |
+| CreateDefaultVpc | Crea o devuelve la VPC predeterminada para la región. |
+| AssociateVpcCidrBlock | Agrega una asociación de bloque CIDR secundaria a una VPC. |
+| DisassociateVpcCidrBlock | Elimina una asociación de bloque CIDR secundaria de una VPC. |
 
 ### Subredes
-`CreateSubnet` · `DescribeSubnets` · `DeleteSubnet` · `ModifySubnetAttribute`
+
+| Acción | Descripción |
+|--------|-------------|
+| CreateSubnet | Crea una subred en una VPC. |
+| DescribeSubnets | Enumera o devuelve subredes almacenadas. |
+| DeleteSubnet | Elimina una subred del almacén local EC2. |
+| ModifySubnetAttribute | Actualiza los atributos de subred admitidos. |
 
 ### Grupos de seguridad
-`CreateSecurityGroup` · `DescribeSecurityGroups` · `DeleteSecurityGroup` · `AuthorizeSecurityGroupIngress` · `AuthorizeSecurityGroupEgress` · `RevokeSecurityGroupIngress` · `RevokeSecurityGroupEgress` · `DescribeSecurityGroupRules` · `ModifySecurityGroupRules` · `UpdateSecurityGroupRuleDescriptionsIngress` · `UpdateSecurityGroupRuleDescriptionsEgress`
+
+| Acción | Descripción |
+|--------|-------------|
+| CreateSecurityGroup | Crea un grupo de seguridad en una VPC. |
+| DescribeSecurityGroups | Enumera o devuelve grupos de seguridad almacenados. |
+| DeleteSecurityGroup | Elimina un grupo de seguridad del almacén local EC2. |
+| AuthorizeSecurityGroupIngress | Agrega permisos entrantes a un grupo de seguridad. |
+| AuthorizeSecurityGroupEgress | Agrega permisos de salida a un grupo de seguridad. |
+| RevokeSecurityGroupIngress | Elimina los permisos entrantes de un grupo de seguridad. |
+| RevokeSecurityGroupEgress | Elimina los permisos salientes de un grupo de seguridad. |
+| DescribeSecurityGroupRules | Enumera las reglas almacenadas del grupo de seguridad. |
+| ModifySecurityGroupRules | Actualiza los campos admitidos en las reglas del grupo de seguridad. |
+| UpdateSecurityGroupRuleDescriptionsIngress | Actualiza las descripciones sobre la coincidencia de reglas de grupos de seguridad entrantes. |
+| UpdateSecurityGroupRuleDescriptionsEgress | Actualiza las descripciones sobre la coincidencia de reglas de grupos de seguridad salientes. |
 
 ### Pares de claves
-`CreateKeyPair` · `DescribeKeyPairs` · `DeleteKeyPair` · `ImportKeyPair`
+
+| Acción | Descripción |
+|--------|-------------|
+| CreateKeyPair | Crea y almacena un par de claves locales. |
+| DescribeKeyPairs | Enumera o devuelve pares de claves almacenados. |
+| DeleteKeyPair | Elimina un par de claves del almacén local EC2. |
+| ImportKeyPair | Importa una clave pública como un par de claves local. |
 
 ### AMI
-`DescribeImages`
+
+| Acción | Descripción |
+|--------|-------------|
+| DescribeImages | Devuelve metadatos de AMI conocidos por el servicio EC2 local. |
 
 ### Etiquetas
-`CreateTags` · `DeleteTags` · `DescribeTags`
+
+| Acción | Descripción |
+|--------|-------------|
+| CreateTags | Agrega etiquetas a los recursos EC2 compatibles. |
+| DeleteTags | Elimina etiquetas de los recursos EC2 compatibles. |
+| DescribeTags | Enumera las etiquetas almacenadas para los recursos EC2. |
 
 ### Pasarelas de Internet
-`CreateInternetGateway` · `DescribeInternetGateways` · `DeleteInternetGateway` · `AttachInternetGateway` · `DetachInternetGateway`
+
+| Acción | Descripción |
+|--------|-------------|
+| CreateInternetGateway | Crea una puerta de enlace a Internet. |
+| DescribeInternetGateways | Enumera o devuelve puertas de enlace de Internet almacenadas. |
+| DeleteInternetGateway | Elimina una puerta de enlace de Internet. |
+| AttachInternetGateway | Adjunta una puerta de enlace de Internet a una VPC. |
+| DetachInternetGateway | Desconecta una puerta de enlace de Internet de una VPC. |
 
 ### Tablas de ruta
-`CreateRouteTable` · `DescribeRouteTables` · `DeleteRouteTable` · `AssociateRouteTable` · `DisassociateRouteTable` · `CreateRoute` · `DeleteRoute`
+
+| Acción | Descripción |
+|--------|-------------|
+| CreateRouteTable | Crea una tabla de rutas en una VPC. |
+| DescribeRouteTables | Enumera o devuelve tablas de rutas almacenadas. |
+| DeleteRouteTable | Elimina una tabla de rutas del almacén local EC2. |
+| AssociateRouteTable | Asocia una tabla de rutas con una subred. |
+| DisassociateRouteTable | Elimina una asociación de tabla de rutas. |
+| CreateRoute | Agrega una ruta a una tabla de rutas. |
+| DeleteRoute | Elimina una ruta de una tabla de rutas. |
+
+### ACL de red
+
+| Acción | Descripción |
+|--------|-------------|
+| CreateNetworkAcl | Crea una ACL de red en una VPC. |
+| DescribeNetworkAcls | Enumera o devuelve las ACL de red almacenadas. |
+| DeleteNetworkAcl | Elimina una ACL de red del almacén local EC2. |
+| CreateNetworkAclEntry | Agrega una entrada a una ACL de red. |
+| ReplaceNetworkAclEntry | Reemplaza una entrada en una ACL de red. |
+| DeleteNetworkAclEntry | Elimina una entrada de una ACL de red. |
+| ReplaceNetworkAclAssociation | Reemplaza la ACL de red asociada con una subred. |
+
+### Listas de prefijos
+
+| Acción | Descripción |
+|--------|-------------|
+| DescribePrefixLists | Devuelve listas de prefijos conocidos por el servicio EC2 local. |
+
+### Puertas de enlace NAT
+
+| Acción | Descripción |
+|--------|-------------|
+| CreateNatGateway | Crea un registro de puerta de enlace NAT. |
+| DescribeNatGateways | Enumera o devuelve puertas de enlace NAT almacenadas. |
+| DeleteNatGateway | Elimina un registro de puerta de enlace NAT. |
 
 ### IP elásticas
-`AllocateAddress` · `DescribeAddresses` · `AssociateAddress` · `DisassociateAddress` · `ReleaseAddress`
+
+| Acción | Descripción |
+|--------|-------------|
+| AllocateAddress | Asigna un registro de dirección IP elástica. |
+| DescribeAddresses | Enumera o devuelve registros de direcciones IP elásticas almacenados. |
+| DescribeAddressesAttribute | Devuelve el ID de asignación y los atributos de IP pública para direcciones IP elásticas. |
+| AssociateAddress | Asocia una dirección IP elástica con un recurso. |
+| DisassociateAddress | Elimina una asociación de dirección IP elástica. |
+| ReleaseAddress | Libera un registro de dirección IP elástica. |
 
 ### Zonas y regiones de disponibilidad
-`DescribeAvailabilityZones` · `DescribeRegions` · `DescribeAccountAttributes`
+
+| Acción | Descripción |
+|--------|-------------|
+| DescribeAvailabilityZones | Devuelve las zonas de disponibilidad local configuradas. |
+| DescribeRegions | Devuelve las regiones conocidas por el servicio EC2 local. |
+| DescribeAccountAttributes | Devuelve atributos EC2 a nivel de cuenta local. |
 
 ### Tipos de instancia
-`DescribeInstanceTypes`
+
+| Acción | Descripción |
+|--------|-------------|
+| DescribeInstanceTypes | Devuelve metadatos del tipo de instancia conocidos por el servicio EC2 local. |
+| DescribeInstanceTypeOfferings | Devuelve ofertas de tipo de instancia para los filtros de ubicación solicitados. |
+
+### Plantillas de lanzamiento de
+
+| Acción | Descripción |
+|--------|-------------|
+| CreateLaunchTemplate | Crea una plantilla de lanzamiento con una versión inicial. |
+| CreateLaunchTemplateVersion | Crea una nueva versión de la plantilla de lanzamiento, opcionalmente a partir de una versión fuente. |
+| DescribeLaunchTemplates | Enumera o devuelve plantillas de lanzamiento almacenadas. |
+| DescribeLaunchTemplateVersions | Enumera las versiones almacenadas para una plantilla de lanzamiento. |
+| ModifyLaunchTemplate | Las actualizaciones inician metadatos de la plantilla, como la versión predeterminada. |
+| DeleteLaunchTemplate | Elimina una plantilla de lanzamiento y sus versiones. |
+
+Las plantillas de lanzamiento almacenan datos de lanzamiento versionados. Se pueden crear nuevas versiones de plantilla a partir de una versión fuente existente, y `ModifyLaunchTemplate` actualiza la versión predeterminada utilizada en lanzamientos posteriores.
+
+### Perfiles de instancia IAM
+
+| Acción | Descripción |
+|--------|-------------|
+| DescribeIamInstanceProfileAssociations | Enumera las asociaciones de perfiles de instancia IAM conocidas por el servicio EC2 local. |
+
+### Interfaces de red
+
+| Acción | Descripción |
+|--------|-------------|
+| DescribeNetworkInterfaces | Enumera las interfaces de red conocidas por el servicio local EC2. |
 
 ### Volúmenes
-`CreateVolume` · `DescribeVolumes` · `DeleteVolume`
+
+| Acción | Descripción |
+|--------|-------------|
+| CreateVolume | Crea un registro de volumen de EBS. |
+| DescribeVolumes | Enumera o devuelve registros de volumen de EBS almacenados. |
+| DeleteVolume | Elimina un registro de volumen de EBS. |
 
 ## Configuración
 
@@ -143,6 +348,11 @@ Floci genera los siguientes recursos en el primer uso en cada región para que l
 | `FLOCI_SERVICES_EC2_IMDS_PORT` | `9169` | Puerto host para el servidor IMDS |
 | `FLOCI_SERVICES_EC2_SSH_PORT_RANGE_START` | `2200` | Inicio del rango de puertos del host SSH |
 | `FLOCI_SERVICES_EC2_SSH_PORT_RANGE_END` | `2299` | Fin del rango de puertos del host SSH |
+| `FLOCI_SERVICES_EC2_PUBLISH_SECURITY_GROUP_PORTS` | `true` | Publicar puertos de entrada del grupo de seguridad TCP en el host mediante sidecars socat |
+| `FLOCI_SERVICES_EC2_APP_PORT_RANGE_START` | `30000` | Inicio del rango de puertos de host para puertos de aplicaciones publicadas |
+| `FLOCI_SERVICES_EC2_APP_PORT_RANGE_END` | `30999` | Fin del rango de puertos de host para puertos de aplicaciones publicadas |
+| `FLOCI_SERVICES_EC2_MAX_PUBLISHED_PORTS_PER_INSTANCE` | `20` | Puertos máximos publicados por instancia; también el rango de regla única más amplio publicado |
+| `FLOCI_SERVICES_EC2_SOCAT_IMAGE` | `alpine/socat` | Imagen utilizada para el sidecar de reenvío de puertos |
 | `FLOCI_SERVICES_EC2_MOCK` | `false` | Omitir Docker; instancias saltan directamente al estado final (útil para pruebas) |
 
 ## Requisitos de
@@ -234,7 +444,7 @@ aws ec2 associate-address \
 
 ## Notas sobre
 
-- `DescribeImages` devuelve una lista estática de AMI comunes (Amazon Linux 2, Amazon Linux 2023, Ubuntu 20.04, Windows Server 2022) además de todos los ID de AMI nativos de Floci.
+- `DescribeImages` devuelve AMI del catálogo de imágenes EC2, incluidas AMI comunes y ID de AMI nativas de Floci.
 - El material clave devuelto por `CreateKeyPair` es un PEM RSA ficticio, que no se puede utilizar para SSH real. Utilice `ImportKeyPair` para trabajar con acceso SSH.
-- Las reglas del grupo de seguridad se almacenan y devuelven correctamente, pero no se aplican a nivel de red: la red del puente Docker maneja el enrutamiento.
+- Las reglas del grupo de seguridad no se aplican como firewall (la red de puente Docker maneja el enrutamiento), pero las reglas de ingreso TCP abiertas a una fuente CIDR se publican en el host a través de sidecars socat para que se pueda acceder a la aplicación de la instancia desde `localhost`; consulte [Publicación de puertos del grupo de seguridad] (#security-group-port-publishing).
 - El servidor IMDS identifica qué instancia está llamando a través de tokens IMDSv2 (asignados en el momento de la emisión del token) o mediante la IP del puente del contenedor para IMDSv1.

@@ -194,6 +194,29 @@ Estas operaciones AWS Lambda no tienen controlador en Floci. Las llamadas devolv
 | `FLOCI_SERVICES_LAMBDA_UNRESERVED_CONCURRENCY_MIN` | `100` | Capacidad mínima no reservada `PutFunctionConcurrency` debe salir |
 | `FLOCI_SERVICES_LAMBDA_HOT_RELOAD_ENABLED` | `false` | Habilite la recarga en caliente de montaje vinculado a través de `S3Bucket=hot-reload` |
 | `FLOCI_SERVICES_LAMBDA_HOT_RELOAD_ALLOWED_PATHS` | *(desarmado)* | Lista permitida separada por comas de rutas de host que pueden montarse mediante enlace |
+| `FLOCI_SERVICES_LAMBDA_DOCKER_NETWORK` | *(desarmado)* | Red Docker para conectar contenedores Lambda (anula `FLOCI_SERVICES_DOCKER_NETWORK`) |
+| `FLOCI_SERVICES_LAMBDA_DOCKER_HOST_OVERRIDE` | *(desarmado)* | Host/IP explícito que generó los contenedores Lambda que se utilizan para alcanzar el tiempo de ejecución API de Floci, evitando la detección automática |
+
+### Anulación del host en tiempo de ejecución API
+
+Cuando se inicia un contenedor Lambda, vuelve a llamar al tiempo de ejecución API de Floci para recuperar
+eventos y publicar resultados. Floci detecta automáticamente las direcciones que deben usar los contenedores
+para esa devolución de llamada (su propia IP de contenedor en la red compartida, o
+`host.docker.internal` cuando se ejecuta en el host). En la mayoría de las configuraciones esto es
+correcto y no necesita configuración.
+
+En topologías de red inusuales, por ejemplo Podman desarraigado, detección automática
+puede elegir una dirección que el contenedor Lambda no puede alcanzar y las invocaciones fallan con
+`connect ECONNREFUSED <ip>:9200`. Conjunto `FLOCI_SERVICES_LAMBDA_DOCKER_HOST_OVERRIDE`
+al host o IP en el que los contenedores realmente pueden llegar a Floci, y Floci lo usa
+palabra por palabra en lugar de detección automática:
+
+```bash
+FLOCI_SERVICES_LAMBDA_DOCKER_HOST_OVERRIDE=floci
+```
+
+Consulte [Configuración Docker → Ejecución en Podman (sin raíz)](../configuration/docker.md#running-on-podman-rootless)
+para obtener un tutorial completo de Podman sin raíz.
 
 ### Requisitos del zócalo Docker
 

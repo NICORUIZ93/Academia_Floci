@@ -5,8 +5,9 @@
 
 ## Acciones compatibles con
 
+<!-- floci:actions:start -->
 | Acción | Descripción |
-|---|---|
+| --- | --- |
 | `CreateEventBus` | Crear un bus de eventos personalizado |
 | `DeleteEventBus` | Eliminar un bus de eventos |
 | `DescribeEventBus` | Obtenga detalles del autobús del evento |
@@ -23,6 +24,21 @@
 | `ListTargetsByRule` | Listar objetivos para una regla |
 | `PutEvents` | Publicar eventos personalizados en un bus de eventos |
 | `TestEventPattern` | Probar si un evento de muestra coincide con un patrón determinado (no se dispara ningún objetivo) |
+| `ListTagsForResource` | - |
+| `TagResource` | - |
+| `UntagResource` | - |
+| `PutPermission` | - |
+| `RemovePermission` | - |
+| `CreateArchive` | - |
+| `DescribeArchive` | - |
+| `UpdateArchive` | - |
+| `DeleteArchive` | - |
+| `ListArchives` | - |
+| `StartReplay` | - |
+| `DescribeReplay` | - |
+| `CancelReplay` | - |
+| `ListReplays` | - |
+<!-- floci:actions:end -->
 
 ## Configuración
 

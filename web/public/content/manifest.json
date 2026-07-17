@@ -249,6 +249,14 @@
   },
   {
     "id": "official-es-18",
+    "title": "Amazon MQ (RabbitMQ)",
+    "category": "servicios",
+    "path": "content/oficial-es/services/amazonmq.md",
+    "language": "Español latino",
+    "type": "official"
+  },
+  {
+    "id": "official-es-19",
     "title": "Puerta de enlace API",
     "category": "servicios",
     "path": "content/oficial-es/services/api-gateway.md",
@@ -256,7 +264,7 @@
     "type": "official"
   },
   {
-    "id": "official-es-19",
+    "id": "official-es-20",
     "title": "AppConfig",
     "category": "servicios",
     "path": "content/oficial-es/services/appconfig.md",
@@ -264,7 +272,7 @@
     "type": "official"
   },
   {
-    "id": "official-es-20",
+    "id": "official-es-21",
     "title": "AppSync",
     "category": "servicios",
     "path": "content/oficial-es/services/appsync.md",
@@ -272,7 +280,7 @@
     "type": "official"
   },
   {
-    "id": "official-es-21",
+    "id": "official-es-22",
     "title": "Athena",
     "category": "servicios",
     "path": "content/oficial-es/services/athena.md",
@@ -280,7 +288,7 @@
     "type": "official"
   },
   {
-    "id": "official-es-22",
+    "id": "official-es-23",
     "title": "Escalado automático",
     "category": "servicios",
     "path": "content/oficial-es/services/autoscaling.md",
@@ -288,7 +296,7 @@
     "type": "official"
   },
   {
-    "id": "official-es-23",
+    "id": "official-es-24",
     "title": "AWS Copia de seguridad",
     "category": "servicios",
     "path": "content/oficial-es/services/backup.md",
@@ -296,7 +304,15 @@
     "type": "official"
   },
   {
-    "id": "official-es-24",
+    "id": "official-es-25",
+    "title": "AWS Lote",
+    "category": "servicios",
+    "path": "content/oficial-es/services/batch.md",
+    "language": "Español latino",
+    "type": "official"
+  },
+  {
+    "id": "official-es-26",
     "title": "Exportaciones de datos BCM (`bcm-data-exports:*`)",
     "category": "servicios",
     "path": "content/oficial-es/services/bcm-data-exports.md",
@@ -304,7 +320,7 @@
     "type": "official"
   },
   {
-    "id": "official-es-25",
+    "id": "official-es-27",
     "title": "Tiempo de ejecución de Bedrock",
     "category": "servicios",
     "path": "content/oficial-es/services/bedrock-runtime.md",
@@ -312,7 +328,7 @@
     "type": "official"
   },
   {
-    "id": "official-es-26",
+    "id": "official-es-28",
     "title": "Explorador de costos (`ce:*`)",
     "category": "servicios",
     "path": "content/oficial-es/services/ce.md",
@@ -320,7 +336,7 @@
     "type": "official"
   },
   {
-    "id": "official-es-27",
+    "id": "official-es-29",
     "title": "CloudFormation",
     "category": "servicios",
     "path": "content/oficial-es/services/cloudformation.md",
@@ -328,7 +344,7 @@
     "type": "official"
   },
   {
-    "id": "official-es-28",
+    "id": "official-es-30",
     "title": "CloudFront",
     "category": "servicios",
     "path": "content/oficial-es/services/cloudfront.md",
@@ -336,7 +352,23 @@
     "type": "official"
   },
   {
-    "id": "official-es-29",
+    "id": "official-es-31",
+    "title": "AWS Mapa de la nube",
+    "category": "servicios",
+    "path": "content/oficial-es/services/cloudmap.md",
+    "language": "Español latino",
+    "type": "official"
+  },
+  {
+    "id": "official-es-32",
+    "title": "CloudTrail",
+    "category": "servicios",
+    "path": "content/oficial-es/services/cloudtrail.md",
+    "language": "Español latino",
+    "type": "official"
+  },
+  {
+    "id": "official-es-33",
     "title": "CloudWatch",
     "category": "servicios",
     "path": "content/oficial-es/services/cloudwatch.md",
@@ -344,7 +376,7 @@
     "type": "official"
   },
   {
-    "id": "official-es-30",
+    "id": "official-es-34",
     "title": "CodeBuild",
     "category": "servicios",
     "path": "content/oficial-es/services/codebuild.md",
@@ -352,7 +384,7 @@
     "type": "official"
   },
   {
-    "id": "official-es-31",
+    "id": "official-es-35",
     "title": "CodeDeploy",
     "category": "servicios",
     "path": "content/oficial-es/services/codedeploy.md",
@@ -360,7 +392,15 @@
     "type": "official"
   },
   {
-    "id": "official-es-32",
+    "id": "official-es-36",
+    "title": "CodePipeline",
+    "category": "servicios",
+    "path": "content/oficial-es/services/codepipeline.md",
+    "language": "Español latino",
+    "type": "official"
+  },
+  {
+    "id": "official-es-37",
     "title": "Cognito",
     "category": "servicios",
     "path": "content/oficial-es/services/cognito.md",
@@ -368,7 +408,7 @@
     "type": "official"
   },
   {
-    "id": "official-es-33",
+    "id": "official-es-38",
     "title": "Configuración de AWS",
     "category": "servicios",
     "path": "content/oficial-es/services/config.md",
@@ -376,7 +416,7 @@
     "type": "official"
   },
   {
-    "id": "official-es-34",
+    "id": "official-es-39",
     "title": "Informes de uso y costo (`cur:*`)",
     "category": "servicios",
     "path": "content/oficial-es/services/cur.md",
@@ -384,7 +424,15 @@
     "type": "official"
   },
   {
-    "id": "official-es-35",
+    "id": "official-es-40",
+    "title": "DocumentDB",
+    "category": "servicios",
+    "path": "content/oficial-es/services/docdb.md",
+    "language": "Español latino",
+    "type": "official"
+  },
+  {
+    "id": "official-es-41",
     "title": "DynamoDB",
     "category": "servicios",
     "path": "content/oficial-es/services/dynamodb.md",
@@ -392,7 +440,7 @@
     "type": "official"
   },
   {
-    "id": "official-es-36",
+    "id": "official-es-42",
     "title": "EC2",
     "category": "servicios",
     "path": "content/oficial-es/services/ec2.md",
@@ -400,7 +448,7 @@
     "type": "official"
   },
   {
-    "id": "official-es-37",
+    "id": "official-es-43",
     "title": "ECR",
     "category": "servicios",
     "path": "content/oficial-es/services/ecr.md",
@@ -408,7 +456,7 @@
     "type": "official"
   },
   {
-    "id": "official-es-38",
+    "id": "official-es-44",
     "title": "ECS (Servicio de contenedor elástico)",
     "category": "servicios",
     "path": "content/oficial-es/services/ecs.md",
@@ -416,7 +464,7 @@
     "type": "official"
   },
   {
-    "id": "official-es-39",
+    "id": "official-es-45",
     "title": "EKS (Servicio elástico de Kubernetes)",
     "category": "servicios",
     "path": "content/oficial-es/services/eks.md",
@@ -424,7 +472,15 @@
     "type": "official"
   },
   {
-    "id": "official-es-40",
+    "id": "official-es-46",
+    "title": "Tallo de frijol elástico",
+    "category": "servicios",
+    "path": "content/oficial-es/services/elastic-beanstalk.md",
+    "language": "Español latino",
+    "type": "official"
+  },
+  {
+    "id": "official-es-47",
     "title": "ElastiCache",
     "category": "servicios",
     "path": "content/oficial-es/services/elasticache.md",
@@ -432,7 +488,7 @@
     "type": "official"
   },
   {
-    "id": "official-es-41",
+    "id": "official-es-48",
     "title": "Equilibrio de carga elástico v2",
     "category": "servicios",
     "path": "content/oficial-es/services/elb.md",
@@ -440,7 +496,15 @@
     "type": "official"
   },
   {
-    "id": "official-es-42",
+    "id": "official-es-49",
+    "title": "EMR",
+    "category": "servicios",
+    "path": "content/oficial-es/services/emr.md",
+    "language": "Español latino",
+    "type": "official"
+  },
+  {
+    "id": "official-es-50",
     "title": "EventBridge",
     "category": "servicios",
     "path": "content/oficial-es/services/eventbridge.md",
@@ -448,7 +512,7 @@
     "type": "official"
   },
   {
-    "id": "official-es-43",
+    "id": "official-es-51",
     "title": "Datos Firehose",
     "category": "servicios",
     "path": "content/oficial-es/services/firehose.md",
@@ -456,7 +520,7 @@
     "type": "official"
   },
   {
-    "id": "official-es-44",
+    "id": "official-es-52",
     "title": "Glue",
     "category": "servicios",
     "path": "content/oficial-es/services/glue.md",
@@ -464,7 +528,7 @@
     "type": "official"
   },
   {
-    "id": "official-es-45",
+    "id": "official-es-53",
     "title": "IAM",
     "category": "servicios",
     "path": "content/oficial-es/services/iam.md",
@@ -472,7 +536,7 @@
     "type": "official"
   },
   {
-    "id": "official-es-46",
+    "id": "official-es-54",
     "title": "Descripción general de los servicios",
     "category": "servicios",
     "path": "content/oficial-es/services/index.md",
@@ -480,7 +544,15 @@
     "type": "official"
   },
   {
-    "id": "official-es-47",
+    "id": "official-es-55",
+    "title": "AWS IoT Núcleo",
+    "category": "servicios",
+    "path": "content/oficial-es/services/iot.md",
+    "language": "Español latino",
+    "type": "official"
+  },
+  {
+    "id": "official-es-56",
     "title": "Kinesis",
     "category": "servicios",
     "path": "content/oficial-es/services/kinesis.md",
@@ -488,7 +560,7 @@
     "type": "official"
   },
   {
-    "id": "official-es-48",
+    "id": "official-es-57",
     "title": "KMS",
     "category": "servicios",
     "path": "content/oficial-es/services/kms.md",
@@ -496,7 +568,7 @@
     "type": "official"
   },
   {
-    "id": "official-es-49",
+    "id": "official-es-58",
     "title": "Lambda",
     "category": "servicios",
     "path": "content/oficial-es/services/lambda.md",
@@ -504,7 +576,23 @@
     "type": "official"
   },
   {
-    "id": "official-es-50",
+    "id": "official-es-59",
+    "title": "Vela de luz de Amazon",
+    "category": "servicios",
+    "path": "content/oficial-es/services/lightsail.md",
+    "language": "Español latino",
+    "type": "official"
+  },
+  {
+    "id": "official-es-60",
+    "title": "MemoryDB",
+    "category": "servicios",
+    "path": "content/oficial-es/services/memorydb.md",
+    "language": "Español latino",
+    "type": "official"
+  },
+  {
+    "id": "official-es-61",
     "title": "MSK (Transmisión administrada para Kafka)",
     "category": "servicios",
     "path": "content/oficial-es/services/msk.md",
@@ -512,7 +600,7 @@
     "type": "official"
   },
   {
-    "id": "official-es-51",
+    "id": "official-es-62",
     "title": "Neptune",
     "category": "servicios",
     "path": "content/oficial-es/services/neptune.md",
@@ -520,7 +608,7 @@
     "type": "official"
   },
   {
-    "id": "official-es-52",
+    "id": "official-es-63",
     "title": "Servicio OpenSearch",
     "category": "servicios",
     "path": "content/oficial-es/services/opensearch.md",
@@ -528,7 +616,7 @@
     "type": "official"
   },
   {
-    "id": "official-es-53",
+    "id": "official-es-64",
     "title": "EventBridge Tuberías",
     "category": "servicios",
     "path": "content/oficial-es/services/pipes.md",
@@ -536,7 +624,7 @@
     "type": "official"
   },
   {
-    "id": "official-es-54",
+    "id": "official-es-65",
     "title": "Precios de (servicio de lista de precios de AWS)",
     "category": "servicios",
     "path": "content/oficial-es/services/pricing.md",
@@ -544,7 +632,15 @@
     "type": "official"
   },
   {
-    "id": "official-es-55",
+    "id": "official-es-66",
+    "title": "RDS Datos API",
+    "category": "servicios",
+    "path": "content/oficial-es/services/rds-data.md",
+    "language": "Español latino",
+    "type": "official"
+  },
+  {
+    "id": "official-es-67",
     "title": "RDS",
     "category": "servicios",
     "path": "content/oficial-es/services/rds.md",
@@ -552,7 +648,7 @@
     "type": "official"
   },
   {
-    "id": "official-es-56",
+    "id": "official-es-68",
     "title": "Grupos de recursos Etiquetado API",
     "category": "servicios",
     "path": "content/oficial-es/services/resource-groups-tagging.md",
@@ -560,7 +656,7 @@
     "type": "official"
   },
   {
-    "id": "official-es-57",
+    "id": "official-es-69",
     "title": "Route53",
     "category": "servicios",
     "path": "content/oficial-es/services/route53.md",
@@ -568,7 +664,7 @@
     "type": "official"
   },
   {
-    "id": "official-es-58",
+    "id": "official-es-70",
     "title": "S3",
     "category": "servicios",
     "path": "content/oficial-es/services/s3.md",
@@ -576,7 +672,15 @@
     "type": "official"
   },
   {
-    "id": "official-es-59",
+    "id": "official-es-71",
+    "title": "S3 Vectores",
+    "category": "servicios",
+    "path": "content/oficial-es/services/s3vectors.md",
+    "language": "Español latino",
+    "type": "official"
+  },
+  {
+    "id": "official-es-72",
     "title": "Programador EventBridge",
     "category": "servicios",
     "path": "content/oficial-es/services/scheduler.md",
@@ -584,7 +688,7 @@
     "type": "official"
   },
   {
-    "id": "official-es-60",
+    "id": "official-es-73",
     "title": "Administrador de secretos",
     "category": "servicios",
     "path": "content/oficial-es/services/secrets-manager.md",
@@ -592,7 +696,7 @@
     "type": "official"
   },
   {
-    "id": "official-es-61",
+    "id": "official-es-74",
     "title": "SES",
     "category": "servicios",
     "path": "content/oficial-es/services/ses.md",
@@ -600,7 +704,7 @@
     "type": "official"
   },
   {
-    "id": "official-es-62",
+    "id": "official-es-75",
     "title": "SNS",
     "category": "servicios",
     "path": "content/oficial-es/services/sns.md",
@@ -608,7 +712,7 @@
     "type": "official"
   },
   {
-    "id": "official-es-63",
+    "id": "official-es-76",
     "title": "SQS",
     "category": "servicios",
     "path": "content/oficial-es/services/sqs.md",
@@ -616,15 +720,15 @@
     "type": "official"
   },
   {
-    "id": "official-es-64",
-    "title": "SSM Almacén de parámetros",
+    "id": "official-es-77",
+    "title": "SSM",
     "category": "servicios",
     "path": "content/oficial-es/services/ssm.md",
     "language": "Español latino",
     "type": "official"
   },
   {
-    "id": "official-es-65",
+    "id": "official-es-78",
     "title": "Funciones de paso",
     "category": "servicios",
     "path": "content/oficial-es/services/step-functions.md",
@@ -632,7 +736,7 @@
     "type": "official"
   },
   {
-    "id": "official-es-66",
+    "id": "official-es-79",
     "title": "STS",
     "category": "servicios",
     "path": "content/oficial-es/services/sts.md",
@@ -640,7 +744,7 @@
     "type": "official"
   },
   {
-    "id": "official-es-67",
+    "id": "official-es-80",
     "title": "DetectDocumentText",
     "category": "servicios",
     "path": "content/oficial-es/services/textract.md",
@@ -648,7 +752,7 @@
     "type": "official"
   },
   {
-    "id": "official-es-68",
+    "id": "official-es-81",
     "title": "Transcribe",
     "category": "servicios",
     "path": "content/oficial-es/services/transcribe.md",
@@ -656,7 +760,7 @@
     "type": "official"
   },
   {
-    "id": "official-es-69",
+    "id": "official-es-82",
     "title": "Familia de transferencia",
     "category": "servicios",
     "path": "content/oficial-es/services/transfer.md",
@@ -664,7 +768,15 @@
     "type": "official"
   },
   {
-    "id": "official-es-70",
+    "id": "official-es-83",
+    "title": "WAFv2",
+    "category": "servicios",
+    "path": "content/oficial-es/services/wafv2.md",
+    "language": "Español latino",
+    "type": "official"
+  },
+  {
+    "id": "official-es-84",
     "title": "Testcontainers — Go",
     "category": "testcontainers",
     "path": "content/oficial-es/testcontainers/go.md",
@@ -672,7 +784,7 @@
     "type": "official"
   },
   {
-    "id": "official-es-71",
+    "id": "official-es-85",
     "title": "Testcontainers",
     "category": "testcontainers",
     "path": "content/oficial-es/testcontainers/index.md",
@@ -680,7 +792,7 @@
     "type": "official"
   },
   {
-    "id": "official-es-72",
+    "id": "official-es-86",
     "title": "Testcontainers — Java",
     "category": "testcontainers",
     "path": "content/oficial-es/testcontainers/java.md",
@@ -688,7 +800,7 @@
     "type": "official"
   },
   {
-    "id": "official-es-73",
+    "id": "official-es-87",
     "title": "Testcontainers — Node.js / TypeScript",
     "category": "testcontainers",
     "path": "content/oficial-es/testcontainers/nodejs.md",
@@ -696,7 +808,7 @@
     "type": "official"
   },
   {
-    "id": "official-es-74",
+    "id": "official-es-88",
     "title": "Testcontainers — Python",
     "category": "testcontainers",
     "path": "content/oficial-es/testcontainers/python.md",

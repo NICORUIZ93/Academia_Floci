@@ -13,6 +13,14 @@ EKS utiliza un REST API estándar con cuerpos JSON, no el JSON 1.1 (`X-Amz-Targe
 | `DescribeCluster` | Describir un grupo por su nombre |
 | `ListClusters` | Listar todos los nombres de los clústeres |
 | `DeleteCluster` | Eliminar un clúster |
+| `CreateNodegroup` | Crear metadatos de grupo de nodos para un clúster |
+| `DescribeNodegroup` | Describir un grupo de nodos por clúster y nombre |
+| `ListNodegroups` | Listar nombres de grupos de nodos para un clúster |
+| `DeleteNodegroup` | Eliminar un grupo de nodos |
+| `CreateFargateProfile` | Crear metadatos de perfil de Fargate para un clúster |
+| `DescribeFargateProfile` | Describir un perfil de Fargate por grupo y nombre |
+| `ListFargateProfiles` | Enumerar nombres de perfiles de Fargate para un clúster |
+| `DeleteFargateProfile` | Eliminar un perfil de Fargate |
 | `TagResource` | Agregar etiquetas a un clúster |
 | `UntagResource` | Eliminar etiquetas de un clúster |
 | `ListTagsForResource` | Listar etiquetas en un clúster |
@@ -79,6 +87,51 @@ services:
 | `FLOCI_SERVICES_EKS_KEEP_RUNNING_ON_SHUTDOWN` | `false` | Deje los contenedores k3s en ejecución después de que se detenga Floci |
 | `FLOCI_SERVICES_EKS_ENDPOINT_MODE` | `host` | Punto final `describe-cluster`: `host` (`localhost:<hostPort>`) o `network` (DNS de contenedor) |
 | `FLOCI_SERVICES_EKS_IAM_AUTH_WEBHOOK` | `true` | Conecte un webhook de autenticación de token a k3s para que `aws eks get-token` funcione |
+| `FLOCI_SERVICES_EKS_ECR_REGISTRY_MIRROR` | `true` | Inyecte un `registries.yaml` en contenedor para que los pods puedan extraer imágenes enviadas a [Floci ECR](ecr.md) |
+
+### Extrayendo imágenes de Floci ECR
+
+Las imágenes enviadas al [registro Floci ECR](ecr.md) utilizan URI de repositorio basados en `localhost`
+(por ejemplo `000000000000.dkr.ecr.us-east-1.localhost:5100/my-repo:tag`). Dentro de un k3s
+cluster ese nombre de host se resolvería en el propio contenedor k3s, y containerd insiste
+en HTTPS para cualquier cosa que no reconozca como loopback, por lo que, listo para usar, k3s no puede
+extraiga del registro aunque `docker push` del host funcione.
+
+Floci resuelve esto en la creación del clúster: cada nuevo contenedor k3s genera un
+`/etc/rancher/k3s/registries.yaml` que refleja cada nombre de host del repositorio del emulador
+can mint: la cuenta predeterminada en todo el catálogo de regiones, además del estilo de ruta
+Formulario `localhost:<port>` utilizado por `FLOCI_SERVICES_ECR_URI_STYLE=path` — al registro
+punto final dentro de la red del contenedor (`http://floci-ecr-registry:5000`). la misma imagen
+La referencia luego funciona para la inserción del lado del host y la extracción en el clúster, sin volver a etiquetar
+y sin configuración manual en contenedores:
+
+```bash
+aws ecr create-repository --repository-name my-repo
+docker build -t 000000000000.dkr.ecr.us-east-1.localhost:5100/my-repo:v1 .
+docker push 000000000000.dkr.ecr.us-east-1.localhost:5100/my-repo:v1
+
+aws eks create-cluster --name demo ...
+helm install my-app ./chart \
+  --set image.repository=000000000000.dkr.ecr.us-east-1.localhost:5100/my-repo \
+  --set image.tag=v1
+```
+
+Requisitos y límites:
+
+- Los k3s y los contenedores de registro deben compartir una red Docker: configure el valor global
+  `FLOCI_SERVICES_DOCKER_NETWORK` (como en el estándar `docker-compose.yml`) o el
+  variables de red por servicio.
+- Sólo se reflejan los nombres de host mintables de Floci; registros públicos (docker.io, ghcr.io,…)
+  nunca son tocados.
+- Los URI de repositorio que utilizan una `registryId` (cuenta) no predeterminada no están cubiertos.
+- Se toma una instantánea del conjunto de espejos cuando se crea el clúster. Clústeres creados antes de esto
+  La característica (o después de que el registro se volvió a crear en un puerto diferente) se puede arreglar
+  manualmente: el sistema de archivos del contenedor k3s sobrevive a un reinicio:
+
+  ```bash
+  docker cp registries.yaml floci-eks-<cluster>:/etc/rancher/k3s/registries.yaml
+  docker restart floci-eks-<cluster>
+  ```
 
 ### Modo simulado (CI/pruebas)
 
@@ -97,6 +150,18 @@ services:
 
 ```
 arn:aws:eks:<region>:<accountId>:cluster/<clusterName>
+```
+
+Los grupos de nodos utilizan:
+
+```
+arn:aws:eks:<region>:<accountId>:nodegroup/<clusterName>/<nodegroupName>/<id>
+```
+
+Los perfiles de Fargate utilizan:
+
+```
+arn:aws:eks:<region>:<accountId>:fargateprofile/<clusterName>/<fargateProfileName>/<id>
 ```
 
 ## Ejemplos
@@ -119,6 +184,59 @@ aws eks describe-cluster --name my-cluster
 
 # List clusters
 aws eks list-clusters
+
+# Create a node group
+curl -s -X POST "$AWS_ENDPOINT_URL/clusters/my-cluster/node-groups" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "nodegroupName": "my-nodegroup",
+    "nodeRole": "arn:aws:iam::000000000000:role/eks-node-role",
+    "subnets": ["subnet-123", "subnet-456"],
+    "instanceTypes": ["t3.medium"],
+    "scalingConfig": {
+      "minSize": 1,
+      "maxSize": 3,
+      "desiredSize": 1
+    }
+  }'
+
+# Describe the node group
+curl -s "$AWS_ENDPOINT_URL/clusters/my-cluster/node-groups/my-nodegroup"
+
+# List node groups
+curl -s "$AWS_ENDPOINT_URL/clusters/my-cluster/node-groups"
+
+# Delete the node group
+curl -s -X DELETE "$AWS_ENDPOINT_URL/clusters/my-cluster/node-groups/my-nodegroup"
+
+# Create a Fargate profile
+curl -s -X POST "$AWS_ENDPOINT_URL/clusters/my-cluster/fargate-profiles" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "fargateProfileName": "my-fargate-profile",
+    "podExecutionRoleArn": "arn:aws:iam::000000000000:role/eks-fargate-role",
+    "subnets": ["subnet-123", "subnet-456"],
+    "selectors": [
+      {
+        "namespace": "default",
+        "labels": {
+          "app": "api"
+        }
+      }
+    ],
+    "tags": {
+      "env": "dev"
+    }
+  }'
+
+# Describe the Fargate profile
+curl -s "$AWS_ENDPOINT_URL/clusters/my-cluster/fargate-profiles/my-fargate-profile"
+
+# List Fargate profiles
+curl -s "$AWS_ENDPOINT_URL/clusters/my-cluster/fargate-profiles"
+
+# Delete the Fargate profile
+curl -s -X DELETE "$AWS_ENDPOINT_URL/clusters/my-cluster/fargate-profiles/my-fargate-profile"
 
 # Tag a cluster
 aws eks tag-resource \
@@ -158,6 +276,8 @@ System.out.println(described.cluster().status()); // ACTIVE
 // List clusters
 List<String> names = eks.listClusters(r -> {}).clusters();
 
+// Node group and Fargate profile support are currently exposed through the REST paths.
+
 // Tag resource
 eks.tagResource(r -> r
     .resourceArn(created.cluster().arn())
@@ -171,8 +291,6 @@ eks.deleteCluster(r -> r.name("my-cluster"));
 
 Las siguientes funciones de EKS aún no son compatibles:
 
-- Grupos de nodos (`CreateNodegroup`, `DescribeNodegroup`, `ListNodegroups`, `DeleteNodegroup`)
-- Perfiles de Fargate
 - `UpdateClusterConfig` / `UpdateClusterVersion`
 - Complementos (`CreateAddon`, `DescribeAddon`, `ListAddons`)
 - Configuraciones del proveedor de identidad

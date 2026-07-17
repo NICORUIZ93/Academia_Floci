@@ -130,6 +130,21 @@ ECS emula clústeres, definiciones de tareas, tareas y servicios. En la configur
 | `FLOCI_SERVICES_ECS_DEFAULT_MEMORY_MB` | `512` | Memoria predeterminada (MB) cuando la definición de tarea la omite |
 | `FLOCI_SERVICES_ECS_DEFAULT_CPU_UNITS` | `256` | Unidades de CPU predeterminadas cuando la definición de tarea las omite |
 
+### Propiedad del volumen EFS
+
+Los volúmenes `efsVolumeConfiguration` de una tarea están respaldados por volúmenes Docker locales compartidos (Floci no puede montar un sistema de archivos EFS real). Se crea un volumen Docker con el nombre `root:root 0755`, por lo que una tarea cuya imagen se ejecuta como un `USER` no raíz no puede escribirla. Para emular un [punto de acceso EFS] (https://docs.aws.amazon.com/efs/latest/ug/efs-access-points.html) `RootDirectory.CreationInfo` y `PosixUser`, configure `floci.storage.efs.*` (todos optan por participar; el valor predeterminado es un volumen con nombre simple, por lo que el comportamiento existente no cambia):
+
+| Clave (`floci.storage.efs.`) | sobre | Equivalente AWS | Descripción |
+|---|---|---|---|
+| `owner-uid` | `FLOCI_STORAGE_EFS_OWNER_UID` | `CreationInfo.OwnerUid` | Uid propietario de la raíz del volumen (configurado junto con `owner-gid`) |
+| `owner-gid` | `FLOCI_STORAGE_EFS_OWNER_GID` | `CreationInfo.OwnerGid` | Gid propietario de la raíz del volumen (configurado junto con `owner-uid`) |
+| `root-permissions` | `FLOCI_STORAGE_EFS_ROOT_PERMISSIONS` | `CreationInfo.Permissions` | 3-4 dígitos octales, p.e. `0777` o `2775` para el bit setgid |
+| `mount-user` | `FLOCI_STORAGE_EFS_MOUNT_USER` | `PosixUser {Uid,Gid}` | Ejecute contenedores de montaje como `uid[:gid]` |
+| `mount-group-add` | `FLOCI_STORAGE_EFS_MOUNT_GROUP_ADD` | `PosixUser` suplementario | Gid suplementario agregado a los contenedores de montaje |
+| `init-image` | `FLOCI_STORAGE_EFS_INIT_IMAGE` | — | Imagen del `chown`/`chmod` único de la raíz del volumen (predeterminado `busybox:stable`) |
+
+`owner-uid` y `owner-gid` deben configurarse juntos (un `CreationInfo` parcial no es válido en AWS). La raíz del volumen se inicializa una vez por volumen; exprese el bit setgid a través de un `root-permissions` de 4 dígitos (por ejemplo, `2775`) para que los subdirectorios hereden el gid propietario.
+
 ### Modo simulado
 
 Configure `FLOCI_SERVICES_ECS_MOCK=true` para que se ejecute sin Docker. En este modo, las tareas omiten el inicio del contenedor y pasan inmediatamente a `RUNNING` y luego a `STOPPED` cuando se detiene. Este es el modo recomendado para pruebas unitarias/de integración y canalizaciones de CI donde Docker-in-Docker no está disponible.

@@ -55,7 +55,7 @@
     },
     {
       "path": "docker-compose.yml",
-      "lines": 40,
+      "lines": 47,
       "kind": "local-infra",
       "symbols": [],
       "imports": [],
@@ -5034,7 +5034,7 @@
     },
     {
       "path": "web/public/content/manifest.json",
-      "lines": 707,
+      "lines": 819,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5323,7 +5323,7 @@
     },
     {
       "path": "web/public/content/oficial-es/configuration/advanced/application-yml.md",
-      "lines": 335,
+      "lines": 356,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5392,7 +5392,7 @@
     },
     {
       "path": "web/public/content/oficial-es/configuration/docker.md",
-      "lines": 135,
+      "lines": 186,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5405,12 +5405,13 @@
         "### Precedencia",
         "## Configuraci\u00f3n de registro del contenedor",
         "## Red Docker",
+        "## ejecut\u00e1ndose en Podman (sin ra\u00edz)",
         "## Referencia completa"
       ]
     },
     {
       "path": "web/public/content/oficial-es/configuration/environment-variables.md",
-      "lines": 422,
+      "lines": 439,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5420,11 +5421,11 @@
         "## Autenticaci\u00f3n",
         "## Navegador CORS",
         "## TLS / HTTPS",
+        "## Protocolos de cable",
         "## Almacenamiento",
         "### Anulaciones de almacenamiento por servicio",
         "## Docker Demonio",
         "### Credenciales de registro",
-        "## DNS",
         "## Ganchos de inicializaci\u00f3n",
         "### SSM (Almac\u00e9n de par\u00e1metros)"
       ]
@@ -5452,13 +5453,14 @@
     },
     {
       "path": "web/public/content/oficial-es/configuration/multi-account.md",
-      "lines": 161,
+      "lines": 176,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
       "headings": [
         "# Aislamiento de m\u00faltiples cuentas",
         "## C\u00f3mo funciona",
+        "## Credenciales temporales (AssumeRole)",
         "## Comportamiento predeterminado de (cuenta \u00fanica)",
         "## Habilitaci\u00f3n del aislamiento de m\u00faltiples cuentas",
         "### AWS CLI",
@@ -5467,8 +5469,7 @@
         "# AWS Secret Access Key: test",
         "# AWS Access Key ID: 222222222222",
         "# AWS Secret Access Key: test",
-        "# Create the same queue name under both accounts",
-        "# Each account sees only its own queue"
+        "# Create the same queue name under both accounts"
       ]
     },
     {
@@ -5494,7 +5495,7 @@
     },
     {
       "path": "web/public/content/oficial-es/configuration/storage.md",
-      "lines": 175,
+      "lines": 177,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5595,7 +5596,7 @@
     },
     {
       "path": "web/public/content/oficial-es/getting-started/migrate-from-localstack.md",
-      "lines": 254,
+      "lines": 256,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5637,7 +5638,7 @@
     },
     {
       "path": "web/public/content/oficial-es/index.md",
-      "lines": 105,
+      "lines": 118,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5652,7 +5653,7 @@
     },
     {
       "path": "web/public/content/oficial-es/services/acm.md",
-      "lines": 125,
+      "lines": 127,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5669,6 +5670,24 @@
         "# List only issued certificates",
         "# Add tags",
         "# List tags"
+      ]
+    },
+    {
+      "path": "web/public/content/oficial-es/services/amazonmq.md",
+      "lines": 82,
+      "kind": "course-content",
+      "symbols": [],
+      "imports": [],
+      "headings": [
+        "# Amazon MQ (RabbitMQ)",
+        "## Acciones admitidas",
+        "### Gesti\u00f3n de usuarios",
+        "## Configuraci\u00f3n",
+        "## C\u00f3mo funciona",
+        "## Ejemplos",
+        "# Create a broker (exactly one admin user is required for RabbitMQ)",
+        "# Describe a broker (poll until BrokerState is RUNNING)",
+        "# Delete a broker"
       ]
     },
     {
@@ -5715,7 +5734,7 @@
     },
     {
       "path": "web/public/content/oficial-es/services/appsync.md",
-      "lines": 190,
+      "lines": 296,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5731,12 +5750,12 @@
         "### Teclas API",
         "### Etiquetas",
         "### Variables de entorno",
-        "## Paginaci\u00f3n"
+        "### Nombres de dominio"
       ]
     },
     {
       "path": "web/public/content/oficial-es/services/athena.md",
-      "lines": 130,
+      "lines": 138,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5757,7 +5776,7 @@
     },
     {
       "path": "web/public/content/oficial-es/services/autoscaling.md",
-      "lines": 134,
+      "lines": 150,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5773,7 +5792,7 @@
         "### Actividades de",
         "### Metadatos",
         "## Conciliador de capacidad (Fase 2)",
-        "## Configuraci\u00f3n"
+        "## Compatibilidad de fuente de lanzamiento"
       ]
     },
     {
@@ -5795,6 +5814,23 @@
         "## Ciclo de vida del trabajo",
         "## Tipos de recursos admitidos",
         "## Restricciones de"
+      ]
+    },
+    {
+      "path": "web/public/content/oficial-es/services/batch.md",
+      "lines": 105,
+      "kind": "course-content",
+      "symbols": [],
+      "imports": [],
+      "headings": [
+        "# AWS Lote",
+        "## Operaciones compatibles",
+        "## Modos de corredor",
+        "## Comportamiento de env\u00edo de",
+        "## EventBridge",
+        "## CloudFormation",
+        "## Configuraci\u00f3n",
+        "## Limitaciones de"
       ]
     },
     {
@@ -5851,23 +5887,23 @@
     },
     {
       "path": "web/public/content/oficial-es/services/cloudformation.md",
-      "lines": 199,
+      "lines": 254,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
       "headings": [
         "# CloudFormation",
         "## Acciones admitidas",
-        "## Tipos de recursos compatibles con",
+        "## Tipos de recursos admitidos",
         "## Actualizaciones de la pila Lambda",
+        "## Aprovisionamiento consciente de cuentas",
+        "## StackSets",
+        "# 1. Create the stack set (in the administration account)",
+        "# 2. Create instances in two target accounts",
+        "# 3. The resources materialize in each target account's namespace",
         "## Configuraci\u00f3n",
         "## Ejemplos",
-        "# Validate a template",
-        "# Deploy a stack",
-        "# Check status",
-        "# Watch events",
-        "# Update",
-        "# Delete"
+        "# Validate a template"
       ]
     },
     {
@@ -5889,6 +5925,34 @@
         "### Funciones de CloudFront",
         "### Etiquetado",
         "## Comportamiento de"
+      ]
+    },
+    {
+      "path": "web/public/content/oficial-es/services/cloudmap.md",
+      "lines": 121,
+      "kind": "course-content",
+      "symbols": [],
+      "imports": [],
+      "headings": [
+        "# AWS Mapa de la nube",
+        "## Operaciones compatibles",
+        "## Configuraci\u00f3n",
+        "## Ejemplos",
+        "## Documentos relacionados",
+        "## Fuera de alcance"
+      ]
+    },
+    {
+      "path": "web/public/content/oficial-es/services/cloudtrail.md",
+      "lines": 41,
+      "kind": "course-content",
+      "symbols": [],
+      "imports": [],
+      "headings": [
+        "# CloudTrail",
+        "## Acciones admitidas",
+        "## Ejemplo de",
+        "# A trail needs a destination S3 bucket"
       ]
     },
     {
@@ -5955,24 +6019,38 @@
       ]
     },
     {
+      "path": "web/public/content/oficial-es/services/codepipeline.md",
+      "lines": 62,
+      "kind": "course-content",
+      "symbols": [],
+      "imports": [],
+      "headings": [
+        "# CodePipeline",
+        "## Operaciones admitidas (44 en total)",
+        "## Ejecuci\u00f3n",
+        "## Configuraci\u00f3n",
+        "## Ejemplo de"
+      ]
+    },
+    {
       "path": "web/public/content/oficial-es/services/cognito.md",
-      "lines": 163,
+      "lines": 245,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
       "headings": [
         "# Cognito",
         "## Acciones admitidas",
-        "## Puntos finales conocidos y OAuth",
-        "## Configuraci\u00f3n",
-        "## Ejemplos",
-        "# Create a user pool",
-        "# Create an app client",
-        "# Retrieve the generated client secret",
-        "# Register a resource server and scopes",
-        "# Create a user",
-        "# Set a permanent password",
-        "# Authenticate"
+        "### Grupos de usuarios",
+        "### Etiquetas del grupo de usuarios",
+        "### Clientes del grupo de usuarios",
+        "### Servidores de recursos",
+        "### Gesti\u00f3n de usuarios administradores",
+        "### Operaciones de usuario",
+        "### Autenticaci\u00f3n",
+        "### Listado de usuarios",
+        "### Grupos",
+        "## Puntos finales conocidos y OAuth"
       ]
     },
     {
@@ -6016,6 +6094,27 @@
       ]
     },
     {
+      "path": "web/public/content/oficial-es/services/docdb.md",
+      "lines": 145,
+      "kind": "course-content",
+      "symbols": [],
+      "imports": [],
+      "headings": [
+        "# DocumentDB",
+        "## Acciones admitidas",
+        "## Configuraci\u00f3n",
+        "### Docker Redactar",
+        "## Ejemplos",
+        "### Gesti\u00f3n API (AWS CLI)",
+        "# Create a DocumentDB cluster (starts a MongoDB container)",
+        "# Get the cluster endpoint and port",
+        "# Add an instance to the cluster",
+        "# Delete instance and cluster",
+        "### Plano de datos (Python + pymongo)",
+        "# Read the host and port from DescribeDBClusters \u2014 the port is dynamic"
+      ]
+    },
+    {
       "path": "web/public/content/oficial-es/services/dynamodb.md",
       "lines": 160,
       "kind": "course-content",
@@ -6038,7 +6137,7 @@
     },
     {
       "path": "web/public/content/oficial-es/services/ec2.md",
-      "lines": 241,
+      "lines": 451,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -6046,20 +6145,20 @@
         "# EC2",
         "## Modelo de ejecuci\u00f3n de instancia",
         "## Mapeo de im\u00e1genes de AMI a Docker",
+        "### Invitados AMI derivados de im\u00e1genes en la nube",
         "## Inyecci\u00f3n de clave SSH",
+        "## Publicaci\u00f3n de puertos del grupo de seguridad",
         "## UserData",
         "## Servicio de metadatos de instancia (IMDS)",
         "# IMDSv2 \u2014 get a token first",
         "# Then use the token for metadata requests",
         "### Puntos finales IMDS compatibles",
-        "## Recursos predeterminados de",
-        "## Acciones admitidas",
-        "### Instancias"
+        "## Recursos predeterminados de"
       ]
     },
     {
       "path": "web/public/content/oficial-es/services/ecr.md",
-      "lines": 190,
+      "lines": 197,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -6080,7 +6179,7 @@
     },
     {
       "path": "web/public/content/oficial-es/services/ecs.md",
-      "lines": 272,
+      "lines": 287,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -6101,7 +6200,7 @@
     },
     {
       "path": "web/public/content/oficial-es/services/eks.md",
-      "lines": 181,
+      "lines": 299,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -6113,16 +6212,29 @@
         "### Modo real (`mock: false`, predeterminado)",
         "#### Conexi\u00f3n con `kubectl` (flujo de trabajo nativo AWS)",
         "## Configuraci\u00f3n",
+        "### Extrayendo im\u00e1genes de Floci ECR",
         "### Modo simulado (CI/pruebas)",
         "# docker-compose.yml \u2014 CI / test environment",
         "## Formato ARN",
-        "## Ejemplos",
-        "# Create a cluster"
+        "## Ejemplos"
+      ]
+    },
+    {
+      "path": "web/public/content/oficial-es/services/elastic-beanstalk.md",
+      "lines": 54,
+      "kind": "course-content",
+      "symbols": [],
+      "imports": [],
+      "headings": [
+        "# Tallo de frijol el\u00e1stico",
+        "## Operaciones admitidas (14 en total)",
+        "## Configuraci\u00f3n",
+        "## Ejemplo de uso de"
       ]
     },
     {
       "path": "web/public/content/oficial-es/services/elasticache.md",
-      "lines": 93,
+      "lines": 101,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -6130,7 +6242,7 @@
         "# ElastiCache",
         "## Acciones de gesti\u00f3n admitidas",
         "## Configuraci\u00f3n",
-        "### Docker Componer",
+        "### Docker Redactar",
         "## Ejemplos",
         "# Create a replication group (starts a Valkey container)",
         "# Get the connection port",
@@ -6143,7 +6255,7 @@
     },
     {
       "path": "web/public/content/oficial-es/services/elb.md",
-      "lines": 117,
+      "lines": 171,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -6156,15 +6268,31 @@
         "### Oyentes",
         "### Reglas de",
         "### Etiquetas",
-        "### Metadatos",
+        "### Metadatos de",
         "## Notas de comportamiento de",
         "## Formato ARN",
         "## Ejemplos"
       ]
     },
     {
+      "path": "web/public/content/oficial-es/services/emr.md",
+      "lines": 63,
+      "kind": "course-content",
+      "symbols": [],
+      "imports": [],
+      "headings": [
+        "# EMR",
+        "## Acciones admitidas",
+        "## Ejemplo de",
+        "# Create a cluster",
+        "# Inspect it",
+        "# Add a step",
+        "# Terminate"
+      ]
+    },
+    {
       "path": "web/public/content/oficial-es/services/eventbridge.md",
-      "lines": 85,
+      "lines": 101,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -6184,7 +6312,7 @@
     },
     {
       "path": "web/public/content/oficial-es/services/firehose.md",
-      "lines": 45,
+      "lines": 51,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -6200,7 +6328,7 @@
     },
     {
       "path": "web/public/content/oficial-es/services/glue.md",
-      "lines": 134,
+      "lines": 199,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -6208,19 +6336,20 @@
         "# Glue",
         "## Acciones admitidas",
         "### Cat\u00e1logo de datos",
+        "#### Bases de datos",
+        "#### Mesas",
+        "#### Particiones",
+        "#### Funciones definidas por el usuario",
         "### Registro de esquema",
-        "## Configuraci\u00f3n",
-        "## Integraci\u00f3n de con Athena",
-        "## Ejemplo de cat\u00e1logo de datos",
-        "# Create a database",
-        "# Create a JSON table (standard AWS format for NDJSON data)",
-        "# Create a Parquet table",
-        "## Ejemplo de registro de esquema"
+        "#### Registros",
+        "#### Esquemas",
+        "#### Versiones",
+        "#### Metadatos y etiquetas"
       ]
     },
     {
       "path": "web/public/content/oficial-es/services/iam.md",
-      "lines": 187,
+      "lines": 305,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -6241,7 +6370,7 @@
     },
     {
       "path": "web/public/content/oficial-es/services/index.md",
-      "lines": 87,
+      "lines": 102,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -6252,8 +6381,25 @@
       ]
     },
     {
+      "path": "web/public/content/oficial-es/services/iot.md",
+      "lines": 142,
+      "kind": "course-content",
+      "symbols": [],
+      "imports": [],
+      "headings": [
+        "# AWS IoT N\u00facleo",
+        "## Cobertura MVP 1",
+        "## Cobertura MVP 2",
+        "## Agente MQTT",
+        "## Temas reservados",
+        "## Forma de implementaci\u00f3n",
+        "## Criterios de finalizaci\u00f3n de la fase 7 de",
+        "## Motor de reglas"
+      ]
+    },
+    {
       "path": "web/public/content/oficial-es/services/kinesis.md",
-      "lines": 110,
+      "lines": 116,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -6274,7 +6420,7 @@
     },
     {
       "path": "web/public/content/oficial-es/services/kms.md",
-      "lines": 87,
+      "lines": 96,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -6293,7 +6439,7 @@
     },
     {
       "path": "web/public/content/oficial-es/services/lambda.md",
-      "lines": 432,
+      "lines": 455,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -6310,6 +6456,38 @@
         "### C\u00f3mo funciona",
         "### Configuraci\u00f3n de",
         "# Optional: restrict which host paths may be bind-mounted (comma-separated)"
+      ]
+    },
+    {
+      "path": "web/public/content/oficial-es/services/lightsail.md",
+      "lines": 59,
+      "kind": "course-content",
+      "symbols": [],
+      "imports": [],
+      "headings": [
+        "# Vela de luz de Amazon",
+        "## Flujos de trabajo locales compatibles",
+        "## Ejemplos",
+        "## Persistencia"
+      ]
+    },
+    {
+      "path": "web/public/content/oficial-es/services/memorydb.md",
+      "lines": 86,
+      "kind": "course-content",
+      "symbols": [],
+      "imports": [],
+      "headings": [
+        "# MemoryDB",
+        "## Modo simulado",
+        "## Acciones de gesti\u00f3n compatibles con",
+        "## Configuraci\u00f3n",
+        "### Docker Redactar",
+        "## Ejemplos",
+        "# Create a cluster (starts a Valkey container)",
+        "# Get the connection address and port",
+        "# Connect with redis-cli (use the Port from ClusterEndpoint)",
+        "# Delete the cluster"
       ]
     },
     {
@@ -6332,23 +6510,23 @@
     },
     {
       "path": "web/public/content/oficial-es/services/neptune.md",
-      "lines": 132,
+      "lines": 166,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
       "headings": [
         "# Neptune",
-        "## Acciones admitidas",
+        "## Motor trasero (`db-type`)",
+        "## Acciones compatibles con",
         "## Configuraci\u00f3n",
-        "### Docker Componer",
+        "### Docker Redactar",
         "## Ejemplos",
         "### Gesti\u00f3n API (AWS CLI)",
         "# Create a Neptune cluster",
         "# Get cluster details and Gremlin endpoint port",
         "# Create an instance in the cluster",
         "# Delete instance and cluster",
-        "### Plano de datos gr\u00e1ficos (Python + gremlin-python)",
-        "# Use the port returned by DescribeDBClusters"
+        "### Plano de datos gr\u00e1ficos (Python + gremlin-python)"
       ]
     },
     {
@@ -6374,7 +6552,7 @@
     },
     {
       "path": "web/public/content/oficial-es/services/pipes.md",
-      "lines": 91,
+      "lines": 110,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -6410,8 +6588,22 @@
       ]
     },
     {
+      "path": "web/public/content/oficial-es/services/rds-data.md",
+      "lines": 86,
+      "kind": "course-content",
+      "symbols": [],
+      "imports": [],
+      "headings": [
+        "# RDS Datos API",
+        "## Acciones admitidas",
+        "## Notas de compatibilidad",
+        "## Configuraci\u00f3n",
+        "## Ejemplo de"
+      ]
+    },
+    {
       "path": "web/public/content/oficial-es/services/rds.md",
-      "lines": 141,
+      "lines": 183,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -6420,14 +6612,14 @@
         "## Acciones de gesti\u00f3n admitidas",
         "## Configuraci\u00f3n",
         "### Docker Redactar",
+        "### Modo simulado (CI/pruebas)",
+        "# docker-compose.yml \u2014 CI / test environment",
         "## Ejemplos",
         "# Create a PostgreSQL instance",
         "# Get connection details",
         "# Connect with psql (use the port returned above)",
         "# Create a MySQL instance",
-        "# Connect with mysql client",
-        "## Motores compatibles con",
-        "## Persistencia"
+        "# Connect with mysql client"
       ]
     },
     {
@@ -6468,13 +6660,14 @@
     },
     {
       "path": "web/public/content/oficial-es/services/s3.md",
-      "lines": 316,
+      "lines": 322,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
       "headings": [
         "# S3",
         "## Operaciones compatibles",
+        "## Lecturas de rango",
         "## S3 Select",
         "### Modos de ejecuci\u00f3n",
         "### Modos FileHeaderInfo (CSV)",
@@ -6483,8 +6676,19 @@
         "### Ejemplo",
         "# Upload a CSV file",
         "# Query with WHERE and column projection",
-        "# IS NULL check",
-        "# JSON Lines input"
+        "# IS NULL check"
+      ]
+    },
+    {
+      "path": "web/public/content/oficial-es/services/s3vectors.md",
+      "lines": 37,
+      "kind": "course-content",
+      "symbols": [],
+      "imports": [],
+      "headings": [
+        "# S3 Vectores",
+        "## Operaciones compatibles",
+        "## Ejemplo de"
       ]
     },
     {
@@ -6510,7 +6714,7 @@
     },
     {
       "path": "web/public/content/oficial-es/services/secrets-manager.md",
-      "lines": 97,
+      "lines": 100,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -6531,7 +6735,7 @@
     },
     {
       "path": "web/public/content/oficial-es/services/ses.md",
-      "lines": 224,
+      "lines": 250,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -6573,7 +6777,7 @@
     },
     {
       "path": "web/public/content/oficial-es/services/sqs.md",
-      "lines": 138,
+      "lines": 143,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -6594,24 +6798,28 @@
     },
     {
       "path": "web/public/content/oficial-es/services/ssm.md",
-      "lines": 61,
+      "lines": 100,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
       "headings": [
-        "# SSM Almac\u00e9n de par\u00e1metros",
+        "# SSM",
         "## Acciones compatibles con",
+        "### Almac\u00e9n de par\u00e1metros",
+        "### Ejecutar comando",
+        "### Protocolo del agente ec2messages",
+        "## Ejecuci\u00f3n del comando Ejecutar",
         "## Configuraci\u00f3n",
         "## Ejemplos",
         "# Store parameters",
         "# Retrieve",
         "# Delete",
-        "## Tipos de par\u00e1metros"
+        "# Run a shell command on a Floci EC2 instance"
       ]
     },
     {
       "path": "web/public/content/oficial-es/services/step-functions.md",
-      "lines": 70,
+      "lines": 84,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -6628,7 +6836,7 @@
     },
     {
       "path": "web/public/content/oficial-es/services/sts.md",
-      "lines": 42,
+      "lines": 62,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -6636,6 +6844,8 @@
         "# STS",
         "## Acciones compatibles con",
         "## Configuraci\u00f3n",
+        "## Aplicaci\u00f3n de pol\u00edticas de confianza",
+        "### Limitaciones conocidas",
         "## Ejemplos",
         "# Get caller identity (always works, useful for smoke testing)",
         "# Assume a role",
@@ -6696,6 +6906,21 @@
         "# Create a server",
         "# List servers",
         "# Stop a server (must be ONLINE)"
+      ]
+    },
+    {
+      "path": "web/public/content/oficial-es/services/wafv2.md",
+      "lines": 74,
+      "kind": "course-content",
+      "symbols": [],
+      "imports": [],
+      "headings": [
+        "# WAFv2",
+        "## Acciones admitidas",
+        "## Alcance",
+        "## Ejemplo de",
+        "# Create an IP set",
+        "# Create a web ACL that allows by default"
       ]
     },
     {
@@ -7375,7 +7600,7 @@
     },
     {
       "path": "web/scripts/source-docs-en/configuration/advanced/application-yml.md",
-      "lines": 335,
+      "lines": 356,
       "kind": "documentation",
       "symbols": [],
       "imports": [],
@@ -7444,7 +7669,7 @@
     },
     {
       "path": "web/scripts/source-docs-en/configuration/docker.md",
-      "lines": 135,
+      "lines": 186,
       "kind": "documentation",
       "symbols": [],
       "imports": [],
@@ -7457,12 +7682,13 @@
         "### Precedence",
         "## Container Log Settings",
         "## Docker Network",
+        "## Running on Podman (rootless)",
         "## Full Reference"
       ]
     },
     {
       "path": "web/scripts/source-docs-en/configuration/environment-variables.md",
-      "lines": 422,
+      "lines": 439,
       "kind": "documentation",
       "symbols": [],
       "imports": [],
@@ -7472,13 +7698,13 @@
         "## Authentication",
         "## Browser CORS",
         "## TLS / HTTPS",
+        "## Wire Protocols",
         "## Storage",
         "### Per-service storage overrides",
         "## Docker Daemon",
         "### Registry credentials",
         "## DNS",
-        "## Initialization Hooks",
-        "## Services \u2014 Shared"
+        "## Initialization Hooks"
       ]
     },
     {
@@ -7504,13 +7730,14 @@
     },
     {
       "path": "web/scripts/source-docs-en/configuration/multi-account.md",
-      "lines": 161,
+      "lines": 176,
       "kind": "documentation",
       "symbols": [],
       "imports": [],
       "headings": [
         "# Multi-Account Isolation",
         "## How It Works",
+        "## Temporary Credentials (AssumeRole)",
         "## Default Behavior (Single Account)",
         "## Enabling Multi-Account Isolation",
         "### AWS CLI",
@@ -7519,8 +7746,7 @@
         "# AWS Secret Access Key: test",
         "# AWS Access Key ID: 222222222222",
         "# AWS Secret Access Key: test",
-        "# Create the same queue name under both accounts",
-        "# Each account sees only its own queue"
+        "# Create the same queue name under both accounts"
       ]
     },
     {
@@ -7546,7 +7772,7 @@
     },
     {
       "path": "web/scripts/source-docs-en/configuration/storage.md",
-      "lines": 175,
+      "lines": 177,
       "kind": "documentation",
       "symbols": [],
       "imports": [],
@@ -7647,7 +7873,7 @@
     },
     {
       "path": "web/scripts/source-docs-en/getting-started/migrate-from-localstack.md",
-      "lines": 254,
+      "lines": 256,
       "kind": "documentation",
       "symbols": [],
       "imports": [],
@@ -7689,7 +7915,7 @@
     },
     {
       "path": "web/scripts/source-docs-en/index.md",
-      "lines": 105,
+      "lines": 118,
       "kind": "documentation",
       "symbols": [],
       "imports": [],
@@ -7711,7 +7937,7 @@
     },
     {
       "path": "web/scripts/source-docs-en/services/acm.md",
-      "lines": 125,
+      "lines": 127,
       "kind": "documentation",
       "symbols": [],
       "imports": [],
@@ -7728,6 +7954,24 @@
         "# List only issued certificates",
         "# Add tags",
         "# List tags"
+      ]
+    },
+    {
+      "path": "web/scripts/source-docs-en/services/amazonmq.md",
+      "lines": 82,
+      "kind": "documentation",
+      "symbols": [],
+      "imports": [],
+      "headings": [
+        "# Amazon MQ (RabbitMQ)",
+        "## Supported Actions",
+        "### User management",
+        "## Configuration",
+        "## How it works",
+        "## Examples",
+        "# Create a broker (exactly one admin user is required for RabbitMQ)",
+        "# Describe a broker (poll until BrokerState is RUNNING)",
+        "# Delete a broker"
       ]
     },
     {
@@ -7774,7 +8018,7 @@
     },
     {
       "path": "web/scripts/source-docs-en/services/appsync.md",
-      "lines": 190,
+      "lines": 296,
       "kind": "documentation",
       "symbols": [],
       "imports": [],
@@ -7790,12 +8034,12 @@
         "### API Keys",
         "### Tags",
         "### Environment Variables",
-        "## Pagination"
+        "### Domain Names"
       ]
     },
     {
       "path": "web/scripts/source-docs-en/services/athena.md",
-      "lines": 130,
+      "lines": 138,
       "kind": "documentation",
       "symbols": [],
       "imports": [],
@@ -7816,7 +8060,7 @@
     },
     {
       "path": "web/scripts/source-docs-en/services/autoscaling.md",
-      "lines": 134,
+      "lines": 150,
       "kind": "documentation",
       "symbols": [],
       "imports": [],
@@ -7832,7 +8076,7 @@
         "### Activities",
         "### Metadata",
         "## Capacity Reconciler (Phase 2)",
-        "## Configuration"
+        "## Launch Source Compatibility"
       ]
     },
     {
@@ -7854,6 +8098,23 @@
         "## Job Lifecycle",
         "## Supported Resource Types",
         "## Constraints"
+      ]
+    },
+    {
+      "path": "web/scripts/source-docs-en/services/batch.md",
+      "lines": 105,
+      "kind": "documentation",
+      "symbols": [],
+      "imports": [],
+      "headings": [
+        "# AWS Batch",
+        "## Supported Operations",
+        "## Runner Modes",
+        "## Submit Behavior",
+        "## EventBridge",
+        "## CloudFormation",
+        "## Configuration",
+        "## Limitations"
       ]
     },
     {
@@ -7910,7 +8171,7 @@
     },
     {
       "path": "web/scripts/source-docs-en/services/cloudformation.md",
-      "lines": 199,
+      "lines": 254,
       "kind": "documentation",
       "symbols": [],
       "imports": [],
@@ -7919,14 +8180,14 @@
         "## Supported Actions",
         "## Supported Resource Types",
         "## Lambda Stack Updates",
+        "## Account-Aware Provisioning",
+        "## StackSets",
+        "# 1. Create the stack set (in the administration account)",
+        "# 2. Create instances in two target accounts",
+        "# 3. The resources materialize in each target account's namespace",
         "## Configuration",
         "## Examples",
-        "# Validate a template",
-        "# Deploy a stack",
-        "# Check status",
-        "# Watch events",
-        "# Update",
-        "# Delete"
+        "# Validate a template"
       ]
     },
     {
@@ -7948,6 +8209,34 @@
         "### CloudFront Functions",
         "### Tagging",
         "## Behavior"
+      ]
+    },
+    {
+      "path": "web/scripts/source-docs-en/services/cloudmap.md",
+      "lines": 121,
+      "kind": "documentation",
+      "symbols": [],
+      "imports": [],
+      "headings": [
+        "# AWS Cloud Map",
+        "## Supported Operations",
+        "## Configuration",
+        "## Examples",
+        "## Related Docs",
+        "## Out of Scope"
+      ]
+    },
+    {
+      "path": "web/scripts/source-docs-en/services/cloudtrail.md",
+      "lines": 41,
+      "kind": "documentation",
+      "symbols": [],
+      "imports": [],
+      "headings": [
+        "# CloudTrail",
+        "## Supported Actions",
+        "## Example",
+        "# A trail needs a destination S3 bucket"
       ]
     },
     {
@@ -8014,24 +8303,38 @@
       ]
     },
     {
+      "path": "web/scripts/source-docs-en/services/codepipeline.md",
+      "lines": 62,
+      "kind": "documentation",
+      "symbols": [],
+      "imports": [],
+      "headings": [
+        "# CodePipeline",
+        "## Supported Operations (44 total)",
+        "## Execution",
+        "## Configuration",
+        "## Example"
+      ]
+    },
+    {
       "path": "web/scripts/source-docs-en/services/cognito.md",
-      "lines": 163,
+      "lines": 245,
       "kind": "documentation",
       "symbols": [],
       "imports": [],
       "headings": [
         "# Cognito",
         "## Supported Actions",
-        "## Well-Known And OAuth Endpoints",
-        "## Configuration",
-        "## Examples",
-        "# Create a user pool",
-        "# Create an app client",
-        "# Retrieve the generated client secret",
-        "# Register a resource server and scopes",
-        "# Create a user",
-        "# Set a permanent password",
-        "# Authenticate"
+        "### User Pools",
+        "### User Pool Tags",
+        "### User Pool Clients",
+        "### Resource Servers",
+        "### Admin User Management",
+        "### User Operations",
+        "### Authentication",
+        "### User Listing",
+        "### Groups",
+        "## Well-Known And OAuth Endpoints"
       ]
     },
     {
@@ -8075,6 +8378,27 @@
       ]
     },
     {
+      "path": "web/scripts/source-docs-en/services/docdb.md",
+      "lines": 145,
+      "kind": "documentation",
+      "symbols": [],
+      "imports": [],
+      "headings": [
+        "# DocumentDB",
+        "## Supported Actions",
+        "## Configuration",
+        "### Docker Compose",
+        "## Examples",
+        "### Management API (AWS CLI)",
+        "# Create a DocumentDB cluster (starts a MongoDB container)",
+        "# Get the cluster endpoint and port",
+        "# Add an instance to the cluster",
+        "# Delete instance and cluster",
+        "### Data plane (Python + pymongo)",
+        "# Read the host and port from DescribeDBClusters \u2014 the port is dynamic"
+      ]
+    },
+    {
       "path": "web/scripts/source-docs-en/services/dynamodb.md",
       "lines": 160,
       "kind": "documentation",
@@ -8097,7 +8421,7 @@
     },
     {
       "path": "web/scripts/source-docs-en/services/ec2.md",
-      "lines": 241,
+      "lines": 451,
       "kind": "documentation",
       "symbols": [],
       "imports": [],
@@ -8105,20 +8429,20 @@
         "# EC2",
         "## Instance Execution Model",
         "## AMI to Docker Image Mapping",
+        "### Cloud-image-derived AMI guests",
         "## SSH Key Injection",
+        "## Security Group Port Publishing",
         "## UserData",
         "## Instance Metadata Service (IMDS)",
         "# IMDSv2 \u2014 get a token first",
         "# Then use the token for metadata requests",
         "### Supported IMDS endpoints",
-        "## Default Resources",
-        "## Supported Actions",
-        "### Instances"
+        "## Default Resources"
       ]
     },
     {
       "path": "web/scripts/source-docs-en/services/ecr.md",
-      "lines": 190,
+      "lines": 197,
       "kind": "documentation",
       "symbols": [],
       "imports": [],
@@ -8139,7 +8463,7 @@
     },
     {
       "path": "web/scripts/source-docs-en/services/ecs.md",
-      "lines": 272,
+      "lines": 287,
       "kind": "documentation",
       "symbols": [],
       "imports": [],
@@ -8160,7 +8484,7 @@
     },
     {
       "path": "web/scripts/source-docs-en/services/eks.md",
-      "lines": 181,
+      "lines": 299,
       "kind": "documentation",
       "symbols": [],
       "imports": [],
@@ -8172,16 +8496,29 @@
         "### Real mode (`mock: false`, default)",
         "#### Connecting with `kubectl` (native AWS workflow)",
         "## Configuration",
+        "### Pulling images from Floci ECR",
         "### Mock mode (CI / tests)",
         "# docker-compose.yml \u2014 CI / test environment",
         "## ARN Format",
-        "## Examples",
-        "# Create a cluster"
+        "## Examples"
+      ]
+    },
+    {
+      "path": "web/scripts/source-docs-en/services/elastic-beanstalk.md",
+      "lines": 54,
+      "kind": "documentation",
+      "symbols": [],
+      "imports": [],
+      "headings": [
+        "# Elastic Beanstalk",
+        "## Supported Operations (14 total)",
+        "## Configuration",
+        "## Usage Example"
       ]
     },
     {
       "path": "web/scripts/source-docs-en/services/elasticache.md",
-      "lines": 93,
+      "lines": 101,
       "kind": "documentation",
       "symbols": [],
       "imports": [],
@@ -8202,7 +8539,7 @@
     },
     {
       "path": "web/scripts/source-docs-en/services/elb.md",
-      "lines": 117,
+      "lines": 171,
       "kind": "documentation",
       "symbols": [],
       "imports": [],
@@ -8222,8 +8559,24 @@
       ]
     },
     {
+      "path": "web/scripts/source-docs-en/services/emr.md",
+      "lines": 63,
+      "kind": "documentation",
+      "symbols": [],
+      "imports": [],
+      "headings": [
+        "# EMR",
+        "## Supported Actions",
+        "## Example",
+        "# Create a cluster",
+        "# Inspect it",
+        "# Add a step",
+        "# Terminate"
+      ]
+    },
+    {
       "path": "web/scripts/source-docs-en/services/eventbridge.md",
-      "lines": 85,
+      "lines": 101,
       "kind": "documentation",
       "symbols": [],
       "imports": [],
@@ -8243,7 +8596,7 @@
     },
     {
       "path": "web/scripts/source-docs-en/services/firehose.md",
-      "lines": 45,
+      "lines": 51,
       "kind": "documentation",
       "symbols": [],
       "imports": [],
@@ -8259,7 +8612,7 @@
     },
     {
       "path": "web/scripts/source-docs-en/services/glue.md",
-      "lines": 134,
+      "lines": 199,
       "kind": "documentation",
       "symbols": [],
       "imports": [],
@@ -8267,19 +8620,20 @@
         "# Glue",
         "## Supported Actions",
         "### Data Catalog",
+        "#### Databases",
+        "#### Tables",
+        "#### Partitions",
+        "#### User-defined Functions",
         "### Schema Registry",
-        "## Configuration",
-        "## Integration with Athena",
-        "## Data Catalog Example",
-        "# Create a database",
-        "# Create a JSON table (standard AWS format for NDJSON data)",
-        "# Create a Parquet table",
-        "## Schema Registry Example"
+        "#### Registries",
+        "#### Schemas",
+        "#### Versions",
+        "#### Metadata and Tags"
       ]
     },
     {
       "path": "web/scripts/source-docs-en/services/iam.md",
-      "lines": 187,
+      "lines": 305,
       "kind": "documentation",
       "symbols": [],
       "imports": [],
@@ -8300,7 +8654,7 @@
     },
     {
       "path": "web/scripts/source-docs-en/services/index.md",
-      "lines": 87,
+      "lines": 102,
       "kind": "documentation",
       "symbols": [],
       "imports": [],
@@ -8311,8 +8665,25 @@
       ]
     },
     {
+      "path": "web/scripts/source-docs-en/services/iot.md",
+      "lines": 142,
+      "kind": "documentation",
+      "symbols": [],
+      "imports": [],
+      "headings": [
+        "# AWS IoT Core",
+        "## MVP 1 Coverage",
+        "## MVP 2 Coverage",
+        "## MQTT Broker",
+        "## Reserved Topics",
+        "## Implementation Shape",
+        "## Phase 7 Completion Criteria",
+        "## Rules Engine"
+      ]
+    },
+    {
       "path": "web/scripts/source-docs-en/services/kinesis.md",
-      "lines": 110,
+      "lines": 116,
       "kind": "documentation",
       "symbols": [],
       "imports": [],
@@ -8333,7 +8704,7 @@
     },
     {
       "path": "web/scripts/source-docs-en/services/kms.md",
-      "lines": 87,
+      "lines": 96,
       "kind": "documentation",
       "symbols": [],
       "imports": [],
@@ -8352,7 +8723,7 @@
     },
     {
       "path": "web/scripts/source-docs-en/services/lambda.md",
-      "lines": 432,
+      "lines": 455,
       "kind": "documentation",
       "symbols": [],
       "imports": [],
@@ -8369,6 +8740,38 @@
         "### How it works",
         "### Configuration",
         "# Optional: restrict which host paths may be bind-mounted (comma-separated)"
+      ]
+    },
+    {
+      "path": "web/scripts/source-docs-en/services/lightsail.md",
+      "lines": 59,
+      "kind": "documentation",
+      "symbols": [],
+      "imports": [],
+      "headings": [
+        "# Amazon Lightsail",
+        "## Supported local workflows",
+        "## Examples",
+        "## Persistence"
+      ]
+    },
+    {
+      "path": "web/scripts/source-docs-en/services/memorydb.md",
+      "lines": 86,
+      "kind": "documentation",
+      "symbols": [],
+      "imports": [],
+      "headings": [
+        "# MemoryDB",
+        "## Mock Mode",
+        "## Supported Management Actions",
+        "## Configuration",
+        "### Docker Compose",
+        "## Examples",
+        "# Create a cluster (starts a Valkey container)",
+        "# Get the connection address and port",
+        "# Connect with redis-cli (use the Port from ClusterEndpoint)",
+        "# Delete the cluster"
       ]
     },
     {
@@ -8391,12 +8794,13 @@
     },
     {
       "path": "web/scripts/source-docs-en/services/neptune.md",
-      "lines": 132,
+      "lines": 166,
       "kind": "documentation",
       "symbols": [],
       "imports": [],
       "headings": [
         "# Neptune",
+        "## Backend engine (`db-type`)",
         "## Supported Actions",
         "## Configuration",
         "### Docker Compose",
@@ -8406,8 +8810,7 @@
         "# Get cluster details and Gremlin endpoint port",
         "# Create an instance in the cluster",
         "# Delete instance and cluster",
-        "### Graph data plane (Python + gremlin-python)",
-        "# Use the port returned by DescribeDBClusters"
+        "### Graph data plane (Python + gremlin-python)"
       ]
     },
     {
@@ -8433,7 +8836,7 @@
     },
     {
       "path": "web/scripts/source-docs-en/services/pipes.md",
-      "lines": 91,
+      "lines": 110,
       "kind": "documentation",
       "symbols": [],
       "imports": [],
@@ -8469,8 +8872,22 @@
       ]
     },
     {
+      "path": "web/scripts/source-docs-en/services/rds-data.md",
+      "lines": 86,
+      "kind": "documentation",
+      "symbols": [],
+      "imports": [],
+      "headings": [
+        "# RDS Data API",
+        "## Supported Actions",
+        "## Compatibility Notes",
+        "## Configuration",
+        "## Example"
+      ]
+    },
+    {
       "path": "web/scripts/source-docs-en/services/rds.md",
-      "lines": 141,
+      "lines": 183,
       "kind": "documentation",
       "symbols": [],
       "imports": [],
@@ -8479,14 +8896,14 @@
         "## Supported Management Actions",
         "## Configuration",
         "### Docker Compose",
+        "### Mock mode (CI / tests)",
+        "# docker-compose.yml \u2014 CI / test environment",
         "## Examples",
         "# Create a PostgreSQL instance",
         "# Get connection details",
         "# Connect with psql (use the port returned above)",
         "# Create a MySQL instance",
-        "# Connect with mysql client",
-        "## Supported Engines",
-        "## Persistence"
+        "# Connect with mysql client"
       ]
     },
     {
@@ -8527,13 +8944,14 @@
     },
     {
       "path": "web/scripts/source-docs-en/services/s3.md",
-      "lines": 316,
+      "lines": 322,
       "kind": "documentation",
       "symbols": [],
       "imports": [],
       "headings": [
         "# S3",
         "## Supported Operations",
+        "## Range Reads",
         "## S3 Select",
         "### Execution modes",
         "### FileHeaderInfo modes (CSV)",
@@ -8542,8 +8960,19 @@
         "### Example",
         "# Upload a CSV file",
         "# Query with WHERE and column projection",
-        "# IS NULL check",
-        "# JSON Lines input"
+        "# IS NULL check"
+      ]
+    },
+    {
+      "path": "web/scripts/source-docs-en/services/s3vectors.md",
+      "lines": 37,
+      "kind": "documentation",
+      "symbols": [],
+      "imports": [],
+      "headings": [
+        "# S3 Vectors",
+        "## Supported Operations",
+        "## Example"
       ]
     },
     {
@@ -8569,7 +8998,7 @@
     },
     {
       "path": "web/scripts/source-docs-en/services/secrets-manager.md",
-      "lines": 97,
+      "lines": 100,
       "kind": "documentation",
       "symbols": [],
       "imports": [],
@@ -8590,7 +9019,7 @@
     },
     {
       "path": "web/scripts/source-docs-en/services/ses.md",
-      "lines": 224,
+      "lines": 250,
       "kind": "documentation",
       "symbols": [],
       "imports": [],
@@ -8632,7 +9061,7 @@
     },
     {
       "path": "web/scripts/source-docs-en/services/sqs.md",
-      "lines": 138,
+      "lines": 143,
       "kind": "documentation",
       "symbols": [],
       "imports": [],
@@ -8653,24 +9082,28 @@
     },
     {
       "path": "web/scripts/source-docs-en/services/ssm.md",
-      "lines": 61,
+      "lines": 100,
       "kind": "documentation",
       "symbols": [],
       "imports": [],
       "headings": [
-        "# SSM Parameter Store",
+        "# SSM",
         "## Supported Actions",
+        "### Parameter Store",
+        "### Run Command",
+        "### ec2messages Agent Protocol",
+        "## Run Command Execution",
         "## Configuration",
         "## Examples",
         "# Store parameters",
         "# Retrieve",
         "# Delete",
-        "## Parameter Types"
+        "# Run a shell command on a Floci EC2 instance"
       ]
     },
     {
       "path": "web/scripts/source-docs-en/services/step-functions.md",
-      "lines": 70,
+      "lines": 84,
       "kind": "documentation",
       "symbols": [],
       "imports": [],
@@ -8687,7 +9120,7 @@
     },
     {
       "path": "web/scripts/source-docs-en/services/sts.md",
-      "lines": 42,
+      "lines": 62,
       "kind": "documentation",
       "symbols": [],
       "imports": [],
@@ -8695,6 +9128,8 @@
         "# STS",
         "## Supported Actions",
         "## Configuration",
+        "## Trust Policy Enforcement",
+        "### Known limitations",
         "## Examples",
         "# Get caller identity (always works, useful for smoke testing)",
         "# Assume a role",
@@ -8755,6 +9190,21 @@
         "# Create a server",
         "# List servers",
         "# Stop a server (must be ONLINE)"
+      ]
+    },
+    {
+      "path": "web/scripts/source-docs-en/services/wafv2.md",
+      "lines": 74,
+      "kind": "documentation",
+      "symbols": [],
+      "imports": [],
+      "headings": [
+        "# WAF v2",
+        "## Supported Actions",
+        "## Scope",
+        "## Example",
+        "# Create an IP set",
+        "# Create a web ACL that allows by default"
       ]
     },
     {

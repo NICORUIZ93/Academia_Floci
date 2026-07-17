@@ -5,26 +5,28 @@
 
 ## Acciones compatibles con
 
+<!-- floci:actions:start -->
 | Acción | Descripción |
-|---|---|
+| --- | --- |
 | `RequestCertificate` | Solicitar un nuevo certificado (emitido automáticamente para emulación) |
 | `DescribeCertificate` | Obtenga detalles del certificado y estado de validación |
 | `GetCertificate` | Recuperar el certificado y la cadena en formato PEM |
 | `ListCertificates` | Listar todos los certificados con filtrado de estado opcional |
 | `DeleteCertificate` | Eliminar un certificado |
-| `AddTagsToCertificate` | Agregar etiquetas a un certificado |
-| `RemoveTagsFromCertificate` | Eliminar etiquetas de un certificado |
-| `ListTagsForCertificate` | Listar etiquetas para un certificado |
+| `ImportCertificate` | - |
 | `ExportCertificate` | Certificado de exportación con clave privada cifrada (solo tipo PRIVADO) |
+| `AddTagsToCertificate` | Agregar etiquetas a un certificado |
+| `ListTagsForCertificate` | Listar etiquetas para un certificado |
+| `RemoveTagsFromCertificate` | Eliminar etiquetas de un certificado |
 | `GetAccountConfiguration` | Obtenga la configuración de ACM a nivel de cuenta |
 | `PutAccountConfiguration` | Actualizar la configuración de ACM a nivel de cuenta |
-| `RenewCertificate` | Activar la renovación del certificado |
+<!-- floci:actions:end -->
 
 ## Comportamiento de emulación
 
 - **Emisión automática:** Todos los certificados solicitados se emiten inmediatamente con el estado `ISSUED` (no se requiere validación de DNS/correo electrónico)
 - **Criptografía real:** Los certificados se generan con claves RSA/EC reales y estructura X.509 válida.
-- **Algoritmos clave:** Compatible con `RSA_2048`, `RSA_3072`, `RSA_4096`, `EC_prime256v1`, `EC_secp384r1`, `EC_secp521r1`.
+- **Algoritmos clave:** Compatible con `RSA_2048`, `RSA_3072`, `RSA_4096`, `EC_prime256v1`, `EC_secp384r1`, `EC_secp521r1`
 - **Tipos de certificado:** `AMAZON_ISSUED` (predeterminado) y `PRIVATE` (cuando se proporciona `CertificateAuthorityArn`)
 - **Exportar:** Sólo se pueden exportar certificados tipo `PRIVATE` con su clave privada
 

@@ -5,28 +5,33 @@
 
 ## Acciones compatibles con
 
+<!-- floci:actions:start -->
 | Acción | Descripción |
-|---|---|
+| --- | --- |
 | `CreateQueue` | Crear una cola estándar o FIFO |
 | `DeleteQueue` | Eliminar una cola |
 | `ListQueues` | Listar todas las colas |
 | `GetQueueUrl` | Buscar una URL de cola por nombre |
 | `GetQueueAttributes` | Obtener atributos de configuración de cola |
-| `SetQueueAttributes` | Actualizar configuración de cola |
 | `SendMessage` | Enviar un mensaje a una cola |
-| `SendMessageBatch` | Envía hasta 10 mensajes en una llamada |
 | `ReceiveMessage` | Encuesta para mensajes |
 | `DeleteMessage` | Confirmar y eliminar un mensaje |
 | `DeleteMessageBatch` | Eliminar varios mensajes a la vez |
+| `SendMessageBatch` | Envía hasta 10 mensajes en una llamada |
 | `ChangeMessageVisibility` | Ampliar o restablecer el tiempo de espera de visibilidad de un mensaje |
-| `ChangeMessageVisibilityBatch` | Cambiar visibilidad para múltiples mensajes |
-| `PurgeQueue` | Eliminar todos los mensajes en una cola |
+| `ChangeMessageVisibilityBatch` | Cambiar la visibilidad de varios mensajes |
+| `SetQueueAttributes` | Actualizar configuración de cola |
 | `TagQueue` | Agregar etiquetas a una cola |
 | `UntagQueue` | Eliminar etiquetas de una cola |
 | `ListQueueTags` | Listar etiquetas en una cola |
+| `PurgeQueue` | Eliminar todos los mensajes en una cola |
 | `ListDeadLetterSourceQueues` | Encuentre colas que utilicen esta cola como DLQ |
 | `StartMessageMoveTask` | Iniciar una tarea de redireccionamiento DLQ |
 | `ListMessageMoveTasks` | Listar tareas de redireccionamiento DLQ |
+| `CancelMessageMoveTask` | - |
+| `AddPermission` | - |
+| `RemovePermission` | - |
+<!-- floci:actions:end -->
 
 ## Punto final de inspección local
 
@@ -81,7 +86,7 @@ curl -X DELETE "http://localhost:4566/_aws/sqs/messages?QueueUrl=$QUEUE_URL"
 |---|---|---|
 | `FLOCI_SERVICES_SQS_ENABLED` | `true` | Activar o desactivar el servicio |
 | `FLOCI_SERVICES_SQS_DEFAULT_VISIBILITY_TIMEOUT` | `30` | Tiempo de espera de visibilidad de mensajes predeterminado (segundos) |
-| `FLOCI_SERVICES_SQS_MAX_MESSAGE_SIZE` | `262144` | Tamaño máximo de mensaje en bytes (256 KB) |
+| `FLOCI_SERVICES_SQS_MAX_MESSAGE_SIZE` | `1048576` | Tamaño máximo de mensaje en bytes (1 MB) |
 | `FLOCI_SERVICES_SQS_CLEAR_FIFO_DEDUPLICATION_CACHE_ON_PURGE` | `false` | Cuando `true`, `PurgeQueue` también borra la caché de deduplicación FIFO de la cola y cualquier tema FIFO de SNS suscrito a ella |
 
 ## Ejemplos

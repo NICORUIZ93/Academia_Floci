@@ -8,16 +8,24 @@ Floci gestiona contenedores Valkey/Redis Docker reales y conexiones proxy TCP a 
 
 ## Acciones de gestión admitidas
 
+<!-- floci:actions:start -->
 | Acción | Descripción |
-|---|---|
+| --- | --- |
+| `ValidateIamAuthToken` | Validar un token de autenticación IAM (autenticación del plano de datos) |
 | `CreateReplicationGroup` | Inicie un nuevo clúster Redis/Valkey |
 | `DescribeReplicationGroups` | Lista de clústeres y su información de conexión |
+| `ModifyReplicationGroup` | - |
 | `DeleteReplicationGroup` | Detener y eliminar un clúster |
 | `CreateUser` | Crear un usuario ElastiCache IAM |
 | `DescribeUsers` | Listar usuarios de ElastiCache |
 | `ModifyUser` | Actualizar cadenas de acceso de usuarios |
-| `DeleteUser` | Eliminar un usuario ElastiCache |
-| `ValidateIamAuthToken` | Validar un token de autenticación IAM (autenticación del plano de datos) |
+| `DeleteUser` | Eliminar un usuario de ElastiCache |
+| `CreateCacheCluster` | - |
+| `DescribeCacheClusters` | - |
+| `DeleteCacheCluster` | - |
+| `DescribeCacheSubnetGroups` | - |
+| `DescribeCacheParameterGroups` | - |
+<!-- floci:actions:end -->
 
 ## Configuración
 
@@ -28,7 +36,7 @@ Floci gestiona contenedores Valkey/Redis Docker reales y conexiones proxy TCP a 
 | `FLOCI_SERVICES_ELASTICACHE_PROXY_MAX_PORT` | `6399` | Último puerto de host en el rango de proxy ElastiCache |
 | `FLOCI_SERVICES_ELASTICACHE_DEFAULT_IMAGE` | `valkey/valkey:8` | Imagen Docker para contenedores Redis/Valkey |
 
-### Docker Componer
+### Docker Redactar
 
 ElastiCache requiere la exposición del rango de puerto y zócalo Docker. Para la autenticación de registro privado y otras configuraciones de Docker, consulte [Configuración de Docker](../configuration/docker.md).
 

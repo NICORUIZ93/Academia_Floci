@@ -6,15 +6,23 @@
 
 Floci administra contenedores reales PostgreSQL, MySQL y MariaDB Docker y conexiones proxy TCP a ellos, incluido el soporte de autenticación IAM.
 
+RDS Los datos API (`rds-data`) se documentan por separado porque utiliza rutas REST JSON en lugar del protocolo de consulta RDS. Consulte [RDS Datos API](rds-data.md).
+
 ## Acciones de gestión admitidas
 
+<!-- floci:actions:start -->
 | Acción | Descripción |
-|---|---|
+| --- | --- |
 | `CreateDBInstance` | Iniciar una nueva instancia de base de datos |
 | `DescribeDBInstances` | Listar instancias y su información de conexión |
 | `DeleteDBInstance` | Detener y eliminar una instancia |
 | `ModifyDBInstance` | Actualizar configuración de instancia |
 | `RebootDBInstance` | Reiniciar una instancia de base de datos |
+| `DescribeOrderableDBInstanceOptions` | Listar opciones deterministas de clases de instancias |
+| `CreateDBSubnetGroup` | Crear un grupo de subred de base de datos |
+| `DescribeDBSubnetGroups` | Listar grupos de subredes de bases de datos |
+| `ModifyDBSubnetGroup` | Actualizar la descripción del grupo de subred de la base de datos y la lista de subredes |
+| `DeleteDBSubnetGroup` | Eliminar un grupo de subred de base de datos |
 | `CreateDBCluster` | Cree un clúster compatible con Aurora |
 | `DescribeDBClusters` | Listar grupos |
 | `DeleteDBCluster` | Eliminar un clúster |
@@ -24,12 +32,25 @@ Floci administra contenedores reales PostgreSQL, MySQL y MariaDB Docker y conexi
 | `DeleteDBParameterGroup` | Eliminar un grupo de parámetros |
 | `ModifyDBParameterGroup` | Actualizar la configuración del grupo de parámetros |
 | `DescribeDBParameters` | Listar parámetros en un grupo |
+| `CreateDBClusterParameterGroup` | - |
+| `DescribeDBClusterParameterGroups` | - |
+| `DeleteDBClusterParameterGroup` | - |
+| `ModifyDBClusterParameterGroup` | - |
+| `DescribeDBClusterParameters` | - |
+| `DescribeDBSnapshots` | - |
+| `DescribeDBProxies` | - |
+| `DescribeDBClusterSnapshots` | - |
+| `AddTagsToResource` | Agregar etiquetas a un recurso de base de datos |
+| `ListTagsForResource` | Listar etiquetas para un recurso de base de datos |
+| `RemoveTagsFromResource` | Eliminar etiquetas de un recurso de base de datos |
+<!-- floci:actions:end -->
 
 ## Configuración
 
 | Variables | Predeterminado | Descripción |
 |---|---|---|
 | `FLOCI_SERVICES_RDS_ENABLED` | `true` | Activar o desactivar el servicio |
+| `FLOCI_SERVICES_RDS_MOCK` | `false` | `true` = solo metadatos (sin contenedor Docker ni proxy de autenticación) |
 | `FLOCI_SERVICES_RDS_PROXY_BASE_PORT` | `7000` | Primer puerto de host en el rango de proxy RDS |
 | `FLOCI_SERVICES_RDS_PROXY_MAX_PORT` | `7099` | Último puerto de host en el rango de proxy RDS |
 | `FLOCI_SERVICES_RDS_DEFAULT_POSTGRES_IMAGE` | `postgres:16-alpine` | Imagen Docker para instancias PostgreSQL |
@@ -53,6 +74,27 @@ services:
       FLOCI_SERVICES_DOCKER_NETWORK: my-project_default
       FLOCI_SERVICES_RDS_PROXY_BASE_PORT: "7001"
 ```
+
+### Modo simulado (CI/pruebas)
+
+Configure `FLOCI_SERVICES_RDS_MOCK=true` cuando solo necesite la forma de gestión API: clústeres y
+las instancias se registran como `available` inmediatamente, sin ningún contenedor Docker o proxy de autenticación detrás
+ellos. Cada recurso sigue teniendo un puerto de punto final único, pero nada escucha en él.
+
+```yaml
+# docker-compose.yml — CI / test environment
+services:
+  floci:
+    image: floci/floci:latest
+    environment:
+      FLOCI_SERVICES_RDS_MOCK: "true"
+```
+
+!!! nota "Cambio de modo sobre estado persistente"
+    Con un modo de almacenamiento persistente, cambiar `FLOCI_SERVICES_RDS_MOCK` entre reinicios es
+    mejor esfuerzo, al igual que con los otros servicios con capacidad simulada: recursos creados en modo real y
+    eliminados en simulacro dejan atrás sus contenedores y volúmenes, y los recursos creados en simulacro
+    El modo se restaura con contenedores nuevos y vacíos cuando se cargan en modo real.
 
 ## Ejemplos
 

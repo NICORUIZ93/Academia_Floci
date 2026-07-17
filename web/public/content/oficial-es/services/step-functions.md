@@ -5,21 +5,35 @@
 
 ## Acciones admitidas por
 
+<!-- floci:actions:start -->
 | Acción | Descripción |
-|---|---|
+| --- | --- |
 | `CreateStateMachine` | Crear una máquina de estados (Estándar o Express) |
 | `DescribeStateMachine` | Obtener definición y metadatos de máquina de estado |
 | `ListStateMachines` | Listar todas las máquinas de estados |
 | `DeleteStateMachine` | Eliminar una máquina de estados |
+| `PublishStateMachineVersion` | - |
+| `ListStateMachineVersions` | - |
+| `DeleteStateMachineVersion` | - |
 | `ValidateStateMachineDefinition` | Validar una definición ASL sin crear una máquina de estados |
 | `StartExecution` | Iniciar una nueva ejecución |
+| `StartSyncExecution` | - |
 | `DescribeExecution` | Obtener el estado de ejecución y el resultado |
 | `ListExecutions` | Listar ejecuciones para una máquina de estados |
 | `StopExecution` | Detener una ejecución en ejecución |
 | `GetExecutionHistory` | Obtenga el historial completo de eventos de una ejecución |
-| `SendTaskSuccess` | Informar del éxito de la tarea (para tareas `.waitForTaskToken`) |
+| `SendTaskSuccess` | Informar el éxito de la tarea (para tareas `.waitForTaskToken`) |
 | `SendTaskFailure` | Informar error de tarea |
 | `SendTaskHeartbeat` | Enviar un latido para tareas de larga duración |
+| `CreateActivity` | - |
+| `DeleteActivity` | - |
+| `DescribeActivity` | - |
+| `ListActivities` | - |
+| `GetActivityTask` | - |
+| `ListTagsForResource` | - |
+| `TagResource` | - |
+| `UntagResource` | - |
+<!-- floci:actions:end -->
 
 ## Configuración
 

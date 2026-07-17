@@ -33,6 +33,7 @@ Floci se configura exclusivamente mediante variables de entorno. Cada opción a 
 | `FLOCI_SECURITY_EXTRA_CORS_ALLOWED_HEADERS` | _(ninguno)_ | Nombres de encabezado adicionales para incluir en `Access-Control-Allow-Headers`. Alias: `EXTRA_CORS_ALLOWED_HEADERS` |
 | `FLOCI_SECURITY_EXTRA_CORS_EXPOSE_HEADERS` | _(ninguno)_ | Nombres de encabezado adicionales para incluir en `Access-Control-Expose-Headers`. Alias: `EXTRA_CORS_EXPOSE_HEADERS` |
 | `FLOCI_SECURITY_DISABLE_CORS_HEADERS` | `false` | Deshabilite los encabezados de respuesta globales CORS de Floci. Alias: `DISABLE_CORS_HEADERS` |
+| `FLOCI_SECURITY_CORS_ALLOW_PRIVATE_NETWORK` | `false` | Responda a las comprobaciones previas del acceso a la red privada con `Access-Control-Allow-Private-Network: true`, lo que permite que una página en un origen público/seguro llegue a este backend de loopback. Solo se aplica después de que el origen pase la lista de permitidos anterior. |
 
 ---
 
@@ -49,6 +50,14 @@ Consulte [TLS / HTTPS](./tls.md) para ver ejemplos de configuración de SDK y co
 
 ---
 
+## Protocolos de cable
+
+| Variables | Predeterminado | Descripción |
+|---|---|---|
+| `FLOCI_PROTOCOLS_STRICT_CLAIMING` | `false` | Rechace las solicitudes señaladas por RPC que ningún protocolo de conexión admitido afirme, según la [guía de selección de protocolo de conexión de Smithy] (https://smithy.io/2.0/guides/wire-protocol-selection.html) (por ejemplo, un valor de encabezado `Smithy-Protocol` desconocido o una solicitud `rpc-v2-json` no implementada). Cuando están deshabilitadas, dichas solicitudes se registran y pasan |
+
+---
+
 ## Almacenamiento
 
 | Variables | Predeterminado | Descripción |
@@ -56,7 +65,7 @@ Consulte [TLS / HTTPS](./tls.md) para ver ejemplos de configuración de SDK y co
 | `FLOCI_STORAGE_MODE` | `memory` | Backend de almacenamiento global: `memory`, `persistent`, `hybrid` o `wal` |
 | `FLOCI_STORAGE_PERSISTENT_PATH` | `./data` | Directorio del lado del contenedor para almacenamiento persistente e híbrido |
 | `FLOCI_STORAGE_HOST_PERSISTENT_PATH` | `./data` | Ruta del lado host para montajes de enlace de volumen Docker (datos RDS, OpenSearch, MSK, ECR). Cuando no está configurado, Floci utiliza volúmenes Docker con nombre |
-| `FLOCI_STORAGE_PRUNE_VOLUMES_ON_DELETE` | `false` | Elimine los volúmenes Docker con nombre inmediatamente cuando se elimine el recurso |
+| `FLOCI_STORAGE_PRUNE_VOLUMES_ON_DELETE` | `false` | Eliminar los volúmenes Docker con nombre inmediatamente cuando se elimine el recurso |
 | `FLOCI_STORAGE_WAL_COMPACTION_INTERVAL_MS` | `30000` | Con qué frecuencia (ms) se ejecuta la compactación WAL. Sólo aplica cuando `FLOCI_STORAGE_MODE=wal` |
 
 ### Anulaciones de almacenamiento por servicio
@@ -80,8 +89,10 @@ Consulte [Modos de almacenamiento](./storage.md) para obtener una explicación c
 |---|---|---|
 | `FLOCI_DOCKER_DOCKER_HOST` | `unix:///var/run/docker.sock` | Ruta del socket del demonio Docker o dirección TCP |
 | `FLOCI_DOCKER_DOCKER_CONFIG_PATH` | _(ninguno)_ | Ruta a un directorio que contiene `config.json` de Docker para la autenticación del registro |
+| `FLOCI_DOCKER_IMAGE_REGISTRY_BASE` | _(ninguno)_ | Base de registro/repositorio opcional para cada imagen Docker que se inicia Floci. Cuando se configura, `postgres:16-alpine` se resuelve como `<base>/postgres:16-alpine` y `public.ecr.aws/docker/library/ubuntu:24.04` se resuelve como `<base>/public.ecr.aws/docker/library/ubuntu:24.04` |
 | `FLOCI_DOCKER_LOG_MAX_SIZE` | `10m` | Tamaño máximo de rotación de registros para contenedores generados (por ejemplo, `10m`, `1g`) |
 | `FLOCI_DOCKER_LOG_MAX_FILE` | `3` | Número de archivos de registro rotados que se deben conservar para los contenedores generados |
+| `FLOCI_DOCKER_RESOURCE_NAMESPACE` | _(ninguno)_ | Prefijo de espacio de nombres opcional para nombres de volúmenes y contenedores Docker secundarios administrados |
 
 ### Credenciales de registro
 
@@ -95,7 +106,7 @@ Proporcione credenciales para registros privados (por ejemplo, para imágenes ba
 
 ---
 
-## DNS
+DNS##
 
 El servidor DNS integrado de Floci siempre resuelve los siguientes sufijos comodín en la IP del contenedor de Floci; no se requiere configuración:
 
@@ -145,7 +156,7 @@ Servicios ##: principales
 |---|---|---|
 | `FLOCI_SERVICES_SQS_ENABLED` | `true` | Habilitar el servicio SQS |
 | `FLOCI_SERVICES_SQS_DEFAULT_VISIBILITY_TIMEOUT` | `30` | Tiempo de espera de visibilidad de mensajes predeterminado en segundos |
-| `FLOCI_SERVICES_SQS_MAX_MESSAGE_SIZE` | `262144` | Tamaño máximo del cuerpo del mensaje en bytes (256 KB) |
+| `FLOCI_SERVICES_SQS_MAX_MESSAGE_SIZE` | `1048576` | Tamaño máximo del cuerpo del mensaje en bytes (1 MB) |
 | `FLOCI_SERVICES_SQS_CLEAR_FIFO_DEDUPLICATION_CACHE_ON_PURGE` | `false` | Restablecer la caché de deduplicación cuando se purga una cola FIFO |
 
 ### SNS
@@ -185,6 +196,7 @@ Servicios ##: principales
 | `FLOCI_SERVICES_LAMBDA_HOT_RELOAD_ENABLED` | `false` | Mire los directorios de códigos Lambda para ver cambios y recargarlos sin volver a implementarlos |
 | `FLOCI_SERVICES_LAMBDA_HOT_RELOAD_ALLOWED_PATHS` | _(ninguno)_ | Rutas de host separadas por comas que la recarga en caliente puede observar |
 | `FLOCI_SERVICES_LAMBDA_DOCKER_NETWORK` | _(ninguno)_ | Red Docker para contenedores Lambda (anula `FLOCI_SERVICES_DOCKER_NETWORK`) |
+| `FLOCI_SERVICES_LAMBDA_DOCKER_HOST_OVERRIDE` | _(ninguno)_ | Los contenedores Lambda de IP/host explícitos se utilizan para llegar al tiempo de ejecución API, evitando la detección automática (por ejemplo, Podman sin raíz) |
 | `FLOCI_SERVICES_LAMBDA_AWS_CONFIG_PATH` | _(ninguno)_ | Ruta de host montada en enlace de solo lectura en `/opt/aws-config` dentro de contenedores Lambda para un descubrimiento de credenciales real |
 
 ### Puerta de enlace API
@@ -199,7 +211,8 @@ Servicios ##: principales
 | Variables | Predeterminado | Descripción |
 |---|---|---|
 | `FLOCI_SERVICES_IAM_ENABLED` | `true` | Habilitar el servicio IAM |
-| `FLOCI_SERVICES_IAM_ENFORCEMENT_ENABLED` | `false` | Cuando `true`, aplique políticas de IAM en las llamadas de API. Deje `false` para la mayoría de escenarios de desarrollo local |
+| `FLOCI_SERVICES_IAM_ENFORCEMENT_ENABLED` | `false` | Cuando `true`, aplique políticas de IAM en las llamadas de API. Deje `false` para la mayoría de los escenarios de desarrollo local |
+| `FLOCI_SERVICES_IAM_SEED_DEPLOYER_PRINCIPAL` | `false` | Cree un usuario local `floci-deployer` IAM con `AdministratorAccess` y credenciales estáticas `floci`/`floci` |
 
 ### KMS
 
@@ -223,7 +236,7 @@ Servicios ##: principales
 
 | Variables | Predeterminado | Descripción |
 |---|---|---|
-| `FLOCI_SERVICES_EVENTBRIDGE_ENABLED` | `true` | Habilite el servicio EventBridge |
+| `FLOCI_SERVICES_EVENTBRIDGE_ENABLED` | `true` | Habilitar el servicio EventBridge |
 
 ### Programador
 
@@ -233,7 +246,7 @@ Servicios ##: principales
 | `FLOCI_SERVICES_SCHEDULER_INVOCATION_ENABLED` | `true` | Cuando `false`, las programaciones se almacenan pero nunca se invocan |
 | `FLOCI_SERVICES_SCHEDULER_TICK_INTERVAL_SECONDS` | `10` | Con qué frecuencia (segundos) el programador verifica las programaciones vencidas |
 
-### Registros CloudWatch
+### Registros de CloudWatch
 
 | Variables | Predeterminado | Descripción |
 |---|---|---|
@@ -316,12 +329,15 @@ Estos servicios generan contenedores Docker. Requieren acceso al zócalo Docker 
 | Variables | Predeterminado | Descripción |
 |---|---|---|
 | `FLOCI_SERVICES_RDS_ENABLED` | `true` | Habilitar el servicio RDS |
+| `FLOCI_SERVICES_RDS_MOCK` | `false` | Cuando `true`, los clústeres e instancias de base de datos se crean instantáneamente sin un contenedor real o proxy de autenticación (solo API) |
 | `FLOCI_SERVICES_RDS_PROXY_BASE_PORT` | `7001` | Primer puerto en la gama de proxy RDS |
 | `FLOCI_SERVICES_RDS_PROXY_MAX_PORT` | `7099` | Último puerto en el rango de proxy RDS |
-| `FLOCI_SERVICES_RDS_DEFAULT_POSTGRES_IMAGE` | `postgres:16-alpine` | Imagen predeterminada PostgreSQL Docker |
+| `FLOCI_SERVICES_RDS_DEFAULT_POSTGRES_IMAGE` | `postgres:16-alpine` | Imagen predeterminada de PostgreSQL Docker |
 | `FLOCI_SERVICES_RDS_DEFAULT_MYSQL_IMAGE` | `mysql:8.0` | Imagen predeterminada de MySQL Docker |
 | `FLOCI_SERVICES_RDS_DEFAULT_MARIADB_IMAGE` | `mariadb:11` | Imagen predeterminada de MariaDB Docker |
 | `FLOCI_SERVICES_RDS_DOCKER_NETWORK` | _(ninguno)_ | Red Docker para contenedores RDS (anula `FLOCI_SERVICES_DOCKER_NETWORK`) |
+| `FLOCI_SERVICES_RDS_DATA_ENABLED` | `true` | Habilite el servicio RDS Datos API. Requiere `FLOCI_SERVICES_RDS_ENABLED=true` |
+| `FLOCI_SERVICES_RDS_DATA_TRANSACTION_TTL_SECONDS` | `180` | Tiempo de espera de inactividad, en segundos, antes de que caduquen las transacciones de datos RDS filtradas API |
 
 ### OpenSearch
 
@@ -338,7 +354,7 @@ Estos servicios generan contenedores Docker. Requieren acceso al zócalo Docker 
 
 | Variables | Predeterminado | Descripción |
 |---|---|---|
-| `FLOCI_SERVICES_MSK_ENABLED` | `true` | Habilite el servicio MSK |
+| `FLOCI_SERVICES_MSK_ENABLED` | `true` | Habilitar el servicio MSK |
 | `FLOCI_SERVICES_MSK_MOCK` | `false` | Cuando `true`, los clústeres se crean instantáneamente sin un contenedor Redpanda real |
 | `FLOCI_SERVICES_MSK_DEFAULT_IMAGE` | `redpandadata/redpanda:latest` | Imagen Docker para corredores Kafka/Redpanda |
 
@@ -352,11 +368,11 @@ Estos servicios generan contenedores Docker. Requieren acceso al zócalo Docker 
 | `FLOCI_SERVICES_ECR_REGISTRY_BASE_PORT` | `5100` | Primer puerto en el rango de registro ECR |
 | `FLOCI_SERVICES_ECR_REGISTRY_MAX_PORT` | `5199` | Último puerto en el rango de registro ECR |
 | `FLOCI_SERVICES_ECR_TLS_ENABLED` | `false` | Habilite TLS para el registro ECR |
-| `FLOCI_SERVICES_ECR_KEEP_RUNNING_ON_SHUTDOWN` | `true` | Mantenga el contenedor de registro ECR ejecutándose cuando Floci se detenga |
+| `FLOCI_SERVICES_ECR_KEEP_RUNNING_ON_SHUTDOWN` | `true` | Mantenga el contenedor de registro ECR ejecutándose cuando se detenga Floci |
 | `FLOCI_SERVICES_ECR_URI_STYLE` | `hostname` | Estilo de URI del repositorio: `hostname` (`<account>.dkr.ecr.<region>.localhost`) o `path` |
 | `FLOCI_SERVICES_ECR_DOCKER_NETWORK` | _(ninguno)_ | Red Docker para el contenedor de registro ECR |
 
-### EKS (Servicio de Kubernetes elástico)
+### EKS (Servicio elástico de Kubernetes)
 
 | Variables | Predeterminado | Descripción |
 |---|---|---|
@@ -365,7 +381,7 @@ Estos servicios generan contenedores Docker. Requieren acceso al zócalo Docker 
 | `FLOCI_SERVICES_EKS_PROVIDER` | `k3s` | Proveedor de Kubernetes (`k3s`) |
 | `FLOCI_SERVICES_EKS_DEFAULT_IMAGE` | `rancher/k3s:latest` | Imagen Docker para clústeres EKS |
 | `FLOCI_SERVICES_EKS_API_SERVER_BASE_PORT` | `6500` | Primer puerto de la gama de servidores Kubernetes API |
-| `FLOCI_SERVICES_EKS_API_SERVER_MAX_PORT` | `6599` | Último puerto en la gama de servidores Kubernetes API |
+| `FLOCI_SERVICES_EKS_API_SERVER_MAX_PORT` | `6599` | Último puerto de la gama de servidores Kubernetes API |
 | `FLOCI_SERVICES_EKS_KEEP_RUNNING_ON_SHUTDOWN` | `false` | Mantenga los contenedores EKS en funcionamiento cuando Floci se detenga |
 | `FLOCI_SERVICES_EKS_DOCKER_NETWORK` | _(ninguno)_ | Red Docker para contenedores EKS |
 
@@ -373,7 +389,7 @@ Estos servicios generan contenedores Docker. Requieren acceso al zócalo Docker 
 
 | Variables | Predeterminado | Descripción |
 |---|---|---|
-| `FLOCI_SERVICES_ECS_ENABLED` | `true` | Habilitar el servicio ECS |
+| `FLOCI_SERVICES_ECS_ENABLED` | `true` | Habilite el servicio ECS |
 | `FLOCI_SERVICES_ECS_MOCK` | `false` | Cuando `true`, las tareas se registran pero en realidad no se ejecutan |
 | `FLOCI_SERVICES_ECS_DEFAULT_MEMORY_MB` | `512` | Memoria de tarea predeterminada cuando no se especifica en la definición de tarea |
 | `FLOCI_SERVICES_ECS_DEFAULT_CPU_UNITS` | `256` | Unidades de CPU de tarea predeterminadas cuando no se especifican en la definición de tarea |
@@ -383,7 +399,7 @@ Estos servicios generan contenedores Docker. Requieren acceso al zócalo Docker 
 
 | Variables | Predeterminado | Descripción |
 |---|---|---|
-| `FLOCI_SERVICES_EC2_ENABLED` | `true` | Habilite el servicio EC2 |
+| `FLOCI_SERVICES_EC2_ENABLED` | `true` | Habilitar el servicio EC2 |
 | `FLOCI_SERVICES_EC2_MOCK` | `false` | Cuando `true`, las instancias se registran en estado pero no se genera ningún contenedor |
 | `FLOCI_SERVICES_EC2_IMDS_PORT` | `9169` | Puerto para el punto final del servicio de metadatos de instancia EC2 (IMDS) |
 | `FLOCI_SERVICES_EC2_SSH_PORT_RANGE_START` | `2200` | Primer puerto en el rango de puertos SSH para instancias EC2 |
@@ -405,6 +421,7 @@ Servicios ##: adicionales
 | Variables | Predeterminado | Descripción |
 |---|---|---|
 | `FLOCI_SERVICES_GLUE_ENABLED` | `true` | Habilitar el servicio Glue |
+| `FLOCI_SERVICES_APPSYNC_ENABLED` | `true` | Habilitar el servicio AppSync |
 | `FLOCI_SERVICES_BEDROCK_RUNTIME_ENABLED` | `true` | Habilite el servicio de tiempo de ejecución Bedrock |
 | `FLOCI_SERVICES_TEXTRACT_ENABLED` | `true` | Habilitar el servicio Textract |
 | `FLOCI_SERVICES_TRANSFER_ENABLED` | `true` | Habilitar el servicio de Transferencia Familiar |
@@ -417,5 +434,5 @@ Servicios ##: adicionales
 | `FLOCI_SERVICES_CODEDEPLOY_ENABLED` | `true` | Habilitar el servicio CodeDeploy |
 | `FLOCI_SERVICES_BACKUP_ENABLED` | `true` | Habilite el servicio de copia de seguridad AWS |
 | `FLOCI_SERVICES_BACKUP_JOB_COMPLETION_DELAY_SECONDS` | `3` | Retraso simulado antes de la transición de los trabajos de respaldo a `COMPLETED` |
-| `FLOCI_SERVICES_APPCONFIG_ENABLED` | `true` | Habilitar el servicio AppConfig |
-| `FLOCI_SERVICES_APPCONFIGDATA_ENABLED` | `true` | Habilitar el servicio de datos AppConfig |
+| `FLOCI_SERVICES_APPCONFIG_ENABLED` | `true` | Habilite el servicio AppConfig |
+| `FLOCI_SERVICES_APPCONFIGDATA_ENABLED` | `true` | Habilite el servicio de datos AppConfig |

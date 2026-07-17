@@ -76,18 +76,18 @@ wip: still working on this      # not a recognised type
 
 ## Agregar un nuevo servicio AWS
 
-Consulte [AGENT.md](https://github.com/floci-io/floci/blob/main/AGENT.md) para obtener la guía de arquitectura completa. `AGENT.md` es el archivo de instrucciones del agente canónico para este repositorio. Si su agente de codificación espera un nombre de archivo diferente, cree un enlace simbólico local a `AGENT.md` en lugar de copiarlo.
+Consulte [AGENTS.md](https://github.com/floci-io/floci/blob/main/AGENTS.md) para obtener la guía de arquitectura completa. `AGENTS.md` es el archivo de instrucciones del agente canónico para este repositorio, siguiendo el [estándar AGENTS.md](https://agents.md/). Si su agente de codificación espera un nombre de archivo diferente, cree un enlace simbólico local a `AGENTS.md` en lugar de copiarlo.
 
 ```bash
-ln -s AGENT.md CLAUDE.md
-ln -s AGENT.md GEMINI.md
-ln -s AGENT.md COPILOT.md
+ln -s AGENTS.md CLAUDE.md
+ln -s AGENTS.md GEMINI.md
+ln -s AGENTS.md COPILOT.md
 ```
 
 Resumen rápido:
 
 1. Cree `src/main/java/.../services/<service>/` con un controlador, servicio y paquete `model/`
-2. Elija el protocolo correcto (consulte la tabla de protocolos en `AGENT.md`)
+2. Elija el protocolo correcto (consulte la tabla de protocolos en `AGENTS.md`)
 3. Registre el servicio en `ServiceRegistry`
 4. Agregue configuración en `EmulatorConfig.java` y `application.yml`
 5. Agregar pruebas `*IntegrationTest.java`

@@ -20,6 +20,24 @@
 |---|---|---|
 | `FLOCI_SERVICES_STS_ENABLED` | `true` | Activar o desactivar el servicio |
 
+## Aplicación de políticas de confianza
+
+De forma predeterminada, `AssumeRole` tiene éxito para cualquier persona que llama. Cuando `FLOCI_SERVICES_IAM_ENFORCEMENT_ENABLED=true`,
+`AssumeRole` evalúa la política de confianza del rol de destino (`AssumeRolePolicyDocument`) frente a la persona que llama
+y devuelve `AccessDenied` si no está permitido. Los formularios principales de AWS coinciden: `"*"`, un
+ID de cuenta, una raíz de cuenta ARN (`arn:aws:iam::<acct>:root`) y ARN principales exactos, y un
+explícito `Deny` siempre gana. Tanto los elementos `Action` como `NotAction` se respetan al hacer coincidir
+`sts:AssumeRole`. Los roles que Floci no tiene registro de permanencia permisivos, por lo que esto solo afecta a los roles
+creado a través de IAM con una política de confianza real.
+
+### Limitaciones conocidas
+
+- **Los bloques `Condition` no se evalúan.** Una política de confianza que requiere `sts:ExternalId` (el
+  guardia adjunto confundido) se corresponde solo con su director, por lo que el papel se puede asumir sin pasar
+  `ExternalId` y se ignora el parámetro de solicitud `ExternalId`. Esto coincide con moto/LocalStack.
+- **Solo se marca la política de confianza.** `AssumeRole` entre cuentas en AWS también requiere la
+  propia política de identidad para permitir `sts:AssumeRole`; ese lado no se aplica.
+
 ## Ejemplos
 
 ```bash
@@ -39,3 +57,5 @@ aws sts get-session-token --endpoint-url $AWS_ENDPOINT_URL
 ```
 
 `GetCallerIdentity` se usa comúnmente en canalizaciones de CI y pruebas de integración como una verificación rápida de conectividad antes de ejecutar pruebas más complejas.
+
+Cuando `FLOCI_SERVICES_IAM_SEED_DEPLOYER_PRINCIPAL=true`, las solicitudes firmadas con la clave de acceso inicializada `floci` devuelven `arn:aws:iam::000000000000:user/floci-deployer`. Otras credenciales locales desconocidas continúan devolviendo la raíz de la cuenta ARN por motivos de compatibilidad con versiones anteriores.

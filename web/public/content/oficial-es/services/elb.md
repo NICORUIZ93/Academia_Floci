@@ -2,35 +2,89 @@
 
 **Protocolo:** Consulta (XML) — `POST http://localhost:4566/` con parámetro `Action=`
 
-Floci admite balanceadores de carga de aplicaciones (ALB) y balanceadores de carga de red (NLB) a través de la administración ELBv2 API. Esta es una implementación de Fase 1: el plano de control CRUD completo está disponible y es compatible con AWS SDK / CLI / Terraform. El reenvío de tráfico del plano de datos (puertos de escucha TCP reales) está previsto para la Fase 2.
+Floci admite balanceadores de carga de aplicaciones (ALB) y balanceadores de carga de red (NLB) a través de la administración ELBv2 API. El plano de control es compatible con AWS SDK / CLI / Terraform, y los oyentes de HTTP pueden reenviar a objetivos de instancia registrados utilizando la dirección local accesible del objetivo.
 
 ## Acciones admitidas
 
 ### Equilibradores de carga
-`CreateLoadBalancer` · `DescribeLoadBalancers` · `DeleteLoadBalancer` · `ModifyLoadBalancerAttributes` · `DescribeLoadBalancerAttributes` · `SetSecurityGroups` · `SetSubnets` · `SetIpAddressType`
+
+| Acción | Descripción |
+|--------|-------------|
+| CreateLoadBalancer | Crea un ALB o NLB en estado activo con atributos y etiquetas persistentes. |
+| DescribeLoadBalancers | Enumera o devuelve balanceadores de carga almacenados. |
+| DeleteLoadBalancer | Elimina un equilibrador de carga y detiene sus sockets de escucha. |
+| ModifyLoadBalancerAttributes | Actualiza los atributos del balanceador de carga persistente. |
+| DescribeLoadBalancerAttributes | Devuelve atributos almacenados para un equilibrador de carga. |
+| DescribeCapacityReservation | Devuelve los campos de reserva de capacidad almacenados para un equilibrador de carga. |
+| SetSecurityGroups | Reemplaza los grupos de seguridad asociados con un balanceador de carga. |
+| SetSubnets | Reemplaza las subredes asociadas con un balanceador de carga. |
+| SetIpAddressType | Actualiza el tipo de dirección IP almacenado para un equilibrador de carga. |
 
 ### Grupos objetivo de
-`CreateTargetGroup` · `DescribeTargetGroups` · `ModifyTargetGroup` · `DeleteTargetGroup` · `ModifyTargetGroupAttributes` · `DescribeTargetGroupAttributes`
+
+| Acción | Descripción |
+|--------|-------------|
+| CreateTargetGroup | Crea un grupo objetivo con configuración de protocolo, puerto, verificación de estado y tipo de objetivo. |
+| DescribeTargetGroups | Enumera o devuelve grupos objetivo almacenados. |
+| ModifyTargetGroup | Actualiza la configuración del grupo objetivo mutable. |
+| DeleteTargetGroup | Elimina un grupo objetivo no utilizado. |
+| ModifyTargetGroupAttributes | Actualiza los atributos persistentes del grupo objetivo. |
+| DescribeTargetGroupAttributes | Devuelve atributos almacenados para un grupo objetivo. |
 
 ### Objetivos
-`RegisterTargets` · `DeregisterTargets` · `DescribeTargetHealth`
+
+| Acción | Descripción |
+|--------|-------------|
+| RegisterTargets | Registra objetivos con un grupo objetivo. |
+| DeregisterTargets | Elimina objetivos de un grupo objetivo. |
+| DescribeTargetHealth | Devuelve registros de salud de destino mantenidos por Floci. |
 
 ### Oyentes
-`CreateListener` · `DescribeListeners` · `ModifyListener` · `DeleteListener` · `AddListenerCertificates` · `RemoveListenerCertificates` · `DescribeListenerCertificates`
+
+| Acción | Descripción |
+|--------|-------------|
+| CreateListener | Crea un oyente y su regla predeterminada no eliminable. |
+| DescribeListeners | Enumera o devuelve oyentes almacenados. |
+| ModifyListener | Actualiza la configuración de un oyente y las acciones predeterminadas. |
+| ModifyListenerAttributes | Actualiza los atributos de escucha persistentes. |
+| DescribeListenerAttributes | Devuelve atributos almacenados para un oyente. |
+| DeleteListener | Elimina un oyente y detiene su socket. |
+| AddListenerCertificates | Agrega certificados a un oyente. |
+| RemoveListenerCertificates | Elimina certificados de un oyente. |
+| DescribeListenerCertificates | Enumera los certificados asociados con un oyente. |
 
 ### Reglas de
-`CreateRule` · `DescribeRules` · `ModifyRule` · `DeleteRule` · `SetRulePriorities`
+
+| Acción | Descripción |
+|--------|-------------|
+| CreateRule | Crea una regla de escucha no predeterminada con condiciones, acciones y prioridad. |
+| DescribeRules | Enumera o devuelve reglas de escucha. |
+| ModifyRule | Actualiza las condiciones y acciones de una regla de escucha. |
+| DeleteRule | Elimina una regla de escucha no predeterminada. |
+| SetRulePriorities | Actualiza atómicamente las prioridades de las reglas después de validar la unicidad. |
 
 ### Etiquetas
-`AddTags` · `RemoveTags` · `DescribeTags`
 
-### Metadatos
-`DescribeSSLPolicies` · `DescribeAccountLimits`
+| Acción | Descripción |
+|--------|-------------|
+| AddTags | Agrega etiquetas a los recursos ELBv2 compatibles. |
+| RemoveTags | Elimina etiquetas de los recursos ELBv2 compatibles. |
+| DescribeTags | Devuelve etiquetas para recursos ELBv2 compatibles. |
+
+### Metadatos de
+
+| Acción | Descripción |
+|--------|-------------|
+| DescribeSSLPolicies | Devuelve la lista de políticas SSL estándar predefinidas de Floci. |
+| DescribeAccountLimits | Devuelve los límites de cuenta ELBv2 predeterminados estándar. |
 
 ## Notas de comportamiento de
 
-- Los balanceadores de carga se crean en el estado `provisioning` y pasan a `active` inmediatamente en descripciones posteriores.
-- El estado del objetivo siempre devuelve el estado `initial` con el motivo `Elb.RegistrationInProgress`: las comprobaciones de estado del plano de datos no se realizan en la Fase 1.
+- El estado del balanceador de carga, grupo objetivo, escucha, regla y etiqueta se conserva a través del almacenamiento Floci y se reconstruye al iniciar el servicio.
+- Los balanceadores de carga se crean en el estado `active`.
+- Los sockets de escucha HTTP se conservan cuando las acciones de escucha cambian y se reinician solo cuando cambian las configuraciones a nivel de socket, como el puerto.
+- Los destinos de instancia se resuelven a través de direcciones privadas de instancia EC2 para que el tráfico del balanceador de carga local pueda llegar a los contenedores.
+- El estado del objetivo comienza en el estado `initial` con el motivo `Elb.RegistrationInProgress` y lo actualiza el verificador de estado de Floci cuando la supervisión está activa.
 - Cada `CreateListener` crea automáticamente una regla predeterminada inmutable (`priority=default`, `isDefault=true`). Esta regla no se puede eliminar; utilice `ModifyListener` para cambiar su acción.
 - Las prioridades de las reglas se validan para determinar su unicidad. `SetRulePriorities` es atómico: todas las asignaciones de prioridad se validan antes de confirmar cualquier cambio.
 - `DeleteTargetGroup` se rechaza con `ResourceInUse` mientras cualquier oyente o regla hace referencia al grupo objetivo.
@@ -111,6 +165,6 @@ aws elbv2 delete-target-group \
 |---|---|---|
 | `FLOCI_SERVICES_ELBV2_ENABLED` | `true` | Activar o desactivar el servicio ELBv2 |
 
-## Fase 2 (Planificada)
+## Puertos de escucha
 
-La fase 2 vinculará los puertos de escucha TCP reales en el host para que el tráfico enviado a un puerto de escucha se reenvíe a los objetivos registrados. Esto requiere exponer un rango de puertos (por ejemplo, `8300-8399`) en la configuración de composición Docker, similar a cómo funcionan los puertos proxy ElastiCache y RDS en la actualidad.
+Los sockets de escucha se vinculan en el host Floci. Exponga los puertos de escucha que necesite en Docker Compose cuando el propio Floci se ejecute en un contenedor, similar a los puertos proxy RDS y ElastiCache.

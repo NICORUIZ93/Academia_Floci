@@ -5,28 +5,110 @@
 
 Floci ofrece descubrimiento específico de grupo y puntos finales JWKS, además de un punto final de token OAuth relajado, para que los clientes locales puedan acuñar y validar tokens de acceso tipo Cognito contra claves de firma RS256.
 
-`CreateUserPool` acepta una etiqueta reservada de grupo de usuarios, `floci:override-id`, para fijar el `UserPool.Id` resultante en el momento de la creación. Floci elimina las etiquetas `floci:*` reservadas de las `UserPoolTags` almacenadas y devueltas en las rutas de creación y actualización, por lo que el espacio de nombres de etiquetas actúa como un canal de control de solo entrada y nunca persiste como metadatos visibles para el usuario.
+`CreateUserPool` admite la anulación de varios valores usando etiquetas de grupo de usuarios **solo** en el momento de la creación:
+* `floci:override-id`, para fijar el `UserPool.Id` resultante. 
+* `floci:override-cognito-client-id`
+  * establecido en `use-name` para usar el nombre del cliente como ID del cliente.
+  * establecido en `append-to-name:-somestring` para agregar una cadena al nombre del cliente que se utilizará como ID de cliente.
+  * establecido en `prepend-to-name:somestring-` para anteponer una cadena al nombre del cliente que se utilizará como ID de cliente.
+* `floci:override-cognito-client-secret`, para establecer el secreto para todos los clientes creados en este grupo de usuarios.  
+
+Floci elimina las etiquetas `floci:*` reservadas de las `UserPoolTags` almacenadas y devueltas tanto en las rutas de creación como de actualización, por lo que el espacio de nombres de etiquetas actúa como un canal de control de solo entrada y nunca persiste como metadatos visibles para el usuario.
 
 El `TagResource` independiente rechaza las claves `floci:*` reservadas. `ListTagsForResource` y `UntagResource` operan en el mapa de etiquetas persistentes del grupo de usuarios.
 
 ## Acciones admitidas
 
-| Categoría | Acciones |
-|---|---|
-| **Grupos de usuarios** | CreateUserPool, DescribeUserPool, ListUserPools, UpdateUserPool, DeleteUserPool |
-| **Etiquetas del grupo de usuarios** | TagResource, UntagResource, ListTagsForResource |
-| **Clientes del grupo de usuarios** | CreateUserPoolClient, DescribeUserPoolClient, ListUserPoolClients, DeleteUserPoolClient |
-| **Servidores de recursos** | CreateResourceServer, DescribeResourceServer, ListResourceServers, DeleteResourceServer |
-| **Gestión de usuarios administradores** | AdminCreateUser (incluido `MessageAction=RESEND`), AdminGetUser, AdminDeleteUser, AdminSetUserPassword, AdminUpdateUserAttributes |
-| **Operaciones de usuario** | SignUp, ConfirmSignUp, GetUser, UpdateUserAttributes, ChangePassword, ForgotPassword, ConfirmForgotPassword |
-| **Autenticación** | InitiateAuth, AdminInitiateAuth, RespondToAuthChallenge (admite USER_PASSWORD_AUTH, USER_SRP_AUTH, ADMIN_USER_SRP_AUTH) |
-| **Listado de usuarios** | ListUsers |
-| **Grupos** | CreateGroup, GetGroup, UpdateGroup, ListGroups, ListUsersInGroup, DeleteGroup, AdminAddUserToGroup, AdminRemoveUserFromGroup, AdminListGroupsForUser |
+### Grupos de usuarios
+
+| Acción | Descripción |
+|--------|-------------|
+| CreateUserPool | Crea un grupo de usuarios local, aplicando anulaciones de tiempo de creación compatibles con `floci:*` a partir de etiquetas. |
+| DescribeUserPool | Devuelve la configuración del grupo de usuarios almacenado. |
+| ListUserPools | Enumera los grupos de usuarios locales visibles en la región de solicitud. |
+| UpdateUserPool | Actualiza la configuración del grupo de usuarios mutables y las etiquetas persistentes del grupo de usuarios. |
+| DeleteUserPool | Elimina un grupo de usuarios local y su estado relacionado. |
+
+### Etiquetas del grupo de usuarios
+
+| Acción | Descripción |
+|--------|-------------|
+| TagResource | Agrega etiquetas visibles para el usuario a un grupo de usuarios y rechaza las claves de etiquetas `floci:*` reservadas. |
+| UntagResource | Elimina etiquetas del mapa de etiquetas persistentes de un grupo de usuarios. |
+| ListTagsForResource | Devuelve las etiquetas persistentes del grupo de usuarios. |
+
+### Clientes del grupo de usuarios
+
+| Acción | Descripción |
+|--------|-------------|
+| CreateUserPoolClient | Crea una aplicación cliente para un grupo de usuarios, incluido el manejo de secretos generados opcional. |
+| DescribeUserPoolClient | Devuelve la configuración del cliente de la aplicación almacenada. |
+| ListUserPoolClients | Enumera los clientes de aplicaciones para un grupo de usuarios. |
+| DeleteUserPoolClient | Elimina un cliente de aplicación de un grupo de usuarios. |
+
+### Servidores de recursos
+
+| Acción | Descripción |
+|--------|-------------|
+| CreateResourceServer | Registra un servidor de recursos y ámbitos para un grupo de usuarios. |
+| DescribeResourceServer | Devuelve un servidor de recursos registrado. |
+| ListResourceServers | Enumera los servidores de recursos para un grupo de usuarios. |
+| DeleteResourceServer | Elimina un servidor de recursos de un grupo de usuarios. |
+
+### Gestión de usuarios administradores
+
+| Acción | Descripción |
+|--------|-------------|
+| AdminCreateUser | Crea o reenvía la configuración para un usuario en un grupo de usuarios. |
+| AdminGetUser | Devuelve el estado y los atributos almacenados de un usuario. |
+| AdminDeleteUser | Elimina un usuario de un grupo de usuarios. |
+| AdminSetUserPassword | Establece la contraseña de un usuario y el estado de la contraseña permanente. |
+| AdminUpdateUserAttributes | Actualiza los atributos de un usuario en un grupo de usuarios. |
+
+### Operaciones de usuario
+
+| Acción | Descripción |
+|--------|-------------|
+| SignUp | Crea un usuario de autoservicio para un cliente de aplicación. |
+| ConfirmSignUp | Confirma un registro de autoservicio pendiente. |
+| GetUser | Devuelve atributos para el usuario del token de acceso autenticado. |
+| UpdateUserAttributes | Actualiza los atributos del usuario del token de acceso autenticado. |
+| ChangePassword | Cambia la contraseña del usuario autenticado. |
+| ForgotPassword | Inicia el flujo local de contraseña olvidada para un usuario. |
+| ConfirmForgotPassword | Completa el flujo de contraseña olvidada estableciendo una contraseña de reemplazo. |
+
+### Autenticación
+
+| Acción | Descripción |
+|--------|-------------|
+| InitiateAuth | Autentica a los usuarios de la aplicación-cliente a través de flujos de usuario-contraseña y estilo SRP compatibles. |
+| AdminInitiateAuth | Inicia un flujo de autenticación de administrador para un usuario del grupo de usuarios. |
+| RespondToAuthChallenge | Responde a los desafíos de autenticación de Cognito admitidos. |
+
+### Listado de usuarios
+
+| Acción | Descripción |
+|--------|-------------|
+| ListUsers | Enumera los usuarios almacenados en un grupo de usuarios. |
+
+### Grupos
+
+| Acción | Descripción |
+|--------|-------------|
+| CreateGroup | Crea un grupo en un grupo de usuarios. |
+| GetGroup | Devuelve un grupo de grupo de usuarios. |
+| UpdateGroup | Actualiza la configuración almacenada de un grupo de usuarios. |
+| ListGroups | Enumera grupos en un grupo de usuarios. |
+| ListUsersInGroup | Enumera los usuarios asignados a un grupo. |
+| DeleteGroup | Elimina un grupo de un grupo de usuarios. |
+| AdminAddUserToGroup | Agrega un usuario a un grupo. |
+| AdminRemoveUserFromGroup | Elimina un usuario de un grupo. |
+| AdminListGroupsForUser | Enumera los grupos asignados a un usuario. |
 
 ## Puntos finales conocidos y OAuth
 
 | Punto final | Descripción |
-|---|---|
+|------------------------------------------------------|------------------------------------------------------------------|
 | `GET /{userPoolId}/.well-known/openid-configuration` | Documento de descubrimiento OpenID |
 | `GET /{userPoolId}/.well-known/jwks.json` | Conjunto de claves web JSON para validación JWT |
 | `POST /cognito-idp/oauth2/token` | Punto final de token OAuth relajado para `grant_type=client_credentials` |
@@ -38,14 +120,14 @@ El `TagResource` independiente rechaza las claves `floci:*` reservadas. `ListTag
 - Requiere una aplicación cliente confidencial creada con `GenerateSecret=true`.
 - Requiere `AllowedOAuthFlowsUserPoolClient=true` y `AllowedOAuthFlows=["client_credentials"]`.
 - No requiere un dominio Cognito.
-- Devuelve solo `access_token`, `token_type` y `expires_in`.
-- Valida los alcances OAuth solicitados con el `AllowedOAuthScopes` del cliente de la aplicación y los alcances del servidor de recursos registrados del grupo.
+- Devuelve únicamente `access_token`, `token_type` y `expires_in`.
+- Valida los alcances OAuth solicitados con el `AllowedOAuthScopes` del cliente de la aplicación y los alcances del servidor de recursos registrado del grupo.
 - Anuncia el punto final del token con prefijo en `/{userPoolId}/.well-known/openid-configuration`.
 
 ## Configuración
 
 | Variables | Predeterminado | Descripción |
-|---|---|---|
+|----------------------------------|---------|-------------------------------|
 | `FLOCI_SERVICES_COGNITO_ENABLED` | `true` | Activar o desactivar el servicio |
 
 ## Ejemplos

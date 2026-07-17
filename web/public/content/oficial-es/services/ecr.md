@@ -124,6 +124,13 @@ aws ecr delete-repository  --repository-name floci-it/app --force \
     --endpoint-url $AWS_ENDPOINT
 ```
 
+!!! nota "Extracción de otros contenedores (EKS, consumidores de la misma red)"
+    El URI del repositorio basado en `localhost` solo funciona desde el host. De otros contenedores
+    en la red Docker, se puede acceder al registro en `http://floci-ecr-registry:5000`
+    (nombre del contenedor + puerto interno del contenedor, no el puerto del host `5100+` publicado).
+    Los clústeres [Floci EKS](eks.md#pulling-images-from-floci-ecr) obtienen un espejo contenedor
+    para esto automáticamente, de modo que los gráficos de Helm puedan hacer referencia al URI enviado tal cual.
+
 ## SDK Ejemplo (Java)
 
 ```java
