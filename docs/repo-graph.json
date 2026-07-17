@@ -101,22 +101,409 @@
     },
     {
       "path": "examples/README.md",
-      "lines": 71,
+      "lines": 90,
       "kind": "example",
       "symbols": [],
       "imports": [],
       "headings": [
         "# Ejemplos de referencia",
-        "## Ejemplos por operaci\u00f3n (node/, python/, java/)",
+        "## Ejemplos por operaci\u00f3n (node/, python/, java/, go/, rust/)",
         "# Node.js (requiere: npm install en examples/node/)",
         "# Python (requiere: pip install boto3)",
         "# Java (requiere el AWS SDK for Java v2 en el classpath, ver examples/java/FlociS3Example.java)",
+        "# Go (requiere: go get github.com/aws/aws-sdk-go-v2/config github.com/aws/aws-sdk-go-v2/service/s3)",
+        "# Rust (requiere un Cargo.toml propio con aws-config, aws-sdk-s3,",
+        "# aws-credential-types y tokio; cada archivo es un binario independiente)",
         "## Proyecto final de referencia"
       ]
     },
     {
+      "path": "examples/go/apigateway_create_api.go",
+      "lines": 43,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "examples/go/apigateway_create_resource.go",
+      "lines": 66,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "examples/go/apigateway_put_method.go",
+      "lines": 60,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "examples/go/dynamodb_create_table.go",
+      "lines": 67,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "examples/go/dynamodb_delete_item.go",
+      "lines": 48,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "examples/go/dynamodb_get_item.go",
+      "lines": 62,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "examples/go/dynamodb_put_item.go",
+      "lines": 58,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "examples/go/dynamodb_update_item.go",
+      "lines": 64,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "examples/go/floci_s3_example.go",
+      "lines": 64,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "examples/go/iam_attach_policy.go",
+      "lines": 58,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "examples/go/iam_create_policy.go",
+      "lines": 75,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "examples/go/iam_create_user.go",
+      "lines": 43,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "examples/go/lambda_create_function.go",
+      "lines": 80,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "examples/go/lambda_invoke.go",
+      "lines": 53,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "examples/go/lambda_update.go",
+      "lines": 76,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "examples/go/s3_create_bucket.go",
+      "lines": 44,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "examples/go/s3_delete.go",
+      "lines": 50,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "examples/go/s3_download.go",
+      "lines": 58,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "examples/go/s3_list_buckets.go",
+      "lines": 46,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "examples/go/s3_upload.go",
+      "lines": 58,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "examples/go/sqs_create_queue.go",
+      "lines": 43,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "examples/go/sqs_delete_message.go",
+      "lines": 42,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "examples/go/sqs_receive_message.go",
+      "lines": 58,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "examples/go/sqs_send_message.go",
+      "lines": 43,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
       "path": "examples/init/ready.d/10-seed.sh",
       "lines": 20,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "examples/java/ApiGatewayCreateApi.java",
+      "lines": 31,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "examples/java/ApiGatewayCreateResource.java",
+      "lines": 41,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "examples/java/ApiGatewayPutMethod.java",
+      "lines": 42,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "examples/java/DynamoDbCreateTable.java",
+      "lines": 42,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "examples/java/DynamoDbDeleteItem.java",
+      "lines": 36,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "examples/java/DynamoDbGetItem.java",
+      "lines": 41,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "examples/java/DynamoDbPutItem.java",
+      "lines": 43,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "examples/java/DynamoDbUpdateItem.java",
+      "lines": 41,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "examples/java/FlociS3Example.java",
+      "lines": 91,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "examples/java/IamAttachPolicy.java",
+      "lines": 39,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "examples/java/IamCreatePolicy.java",
+      "lines": 46,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "examples/java/IamCreateUser.java",
+      "lines": 34,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "examples/java/LambdaCreateFunction.java",
+      "lines": 62,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "examples/java/LambdaInvoke.java",
+      "lines": 43,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "examples/java/LambdaUpdate.java",
+      "lines": 62,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "examples/java/S3CreateBucket.java",
+      "lines": 32,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "examples/java/S3Delete.java",
+      "lines": 45,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "examples/java/S3Download.java",
+      "lines": 38,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "examples/java/S3ListBuckets.java",
+      "lines": 32,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "examples/java/S3Upload.java",
+      "lines": 37,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "examples/java/SqsCreateQueue.java",
+      "lines": 30,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "examples/java/SqsDeleteMessage.java",
+      "lines": 32,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "examples/java/SqsReceiveMessage.java",
+      "lines": 42,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "examples/java/SqsSendMessage.java",
+      "lines": 33,
       "kind": "example",
       "symbols": [],
       "imports": [],
@@ -760,6 +1147,198 @@
       "headings": []
     },
     {
+      "path": "examples/rust/apigateway_create_api.rs",
+      "lines": 29,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "examples/rust/apigateway_create_resource.rs",
+      "lines": 49,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "examples/rust/apigateway_put_method.rs",
+      "lines": 48,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "examples/rust/dynamodb_create_table.rs",
+      "lines": 56,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "examples/rust/dynamodb_delete_item.rs",
+      "lines": 36,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "examples/rust/dynamodb_get_item.rs",
+      "lines": 42,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "examples/rust/dynamodb_put_item.rs",
+      "lines": 42,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "examples/rust/dynamodb_update_item.rs",
+      "lines": 45,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "examples/rust/floci_s3_example.rs",
+      "lines": 47,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "examples/rust/iam_attach_policy.rs",
+      "lines": 43,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "examples/rust/iam_create_policy.rs",
+      "lines": 56,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "examples/rust/iam_create_user.rs",
+      "lines": 29,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "examples/rust/lambda_create_function.rs",
+      "lines": 62,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "examples/rust/lambda_invoke.rs",
+      "lines": 44,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "examples/rust/lambda_update.rs",
+      "lines": 67,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "examples/rust/s3_create_bucket.rs",
+      "lines": 35,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "examples/rust/s3_delete.rs",
+      "lines": 37,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "examples/rust/s3_download.rs",
+      "lines": 42,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "examples/rust/s3_list_buckets.rs",
+      "lines": 37,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "examples/rust/s3_upload.rs",
+      "lines": 39,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "examples/rust/sqs_create_queue.rs",
+      "lines": 31,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "examples/rust/sqs_delete_message.rs",
+      "lines": 35,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "examples/rust/sqs_receive_message.rs",
+      "lines": 47,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "examples/rust/sqs_send_message.rs",
+      "lines": 30,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
       "path": "install.sh",
       "lines": 99,
       "kind": "project-file",
@@ -790,7 +1369,7 @@
     },
     {
       "path": "scripts/build_repo_graph.py",
-      "lines": 437,
+      "lines": 440,
       "kind": "automation-script",
       "symbols": [
         "FileNode",

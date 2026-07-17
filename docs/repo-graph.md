@@ -1,8 +1,8 @@
 # Academia Floci Repo Graph
 
-Generated: 2026-07-17 04:52 UTC
+Generated: 2026-07-17 05:16 UTC
 Root: `Academia_Floci`
-Indexed files: 504
+Indexed files: 576
 Import edges: 27
 
 Use this file as the first, compact context for AI assistants. Refresh it with:
@@ -19,7 +19,7 @@ For automated lookups, use `docs/repo-graph.json`.
 - `automation-script`: 6 files
 - `course-content`: 285 files
 - `documentation`: 80 files
-- `example`: 61 files
+- `example`: 133 files
 - `local-infra`: 1 files
 - `project-file`: 25 files
 
@@ -29,6 +29,9 @@ For automated lookups, use `docs/repo-graph.json`.
 - `.ts`: 32
 - `.py`: 31
 - `.js`: 30
+- `.go`: 24
+- `.java`: 24
+- `.rs`: 24
 - `.json`: 16
 - `.html`: 9
 - `.scss`: 8
@@ -45,7 +48,7 @@ For automated lookups, use `docs/repo-graph.json`.
 - `README.md` (246 lines, documentation)
   - headings: # Academia_Floci, ## Como empezar, ## Levantar Floci, # 1. Levantar todos los servicios, # 2. Verificar Floci AWS
 - `scripts/validate.sh` (448 lines, automation-script)
-- `scripts/build_repo_graph.py` (437 lines, automation-script)
+- `scripts/build_repo_graph.py` (440 lines, automation-script)
   - symbols: FileNode, repo_files, read_text, classify, parse_ts_symbols, parse_ts_imports, parse_python_symbols, parse_python_imports, parse_markdown_headings, unique
 - `web/index.html` (249 lines, project-file)
   - symbols: progressLabel, progressBar, openCloudLab, toggleNav, courseNav, resetProgress, closeNav, courseList, courseLabel, difficultyBadge
@@ -144,7 +147,7 @@ For automated lookups, use `docs/repo-graph.json`.
 ### automation-script
 
 - `scripts/build_curriculum.py` (273 lines) - symbols: source_text, normalize_ascii, clean_module_name, parse_curriculum, js_string, render_app_data, main; imports: __future__, json, re, pathlib
-- `scripts/build_repo_graph.py` (437 lines) - symbols: FileNode, repo_files, read_text, classify, parse_ts_symbols, parse_ts_imports, parse_python_symbols, parse_python_imports; imports: __future__, argparse, ast, json, re, collections, dataclasses, datetime
+- `scripts/build_repo_graph.py` (440 lines) - symbols: FileNode, repo_files, read_text, classify, parse_ts_symbols, parse_ts_imports, parse_python_symbols, parse_python_imports; imports: __future__, argparse, ast, json, re, collections, dataclasses, datetime
 - `scripts/fix_lessons.py` (205 lines) - symbols: safe_print, iter_text_check_files, find_text_quality_issues, normalized_content, fix_content, check_http, main; imports: argparse, glob, os, re, urllib.request
 - `scripts/start.sh` (10 lines)
 - `scripts/validate-floci.sh` (43 lines)
@@ -196,25 +199,25 @@ For automated lookups, use `docs/repo-graph.json`.
 
 ### example
 
-- `examples/README.md` (71 lines) - headings: # Ejemplos de referencia, ## Ejemplos por operación (node/, python/, java/), # Node.js (requiere: npm install en examples/node/), # Python (requiere: pip install boto3)
-- `examples/init/ready.d/10-seed.sh` (20 lines)
-- `examples/node/apigateway-create-api.js` (24 lines)
-- `examples/node/apigateway-create-resource.js` (37 lines)
-- `examples/node/apigateway-put-method.js` (41 lines)
-- `examples/node/demo.mjs` (93 lines) - imports: @aws-sdk/client-s3, @aws-sdk/client-sqs
-- `examples/node/dynamodb-create-table.js` (37 lines)
-- `examples/node/dynamodb-delete-item.js` (28 lines)
-- `examples/node/dynamodb-get-item.js` (34 lines)
-- `examples/node/dynamodb-put-item.js` (34 lines)
-- `examples/node/dynamodb-update-item.js` (32 lines)
-- `examples/node/floci-example.js` (134 lines)
-- `examples/node/iam-attach-policy.js` (28 lines)
-- `examples/node/iam-create-policy.js` (44 lines)
-- `examples/node/iam-create-user.js` (28 lines)
-- `examples/node/lambda-create-function.js` (54 lines)
-- `examples/node/lambda-invoke.js` (39 lines)
-- `examples/node/lambda-update.js` (48 lines)
-- ... 43 more files
+- `examples/README.md` (90 lines) - headings: # Ejemplos de referencia, ## Ejemplos por operación (node/, python/, java/, go/, rust/), # Node.js (requiere: npm install en examples/node/), # Python (requiere: pip install boto3)
+- `examples/go/apigateway_create_api.go` (43 lines)
+- `examples/go/apigateway_create_resource.go` (66 lines)
+- `examples/go/apigateway_put_method.go` (60 lines)
+- `examples/go/dynamodb_create_table.go` (67 lines)
+- `examples/go/dynamodb_delete_item.go` (48 lines)
+- `examples/go/dynamodb_get_item.go` (62 lines)
+- `examples/go/dynamodb_put_item.go` (58 lines)
+- `examples/go/dynamodb_update_item.go` (64 lines)
+- `examples/go/floci_s3_example.go` (64 lines)
+- `examples/go/iam_attach_policy.go` (58 lines)
+- `examples/go/iam_create_policy.go` (75 lines)
+- `examples/go/iam_create_user.go` (43 lines)
+- `examples/go/lambda_create_function.go` (80 lines)
+- `examples/go/lambda_invoke.go` (53 lines)
+- `examples/go/lambda_update.go` (76 lines)
+- `examples/go/s3_create_bucket.go` (44 lines)
+- `examples/go/s3_delete.go` (50 lines)
+- ... 115 more files
 
 ### local-infra
 

@@ -15,39 +15,39 @@ y explica con tus palabras qué esperabas antes de consultar estos archivos.
 El `docker-compose.yml` principal no monta el hook de inicialización. Si llegas
 al módulo de hooks, deberás descubrir y agregar tú mismo el montaje correcto.
 
-## Ejemplos por operación (node/, python/, java/)
+## Ejemplos por operación (node/, python/, java/, go/, rust/)
 
 Además de los demos combinados de arriba, cada servicio de la ruta base
-(Módulos 2-7) tiene un archivo independiente por operación, en los tres
+(Módulos 2-7) tiene un archivo independiente por operación, en los cinco
 lenguajes, para consultar una operación puntual sin leer un demo completo.
 Cada archivo se ejecuta solo, acepta argumentos por línea de comandos, y
 asume Floci corriendo en `http://localhost:4566` (ver Módulo 1).
 
-| Servicio | Operación | Node.js | Python | Java |
-|---|---|---|---|---|
-| S3 | Listar buckets | `s3-list-buckets.js` | `s3_list_buckets.py` | `S3ListBuckets.java` |
-| S3 | Crear bucket | `s3-create-bucket.js` | `s3_create_bucket.py` | `S3CreateBucket.java` |
-| S3 | Subir archivo | `s3-upload.js` | `s3_upload.py` | `S3Upload.java` |
-| S3 | Descargar archivo | `s3-download.js` | `s3_download.py` | `S3Download.java` |
-| S3 | Eliminar objeto/bucket | `s3-delete.js` | `s3_delete.py` | `S3Delete.java` |
-| SQS | Crear cola | `sqs-create-queue.js` | `sqs_create_queue.py` | `SqsCreateQueue.java` |
-| SQS | Enviar mensaje | `sqs-send-message.js` | `sqs_send_message.py` | `SqsSendMessage.java` |
-| SQS | Recibir mensaje | `sqs-receive-message.js` | `sqs_receive_message.py` | `SqsReceiveMessage.java` |
-| SQS | Eliminar mensaje | `sqs-delete-message.js` | `sqs_delete_message.py` | `SqsDeleteMessage.java` |
-| DynamoDB | Crear tabla | `dynamodb-create-table.js` | `dynamodb_create_table.py` | `DynamoDbCreateTable.java` |
-| DynamoDB | Insertar item | `dynamodb-put-item.js` | `dynamodb_put_item.py` | `DynamoDbPutItem.java` |
-| DynamoDB | Obtener item | `dynamodb-get-item.js` | `dynamodb_get_item.py` | `DynamoDbGetItem.java` |
-| DynamoDB | Actualizar item | `dynamodb-update-item.js` | `dynamodb_update_item.py` | `DynamoDbUpdateItem.java` |
-| DynamoDB | Eliminar item | `dynamodb-delete-item.js` | `dynamodb_delete_item.py` | `DynamoDbDeleteItem.java` |
-| Lambda | Crear función | `lambda-create-function.js` | `lambda_create_function.py` | `LambdaCreateFunction.java` |
-| Lambda | Invocar | `lambda-invoke.js` | `lambda_invoke.py` | `LambdaInvoke.java` |
-| Lambda | Actualizar código | `lambda-update.js` | `lambda_update.py` | `LambdaUpdate.java` |
-| API Gateway | Crear API | `apigateway-create-api.js` | `apigateway_create_api.py` | `ApiGatewayCreateApi.java` |
-| API Gateway | Crear recurso | `apigateway-create-resource.js` | `apigateway_create_resource.py` | `ApiGatewayCreateResource.java` |
-| API Gateway | Crear método | `apigateway-put-method.js` | `apigateway_put_method.py` | `ApiGatewayPutMethod.java` |
-| IAM | Crear usuario | `iam-create-user.js` | `iam_create_user.py` | `IamCreateUser.java` |
-| IAM | Crear política | `iam-create-policy.js` | `iam_create_policy.py` | `IamCreatePolicy.java` |
-| IAM | Asignar política | `iam-attach-policy.js` | `iam_attach_policy.py` | `IamAttachPolicy.java` |
+| Servicio | Operación | Node.js | Python | Java | Go | Rust |
+|---|---|---|---|---|---|---|
+| S3 | Listar buckets | `s3-list-buckets.js` | `s3_list_buckets.py` | `S3ListBuckets.java` | `s3_list_buckets.go` | `s3_list_buckets.rs` |
+| S3 | Crear bucket | `s3-create-bucket.js` | `s3_create_bucket.py` | `S3CreateBucket.java` | `s3_create_bucket.go` | `s3_create_bucket.rs` |
+| S3 | Subir archivo | `s3-upload.js` | `s3_upload.py` | `S3Upload.java` | `s3_upload.go` | `s3_upload.rs` |
+| S3 | Descargar archivo | `s3-download.js` | `s3_download.py` | `S3Download.java` | `s3_download.go` | `s3_download.rs` |
+| S3 | Eliminar objeto/bucket | `s3-delete.js` | `s3_delete.py` | `S3Delete.java` | `s3_delete.go` | `s3_delete.rs` |
+| SQS | Crear cola | `sqs-create-queue.js` | `sqs_create_queue.py` | `SqsCreateQueue.java` | `sqs_create_queue.go` | `sqs_create_queue.rs` |
+| SQS | Enviar mensaje | `sqs-send-message.js` | `sqs_send_message.py` | `SqsSendMessage.java` | `sqs_send_message.go` | `sqs_send_message.rs` |
+| SQS | Recibir mensaje | `sqs-receive-message.js` | `sqs_receive_message.py` | `SqsReceiveMessage.java` | `sqs_receive_message.go` | `sqs_receive_message.rs` |
+| SQS | Eliminar mensaje | `sqs-delete-message.js` | `sqs_delete_message.py` | `SqsDeleteMessage.java` | `sqs_delete_message.go` | `sqs_delete_message.rs` |
+| DynamoDB | Crear tabla | `dynamodb-create-table.js` | `dynamodb_create_table.py` | `DynamoDbCreateTable.java` | `dynamodb_create_table.go` | `dynamodb_create_table.rs` |
+| DynamoDB | Insertar item | `dynamodb-put-item.js` | `dynamodb_put_item.py` | `DynamoDbPutItem.java` | `dynamodb_put_item.go` | `dynamodb_put_item.rs` |
+| DynamoDB | Obtener item | `dynamodb-get-item.js` | `dynamodb_get_item.py` | `DynamoDbGetItem.java` | `dynamodb_get_item.go` | `dynamodb_get_item.rs` |
+| DynamoDB | Actualizar item | `dynamodb-update-item.js` | `dynamodb_update_item.py` | `DynamoDbUpdateItem.java` | `dynamodb_update_item.go` | `dynamodb_update_item.rs` |
+| DynamoDB | Eliminar item | `dynamodb-delete-item.js` | `dynamodb_delete_item.py` | `DynamoDbDeleteItem.java` | `dynamodb_delete_item.go` | `dynamodb_delete_item.rs` |
+| Lambda | Crear función | `lambda-create-function.js` | `lambda_create_function.py` | `LambdaCreateFunction.java` | `lambda_create_function.go` | `lambda_create_function.rs` |
+| Lambda | Invocar | `lambda-invoke.js` | `lambda_invoke.py` | `LambdaInvoke.java` | `lambda_invoke.go` | `lambda_invoke.rs` |
+| Lambda | Actualizar código | `lambda-update.js` | `lambda_update.py` | `LambdaUpdate.java` | `lambda_update.go` | `lambda_update.rs` |
+| API Gateway | Crear API | `apigateway-create-api.js` | `apigateway_create_api.py` | `ApiGatewayCreateApi.java` | `apigateway_create_api.go` | `apigateway_create_api.rs` |
+| API Gateway | Crear recurso | `apigateway-create-resource.js` | `apigateway_create_resource.py` | `ApiGatewayCreateResource.java` | `apigateway_create_resource.go` | `apigateway_create_resource.rs` |
+| API Gateway | Crear método | `apigateway-put-method.js` | `apigateway_put_method.py` | `ApiGatewayPutMethod.java` | `apigateway_put_method.go` | `apigateway_put_method.rs` |
+| IAM | Crear usuario | `iam-create-user.js` | `iam_create_user.py` | `IamCreateUser.java` | `iam_create_user.go` | `iam_create_user.rs` |
+| IAM | Crear política | `iam-create-policy.js` | `iam_create_policy.py` | `IamCreatePolicy.java` | `iam_create_policy.go` | `iam_create_policy.rs` |
+| IAM | Asignar política | `iam-attach-policy.js` | `iam_attach_policy.py` | `IamAttachPolicy.java` | `iam_attach_policy.go` | `iam_attach_policy.rs` |
 
 Ejecución:
 
@@ -60,7 +60,26 @@ python3 examples/python/s3_create_bucket.py mi-bucket
 
 # Java (requiere el AWS SDK for Java v2 en el classpath, ver examples/java/FlociS3Example.java)
 java -cp <classpath> examples/java/S3CreateBucket.java mi-bucket
+
+# Go (requiere: go get github.com/aws/aws-sdk-go-v2/config github.com/aws/aws-sdk-go-v2/service/s3)
+go run examples/go/s3_create_bucket.go mi-bucket
+
+# Rust (requiere un Cargo.toml propio con aws-config, aws-sdk-s3,
+# aws-credential-types y tokio; cada archivo es un binario independiente)
+cargo run --bin s3_create_bucket -- mi-bucket
 ```
+
+Notas por lenguaje:
+
+- Los archivos de `dynamodb_get_item.go` y `dynamodb_update_item.go` requieren
+  además `github.com/aws/aws-sdk-go-v2/feature/dynamodb/attributevalue`.
+- `lambda_create_function.go`/`lambda_update.go` usan `archive/zip` de la
+  librería estándar de Go, sin dependencias extra.
+- `lambda_create_function.rs`/`lambda_update.rs` requieren el crate `zip`.
+- `iam_create_policy.rs` requiere el crate `serde_json`.
+- Los archivos Go y Rust no traen `go.mod`/`Cargo.toml`: son de referencia,
+  como los de Java, que tampoco traen `pom.xml`. Créalos en tu propio
+  proyecto al copiar un ejemplo.
 
 ## Proyecto final de referencia
 
