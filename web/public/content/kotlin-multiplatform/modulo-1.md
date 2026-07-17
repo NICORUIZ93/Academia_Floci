@@ -40,6 +40,11 @@ Esta capacidad de tratar funciones como valores de primera clase (que pueden pas
 
 **¿Por qué es importante?** Las funciones de orden superior permiten personalizar comportamiento sin que la función que las recibe conozca de antemano ese comportamiento específico, con el compilador verificando que la firma de la función pasada sea compatible.
 
+**Casos de uso reales:**
+- Callbacks `onClick`/`onValueChange` en Jetpack Compose (Módulo 2 del track Android): la función del framework no conoce de antemano qué hará tu app al pulsar un botón.
+- Estrategias de reintento configurables al llamar una API: pasar la lógica de backoff como parámetro en vez de repetirla en cada llamada de red.
+- Operaciones de colección personalizadas (`ordenarPor { it.campo }`) reutilizando la misma función base con distintos criterios.
+
 **Diagrama:**
 
 ```kotlin
@@ -60,6 +65,11 @@ procesarLista(listOf(1, 2, 3)) { numero -> println(numero * 2) }
 **Analogía:** las scope functions son como distintas formas de interactuar brevemente con un objeto para un propósito específico: `apply` es como personalizar un producto y quedarte con el mismo producto ya personalizado; `run` es como consultar algo sobre el producto y quedarte con la respuesta de esa consulta, no con el producto en sí; `let` es como decidir hacer algo con un objeto solo si efectivamente existe; `also` es como registrar de paso una nota sobre el objeto sin alterarlo en absoluto.
 
 **¿Por qué es importante?** Cada scope function tiene un propósito específico distinto según qué se necesita devolver (el receptor original o el resultado de un bloque) y cómo se referencia el receptor, eligiendo la apropiada según el caso produce código más idiomático y expresivo.
+
+**Casos de uso reales:**
+- `apply` para construir objetos de configuración (clientes HTTP, builders de UI) en una sola expresión fluida.
+- `let` para ejecutar lógica solo si un valor nullable proveniente de una API o un formulario efectivamente existe.
+- `also` para logging o analítica de paso, sin alterar el objeto ni interrumpir una cadena de llamadas.
 
 **Diagrama:**
 
@@ -83,6 +93,11 @@ val resultado = obtenerDatos().run { procesar(this) } // ejecuta un bloque y dev
 **Analogía:** una sealed class para modelar estados es como un semáforo con exactamente tres estados posibles conocidos de antemano, donde cualquier sistema que reaccione a ese semáforo puede garantizar que maneja los tres estados sin dejar ninguno sin cubrir; encadenar `filter`+`map` es como una línea de producción donde primero se descartan las piezas que no cumplen cierto criterio, y luego se transforman las restantes, cada estación con una responsabilidad clara y secuencial.
 
 **¿Por qué es importante?** Las sealed classes garantizan, verificado por el compilador, que todos los estados posibles de un modelo se manejen exhaustivamente; encadenar operaciones funcionales sobre colecciones expresa transformaciones de datos de forma declarativa y legible.
+
+**Casos de uso reales:**
+- Modelar el estado de una pantalla completa (cargando/éxito/error) en apps Android o Compose Multiplatform (Módulo 7).
+- Modelar el resultado de validar un formulario (`Valido`, `ErrorCampo(campo, mensaje)`) manejado exhaustivamente en la UI.
+- Filtrar y transformar una respuesta de API antes de mostrarla (`response.filter { it.activo }.map { it.toUiModel() }`).
 
 **Diagrama:**
 

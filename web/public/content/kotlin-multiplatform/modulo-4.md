@@ -40,6 +40,11 @@ Capa de dominio compartida (modelos + casos de uso) sin código específico de p
 
 **¿Por qué es importante?** Los modelos de dominio compartidos garantizan una única definición consistente entre plataformas; los casos de uso dependiendo de interfaces (no implementaciones concretas) permiten testear la lógica de negocio de forma aislada, sin necesidad de infraestructura real.
 
+**Casos de uso reales:**
+- Modelo `Tarea`/`Usuario`/`Pedido` compartido entre las apps Android e iOS de un mismo producto, evitando que diverjan sutilmente.
+- Caso de uso `IniciarSesionUseCase` que valida credenciales igual en ambas plataformas, delegando el almacenamiento seguro a `expect`/`actual` (Módulo 3).
+- Reglas de negocio de facturación o descuentos escritas una sola vez y consumidas por Android, iOS y un backend JVM (Módulo 3).
+
 **Diagrama:**
 
 ```kotlin
@@ -64,6 +69,11 @@ Definir la interfaz en `commonMain` con al menos dos implementaciones (una real,
 
 **¿Por qué es importante?** Definir el repositorio como una interfaz compartida en `commonMain`, con una implementación real y una fake, permite testear la lógica de negocio de forma completamente aislada sin depender de infraestructura real.
 
+**Casos de uso reales:**
+- `TareaRepository` con una implementación que combina Ktor (Módulo 5) para red y SQLDelight (Módulo 6) para caché local.
+- Un `FakeTareaRepository` en memoria usado en los tests de `commonTest` (Módulo 9) sin tocar red ni base de datos real.
+- Cambiar de backend (de REST a GraphQL) implementando una nueva clase que satisface la misma interfaz, sin tocar los casos de uso.
+
 **Diagrama:**
 
 ```kotlin
@@ -87,6 +97,11 @@ Koin funciona de forma idéntica en `commonMain`, resolviendo dependencias sin n
 **Analogía:** Koin es como un directorio de contactos universal que funciona igual en cualquier oficina de la empresa (cualquier plataforma), resolviendo automáticamente quién debe conectarse con quién según las relaciones declaradas una única vez, sin que cada oficina tenga que mantener su propio directorio separado y potencialmente inconsistente con las demás.
 
 **¿Por qué es importante?** Koin permite declarar la configuración de inyección de dependencias una única vez en `commonMain`, funcionando idénticamente en todas las plataformas, sin duplicar esa configuración por separado en cada una.
+
+**Casos de uso reales:**
+- Un único `sharedModule` de Koin que resuelve repositorios y casos de uso, consumido tanto por Compose Multiplatform (Módulo 7) como por SwiftUI vía interoperabilidad (Módulo 8).
+- Cambiar la implementación de `TareaRepository` (real vs. fake) según el build type sin tocar el código que la consume.
+- Evitar mantener configuraciones de Dagger/Hilt (Android) y un inyector manual (iOS) por separado para las mismas dependencias.
 
 **Diagrama:**
 

@@ -40,6 +40,11 @@ Esta estructura demuestra el patrón central de todo el track aplicado en su for
 
 **¿Por qué es importante?** El proyecto integrador demuestra el patrón central de KMP en su forma más completa: maximizar código compartido verificado una única vez, aislando en cada plataforma únicamente lo que genuinamente requiere integración nativa específica.
 
+**Casos de uso reales:**
+- Una app de gestión de tareas real, con la misma lógica de dominio publicada simultáneamente en Google Play y App Store.
+- Onboarding de un nuevo desarrollador al proyecto, que entiende de un vistazo qué vive en `commonMain` frente a cada `App`.
+- Estimar el esfuerzo de una nueva funcionalidad según cuánto de ella puede vivir en código compartido frente a UI nativa.
+
 **Diagrama:**
 
 ```
@@ -79,6 +84,11 @@ Este patrón de "red primero, con fallback a caché local" (u otras variantes si
 
 **¿Por qué es importante?** Combinar Ktor y SQLDelight en el repositorio compartido, con fallback offline a la caché local, hace que ambas plataformas se beneficien exactamente del mismo comportamiento de resiliencia ante conectividad intermitente, sin duplicar esa lógica de sincronización por separado.
 
+**Casos de uso reales:**
+- Una app de notas que sigue mostrando el contenido guardado aunque el usuario entre a un túnel sin señal.
+- Un catálogo de productos de e-commerce que muestra precios de la última sincronización exitosa durante un corte de red.
+- Cola de cambios pendientes de subir (Módulo 6) que se sincroniza automáticamente al recuperar conexión.
+
 **Diagrama:**
 
 ```kotlin
@@ -102,6 +112,11 @@ Esta decisión de dónde trazar exactamente la línea entre lo compartido y lo e
 **Analogía:** la promesa realista de KMP es como una cocina central que prepara los ingredientes base compartidos por todos los platos del menú de una cadena de restaurantes (donde preparar esos ingredientes por separado en cada sucursal sería pura redundancia), mientras cada sucursal individual conserva la libertad de presentar y servir el plato final según las preferencias específicas y las expectativas particulares de su clientela local.
 
 **¿Por qué es importante?** Entender que KMP comparte específicamente lo que es redundancia pura entre plataformas (lógica, networking, persistencia), dejando la UI como una decisión de arquitectura deliberada (nativa por fidelidad, o compartida por velocidad), evita expectativas poco realistas sobre qué KMP puede y debe compartir.
+
+**Casos de uso reales:**
+- Una fintech que elige UI 100% nativa por plataforma (cumplimiento normativo y confianza del usuario) pero comparte toda la lógica de cálculo.
+- Una herramienta interna de empresa que elige Compose Multiplatform para maximizar velocidad de entrega sobre fidelidad nativa exacta.
+- Revisar en retrospectiva del equipo qué se compartió realmente y qué debería haberse mantenido nativo, ajustando el siguiente proyecto.
 
 **Diagrama:**
 

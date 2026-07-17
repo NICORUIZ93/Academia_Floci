@@ -40,6 +40,11 @@ Esta separación estructural refleja directamente el propósito central de KMP: 
 
 **¿Por qué es importante?** Maximizar el código en `commonMain` y aislar en source sets específicos solo lo que genuinamente necesita APIs de plataforma particular es el mecanismo estructural central que permite a KMP compartir la mayor cantidad posible de lógica entre plataformas.
 
+**Casos de uso reales:**
+- Lógica de validación de formularios y reglas de negocio compartidas entre la app Android y la app iOS de una misma empresa.
+- Modelos de dominio y llamadas de red en `commonMain`, mientras las notificaciones push nativas viven en `androidMain`/`iosMain`.
+- Equipos que migran progresivamente lógica duplicada de dos apps nativas separadas hacia un único `commonMain`.
+
 **Diagrama:**
 
 ```
@@ -60,6 +65,11 @@ Este mecanismo resuelve un problema que una simple interfaz común no resolverí
 **Analogía:** `expect`/`actual` es como una especificación técnica universal de un enchufe eléctrico que cada país implementa físicamente según su propio estándar local, sin que el aparato que usa ese enchufe (el código en `commonMain`) necesite saber ni importarle los detalles específicos de la implementación eléctrica de cada país particular, simplemente confía en que el enchufe correcto para su ubicación actual estará disponible.
 
 **¿Por qué es importante?** `expect`/`actual` resuelve la vinculación entre contrato e implementación específica de plataforma en tiempo de compilación, sin la ceremonia de selección en tiempo de ejecución que una interfaz común con inyección de dependencias requeriría.
+
+**Casos de uso reales:**
+- Obtener un identificador único de dispositivo (`Settings.Secure.ANDROID_ID` vs `UIDevice.identifierForVendor`) con una sola función común.
+- Acceder al almacenamiento seguro de credenciales (Keystore en Android, Keychain en iOS) tras una API `expect` común.
+- Formatear fechas usando la API nativa de cada plataforma sin que `commonMain` conozca los detalles de ninguna de las dos.
 
 **Diagrama:**
 
@@ -85,6 +95,11 @@ KMP no se limita conceptualmente a la combinación Android/iOS: también puede c
 **Analogía:** configurar los targets de Gradle es como decidir para qué mercados específicos se fabricará un producto (definiendo qué adaptaciones regionales concretas son necesarias), mientras que el diseño central del producto (el código en `commonMain`) permanece el mismo sin importar cuántos mercados distintos finalmente se decida atender.
 
 **¿Por qué es importante?** KMP no se limita a Android/iOS; puede compilar a JVM, JS/Wasm y Native para escritorio, permitiendo en principio que la misma lógica de negocio alimente backend, web y múltiples aplicaciones móviles nativas desde un único código fuente compartido.
+
+**Casos de uso reales:**
+- Compartir la validación de reglas de negocio entre el backend Spring Boot (target JVM) y las apps móviles.
+- Añadir un target Desktop (Compose Multiplatform) para una versión de escritorio de la misma app sin reescribir la lógica.
+- Elegir deliberadamente NO compilar a todos los targets disponibles cuando el proyecto real solo necesita Android + iOS.
 
 **Diagrama:**
 

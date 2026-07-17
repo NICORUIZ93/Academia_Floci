@@ -41,6 +41,11 @@ Kotlin distingue en su sistema de tipos entre `String` (que nunca puede contener
 
 **¿Por qué es importante?** El null safety de Kotlin elimina en tiempo de compilación una categoría completa de errores de referencia nula que en otros lenguajes solo se detectarían como una excepción en tiempo de ejecución, potencialmente en producción.
 
+**Casos de uso reales:**
+- Respuestas de API donde un campo opcional (`usuario.telefono: String?`) puede legítimamente no venir en el JSON.
+- Resultados de búsqueda en una base de datos local (Room, SQLDelight) que pueden no encontrar ningún registro.
+- Parámetros de configuración con valor por defecto vía operador Elvis (`puerto ?: 8080`) en vez de lanzar una excepción.
+
 **Diagrama:**
 
 ```kotlin
@@ -64,6 +69,11 @@ Las funciones de extensión (`fun String.esEmailValido(): Boolean = this.contain
 
 **¿Por qué es importante?** `data class` elimina el boilerplate de modelos de datos inmutables; las funciones de extensión permiten agregar comportamiento a clases existentes (incluso de terceros) sin necesidad de herencia ni de modificar su código fuente.
 
+**Casos de uso reales:**
+- Modelos de dominio (`data class Tarea(...)`) que se comparan, copian y depuran (`toString`) constantemente en tests y logs.
+- Funciones de extensión de validación (`String.esEmailValido()`) reutilizables en toda la app sin heredar de `String`.
+- `copy()` para actualizar inmutablemente un solo campo de un estado de UI sin reconstruir el objeto completo a mano.
+
 **Diagrama:**
 
 ```kotlin
@@ -86,6 +96,11 @@ Esta capacidad de `when` como expresión se combina naturalmente con sealed clas
 **Analogía:** `when` como expresión es como un clasificador automático que directamente entrega la etiqueta correspondiente según la categoría detectada, en vez de un proceso paso a paso donde primero se determina la categoría y luego, en un paso separado, se asigna manualmente la etiqueta correspondiente a una variable ya existente.
 
 **¿Por qué es importante?** `when` como expresión permite expresar de forma concisa y directa una decisión de selección entre múltiples alternativas, devolviendo directamente el valor resultante sin la ceremonia adicional de una cadena tradicional de `if`/`else if` con asignación manual.
+
+**Casos de uso reales:**
+- Mapear un código de estado HTTP a un mensaje de error legible para el usuario.
+- Decidir qué Composable mostrar según un rango de tamaño de pantalla (`when { ancho < 600 -> ...; else -> ... }`).
+- Clasificar una entrada de usuario en categorías (edad, nivel de suscripción, rol) para aplicar reglas de negocio distintas.
 
 **Diagrama:**
 

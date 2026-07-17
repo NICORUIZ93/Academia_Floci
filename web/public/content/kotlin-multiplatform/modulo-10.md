@@ -54,6 +54,11 @@ Validar ambos targets en cada push individual (no solo antes de un release) dete
 
 **¿Por qué es importante?** Validar ambos targets en cada push detecta regresiones específicas de plataforma inmediatamente tras introducirse, con contexto fresco para diagnosticar, en vez de descubrirlas tardíamente justo antes de un release planificado.
 
+**Casos de uso reales:**
+- Detectar en un pull request que un cambio en `commonMain` rompe la compilación de iOS antes de hacer merge.
+- Ejecutar `commonTest` (Módulo 9) en cada push para atrapar regresiones de lógica compartida temprano.
+- Presupuestar el costo de CI sabiendo que los runners macOS para iOS son más caros que los runners Linux para Android.
+
 **Diagrama:**
 
 ```yaml
@@ -90,6 +95,11 @@ Esta automatización es particularmente valiosa en un contexto multiplataforma c
 
 **¿Por qué es importante?** Fastlane automatiza pasos de release tediosos y propensos a error humano (firma, versionado, subida a las plataformas de distribución) en un único comando consistente y repetible.
 
+**Casos de uso reales:**
+- Publicar una nueva build a TestFlight automáticamente al mergear a la rama `release`, sin intervención manual.
+- Subir simultáneamente builds de Android e iOS de la misma versión en un único paso de CI coordinado.
+- Evitar el error humano clásico de subir a producción una build firmada con el certificado de desarrollo equivocado.
+
 **Diagrama:**
 
 ```ruby
@@ -108,6 +118,11 @@ Mantener el número de versión sincronizado entre la app Android y la app iOS, 
 **Analogía:** el versionado compartido es como asegurarse de que todas las sucursales de una franquicia sigan exactamente la misma edición del manual de operaciones central, evitando la confusión de que distintas sucursales operen simultáneamente según versiones distintas y potencialmente incompatibles del mismo manual base.
 
 **¿Por qué es importante?** Sincronizar el versionado entre ambas plataformas evita la confusión de no saber con certeza qué versión del módulo compartido corre cada plataforma, simplificando el diagnóstico de bugs reportados por usuarios.
+
+**Casos de uso reales:**
+- Un usuario reporta un bug desde la app iOS 2.3.1; el equipo identifica de inmediato qué versión de `commonMain` corresponde.
+- Coordinar un release simultáneo donde Android e iOS despliegan la misma versión del módulo compartido el mismo día.
+- Auditar en logs de crash qué versión del módulo compartido estaba activa en el momento del fallo.
 
 **Diagrama:**
 

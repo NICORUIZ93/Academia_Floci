@@ -40,6 +40,11 @@ Cliente HTTP compartido que consume una API real desde Android e iOS, más tres 
 
 **¿Por qué es importante?** Ktor Client evita duplicar dos implementaciones de cliente HTTP completamente separadas (URLSession en iOS, OkHttp en Android), abstrayendo el motor de transporte nativo detrás de una única API común compartida.
 
+**Casos de uso reales:**
+- Consumir la misma API REST de tareas desde `TareasRepositoryImpl` (Módulo 4) en Android e iOS con un único cliente.
+- Sincronizar el catálogo de productos de una app de e-commerce compartida entre ambas plataformas.
+- Subir archivos adjuntos (fotos, documentos) reutilizando la misma configuración de multipart en ambas plataformas.
+
 **Diagrama:**
 
 ```kotlin
@@ -64,6 +69,11 @@ suspend fun obtenerTareas(): List<TareaDTO> =
 
 **¿Por qué es importante?** Modelar errores de red como un tipo de retorno explícito hace visible en la propia firma de la función que la operación puede fallar, forzando un manejo explícito de ambos casos posibles, en vez de dejar que las excepciones se propaguen sin control.
 
+**Casos de uso reales:**
+- Mostrar un mensaje de "sin conexión" específico frente a un mensaje de "credenciales inválidas" según el tipo de `Resultado.Error`.
+- Reintentar automáticamente solo los errores de timeout, no los errores de validación del servidor (400 Bad Request).
+- Propagar el `Resultado` tal cual desde el repositorio hasta el `StateFlow` de UI (Módulo 2), sin excepciones no manejadas en ningún punto intermedio.
+
 **Diagrama:**
 
 ```kotlin
@@ -87,6 +97,11 @@ suspend fun obtenerTareasSeguro(): Resultado<List<TareaDTO>> = try {
 **Analogía:** un interceptor de autenticación configurado en el cliente compartido es como un sello de aprobación aplicado automáticamente a cada correspondencia saliente de una oficina, garantizando que ningún empleado individual tenga que recordar aplicar ese sello manualmente en cada envío particular.
 
 **¿Por qué es importante?** Configurar la autenticación como un interceptor centralizado en el cliente HTTP compartido garantiza que ninguna llamada de red individual del código de la aplicación olvide incluir las credenciales necesarias, sin duplicar esa lógica en cada llamada.
+
+**Casos de uso reales:**
+- Renovar automáticamente un access token expirado (`refreshTokens`) sin que cada pantalla implemente su propia lógica de reintento.
+- Agregar un header `X-App-Version` a todas las peticiones para depuración en producción, sin tocar cada llamada individual.
+- Cerrar sesión automáticamente en ambas plataformas cuando el interceptor detecta una respuesta 401 repetida.
 
 **Diagrama:**
 

@@ -42,6 +42,11 @@ Esta extensión representa un salto conceptual más allá de compartir solo lóg
 
 **¿Por qué es importante?** Compose Multiplatform extiende el modelo de programación de Jetpack Compose a iOS y otras plataformas, compartiendo no solo lógica sino también el código de UI en sí, mediante Skia como motor gráfico embebido común.
 
+**Casos de uso reales:**
+- Una startup con equipo pequeño que necesita una app Android + iOS con presupuesto y tiempo de desarrollo limitados.
+- Herramientas internas de empresa donde la consistencia visual exacta entre plataformas importa más que seguir cada convención nativa.
+- Prototipos y MVPs donde iterar rápido en una única base de código de UI vale más que la integración nativa profunda.
+
 **Diagrama:**
 
 ```kotlin
@@ -65,6 +70,11 @@ Librerías de navegación compatibles con KMP (como Voyager, o el Navigation Com
 
 **¿Por qué es importante?** Theming y navegación compartidos garantizan coherencia visual y de flujo exacta entre plataformas, definidos una única vez en vez de mantener implementaciones paralelas potencialmente divergentes.
 
+**Casos de uso reales:**
+- Aplicar modo oscuro/claro de forma idéntica en Android e iOS desde una única definición de `ColorScheme`.
+- Rebranding de la app (cambio de paleta de colores corporativa) editando un solo archivo en vez de dos temas nativos separados.
+- Flujo de onboarding con varias pantallas navegables, definido una vez y consistente en ambas plataformas.
+
 **Diagrama:**
 
 ```kotlin
@@ -85,6 +95,11 @@ Compose Multiplatform también se extiende más allá de dispositivos móviles h
 **Analogía:** las limitaciones actuales de Compose Multiplatform en iOS son como una traducción de un idioma a otro que captura fielmente la mayor parte del contenido original, pero donde ciertas expresiones idiomáticas muy específicas y locales todavía requieren una adaptación manual especializada en vez de una traducción directa y automática.
 
 **¿Por qué es importante?** Reconocer las limitaciones actuales de Compose Multiplatform en iOS (madurez menor que en Android, ciertas integraciones nativas que requieren puentes específicos) evita asumir que absolutamente toda la UI puede compartirse sin ninguna consideración específica de plataforma.
+
+**Casos de uso reales:**
+- Usar SwiftUI nativo para un widget de pantalla de inicio en iOS mientras el resto de la app usa Compose Multiplatform.
+- Evaluar si una integración de pago nativa (Apple Pay/Google Pay) necesita un puente `expect`/`actual` puntual (Módulo 3) en vez de UI compartida.
+- Decidir conscientemente no adoptar el target Web todavía por su madurez relativa menor frente a Android/iOS.
 
 **Diagrama:**
 

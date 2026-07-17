@@ -43,6 +43,11 @@ Función suspendida que combina dos fuentes de datos con manejo de errores estru
 
 **¿Por qué es importante?** La concurrencia estructurada garantiza que la cancelación de un scope padre cancela automáticamente todas sus coroutines hijas, evitando tareas huérfanas ejecutándose sin control, una garantía que threads manuales o callbacks no ofrecen por sí solos.
 
+**Casos de uso reales:**
+- Cargar en paralelo perfil de usuario y lista de pedidos al abrir una pantalla, cancelando ambas si el usuario navega antes de que terminen.
+- Llamadas de red desde un ViewModel (Módulo 4 del track Android) que se cancelan automáticamente cuando la pantalla se destruye.
+- Sincronizar datos remotos con caché local (Módulo 11) sin dejar la sincronización corriendo tras cerrar la app.
+
 **Diagrama:**
 
 ```kotlin
@@ -65,6 +70,11 @@ suspend fun cargarPantalla() = coroutineScope {
 
 **¿Por qué es importante?** `StateFlow` es apropiado para estado de UI que siempre tiene un valor actual consultable; `SharedFlow` es apropiado para eventos puntuales de un solo uso donde no existe un "valor actual" con sentido de repetirse a nuevos observadores.
 
+**Casos de uso reales:**
+- `StateFlow` para el estado observable de un ViewModel Compose (lista de tareas, estado de carga).
+- `SharedFlow` para eventos de navegación de un solo disparo ("mostrar este Snackbar una vez") que no deben repetirse al rotar la pantalla.
+- `Flow` para observar cambios en una tabla SQLDelight (Módulo 6) y actualizar la UI automáticamente en cada `insert`/`update`.
+
 **Diagrama:**
 
 ```kotlin
@@ -86,6 +96,11 @@ Manejar errores dentro de una coroutine sigue el mismo mecanismo estructural de 
 **Analogía:** manejar errores de una coroutine con `try`/`catch` es como tener un plan de contingencia explícito para cuando un mensajero no logra completar su encargo, convirtiendo ese fallo en una respuesta manejable en vez de dejar que el problema se propague sin control; `Mutex` es como un único pase de acceso que solo una persona puede sostener a la vez para entrar a una sala específica, garantizando que nunca dos personas modifiquen simultáneamente el mismo recurso dentro de esa sala.
 
 **¿Por qué es importante?** `try`/`catch` alrededor de una llamada suspend transforma errores asíncronos en estados manejables explícitos; `Mutex` proporciona exclusión mutua compatible con el modelo de suspensión de coroutines, evitando el bloqueo de thread físico completo que `synchronized` impondría.
+
+**Casos de uso reales:**
+- Capturar errores de red (timeout, sin conexión) y convertirlos en `EstadoUI.Error` con un mensaje legible para el usuario.
+- `Mutex` para proteger una caché en memoria compartida entre varias coroutines que la leen y escriben concurrentemente.
+- `kotlinx.atomicfu` para un contador de peticiones en curso, consistente en Android, iOS y JVM sin código específico por plataforma.
 
 **Diagrama:**
 

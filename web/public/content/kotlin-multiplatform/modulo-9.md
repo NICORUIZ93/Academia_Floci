@@ -54,6 +54,11 @@ Esta capacidad de "escribir una vez, probar en ambas plataformas" es el compleme
 
 **¿Por qué es importante?** Un test escrito una única vez en `commonTest` confirma que la lógica compartida se comporta de forma idéntica en ambas plataformas, sin duplicar el esfuerzo de escribir y mantener suites de pruebas separadas por plataforma.
 
+**Casos de uso reales:**
+- Verificar `ObtenerTareasPendientesUseCase` (Módulo 4) una sola vez y confiar en que el resultado es idéntico en Android e iOS.
+- Detectar en CI (Módulo 10) si un cambio en `commonMain` rompe la lógica compartida antes de compilar ambas apps completas.
+- Cubrir reglas de negocio críticas (cálculo de precios, validaciones) con un único test suite mantenido por un solo equipo.
+
 **Diagrama:**
 
 ```kotlin
@@ -82,6 +87,11 @@ Preferir fakes sobre mocks en el contexto específico de `commonTest` tiene una 
 
 **¿Por qué es importante?** Los fakes son código Kotlin ordinario compatible con cualquier target de Kotlin Multiplatform, mientras que las librerías de mocking tradicionales dependen frecuentemente de mecanismos específicos de la JVM no disponibles universalmente en todos los targets, incluyendo iOS.
 
+**Casos de uso reales:**
+- `TareaRepositoryFake` reutilizado en decenas de tests de distintos casos de uso, sin depender de una librería de mocking.
+- Un `FakeApiClient` que simula respuestas de red exitosas y de error, sin levantar un servidor real ni Floci.
+- Fakes compartidos entre el equipo Android y el equipo iOS, ya que ambos ejecutan exactamente los mismos tests de `commonTest`.
+
 **Diagrama:**
 
 ```kotlin
@@ -101,6 +111,11 @@ Esta capacidad es crucial para mantener una suite de tests rápida y ágil: sin 
 **Analogía:** `runTest` es como un simulador de vuelo que permite probar procedimientos que en la realidad tomarían horas completas, comprimiendo ese tiempo a segundos reales sin alterar la validez de lo que efectivamente se está verificando en el procedimiento simulado.
 
 **¿Por qué es importante?** `runTest` permite que los tests de código con delays simulados corran instantáneamente en tiempo real, manteniendo la suite de pruebas rápida y ágil incluso con lógica que internamente simula esperas prolongadas.
+
+**Casos de uso reales:**
+- Testear un mecanismo de reintento con backoff exponencial (varios segundos simulados) en milisegundos reales de test.
+- Verificar timeouts de red configurados en el cliente Ktor (Módulo 5) sin esperar el timeout real completo.
+- Mantener una suite de cientos de tests rápida en CI (Módulo 10) aunque varios simulen esperas de red o de UI.
 
 **Diagrama:**
 

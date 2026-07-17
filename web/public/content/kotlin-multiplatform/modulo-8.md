@@ -40,6 +40,11 @@ Este proceso de compilación produce un binario real y nativo (no una capa de in
 
 **¿Por qué es importante?** Kotlin/Native compila el módulo compartido a un binario nativo real, importable en Xcode como cualquier otro framework, con overhead de rendimiento mínimo en las llamadas entre Swift y Kotlin.
 
+**Casos de uso reales:**
+- Un equipo iOS que integra el módulo `Shared` en su proyecto Xcode existente sin cambiar su flujo de trabajo habitual.
+- Publicar el framework como dependencia interna reutilizable entre varias apps iOS de la misma empresa.
+- Medir el impacto en tamaño de binario del framework generado antes de decidir cuánta lógica mover a `commonMain`.
+
 **Diagrama:**
 
 ```kotlin
@@ -60,6 +65,11 @@ Los tipos básicos de Kotlin se mapean directamente a sus equivalentes naturales
 **Analogía:** el mapeo de tipos es como una traducción directa palabra por palabra para conceptos simples (números, texto), pero que requiere una adaptación estructural más cuidadosa para conceptos más elaborados (una sealed class), donde el idioma de destino (Swift) representa la misma idea con una estructura gramatical distinta que se comporta de forma similar pero no idéntica en cuanto a garantías del compilador.
 
 **¿Por qué es importante?** Los tipos básicos se mapean directamente entre Kotlin y Swift; las sealed classes se exponen como jerarquías de clases regulares manejables con switch, aunque sin la misma garantía estricta de exhaustividad verificada que Kotlin ofrece nativamente.
+
+**Casos de uso reales:**
+- Consumir `Tarea` (Módulo 4) directamente desde una vista SwiftUI (Módulo 1 del track iOS) como si fuera un struct nativo de Swift.
+- Manejar `Resultado<T>` (Módulo 5) con un `switch` en Swift, replicando el mismo manejo exhaustivo que `when` hace en Kotlin.
+- Documentar explícitamente en el equipo qué sealed classes existen, ya que Swift no avisará si falta una rama en el `switch`.
 
 **Diagrama:**
 
@@ -86,6 +96,11 @@ CocoaPods fue históricamente la forma estándar y más común de distribuir el 
 **Analogía:** exponer una función suspend como callback hacia Swift es como traducir una instrucción que originalmente decía "espera aquí hasta que el resultado esté listo" hacia una instrucción equivalente que dice "cuando el resultado esté listo, ejecuta esta acción específica", logrando el mismo efecto final pero expresado con una sintaxis distinta según las capacidades nativas del idioma de destino.
 
 **¿Por qué es importante?** Kotlin/Native expone funciones suspend hacia Swift mediante callbacks (o `async`/`await` nativo con librerías más recientes); SPM es la alternativa moderna recomendada por Apple para distribuir el framework, con mejor integración nativa en Xcode que CocoaPods.
+
+**Casos de uso reales:**
+- Invocar `obtenerTareasPendientesUseCase` (Módulo 4) desde una vista SwiftUI usando `async`/`await` nativo de Swift.
+- Migrar la distribución del framework compartido de CocoaPods a SPM en un proyecto iOS existente.
+- Envolver el callback generado por Kotlin/Native en una función `async` propia de Swift para integrarlo naturalmente con `Task {}`.
 
 **Diagrama:**
 

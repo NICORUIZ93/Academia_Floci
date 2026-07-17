@@ -5007,7 +5007,7 @@
     },
     {
       "path": "web/public/content/kotlin-multiplatform/modulo-0.md",
-      "lines": 181,
+      "lines": 196,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5028,7 +5028,7 @@
     },
     {
       "path": "web/public/content/kotlin-multiplatform/modulo-1.md",
-      "lines": 183,
+      "lines": 198,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5049,7 +5049,7 @@
     },
     {
       "path": "web/public/content/kotlin-multiplatform/modulo-10.md",
-      "lines": 198,
+      "lines": 213,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5070,7 +5070,7 @@
     },
     {
       "path": "web/public/content/kotlin-multiplatform/modulo-11.md",
-      "lines": 190,
+      "lines": 205,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5091,7 +5091,7 @@
     },
     {
       "path": "web/public/content/kotlin-multiplatform/modulo-2.md",
-      "lines": 180,
+      "lines": 195,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5112,7 +5112,7 @@
     },
     {
       "path": "web/public/content/kotlin-multiplatform/modulo-3.md",
-      "lines": 183,
+      "lines": 198,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5133,7 +5133,7 @@
     },
     {
       "path": "web/public/content/kotlin-multiplatform/modulo-4.md",
-      "lines": 179,
+      "lines": 194,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5154,7 +5154,7 @@
     },
     {
       "path": "web/public/content/kotlin-multiplatform/modulo-5.md",
-      "lines": 179,
+      "lines": 194,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5175,7 +5175,7 @@
     },
     {
       "path": "web/public/content/kotlin-multiplatform/modulo-6.md",
-      "lines": 189,
+      "lines": 204,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5196,7 +5196,7 @@
     },
     {
       "path": "web/public/content/kotlin-multiplatform/modulo-7.md",
-      "lines": 175,
+      "lines": 190,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5217,7 +5217,7 @@
     },
     {
       "path": "web/public/content/kotlin-multiplatform/modulo-8.md",
-      "lines": 177,
+      "lines": 192,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5238,7 +5238,7 @@
     },
     {
       "path": "web/public/content/kotlin-multiplatform/modulo-9.md",
-      "lines": 192,
+      "lines": 207,
       "kind": "course-content",
       "symbols": [],
       "imports": [],

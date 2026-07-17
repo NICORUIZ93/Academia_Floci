@@ -53,6 +53,11 @@ La diferencia crucial frente a un ORM dinámico tradicional (que construye y val
 
 **¿Por qué es importante?** SQLDelight detecta errores de SQL (nombres de columnas incorrectos, tipos inválidos) en tiempo de compilación, mientras que un ORM dinámico solo los detectaría en tiempo de ejecución, potencialmente en producción con datos reales.
 
+**Casos de uso reales:**
+- Caché local de la lista de tareas obtenida por red (Módulo 5), consultable sin conexión.
+- Historial de búsquedas recientes persistido localmente en ambas plataformas con las mismas queries.
+- Cola de acciones pendientes de sincronizar (`pendienteDeEnvio: INTEGER`) cuando el dispositivo recupera conexión.
+
 **Diagrama:**
 
 ```sql
@@ -81,6 +86,11 @@ Esta separación entre queries compartidas (código de alto nivel, expresando qu
 
 **¿Por qué es importante?** Aunque las queries sean compartidas, el driver que las ejecuta contra SQLite es necesariamente específico de cada plataforma, dado que Android e iOS exponen SQLite mediante mecanismos nativos distintos entre sí.
 
+**Casos de uso reales:**
+- Registrar el driver de Android en `Application.onCreate()` y el de iOS al arrancar la app SwiftUI, ambos apuntando al mismo esquema `.sq`.
+- Usar un driver en memoria (`inMemoryDriver`) en tests de `commonTest` (Módulo 9) para no tocar disco en cada test.
+- Depurar un problema de datos corruptos abriendo el mismo archivo `app.db` con herramientas nativas distintas por plataforma.
+
 **Diagrama:**
 
 ```kotlin
@@ -101,6 +111,11 @@ SQLDelight aplica estas migraciones en orden secuencial estricto según la versi
 **Analogía:** una migración de esquema es como una instrucción de actualización incremental de un manual impreso ya distribuido: en vez de reemplazar el manual completo de cada persona que ya tiene una versión anterior, se distribuye únicamente el suplemento específico de actualización necesario, aplicado en el orden correcto según qué versión específica del manual cada persona ya posee.
 
 **¿Por qué es importante?** Las migraciones versionadas de SQLDelight permiten evolucionar el esquema local de la base de datos sin perder datos existentes en dispositivos de usuarios con versiones anteriores de la aplicación ya instaladas.
+
+**Casos de uso reales:**
+- Agregar una columna `prioridad` a `Tarea` en una nueva versión de la app sin borrar las tareas que el usuario ya tenía guardadas.
+- Renombrar o dividir una tabla existente conservando los datos históricos del usuario tras actualizar.
+- Probar que las migraciones aplican correctamente desde cualquier versión antigua hasta la más reciente, como parte del test suite (Módulo 9).
 
 **Diagrama:**
 
