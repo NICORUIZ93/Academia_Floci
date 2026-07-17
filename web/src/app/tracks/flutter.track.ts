@@ -164,4 +164,11 @@ export const FLUTTER_MODULES: CourseModule[] = [
     ['¿Qué decisión de arquitectura cambiarías si el equipo creciera a 5 personas trabajando en paralelo?', '¿Qué parte del ecosistema Flutter (widgets, estado, platform channels) te resultó más distinta a lo que conocías de otros frameworks?'],
     ['Flutter', 'Riverpod', 'dio'],
     'App Flutter con datos reales, persistencia offline y tests, corriendo en Android e iOS.'),
+  m(13, 'Flutter en producción: seguridad, isolates y operación', 'Producción', 'Experto', '4 h', '#02569b',
+    'Opera una aplicación multiplataforma segura, fluida y observable más allá del happy path.',
+    ['Modelo de amenazas por plataforma', 'Secretos y almacenamiento seguro', 'Isolates, frame budget y memoria', 'Offline, telemetría y releases'],
+    ['Audita permisos, enlaces, plugins y secretos', 'Mueve trabajo CPU-bound fuera del isolate de UI', 'Implementa outbox idempotente y conflictos', 'Define métricas, símbolos, migración y rollback'],
+    ['¿Qué riesgo introduce un plugin aunque su API Dart sea segura?', '¿Cuándo un isolate mejora la experiencia y cuándo solo añade complejidad?'],
+    ['Flutter DevTools', 'Dart isolates', 'secure storage'],
+    'Dossier de producción multiplataforma con pruebas, perfiles y runbook.'),
 ];

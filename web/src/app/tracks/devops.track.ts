@@ -181,4 +181,11 @@ export const DEVOPS_MODULES: CourseModule[] = [
     ['¿Qué etapa del pipeline fue la más difícil de automatizar correctamente y por qué?', '¿Qué le falta a este pipeline para considerarlo listo para un equipo de producción real?'],
     ['GitHub Actions', 'Kubernetes', 'Helm', 'Prometheus'],
     'Pipeline CI/CD funcional que construye, prueba, escanea y despliega una app a un cluster con métricas visibles.'),
+  m(14, 'SRE y plataforma: confiabilidad, incidentes y supply chain', 'SRE y plataforma', 'Experto', '5 h', '#475569',
+    'Evoluciona del pipeline funcional a una plataforma operable con objetivos de confiabilidad y evidencia de procedencia.',
+    ['SLI, SLO y error budgets', 'Alertas y respuesta a incidentes', 'Supply chain y artefactos firmados', 'GitOps, políticas y plataformas internas'],
+    ['Define SLO y burn-rate alerts', 'Ejecuta un game day y postmortem', 'Genera SBOM, firma y verifica una imagen', 'Diseña golden path con límites y métricas'],
+    ['¿Por qué disponibilidad máxima no siempre es el objetivo correcto?', '¿Qué prueba una firma de artefacto y qué no prueba?'],
+    ['Prometheus', 'OpenTelemetry', 'Argo CD', 'Sigstore'],
+    'Paquete operativo con SLO, alertas, incidente ensayado y cadena de suministro verificable.'),
 ];

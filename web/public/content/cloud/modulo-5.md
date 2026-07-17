@@ -215,6 +215,22 @@ Trigger S3 (asíncrono)          DynamoDB Streams (asíncrono)     API Gateway (
 
 ---
 
+## Criterio transversal de calidad del código
+
+Aplica estas decisiones en todos los ejemplos y en tu entrega:
+
+- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
+- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
+- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
+- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
+- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
+- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
+- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
+
+**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
+
+**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
+
 ## Laboratorio práctico
 
 > Este laboratorio asume que ya ejecutaste `floci start` y `eval $(floci env)` (Módulo 1) en tu sesión de terminal, así que los comandos de `aws` no repiten `--endpoint-url`.
@@ -243,7 +259,9 @@ Trigger S3 (asíncrono)          DynamoDB Streams (asíncrono)     API Gateway (
 | 4 | Invocar de nuevo para confirmar el cambio | `aws lambda invoke --function-name mi-funcion --payload '{"nombre":"Nicolás"}' --cli-binary-format raw-in-base64-out salida2.json && cat salida2.json` | Verifica que la nueva invocación refleja el código actualizado | `{"mensaje":"Hola, Nicolás","hora":"2026-..."}` |
 | 5 | Actualizar la configuración (memoria y variables de entorno) | `aws lambda update-function-configuration --function-name mi-funcion --memory-size 256 --environment "Variables={ENTORNO=desarrollo}"` | Cambia la memoria asignada y añade una variable de entorno, sin tocar el código | Un JSON confirmando `MemorySize: 256` y la variable `ENTORNO` |
 
-**Verificación:** el laboratorio se considera exitoso si `salida.json` (antes de la actualización) contiene solo el `mensaje`, y `salida2.json` (después de actualizar el código) contiene tanto el `mensaje` como el nuevo campo `hora`, confirmando que `update-function-code` reemplazó efectivamente la lógica ejecutada.
+**Verificación visual con Floci UI:** abre **Cloud Explorer → Serverless**, localiza la función y revisa su configuración antes y después de actualizarla. Compara runtime, memoria, timeout y fecha de modificación con `aws lambda get-function-configuration`. La salida de una invocación se valida por CLI; la UI te ayuda a comprender el recurso y detectar una configuración distinta a la esperada.
+
+**Verificación:** el laboratorio se considera exitoso si la configuración visible coincide con `get-function-configuration`, `salida.json` contiene solo el `mensaje`, y `salida2.json` contiene tanto el `mensaje` como el nuevo campo `hora`, confirmando que `update-function-code` reemplazó efectivamente la lógica ejecutada.
 
 **Errores comunes y soluciones**
 
@@ -287,6 +305,30 @@ Trigger S3 (asíncrono)          DynamoDB Streams (asíncrono)     API Gateway (
 - La justificación de cada una se basa en si el invocador original necesita esperar una respuesta inmediata o no, conectándolo con el Tema 6.
 
 ---
+
+## Rúbrica del proyecto
+
+Esta rúbrica evalúa el laboratorio y los ejercicios como evidencia de dominio, no la mera finalización de pasos.
+
+| Criterio | Peso | Evidencia esperada |
+|---|---:|---|
+| Comprensión conceptual | 20% | Explica el mecanismo, sus límites y por qué la solución funciona. |
+| Implementación funcional | 30% | El artefacto satisface requisitos normales, límite y de error. |
+| Verificación | 20% | Incluye pruebas, mediciones o inspecciones reproducibles. |
+| Diseño y calidad | 15% | Nombres, estructura, seguridad y mantenibilidad son deliberados. |
+| Comunicación profesional | 15% | README, decisiones, comandos y resultados permiten repetir el trabajo. |
+
+Se alcanza competencia con 70/100 y sin cero en implementación o verificación. El nivel experto exige comparar alternativas, justificar trade-offs y reconocer condiciones donde la solución dejaría de ser válida.
+
+## Bibliografía y fundamento académico
+
+Estas fuentes sustentan los conceptos y deben consultarse para verificar detalles que cambian entre versiones:
+
+- AWS, Microsoft Azure y Google Cloud, marcos oficiales de arquitectura bien diseñada.
+- NIST, *Cloud Computing Standards Roadmap* y *Secure Software Development Framework*.
+- Beyer et al., *Site Reliability Engineering*.
+- ACM/IEEE-CS/AAAI, *Computer Science Curricula 2023*.
+- IEEE Computer Society, *SWEBOK Guide V4.0*.
 
 ## Resumen del módulo
 

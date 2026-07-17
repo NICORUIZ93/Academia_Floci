@@ -190,6 +190,22 @@ Finalmente, la auditoría periódica de acceso —revisar qué permisos existen,
 
 ---
 
+## Criterio transversal de calidad del código
+
+Aplica estas decisiones en todos los ejemplos y en tu entrega:
+
+- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
+- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
+- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
+- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
+- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
+- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
+- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
+
+**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
+
+**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
+
 ## Laboratorio práctico
 
 > Este laboratorio asume que ya ejecutaste `floci start` y `eval $(floci env)` (Módulo 1) en tu sesión de terminal, así que los comandos de `aws` no repiten `--endpoint-url`.
@@ -210,7 +226,9 @@ Finalmente, la auditoría periódica de acceso —revisar qué permisos existen,
 | 8 | Verificar el permiso concedido con el simulador | `aws iam simulate-principal-policy --policy-source-arn <Arn-del-usuario> --action-names s3:GetObject --resource-arns arn:aws:s3:::bucket-solo-lectura/archivo.txt` | Simula si esa acción concreta sobre ese recurso concreto sería permitida, sin necesidad de ejecutar la acción real | Un JSON con `EvalDecision: "allowed"` |
 | 9 | Verificar que una acción NO concedida es denegada | `aws iam simulate-principal-policy --policy-source-arn <Arn-del-usuario> --action-names s3:DeleteObject --resource-arns arn:aws:s3:::bucket-solo-lectura/archivo.txt` | Confirma que el mínimo privilegio funciona: esta acción nunca fue concedida | Un JSON con `EvalDecision: "implicitDeny"` |
 
-**Verificación:** el laboratorio se considera exitoso si el paso 8 confirma `"allowed"` para `s3:GetObject`, y el paso 9 confirma `"implicitDeny"` (o `explicitDeny`) para `s3:DeleteObject`, demostrando que el usuario tiene exactamente el permiso concedido (lectura) y ningún otro (borrado), sin necesidad de haber probado la acción real de borrar un objeto para descubrirlo.
+**Comprobación visual:** abre Floci UI y revisa si IAM aparece como placeholder. En la versión actual no debes esperar administración completa de usuarios y políticas desde la consola. Esta limitación es deliberadamente visible: evita que una tabla falsa produzca confianza incorrecta. Para seguridad, la evidencia debe venir de `get-policy-version` y `simulate-principal-policy`, no solo de una pantalla.
+
+**Verificación:** el laboratorio se considera exitoso si el paso 8 confirma `"allowed"` para `s3:GetObject`, y el paso 9 confirma `"implicitDeny"` (o `explicitDeny`) para `s3:DeleteObject`, demostrando que el usuario tiene exactamente lectura y ningún permiso de borrado. Registra la disponibilidad de IAM en Floci UI sin tratar un placeholder como un fallo.
 
 **Errores comunes y soluciones**
 
@@ -254,6 +272,30 @@ Finalmente, la auditoría periódica de acceso —revisar qué permisos existen,
 - Menciona que un `Deny` explícito prevalece sobre un `Allow`, conectándolo con el Tema 4.
 
 ---
+
+## Rúbrica del proyecto
+
+Esta rúbrica evalúa el laboratorio y los ejercicios como evidencia de dominio, no la mera finalización de pasos.
+
+| Criterio | Peso | Evidencia esperada |
+|---|---:|---|
+| Comprensión conceptual | 20% | Explica el mecanismo, sus límites y por qué la solución funciona. |
+| Implementación funcional | 30% | El artefacto satisface requisitos normales, límite y de error. |
+| Verificación | 20% | Incluye pruebas, mediciones o inspecciones reproducibles. |
+| Diseño y calidad | 15% | Nombres, estructura, seguridad y mantenibilidad son deliberados. |
+| Comunicación profesional | 15% | README, decisiones, comandos y resultados permiten repetir el trabajo. |
+
+Se alcanza competencia con 70/100 y sin cero en implementación o verificación. El nivel experto exige comparar alternativas, justificar trade-offs y reconocer condiciones donde la solución dejaría de ser válida.
+
+## Bibliografía y fundamento académico
+
+Estas fuentes sustentan los conceptos y deben consultarse para verificar detalles que cambian entre versiones:
+
+- AWS, Microsoft Azure y Google Cloud, marcos oficiales de arquitectura bien diseñada.
+- NIST, *Cloud Computing Standards Roadmap* y *Secure Software Development Framework*.
+- Beyer et al., *Site Reliability Engineering*.
+- ACM/IEEE-CS/AAAI, *Computer Science Curricula 2023*.
+- IEEE Computer Society, *SWEBOK Guide V4.0*.
 
 ## Resumen del módulo
 

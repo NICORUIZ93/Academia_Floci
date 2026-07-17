@@ -27,6 +27,26 @@ Proyecto Android nuevo corriendo en un emulador con un recurso propio, más tres
 
 ---
 
+## Antes de comenzar: instala Android Studio y un dispositivo de prueba
+
+No necesitas un teléfono Android. Android Studio incluye el SDK, Gradle y un emulador. Descarga la versión estable desde [developer.android.com/studio](https://developer.android.com/studio) y conserva las opciones recomendadas del asistente.
+
+- **Windows:** activa la virtualización en BIOS/UEFI; Android Studio puede solicitar Windows Hypervisor Platform. Evita carpetas de proyecto sincronizadas por OneDrive.
+- **macOS:** elige la descarga para Apple Silicon o Intel según tu Mac. En Apple Silicon usa imágenes de emulador ARM64.
+- **Linux:** instala los paquetes de virtualización/KVM de tu distribución, agrega tu usuario al grupo `kvm` y reinicia sesión.
+
+En **SDK Manager** instala Android SDK Platform, Build-Tools y Platform-Tools. En **Device Manager** crea un dispositivo Pixel con una imagen estable. Crea un proyecto **Empty Activity**, Kotlin y Jetpack Compose; espera a que termine “Gradle Sync” y pulsa Run.
+
+Comprueba también la terminal integrada:
+
+```bash
+./gradlew tasks          # macOS/Linux
+.\gradlew.bat tasks      # Windows
+adb devices
+```
+
+El emulador debe aparecer como `device`. Si figura `unauthorized`, acepta el diálogo del dispositivo; si no aparece, reinicia ADB desde Device Manager. La primera sincronización puede tardar porque descarga dependencias: no la canceles mientras haya actividad de red.
+
 ## Contenido teórico
 
 ### Tema 1: Estructura de un proyecto Android Studio
@@ -135,6 +155,35 @@ dependencies {
 
 ---
 
+## Ruta de proyecto progresivo desde carpeta vacía
+
+No crees un proyecto desechable por módulo. Conserva un único repositorio que evoluciona durante todo el track y etiqueta cada hito (`git tag modulo-N`). Empieza con crea una carpeta vacía `academia-android`, abre Android Studio y genera allí un proyecto **Empty Activity**; luego ejecuta `git init`. Ejecuta el comando paso a paso, inspecciona los archivos generados y registra versiones y precondiciones en el README.
+
+| Hito | Evolución acumulativa | Evidencia antes de avanzar |
+|---|---|---|
+| Base | Compose, estado y navegación. | Arranque reproducible, commit limpio y prueba mínima. |
+| Aplicación | red, Room y trabajo en background. | Casos normales, límite y error automatizados. |
+| Integración | Conecta capas y reemplaza dobles por infraestructura controlada. | Diagrama, contratos y prueba de integración. |
+| Experto | testing, seguridad y publicación. | Perfil o threat model, telemetría y runbook de recuperación. |
+
+Al iniciar cada laboratorio crea una rama `modulo-N`, implementa el incremento, verifica el criterio de éxito y fusiona solo con pruebas verdes. Si un módulo necesita un experimento aislado, colócalo en `experiments/modulo-N/`; el producto acumulativo permanece ejecutable. Al terminar, otra persona debe poder clonar el repositorio y reproducir el último hito siguiendo únicamente el README.
+
+## Criterio transversal de calidad del código
+
+Aplica estas decisiones en todos los ejemplos y en tu entrega:
+
+- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
+- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
+- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
+- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
+- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
+- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
+- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
+
+**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
+
+**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
+
 ## Laboratorio práctico
 
 **Objetivo del laboratorio:** crear un proyecto Android nuevo corriendo en un emulador con un recurso propio.
@@ -189,6 +238,30 @@ dependencies {
 - Explica correctamente al menos uno de: límites explícitos, compilación incremental más rápida.
 
 ---
+
+## Rúbrica del proyecto
+
+Esta rúbrica evalúa el laboratorio y los ejercicios como evidencia de dominio, no la mera finalización de pasos.
+
+| Criterio | Peso | Evidencia esperada |
+|---|---:|---|
+| Comprensión conceptual | 20% | Explica el mecanismo, sus límites y por qué la solución funciona. |
+| Implementación funcional | 30% | El artefacto satisface requisitos normales, límite y de error. |
+| Verificación | 20% | Incluye pruebas, mediciones o inspecciones reproducibles. |
+| Diseño y calidad | 15% | Nombres, estructura, seguridad y mantenibilidad son deliberados. |
+| Comunicación profesional | 15% | README, decisiones, comandos y resultados permiten repetir el trabajo. |
+
+Se alcanza competencia con 70/100 y sin cero en implementación o verificación. El nivel experto exige comparar alternativas, justificar trade-offs y reconocer condiciones donde la solución dejaría de ser válida.
+
+## Bibliografía y fundamento académico
+
+Estas fuentes sustentan los conceptos y deben consultarse para verificar detalles que cambian entre versiones:
+
+- Google, *Android Developers Documentation* y guías de arquitectura de aplicaciones.
+- JetBrains, *Kotlin Language Documentation*.
+- OWASP Foundation, *Mobile Application Security Verification Standard*.
+- ACM/IEEE-CS/AAAI, *Computer Science Curricula 2023*.
+- IEEE Computer Society, *SWEBOK Guide V4.0*.
 
 ## Resumen del módulo
 

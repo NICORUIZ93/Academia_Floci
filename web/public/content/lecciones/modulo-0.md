@@ -105,7 +105,7 @@ floci --version
 | `Bind for 0.0.0.0:4566 failed` | Otro contenedor usa el puerto 4566. | Detén el contenedor que ocupa el puerto. | `docker ps --filter "publish=4566"` |
 | `Unable to locate credentials` | No cargaste variables locales de AWS. | Carga `floci env` según tu shell. | `aws sts get-caller-identity` |
 | `docker.sock permission denied` | Tu usuario no puede usar Docker. | Agrégalo al grupo docker y reinicia sesión. | `docker info` |
-| `Unable to find image floci/floci-ui:latest` | Este curso no depende de una imagen UI oficial. | Usa StackPort con Docker Compose. | `docker compose ps` |
+| `Unable to find image floci/floci-ui:latest` | Floci UI se inicia desde su repositorio, no con esa imagen directa. | Clona `floci-io/floci-ui` y ejecuta su `docker compose up`. | Abre `http://localhost:4500` |
 
 ### Windows: instalación recomendada
 
@@ -322,7 +322,7 @@ StackPort. Desde tu terminal sigues usando `http://localhost:4566`; dentro de
 Compose, StackPort usa `http://floci:4566` porque ambos contenedores comparten
 red.
 
-> Floci se aprende y se automatiza desde la CLI. Para inspección visual en este curso usamos StackPort; no uses una imagen `floci/floci-ui:latest` como paso obligatorio.
+> Floci se automatiza desde CLI/SDK y puede inspeccionarse con las dos interfaces: StackPort (`http://localhost:8080`) como explorador AWS integrado y Floci UI (`http://localhost:4500`) como consola oficial multi-cloud. Pueden ejecutarse por separado o conjuntamente.
 
 ---
 

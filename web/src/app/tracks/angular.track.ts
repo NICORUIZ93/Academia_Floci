@@ -181,4 +181,25 @@ export const ANGULAR_MODULES: CourseModule[] = [
     ['¿Qué decisión de arquitectura cambiarías si reescribieras este proyecto desde cero?', '¿Qué parte de Angular moderno (signals, standalone, @defer) tuvo el mayor impacto en tu código?'],
     ['Angular', 'RxJS', 'Vitest'],
     'Aplicación Angular standalone con routing, formularios, consumo de API y tests.'),
+  m(14, 'Angular en producción: accesibilidad, seguridad e i18n', 'Producción frontend', 'Experto', '7 h', '#dd0031',
+    'Audita y endurece la aplicación standalone para usuarios, idiomas, dispositivos y amenazas reales mediante semántica y foco correctos, sanitización contextual, CSP, traducciones verificadas y presupuestos de entrega.',
+    [
+      'Accesibilidad: HTML nativo, foco, routing, formularios, CDK/Angular Aria y pruebas',
+      'Seguridad: sanitización, contextos DOM, CSP, Trusted Types, auth y SSR',
+      'i18n: mensajes, ICU, locales, RTL, fechas, moneda y traducciones',
+      'Performance budgets, Core Web Vitals, caché, service worker y releases observables',
+    ],
+    [
+      'Completa un flujo solo con teclado y lector, corrige foco y anuncia navegación',
+      'Explota y corrige un sink inseguro y aplica CSP sin bypass injustificado',
+      'Extrae y despliega dos locales con plurales, moneda, zona horaria y RTL probados',
+      'Define budgets y comprueba una actualización segura, métricas y rollback',
+    ],
+    [
+      '¿Por qué agregar role=button no convierte un div en un botón completo?',
+      '¿Cuándo bypassSecurityTrustHtml introduce una vulnerabilidad?',
+      '¿Por qué traducir strings no basta para internacionalizar una aplicación?',
+    ],
+    ['Angular', 'Angular CDK', 'Angular Aria', 'Playwright', 'Lighthouse'],
+    'Aplicación Angular auditada con flujo accesible, CSP y Trusted Types, dos locales, RTL, budgets de build, estrategia de actualización y evidencia de rendimiento real.'),
 ];

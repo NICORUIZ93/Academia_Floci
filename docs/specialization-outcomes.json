@@ -1,0 +1,115 @@
+{
+  "schemaVersion": 1,
+  "description": "Resultados observables que conectan los fundamentos comunes con las doce rutas especializadas.",
+  "tracks": [
+    {
+      "id": "javascript",
+      "outcomes": [
+        {"id":"JS-1","level":"Fundamentos","statement":"Construir programas JavaScript explicando tipos, alcance, funciones, objetos y control de flujo.","moduleIds":[0,1,2,3],"evidence":["programas ejecutables","pruebas de casos límite"],"cs2023":["FPL","SDF"],"swebok":["Software Construction"]},
+        {"id":"JS-2","level":"Aplicación","statement":"Manipular DOM y asincronía preservando accesibilidad, estados explícitos y manejo de errores.","moduleIds":[4,5,6],"evidence":["interfaz accesible","flujo asíncrono probado"],"cs2023":["HCI","PDC"],"swebok":["Software Construction","Software Quality"]},
+        {"id":"JS-3","level":"Integración","statement":"Diseñar módulos, persistencia y consumo de APIs con contratos verificables.","moduleIds":[7,8,9],"evidence":["aplicación modular","pruebas de integración"],"cs2023":["SE","SDF"],"swebok":["Software Design","Software Testing"]},
+        {"id":"JS-4","level":"Experto","statement":"Optimizar y asegurar una aplicación JavaScript considerando memoria, compatibilidad y supply chain.","moduleIds":[10,11,12,13],"evidence":["perfil de rendimiento","threat model y auditoría de dependencias"],"cs2023":["SEC","SE"],"swebok":["Software Security","Software Quality"]}
+      ]
+    },
+    {
+      "id": "node",
+      "outcomes": [
+        {"id":"NODE-1","level":"Fundamentos","statement":"Construir servicios Node comprendiendo runtime, módulos, paquetes y asincronía.","moduleIds":[0,1,2],"evidence":["CLI reproducible","experimentos del event loop"],"cs2023":["PDC","SDF"],"swebok":["Software Construction"]},
+        {"id":"NODE-2","level":"Aplicación","statement":"Diseñar APIs HTTP con validación, errores, autenticación y autorización.","moduleIds":[3,4,5,6],"evidence":["contrato HTTP","pruebas negativas de acceso"],"cs2023":["NC","SEC"],"swebok":["Software Construction","Software Security"]},
+        {"id":"NODE-3","level":"Integración","statement":"Persistir, probar y desplegar servicios con arquitectura y observabilidad explícitas.","moduleIds":[7,8,9,10],"evidence":["migraciones y transacciones","pipeline y telemetría"],"cs2023":["DM","SE"],"swebok":["Software Architecture","Software Testing","Software Engineering Operations"]},
+        {"id":"NODE-4","level":"Experto","statement":"Operar integraciones fiables mediante contratos tipados, idempotencia y resiliencia.","moduleIds":[11,12,13],"evidence":["servicio integrado","inyección de fallos y runbook"],"cs2023":["PDC","SF"],"swebok":["Software Quality","Software Engineering Operations"]}
+      ]
+    },
+    {
+      "id": "angular",
+      "outcomes": [
+        {"id":"NG-1","level":"Fundamentos","statement":"Construir componentes Angular tipados comprendiendo templates, DI y flujo de datos.","moduleIds":[0,1,2,3],"evidence":["componentes accesibles","pruebas de bindings"],"cs2023":["FPL","HCI"],"swebok":["Software Construction"]},
+        {"id":"NG-2","level":"Aplicación","statement":"Modelar estado, formularios, rutas y HTTP mediante contratos y estados explícitos.","moduleIds":[4,5,6,7],"evidence":["flujo de formulario","integración HTTP probada"],"cs2023":["HCI","NC"],"swebok":["Software Design","Software Testing"]},
+        {"id":"NG-3","level":"Integración","statement":"Organizar una aplicación escalable con RxJS, seguridad del cliente y arquitectura por dominios.","moduleIds":[8,9,10,11],"evidence":["diagrama de arquitectura","pruebas de streams y autorización"],"cs2023":["PDC","SE","SEC"],"swebok":["Software Architecture","Software Security"]},
+        {"id":"NG-4","level":"Experto","statement":"Entregar Angular en producción con rendimiento, accesibilidad, internacionalización y operación medibles.","moduleIds":[12,13,14],"evidence":["presupuesto de bundle","auditoría WCAG y runbook"],"cs2023":["HCI","SEP"],"swebok":["Software Quality","Software Engineering Operations"]}
+      ]
+    },
+    {
+      "id": "react",
+      "outcomes": [
+        {"id":"REACT-1","level":"Fundamentos","statement":"Construir interfaces React explicando componentes, props, estado, eventos y renderizado.","moduleIds":[0,1,2,3],"evidence":["árbol de componentes","pruebas de interacción"],"cs2023":["HCI","SDF"],"swebok":["Software Construction"]},
+        {"id":"REACT-2","level":"Aplicación","statement":"Gestionar efectos, rutas, formularios y datos remotos sin estados imposibles.","moduleIds":[4,5,6,7],"evidence":["flujo navegable","estados de red probados"],"cs2023":["HCI","NC"],"swebok":["Software Design","Software Testing"]},
+        {"id":"REACT-3","level":"Integración","statement":"Diseñar estado compartido, testing y arquitectura de frontend con límites mantenibles.","moduleIds":[8,9,10],"evidence":["suite por comportamiento","ADR de estado"],"cs2023":["SE","SDF"],"swebok":["Software Architecture","Software Testing"]},
+        {"id":"REACT-4","level":"Experto","statement":"Operar una aplicación React resiliente, accesible, segura y eficiente.","moduleIds":[11,12,13],"evidence":["perfil de rendimiento","auditoría de seguridad y accesibilidad"],"cs2023":["HCI","SEC"],"swebok":["Software Security","Software Quality"]}
+      ]
+    },
+    {
+      "id": "java",
+      "outcomes": [
+        {"id":"JAVA-1","level":"Fundamentos","statement":"Modelar programas Java con tipos, control, objetos, encapsulación y excepciones.","moduleIds":[0,1,2,3],"evidence":["aplicación de consola","pruebas de invariantes"],"cs2023":["FPL","SDF"],"swebok":["Software Construction"]},
+        {"id":"JAVA-2","level":"Aplicación","statement":"Usar colecciones, genéricos, streams e I/O seleccionando abstracciones por contrato y coste.","moduleIds":[4,5,6,7],"evidence":["procesador de datos","benchmark de colección"],"cs2023":["AL","FPL"],"swebok":["Software Construction","Computing Foundations"]},
+        {"id":"JAVA-3","level":"Integración","statement":"Construir software concurrente, persistente y probado preservando integridad.","moduleIds":[8,9,10,11],"evidence":["prueba de concurrencia","persistencia transaccional y suite"],"cs2023":["DM","PDC"],"swebok":["Software Testing","Software Design"]},
+        {"id":"JAVA-4","level":"Experto","statement":"Diagnosticar y endurecer aplicaciones Java mediante arquitectura, JMM, profiling y seguridad de runtime.","moduleIds":[12,13,14],"evidence":["perfil JFR/JMH","threat model y ADR"],"cs2023":["AR","SEC","SE"],"swebok":["Software Architecture","Software Security","Software Quality"]}
+      ]
+    },
+    {
+      "id": "spring-boot",
+      "outcomes": [
+        {"id":"SPRING-1","level":"Fundamentos","statement":"Construir una API Spring Boot comprendiendo configuración, DI y contratos HTTP.","moduleIds":[0,1,2],"evidence":["API ejecutable","pruebas de endpoints"],"cs2023":["NC","SDF"],"swebok":["Software Construction"]},
+        {"id":"SPRING-2","level":"Aplicación","statement":"Persistir y proteger recursos mediante transacciones, validación y autorización.","moduleIds":[3,4,5,6],"evidence":["migraciones y rollback","pruebas negativas de seguridad"],"cs2023":["DM","SEC"],"swebok":["Software Security","Software Testing"]},
+        {"id":"SPRING-3","level":"Integración","statement":"Integrar mensajería, caché, documentación y observabilidad con fallos controlados.","moduleIds":[7,8,9,10],"evidence":["flujo asíncrono idempotente","trazas y métricas"],"cs2023":["PDC","SF"],"swebok":["Software Architecture","Software Engineering Operations"]},
+        {"id":"SPRING-4","level":"Experto","statement":"Operar servicios distribuidos con contratos compatibles, consistencia explícita y resiliencia.","moduleIds":[11,12,13],"evidence":["pruebas de contrato","game day y runbook"],"cs2023":["NC","SE"],"swebok":["Software Quality","Software Engineering Operations"]}
+      ]
+    },
+    {
+      "id": "android",
+      "outcomes": [
+        {"id":"ANDROID-1","level":"Fundamentos","statement":"Construir UI Android con Kotlin y Compose comprendiendo ciclo de vida y estado.","moduleIds":[0,1,2,3],"evidence":["pantallas adaptables","pruebas de recomposición"],"cs2023":["HCI","SDF"],"swebok":["Software Construction"]},
+        {"id":"ANDROID-2","level":"Aplicación","statement":"Navegar, consumir red y persistir datos respetando lifecycle y errores explícitos.","moduleIds":[4,5,6,7],"evidence":["flujo offline","pruebas de navegación y repositorio"],"cs2023":["DM","NC"],"swebok":["Software Design","Software Testing"]},
+        {"id":"ANDROID-3","level":"Integración","statement":"Diseñar una app modular y testeable con trabajo en segundo plano y DI.","moduleIds":[8,9,10],"evidence":["grafo modular","worker y suite reproducible"],"cs2023":["PDC","SE"],"swebok":["Software Architecture","Software Testing"]},
+        {"id":"ANDROID-4","level":"Experto","statement":"Publicar y operar Android con accesibilidad, seguridad, sincronización y calidad medibles.","moduleIds":[11,12,13],"evidence":["auditoría móvil","release gradual y diagnóstico"],"cs2023":["HCI","SEC"],"swebok":["Software Security","Software Quality","Software Engineering Operations"]}
+      ]
+    },
+    {
+      "id": "kotlin-multiplatform",
+      "outcomes": [
+        {"id":"KMP-1","level":"Fundamentos","statement":"Diseñar código Kotlin compartible diferenciando common, expect/actual y límites de plataforma.","moduleIds":[0,1,2],"evidence":["módulo common","implementaciones de plataforma"],"cs2023":["FPL","SDF"],"swebok":["Software Construction"]},
+        {"id":"KMP-2","level":"Aplicación","statement":"Compartir dominio, red y datos sin filtrar detalles nativos a la API común.","moduleIds":[3,4,5,6],"evidence":["repositorio compartido","pruebas de contrato por target"],"cs2023":["DM","NC"],"swebok":["Software Design","Software Testing"]},
+        {"id":"KMP-3","level":"Integración","statement":"Integrar UI y dependencias nativas manteniendo concurrencia y ownership claros.","moduleIds":[7,8,9],"evidence":["app Android/iOS","pruebas de cancelación y lifecycle"],"cs2023":["HCI","PDC"],"swebok":["Software Architecture","Software Construction"]},
+        {"id":"KMP-4","level":"Experto","statement":"Evolucionar una librería multiplataforma con compatibilidad binaria, seguridad y observabilidad.","moduleIds":[10,11,12],"evidence":["matriz de compatibilidad","pipeline multi-target y runbook"],"cs2023":["SE","SEC"],"swebok":["Software Configuration Management","Software Quality"]}
+      ]
+    },
+    {
+      "id": "ios",
+      "outcomes": [
+        {"id":"IOS-1","level":"Fundamentos","statement":"Construir interfaces SwiftUI comprendiendo Swift, identidad, layout y flujo de estado.","moduleIds":[0,1,2,3],"evidence":["app navegable","pruebas de estado"],"cs2023":["FPL","HCI"],"swebok":["Software Construction"]},
+        {"id":"IOS-2","level":"Aplicación","statement":"Integrar concurrencia, red y persistencia preservando aislamiento y errores explícitos.","moduleIds":[4,5,6,7],"evidence":["flujo async cancelable","repositorio persistente probado"],"cs2023":["DM","PDC"],"swebok":["Software Design","Software Testing"]},
+        {"id":"IOS-3","level":"Integración","statement":"Diseñar y validar arquitectura iOS accesible y eficiente.","moduleIds":[8,9,10],"evidence":["suite Swift Testing","perfil Instruments y VoiceOver"],"cs2023":["HCI","SE"],"swebok":["Software Architecture","Software Quality"]},
+        {"id":"IOS-4","level":"Experto","statement":"Publicar y operar iOS protegiendo datos, sincronización y migraciones.","moduleIds":[11,12,13],"evidence":["build TestFlight","threat model, outbox y runbook"],"cs2023":["SEC","SF"],"swebok":["Software Security","Software Engineering Operations"]}
+      ]
+    },
+    {
+      "id": "flutter",
+      "outcomes": [
+        {"id":"FLUTTER-1","level":"Fundamentos","statement":"Construir UI Flutter con Dart comprendiendo widgets, constraints, estado e identidad.","moduleIds":[0,1,2,3],"evidence":["interfaz responsive","pruebas de widgets"],"cs2023":["FPL","HCI"],"swebok":["Software Construction"]},
+        {"id":"FLUTTER-2","level":"Aplicación","statement":"Gestionar estado, red y persistencia con errores y estados offline explícitos.","moduleIds":[4,5,6],"evidence":["flujo de datos","repositorio offline probado"],"cs2023":["DM","NC"],"swebok":["Software Design","Software Testing"]},
+        {"id":"FLUTTER-3","level":"Integración","statement":"Integrar plataformas nativas y optimizar UI mediante mediciones reproducibles.","moduleIds":[7,8,9,10],"evidence":["plugin/channel probado","perfil DevTools y auditoría accesible"],"cs2023":["HCI","PDC"],"swebok":["Software Quality","Software Testing"]},
+        {"id":"FLUTTER-4","level":"Experto","statement":"Publicar y operar Flutter con seguridad, isolates, sincronización y releases por plataforma.","moduleIds":[11,12,13],"evidence":["builds firmados","auditoría, outbox y runbook"],"cs2023":["SEC","SF"],"swebok":["Software Security","Software Engineering Operations"]}
+      ]
+    },
+    {
+      "id": "devops",
+      "outcomes": [
+        {"id":"DEVOPS-1","level":"Fundamentos","statement":"Automatizar entornos reproducibles con Linux, Git, contenedores y composición local.","moduleIds":[0,1,2,3],"evidence":["scripts idempotentes","imagen y entorno reproducibles"],"cs2023":["OS","SF"],"swebok":["Software Configuration Management","Software Construction"]},
+        {"id":"DEVOPS-2","level":"Aplicación","statement":"Diseñar pipelines CI/CD con calidad, promoción y rollback verificables.","moduleIds":[4,5],"evidence":["pipeline protegido","despliegue y rollback ensayados"],"cs2023":["SE","SEP"],"swebok":["Software Engineering Process","Software Testing"]},
+        {"id":"DEVOPS-3","level":"Integración","statement":"Provisionar y operar infraestructura declarativa en Kubernetes con cambios revisables.","moduleIds":[6,7,8],"evidence":["chart y políticas","plan Terraform revisado"],"cs2023":["NC","SF"],"swebok":["Software Engineering Operations","Software Configuration Management"]},
+        {"id":"DEVOPS-4","level":"Experto","statement":"Observar, proteger y gobernar entregas mediante SLO, incidentes y cadena de suministro verificable.","moduleIds":[9,10,11,12,13,14],"evidence":["dashboard y alertas","SBOM/firma, game day y postmortem"],"cs2023":["SEC","SE"],"swebok":["Software Security","Software Quality","Software Engineering Operations"]}
+      ]
+    },
+    {
+      "id": "cloud",
+      "outcomes": [
+        {"id":"CLOUD-1","level":"Fundamentos","statement":"Preparar un laboratorio cloud local reproducible y explicar cómputo, almacenamiento, red y responsabilidad compartida.","moduleIds":[0,1,2,3,4],"evidence":["entorno Floci/StackPort","recursos inspeccionados por CLI"],"cs2023":["NC","SF"],"swebok":["Computing Foundations","Software Engineering Operations"]},
+        {"id":"CLOUD-2","level":"Aplicación","statement":"Construir APIs event-driven con identidad, secretos, observabilidad y equivalencias multi-cloud.","moduleIds":[5,6,7,8,9,10,11,12],"evidence":["API serverless","threat model y trazas"],"cs2023":["NC","SEC"],"swebok":["Software Architecture","Software Security"]},
+        {"id":"CLOUD-3","level":"Integración","statement":"Seleccionar y combinar datos, contenedores, IaC, workflows, streaming, identidad, analítica e IA por atributos de calidad.","moduleIds":[13,14,15,16,17,18,19,20],"evidence":["stack IaC","matriz de decisiones y pruebas de integración"],"cs2023":["DM","PDC","SE"],"swebok":["Software Design","Software Engineering Models and Methods"]},
+        {"id":"CLOUD-4","level":"Experto","statement":"Operar cómputo, red, caché, entrega, gobierno e integraciones con costo y riesgo explícitos.","moduleIds":[21,22,23,24,25,26,27,28,29,30],"evidence":["arquitectura operable","FinOps, controles y runbook"],"cs2023":["NC","SEP","SF"],"swebok":["Software Engineering Economics","Software Engineering Operations","Software Quality"]},
+        {"id":"CLOUD-5","level":"Experto","statement":"Demostrar portabilidad y recuperación multi-cloud mediante contratos, RTO/RPO y experimentos de fallo.","moduleIds":[31,32],"evidence":["proyecto multi-cloud","restore test y chaos experiment"],"cs2023":["PDC","SE"],"swebok":["Software Architecture","Software Quality"]}
+      ]
+    }
+  ]
+}

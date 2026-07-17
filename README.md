@@ -7,12 +7,17 @@ mantiene dos experiencias:
 - `web/src`: version Angular "Academia Cloud Local", usada por build, unit tests
   y e2e.
 
-El curriculo ampliado aplica 213 temas y mas de 900 subtemas en formato de
-libro.
+La academia reúne 13 rutas, 200 capítulos y más de 750 temas en formato de
+libro, con proyectos acumulativos, práctica, evaluación y fuentes académicas.
 
 - [Abrir la academia](web/index.html)
 - [Guia web](web/README.md)
 - [Mapa compacto del repo](docs/repo-graph.md)
+- [Metodología de aprendizaje](docs/METODOLOGIA-DE-APRENDIZAJE.md)
+- [Matriz curricular](docs/MATRIZ-CURRICULAR.md)
+- [Fuentes oficiales y versiones revisadas](docs/official-sources.json)
+- [Estándar de código, Clean Code y SOLID](docs/ESTANDAR-DE-CODIGO.md)
+- [Proyecto transversal de logística RutaFlow](examples/rutaflow/README.md)
 
 ## Como empezar
 
@@ -78,11 +83,11 @@ curl http://localhost:4588
 Servicios locales:
 
 - AWS local: `http://localhost:4566`
-- StackPort: `http://localhost:8080`
+- StackPort (explorador AWS ligero incluido en este compose): `http://localhost:8080`
 - Azure local: `http://localhost:4577`
 - GCP local: `http://localhost:4588`
 
-Panel visual oficial (opcional, proyecto aparte — no está en este `docker-compose.yml`):
+Panel visual oficial recomendado (proyecto aparte — no está en este `docker-compose.yml`):
 
 ```bash
 git clone https://github.com/floci-io/floci-ui
@@ -92,6 +97,15 @@ docker compose up                      # solo AWS
 ```
 
 Ábrelo en `http://localhost:4500`.
+
+La metodología recomendada del curso es crear y modificar recursos con CLI,
+SDK o Terraform y comprobar después el resultado visualmente. Puedes usar
+**StackPort** para una exploración AWS rápida dentro del Compose de la academia,
+**Floci UI** para la consola oficial y su visión multi-cloud, o ambos a lo largo
+del curso. Los stacks predeterminados comparten el puerto `4566`: para abrirlos
+simultáneamente debes apuntar ambas interfaces al mismo runtime y evitar levantar
+un segundo Floci. Cuando una categoría de Floci UI aparece como `placeholder`, usa
+StackPort si soporta ese recurso y conserva CLI/SDK como fuente de verdad.
 
 Credenciales locales para AWS CLI y SDKs:
 
@@ -171,6 +185,22 @@ tiene ademas un cuestionario final de 10 preguntas (`/curso/<track>/quiz`).
 `scripts/validate.sh` valida automaticamente que el numero de archivos
 Markdown de cada track coincida con los modulos declarados en su fuente
 TypeScript, y que cada cuestionario tenga exactamente 10 preguntas.
+
+## Actualización tecnológica
+
+Cada ruta se contrasta con especificaciones, documentación, notas de versión,
+seguridad y migración publicadas por los proyectos oficiales. El registro
+`docs/official-sources.json` indica la línea estable o LTS utilizada, la fecha
+de revisión y qué términos deben estar incorporados en el contenido.
+
+```bash
+python3 scripts/validate_official_sources.py
+```
+
+La comprobación vence a los 120 días. El CI se ejecuta además cada mes para
+detectar una revisión pendiente aunque el repositorio no reciba cambios. Las
+funciones preview o experimentales se presentan como tales y nunca como base
+obligatoria de producción.
 
 Para regenerar el curriculo desde el texto fuente disponible en esta sesion:
 

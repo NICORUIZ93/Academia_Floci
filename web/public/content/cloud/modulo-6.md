@@ -203,6 +203,22 @@ Configuración actual (recursos, métodos, integraciones)
 
 ---
 
+## Criterio transversal de calidad del código
+
+Aplica estas decisiones en todos los ejemplos y en tu entrega:
+
+- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
+- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
+- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
+- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
+- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
+- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
+- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
+
+**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
+
+**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
+
 ## Laboratorio práctico
 
 > Este laboratorio asume que ya ejecutaste `floci start` y `eval $(floci env)` (Módulo 1) en tu sesión de terminal, así que los comandos de `aws` no repiten `--endpoint-url`.
@@ -224,7 +240,9 @@ Configuración actual (recursos, métodos, integraciones)
 | 7 | Invocar el endpoint desplegado | `curl http://localhost:4566/restapis/<api-id>/dev/_user_request_/tareas` | Prueba de extremo a extremo: petición HTTP real que llega a API Gateway y este la reenvía a Lambda | El mismo JSON que devolvería invocar la Lambda directamente, por ejemplo `{"mensaje":"Hola, mundo"}` |
 | 8 | Comparar con invocar la Lambda directamente | `aws lambda invoke --function-name mi-funcion --payload '{}' --cli-binary-format raw-in-base64-out salida-directa.json && cat salida-directa.json` | Confirma que ambos caminos (API Gateway y la CLI directa) llegan al mismo resultado final de negocio | El contenido de `salida-directa.json` coincide en su parte de negocio con la respuesta del `curl` del paso 7 |
 
-**Verificación:** el laboratorio se considera exitoso si el `curl` del paso 7 responde con un código HTTP 200 y un cuerpo JSON coherente con lo que la función Lambda devuelve, confirmando que la cadena completa (petición HTTP → API Gateway → integración proxy → Lambda → respuesta) funciona de extremo a extremo.
+**Comprobación visual:** usa Floci UI para comprobar que la función Lambda integrada sigue disponible en **Cloud Explorer → Serverless**. API Gateway no tiene actualmente una superficie unificada completa en Cloud Explorer, por lo que rutas, métodos, integración y deployment se verifican con `get-resources`, `get-integration` y `get-deployments`. La interfaz aporta contexto visual de la función; `curl` demuestra el flujo de extremo a extremo.
+
+**Verificación:** el laboratorio se considera exitoso si la función integrada aparece con la configuración esperada, y si el `curl` del paso 7 responde con un código HTTP 200 y un cuerpo JSON coherente con lo que Lambda devuelve, confirmando la cadena completa (petición HTTP → API Gateway → integración proxy → Lambda → respuesta).
 
 **Errores comunes y soluciones**
 
@@ -268,6 +286,30 @@ Configuración actual (recursos, métodos, integraciones)
 - La justificación menciona que el caso de uso no requiere las funcionalidades avanzadas exclusivas de REST, conectándolo con el Tema 1.
 
 ---
+
+## Rúbrica del proyecto
+
+Esta rúbrica evalúa el laboratorio y los ejercicios como evidencia de dominio, no la mera finalización de pasos.
+
+| Criterio | Peso | Evidencia esperada |
+|---|---:|---|
+| Comprensión conceptual | 20% | Explica el mecanismo, sus límites y por qué la solución funciona. |
+| Implementación funcional | 30% | El artefacto satisface requisitos normales, límite y de error. |
+| Verificación | 20% | Incluye pruebas, mediciones o inspecciones reproducibles. |
+| Diseño y calidad | 15% | Nombres, estructura, seguridad y mantenibilidad son deliberados. |
+| Comunicación profesional | 15% | README, decisiones, comandos y resultados permiten repetir el trabajo. |
+
+Se alcanza competencia con 70/100 y sin cero en implementación o verificación. El nivel experto exige comparar alternativas, justificar trade-offs y reconocer condiciones donde la solución dejaría de ser válida.
+
+## Bibliografía y fundamento académico
+
+Estas fuentes sustentan los conceptos y deben consultarse para verificar detalles que cambian entre versiones:
+
+- AWS, Microsoft Azure y Google Cloud, marcos oficiales de arquitectura bien diseñada.
+- NIST, *Cloud Computing Standards Roadmap* y *Secure Software Development Framework*.
+- Beyer et al., *Site Reliability Engineering*.
+- ACM/IEEE-CS/AAAI, *Computer Science Curricula 2023*.
+- IEEE Computer Society, *SWEBOK Guide V4.0*.
 
 ## Resumen del módulo
 

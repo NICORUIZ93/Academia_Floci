@@ -188,6 +188,22 @@ docker-compose.yml
 
 ---
 
+## Criterio transversal de calidad del código
+
+Aplica estas decisiones en todos los ejemplos y en tu entrega:
+
+- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
+- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
+- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
+- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
+- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
+- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
+- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
+
+**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
+
+**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
+
 ## Laboratorio práctico
 
 **Objetivo del laboratorio:** ejecutar los comandos esenciales de Docker sobre una imagen de prueba, instalar `floci-cli` —la herramienta oficial recomendada para gestionar Floci— y levantarlo por primera vez con la AWS CLI ya configurada para hablar con él.
@@ -241,7 +257,40 @@ export AWS_ENDPOINT_URL=http://localhost:4566
 export AWS_ACCESS_KEY_ID=test AWS_SECRET_ACCESS_KEY=test AWS_DEFAULT_REGION=us-east-1
 ```
 
-**Verificación:** el laboratorio se considera exitoso si `floci status` reporta el servidor corriendo, `floci doctor` no muestra errores, y `aws s3 ls` se ejecuta sin errores de conexión ni de credenciales después de `eval $(floci env)`.
+### Laboratorio 1.4 — Usar StackPort y Floci UI
+
+La academia ya incluye **StackPort** en su `docker-compose.yml`. Levántalo junto con Floci y abre `http://localhost:8080`:
+
+```bash
+docker compose up -d aws-local stackport
+```
+
+StackPort es útil como explorador AWS ligero y arranca en la misma red del laboratorio. También puedes usar Floci UI durante el curso; no son alternativas excluyentes.
+
+Floci UI es un proyecto oficial separado porque incluye su propio frontend, API proxy y configuración de runtimes. No intentes iniciarlo con `docker run floci/floci-ui:latest`: clona el repositorio y usa su Docker Compose, que mantiene coordinados todos sus servicios.
+
+```bash
+git clone https://github.com/floci-io/floci-ui.git
+cd floci-ui
+docker compose up -d
+docker compose ps
+```
+
+**Evita el conflicto del puerto 4566:** el Compose de Floci UI incluye por defecto su propio runtime Floci, igual que la academia. Para probar su stack completo, detén primero el Compose de la academia con `docker compose down` desde la carpeta de Academia_Floci. Para mantener StackPort y Floci UI abiertos simultáneamente y viendo exactamente los mismos recursos, configura la API de Floci UI con `FLOCI_ENDPOINT` apuntando al runtime ya existente y no levantes el segundo servicio Floci; sigue el Compose y `.env.example` de la versión de Floci UI que hayas clonado.
+
+Abre `http://localhost:4500`. Debes ver **Console Home**, el estado del runtime AWS y el acceso a **Cloud Explorer**. Para levantar también runtimes Azure y GCP usa `docker compose --profile multicloud up -d`. Los puertos predeterminados son UI `4500`, API `4501` y Floci AWS `4566`.
+
+Realiza una primera comprobación de extremo a extremo:
+
+```bash
+aws --endpoint-url=http://localhost:4566 s3 mb s3://mi-primer-bucket-visual
+```
+
+Repite la comprobación visual primero en StackPort y después en Floci UI, o en ambas simultáneamente si las configuraste contra el mismo runtime. Localiza `mi-primer-bucket-visual`, confirma proveedor, región y tipo, elimínalo desde CLI y comprueba que desaparece. Así aprendes las fortalezas de ambas interfaces sin confundir dos runtimes independientes.
+
+**Mapa de disponibilidad actual:** Storage es la superficie multi-cloud más completa; AWS Compute, Networking, EKS y Serverless tienen flujos reales; Secrets Manager conserva una página AWS dedicada. Queue, IAM y otros servicios todavía pueden mostrarse como placeholders. La interfaz declara estas limitaciones deliberadamente y no inventa recursos de demostración. Cuando una operación no esté conectada, usa CLI/SDK como fuente de verdad.
+
+**Verificación:** el laboratorio se considera exitoso si `floci status` reporta el servidor corriendo, `aws s3 ls` funciona con el endpoint local y el bucket creado por CLI aparece al menos en una consola visual configurada —idealmente en StackPort y Floci UI— antes de desaparecer tras su eliminación.
 
 **Errores comunes y soluciones**
 
@@ -285,6 +334,30 @@ export AWS_ACCESS_KEY_ID=test AWS_SECRET_ACCESS_KEY=test AWS_DEFAULT_REGION=us-e
 - Puedes explicar por qué desapareció (falta de `floci start --persist ./data`) relacionándolo con el Tema 5 de este módulo.
 
 ---
+
+## Rúbrica del proyecto
+
+Esta rúbrica evalúa el laboratorio y los ejercicios como evidencia de dominio, no la mera finalización de pasos.
+
+| Criterio | Peso | Evidencia esperada |
+|---|---:|---|
+| Comprensión conceptual | 20% | Explica el mecanismo, sus límites y por qué la solución funciona. |
+| Implementación funcional | 30% | El artefacto satisface requisitos normales, límite y de error. |
+| Verificación | 20% | Incluye pruebas, mediciones o inspecciones reproducibles. |
+| Diseño y calidad | 15% | Nombres, estructura, seguridad y mantenibilidad son deliberados. |
+| Comunicación profesional | 15% | README, decisiones, comandos y resultados permiten repetir el trabajo. |
+
+Se alcanza competencia con 70/100 y sin cero en implementación o verificación. El nivel experto exige comparar alternativas, justificar trade-offs y reconocer condiciones donde la solución dejaría de ser válida.
+
+## Bibliografía y fundamento académico
+
+Estas fuentes sustentan los conceptos y deben consultarse para verificar detalles que cambian entre versiones:
+
+- AWS, Microsoft Azure y Google Cloud, marcos oficiales de arquitectura bien diseñada.
+- NIST, *Cloud Computing Standards Roadmap* y *Secure Software Development Framework*.
+- Beyer et al., *Site Reliability Engineering*.
+- ACM/IEEE-CS/AAAI, *Computer Science Curricula 2023*.
+- IEEE Computer Society, *SWEBOK Guide V4.0*.
 
 ## Resumen del módulo
 

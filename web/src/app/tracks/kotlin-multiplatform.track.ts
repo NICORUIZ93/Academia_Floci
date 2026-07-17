@@ -151,4 +151,25 @@ export const KOTLIN_MULTIPLATFORM_MODULES: CourseModule[] = [
     ['¿Qué porcentaje real de tu código terminó siendo compartido vs específico de plataforma?', '¿Qué decisión de arquitectura te ahorró más tiempo al final del proyecto?'],
     ['Kotlin Multiplatform', 'Ktor', 'SQLDelight'],
     'App con lógica de negocio, networking y persistencia compartidos, funcionando en Android e iOS.'),
+  m(12, 'KMP en producción: fronteras, compatibilidad y observabilidad', 'Producción KMP', 'Experto', '8 h', '#7f52ff',
+    'Convierte el módulo compartido en un producto mantenible: diseña una API idiomática para Kotlin y Swift, propaga cancelación sin fugas, controla memoria/recursos nativos, valida compatibilidad binaria y de datos y opera releases coordinados por plataforma.',
+    [
+      'Frontera shared/plataforma, API Swift-friendly, errores, Flow y cancelación',
+      'Kotlin/Native memory manager, recursos nativos, pinning, callbacks y leaks',
+      'Compatibilidad source/binary/behavior, schemas, KLib/XCFramework y publicación',
+      'Seguridad, telemetría, símbolos, matriz de targets, rollout y rollback coordinado',
+    ],
+    [
+      'Reduce la API exportada y prueba consumo idiomático y cancelable desde Swift/Android',
+      'Provoca una retención cross-runtime y demuestra liberación de jobs/callbacks/recursos',
+      'Rompe una API y migración deliberadamente y haz que CI detenga el release',
+      'Correlaciona un fallo compartido en ambas apps y ejecuta compatibilidad/rollback',
+    ],
+    [
+      '¿Por qué compartir más código puede aumentar el coste total del producto?',
+      '¿Quién posee un callback o recurso que cruza Kotlin/Native y Swift?',
+      '¿Por qué compatibilidad binaria no garantiza compatibilidad de comportamiento?',
+    ],
+    ['Kotlin Multiplatform', 'Kotlin/Native', 'Swift', 'Gradle', 'XCFramework'],
+    'SDK compartido con superficie estable, cancelación/recursos probados, gates de API y schemas, artefactos versionados, telemetría simbolizada y estrategia de release compatible para Android/iOS.'),
 ];

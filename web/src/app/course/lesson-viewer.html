@@ -1,18 +1,42 @@
 <ng-container *ngIf="module() as m; else notFound">
+  <div class="reading-progress" aria-hidden="true"><span [style.width.%]="readingProgress()"></span></div>
   <div class="lesson-layout">
     <article class="lesson">
-      <div class="lesson-breadcrumb">
-        <span>{{ track()?.name }}</span>
-        <span class="sep">/</span>
-        <span>Capítulo {{ moduleIndex() + 1 }} de {{ track()?.modules?.length }} · {{ m.level }} · {{ m.duration }}</span>
-      </div>
+      <header class="lesson-hero">
+        <div class="lesson-eyebrow"><lucide-icon [img]="icons.BookOpen" /> {{ track()?.name }} · Capítulo {{ moduleIndex() + 1 }}</div>
+        <h1>{{ m.title }}</h1>
+        <p class="lesson-description">{{ m.description }}</p>
+        <div class="lesson-meta">
+          <span><lucide-icon [img]="icons.Clock3" /> {{ m.duration }}</span>
+          <span><lucide-icon [img]="icons.ListTree" /> {{ tocItems().length || '—' }} secciones</span>
+          <span class="level">{{ m.level }}</span>
+        </div>
+      </header>
 
-      <h1>{{ m.title }}</h1>
-      <p class="lesson-description">{{ m.description }}</p>
+      <section class="learning-toolbar" aria-label="Modo de estudio">
+        <div class="learning-modes">
+          <button [class.active]="lessonMode() === 'learn'" (click)="setLessonMode('learn')">Aprender</button>
+          <button [class.active]="lessonMode() === 'practice'" (click)="setLessonMode('practice')">Practicar</button>
+          <button [class.active]="lessonMode() === 'review'" (click)="setLessonMode('review')">Repasar</button>
+        </div>
+        <div class="lesson-stats" aria-label="Contenido del capítulo">
+          <span><strong>{{ lessonStats().topics }}</strong> temas</span>
+          <span><strong>{{ lessonStats().examples }}</strong> ejemplos</span>
+          <span><strong>{{ lessonStats().activities }}</strong> actividades</span>
+        </div>
+      </section>
 
-      <section class="lesson-panel">
+      <ol class="build-method" aria-label="Metodología Aprende construyendo">
+        <li><span>1</span><div><strong>Objetivo</strong><small>Mira qué construirás</small></div></li>
+        <li><span>2</span><div><strong>Explicación</strong><small>Comprende una idea</small></div></li>
+        <li><span>3</span><div><strong>Demostración</strong><small>Sigue el ejemplo</small></div></li>
+        <li><span>4</span><div><strong>Tarea</strong><small>Inténtala sin ayuda</small></div></li>
+        <li><span>5</span><div><strong>Repaso</strong><small>Verifica y registra</small></div></li>
+      </ol>
+
+      <section class="lesson-panel" [attr.data-mode]="lessonMode()">
         <div *ngIf="lessonLoading()" class="lesson-skeleton">Cargando lección…</div>
-        <div *ngIf="!lessonLoading() && lessonHtml() as html" #lessonContent class="lesson-markdown" [innerHTML]="html"></div>
+        <div *ngIf="!lessonLoading() && lessonHtml() as html" #lessonContent class="lesson-markdown" [innerHTML]="html" (click)="copyCode($event)" (input)="savePracticeNote($event)"></div>
         <ng-container *ngIf="!lessonLoading() && !lessonHtml()">
           <div class="structured-lesson">
             <section>
@@ -39,7 +63,7 @@
     </article>
 
     <aside class="lesson-toc" *ngIf="tocItems().length" aria-label="En esta lección">
-      <p class="lesson-toc-title">En esta lección</p>
+      <div class="lesson-toc-heading"><lucide-icon [img]="icons.ListTree" /><div><span>Índice</span><small>En este capítulo</small></div></div>
       <nav>
         <a
           *ngFor="let item of tocItems()"

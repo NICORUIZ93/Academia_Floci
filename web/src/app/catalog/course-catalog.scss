@@ -77,6 +77,27 @@ main {
   padding: 28px 30px 72px;
 }
 
+.official-panel {
+  margin-bottom: 22px;
+  padding: 28px;
+  border: 1px solid $bd;
+  border-radius: 8px;
+  background: $wh;
+  box-shadow: $sh;
+}
+.official-heading { display: flex; align-items: flex-start; justify-content: space-between; gap: 28px; }
+.official-heading h1 { margin: 4px 0 8px; font-size: clamp(24px, 3vw, 36px); }
+.official-heading p { max-width: 790px; margin: 0; color: $mu; font-size: 14px; line-height: 1.65; }
+.official-heading .eyebrow { color: $p; font-size: 11px; font-weight: 900; letter-spacing: .08em; text-transform: uppercase; }
+.official-heading > a { flex: 0 0 auto; padding: 10px 13px; border-radius: 7px; color: #fff; background: $p; font-size: 12px; font-weight: 850; text-decoration: none; }
+.official-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; margin-top: 22px; }
+.official-grid a { display: grid; gap: 4px; min-width: 0; padding: 12px; border: 1px solid $bd; border-radius: 7px; color: inherit; background: $bg2; text-decoration: none; }
+.official-grid a:hover { border-color: $p; }
+.official-grid strong { font-size: 13px; }
+.official-grid span { color: $mu; font-size: 12px; line-height: 1.4; }
+.official-grid small { color: $p; font-size: 10px; font-weight: 850; }
+.official-note { margin: 18px 0 0; color: $mu; font-size: 13px; line-height: 1.6; }
+
 .tracks-section {
   border: 1px solid $bd;
   border-radius: 8px;
@@ -142,6 +163,7 @@ main {
 
 @media (max-width: 1080px) {
   .catalog-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .official-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 }
 
 @media (max-width: 760px) {
@@ -149,4 +171,7 @@ main {
   main { padding: 18px; }
   .tracks-section { padding: 22px; }
   .catalog-grid { grid-template-columns: 1fr; }
+  .official-heading { display: grid; }
+  .official-heading > a { justify-self: start; }
+  .official-grid { grid-template-columns: 1fr; }
 }

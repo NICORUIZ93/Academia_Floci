@@ -183,4 +183,25 @@ export const JAVASCRIPT_MODULES: CourseModule[] = [
     ['¿Qué hace exactamente un framework como Angular/React que tú tuviste que construir a mano aquí?', '¿Qué fue lo más difícil de mantener sincronizados estado y DOM sin un framework?', '¿En qué punto del proyecto un framework te habría ahorrado más tiempo?'],
     ['JavaScript', 'Vite'],
     'SPA funcional (varias vistas, estado compartido, datos reales) sin ningún framework de UI.'),
+  m(13, 'JavaScript en producción: seguridad, memoria y compatibilidad', 'Producción', 'Experto', '6 h', '#e9b400',
+    'Convierte la SPA funcional en software operable: delimita datos no confiables, previene XSS y contaminación de prototipos, encuentra fugas de memoria, captura errores con contexto y entrega una experiencia compatible e internacionalizada.',
+    [
+      'Modelo de amenazas del navegador, XSS, CSP, Trusted Types y dependencias',
+      'Garbage collection, retención, listeners, timers y análisis de heap',
+      'Errores síncronos/asíncronos, Error.cause, telemetría y source maps',
+      'Feature detection, progressive enhancement, Intl y zonas horarias',
+    ],
+    [
+      'Explota y corrige una inserción insegura sin ocultar el problema con sanitización casera',
+      'Provoca una fuga navegando repetidamente y demuestra su corrección con snapshots',
+      'Diseña fronteras de error y correlaciona una falla minificada con su fuente original',
+      'Internacionaliza números, moneda y fechas y prueba zonas horarias y capacidades ausentes',
+    ],
+    [
+      '¿Por qué escapar HTML depende del contexto donde se inserta el dato?',
+      '¿Cómo puede existir una fuga si JavaScript tiene garbage collector?',
+      '¿Por qué una fecha sin zona horaria es un requisito incompleto?',
+    ],
+    ['JavaScript', 'DevTools', 'CSP', 'Intl', 'Vitest'],
+    'SPA endurecida con threat model, CSP, render seguro, auditoría de dependencias, prueba de memoria, telemetría de errores, compatibilidad e internacionalización verificadas.'),
 ];

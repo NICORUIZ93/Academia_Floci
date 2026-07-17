@@ -13,6 +13,25 @@
   </header>
 
   <main>
+    <section class="official-panel" aria-labelledby="official-title">
+      <div class="official-heading">
+        <div>
+          <p class="eyebrow">Contenido vivo · revisión editorial 17 julio 2026</p>
+          <h1 id="official-title">Versiones y fuentes oficiales</h1>
+          <p>La Academia distingue fundamentos duraderos de APIs que cambian. Cada ruta enlaza documentación del mantenedor, notas de versión, migraciones y seguridad; una validación mensual detecta enlaces rotos o revisiones vencidas.</p>
+        </div>
+        <a href="https://github.com/floci-io/floci-ui" target="_blank" rel="noopener noreferrer">Floci UI: cloud de forma visual</a>
+      </div>
+      <div class="official-grid">
+        <a *ngFor="let update of officialUpdates" [href]="update.url" target="_blank" rel="noopener noreferrer">
+          <strong>{{ update.stack }}</strong>
+          <span>{{ update.baseline }}</span>
+          <small>Documentación oficial ↗</small>
+        </a>
+      </div>
+      <p class="official-note"><strong>Política:</strong> una novedad no entra solo por ser reciente. Se evalúan estabilidad, migración, seguridad, compatibilidad y utilidad para el proyecto RutaFlow.</p>
+    </section>
+
     <section class="tracks-section">
       <div class="track-group" *ngFor="let group of trackGroups()">
         <h2>{{ group.title }}</h2>

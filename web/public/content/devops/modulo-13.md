@@ -127,6 +127,44 @@ Módulo 13: ESTE proyecto — todo integrado en un solo flujo
 
 ---
 
+## Proyecto transversal RutaFlow: Entrega operable
+
+RutaFlow conecta este track con una plataforma completa de paquetería. La implementación de referencia está en `examples/rutaflow/devops/deployment.yaml`; se estudia como punto de partida pequeño, no como sistema terminado.
+
+### Capacidad y fundamento
+
+El manifiesto fija imagen por digest, ejecuta non-root, elimina capacidades, usa filesystem de solo lectura y declara recursos. Readiness decide tráfico; liveness solo reinicia bloqueo real. Dos réplicas no garantizan disponibilidad si comparten nodo, zona, base o configuración defectuosa.
+
+### Implementación guiada
+
+1. Copia el contrato y escribe primero casos normales, límite, inválidos y duplicados.
+2. Ejecuta la referencia, provoca un fallo y explica el mensaje antes de modificarla.
+3. Implementa una mejora pequeña manteniendo nombres de dominio, efectos visibles y errores tipados.
+4. Integra con el contrato del track anterior sin compartir tablas, estado mutable ni detalles de framework.
+5. Registra la decisión en el README y etiqueta el hito de RutaFlow correspondiente.
+
+### Verificación profesional
+
+Añade Service, PodDisruptionBudget, topology spread, NetworkPolicy y autoscaling basado en una señal defendible. Valida schema/policies, firma, SBOM y provenance en CI. Ejecuta rollback y game day de pérdida de pod/nodo observando el SLO de confirmación.
+
+El capítulo se completa cuando la evidencia permite a otra persona reproducir el flujo y explicar qué garantías ofrece y cuáles todavía no.
+
+## Criterio transversal de calidad del código
+
+Aplica estas decisiones en todos los ejemplos y en tu entrega:
+
+- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
+- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
+- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
+- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
+- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
+- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
+- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
+
+**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
+
+**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
+
 ## Laboratorio práctico
 
 **Objetivo del laboratorio:** implementar (o documentar con diseño detallado y evidencia de cada etapa) un pipeline CI/CD completo end-to-end, aplicando en conjunto los Módulos 1 a 12 de este track.
@@ -185,6 +223,30 @@ Módulo 13: ESTE proyecto — todo integrado en un solo flujo
 - Distingue explícitamente el camino de acción según haya habido o no un despliegue reciente, e incluye un criterio claro de escalación.
 
 ---
+
+## Rúbrica del proyecto
+
+Esta rúbrica evalúa el laboratorio y los ejercicios como evidencia de dominio, no la mera finalización de pasos.
+
+| Criterio | Peso | Evidencia esperada |
+|---|---:|---|
+| Comprensión conceptual | 20% | Explica el mecanismo, sus límites y por qué la solución funciona. |
+| Implementación funcional | 30% | El artefacto satisface requisitos normales, límite y de error. |
+| Verificación | 20% | Incluye pruebas, mediciones o inspecciones reproducibles. |
+| Diseño y calidad | 15% | Nombres, estructura, seguridad y mantenibilidad son deliberados. |
+| Comunicación profesional | 15% | README, decisiones, comandos y resultados permiten repetir el trabajo. |
+
+Se alcanza competencia con 70/100 y sin cero en implementación o verificación. El nivel experto exige comparar alternativas, justificar trade-offs y reconocer condiciones donde la solución dejaría de ser válida.
+
+## Bibliografía y fundamento académico
+
+Estas fuentes sustentan los conceptos y deben consultarse para verificar detalles que cambian entre versiones:
+
+- CNCF, documentación oficial de Kubernetes, Prometheus y OpenTelemetry.
+- HashiCorp, *Terraform Documentation*.
+- Beyer et al., *Site Reliability Engineering*; Forsgren et al., *Accelerate*.
+- ACM/IEEE-CS/AAAI, *Computer Science Curricula 2023*.
+- IEEE Computer Society, *SWEBOK Guide V4.0*.
 
 ## Resumen del módulo
 

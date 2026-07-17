@@ -124,6 +124,44 @@ App iOS "nativa" =
 
 ---
 
+## Proyecto transversal RutaFlow: Tracking de ruta y privacidad
+
+RutaFlow conecta este track con una plataforma completa de paquetería. La implementación de referencia está en `examples/rutaflow/ios/LocationPolicy.swift`; se estudia como punto de partida pequeño, no como sistema terminado.
+
+### Capacidad y fundamento
+
+La política pura decide intervalo y distancia antes de tocar Core Location. `Duration` y nombres con unidad evitan números ambiguos. La app solicita permiso en contexto, detiene tracking fuera de jornada y reduce precisión/frecuencia según batería; background location requiere beneficio visible y configuración justificada.
+
+### Implementación guiada
+
+1. Copia el contrato y escribe primero casos normales, límite, inválidos y duplicados.
+2. Ejecuta la referencia, provoca un fallo y explica el mensaje antes de modificarla.
+3. Implementa una mejora pequeña manteniendo nombres de dominio, efectos visibles y errores tipados.
+4. Integra con el contrato del track anterior sin compartir tablas, estado mutable ni detalles de framework.
+5. Registra la decisión en el README y etiqueta el hito de RutaFlow correspondiente.
+
+### Verificación profesional
+
+Implementa un adaptador `CLLocationManager`, prueba autorización denegada/restringida, accuracy reducida, pausa y relanzamiento. Usa GPX para simular ruta, Energy Log para comparar políticas y redacción de logs para impedir coordenadas precisas.
+
+El capítulo se completa cuando la evidencia permite a otra persona reproducir el flujo y explicar qué garantías ofrece y cuáles todavía no.
+
+## Criterio transversal de calidad del código
+
+Aplica estas decisiones en todos los ejemplos y en tu entrega:
+
+- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
+- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
+- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
+- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
+- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
+- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
+- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
+
+**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
+
+**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
+
 ## Laboratorio práctico
 
 **Objetivo del laboratorio:** construir una app iOS con SwiftUI, datos reales, persistencia local y tests.
@@ -178,6 +216,30 @@ App iOS "nativa" =
 - Menciona al menos dos de los tres pilares (seguridad de tipos, concurrencia estructurada, UI reactiva) como parte de la respuesta.
 
 ---
+
+## Rúbrica del proyecto
+
+Esta rúbrica evalúa el laboratorio y los ejercicios como evidencia de dominio, no la mera finalización de pasos.
+
+| Criterio | Peso | Evidencia esperada |
+|---|---:|---|
+| Comprensión conceptual | 20% | Explica el mecanismo, sus límites y por qué la solución funciona. |
+| Implementación funcional | 30% | El artefacto satisface requisitos normales, límite y de error. |
+| Verificación | 20% | Incluye pruebas, mediciones o inspecciones reproducibles. |
+| Diseño y calidad | 15% | Nombres, estructura, seguridad y mantenibilidad son deliberados. |
+| Comunicación profesional | 15% | README, decisiones, comandos y resultados permiten repetir el trabajo. |
+
+Se alcanza competencia con 70/100 y sin cero en implementación o verificación. El nivel experto exige comparar alternativas, justificar trade-offs y reconocer condiciones donde la solución dejaría de ser válida.
+
+## Bibliografía y fundamento académico
+
+Estas fuentes sustentan los conceptos y deben consultarse para verificar detalles que cambian entre versiones:
+
+- Apple, *Swift Language Guide* y *Apple Developer Documentation*.
+- Apple, *Human Interface Guidelines* y documentación de accesibilidad.
+- OWASP Foundation, *Mobile Application Security Verification Standard*.
+- ACM/IEEE-CS/AAAI, *Computer Science Curricula 2023*.
+- IEEE Computer Society, *SWEBOK Guide V4.0*.
 
 ## Resumen del módulo
 

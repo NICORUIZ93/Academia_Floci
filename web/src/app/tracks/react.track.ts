@@ -161,4 +161,25 @@ export const REACT_MODULES: CourseModule[] = [
     ['¿Qué decisión de arquitectura te costó más definir: la separación de estado de cliente vs servidor?', '¿Qué parte del ecosistema React (Query, Router, TypeScript) tuvo el mayor impacto en la calidad del código final?'],
     ['React', 'TanStack Query', 'TypeScript'],
     'SPA en React + TypeScript con rutas, estado global, datos reales y tests.'),
+  m(13, 'React en producción: resiliencia, accesibilidad y seguridad', 'Producción React', 'Experto', '7 h', '#149eca',
+    'Endurece la SPA y su variante servidor: define fronteras de Suspense/error, evita estados y efectos inconsistentes, completa flujos accesibles, protege render y acciones, estabiliza hidratación e internacionaliza sin divergencias.',
+    [
+      'Pureza, efectos, Suspense, Error Boundaries, recuperación y telemetría',
+      'Accesibilidad de componentes, routing, foco, formularios y pruebas de usuario',
+      'XSS, dangerouslySetInnerHTML, CSP, Server Components/Actions y secretos',
+      'Hidratación determinista, i18n, RTL, performance budgets y releases',
+    ],
+    [
+      'Diseña fronteras de carga/error y prueba recuperación sin perder estado válido',
+      'Completa un flujo con teclado y lector y automatiza regresiones por rol',
+      'Explota/corrige un render inseguro y demuestra autorización en el servidor',
+      'Elimina mismatches, construye dos locales y controla budgets y rollback',
+    ],
+    [
+      '¿Qué errores no captura un Error Boundary?',
+      '¿Por qué un componente visualmente clickable puede ser inaccesible?',
+      '¿Por qué suppressHydrationWarning no corrige una divergencia de datos?',
+    ],
+    ['React', 'Next.js', 'Testing Library', 'Playwright', 'axe'],
+    'Aplicación React resiliente con boundaries, flujo accesible, CSP, acciones autorizadas, hidratación estable, dos locales, medición por release y rollback probado.'),
 ];

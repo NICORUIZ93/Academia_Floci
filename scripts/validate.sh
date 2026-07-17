@@ -337,6 +337,7 @@ if (fs.existsSync('index.html') || fs.existsSync('academia-floci-simple.html')) 
 // TypeScript (cada uno declarado como m(<numero>, ...)), para detectar contenido
 // huerfano o modulos sin redactar.
 const TRACK_SOURCES = {
+  foundations: 'web/src/app/tracks/foundations.track.ts',
   cloud: 'web/src/app/course-data.ts',
   devops: 'web/src/app/tracks/devops.track.ts',
   javascript: 'web/src/app/tracks/javascript.track.ts',
@@ -349,6 +350,7 @@ const TRACK_SOURCES = {
   android: 'web/src/app/tracks/android.track.ts',
   ios: 'web/src/app/tracks/ios.track.ts',
   flutter: 'web/src/app/tracks/flutter.track.ts',
+  rutaflow: 'web/src/app/tracks/rutaflow.track.ts',
 };
 
 const trackIdsInData = [...angularCourseData.matchAll(/id:\s*'([a-z-]+)'/g)].map((m) => m[1]);
@@ -392,8 +394,9 @@ for (const [trackId, sourceFile] of Object.entries(TRACK_SOURCES)) {
   }
 }
 
-// Cuestionario final: 10 preguntas por track, con las 12 tracks cubiertas.
+// Cuestionario final: 10 preguntas por track.
 const TRACK_QUIZ_NAMES = {
+  foundations: 'FOUNDATIONS_QUIZ',
   cloud: 'CLOUD_QUIZ',
   devops: 'DEVOPS_QUIZ',
   javascript: 'JAVASCRIPT_QUIZ',
@@ -406,6 +409,7 @@ const TRACK_QUIZ_NAMES = {
   android: 'ANDROID_QUIZ',
   ios: 'IOS_QUIZ',
   flutter: 'FLUTTER_QUIZ',
+  rutaflow: 'RUTAFLOW_QUIZ',
 };
 
 let totalQuizQuestions = 0;
@@ -444,4 +448,9 @@ console.log(`Validacion OK: app estatica, ${courses.length} modulos, ${fallbackS
 console.log(`Validacion OK: app Angular, ${trackIdsInData.length} tracks, ${totalQuizQuestions} preguntas de cuestionario final.`);
 NODE
 
+python3 scripts/validate_pedagogy.py
+python3 scripts/validate_curriculum.py
+python3 scripts/validate_official_sources.py
+python3 scripts/validate_code_quality.py
+python3 scripts/validate_rutaflow.py
 python3 scripts/build_repo_graph.py --check

@@ -10,6 +10,8 @@ import { KOTLIN_MULTIPLATFORM_MODULES } from './tracks/kotlin-multiplatform.trac
 import { ANDROID_MODULES } from './tracks/android.track';
 import { IOS_MODULES } from './tracks/ios.track';
 import { FLUTTER_MODULES } from './tracks/flutter.track';
+import { FOUNDATIONS_MODULES } from './tracks/foundations.track';
+import { RUTAFLOW_MODULES } from './tracks/rutaflow.track';
 
 export type { CourseModule, QuizQuestion, Track };
 export { createModule };
@@ -747,6 +749,24 @@ export const COURSE_MODULES: CourseModule[] = [
     'API completa con los mismos endpoints funcionando en AWS local, Azure local y GCP local.',
     ['aws', 'azure', 'gcp']
   ),
+  m(32,
+    'Arquitectura cloud resiliente: redes, landing zones y recuperación',
+    'Resiliencia cloud',
+    'Experto', '5 h', '#137c8b',
+    'Diseña una base cloud gobernada y prueba que el sistema puede aislar fallos y recuperar datos dentro de objetivos explícitos.',
+    ['VPC/VNet y segmentación', 'Landing zones y separación de cuentas', 'Alta disponibilidad y disaster recovery', 'RTO, RPO, chaos experiments y runbooks'],
+    [
+      'Dibuja flujos norte-sur y este-oeste, rutas, zonas de confianza y puntos únicos de fallo',
+      'Diseña una landing zone con cuentas/proyectos, identidad federada, logs y políticas centrales',
+      'Define RTO y RPO por viaje de usuario y selecciona una estrategia DR justificable',
+      'Ejecuta un experimento de pérdida de zona o dependencia y mide detección, conmutación y recuperación',
+      'Restaura un backup en un entorno aislado y demuestra integridad funcional, no solo estado SUCCESS',
+    ],
+    ['¿Por qué tener un backup no demuestra capacidad de recuperación?', '¿Cuándo multi-región agrega más riesgo que confiabilidad?'],
+    ['VPC', 'Route 53', 'AWS Backup', 'CloudWatch', 'IAM', 'Organizations'],
+    'Dossier de arquitectura con threat model, RTO/RPO, restauración probada, experimento de fallo y runbook.',
+    ['aws', 'azure', 'gcp']
+  ),
 ];
 
 export const SERVICE_GROUPS: ServiceGroup[] = [
@@ -762,6 +782,19 @@ export const SERVICE_GROUPS: ServiceGroup[] = [
 // ── Cuestionarios finales (10 preguntas por track) ──────────────────────────
 // Motor genérico y reusable en cualquier track: ver FinalQuizComponent
 // (course/final-quiz.ts), montado en la ruta /curso/:trackId/quiz.
+
+export const FOUNDATIONS_QUIZ: QuizQuestion[] = [
+  { question: '¿Qué diferencia hay entre un programa y un proceso?', options: ['Ninguna', 'El programa es código almacenado; el proceso es una instancia en ejecución', 'El proceso siempre está en Internet', 'El programa solo existe en memoria RAM'], answer: 1 },
+  { question: '¿Qué componente ejecuta instrucciones y realiza cálculos?', options: ['CPU', 'SSD', 'Teclado', 'Monitor'], answer: 0 },
+  { question: '¿Qué ocurre con el contenido ordinario de la RAM al apagar el equipo?', options: ['Se conserva para siempre', 'Se pierde', 'Se copia automáticamente a Git', 'Se convierte en un archivo'], answer: 1 },
+  { question: '¿Qué es una ruta absoluta?', options: ['Una ruta que parte desde la raíz del sistema', 'Un nombre de archivo sin carpeta', 'Una dirección web exclusivamente', 'Un comando de Git'], answer: 0 },
+  { question: '¿Qué indica normalmente pwd?', options: ['La contraseña', 'La carpeta de trabajo actual', 'Los procesos activos', 'La versión de Python'], answer: 1 },
+  { question: '¿Qué hace cd?', options: ['Elimina una carpeta', 'Cambia la carpeta de trabajo', 'Crea un programa', 'Compila todo el proyecto'], answer: 1 },
+  { question: '¿Qué es un argumento de un comando?', options: ['Un error', 'Información adicional que modifica o completa la operación', 'Otro nombre para la CPU', 'Una variable obligatoriamente secreta'], answer: 1 },
+  { question: '¿Qué suele significar un código de salida 0?', options: ['La operación terminó correctamente', 'El equipo se apagó', 'No se ejecutó nada', 'Falta memoria'], answer: 0 },
+  { question: '¿Por qué conviene leer un mensaje de error completo?', options: ['No conviene', 'Contiene tipo, ubicación y contexto útiles para diagnosticar', 'Porque siempre incluye la solución exacta', 'Solo para llenar documentación'], answer: 1 },
+  { question: '¿Qué evidencia demuestra mejor que el primer programa funciona?', options: ['Decir que funciona', 'Comando, salida observada y archivo fuente reproducible', 'Una captura sin código', 'Instalar muchas extensiones'], answer: 1 },
+];
 
 export const CLOUD_QUIZ: QuizQuestion[] = [
   { question: '¿Qué variable de entorno evita repetir --endpoint-url en cada comando de la AWS CLI?', options: ['AWS_ENDPOINT_URL', 'FLOCI_HOSTNAME', 'AWS_ACCOUNT_ID', 'AWS_PROFILE_ENDPOINT'], answer: 0 },
@@ -919,6 +952,19 @@ export const FLUTTER_QUIZ: QuizQuestion[] = [
   { question: '¿Qué requiere publicar la misma app Flutter en Google Play y App Store?', options: ['Un único paso combinado sin diferencias', 'Cumplir los requisitos de cada tienda por separado aunque el código compartido sea el mismo', 'Reescribir la app en Kotlin y Swift', 'Nada, se publica automáticamente al hacer build'], answer: 1 },
 ];
 
+export const RUTAFLOW_QUIZ: QuizQuestion[] = [
+  { question: '¿Qué debe ocurrir si se repite el mismo comando de entrega?', options: ['Crear otra entrega', 'Devolver el resultado original sin duplicar efectos', 'Borrar el envío', 'Cambiar la clave'], answer: 1 },
+  { question: '¿Por qué una coordenada GPS no demuestra por sí sola una entrega?', options: ['Porque GPS no existe', 'Porque requiere tiempo, precisión, identidad, autorización y evidencia adicional', 'Porque siempre es falsa', 'Porque solo funciona en web'], answer: 1 },
+  { question: '¿Cómo se corrige un movimiento contable incorrecto?', options: ['Editándolo', 'Eliminándolo', 'Registrando un reverso y el movimiento correcto', 'Cambiando el saldo'], answer: 2 },
+  { question: '¿Qué garantiza una outbox transaccional?', options: ['Cero fallos', 'Que el cambio de dominio y la intención de publicar se confirman juntos', 'Orden global perfecto', 'Entrega exactamente una vez'], answer: 1 },
+  { question: '¿Qué estrategia protege mejor la batería del conductor?', options: ['GPS máximo siempre', 'Muestreo adaptado a actividad, precisión necesaria y batería', 'Desactivar permisos', 'Enviar cada milisegundo'], answer: 1 },
+  { question: '¿Dónde se debe autorizar una confirmación de entrega?', options: ['Solo en el botón', 'En el backend y el dominio con identidad autenticada', 'En CSS', 'En el mapa'], answer: 1 },
+  { question: '¿Qué debe hacer un consumidor ante un evento duplicado?', options: ['Aplicarlo de nuevo', 'Deduplicarlo mediante una identidad persistida', 'Cambiar su contenido', 'Ignorar todos los eventos'], answer: 1 },
+  { question: '¿Qué demuestra un restore test?', options: ['Que existe un archivo', 'Que datos y aplicación pueden recuperarse dentro de objetivos medidos', 'Que nunca habrá incidentes', 'Que multi-región es innecesario'], answer: 1 },
+  { question: '¿Qué mide un buen SLI de confirmación?', options: ['Solo CPU', 'La proporción de confirmaciones correctas observada por usuarios', 'Número de archivos', 'Cantidad de desarrolladores'], answer: 1 },
+  { question: '¿Por qué no se inicia con microservicios?', options: ['Porque son ilegales', 'Porque primero deben entenderse dominio, transacciones y límites reales', 'Porque no usan HTTP', 'Porque no tienen bases'], answer: 1 },
+];
+
 // ── Multi-cloud comparison ───────────────────────────────────────────────────
 
 export interface CloudComparison {
@@ -985,6 +1031,8 @@ export const GCP_GROUPS: AltCloudGroup[] = [
 // descripción, conceptos clave y entregable previstos.
 
 export const TRACKS: Track[] = [
+  { id: 'rutaflow', name: 'RutaFlow — Plataforma profesional de entregas', shortName: 'RutaFlow', tagline: 'Proyecto full-stack: paquetería, GPS, mapas, Flutter, backend, datos, contabilidad, cloud y DevOps.', color: '#f97316', icon: 'truck', modules: RUTAFLOW_MODULES, quiz: RUTAFLOW_QUIZ },
+  { id: 'foundations', name: 'Fundamentos de Ingeniería de Software', shortName: 'Fundamentos', tagline: 'De cero absoluto: computador, terminal, programación y bases profesionales.', color: '#6d5dfc', icon: 'book-open', modules: FOUNDATIONS_MODULES, quiz: FOUNDATIONS_QUIZ },
   { id: 'cloud', name: 'Cloud Local — AWS, Azure y GCP', shortName: 'Cloud', tagline: 'Servicios cloud reales en local, sin pagar ni crear cuentas.', color: '#137c8b', icon: 'cloud-cog', modules: COURSE_MODULES, quiz: CLOUD_QUIZ },
   { id: 'devops', name: 'DevOps', shortName: 'DevOps', tagline: 'Linux, Docker, CI/CD, Kubernetes e infraestructura como código.', color: '#475569', icon: 'git-branch', modules: DEVOPS_MODULES, quiz: DEVOPS_QUIZ },
   { id: 'javascript', name: 'JavaScript de cero a master', shortName: 'JavaScript', tagline: 'El lenguaje base de la web: del primer script al rendimiento avanzado.', color: '#e9b400', icon: 'braces', modules: JAVASCRIPT_MODULES, quiz: JAVASCRIPT_QUIZ },

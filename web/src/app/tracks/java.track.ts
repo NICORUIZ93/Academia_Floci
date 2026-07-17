@@ -182,4 +182,25 @@ export const JAVA_MODULES: CourseModule[] = [
     ['¿Qué decisión de diseño cambiarías si tuvieras que escalar esta aplicación a 10x el volumen de datos?', '¿Qué parte del proyecto te hizo apreciar más una feature de Java moderna (records, virtual threads, pattern matching)?'],
     ['Java 21', 'JUnit 5', 'Gradle'],
     'Aplicación Java con lógica concurrente, tests y build reproducible documentado.'),
+  m(14, 'Java en producción: memoria, benchmarks y runtime seguro', 'Producción JVM', 'Experto', '7 h', '#5382a1',
+    'Endurece el proyecto integrador comprendiendo visibilidad y publicación en el Java Memory Model, midiendo con JMH sin engañar al JIT, defendiendo fronteras de datos y construyendo un runtime mínimo, observable y actualizable.',
+    [
+      'Java Memory Model, happens-before, volatile, final y publicación segura',
+      'JMH, warmup, dead-code elimination, escape analysis y medición responsable',
+      'Validación, deserialización, secretos, criptografía y cadena de suministro',
+      'jlink/jpackage, Class Data Sharing, contenedores, señales y actualización del runtime',
+    ],
+    [
+      'Reproduce un error de visibilidad y demuestra la corrección mediante relaciones happens-before',
+      'Construye un benchmark JMH y refuta una medición ingenua del mismo código',
+      'Rechaza grafos y tipos no permitidos y sustituye serialización nativa cuando no es necesaria',
+      'Genera una imagen de runtime mínima, no root, con JFR, límites y apagado probado',
+    ],
+    [
+      '¿Por qué volatile aporta visibilidad pero no vuelve atómico a counter++?',
+      '¿Cómo puede el JIT eliminar justamente el trabajo que intentas medir?',
+      '¿Quién actualiza las vulnerabilidades de una imagen creada con jlink?',
+    ],
+    ['Java', 'JMH', 'jcstress', 'JFR', 'jlink'],
+    'Servicio Java con publicación segura, pruebas de estrés concurrente, benchmark válido, entrada deserializada defensivamente, runtime modular mínimo y runbook de actualización/diagnóstico.'),
 ];

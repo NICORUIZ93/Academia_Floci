@@ -27,6 +27,25 @@ Programa de consola sin un solo `NullPointerException` posible (null safety real
 
 ---
 
+## Antes de comenzar: entorno Kotlin Multiplatform
+
+Kotlin Multiplatform combina herramientas de varias plataformas. Para empezar instala **JDK 21**, Git e **IntelliJ IDEA** con el plugin Kotlin. Para Android necesitarás Android Studio; para compilar el destino iOS necesitarás obligatoriamente un Mac con Xcode.
+
+| Sistema | Qué puedes desarrollar | Instalación mínima |
+|---|---|---|
+| Windows | commonMain, JVM, Android y Desktop | JDK 21, IntelliJ/Android Studio, Git |
+| macOS | Todos los destinos, incluido iOS | JDK 21, Xcode, Android Studio, Git |
+| Linux | commonMain, JVM, Android y Desktop | OpenJDK 21, IntelliJ/Android Studio, Git |
+
+Verifica `java --version` y `git --version`. En macOS abre Xcode una vez y acepta su licencia; comprueba `xcodebuild -version`. Crea un proyecto desde el asistente **Kotlin Multiplatform** de Android Studio/IntelliJ y ejecuta primero el destino Desktop o Android. Usa siempre el Gradle Wrapper incluido:
+
+```bash
+./gradlew tasks          # macOS/Linux
+.\gradlew.bat tasks      # Windows
+```
+
+Si Gradle no encuentra Java, configura `JAVA_HOME` hacia el JDK, no hacia una JRE. No intentes resolver problemas de lógica común y de toolchain iOS al mismo tiempo: haz funcionar primero `commonTest`, después cada plataforma por separado.
+
 ## Contenido teórico
 
 ### Tema 1: Null safety real
@@ -114,6 +133,35 @@ val descripcion = when (edad) {
 
 ---
 
+## Ruta de proyecto progresivo desde carpeta vacía
+
+No crees un proyecto desechable por módulo. Conserva un único repositorio que evoluciona durante todo el track y etiqueta cada hito (`git tag modulo-N`). Empieza con crea `academia-kmp` con el asistente oficial Kotlin Multiplatform en una carpeta vacía y ejecuta `git init`. Ejecuta el comando paso a paso, inspecciona los archivos generados y registra versiones y precondiciones en el README.
+
+| Hito | Evolución acumulativa | Evidencia antes de avanzar |
+|---|---|---|
+| Base | dominio común y targets. | Arranque reproducible, commit limpio y prueba mínima. |
+| Aplicación | red, datos e integración nativa. | Casos normales, límite y error automatizados. |
+| Integración | Conecta capas y reemplaza dobles por infraestructura controlada. | Diagrama, contratos y prueba de integración. |
+| Experto | compatibilidad y operación multi-target. | Perfil o threat model, telemetría y runbook de recuperación. |
+
+Al iniciar cada laboratorio crea una rama `modulo-N`, implementa el incremento, verifica el criterio de éxito y fusiona solo con pruebas verdes. Si un módulo necesita un experimento aislado, colócalo en `experiments/modulo-N/`; el producto acumulativo permanece ejecutable. Al terminar, otra persona debe poder clonar el repositorio y reproducir el último hito siguiendo únicamente el README.
+
+## Criterio transversal de calidad del código
+
+Aplica estas decisiones en todos los ejemplos y en tu entrega:
+
+- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
+- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
+- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
+- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
+- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
+- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
+- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
+
+**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
+
+**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
+
 ## Laboratorio práctico
 
 **Objetivo del laboratorio:** construir un programa de consola sin un solo `NullPointerException` posible.
@@ -169,6 +217,30 @@ val descripcion = when (edad) {
 - Explica correctamente la restricción del conjunto de subtipos de una sealed class como razón de la exhaustividad verificable.
 
 ---
+
+## Rúbrica del proyecto
+
+Esta rúbrica evalúa el laboratorio y los ejercicios como evidencia de dominio, no la mera finalización de pasos.
+
+| Criterio | Peso | Evidencia esperada |
+|---|---:|---|
+| Comprensión conceptual | 20% | Explica el mecanismo, sus límites y por qué la solución funciona. |
+| Implementación funcional | 30% | El artefacto satisface requisitos normales, límite y de error. |
+| Verificación | 20% | Incluye pruebas, mediciones o inspecciones reproducibles. |
+| Diseño y calidad | 15% | Nombres, estructura, seguridad y mantenibilidad son deliberados. |
+| Comunicación profesional | 15% | README, decisiones, comandos y resultados permiten repetir el trabajo. |
+
+Se alcanza competencia con 70/100 y sin cero en implementación o verificación. El nivel experto exige comparar alternativas, justificar trade-offs y reconocer condiciones donde la solución dejaría de ser válida.
+
+## Bibliografía y fundamento académico
+
+Estas fuentes sustentan los conceptos y deben consultarse para verificar detalles que cambian entre versiones:
+
+- JetBrains, documentación oficial de *Kotlin Multiplatform* y Kotlin Coroutines.
+- Google, *Android Developers Documentation*; Apple, *Developer Documentation*.
+- Kotlin Foundation, especificación y pautas de compatibilidad de Kotlin.
+- ACM/IEEE-CS/AAAI, *Computer Science Curricula 2023*.
+- IEEE Computer Society, *SWEBOK Guide V4.0*.
 
 ## Resumen del módulo
 

@@ -167,4 +167,25 @@ export const ANDROID_MODULES: CourseModule[] = [
     ['¿Qué decisión de arquitectura cambiarías si la app tuviera que soportar 10 pantallas más?', '¿Qué parte del proyecto (Compose, Room, Hilt) fue la más difícil de integrar correctamente con las demás?'],
     ['Jetpack Compose', 'Room', 'Hilt'],
     'App Android con Compose, datos reales, persistencia offline y tests.'),
+  m(13, 'Android en producción: seguridad, sincronización y calidad', 'Producción Android', 'Experto', '8 h', '#3ddc84',
+    'Endurece la app offline-first para dispositivos y redes hostiles: minimiza datos y permisos, protege claves y componentes, resuelve conflictos de sincronización, diagnostica ANR/crashes y despliega gradualmente con rollback y privacidad verificables.',
+    [
+      'Threat model móvil, permisos, componentes exportados, deep links y red segura',
+      'Android Keystore, datos sensibles, backups, logs, screenshots y secretos',
+      'Outbox local, idempotencia, versiones, conflictos, WorkManager y reconciliación',
+      'ANR, crashes, StrictMode, Macrobenchmark, vitals, staged rollout y rollback',
+    ],
+    [
+      'Explota/corrige un deep link y demuestra mínimo privilegio en manifest/permisos',
+      'Protege una clave no exportable y prueba backup, logout y dispositivo restaurado',
+      'Simula dos dispositivos offline y demuestra una política de conflicto sin perder cambios',
+      'Provoca un ANR, identifica el bloqueo y opera un rollout mediante métricas por versión',
+    ],
+    [
+      '¿Por qué una API key incluida en el APK no puede considerarse secreta?',
+      '¿Cuándo last-write-wins pierde intención del usuario?',
+      '¿Por qué capturar crashes no permite diagnosticar todos los ANR?',
+    ],
+    ['Android Keystore', 'Room', 'WorkManager', 'Macrobenchmark', 'Play Console'],
+    'App con threat model, almacenamiento y enlaces endurecidos, sincronización idempotente con conflictos probados, diagnóstico ANR/crash y release gradual recuperable.'),
 ];

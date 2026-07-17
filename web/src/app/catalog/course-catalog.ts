@@ -4,6 +4,7 @@ import { RouterLink } from '@angular/router';
 import { CloudCog, LucideAngularModule, LucideIconData, Moon, Sun } from 'lucide-angular';
 import { TRACKS } from '../course-data';
 import { TRACK_ICONS } from '../icon-registry';
+import { OFFICIAL_UPDATES } from '../official-updates';
 import { ProgressService } from '../progress.service';
 import { ThemeService } from '../theme.service';
 
@@ -33,6 +34,7 @@ export class CourseCatalogComponent {
   readonly brandIcon = CloudCog;
   readonly icons = { Sun, Moon };
   readonly themeService = inject(ThemeService);
+  readonly officialUpdates = OFFICIAL_UPDATES;
 
   constructor(private readonly progressService: ProgressService) {}
 
@@ -53,8 +55,8 @@ export class CourseCatalogComponent {
     }))
   );
 
-  readonly featuredTracks = computed(() => this.cards().filter(card => ['cloud', 'flutter', 'spring-boot', 'devops'].includes(card.id)));
-  readonly foundationTracks = computed(() => this.cards().filter(card => ['javascript', 'java', 'node', 'angular', 'react'].includes(card.id)));
+  readonly featuredTracks = computed(() => this.cards().filter(card => ['rutaflow', 'cloud', 'flutter', 'spring-boot', 'devops'].includes(card.id)));
+  readonly foundationTracks = computed(() => this.cards().filter(card => ['foundations', 'javascript', 'java', 'node', 'angular', 'react'].includes(card.id)));
   readonly mobileTracks = computed(() => this.cards().filter(card => ['flutter', 'android', 'ios', 'kotlin-multiplatform'].includes(card.id)));
 
   trackGroups() {

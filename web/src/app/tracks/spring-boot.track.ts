@@ -165,4 +165,25 @@ export const SPRING_BOOT_MODULES: CourseModule[] = [
     ['¿Qué decisión de arquitectura tomarías distinto si este microservicio tuviera que escalar a 100x el tráfico actual?', '¿Qué parte del ecosistema Spring (Security, Data JPA, Testcontainers) te resultó más compleja de dominar?'],
     ['Spring Boot', 'Spring Security', 'Spring Data JPA'],
     'Microservicio Spring Boot con auth, persistencia real, Actuator y tests de integración.'),
+  m(13, 'Consistencia, contratos y operación distribuida', 'Producción distribuida', 'Experto', '8 h', '#6db33f',
+    'Convierte el microservicio funcional en un sistema verificable ante rollback, self-invocation, requests duplicados, doble escritura, cambios de contrato y dependencias lentas mediante transacciones explícitas, outbox, contratos y SLO.',
+    [
+      '@Transactional, proxies, propagación, aislamiento, rollback y locks',
+      'Idempotencia, optimistic locking, outbox, Kafka y consumidores deduplicados',
+      'OpenAPI, Problem Details, Spring Cloud Contract y evolución compatible',
+      'Micrometer Observation, trazas, SLI/SLO, resiliencia e incidentes',
+    ],
+    [
+      'Demuestra commit/rollback y el fallo de self-invocation con una prueba de integración',
+      'Fuerza requests/eventos duplicados y prueba un único efecto de negocio',
+      'Rompe un contrato deliberadamente y haz que CI detenga al proveedor',
+      'Inyecta latencia/caída, sigue una traza y recupera mediante runbook y postmortem',
+    ],
+    [
+      '¿Por qué llamar un método @Transactional desde el mismo bean puede evitar el proxy?',
+      '¿Qué garantiza Kafka exactly-once y qué efecto queda fuera de esa frontera?',
+      '¿Por qué una métrica con userId como tag puede derribar el monitoreo?',
+    ],
+    ['Spring Boot', 'PostgreSQL', 'Kafka', 'Spring Cloud Contract', 'OpenTelemetry'],
+    'Microservicio con límites transaccionales probados, idempotencia, outbox, consumidor deduplicado, contrato ejecutable, trazas correlacionadas, SLO y recuperación de fallos ensayada.'),
 ];

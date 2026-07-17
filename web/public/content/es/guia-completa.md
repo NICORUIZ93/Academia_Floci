@@ -1036,9 +1036,12 @@ terminal, el endpoint sigue siendo `http://localhost:4566`.
 - **NiceBucket (solo S3)** — explorador nativo para buckets S3. Útil en clases
   cuando el objetivo es enseñar almacenamiento de objetos.
 
-No uses `docker run floci/floci-ui:latest` como paso del curso. Si encuentras
-capturas o referencias a una UI de Floci, trátalas como material externo; la
-ruta validada aquí es CLI + StackPort.
+No uses `docker run floci/floci-ui:latest` como instalación de la interfaz.
+Floci UI es un proyecto oficial separado: clona `https://github.com/floci-io/floci-ui`,
+ejecuta `docker compose up` dentro de esa carpeta y abre `http://localhost:4500`.
+La ruta recomendada es operar con CLI/SDK y verificar visualmente con una o
+ambas interfaces: StackPort como explorador AWS ligero integrado en la academia,
+y Floci UI como consola oficial con orientación multi-cloud. Son complementarias.
 
 ### Problemas comunes validados
 
@@ -1050,7 +1053,7 @@ ruta validada aquí es CLI + StackPort.
 | `Bind for 0.0.0.0:4566 failed` | El puerto 4566 ya está ocupado. | Detén el contenedor que publica ese puerto. | `docker ps --filter "publish=4566"` |
 | `Unable to locate credentials` | No cargaste variables locales. | Usa `eval $(floci env)` o `$env:` en PowerShell. | `aws sts get-caller-identity` |
 | `docker.sock permission denied` | Usuario sin permiso para Docker. | `sudo usermod -aG docker $USER` y reinicia sesión. | `docker info` |
-| `Unable to find image floci/floci-ui:latest` | La academia no usa esa imagen. | `docker compose up -d floci stackport`. | `docker compose ps` |
+| `Unable to find image floci/floci-ui:latest` | Floci UI no se inicia como imagen aislada. | Clona `floci-io/floci-ui` y usa su Docker Compose. | Abre `http://localhost:4500` |
 
 ### Persistencia de datos
 

@@ -18,7 +18,7 @@
     },
     {
       "path": ".github/workflows/ci.yml",
-      "lines": 42,
+      "lines": 47,
       "kind": "project-file",
       "symbols": [],
       "imports": [],
@@ -34,7 +34,7 @@
     },
     {
       "path": "README.md",
-      "lines": 246,
+      "lines": 276,
       "kind": "documentation",
       "symbols": [],
       "imports": [],
@@ -60,6 +60,53 @@
       "symbols": [],
       "imports": [],
       "headings": []
+    },
+    {
+      "path": "docs/ESTANDAR-DE-CODIGO.md",
+      "lines": 56,
+      "kind": "documentation",
+      "symbols": [],
+      "imports": [],
+      "headings": [
+        "# Est\u00e1ndar transversal de c\u00f3digo y dise\u00f1o",
+        "## Prioridades",
+        "## Clean Code con criterio",
+        "## SOLID cuando aporta valor",
+        "## M\u00e1s all\u00e1 del c\u00f3digo orientado a objetos",
+        "## Revisi\u00f3n obligatoria de cada ejemplo"
+      ]
+    },
+    {
+      "path": "docs/MATRIZ-CURRICULAR.md",
+      "lines": 71,
+      "kind": "documentation",
+      "symbols": [],
+      "imports": [],
+      "headings": [
+        "# Matriz curricular auditable",
+        "## Progresi\u00f3n de competencia",
+        "## Cobertura por m\u00f3dulo",
+        "## M\u00e9todo de evaluaci\u00f3n",
+        "## Resultados por especializaci\u00f3n",
+        "## Vac\u00edos declarados y alcance"
+      ]
+    },
+    {
+      "path": "docs/METODOLOGIA-DE-APRENDIZAJE.md",
+      "lines": 57,
+      "kind": "documentation",
+      "symbols": [],
+      "imports": [],
+      "headings": [
+        "# Metodolog\u00eda Aprende construyendo",
+        "## Ciclo de cada cap\u00edtulo",
+        "## Tama\u00f1o de las experiencias",
+        "## Regla para mostrar soluciones",
+        "## Evidencia de aprendizaje",
+        "## Aplicaci\u00f3n en el lector",
+        "## Mantenimiento tecnol\u00f3gico",
+        "## Calidad del c\u00f3digo en toda la academia"
+      ]
     },
     {
       "path": "docs/METODOLOGIA.md",
@@ -98,6 +145,38 @@
         "## \ud83d\udd28 R\u00f3mpelo a prop\u00f3sito",
         "## \ud83e\udde9 Ejercicios (sin soluci\u00f3n visible)"
       ]
+    },
+    {
+      "path": "docs/curriculum-matrix.json",
+      "lines": 143,
+      "kind": "project-file",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "docs/official-sources.json",
+      "lines": 21,
+      "kind": "project-file",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "docs/official-topic-atlas.json",
+      "lines": 175,
+      "kind": "project-file",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "docs/specialization-outcomes.json",
+      "lines": 116,
+      "kind": "project-file",
+      "symbols": [],
+      "imports": [],
+      "headings": []
     },
     {
       "path": "examples/README.md",
@@ -1491,6 +1570,138 @@
       "headings": []
     },
     {
+      "path": "examples/rutaflow/README.md",
+      "lines": 48,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
+      "headings": [
+        "# RutaFlow: plataforma educativa de entregas",
+        "## Primer recorrido funcional",
+        "## Invariantes",
+        "## Implementaci\u00f3n por ruta"
+      ]
+    },
+    {
+      "path": "examples/rutaflow/android/LocationPolicy.kt",
+      "lines": 16,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "examples/rutaflow/angular/operations.store.ts",
+      "lines": 33,
+      "kind": "example",
+      "symbols": [
+        "OperationsStore",
+        "RouteSummary",
+        "state",
+        "delayedRoutes"
+      ],
+      "imports": [
+        "@angular/core"
+      ],
+      "headings": []
+    },
+    {
+      "path": "examples/rutaflow/cloud/template.yaml",
+      "lines": 25,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "examples/rutaflow/devops/deployment.yaml",
+      "lines": 27,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "examples/rutaflow/flutter/delivery_outbox.dart",
+      "lines": 37,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "examples/rutaflow/foundation/domain.py",
+      "lines": 48,
+      "kind": "example",
+      "symbols": [
+        "ShipmentStatus",
+        "transition",
+        "Stop",
+        "nearest_neighbor_route"
+      ],
+      "imports": [
+        "dataclasses",
+        "enum",
+        "math"
+      ],
+      "headings": []
+    },
+    {
+      "path": "examples/rutaflow/ios/LocationPolicy.swift",
+      "lines": 21,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "examples/rutaflow/java/PricingEngine.java",
+      "lines": 33,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "examples/rutaflow/javascript/tracking-widget.js",
+      "lines": 23,
+      "kind": "example",
+      "symbols": [
+        "renderTracking"
+      ],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "examples/rutaflow/kotlin-multiplatform/SyncEngine.kt",
+      "lines": 29,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "examples/rutaflow/node/confirm-delivery.ts",
+      "lines": 29,
+      "kind": "example",
+      "symbols": [
+        "DeliveryRepository",
+        "DeliveryCommand",
+        "DeliveryResult",
+        "confirmDelivery"
+      ],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "examples/rutaflow/spring-boot/DeliveryService.java",
+      "lines": 32,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
       "path": "examples/tracks/android/compose-ui.kt",
       "lines": 38,
       "kind": "example",
@@ -2006,6 +2217,74 @@
       "headings": []
     },
     {
+      "path": "scripts/create_rutaflow_content.py",
+      "lines": 178,
+      "kind": "automation-script",
+      "symbols": [
+        "render"
+      ],
+      "imports": [
+        "pathlib"
+      ],
+      "headings": []
+    },
+    {
+      "path": "scripts/enrich_code_quality.py",
+      "lines": 44,
+      "kind": "automation-script",
+      "symbols": [],
+      "imports": [
+        "pathlib"
+      ],
+      "headings": []
+    },
+    {
+      "path": "scripts/enrich_curriculum_sections.py",
+      "lines": 172,
+      "kind": "automation-script",
+      "symbols": [
+        "bibliography",
+        "project_path"
+      ],
+      "imports": [
+        "pathlib"
+      ],
+      "headings": []
+    },
+    {
+      "path": "scripts/enrich_official_topic_atlas.py",
+      "lines": 127,
+      "kind": "automation-script",
+      "symbols": [
+        "block"
+      ],
+      "imports": [
+        "pathlib",
+        "json"
+      ],
+      "headings": []
+    },
+    {
+      "path": "scripts/enrich_official_updates.py",
+      "lines": 97,
+      "kind": "automation-script",
+      "symbols": [],
+      "imports": [
+        "pathlib"
+      ],
+      "headings": []
+    },
+    {
+      "path": "scripts/enrich_rutaflow_projects.py",
+      "lines": 61,
+      "kind": "automation-script",
+      "symbols": [],
+      "imports": [
+        "pathlib"
+      ],
+      "headings": []
+    },
+    {
       "path": "scripts/fix_lessons.py",
       "lines": 205,
       "kind": "automation-script",
@@ -2045,10 +2324,70 @@
     },
     {
       "path": "scripts/validate.sh",
-      "lines": 448,
+      "lines": 457,
       "kind": "automation-script",
       "symbols": [],
       "imports": [],
+      "headings": []
+    },
+    {
+      "path": "scripts/validate_code_quality.py",
+      "lines": 44,
+      "kind": "automation-script",
+      "symbols": [],
+      "imports": [
+        "pathlib"
+      ],
+      "headings": []
+    },
+    {
+      "path": "scripts/validate_curriculum.py",
+      "lines": 163,
+      "kind": "automation-script",
+      "symbols": [],
+      "imports": [
+        "json",
+        "pathlib",
+        "re"
+      ],
+      "headings": []
+    },
+    {
+      "path": "scripts/validate_official_sources.py",
+      "lines": 88,
+      "kind": "automation-script",
+      "symbols": [],
+      "imports": [
+        "datetime",
+        "json",
+        "pathlib",
+        "urllib.parse"
+      ],
+      "headings": []
+    },
+    {
+      "path": "scripts/validate_pedagogy.py",
+      "lines": 81,
+      "kind": "automation-script",
+      "symbols": [],
+      "imports": [
+        "pathlib",
+        "re",
+        "sys"
+      ],
+      "headings": []
+    },
+    {
+      "path": "scripts/validate_rutaflow.py",
+      "lines": 94,
+      "kind": "automation-script",
+      "symbols": [],
+      "imports": [
+        "pathlib",
+        "importlib.util",
+        "subprocess",
+        "sys"
+      ],
       "headings": []
     },
     {
@@ -2223,28 +2562,28 @@
     },
     {
       "path": "web/public/content/android/modulo-0.md",
-      "lines": 217,
+      "lines": 290,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
       "headings": [
         "# M\u00f3dulo 0: Kotlin aplicado a Android",
         "## S\u00edlabo",
+        "## Antes de comenzar: instala Android Studio y un dispositivo de prueba",
         "## Contenido te\u00f3rico",
         "### Tema 1: Estructura de un proyecto Android Studio",
         "### Tema 2: Recursos externalizados",
         "### Tema 3: AndroidManifest.xml y m\u00f3dulos Gradle",
+        "## Ruta de proyecto progresivo desde carpeta vac\u00eda",
+        "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
         "## Ejercicios de evaluaci\u00f3n",
-        "### Ejercicio 1: Por qu\u00e9 externalizar strings",
-        "### Ejercicio 2: Qu\u00e9 declara el manifiesto",
-        "### Ejercicio 3: Ventaja de separar en m\u00f3dulos Gradle",
-        "## Resumen del m\u00f3dulo"
+        "### Ejercicio 1: Por qu\u00e9 externalizar strings"
       ]
     },
     {
       "path": "web/public/content/android/modulo-1.md",
-      "lines": 206,
+      "lines": 246,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -2255,17 +2594,17 @@
         "### Tema 1: Ciclo de vida de una Activity",
         "### Tema 2: ViewModel sobrevive a la rotaci\u00f3n",
         "### Tema 3: SavedStateHandle",
+        "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
         "## Ejercicios de evaluaci\u00f3n",
         "### Ejercicio 1: Por qu\u00e9 el ViewModel sobrevive a rotaci\u00f3n pero no a la muerte del proceso",
         "### Ejercicio 2: Diferencia entre lo que sobrevive un ViewModel y SavedStateHandle",
-        "### Ejercicio 3: Cu\u00e1ndo liberar un recurso costoso",
-        "## Resumen del m\u00f3dulo"
+        "### Ejercicio 3: Cu\u00e1ndo liberar un recurso costoso"
       ]
     },
     {
       "path": "web/public/content/android/modulo-10.md",
-      "lines": 202,
+      "lines": 242,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -2276,17 +2615,17 @@
         "### Tema 1: Detectar y corregir recomposici\u00f3n innecesaria",
         "### Tema 2: Baseline Profiles y ciclo de efectos",
         "### Tema 3: Accesibilidad e interop con Views",
+        "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
         "## Ejercicios de evaluaci\u00f3n",
         "### Ejercicio 1: Causa t\u00edpica de recomposici\u00f3n innecesaria",
         "### Ejercicio 2: Por qu\u00e9 la accesibilidad no es opcional",
-        "### Ejercicio 3: Qu\u00e9 optimiza un Baseline Profile",
-        "## Resumen del m\u00f3dulo"
+        "### Ejercicio 3: Qu\u00e9 optimiza un Baseline Profile"
       ]
     },
     {
       "path": "web/public/content/android/modulo-11.md",
-      "lines": 221,
+      "lines": 261,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -2297,17 +2636,17 @@
         "### Tema 1: Firma de la app",
         "### Tema 2: App Bundle vs APK",
         "### Tema 3: Versionado, tracks y pol\u00edticas",
+        "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
         "## Ejercicios de evaluaci\u00f3n",
         "### Ejercicio 1: Por qu\u00e9 un App Bundle en vez de un APK universal",
         "### Ejercicio 2: Diferencia entre versionCode y versionName",
-        "### Ejercicio 3: Prop\u00f3sito de los tracks de Play Console",
-        "## Resumen del m\u00f3dulo"
+        "### Ejercicio 3: Prop\u00f3sito de los tracks de Play Console"
       ]
     },
     {
       "path": "web/public/content/android/modulo-12.md",
-      "lines": 217,
+      "lines": 279,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -2318,17 +2657,38 @@
         "### Tema 1: Arquitectura MVVM completa con UDF",
         "### Tema 2: Inyecci\u00f3n de dependencias en toda la app",
         "### Tema 3: Cierre del track y pr\u00f3ximos pasos",
+        "## Proyecto transversal RutaFlow: Ubicaci\u00f3n consciente de bater\u00eda",
+        "### Capacidad y fundamento",
+        "### Implementaci\u00f3n guiada",
+        "### Verificaci\u00f3n profesional",
+        "## Criterio transversal de calidad del c\u00f3digo",
+        "## Laboratorio pr\u00e1ctico"
+      ]
+    },
+    {
+      "path": "web/public/content/android/modulo-13.md",
+      "lines": 327,
+      "kind": "course-content",
+      "symbols": [],
+      "imports": [],
+      "headings": [
+        "# M\u00f3dulo 13: Android en producci\u00f3n \u2014 seguridad, sincronizaci\u00f3n y calidad",
+        "## S\u00edlabo",
+        "## Contenido te\u00f3rico",
+        "### Tema 1: El sistema operativo conecta tu app con entradas externas",
+        "### Tema 2: Proteger datos exige conocer copias y ciclo de vida",
+        "### Tema 3: Offline-first necesita un protocolo de cambios",
+        "### Tema 4: La calidad se opera por dispositivo y versi\u00f3n",
+        "## Revisi\u00f3n oficial de plataforma \u2014 julio de 2026",
+        "### Android 17: privacidad, compatibilidad y dispositivos grandes",
+        "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
-        "## Ejercicios de evaluaci\u00f3n",
-        "### Ejercicio 1: Decisi\u00f3n de arquitectura ante escalamiento",
-        "### Ejercicio 2: Parte m\u00e1s dif\u00edcil de integrar",
-        "### Ejercicio 3: Qu\u00e9 define una app Android profesional",
-        "## Resumen del m\u00f3dulo"
+        "### Proyecto: app resistente a dispositivo, red y release"
       ]
     },
     {
       "path": "web/public/content/android/modulo-2.md",
-      "lines": 217,
+      "lines": 257,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -2339,17 +2699,17 @@
         "### Tema 1: Composables y recomposici\u00f3n",
         "### Tema 2: State hoisting",
         "### Tema 3: remember, rememberSaveable y layout b\u00e1sico",
+        "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
         "## Ejercicios de evaluaci\u00f3n",
         "### Ejercicio 1: Por qu\u00e9 Compose recompone",
         "### Ejercicio 2: Qu\u00e9 problema resuelve state hoisting",
-        "### Ejercicio 3: remember vs rememberSaveable",
-        "## Resumen del m\u00f3dulo"
+        "### Ejercicio 3: remember vs rememberSaveable"
       ]
     },
     {
       "path": "web/public/content/android/modulo-3.md",
-      "lines": 225,
+      "lines": 265,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -2360,17 +2720,17 @@
         "### Tema 1: NavHost y NavController",
         "### Tema 2: Argumentos tipados y deep links",
         "### Tema 3: Navegaci\u00f3n anidada con stacks independientes",
+        "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
         "## Ejercicios de evaluaci\u00f3n",
         "### Ejercicio 1: Ventaja de argumentos tipados",
         "### Ejercicio 2: Por qu\u00e9 stacks independientes por secci\u00f3n",
-        "### Ejercicio 3: Qu\u00e9 resuelve un deep link",
-        "## Resumen del m\u00f3dulo"
+        "### Ejercicio 3: Qu\u00e9 resuelve un deep link"
       ]
     },
     {
       "path": "web/public/content/android/modulo-4.md",
-      "lines": 223,
+      "lines": 263,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -2381,17 +2741,17 @@
         "### Tema 1: StateFlow en el ViewModel",
         "### Tema 2: collectAsStateWithLifecycle y UDF",
         "### Tema 3: SharedFlow para eventos de un solo uso",
+        "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
         "## Ejercicios de evaluaci\u00f3n",
         "### Ejercicio 1: Por qu\u00e9 collectAsStateWithLifecycle es m\u00e1s seguro",
         "### Ejercicio 2: Por qu\u00e9 SharedFlow para eventos de un solo uso",
-        "### Ejercicio 3: Qu\u00e9 es UDF",
-        "## Resumen del m\u00f3dulo"
+        "### Ejercicio 3: Qu\u00e9 es UDF"
       ]
     },
     {
       "path": "web/public/content/android/modulo-5.md",
-      "lines": 223,
+      "lines": 263,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -2402,17 +2762,17 @@
         "### Tema 1: Retrofit con coroutines",
         "### Tema 2: Manejo de errores HTTP",
         "### Tema 3: Interceptores de OkHttp",
+        "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
         "## Ejercicios de evaluaci\u00f3n",
         "### Ejercicio 1: Retrofit + coroutines vs Callback",
         "### Ejercicio 2: Consecuencia de no modelar el error",
-        "### Ejercicio 3: Prop\u00f3sito de un interceptor",
-        "## Resumen del m\u00f3dulo"
+        "### Ejercicio 3: Prop\u00f3sito de un interceptor"
       ]
     },
     {
       "path": "web/public/content/android/modulo-6.md",
-      "lines": 228,
+      "lines": 268,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -2423,17 +2783,17 @@
         "### Tema 1: Entities, DAOs y Database",
         "### Tema 2: Room + Flow reactivo, y migraciones",
         "### Tema 3: Estrategia offline-first",
+        "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
         "## Ejercicios de evaluaci\u00f3n",
         "### Ejercicio 1: Ventaja de un DAO reactivo",
         "### Ejercicio 2: Por qu\u00e9 offline-first mejora la experiencia con buena conexi\u00f3n",
-        "### Ejercicio 3: Necesidad de migraciones",
-        "## Resumen del m\u00f3dulo"
+        "### Ejercicio 3: Necesidad de migraciones"
       ]
     },
     {
       "path": "web/public/content/android/modulo-7.md",
-      "lines": 224,
+      "lines": 264,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -2444,17 +2804,17 @@
         "### Tema 1: Configuraci\u00f3n b\u00e1sica de Hilt",
         "### Tema 2: @Provides y @Binds",
         "### Tema 3: Scopes y testing con Hilt",
+        "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
         "## Ejercicios de evaluaci\u00f3n",
         "### Ejercicio 1: Problema de acoplamiento que resuelve Hilt",
         "### Ejercicio 2: Cu\u00e1ndo usar @Provides en vez de @Inject directo",
-        "### Ejercicio 3: Elecci\u00f3n correcta de scope",
-        "## Resumen del m\u00f3dulo"
+        "### Ejercicio 3: Elecci\u00f3n correcta de scope"
       ]
     },
     {
       "path": "web/public/content/android/modulo-8.md",
-      "lines": 220,
+      "lines": 260,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -2465,17 +2825,17 @@
         "### Tema 1: CoroutineWorker y garant\u00eda de ejecuci\u00f3n",
         "### Tema 2: Constraints y trabajo peri\u00f3dico",
         "### Tema 3: Notificaciones desde background work",
+        "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
         "## Ejercicios de evaluaci\u00f3n",
         "### Ejercicio 1: Garant\u00eda de WorkManager frente a un coroutine simple",
         "### Ejercicio 2: Por qu\u00e9 WorkManager respeta constraints",
-        "### Ejercicio 3: Intervalo m\u00ednimo de trabajo peri\u00f3dico",
-        "## Resumen del m\u00f3dulo"
+        "### Ejercicio 3: Intervalo m\u00ednimo de trabajo peri\u00f3dico"
       ]
     },
     {
       "path": "web/public/content/android/modulo-9.md",
-      "lines": 227,
+      "lines": 267,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -2486,38 +2846,38 @@
         "### Tema 1: Testing de ViewModels con fakes y runTest",
         "### Tema 2: Compose UI Testing",
         "### Tema 3: Espresso y fakes vs mocks",
+        "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
         "## Ejercicios de evaluaci\u00f3n",
         "### Ejercicio 1: Rapidez y confiabilidad de un repositorio fake",
         "### Ejercicio 2: Qu\u00e9 cubre un test de Compose UI adicionalmente",
-        "### Ejercicio 3: Cu\u00e1ndo preferir un fake sobre un mock",
-        "## Resumen del m\u00f3dulo"
+        "### Ejercicio 3: Cu\u00e1ndo preferir un fake sobre un mock"
       ]
     },
     {
       "path": "web/public/content/angular/modulo-0.md",
-      "lines": 215,
+      "lines": 301,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
       "headings": [
         "# M\u00f3dulo 0: Fundamentos y Angular CLI",
         "## S\u00edlabo",
+        "## Antes de comenzar: prepara tu equipo desde cero",
+        "### Windows",
+        "### macOS",
+        "### Linux (Ubuntu/Debian)",
+        "### Tu primer proyecto verificable",
         "## Contenido te\u00f3rico",
         "### Tema 1: El CLI ya no genera NgModules",
         "### Tema 2: Interpolaci\u00f3n y property binding",
         "### Tema 3: TypeScript a fondo \u2014 unknown, any, never y utility types",
-        "### Tema 4: Compilador AOT frente a JIT",
-        "## Laboratorio pr\u00e1ctico",
-        "## Ejercicios de evaluaci\u00f3n",
-        "### Ejercicio 1: Qu\u00e9 elimin\u00f3 el Angular moderno",
-        "### Ejercicio 2: Interpolaci\u00f3n frente a property binding",
-        "### Ejercicio 3: unknown frente a any"
+        "### Tema 4: Compilador AOT frente a JIT"
       ]
     },
     {
       "path": "web/public/content/angular/modulo-1.md",
-      "lines": 238,
+      "lines": 278,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -2529,16 +2889,16 @@
         "### Tema 2: Control de flujo nativo \u2014 @if, @for, @switch",
         "### Tema 3: Content projection con ng-content",
         "### Tema 4: Ciclo de vida completo de un componente",
+        "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
         "## Ejercicios de evaluaci\u00f3n",
         "### Ejercicio 1: Por qu\u00e9 @for exige track",
-        "### Ejercicio 2: Ventaja de input()/output() sobre los decoradores cl\u00e1sicos",
-        "### Ejercicio 3: Dise\u00f1ar un componente con content projection"
+        "### Ejercicio 2: Ventaja de input()/output() sobre los decoradores cl\u00e1sicos"
       ]
     },
     {
       "path": "web/public/content/angular/modulo-10.md",
-      "lines": 189,
+      "lines": 229,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -2549,17 +2909,17 @@
         "### Tema 1: TestBed y componentes standalone",
         "### Tema 2: Angular Testing Library",
         "### Tema 3: Mockear HttpClient y el nuevo builder basado en Vitest",
+        "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
         "## Ejercicios de evaluaci\u00f3n",
         "### Ejercicio 1: setInput frente a asignaci\u00f3n directa",
         "### Ejercicio 2: Consultas orientadas al usuario",
-        "### Ejercicio 3: Aislamiento de pruebas HTTP",
-        "## Resumen del m\u00f3dulo"
+        "### Ejercicio 3: Aislamiento de pruebas HTTP"
       ]
     },
     {
       "path": "web/public/content/angular/modulo-11.md",
-      "lines": 202,
+      "lines": 242,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -2571,16 +2931,16 @@
         "### Tema 2: Hidrataci\u00f3n",
         "### Tema 3: @defer \u2014 carga diferida de vistas",
         "### Tema 4: Zoneless",
+        "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
         "## Ejercicios de evaluaci\u00f3n",
         "### Ejercicio 1: Por qu\u00e9 SSR mejora el SEO",
-        "### Ejercicio 2: Por qu\u00e9 la hidrataci\u00f3n reutiliza el DOM",
-        "### Ejercicio 3: Elegir el trigger de @defer apropiado"
+        "### Ejercicio 2: Por qu\u00e9 la hidrataci\u00f3n reutiliza el DOM"
       ]
     },
     {
       "path": "web/public/content/angular/modulo-12.md",
-      "lines": 176,
+      "lines": 216,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -2591,17 +2951,17 @@
         "### Tema 1: Los saltos que importan",
         "### Tema 2: C\u00f3mo leer un Angular Update Guide",
         "### Tema 3: Por qu\u00e9 migrar una versi\u00f3n mayor a la vez",
+        "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
         "## Ejercicios de evaluaci\u00f3n",
         "### Ejercicio 1: Por qu\u00e9 Ivy fue importante",
         "### Ejercicio 2: Riesgo de saltar versiones",
-        "### Ejercicio 3: Usar update.angular.io",
-        "## Resumen del m\u00f3dulo"
+        "### Ejercicio 3: Usar update.angular.io"
       ]
     },
     {
       "path": "web/public/content/angular/modulo-13.md",
-      "lines": 194,
+      "lines": 256,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -2612,17 +2972,38 @@
         "### Tema 1: Estructura del proyecto integrador",
         "### Tema 2: Integrando routing, store y formularios",
         "### Tema 3: TareasStore \u2014 combinando signals, computed y HttpClient",
+        "## Proyecto transversal RutaFlow: Consola operativa de rutas",
+        "### Capacidad y fundamento",
+        "### Implementaci\u00f3n guiada",
+        "### Verificaci\u00f3n profesional",
+        "## Criterio transversal de calidad del c\u00f3digo",
+        "## Laboratorio pr\u00e1ctico"
+      ]
+    },
+    {
+      "path": "web/public/content/angular/modulo-14.md",
+      "lines": 305,
+      "kind": "course-content",
+      "symbols": [],
+      "imports": [],
+      "headings": [
+        "# M\u00f3dulo 14: Angular en producci\u00f3n \u2014 accesibilidad, seguridad e internacionalizaci\u00f3n",
+        "## S\u00edlabo",
+        "## Contenido te\u00f3rico",
+        "### Tema 1: Accesibilidad es comportamiento, no una puntuaci\u00f3n",
+        "### Tema 2: La seguridad autom\u00e1tica tiene fronteras expl\u00edcitas",
+        "### Tema 3: Internacionalizar implica significado, no reemplazo de texto",
+        "### Tema 4: Rendimiento y actualizaci\u00f3n son contratos de experiencia",
+        "## Revisi\u00f3n oficial de plataforma \u2014 julio de 2026",
+        "### Angular v22 y adopci\u00f3n seg\u00fan estabilidad",
+        "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
-        "## Ejercicios de evaluaci\u00f3n",
-        "### Ejercicio 1: Separaci\u00f3n de features",
-        "### Ejercicio 2: Por qu\u00e9 un store de signals aqu\u00ed, no NgRx",
-        "### Ejercicio 3: Cierre del track \u2014 habilidades combinadas",
-        "## Resumen del m\u00f3dulo"
+        "### Proyecto: auditor\u00eda integral de la aplicaci\u00f3n standalone"
       ]
     },
     {
       "path": "web/public/content/angular/modulo-2.md",
-      "lines": 216,
+      "lines": 256,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -2634,16 +3015,16 @@
         "### Tema 2: Mutaci\u00f3n frente a actualizaci\u00f3n inmutable",
         "### Tema 3: Signals frente a Observables",
         "### Tema 4: Hacia zoneless change detection",
+        "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
         "## Ejercicios de evaluaci\u00f3n",
         "### Ejercicio 1: Por qu\u00e9 push() no dispara la actualizaci\u00f3n",
-        "### Ejercicio 2: Cu\u00e1ndo preferir\u00edas RxJS sobre un signal",
-        "### Ejercicio 3: Dise\u00f1ar un computed derivado"
+        "### Ejercicio 2: Cu\u00e1ndo preferir\u00edas RxJS sobre un signal"
       ]
     },
     {
       "path": "web/public/content/angular/modulo-3.md",
-      "lines": 212,
+      "lines": 252,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -2655,16 +3036,16 @@
         "### Tema 2: inject() frente a inyecci\u00f3n por constructor",
         "### Tema 3: Jerarqu\u00eda de inyectores",
         "### Tema 4: Tokens de inyecci\u00f3n y decoradores de resoluci\u00f3n",
+        "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
         "## Ejercicios de evaluaci\u00f3n",
         "### Ejercicio 1: inject() frente a inyecci\u00f3n por constructor",
-        "### Ejercicio 2: Resoluci\u00f3n en niveles m\u00faltiples",
-        "### Ejercicio 3: Dise\u00f1ar un token de inyecci\u00f3n para pruebas"
+        "### Ejercicio 2: Resoluci\u00f3n en niveles m\u00faltiples"
       ]
     },
     {
       "path": "web/public/content/angular/modulo-4.md",
-      "lines": 208,
+      "lines": 248,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -2676,16 +3057,16 @@
         "### Tema 2: Guards funcionales",
         "### Tema 3: Lazy loading con loadComponent",
         "### Tema 4: Par\u00e1metros de ruta, query params y capacidades avanzadas de routing",
+        "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
         "## Ejercicios de evaluaci\u00f3n",
         "### Ejercicio 1: Ventaja de loadComponent",
-        "### Ejercicio 2: Testabilidad de guards funcionales",
-        "### Ejercicio 3: Elegir el mecanismo de routing correcto"
+        "### Ejercicio 2: Testabilidad de guards funcionales"
       ]
     },
     {
       "path": "web/public/content/angular/modulo-5.md",
-      "lines": 223,
+      "lines": 263,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -2697,16 +3078,16 @@
         "### Tema 2: Validadores as\u00edncronos",
         "### Tema 3: FormArray para campos din\u00e1micos",
         "### Tema 4: Template-driven forms \u2014 cu\u00e1ndo siguen siendo v\u00e1lidos",
+        "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
         "## Ejercicios de evaluaci\u00f3n",
         "### Ejercicio 1: Por qu\u00e9 Reactive Forms es m\u00e1s testeable",
-        "### Ejercicio 2: Cu\u00e1ndo usar template-driven hoy",
-        "### Ejercicio 3: Dise\u00f1ar un validador de confirmaci\u00f3n de contrase\u00f1a"
+        "### Ejercicio 2: Cu\u00e1ndo usar template-driven hoy"
       ]
     },
     {
       "path": "web/public/content/angular/modulo-6.md",
-      "lines": 212,
+      "lines": 252,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -2718,16 +3099,16 @@
         "### Tema 2: Operadores clave \u2014 debounceTime, distinctUntilChanged, switchMap, combineLatest",
         "### Tema 3: Manejo de suscripciones sin fugas de memoria",
         "### Tema 4: Subjects y operadores de aplanamiento avanzados",
+        "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
         "## Ejercicios de evaluaci\u00f3n",
         "### Ejercicio 1: switchMap frente a mergeMap",
-        "### Ejercicio 2: Fuga de memoria evitada por el async pipe",
-        "### Ejercicio 3: Elegir el operador de aplanamiento correcto"
+        "### Ejercicio 2: Fuga de memoria evitada por el async pipe"
       ]
     },
     {
       "path": "web/public/content/angular/modulo-7.md",
-      "lines": 192,
+      "lines": 232,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -2738,17 +3119,17 @@
         "### Tema 1: HttpClient con backend fetch",
         "### Tema 2: Interceptores funcionales",
         "### Tema 3: Registro de interceptores y centralizaci\u00f3n del manejo de errores",
+        "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
         "## Ejercicios de evaluaci\u00f3n",
         "### Ejercicio 1: Por qu\u00e9 clonar la petici\u00f3n",
         "### Ejercicio 2: Centralizar el manejo de errores",
-        "### Ejercicio 3: Orden de interceptores",
-        "## Resumen del m\u00f3dulo"
+        "### Ejercicio 3: Orden de interceptores"
       ]
     },
     {
       "path": "web/public/content/angular/modulo-8.md",
-      "lines": 186,
+      "lines": 226,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -2759,17 +3140,17 @@
         "### Tema 1: Bootstrap sin NgModules",
         "### Tema 2: Organizaci\u00f3n por feature",
         "### Tema 3: Migraci\u00f3n desde NgModules",
+        "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
         "## Ejercicios de evaluaci\u00f3n",
         "### Ejercicio 1: Qu\u00e9 reemplaza al AppModule",
         "### Ejercicio 2: Organizaci\u00f3n por feature frente a por tipo",
-        "### Ejercicio 3: Pasos de migraci\u00f3n",
-        "## Resumen del m\u00f3dulo"
+        "### Ejercicio 3: Pasos de migraci\u00f3n"
       ]
     },
     {
       "path": "web/public/content/angular/modulo-9.md",
-      "lines": 187,
+      "lines": 227,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -2780,23 +3161,24 @@
         "### Tema 1: Store propio con signals",
         "### Tema 2: NgRx \u2014 actions, reducers y selectors",
         "### Tema 3: Cu\u00e1ndo NgRx justifica su complejidad",
+        "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
         "## Ejercicios de evaluaci\u00f3n",
         "### Ejercicio 1: Encapsulaci\u00f3n en un store de signals",
         "### Ejercicio 2: Reducers puros",
-        "### Ejercicio 3: Justificar NgRx",
-        "## Resumen del m\u00f3dulo"
+        "### Ejercicio 3: Justificar NgRx"
       ]
     },
     {
       "path": "web/public/content/cloud/modulo-0.md",
-      "lines": 368,
+      "lines": 444,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
       "headings": [
         "# M\u00f3dulo 0: Introducci\u00f3n y preparaci\u00f3n",
         "## S\u00edlabo",
+        "## Antes de comenzar: instalaci\u00f3n guiada por sistema operativo",
         "## Contenido te\u00f3rico",
         "### Tema 1: Fundamentos absolutos \u2014 qu\u00e9 es una terminal, un comando y un sistema operativo",
         "### Tema 2: Fundamentos de redes \u2014 direcciones IP, puertos, HTTP y APIs",
@@ -2805,13 +3187,12 @@
         "### Tema 5: Servicios que emula Floci \u2014 AWS, Azure y GCP",
         "### Tema 6: Ventajas y limitaciones de practicar con un emulador local",
         "### Tema 7: Metodolog\u00eda de estudio \u2014 teor\u00eda, laboratorio y evaluaci\u00f3n en cada m\u00f3dulo",
-        "## Laboratorio pr\u00e1ctico",
-        "## Ejercicios de evaluaci\u00f3n"
+        "## Ruta de proyecto progresivo desde carpeta vac\u00eda"
       ]
     },
     {
       "path": "web/public/content/cloud/modulo-1.md",
-      "lines": 318,
+      "lines": 391,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -2824,15 +3205,15 @@
         "### Tema 3: Registros de contenedores (Docker Hub)",
         "### Tema 4: Comandos esenciales de Docker",
         "### Tema 5: Docker Compose \u2014 servicios, redes y vol\u00famenes",
+        "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
         "### Laboratorio 1.1 \u2014 Comandos esenciales con una imagen de prueba",
-        "### Laboratorio 1.2 \u2014 Instalar floci-cli y levantar Floci",
-        "### Laboratorio 1.3 \u2014 Probar la AWS CLI contra Floci"
+        "### Laboratorio 1.2 \u2014 Instalar floci-cli y levantar Floci"
       ]
     },
     {
       "path": "web/public/content/cloud/modulo-10.md",
-      "lines": 190,
+      "lines": 230,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -2843,17 +3224,17 @@
         "### Tema 1: Secrets Manager y por qu\u00e9 no usar variables de entorno hardcodeadas",
         "### Tema 2: KMS y envelope encryption",
         "### Tema 3: SSM Parameter Store vs Secrets Manager",
+        "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
         "## Ejercicios de evaluaci\u00f3n",
         "### Ejercicio 1: Por qu\u00e9 no guardar secretos en variables de entorno",
         "### Ejercicio 2: Diferencia entre SSM Parameter Store y Secrets Manager",
-        "### Ejercicio 3: Qu\u00e9 es envelope encryption",
-        "## Resumen del m\u00f3dulo"
+        "### Ejercicio 3: Qu\u00e9 es envelope encryption"
       ]
     },
     {
       "path": "web/public/content/cloud/modulo-11.md",
-      "lines": 189,
+      "lines": 229,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -2865,16 +3246,16 @@
         "### Tema 2: EventBridge: bus de eventos con filtrado declarativo",
         "# Solo eventos con source=\"mi.app\" disparan esta regla, filtrado declarativo sobre el contenido",
         "### Tema 3: SNS + SQS juntos, y Azure Event Hubs",
+        "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
         "## Ejercicios de evaluaci\u00f3n",
         "### Ejercicio 1: Cu\u00e1ndo usar SNS y cu\u00e1ndo EventBridge",
-        "### Ejercicio 2: Qu\u00e9 es el patr\u00f3n fan-out",
-        "### Ejercicio 3: Por qu\u00e9 SQS + SNS son m\u00e1s robustos que SNS solo"
+        "### Ejercicio 2: Qu\u00e9 es el patr\u00f3n fan-out"
       ]
     },
     {
       "path": "web/public/content/cloud/modulo-12.md",
-      "lines": 196,
+      "lines": 236,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -2886,16 +3267,16 @@
         "# El mismo correlation_id se propaga a trav\u00e9s de CADA servicio que procesa esta solicitud",
         "### Tema 2: Metric filters y alarmas",
         "### Tema 3: Diagn\u00f3stico sistem\u00e1tico y X-Ray",
+        "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
         "## Ejercicios de evaluaci\u00f3n",
         "### Ejercicio 1: Por qu\u00e9 un metric filter es m\u00e1s barato",
-        "### Ejercicio 2: Por qu\u00e9 el correlation ID es esencial",
-        "### Ejercicio 3: C\u00f3mo encontrar la causa de un error sin adivinar"
+        "### Ejercicio 2: Por qu\u00e9 el correlation ID es esencial"
       ]
     },
     {
       "path": "web/public/content/cloud/modulo-13.md",
-      "lines": 190,
+      "lines": 230,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -2907,16 +3288,16 @@
         "### Tema 2: Snapshots y restore",
         "# mi-postgres-2 es una instancia NUEVA e independiente; mi-postgres original permanece intacta",
         "### Tema 3: Migrations",
+        "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
         "## Ejercicios de evaluaci\u00f3n",
         "### Ejercicio 1: Cu\u00e1ndo elegir DynamoDB sobre RDS",
-        "### Ejercicio 2: Diferencia entre RDS en cloud local y PostgreSQL en Docker simple",
-        "### Ejercicio 3: Qu\u00e9 es una migration y por qu\u00e9 es importante"
+        "### Ejercicio 2: Diferencia entre RDS en cloud local y PostgreSQL en Docker simple"
       ]
     },
     {
       "path": "web/public/content/cloud/modulo-14.md",
-      "lines": 198,
+      "lines": 238,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -2927,17 +3308,17 @@
         "### Tema 1: ECR y por qu\u00e9 no basta con Docker Hub",
         "### Tema 2: Task Definition y ECS Cluster",
         "### Tema 3: Contenedores vs Lambda, y EKS",
+        "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
         "## Ejercicios de evaluaci\u00f3n",
         "### Ejercicio 1: Por qu\u00e9 necesitas ECR si tienes Docker Hub",
         "### Ejercicio 2: Diferencia entre ECS y EKS",
-        "### Ejercicio 3: Cu\u00e1ndo usar contenedores sobre Lambda",
-        "## Resumen del m\u00f3dulo"
+        "### Ejercicio 3: Cu\u00e1ndo usar contenedores sobre Lambda"
       ]
     },
     {
       "path": "web/public/content/cloud/modulo-15.md",
-      "lines": 202,
+      "lines": 242,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -2948,17 +3329,17 @@
         "### Tema 1: Stack, Template y por qu\u00e9 no crear recursos manualmente con la CLI",
         "### Tema 2: Change sets",
         "### Tema 3: Drift detection, Terraform/CDK, y compatibilidad multi-herramienta",
+        "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
         "## Ejercicios de evaluaci\u00f3n",
         "### Ejercicio 1: Ventaja de CloudFormation frente a la CLI manual",
         "### Ejercicio 2: Por qu\u00e9 revisar un change set antes de aplicarlo",
-        "### Ejercicio 3: Qu\u00e9 es drift detection",
-        "## Resumen del m\u00f3dulo"
+        "### Ejercicio 3: Qu\u00e9 es drift detection"
       ]
     },
     {
       "path": "web/public/content/cloud/modulo-16.md",
-      "lines": 191,
+      "lines": 231,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -2969,17 +3350,17 @@
         "### Tema 1: State machine y Task states",
         "### Tema 2: Choice state, Retry y Catch",
         "### Tema 3: Express vs Standard, y cu\u00e1ndo EventBridge Pipes es suficiente",
+        "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
         "## Ejercicios de evaluaci\u00f3n",
         "### Ejercicio 1: Cu\u00e1ndo usar Step Functions vs EventBridge Pipes",
         "### Ejercicio 2: Diferencia entre orquestaci\u00f3n y coreograf\u00eda",
-        "### Ejercicio 3: Cu\u00e1ndo usar Express vs Standard",
-        "## Resumen del m\u00f3dulo"
+        "### Ejercicio 3: Cu\u00e1ndo usar Express vs Standard"
       ]
     },
     {
       "path": "web/public/content/cloud/modulo-17.md",
-      "lines": 186,
+      "lines": 226,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -2990,17 +3371,17 @@
         "### Tema 1: Streams vs colas",
         "### Tema 2: MSK (Kafka gestionado) y consumer groups",
         "### Tema 3: Kinesis Data Streams vs Firehose, y GCP Managed Kafka",
+        "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
         "## Ejercicios de evaluaci\u00f3n",
         "### Ejercicio 1: Cu\u00e1ndo usar Kinesis sobre SQS",
         "### Ejercicio 2: Qu\u00e9 es un consumer group y por qu\u00e9 existe",
-        "### Ejercicio 3: Diferencia entre Kinesis Data Streams y Firehose",
-        "## Resumen del m\u00f3dulo"
+        "### Ejercicio 3: Diferencia entre Kinesis Data Streams y Firehose"
       ]
     },
     {
       "path": "web/public/content/cloud/modulo-18.md",
-      "lines": 185,
+      "lines": 225,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -3011,17 +3392,17 @@
         "### Tema 1: Por qu\u00e9 no construir tu propio sistema de autenticaci\u00f3n",
         "### Tema 2: Access Token, ID Token y Refresh Token",
         "### Tema 3: OAuth 2.0 y PKCE",
+        "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
         "## Ejercicios de evaluaci\u00f3n",
         "### Ejercicio 1: Diferencia entre Access Token, ID Token y Refresh Token",
         "### Ejercicio 2: Por qu\u00e9 no construir tu propio sistema de autenticaci\u00f3n",
-        "### Ejercicio 3: Qu\u00e9 es PKCE y para qu\u00e9 sirve",
-        "## Resumen del m\u00f3dulo"
+        "### Ejercicio 3: Qu\u00e9 es PKCE y para qu\u00e9 sirve"
       ]
     },
     {
       "path": "web/public/content/cloud/modulo-19.md",
-      "lines": 196,
+      "lines": 236,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -3034,15 +3415,15 @@
         "# \u2192 descubre esquema autom\u00e1ticamente y lo registra en Glue Catalog",
         "# \u2192 consulta SQL directa sobre los archivos en S3, usando ese esquema",
         "### Tema 3: Parquet vs CSV, y partition pruning",
+        "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
         "## Ejercicios de evaluaci\u00f3n",
-        "### Ejercicio 1: Diferencia entre data lake y data warehouse",
-        "### Ejercicio 2: Por qu\u00e9 Parquet es m\u00e1s eficiente que CSV"
+        "### Ejercicio 1: Diferencia entre data lake y data warehouse"
       ]
     },
     {
       "path": "web/public/content/cloud/modulo-2.md",
-      "lines": 286,
+      "lines": 328,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -3055,15 +3436,15 @@
         "### Tema 3: Versionado y ciclo de vida",
         "### Tema 4: Transici\u00f3n entre capas de almacenamiento",
         "### Tema 5: Pol\u00edticas de bucket, ACL y URLs pre-firmadas",
+        "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
         "### Laboratorio 2.1 \u2014 Operaciones CRUD b\u00e1sicas",
-        "### Laboratorio 2.2 \u2014 Versionado",
-        "## Ejercicios de evaluaci\u00f3n"
+        "### Laboratorio 2.2 \u2014 Versionado"
       ]
     },
     {
       "path": "web/public/content/cloud/modulo-20.md",
-      "lines": 189,
+      "lines": 229,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -3076,15 +3457,15 @@
         "# AWS real: misma entrada \u2192 puede variar entre invocaciones (no determinista)",
         "### Tema 2: Textract y Transcribe",
         "### Tema 3: Stub vs mock, y qu\u00e9 probar localmente",
+        "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
         "## Ejercicios de evaluaci\u00f3n",
-        "### Ejercicio 1: Diferencia entre stub y mock",
-        "### Ejercicio 2: Qu\u00e9 contratos se pueden probar localmente"
+        "### Ejercicio 1: Diferencia entre stub y mock"
       ]
     },
     {
       "path": "web/public/content/cloud/modulo-21.md",
-      "lines": 185,
+      "lines": 225,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -3097,15 +3478,15 @@
         "### Tema 3: UserData e IMDS \u2014 arranque automatizado y credenciales por instancia",
         "### Tema 4: Auto Scaling \u2014 configuraciones de lanzamiento y grupos",
         "### Tema 5: El reconciliador de capacidad y las pol\u00edticas de escalado",
+        "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
         "### Laboratorio 21.1 \u2014 Lanzar una instancia EC2 con acceso SSH e IMDS",
-        "### Laboratorio 21.2 \u2014 Auto Scaling Group con reconciliador en vivo",
-        "## Ejercicios de evaluaci\u00f3n"
+        "### Laboratorio 21.2 \u2014 Auto Scaling Group con reconciliador en vivo"
       ]
     },
     {
       "path": "web/public/content/cloud/modulo-22.md",
-      "lines": 170,
+      "lines": 210,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -3118,15 +3499,15 @@
         "### Tema 3: CloudFront \u2014 distribuci\u00f3n de contenido y control de acceso al origen",
         "### Tema 4: Route53 \u2014 zonas alojadas y registros de recursos",
         "### Tema 5: C\u00f3mo se integran los cuatro servicios en una arquitectura de borde real",
+        "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
         "### Laboratorio 22.1 \u2014 Application Load Balancer con enrutamiento por ruta",
-        "### Laboratorio 22.2 \u2014 Certificado, distribuci\u00f3n CDN y zona DNS",
-        "## Ejercicios de evaluaci\u00f3n"
+        "### Laboratorio 22.2 \u2014 Certificado, distribuci\u00f3n CDN y zona DNS"
       ]
     },
     {
       "path": "web/public/content/cloud/modulo-23.md",
-      "lines": 154,
+      "lines": 194,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -3138,16 +3519,16 @@
         "### Tema 2: Arquitectura de ElastiCache en Floci \u2014 contenedores reales, no simulaci\u00f3n",
         "### Tema 3: Creaci\u00f3n de cl\u00fasteres y conexi\u00f3n con clientes est\u00e1ndar",
         "### Tema 4: Autenticaci\u00f3n IAM para el plano de datos de ElastiCache",
+        "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
         "### Laboratorio 23.1 \u2014 Cl\u00faster ElastiCache con cache-aside",
         "### Laboratorio 23.2 \u2014 Usuario con autenticaci\u00f3n IAM",
-        "## Ejercicios de evaluaci\u00f3n",
-        "### Ejercicio 1: Cu\u00e1ndo S\u00cd y cu\u00e1ndo NO usar cach\u00e9"
+        "## Ejercicios de evaluaci\u00f3n"
       ]
     },
     {
       "path": "web/public/content/cloud/modulo-24.md",
-      "lines": 169,
+      "lines": 209,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -3160,15 +3541,15 @@
         "### Tema 3: CodeDeploy \u2014 aplicaciones, grupos y configuraciones predefinidas",
         "### Tema 4: Despliegue Blue/Green de Lambda \u2014 cambio de tr\u00e1fico por alias",
         "### Tema 5: Despliegue Blue/Green de ECS \u2014 cambio de tr\u00e1fico por listener ELB",
+        "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
         "### Laboratorio 24.1 \u2014 Compilaci\u00f3n real con CodeBuild",
-        "### Laboratorio 24.2 \u2014 Despliegue canary de Lambda con CodeDeploy",
-        "## Ejercicios de evaluaci\u00f3n"
+        "### Laboratorio 24.2 \u2014 Despliegue canary de Lambda con CodeDeploy"
       ]
     },
     {
       "path": "web/public/content/cloud/modulo-25.md",
-      "lines": 169,
+      "lines": 209,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -3181,15 +3562,15 @@
         "### Tema 3: AppConfigData \u2014 el plano de datos que consume tu aplicaci\u00f3n",
         "### Tema 4: AWS Backup \u2014 centralizar la pol\u00edtica de respaldo de m\u00faltiples servicios",
         "### Tema 5: El ciclo de vida de un trabajo de respaldo",
+        "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
         "### Laboratorio 25.1 \u2014 Configuraci\u00f3n din\u00e1mica con AppConfig",
-        "### Laboratorio 25.2 \u2014 Plan de respaldo para DynamoDB",
-        "## Ejercicios de evaluaci\u00f3n"
+        "### Laboratorio 25.2 \u2014 Plan de respaldo para DynamoDB"
       ]
     },
     {
       "path": "web/public/content/cloud/modulo-26.md",
-      "lines": 154,
+      "lines": 194,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -3201,16 +3582,16 @@
         "### Tema 2: Firehose vs Kinesis Data Streams \u2014 qui\u00e9n consume los datos",
         "### Tema 3: EventBridge Pipes \u2014 conectar origen y destino sin c\u00f3digo de pegamento",
         "### Tema 4: Cu\u00e1ndo usar Pipes frente a reglas EventBridge o Step Functions",
+        "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
         "### Laboratorio 26.1 \u2014 Entrega autom\u00e1tica con Firehose",
         "### Laboratorio 26.2 \u2014 Pipe de SQS a Lambda sin c\u00f3digo intermedio",
-        "## Ejercicios de evaluaci\u00f3n",
-        "### Ejercicio 1: Firehose vs consumidor Kinesis propio"
+        "## Ejercicios de evaluaci\u00f3n"
       ]
     },
     {
       "path": "web/public/content/cloud/modulo-27.md",
-      "lines": 157,
+      "lines": 197,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -3222,16 +3603,16 @@
         "### Tema 2: Fuentes de datos y resolvers",
         "### Tema 3: SES \u2014 identidades, env\u00edo y plantillas",
         "### Tema 4: El simulador de buzones y el punto de inspecci\u00f3n local",
+        "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
         "### Laboratorio 27.1 \u2014 API GraphQL con resolver local",
         "### Laboratorio 27.2 \u2014 Simulador de entrega, rebote y queja con SES",
-        "## Ejercicios de evaluaci\u00f3n",
-        "### Ejercicio 1: Dise\u00f1a un esquema GraphQL para el proyecto del curso"
+        "## Ejercicios de evaluaci\u00f3n"
       ]
     },
     {
       "path": "web/public/content/cloud/modulo-28.md",
-      "lines": 155,
+      "lines": 195,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -3243,16 +3624,16 @@
         "### Tema 2: Neptune en Floci \u2014 un servidor Gremlin real, no una simulaci\u00f3n",
         "### Tema 3: OpenSearch \u2014 modo simulado y modo real",
         "### Tema 4: Eligiendo entre Neptune, OpenSearch y DynamoDB",
+        "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
         "### Laboratorio 28.1 \u2014 Grafo de relaciones con Neptune",
         "### Laboratorio 28.2 \u2014 B\u00fasqueda de texto completo con OpenSearch",
-        "## Ejercicios de evaluaci\u00f3n",
-        "### Ejercicio 1: Modela un grafo de recomendaciones"
+        "## Ejercicios de evaluaci\u00f3n"
       ]
     },
     {
       "path": "web/public/content/cloud/modulo-29.md",
-      "lines": 170,
+      "lines": 210,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -3265,15 +3646,15 @@
         "### Tema 3: BCM Data Exports \u2014 reportes de costo en formato est\u00e1ndar",
         "### Tema 4: Resource Groups Tagging API \u2014 descubrimiento centralizado por etiqueta",
         "### Tema 5: STS en profundidad \u2014 identidad temporal y aislamiento multi-cuenta",
+        "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
         "### Laboratorio 29.1 \u2014 Costo sintetizado y exportaci\u00f3n FOCUS",
-        "### Laboratorio 29.2 \u2014 Descubrimiento centralizado por etiqueta",
-        "## Ejercicios de evaluaci\u00f3n"
+        "### Laboratorio 29.2 \u2014 Descubrimiento centralizado por etiqueta"
       ]
     },
     {
       "path": "web/public/content/cloud/modulo-3.md",
-      "lines": 262,
+      "lines": 304,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -3285,16 +3666,16 @@
         "### Tema 2: Ciclo de vida de un mensaje",
         "### Tema 3: Dead Letter Queues (DLQ)",
         "### Tema 4: Colas FIFO vs Standard",
+        "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
         "### Laboratorio 3.1 \u2014 Ciclo completo con cola Standard y DLQ",
         "### Laboratorio 3.2 \u2014 Cola FIFO con MessageGroupId",
-        "## Ejercicios de evaluaci\u00f3n",
-        "### Ejercicio 1: Explicar la entrega duplicada"
+        "## Ejercicios de evaluaci\u00f3n"
       ]
     },
     {
       "path": "web/public/content/cloud/modulo-30.md",
-      "lines": 146,
+      "lines": 186,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -3306,16 +3687,16 @@
         "### Tema 2: Ciclo de vida del servidor y modelo de usuarios",
         "### Tema 3: Claves p\u00fablicas SSH y autenticaci\u00f3n de usuarios",
         "### Tema 4: Los l\u00edmites de la Fase 1 \u2014 plano de gesti\u00f3n completo, plano de datos pendiente",
+        "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
         "### Laboratorio 30.1 \u2014 Servidor, usuario y clave SSH",
         "## Ejercicios de evaluaci\u00f3n",
-        "### Ejercicio 1: Justifica Transfer Family frente a un servidor SFTP propio",
-        "### Ejercicio 2: Dise\u00f1a el aislamiento de usuarios por proveedor"
+        "### Ejercicio 1: Justifica Transfer Family frente a un servidor SFTP propio"
       ]
     },
     {
       "path": "web/public/content/cloud/modulo-31.md",
-      "lines": 333,
+      "lines": 395,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -3327,16 +3708,37 @@
         "### Tema 2: Arquitectura interna de cloud local y su uso en CI/CD",
         "### Tema 3: Migraci\u00f3n desde otros emuladores, y l\u00edmites de un emulador",
         "### Tema 4: Testcontainers \u2014 pruebas de integraci\u00f3n automatizadas",
+        "## Proyecto transversal RutaFlow: Arquitectura event-driven y recuperaci\u00f3n",
+        "### Capacidad y fundamento",
+        "### Implementaci\u00f3n guiada",
+        "### Verificaci\u00f3n profesional",
+        "## Criterio transversal de calidad del c\u00f3digo"
+      ]
+    },
+    {
+      "path": "web/public/content/cloud/modulo-32.md",
+      "lines": 239,
+      "kind": "course-content",
+      "symbols": [],
+      "imports": [],
+      "headings": [
+        "# M\u00f3dulo 32: Arquitectura cloud resiliente \u2014 redes, landing zones y recuperaci\u00f3n",
+        "## S\u00edlabo",
+        "## Contenido te\u00f3rico",
+        "### Tema 1: Una red segura empieza por flujos, no por subredes",
+        "### Tema 2: Una landing zone convierte gobierno en una base repetible",
+        "### Tema 3: Disponibilidad y recuperaci\u00f3n responden preguntas distintas",
+        "### Tema 4: Un backup solo existe operativamente despu\u00e9s de restaurarlo",
+        "## Revisi\u00f3n oficial de plataforma \u2014 julio de 2026",
+        "### Nube de evoluci\u00f3n continua y vigilancia de retiros",
+        "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
-        "## Ejercicios de evaluaci\u00f3n",
-        "### Ejercicio 1: Qu\u00e9 es transferible entre proveedores",
-        "### Ejercicio 2: Qu\u00e9 fue fundamentalmente diferente entre los proveedores",
-        "### Ejercicio 3: Qu\u00e9 falta para pasar a producci\u00f3n en nube real"
+        "## Ejercicios de evaluaci\u00f3n"
       ]
     },
     {
       "path": "web/public/content/cloud/modulo-4.md",
-      "lines": 317,
+      "lines": 359,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -3350,14 +3752,14 @@
         "### Tema 4: Clave primaria simple (HASH) vs compuesta (HASH + RANGE)",
         "### Tema 5: \u00cdndices secundarios globales (GSI) y locales (LSI)",
         "### Tema 6: Query vs Scan",
+        "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
-        "### Laboratorio 4.1 \u2014 CRUD completo",
-        "### Laboratorio 4.2 \u2014 Query vs Scan"
+        "### Laboratorio 4.1 \u2014 CRUD completo"
       ]
     },
     {
       "path": "web/public/content/cloud/modulo-5.md",
-      "lines": 321,
+      "lines": 363,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -3371,14 +3773,14 @@
         "### Tema 4: Payload de entrada y respuesta",
         "### Tema 5: Versionado y alias",
         "### Tema 6: Integraci\u00f3n con S3, DynamoDB Streams y API Gateway",
+        "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
-        "### Laboratorio 5.1 \u2014 Desplegar e invocar",
-        "### Laboratorio 5.2 \u2014 Actualizar c\u00f3digo y configuraci\u00f3n"
+        "### Laboratorio 5.1 \u2014 Desplegar e invocar"
       ]
     },
     {
       "path": "web/public/content/cloud/modulo-6.md",
-      "lines": 300,
+      "lines": 342,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -3391,15 +3793,15 @@
         "### Tema 3: Integraci\u00f3n con Lambda (proxy)",
         "### Tema 4: Mapeo de entrada/salida y validaci\u00f3n con modelos",
         "### Tema 5: Despliegue y variables de stage",
+        "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
         "### Laboratorio 6.1 \u2014 Construir y desplegar el endpoint",
-        "## Ejercicios de evaluaci\u00f3n",
-        "### Ejercicio 1: Explicar el valor de la integraci\u00f3n proxy"
+        "## Ejercicios de evaluaci\u00f3n"
       ]
     },
     {
       "path": "web/public/content/cloud/modulo-7.md",
-      "lines": 286,
+      "lines": 328,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -3412,15 +3814,15 @@
         "### Tema 3: Usuarios, grupos y roles",
         "### Tema 4: Estructura de una pol\u00edtica \u2014 acciones, recursos y condiciones",
         "### Tema 5: Buenas pr\u00e1cticas \u2014 roles sobre usuarios, pol\u00edticas restrictivas, rotaci\u00f3n de credenciales",
+        "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
         "## Ejercicios de evaluaci\u00f3n",
-        "### Ejercicio 1: Corregir una pol\u00edtica demasiado permisiva",
-        "### Ejercicio 2: Justificar un rol sobre un usuario"
+        "### Ejercicio 1: Corregir una pol\u00edtica demasiado permisiva"
       ]
     },
     {
       "path": "web/public/content/cloud/modulo-8.md",
-      "lines": 269,
+      "lines": 309,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -3431,17 +3833,17 @@
         "### Tema 1: floci-az \u2014 Blob Storage, Queue Storage, Table Storage, Cosmos DB, Functions",
         "### Tema 2: floci-gcp \u2014 Cloud Storage, Pub/Sub, Firestore, Cloud Functions",
         "### Tema 3: Comparativa AWS vs Azure vs GCP por categor\u00eda de servicio",
+        "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
         "### Laboratorio 8.1 \u2014 Azure: Blob Storage y Queue Storage",
         "### Laboratorio 8.2 \u2014 GCP: Cloud Storage y Pub/Sub",
         "## Ejercicios de evaluaci\u00f3n",
-        "### Ejercicio 1: Completar la tabla comparativa",
-        "### Ejercicio 2: Elegir el servicio de mensajer\u00eda correcto"
+        "### Ejercicio 1: Completar la tabla comparativa"
       ]
     },
     {
       "path": "web/public/content/cloud/modulo-9.md",
-      "lines": 388,
+      "lines": 436,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -3454,36 +3856,36 @@
         "### Tema 3: Archivos adjuntos en S3 y procesamiento en segundo plano con SQS",
         "### Tema 4: API Gateway e IAM de m\u00ednimo privilegio para el proyecto",
         "### Tema 5: Documentaci\u00f3n de la API y gu\u00eda de despliegue",
-        "## Proyecto final: Sistema de Gesti\u00f3n de Tareas",
-        "### Requisitos funcionales",
-        "### Requisitos t\u00e9cnicos",
-        "### Entregables"
+        "## Criterio transversal de calidad del c\u00f3digo",
+        "## Laboratorio pr\u00e1ctico",
+        "### Proyecto final: Sistema de Gesti\u00f3n de Tareas",
+        "### Requisitos funcionales"
       ]
     },
     {
       "path": "web/public/content/devops/modulo-0.md",
-      "lines": 363,
+      "lines": 443,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
       "headings": [
         "# M\u00f3dulo 0: Linux y shell scripting para DevOps",
         "## S\u00edlabo",
+        "## Antes de comenzar: construye un laboratorio seguro",
+        "### Windows",
+        "### macOS",
+        "### Linux (Ubuntu/Debian)",
         "## Contenido te\u00f3rico",
         "### Tema 1: Sistema de archivos y permisos (chmod/chown)",
         "### Tema 2: Procesos, se\u00f1ales y jobs en segundo plano",
         "### Tema 3: Pipes, redirecci\u00f3n y filtros (grep, awk, sed)",
         "### Tema 4: Variables de entorno y scripts bash robustos (set -euo pipefail)",
-        "# \u2502\u2502\u2502",
-        "# \u2502\u2502\u2514\u2500 pipefail: un pipe falla si CUALQUIER comando de la cadena falla",
-        "# \u2502\u2514\u2500\u2500 u: falla si usas una variable no definida",
-        "# \u2514\u2500\u2500\u2500 e: el script se detiene en el primer comando que falle",
-        "### Tema 5: Cron y tareas programadas"
+        "# \u2502\u2502\u2502"
       ]
     },
     {
       "path": "web/public/content/devops/modulo-1.md",
-      "lines": 330,
+      "lines": 370,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -3498,13 +3900,13 @@
         "### Tema 5: Monorepos vs polyrepos",
         "### Tema 6: git cherry-pick, git stash, git reset vs git revert",
         "### Tema 7: git reflog, git worktree y git submodule",
-        "## Laboratorio pr\u00e1ctico",
-        "## Ejercicios de evaluaci\u00f3n"
+        "## Criterio transversal de calidad del c\u00f3digo",
+        "## Laboratorio pr\u00e1ctico"
       ]
     },
     {
       "path": "web/public/content/devops/modulo-10.md",
-      "lines": 240,
+      "lines": 280,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -3516,16 +3918,16 @@
         "### Tema 2: Pipeline ELK/EFK",
         "### Tema 3: Loki + Grafana como alternativa ligera",
         "### Tema 4: Correlation ID a trav\u00e9s de servicios",
+        "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
         "## Ejercicios de evaluaci\u00f3n",
         "### Ejercicio 1: Explicar la ventaja de buscar en logs centralizados",
-        "### Ejercicio 2: Elegir entre Loki y Elasticsearch",
-        "### Ejercicio 3: Dise\u00f1ar la propagaci\u00f3n de un correlation ID"
+        "### Ejercicio 2: Elegir entre Loki y Elasticsearch"
       ]
     },
     {
       "path": "web/public/content/devops/modulo-11.md",
-      "lines": 310,
+      "lines": 350,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -3539,14 +3941,14 @@
         "### Tema 4: Menor privilegio en CI/CD",
         "### Tema 5: SBOM y supply chain security",
         "### Tema 6: SAST, DAST y SCA \u2014 diferencias y herramientas",
+        "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
-        "## Ejercicios de evaluaci\u00f3n",
-        "### Ejercicio 1: Priorizar un reporte de vulnerabilidades"
+        "## Ejercicios de evaluaci\u00f3n"
       ]
     },
     {
       "path": "web/public/content/devops/modulo-12.md",
-      "lines": 301,
+      "lines": 341,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -3560,14 +3962,14 @@
         "### Tema 4: Checklist de salida a producci\u00f3n",
         "### Tema 5: GitOps con ArgoCD y FluxCD",
         "### Tema 6: Platform Engineering \u2014 Internal Developer Platforms (IDPs)",
+        "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
-        "## Ejercicios de evaluaci\u00f3n",
-        "### Ejercicio 1: Identificar qu\u00e9 S\u00cd cambia al ir a producci\u00f3n real"
+        "## Ejercicios de evaluaci\u00f3n"
       ]
     },
     {
       "path": "web/public/content/devops/modulo-13.md",
-      "lines": 216,
+      "lines": 278,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -3578,17 +3980,38 @@
         "### Tema 1: El pipeline completo \u2014 de commit a producci\u00f3n verificada",
         "### Tema 2: Uniendo cada m\u00f3dulo del track en un solo flujo",
         "### Tema 3: Cierre del track \u2014 checklist final y reflexi\u00f3n",
+        "## Proyecto transversal RutaFlow: Entrega operable",
+        "### Capacidad y fundamento",
+        "### Implementaci\u00f3n guiada",
+        "### Verificaci\u00f3n profesional",
+        "## Criterio transversal de calidad del c\u00f3digo",
+        "## Laboratorio pr\u00e1ctico"
+      ]
+    },
+    {
+      "path": "web/public/content/devops/modulo-14.md",
+      "lines": 224,
+      "kind": "course-content",
+      "symbols": [],
+      "imports": [],
+      "headings": [
+        "# M\u00f3dulo 14: SRE y plataforma \u2014 confiabilidad, incidentes y supply chain",
+        "## S\u00edlabo",
+        "## Contenido te\u00f3rico",
+        "### Tema 1: Confiabilidad es una expectativa cuantificada",
+        "### Tema 2: Una alerta debe conducir a una acci\u00f3n",
+        "### Tema 3: Construir una imagen no demuestra de d\u00f3nde proviene",
+        "### Tema 4: Una plataforma interna es un producto con l\u00edmites",
+        "## Revisi\u00f3n oficial de plataforma \u2014 julio de 2026",
+        "### Kubernetes 1.36, OpenTelemetry 1.59 y herramientas con ciclo propio",
+        "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
-        "## Ejercicios de evaluaci\u00f3n",
-        "### Ejercicio 1: Dise\u00f1ar el orden correcto de un pipeline",
-        "### Ejercicio 2: Diagnosticar un despliegue fallido sin rollback",
-        "### Ejercicio 3: Dise\u00f1ar un runbook m\u00ednimo",
-        "## Resumen del m\u00f3dulo"
+        "## Ejercicios de evaluaci\u00f3n"
       ]
     },
     {
       "path": "web/public/content/devops/modulo-2.md",
-      "lines": 308,
+      "lines": 348,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -3602,14 +4025,14 @@
         "### Tema 4: Vol\u00famenes vs bind mounts",
         "### Tema 5: Redes en Docker",
         "### Tema 6: Registries \u2014 Docker Hub, AWS ECR, Azure Container Registry, Harbor",
+        "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
-        "## Ejercicios de evaluaci\u00f3n",
-        "### Ejercicio 1: Diagnosticar un Dockerfile mal ordenado"
+        "## Ejercicios de evaluaci\u00f3n"
       ]
     },
     {
       "path": "web/public/content/devops/modulo-3.md",
-      "lines": 234,
+      "lines": 274,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -3621,16 +4044,16 @@
         "### Tema 2: Variables de entorno y .env",
         "### Tema 3: Redes y descubrimiento por nombre de servicio",
         "### Tema 4: Perfiles para distintos entornos",
+        "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
         "## Ejercicios de evaluaci\u00f3n",
         "### Ejercicio 1: Explicar la insuficiencia de depends_on sin healthcheck",
-        "### Ejercicio 2: Gestionar un secreto correctamente",
-        "### Ejercicio 3: Dise\u00f1ar perfiles apropiados"
+        "### Ejercicio 2: Gestionar un secreto correctamente"
       ]
     },
     {
       "path": "web/public/content/devops/modulo-4.md",
-      "lines": 240,
+      "lines": 280,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -3642,16 +4065,16 @@
         "### Tema 2: Cach\u00e9 de dependencias en CI",
         "### Tema 3: Artifacts y reportes de cobertura",
         "### Tema 4: Pipelines como c\u00f3digo (GitHub Actions/GitLab CI)",
+        "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
         "## Ejercicios de evaluaci\u00f3n",
         "### Ejercicio 1: Dise\u00f1ar la separaci\u00f3n de jobs",
-        "### Ejercicio 2: Diagnosticar cach\u00e9 ineficaz",
-        "### Ejercicio 3: Justificar CI obligatorio"
+        "### Ejercicio 2: Diagnosticar cach\u00e9 ineficaz"
       ]
     },
     {
       "path": "web/public/content/devops/modulo-5.md",
-      "lines": 258,
+      "lines": 298,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -3664,15 +4087,15 @@
         "### Tema 3: Rolling updates",
         "### Tema 4: Feature flags vs branches por entorno",
         "### Tema 5: Rollback autom\u00e1tico por m\u00e9tricas",
+        "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
         "## Ejercicios de evaluaci\u00f3n",
-        "### Ejercicio 1: Elegir entre blue-green y canary",
-        "### Ejercicio 2: Diagnosticar un feature flag mal dise\u00f1ado"
+        "### Ejercicio 1: Elegir entre blue-green y canary"
       ]
     },
     {
       "path": "web/public/content/devops/modulo-6.md",
-      "lines": 324,
+      "lines": 364,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -3687,13 +4110,13 @@
         "### Tema 5: Namespaces",
         "### Tema 6: StatefulSets, DaemonSets, Jobs y CronJobs",
         "### Tema 7: Persistent Volumes, PVCs y StorageClasses",
-        "## Laboratorio pr\u00e1ctico",
-        "## Ejercicios de evaluaci\u00f3n"
+        "## Criterio transversal de calidad del c\u00f3digo",
+        "## Laboratorio pr\u00e1ctico"
       ]
     },
     {
       "path": "web/public/content/devops/modulo-7.md",
-      "lines": 300,
+      "lines": 340,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -3707,14 +4130,14 @@
         "### Tema 4: Probes de liveness y readiness",
         "### Tema 5: RBAC en Kubernetes",
         "### Tema 6: Service Mesh \u2014 Istio, Linkerd, Envoy y mTLS",
+        "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
-        "## Ejercicios de evaluaci\u00f3n",
-        "### Ejercicio 1: Justificar Helm sobre YAML suelto"
+        "## Ejercicios de evaluaci\u00f3n"
       ]
     },
     {
       "path": "web/public/content/devops/modulo-8.md",
-      "lines": 330,
+      "lines": 370,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -3729,13 +4152,13 @@
         "### Tema 5: Workspaces para m\u00faltiples entornos",
         "### Tema 6: Ansible \u2014 playbooks, roles, inventory y m\u00f3dulos",
         "### Tema 7: Pulumi como alternativa a HCL",
-        "## Laboratorio pr\u00e1ctico",
-        "## Ejercicios de evaluaci\u00f3n"
+        "## Criterio transversal de calidad del c\u00f3digo",
+        "## Laboratorio pr\u00e1ctico"
       ]
     },
     {
       "path": "web/public/content/devops/modulo-9.md",
-      "lines": 331,
+      "lines": 371,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -3750,8 +4173,8 @@
         "### Tema 5: SLI, SLO, SLA",
         "### Tema 6: OpenTelemetry como est\u00e1ndar de instrumentaci\u00f3n",
         "### Tema 7: M\u00e9tricas DORA \u2014 Lead Time, Deployment Frequency, MTTR, Change Failure Rate",
-        "## Laboratorio pr\u00e1ctico",
-        "## Ejercicios de evaluaci\u00f3n"
+        "## Criterio transversal de calidad del c\u00f3digo",
+        "## Laboratorio pr\u00e1ctico"
       ]
     },
     {
@@ -3852,7 +4275,7 @@
     },
     {
       "path": "web/public/content/es/guia-completa.md",
-      "lines": 1213,
+      "lines": 1216,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -3894,28 +4317,28 @@
     },
     {
       "path": "web/public/content/flutter/modulo-0.md",
-      "lines": 211,
+      "lines": 285,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
       "headings": [
         "# M\u00f3dulo 0: Fundamentos de Dart",
         "## S\u00edlabo",
+        "## Antes de comenzar: instala Flutter y valida todo",
         "## Contenido te\u00f3rico",
         "### Tema 1: Sound null safety",
         "### Tema 2: Clases y mixins",
         "### Tema 3: Futures, async/await y colecciones funcionales",
+        "## Ruta de proyecto progresivo desde carpeta vac\u00eda",
+        "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
         "## Ejercicios de evaluaci\u00f3n",
-        "### Ejercicio 1: Qu\u00e9 garantiza sound null safety",
-        "### Ejercicio 2: Diferencia entre herencia simple y mixin",
-        "### Ejercicio 3: Legibilidad de async/await",
-        "## Resumen del m\u00f3dulo"
+        "### Ejercicio 1: Qu\u00e9 garantiza sound null safety"
       ]
     },
     {
       "path": "web/public/content/flutter/modulo-1.md",
-      "lines": 211,
+      "lines": 251,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -3926,17 +4349,17 @@
         "### Tema 1: StatelessWidget vs StatefulWidget",
         "### Tema 2: Layout con Row, Column y Stack, y ciclo de vida",
         "### Tema 3: Keys",
+        "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
         "## Ejercicios de evaluaci\u00f3n",
         "### Ejercicio 1: Cu\u00e1ndo se necesita realmente una Key",
         "### Ejercicio 2: Por qu\u00e9 un StatelessWidget puede ser din\u00e1mico",
-        "### Ejercicio 3: Rebuild vs re-render",
-        "## Resumen del m\u00f3dulo"
+        "### Ejercicio 3: Rebuild vs re-render"
       ]
     },
     {
       "path": "web/public/content/flutter/modulo-10.md",
-      "lines": 199,
+      "lines": 239,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -3947,17 +4370,17 @@
         "### Tema 1: ThemeData con Material 3",
         "### Tema 2: Adaptaci\u00f3n Material vs Cupertino",
         "### Tema 3: Accesibilidad con Semantics y dark mode",
+        "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
         "## Ejercicios de evaluaci\u00f3n",
         "### Ejercicio 1: Por qu\u00e9 adaptar Material/Cupertino hace la app m\u00e1s nativa",
         "### Ejercicio 2: Qu\u00e9 revela activar un lector de pantalla",
-        "### Ejercicio 3: Riesgo de probar solo un modo de color",
-        "## Resumen del m\u00f3dulo"
+        "### Ejercicio 3: Riesgo de probar solo un modo de color"
       ]
     },
     {
       "path": "web/public/content/flutter/modulo-11.md",
-      "lines": 203,
+      "lines": 243,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -3970,15 +4393,15 @@
         "# pubspec.yaml",
         "### Tema 3: CI/CD con Codemagic o Fastlane",
         "# codemagic.yaml",
+        "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
         "## Ejercicios de evaluaci\u00f3n",
-        "### Ejercicio 1: Pasos espec\u00edficos vs comunes de publicaci\u00f3n",
-        "### Ejercicio 2: Ventaja de automatizar ambos builds"
+        "### Ejercicio 1: Pasos espec\u00edficos vs comunes de publicaci\u00f3n"
       ]
     },
     {
       "path": "web/public/content/flutter/modulo-12.md",
-      "lines": 211,
+      "lines": 273,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -3989,17 +4412,38 @@
         "### Tema 1: Arquitectura por features y Clean Architecture",
         "### Tema 2: Uniendo los m\u00f3dulos del track",
         "### Tema 3: Cierre del track",
+        "## Proyecto transversal RutaFlow: Entrega offline con outbox",
+        "### Capacidad y fundamento",
+        "### Implementaci\u00f3n guiada",
+        "### Verificaci\u00f3n profesional",
+        "## Criterio transversal de calidad del c\u00f3digo",
+        "## Laboratorio pr\u00e1ctico"
+      ]
+    },
+    {
+      "path": "web/public/content/flutter/modulo-13.md",
+      "lines": 237,
+      "kind": "course-content",
+      "symbols": [],
+      "imports": [],
+      "headings": [
+        "# M\u00f3dulo 13: Flutter en producci\u00f3n \u2014 seguridad, isolates y operaci\u00f3n",
+        "## S\u00edlabo",
+        "## Contenido te\u00f3rico",
+        "### Tema 1: Una API Dart puede terminar en una frontera nativa",
+        "### Tema 2: Los secretos no pertenecen al binario",
+        "### Tema 3: Fluidez se mide contra el presupuesto de cada frame",
+        "### Tema 4: Producci\u00f3n exige protocolo, telemetr\u00eda y contenci\u00f3n",
+        "## Revisi\u00f3n oficial de plataforma \u2014 julio de 2026",
+        "### Flutter 3.44, Dart 3.11 y migraciones controladas",
+        "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
-        "## Ejercicios de evaluaci\u00f3n",
-        "### Ejercicio 1: Decisi\u00f3n de arquitectura ante un equipo creciente",
-        "### Ejercicio 2: Parte del ecosistema m\u00e1s distinta a lo conocido",
-        "### Ejercicio 3: Costo de la consistencia de Flutter",
-        "## Resumen del m\u00f3dulo"
+        "## Ejercicios de evaluaci\u00f3n"
       ]
     },
     {
       "path": "web/public/content/flutter/modulo-2.md",
-      "lines": 195,
+      "lines": 235,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -4010,17 +4454,17 @@
         "### Tema 1: MediaQuery vs LayoutBuilder",
         "### Tema 2: C\u00f3mo Flutter calcula tama\u00f1os",
         "### Tema 3: Breakpoints propios y SafeArea",
+        "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
         "## Ejercicios de evaluaci\u00f3n",
         "### Ejercicio 1: C\u00f3mo Flutter calcula el tama\u00f1o final de un widget",
         "### Ejercicio 2: Por qu\u00e9 SafeArea importa m\u00e1s en algunos dispositivos",
-        "### Ejercicio 3: Cu\u00e1ndo preferir LayoutBuilder sobre MediaQuery",
-        "## Resumen del m\u00f3dulo"
+        "### Ejercicio 3: Cu\u00e1ndo preferir LayoutBuilder sobre MediaQuery"
       ]
     },
     {
       "path": "web/public/content/flutter/modulo-3.md",
-      "lines": 209,
+      "lines": 249,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -4031,17 +4475,17 @@
         "### Tema 1: go_router: navegaci\u00f3n como funci\u00f3n de la URL",
         "### Tema 2: Guards y deep linking",
         "### Tema 3: Transiciones personalizadas",
+        "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
         "## Ejercicios de evaluaci\u00f3n",
         "### Ejercicio 1: Qu\u00e9 problema resuelve go_router",
         "### Ejercicio 2: Por qu\u00e9 el deep linking es m\u00e1s directo con un router declarativo",
-        "### Ejercicio 3: Ventaja de centralizar un guard en la ruta",
-        "## Resumen del m\u00f3dulo"
+        "### Ejercicio 3: Ventaja de centralizar un guard en la ruta"
       ]
     },
     {
       "path": "web/public/content/flutter/modulo-4.md",
-      "lines": 199,
+      "lines": 239,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -4052,17 +4496,17 @@
         "### Tema 1: setState y sus l\u00edmites",
         "### Tema 2: Riverpod",
         "### Tema 3: Bloc/Cubit y otras alternativas",
+        "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
         "## Ejercicios de evaluaci\u00f3n",
         "### Ejercicio 1: Qu\u00e9 garantiza Riverpod en tiempo de compilaci\u00f3n",
         "### Ejercicio 2: Ventaja del modelo de eventos de Bloc/Cubit",
-        "### Ejercicio 3: L\u00edmite de setState al compartir estado",
-        "## Resumen del m\u00f3dulo"
+        "### Ejercicio 3: L\u00edmite de setState al compartir estado"
       ]
     },
     {
       "path": "web/public/content/flutter/modulo-5.md",
-      "lines": 212,
+      "lines": 252,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -4073,17 +4517,17 @@
         "### Tema 1: http vs dio",
         "### Tema 2: json_serializable",
         "### Tema 3: Interceptores y estados expl\u00edcitos",
+        "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
         "## Ejercicios de evaluaci\u00f3n",
         "### Ejercicio 1: Ventajas de dio sobre http",
         "### Ejercicio 2: Por qu\u00e9 json_serializable es m\u00e1s seguro",
-        "### Ejercicio 3: Ventaja de modelar estados con sealed class",
-        "## Resumen del m\u00f3dulo"
+        "### Ejercicio 3: Ventaja de modelar estados con sealed class"
       ]
     },
     {
       "path": "web/public/content/flutter/modulo-6.md",
-      "lines": 207,
+      "lines": 247,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -4094,17 +4538,17 @@
         "### Tema 1: shared_preferences",
         "### Tema 2: sqflite vs Hive",
         "### Tema 3: Offline-first y Firebase",
+        "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
         "## Ejercicios de evaluaci\u00f3n",
         "### Ejercicio 1: Cu\u00e1ndo elegir Hive sobre sqflite",
         "### Ejercicio 2: Por qu\u00e9 shared_preferences no es apropiado para listas grandes",
-        "### Ejercicio 3: Ventaja de offline-first",
-        "## Resumen del m\u00f3dulo"
+        "### Ejercicio 3: Ventaja de offline-first"
       ]
     },
     {
       "path": "web/public/content/flutter/modulo-7.md",
-      "lines": 199,
+      "lines": 239,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -4115,17 +4559,17 @@
         "### Tema 1: MethodChannel",
         "### Tema 2: Plugins federados",
         "### Tema 3: Permisos de plataforma y cu\u00e1ndo escribir un platform channel propio",
+        "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
         "## Ejercicios de evaluaci\u00f3n",
         "### Ejercicio 1: Cu\u00e1ndo escribir un platform channel propio",
         "### Ejercicio 2: Qu\u00e9 distingue a un plugin federado",
-        "### Ejercicio 3: Por qu\u00e9 un MethodChannel requiere implementaci\u00f3n en ambos lados",
-        "## Resumen del m\u00f3dulo"
+        "### Ejercicio 3: Por qu\u00e9 un MethodChannel requiere implementaci\u00f3n en ambos lados"
       ]
     },
     {
       "path": "web/public/content/flutter/modulo-8.md",
-      "lines": 193,
+      "lines": 233,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -4136,17 +4580,17 @@
         "### Tema 1: Animaciones impl\u00edcitas vs expl\u00edcitas",
         "### Tema 2: Flutter DevTools y detecci\u00f3n de jank",
         "### Tema 3: const widgets, RepaintBoundary y shouldRepaint",
+        "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
         "## Ejercicios de evaluaci\u00f3n",
         "### Ejercicio 1: Cu\u00e1ndo una animaci\u00f3n impl\u00edcita es suficiente",
         "### Ejercicio 2: Por qu\u00e9 const mejora el rendimiento",
-        "### Ejercicio 3: Qu\u00e9 revela DevTools sobre el jank",
-        "## Resumen del m\u00f3dulo"
+        "### Ejercicio 3: Qu\u00e9 revela DevTools sobre el jank"
       ]
     },
     {
       "path": "web/public/content/flutter/modulo-9.md",
-      "lines": 215,
+      "lines": 255,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -4157,38 +4601,269 @@
         "### Tema 1: Unit tests y widget tests",
         "### Tema 2: Mocking con mocktail",
         "### Tema 3: Integration tests",
+        "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
         "## Ejercicios de evaluaci\u00f3n",
         "### Ejercicio 1: Diferencia entre widget test e integration test",
         "### Ejercicio 2: Por qu\u00e9 mocktail hace los tests m\u00e1s r\u00e1pidos y confiables",
-        "### Ejercicio 3: Por qu\u00e9 usar pumpAndSettle en integration tests",
-        "## Resumen del m\u00f3dulo"
+        "### Ejercicio 3: Por qu\u00e9 usar pumpAndSettle en integration tests"
+      ]
+    },
+    {
+      "path": "web/public/content/foundations/modulo-0.md",
+      "lines": 269,
+      "kind": "course-content",
+      "symbols": [],
+      "imports": [],
+      "headings": [
+        "# M\u00f3dulo 0: C\u00f3mo funciona tu entorno de desarrollo",
+        "## S\u00edlabo",
+        "## Antes de comenzar: instalaci\u00f3n guiada",
+        "## Contenido te\u00f3rico",
+        "### Tema 1: Del hardware al programa en ejecuci\u00f3n",
+        "### Tema 2: Archivos, carpetas y rutas sin perderse",
+        "### Tema 3: C\u00f3mo leer un comando antes de ejecutarlo",
+        "### Tema 4: Primer programa, primer error y primera evidencia",
+        "# Mi primer programa",
+        "## C\u00f3mo ejecutarlo",
+        "## Resultado esperado",
+        "## Error investigado"
+      ]
+    },
+    {
+      "path": "web/public/content/foundations/modulo-1.md",
+      "lines": 259,
+      "kind": "course-content",
+      "symbols": [],
+      "imports": [],
+      "headings": [
+        "# M\u00f3dulo 1: Pensamiento computacional y programaci\u00f3n",
+        "## S\u00edlabo",
+        "## Contenido te\u00f3rico",
+        "### Tema 1: Del problema al algoritmo y a los casos de prueba",
+        "### Tema 2: Variables, tipos, expresiones y cambios de estado",
+        "### Tema 3: Decisiones, repeticiones y trazado de ejecuci\u00f3n",
+        "### Tema 4: Funciones y descomposici\u00f3n de problemas",
+        "## Criterio transversal de calidad del c\u00f3digo",
+        "## Laboratorio pr\u00e1ctico",
+        "### Proyecto 1: calculadora de presupuesto desde carpeta vac\u00eda",
+        "## Ejercicios de evaluaci\u00f3n",
+        "### Ejercicio 1: dise\u00f1ar antes de programar"
+      ]
+    },
+    {
+      "path": "web/public/content/foundations/modulo-10.md",
+      "lines": 291,
+      "kind": "course-content",
+      "symbols": [],
+      "imports": [],
+      "headings": [
+        "# Sistemas distribuidos, resiliencia y observabilidad",
+        "## S\u00edlabo",
+        "## Contenido te\u00f3rico",
+        "### Tema 1: La red convierte el resultado en una incertidumbre",
+        "### Tema 2: Replicaci\u00f3n, consistencia y decisiones expl\u00edcitas",
+        "### Tema 3: Mensajes que se procesan con efectos exactamente una vez",
+        "### Tema 4: Resiliencia y observabilidad orientadas a objetivos",
+        "## Proyecto transversal RutaFlow: Dominio, algoritmos y contabilidad",
+        "### Capacidad y fundamento",
+        "### Implementaci\u00f3n guiada",
+        "### Verificaci\u00f3n profesional",
+        "## Criterio transversal de calidad del c\u00f3digo"
+      ]
+    },
+    {
+      "path": "web/public/content/foundations/modulo-2.md",
+      "lines": 268,
+      "kind": "course-content",
+      "symbols": [],
+      "imports": [],
+      "headings": [
+        "# M\u00f3dulo 2: Estructuras de datos, algoritmos y complejidad",
+        "## S\u00edlabo",
+        "## Contenido te\u00f3rico",
+        "### Tema 1: Elegir estructuras seg\u00fan las operaciones",
+        "### Tema 2: Pilas, colas y abstracciones de comportamiento",
+        "### Tema 3: B\u00fasqueda, precondiciones y demostraci\u00f3n de correcci\u00f3n",
+        "### Tema 4: Complejidad, medici\u00f3n, ordenamiento y recursi\u00f3n",
+        "## Criterio transversal de calidad del c\u00f3digo",
+        "## Laboratorio pr\u00e1ctico",
+        "### Proyecto 2: gestor de inventario con an\u00e1lisis de rendimiento",
+        "## Ejercicios de evaluaci\u00f3n",
+        "### Ejercicio 1: elecci\u00f3n de estructura"
+      ]
+    },
+    {
+      "path": "web/public/content/foundations/modulo-3.md",
+      "lines": 266,
+      "kind": "course-content",
+      "symbols": [],
+      "imports": [],
+      "headings": [
+        "# M\u00f3dulo 3: Fundamentos de web, redes y accesibilidad",
+        "## S\u00edlabo",
+        "## Contenido te\u00f3rico",
+        "### Tema 1: De una URL al servidor: red, DNS, IP y puertos",
+        "### Tema 2: HTTP como contrato observable",
+        "### Tema 3: HTML sem\u00e1ntico, formularios y el DOM",
+        "### Tema 4: CSS, layout responsive y accesibilidad verificable",
+        "## Criterio transversal de calidad del c\u00f3digo",
+        "## Laboratorio pr\u00e1ctico",
+        "### Proyecto 3: sitio profesional accesible desde carpeta vac\u00eda",
+        "## Ejercicios de evaluaci\u00f3n",
+        "### Ejercicio 1: diagn\u00f3stico por capas"
+      ]
+    },
+    {
+      "path": "web/public/content/foundations/modulo-4.md",
+      "lines": 278,
+      "kind": "course-content",
+      "symbols": [],
+      "imports": [],
+      "headings": [
+        "# M\u00f3dulo 4: Modelado de datos, SQL y persistencia",
+        "## S\u00edlabo",
+        "## Contenido te\u00f3rico",
+        "### Tema 1: Del mundo real al modelo relacional",
+        "### Tema 2: SQL para definir, escribir, consultar y relacionar",
+        "# Incorrecto: permite alterar la consulta",
+        "# Correcto: el driver separa c\u00f3digo y dato",
+        "### Tema 3: \u00cdndices, restricciones y planes de consulta",
+        "### Tema 4: Transacciones, concurrencia y elecci\u00f3n SQL/NoSQL",
+        "## Criterio transversal de calidad del c\u00f3digo",
+        "## Laboratorio pr\u00e1ctico",
+        "### Proyecto 4: migrar el inventario JSON a SQLite"
+      ]
+    },
+    {
+      "path": "web/public/content/foundations/modulo-5.md",
+      "lines": 262,
+      "kind": "course-content",
+      "symbols": [],
+      "imports": [],
+      "headings": [
+        "# M\u00f3dulo 5: Testing, depuraci\u00f3n, Git y CI",
+        "## S\u00edlabo",
+        "## Contenido te\u00f3rico",
+        "### Tema 1: Depurar con evidencia, no con cambios aleatorios",
+        "### Tema 2: Pruebas con prop\u00f3sito y niveles adecuados",
+        "### Tema 3: Git como historial de decisiones y colaboraci\u00f3n",
+        "# editar y probar",
+        "### Tema 4: Calidad est\u00e1tica, revisi\u00f3n e integraci\u00f3n continua",
+        "## Criterio transversal de calidad del c\u00f3digo",
+        "## Laboratorio pr\u00e1ctico",
+        "### Proyecto 5: convertir el inventario en un repositorio confiable",
+        "## Ejercicios de evaluaci\u00f3n"
+      ]
+    },
+    {
+      "path": "web/public/content/foundations/modulo-6.md",
+      "lines": 246,
+      "kind": "course-content",
+      "symbols": [],
+      "imports": [],
+      "headings": [
+        "# M\u00f3dulo 6: Seguridad, privacidad y modelado de amenazas",
+        "## S\u00edlabo",
+        "## Contenido te\u00f3rico",
+        "### Tema 1: Activos, amenazas, riesgos y l\u00edmites de confianza",
+        "### Tema 2: Identidad, contrase\u00f1as, sesiones y autorizaci\u00f3n",
+        "### Tema 3: Criptograf\u00eda aplicada, TLS, claves y secretos",
+        "### Tema 4: Validaci\u00f3n, vulnerabilidades web, privacidad y respuesta",
+        "## Criterio transversal de calidad del c\u00f3digo",
+        "## Laboratorio pr\u00e1ctico",
+        "### Proyecto 6: endurecimiento del inventario",
+        "## Ejercicios de evaluaci\u00f3n",
+        "### Ejercicio 1: threat model"
+      ]
+    },
+    {
+      "path": "web/public/content/foundations/modulo-7.md",
+      "lines": 256,
+      "kind": "course-content",
+      "symbols": [],
+      "imports": [],
+      "headings": [
+        "# M\u00f3dulo 7: Requisitos, dise\u00f1o, arquitectura y mantenimiento",
+        "## S\u00edlabo",
+        "## Contenido te\u00f3rico",
+        "### Tema 1: Requisitos, stakeholders y criterios verificables",
+        "### Tema 2: Arquitectura guiada por atributos de calidad",
+        "### Tema 3: Dise\u00f1o modular, principios, patrones y refactoring",
+        "### Tema 4: Decisiones, documentaci\u00f3n, deuda y evoluci\u00f3n",
+        "# ADR-003: SQLite como persistencia inicial",
+        "## Contexto",
+        "## Decisi\u00f3n",
+        "## Consecuencias",
+        "## Criterio transversal de calidad del c\u00f3digo"
+      ]
+    },
+    {
+      "path": "web/public/content/foundations/modulo-8.md",
+      "lines": 274,
+      "kind": "course-content",
+      "symbols": [],
+      "imports": [],
+      "headings": [
+        "# Sistemas operativos, concurrencia, Linux y contenedores",
+        "## S\u00edlabo",
+        "## Contenido te\u00f3rico",
+        "### Tema 1: El sistema operativo como administrador y frontera",
+        "### Tema 2: Memoria y concurrencia sin magia",
+        "### Tema 3: Linux como entorno observable",
+        "### Tema 4: Contenedores: aislamiento reproducible",
+        "## Criterio transversal de calidad del c\u00f3digo",
+        "## Laboratorio pr\u00e1ctico",
+        "### Proyecto 8 \u2014 Inventario operable en un contenedor",
+        "## Ejercicios de evaluaci\u00f3n",
+        "### Ejercicio 1 \u2014 Diagn\u00f3stico"
+      ]
+    },
+    {
+      "path": "web/public/content/foundations/modulo-9.md",
+      "lines": 279,
+      "kind": "course-content",
+      "symbols": [],
+      "imports": [],
+      "headings": [
+        "# Matem\u00e1ticas discretas, l\u00f3gica y probabilidad para software",
+        "## S\u00edlabo",
+        "## Contenido te\u00f3rico",
+        "### Tema 1: L\u00f3gica para especificar antes de programar",
+        "### Tema 2: Conjuntos, relaciones, funciones e inducci\u00f3n",
+        "### Tema 3: Conteo, grafos y estructuras conectadas",
+        "### Tema 4: Probabilidad y evidencia para decisiones t\u00e9cnicas",
+        "## Criterio transversal de calidad del c\u00f3digo",
+        "## Laboratorio pr\u00e1ctico",
+        "### Proyecto 9: cuaderno de propiedades, grafos y evidencia",
+        "## Ejercicios de evaluaci\u00f3n",
+        "### Ejercicio 1: negar una pol\u00edtica"
       ]
     },
     {
       "path": "web/public/content/ios/modulo-0.md",
-      "lines": 215,
+      "lines": 286,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
       "headings": [
         "# M\u00f3dulo 0: Fundamentos de Swift",
         "## S\u00edlabo",
+        "## Antes de comenzar: qu\u00e9 equipo necesitas realmente",
+        "### macOS: entorno completo recomendado",
+        "### Windows y Linux: etapa de fundamentos",
         "## Contenido te\u00f3rico",
         "### Tema 1: Optionals y unwrapping seguro",
         "### Tema 2: struct vs class",
         "### Tema 3: Protocolos y enums con valores asociados",
-        "## Laboratorio pr\u00e1ctico",
-        "## Ejercicios de evaluaci\u00f3n",
-        "### Ejercicio 1: Qu\u00e9 previene el sistema de optionals",
-        "### Ejercicio 2: Cu\u00e1ndo elegir struct sobre class",
-        "### Ejercicio 3: Ventaja de la verificaci\u00f3n de exhaustividad",
-        "## Resumen del m\u00f3dulo"
+        "## Ruta de proyecto progresivo desde carpeta vac\u00eda",
+        "## Criterio transversal de calidad del c\u00f3digo",
+        "## Laboratorio pr\u00e1ctico"
       ]
     },
     {
       "path": "web/public/content/ios/modulo-1.md",
-      "lines": 201,
+      "lines": 241,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -4199,17 +4874,17 @@
         "### Tema 1: El protocolo View y composici\u00f3n",
         "### Tema 2: Orden de modificadores y layout con stacks",
         "### Tema 3: Previews, LazyVGrid/ScrollView y property wrappers",
+        "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
         "## Ejercicios de evaluaci\u00f3n",
         "### Ejercicio 1: Por qu\u00e9 el orden de modificadores cambia el resultado",
         "### Ejercicio 2: Ventaja del sistema de Previews",
-        "### Ejercicio 3: Composici\u00f3n uniforme de vistas",
-        "## Resumen del m\u00f3dulo"
+        "### Ejercicio 3: Composici\u00f3n uniforme de vistas"
       ]
     },
     {
       "path": "web/public/content/ios/modulo-10.md",
-      "lines": 183,
+      "lines": 223,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -4220,17 +4895,17 @@
         "### Tema 1: Instruments",
         "### Tema 2: Accesibilidad con VoiceOver",
         "### Tema 3: Human Interface Guidelines, Dynamic Type e interop con UIKit",
+        "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
         "## Ejercicios de evaluaci\u00f3n",
         "### Ejercicio 1: Qu\u00e9 revela Instruments que el simulador no revela",
         "### Ejercicio 2: Por qu\u00e9 las HIG hacen que una app se sienta nativa",
-        "### Ejercicio 3: Por qu\u00e9 usar el propio \u00edcono sin descripci\u00f3n es un problema real",
-        "## Resumen del m\u00f3dulo"
+        "### Ejercicio 3: Por qu\u00e9 usar el propio \u00edcono sin descripci\u00f3n es un problema real"
       ]
     },
     {
       "path": "web/public/content/ios/modulo-11.md",
-      "lines": 178,
+      "lines": 218,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -4241,17 +4916,17 @@
         "### Tema 1: Certificados y provisioning profiles",
         "### Tema 2: Archivar, subir y TestFlight",
         "### Tema 3: Metadata y versionado",
+        "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
         "## Ejercicios de evaluaci\u00f3n",
         "### Ejercicio 1: Diferencia entre certificado de desarrollo y distribuci\u00f3n",
         "### Ejercicio 2: Ventaja de probar con TestFlight antes de la App Store",
-        "### Ejercicio 3: Requisitos obligatorios de metadata",
-        "## Resumen del m\u00f3dulo"
+        "### Ejercicio 3: Requisitos obligatorios de metadata"
       ]
     },
     {
       "path": "web/public/content/ios/modulo-12.md",
-      "lines": 205,
+      "lines": 267,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -4262,17 +4937,38 @@
         "### Tema 1: Arquitectura del proyecto integrador",
         "### Tema 2: Sincronizaci\u00f3n entre red y persistencia local",
         "### Tema 3: Cierre del track",
+        "## Proyecto transversal RutaFlow: Tracking de ruta y privacidad",
+        "### Capacidad y fundamento",
+        "### Implementaci\u00f3n guiada",
+        "### Verificaci\u00f3n profesional",
+        "## Criterio transversal de calidad del c\u00f3digo",
+        "## Laboratorio pr\u00e1ctico"
+      ]
+    },
+    {
+      "path": "web/public/content/ios/modulo-13.md",
+      "lines": 273,
+      "kind": "course-content",
+      "symbols": [],
+      "imports": [],
+      "headings": [
+        "# M\u00f3dulo 13: iOS en producci\u00f3n \u2014 seguridad, sincronizaci\u00f3n y operaci\u00f3n",
+        "## S\u00edlabo",
+        "## Contenido te\u00f3rico",
+        "### Tema 1: El sandbox reduce superficie, pero no valida intenciones",
+        "### Tema 2: Proteger datos es controlar todas sus copias",
+        "### Tema 3: Offline-first es un protocolo, no una cach\u00e9",
+        "### Tema 4: Operar significa detectar, limitar y aprender del fallo",
+        "## Revisi\u00f3n oficial de plataforma \u2014 julio de 2026",
+        "### Swift 6.2 y actualizaciones SwiftUI de 2026",
+        "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
-        "## Ejercicios de evaluaci\u00f3n",
-        "### Ejercicio 1: Decisi\u00f3n m\u00e1s natural en SwiftUI",
-        "### Ejercicio 2: Parte que requiri\u00f3 m\u00e1s iteraci\u00f3n",
-        "### Ejercicio 3: Los tres pilares de una app iOS nativa",
-        "## Resumen del m\u00f3dulo"
+        "## Ejercicios de evaluaci\u00f3n"
       ]
     },
     {
       "path": "web/public/content/ios/modulo-2.md",
-      "lines": 214,
+      "lines": 254,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -4283,17 +4979,17 @@
         "### Tema 1: @State y @Binding",
         "### Tema 2: @Observable",
         "### Tema 3: @Environment y identidad vs valor",
+        "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
         "## Ejercicios de evaluaci\u00f3n",
         "### Ejercicio 1: Diferencia entre @State y @Binding",
         "### Ejercicio 2: Qu\u00e9 resuelve @Observable",
-        "### Ejercicio 3: Problema que resuelve @Environment",
-        "## Resumen del m\u00f3dulo"
+        "### Ejercicio 3: Problema que resuelve @Environment"
       ]
     },
     {
       "path": "web/public/content/ios/modulo-3.md",
-      "lines": 205,
+      "lines": 245,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -4304,17 +5000,17 @@
         "### Tema 1: NavigationStack y NavigationPath",
         "### Tema 2: Sheets, full screen covers y TabView",
         "### Tema 3: Deep linking y controles de formulario",
+        "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
         "## Ejercicios de evaluaci\u00f3n",
         "### Ejercicio 1: Ventaja de NavigationPath",
         "### Ejercicio 2: Cu\u00e1ndo usar sheet vs full screen cover",
-        "### Ejercicio 3: Qu\u00e9 logra el deep linking",
-        "## Resumen del m\u00f3dulo"
+        "### Ejercicio 3: Qu\u00e9 logra el deep linking"
       ]
     },
     {
       "path": "web/public/content/ios/modulo-4.md",
-      "lines": 213,
+      "lines": 253,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -4325,17 +5021,17 @@
         "### Tema 1: async/await y Task",
         "### Tema 2: Actors para estado mutable seguro",
         "### Tema 3: TaskGroup y MainActor",
+        "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
         "## Ejercicios de evaluaci\u00f3n",
         "### Ejercicio 1: Qu\u00e9 previene un actor",
         "### Ejercicio 2: Por qu\u00e9 async/await es m\u00e1s f\u00e1cil de razonar",
-        "### Ejercicio 3: Garant\u00eda de @MainActor",
-        "## Resumen del m\u00f3dulo"
+        "### Ejercicio 3: Garant\u00eda de @MainActor"
       ]
     },
     {
       "path": "web/public/content/ios/modulo-5.md",
-      "lines": 213,
+      "lines": 253,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -4346,17 +5042,17 @@
         "### Tema 1: URLSession con async/await y Codable",
         "### Tema 2: Errores tipados",
         "### Tema 3: Reintentos y cancelaci\u00f3n",
+        "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
         "## Ejercicios de evaluaci\u00f3n",
         "### Ejercicio 1: Qu\u00e9 elimina Codable",
         "### Ejercicio 2: Ventaja de un enum de error propio",
-        "### Ejercicio 3: Por qu\u00e9 cancelar una tarea en curso",
-        "## Resumen del m\u00f3dulo"
+        "### Ejercicio 3: Por qu\u00e9 cancelar una tarea en curso"
       ]
     },
     {
       "path": "web/public/content/ios/modulo-6.md",
-      "lines": 202,
+      "lines": 242,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -4367,17 +5063,17 @@
         "### Tema 1: @Model y ModelContainer",
         "### Tema 2: @Query y operaciones de escritura",
         "### Tema 3: Migraciones y SwiftData vs Core Data",
+        "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
         "## Ejercicios de evaluaci\u00f3n",
         "### Ejercicio 1: Qu\u00e9 simplifica SwiftData",
         "### Ejercicio 2: Cu\u00e1ndo preferir Core Data directo",
-        "### Ejercicio 3: Ventaja de un DAO/Query reactivo",
-        "## Resumen del m\u00f3dulo"
+        "### Ejercicio 3: Ventaja de un DAO/Query reactivo"
       ]
     },
     {
       "path": "web/public/content/ios/modulo-7.md",
-      "lines": 190,
+      "lines": 230,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -4388,17 +5084,17 @@
         "### Tema 1: Publishers y Subscribers",
         "### Tema 2: Operadores: debounce y combineLatest",
         "### Tema 3: Combine vs async/await",
+        "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
         "## Ejercicios de evaluaci\u00f3n",
         "### Ejercicio 1: Comparaci\u00f3n de Combine con RxJS/RxSwift",
         "### Ejercicio 2: Por qu\u00e9 preferir async/await para c\u00f3digo nuevo",
-        "### Ejercicio 3: Prop\u00f3sito de debounce",
-        "## Resumen del m\u00f3dulo"
+        "### Ejercicio 3: Prop\u00f3sito de debounce"
       ]
     },
     {
       "path": "web/public/content/ios/modulo-8.md",
-      "lines": 207,
+      "lines": 247,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -4409,17 +5105,17 @@
         "### Tema 1: De una vista \"gorda\" a MVVM",
         "### Tema 2: Capas del proyecto e inyecci\u00f3n por inicializador",
         "### Tema 3: Cu\u00e1ndo MVVM no alcanza",
+        "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
         "## Ejercicios de evaluaci\u00f3n",
         "### Ejercicio 1: Problema que resuelve separar l\u00f3gica de la vista",
         "### Ejercicio 2: Cu\u00e1ndo MVVM empieza a quedarse corto",
-        "### Ejercicio 3: Ventaja de inyectar por inicializador",
-        "## Resumen del m\u00f3dulo"
+        "### Ejercicio 3: Ventaja de inyectar por inicializador"
       ]
     },
     {
       "path": "web/public/content/ios/modulo-9.md",
-      "lines": 210,
+      "lines": 250,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -4430,38 +5126,38 @@
         "### Tema 1: XCTest cl\u00e1sico y Swift Testing",
         "### Tema 2: Testing de c\u00f3digo async",
         "### Tema 3: UI Tests con XCUITest",
+        "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
         "## Ejercicios de evaluaci\u00f3n",
         "### Ejercicio 1: Ventaja de legibilidad de Swift Testing",
         "### Ejercicio 2: Por qu\u00e9 un UI Test es m\u00e1s lento y fr\u00e1gil",
-        "### Ejercicio 3: Simplificaci\u00f3n de testing async",
-        "## Resumen del m\u00f3dulo"
+        "### Ejercicio 3: Simplificaci\u00f3n de testing async"
       ]
     },
     {
       "path": "web/public/content/java/modulo-0.md",
-      "lines": 201,
+      "lines": 276,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
       "headings": [
         "# M\u00f3dulo 0: Sintaxis, tipos y el modelo de la JVM",
         "## S\u00edlabo",
+        "## Antes de comenzar: instala Java correctamente",
         "## Contenido te\u00f3rico",
         "### Tema 1: Del c\u00f3digo fuente a la JVM",
         "### Tema 2: public static void main \u2014 qu\u00e9 significa cada palabra",
         "### Tema 3: JDK, JRE y JVM",
         "### Tema 4: Tipos primitivos vs referencias",
+        "## Ruta de proyecto progresivo desde carpeta vac\u00eda",
+        "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
-        "## Ejercicios de evaluaci\u00f3n",
-        "### Ejercicio 1: Por qu\u00e9 bytecode en vez de c\u00f3digo m\u00e1quina nativo",
-        "### Ejercicio 2: Cada palabra de main",
-        "### Ejercicio 3: JDK, JRE y JVM"
+        "## Ejercicios de evaluaci\u00f3n"
       ]
     },
     {
       "path": "web/public/content/java/modulo-1.md",
-      "lines": 185,
+      "lines": 225,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -4472,17 +5168,17 @@
         "### Tema 1: Herencia y sobreescritura",
         "### Tema 2: Interfaces, clases abstractas y cu\u00e1ndo usar cada una",
         "### Tema 3: Sobrecarga vs sobreescritura, y modificadores de acceso",
+        "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
         "## Ejercicios de evaluaci\u00f3n",
         "### Ejercicio 1: Sobrecarga vs sobreescritura",
         "### Ejercicio 2: Clase abstracta vs interfaz",
-        "### Ejercicio 3: Modificadores de acceso",
-        "## Resumen del m\u00f3dulo"
+        "### Ejercicio 3: Modificadores de acceso"
       ]
     },
     {
       "path": "web/public/content/java/modulo-10.md",
-      "lines": 191,
+      "lines": 231,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -4493,17 +5189,17 @@
         "### Tema 1: module-info.java y encapsulaci\u00f3n fuerte",
         "### Tema 2: Migraci\u00f3n incremental y cu\u00e1ndo JPMS aporta valor",
         "### Tema 3: `opens` para acceso reflexivo controlado de frameworks",
+        "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
         "## Ejercicios de evaluaci\u00f3n",
         "### Ejercicio 1: Encapsulaci\u00f3n adicional de JPMS",
         "### Ejercicio 2: Cu\u00e1ndo JPMS aporta valor",
-        "### Ejercicio 3: requires transitive",
-        "### Ejercicio 4: exports vs. opens"
+        "### Ejercicio 3: requires transitive"
       ]
     },
     {
       "path": "web/public/content/java/modulo-11.md",
-      "lines": 178,
+      "lines": 218,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -4514,17 +5210,17 @@
         "### Tema 1: Generaciones de memoria y recolectores",
         "### Tema 2: Java Flight Recorder y JIT compilation",
         "### Tema 3: Referencias especiales y heap dumps",
+        "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
         "## Ejercicios de evaluaci\u00f3n",
         "### Ejercicio 1: Por qu\u00e9 ZGC puede tener menor throughput que G1",
         "### Ejercicio 2: Informaci\u00f3n que da un heap dump",
-        "### Ejercicio 3: Qu\u00e9 hace el JIT compiler",
-        "## Resumen del m\u00f3dulo"
+        "### Ejercicio 3: Qu\u00e9 hace el JIT compiler"
       ]
     },
     {
       "path": "web/public/content/java/modulo-12.md",
-      "lines": 187,
+      "lines": 227,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -4535,17 +5231,17 @@
         "### Tema 1: Builder \u2014 constructores con muchos par\u00e1metros opcionales",
         "### Tema 2: Factory y Strategy",
         "### Tema 3: SOLID y cu\u00e1ndo NO aplicar un patr\u00f3n",
+        "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
         "## Ejercicios de evaluaci\u00f3n",
         "### Ejercicio 1: Problema que resuelve Builder",
         "### Ejercicio 2: Reconocer cu\u00e1ndo no aplicar un patr\u00f3n",
-        "### Ejercicio 3: Responsabilidad \u00fanica en la pr\u00e1ctica",
-        "## Resumen del m\u00f3dulo"
+        "### Ejercicio 3: Responsabilidad \u00fanica en la pr\u00e1ctica"
       ]
     },
     {
       "path": "web/public/content/java/modulo-13.md",
-      "lines": 182,
+      "lines": 244,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -4557,16 +5253,37 @@
         "### Tema 2: Integrando concurrencia, modelado y testing",
         "### Tema 3: Build reproducible y cierre del track",
         "# cualquier persona clona el repo y ejecuta con un \u00fanico comando",
+        "## Proyecto transversal RutaFlow: Motor de tarifas",
+        "### Capacidad y fundamento",
+        "### Implementaci\u00f3n guiada",
+        "### Verificaci\u00f3n profesional",
+        "## Criterio transversal de calidad del c\u00f3digo"
+      ]
+    },
+    {
+      "path": "web/public/content/java/modulo-14.md",
+      "lines": 335,
+      "kind": "course-content",
+      "symbols": [],
+      "imports": [],
+      "headings": [
+        "# M\u00f3dulo 14: Java en producci\u00f3n \u2014 memoria, benchmarks y runtime seguro",
+        "## S\u00edlabo",
+        "## Contenido te\u00f3rico",
+        "### Tema 1: Compartir memoria requiere orden y visibilidad",
+        "### Tema 2: La JVM optimiza y puede invalidar un cron\u00f3metro ingenuo",
+        "### Tema 3: Deserializar es permitir construcci\u00f3n y comportamiento",
+        "### Tema 4: El runtime es parte del artefacto y necesita ciclo de vida",
+        "## Revisi\u00f3n oficial de plataforma \u2014 julio de 2026",
+        "### Java LTS frente a entregas semestrales",
+        "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
-        "## Ejercicios de evaluaci\u00f3n",
-        "### Ejercicio 1: Decisi\u00f3n de dise\u00f1o al escalar 10x",
-        "### Ejercicio 2: Feature de Java moderna con mayor impacto",
-        "### Ejercicio 3: Cierre del track \u2014 habilidades combinadas"
+        "### Proyecto: endurecimiento medible del procesador concurrente"
       ]
     },
     {
       "path": "web/public/content/java/modulo-2.md",
-      "lines": 190,
+      "lines": 230,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -4577,17 +5294,17 @@
         "### Tema 1: List, Set, Map y sus implementaciones",
         "### Tema 2: Gen\u00e9ricos, wildcards y type erasure",
         "### Tema 3: Comparable vs Comparator, e iteraci\u00f3n",
+        "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
         "## Ejercicios de evaluaci\u00f3n",
         "### Ejercicio 1: Cu\u00e1ndo elegir LinkedList sobre ArrayList",
         "### Ejercicio 2: Comparable vs Comparator",
-        "### Ejercicio 3: Type erasure",
-        "## Resumen del m\u00f3dulo"
+        "### Ejercicio 3: Type erasure"
       ]
     },
     {
       "path": "web/public/content/java/modulo-3.md",
-      "lines": 182,
+      "lines": 222,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -4598,17 +5315,17 @@
         "### Tema 1: Checked vs unchecked exceptions",
         "### Tema 2: try-with-resources",
         "### Tema 3: Excepciones personalizadas y no tragar excepciones",
+        "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
         "## Ejercicios de evaluaci\u00f3n",
         "### Ejercicio 1: Por qu\u00e9 el compilador obliga a manejar checked exceptions",
         "### Ejercicio 2: Problema del catch vac\u00edo",
-        "### Ejercicio 3: try-with-resources y AutoCloseable",
-        "## Resumen del m\u00f3dulo"
+        "### Ejercicio 3: try-with-resources y AutoCloseable"
       ]
     },
     {
       "path": "web/public/content/java/modulo-4.md",
-      "lines": 184,
+      "lines": 224,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -4619,17 +5336,17 @@
         "### Tema 1: Stream API \u2014 map, filter, reduce, collect",
         "### Tema 2: Optional \u2014 evitar null expl\u00edcitamente",
         "### Tema 3: Streams paralelos y referencias a m\u00e9todos",
+        "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
         "## Ejercicios de evaluaci\u00f3n",
         "### Ejercicio 1: Por qu\u00e9 Optional reemplaza con ventaja a null",
         "### Ejercicio 2: Cu\u00e1ndo un stream paralelo ayuda o empeora",
-        "### Ejercicio 3: Operaciones intermedias vs terminales",
-        "## Resumen del m\u00f3dulo"
+        "### Ejercicio 3: Operaciones intermedias vs terminales"
       ]
     },
     {
       "path": "web/public/content/java/modulo-5.md",
-      "lines": 195,
+      "lines": 235,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -4641,16 +5358,16 @@
         "### Tema 2: CompletableFuture",
         "### Tema 3: Virtual threads",
         "### Tema 4: Condiciones de carrera y sincronizaci\u00f3n",
+        "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
         "## Ejercicios de evaluaci\u00f3n",
         "### Ejercicio 1: Por qu\u00e9 los virtual threads son tan baratos",
-        "### Ejercicio 2: Por qu\u00e9 una condici\u00f3n de carrera puede no manifestarse en pruebas",
-        "### Ejercicio 3: ExecutorService y reutilizaci\u00f3n de hilos"
+        "### Ejercicio 2: Por qu\u00e9 una condici\u00f3n de carrera puede no manifestarse en pruebas"
       ]
     },
     {
       "path": "web/public/content/java/modulo-6.md",
-      "lines": 181,
+      "lines": 221,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -4661,17 +5378,17 @@
         "### Tema 1: NIO.2 \u2014 Path y Files",
         "### Tema 2: Serializaci\u00f3n con Jackson",
         "### Tema 3: Archivos grandes y recursos del classpath",
+        "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
         "## Ejercicios de evaluaci\u00f3n",
         "### Ejercicio 1: Ventaja de Path sobre File",
         "### Ejercicio 2: Por qu\u00e9 leer con buffer evita problemas de memoria",
-        "### Ejercicio 3: Recursos del classpath frente a archivos del sistema",
-        "## Resumen del m\u00f3dulo"
+        "### Ejercicio 3: Recursos del classpath frente a archivos del sistema"
       ]
     },
     {
       "path": "web/public/content/java/modulo-7.md",
-      "lines": 182,
+      "lines": 222,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -4682,17 +5399,17 @@
         "### Tema 1: record \u2014 modelos inmutables sin boilerplate",
         "### Tema 2: sealed \u2014 jerarqu\u00edas cerradas y exhaustividad",
         "### Tema 3: Pattern matching exhaustivo y para instanceof",
+        "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
         "## Ejercicios de evaluaci\u00f3n",
         "### Ejercicio 1: Qu\u00e9 garantiza un switch exhaustivo sobre sealed",
         "### Ejercicio 2: Boilerplate eliminado por record",
-        "### Ejercicio 3: Pattern matching para instanceof",
-        "## Resumen del m\u00f3dulo"
+        "### Ejercicio 3: Pattern matching para instanceof"
       ]
     },
     {
       "path": "web/public/content/java/modulo-8.md",
-      "lines": 181,
+      "lines": 221,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -4703,17 +5420,17 @@
         "### Tema 1: pom.xml vs build.gradle.kts",
         "### Tema 2: Ciclo de vida de build y scopes",
         "### Tema 3: Proyectos multi-m\u00f3dulo",
+        "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
         "## Ejercicios de evaluaci\u00f3n",
         "### Ejercicio 1: Ventaja y desventaja de Gradle Kotlin DSL",
         "### Ejercicio 2: Por qu\u00e9 separar dependencias por scope importa",
-        "### Ejercicio 3: L\u00edmites de un proyecto multi-m\u00f3dulo",
-        "## Resumen del m\u00f3dulo"
+        "### Ejercicio 3: L\u00edmites de un proyecto multi-m\u00f3dulo"
       ]
     },
     {
       "path": "web/public/content/java/modulo-9.md",
-      "lines": 194,
+      "lines": 234,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -4724,38 +5441,38 @@
         "### Tema 1: JUnit 5 \u2014 anotaciones y ciclo de vida",
         "### Tema 2: Mockito \u2014 aislar dependencias",
         "### Tema 3: Tests parametrizados y cobertura",
+        "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
         "## Ejercicios de evaluaci\u00f3n",
         "### Ejercicio 1: Mock vs stub",
         "### Ejercicio 2: Por qu\u00e9 aislar con mocks hace las pruebas m\u00e1s r\u00e1pidas y confiables",
-        "### Ejercicio 3: Cobertura de c\u00f3digo y su l\u00edmite",
-        "## Resumen del m\u00f3dulo"
+        "### Ejercicio 3: Cobertura de c\u00f3digo y su l\u00edmite"
       ]
     },
     {
       "path": "web/public/content/javascript/modulo-0.md",
-      "lines": 263,
+      "lines": 340,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
       "headings": [
         "# M\u00f3dulo 0: Fundamentos del lenguaje y el entorno",
         "## S\u00edlabo",
+        "## Antes de comenzar: tu primer entorno de programaci\u00f3n",
         "## Contenido te\u00f3rico",
         "### Tema 1: Variables \u2014 let, const y var",
         "### Tema 2: Tipos primitivos y typeof",
         "### Tema 3: Coerci\u00f3n impl\u00edcita \u2014 == frente a ===",
         "### Tema 4: Template literals",
         "### Tema 5: Entorno \u2014 navegador frente a Node.js",
-        "## Laboratorio pr\u00e1ctico",
-        "## Ejercicios de evaluaci\u00f3n",
-        "### Ejercicio 1: Predecir la coerci\u00f3n",
-        "### Ejercicio 2: typeof null"
+        "## Ruta de proyecto progresivo desde carpeta vac\u00eda",
+        "## Criterio transversal de calidad del c\u00f3digo",
+        "## Laboratorio pr\u00e1ctico"
       ]
     },
     {
       "path": "web/public/content/javascript/modulo-1.md",
-      "lines": 267,
+      "lines": 307,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -4768,15 +5485,15 @@
         "### Tema 3: Funciones de orden superior",
         "### Tema 4: Control de flujo \u2014 if, switch y loops",
         "### Tema 5: IIFE y el objeto arguments",
+        "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
         "## Ejercicios de evaluaci\u00f3n",
-        "### Ejercicio 1: Hoisting comparado",
-        "### Ejercicio 2: Dise\u00f1ar una funci\u00f3n de orden superior propia"
+        "### Ejercicio 1: Hoisting comparado"
       ]
     },
     {
       "path": "web/public/content/javascript/modulo-10.md",
-      "lines": 259,
+      "lines": 299,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -4789,15 +5506,15 @@
         "### Tema 3: Web Workers para trabajo pesado",
         "### Tema 4: Profiling con DevTools",
         "### Tema 5: Core Web Vitals",
+        "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
         "## Ejercicios de evaluaci\u00f3n",
-        "### Ejercicio 1: Elegir entre debounce y throttle",
-        "### Ejercicio 2: Cu\u00e1ndo memoizar es contraproducente"
+        "### Ejercicio 1: Elegir entre debounce y throttle"
       ]
     },
     {
       "path": "web/public/content/javascript/modulo-11.md",
-      "lines": 235,
+      "lines": 275,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -4809,16 +5526,16 @@
         "### Tema 2: Generics",
         "### Tema 3: Narrowing y union types",
         "### Tema 4: tsconfig esencial y modo strict",
+        "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
         "## Ejercicios de evaluaci\u00f3n",
         "### Ejercicio 1: any frente a tipado correcto",
-        "### Ejercicio 2: interface frente a type",
-        "### Ejercicio 3: Los l\u00edmites de TypeScript en runtime"
+        "### Ejercicio 2: interface frente a type"
       ]
     },
     {
       "path": "web/public/content/javascript/modulo-12.md",
-      "lines": 248,
+      "lines": 310,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -4830,16 +5547,37 @@
         "### Tema 2: Estado de aplicaci\u00f3n con un store propio",
         "### Tema 3: Consumo de una API real con manejo de errores",
         "### Tema 4: Conectando todo \u2014 el patr\u00f3n completo de una SPA",
+        "## Proyecto transversal RutaFlow: Widget p\u00fablico de seguimiento",
+        "### Capacidad y fundamento",
+        "### Implementaci\u00f3n guiada",
+        "### Verificaci\u00f3n profesional",
+        "## Criterio transversal de calidad del c\u00f3digo"
+      ]
+    },
+    {
+      "path": "web/public/content/javascript/modulo-13.md",
+      "lines": 303,
+      "kind": "course-content",
+      "symbols": [],
+      "imports": [],
+      "headings": [
+        "# M\u00f3dulo 13: JavaScript en producci\u00f3n \u2014 seguridad, memoria y compatibilidad",
+        "## S\u00edlabo",
+        "## Contenido te\u00f3rico",
+        "### Tema 1: Datos no confiables y seguridad en el navegador",
+        "### Tema 2: Memoria administrada no significa memoria infinita",
+        "### Tema 3: Errores \u00fatiles sin convertir usuarios en sensores involuntarios",
+        "### Tema 4: Compatibilidad, idioma y tiempo son requisitos de datos",
+        "## Revisi\u00f3n oficial de plataforma \u2014 julio de 2026",
+        "### ECMAScript vivo, propuestas y fechas modernas",
+        "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
-        "## Ejercicios de evaluaci\u00f3n",
-        "### Ejercicio 1: Qu\u00e9 automatiza un framework",
-        "### Ejercicio 2: Diagnosticar un bug de sincronizaci\u00f3n de rutas",
-        "### Ejercicio 3: Dise\u00f1ar el estado de una operaci\u00f3n as\u00edncrona"
+        "### Proyecto de endurecimiento de la SPA"
       ]
     },
     {
       "path": "web/public/content/javascript/modulo-2.md",
-      "lines": 309,
+      "lines": 349,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -4853,14 +5591,14 @@
         "### Tema 4: this seg\u00fan el modo de invocaci\u00f3n",
         "### Tema 5: Module pattern y factory functions",
         "### Tema 6: Execution Context, Scope Chain y Lexical Environment",
+        "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
-        "## Ejercicios de evaluaci\u00f3n",
-        "### Ejercicio 1: Diagnosticar un closure compartido por error"
+        "## Ejercicios de evaluaci\u00f3n"
       ]
     },
     {
       "path": "web/public/content/javascript/modulo-3.md",
-      "lines": 257,
+      "lines": 297,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -4872,16 +5610,16 @@
         "### Tema 2: class, extends y super",
         "### Tema 3: Getters, setters y propiedades computadas",
         "### Tema 4: Encapsulaci\u00f3n con campos privados (#campo)",
+        "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
         "## Ejercicios de evaluaci\u00f3n",
         "### Ejercicio 1: Prototipos frente a copia",
-        "### Ejercicio 2: Dise\u00f1ar una jerarqu\u00eda con super",
-        "### Ejercicio 3: Dise\u00f1ar encapsulaci\u00f3n con validaci\u00f3n"
+        "### Ejercicio 2: Dise\u00f1ar una jerarqu\u00eda con super"
       ]
     },
     {
       "path": "web/public/content/javascript/modulo-4.md",
-      "lines": 255,
+      "lines": 295,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -4894,15 +5632,15 @@
         "### Tema 3: Inmutabilidad y actualizaci\u00f3n de estructuras anidadas",
         "### Tema 4: WeakMap y WeakSet",
         "### Tema 5: M\u00e9todos inmutables modernos",
+        "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
         "## Ejercicios de evaluaci\u00f3n",
-        "### Ejercicio 1: reduce frente a exceso de ingenier\u00eda",
-        "### Ejercicio 2: Elegir la estructura correcta"
+        "### Ejercicio 1: reduce frente a exceso de ingenier\u00eda"
       ]
     },
     {
       "path": "web/public/content/javascript/modulo-5.md",
-      "lines": 258,
+      "lines": 298,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -4915,15 +5653,15 @@
         "### Tema 3: Promise.all, allSettled, race y any",
         "### Tema 4: El motor V8 \u2014 JIT y AST",
         "### Tema 5: Stack, Heap y Garbage Collection",
+        "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
         "## Ejercicios de evaluaci\u00f3n",
-        "### Ejercicio 1: Predecir el orden exacto",
-        "### Ejercicio 2: Elegir el combinador correcto"
+        "### Ejercicio 1: Predecir el orden exacto"
       ]
     },
     {
       "path": "web/public/content/javascript/modulo-6.md",
-      "lines": 318,
+      "lines": 358,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -4937,14 +5675,14 @@
         "### Tema 4: Reintentos y timeouts manuales",
         "### Tema 5: Generadores \u2014 function*, yield y yield*",
         "### Tema 6: Proxies y Reflect",
+        "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
-        "## Ejercicios de evaluaci\u00f3n",
-        "### Ejercicio 1: \u00bfawait bloquea el hilo?"
+        "## Ejercicios de evaluaci\u00f3n"
       ]
     },
     {
       "path": "web/public/content/javascript/modulo-7.md",
-      "lines": 284,
+      "lines": 324,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -4958,14 +5696,14 @@
         "### Tema 4: package.json \u2014 exports, type y scripts",
         "### Tema 5: import() din\u00e1mico e import.meta",
         "### Tema 6: Webpack, Rollup y Babel/SWC",
+        "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
-        "## Ejercicios de evaluaci\u00f3n",
-        "### Ejercicio 1: ESM habilita tree-shaking, CommonJS lo dificulta"
+        "## Ejercicios de evaluaci\u00f3n"
       ]
     },
     {
       "path": "web/public/content/javascript/modulo-8.md",
-      "lines": 291,
+      "lines": 331,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -4979,14 +5717,14 @@
         "### Tema 4: Web APIs \u2014 localStorage e IntersectionObserver",
         "### Tema 5: ResizeObserver y MutationObserver",
         "### Tema 6: requestAnimationFrame y requestIdleCallback",
+        "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
-        "## Ejercicios de evaluaci\u00f3n",
-        "### Ejercicio 1: Justificar la delegaci\u00f3n de eventos"
+        "## Ejercicios de evaluaci\u00f3n"
       ]
     },
     {
       "path": "web/public/content/javascript/modulo-9.md",
-      "lines": 240,
+      "lines": 280,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -4999,36 +5737,36 @@
         "### Tema 3: Mockear fetch",
         "### Tema 4: ESLint, Prettier y cobertura de c\u00f3digo",
         "# 100% cobertura \u2260 ausencia de bugs; solo significa \"se ejecut\u00f3\", no \"se verific\u00f3 bien\"",
+        "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
         "## Ejercicios de evaluaci\u00f3n",
-        "### Ejercicio 1: Mock, spy y fake",
-        "### Ejercicio 2: Por qu\u00e9 100% de cobertura no basta"
+        "### Ejercicio 1: Mock, spy y fake"
       ]
     },
     {
       "path": "web/public/content/kotlin-multiplatform/modulo-0.md",
-      "lines": 196,
+      "lines": 268,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
       "headings": [
         "# M\u00f3dulo 0: Fundamentos de Kotlin",
         "## S\u00edlabo",
+        "## Antes de comenzar: entorno Kotlin Multiplatform",
         "## Contenido te\u00f3rico",
         "### Tema 1: Null safety real",
         "### Tema 2: data class y funciones de extensi\u00f3n",
         "### Tema 3: when como expresi\u00f3n",
+        "## Ruta de proyecto progresivo desde carpeta vac\u00eda",
+        "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
         "## Ejercicios de evaluaci\u00f3n",
-        "### Ejercicio 1: String vs String?",
-        "### Ejercicio 2: Qu\u00e9 evita el null safety de Kotlin",
-        "### Ejercicio 3: Exhaustividad de when sin else",
-        "## Resumen del m\u00f3dulo"
+        "### Ejercicio 1: String vs String?"
       ]
     },
     {
       "path": "web/public/content/kotlin-multiplatform/modulo-1.md",
-      "lines": 198,
+      "lines": 238,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5039,17 +5777,17 @@
         "### Tema 1: Funciones de orden superior",
         "### Tema 2: Scope functions",
         "### Tema 3: Sealed classes y colecciones funcionales",
+        "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
         "## Ejercicios de evaluaci\u00f3n",
         "### Ejercicio 1: Diferencia pr\u00e1ctica entre let, run, apply y also",
         "### Ejercicio 2: Exhaustividad sin else",
-        "### Ejercicio 3: Encadenar operaciones funcionales",
-        "## Resumen del m\u00f3dulo"
+        "### Ejercicio 3: Encadenar operaciones funcionales"
       ]
     },
     {
       "path": "web/public/content/kotlin-multiplatform/modulo-10.md",
-      "lines": 213,
+      "lines": 253,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5061,16 +5799,16 @@
         "### Tema 2: Fastlane",
         "# fastlane/Fastfile",
         "### Tema 3: Versionado compartido",
+        "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
         "## Ejercicios de evaluaci\u00f3n",
         "### Ejercicio 1: Por qu\u00e9 validar ambos targets en cada push",
-        "### Ejercicio 2: Qu\u00e9 automatiza Fastlane",
-        "### Ejercicio 3: Necesidad de un runner macOS para iOS"
+        "### Ejercicio 2: Qu\u00e9 automatiza Fastlane"
       ]
     },
     {
       "path": "web/public/content/kotlin-multiplatform/modulo-11.md",
-      "lines": 205,
+      "lines": 267,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5081,17 +5819,38 @@
         "### Tema 1: Arquitectura del proyecto integrador",
         "### Tema 2: Sincronizaci\u00f3n de datos remotos con cach\u00e9 local",
         "### Tema 3: Cierre del track \u2014 la promesa realista de KMP",
+        "## Proyecto transversal RutaFlow: Sincronizaci\u00f3n compartida",
+        "### Capacidad y fundamento",
+        "### Implementaci\u00f3n guiada",
+        "### Verificaci\u00f3n profesional",
+        "## Criterio transversal de calidad del c\u00f3digo",
+        "## Laboratorio pr\u00e1ctico"
+      ]
+    },
+    {
+      "path": "web/public/content/kotlin-multiplatform/modulo-12.md",
+      "lines": 335,
+      "kind": "course-content",
+      "symbols": [],
+      "imports": [],
+      "headings": [
+        "# M\u00f3dulo 12: KMP en producci\u00f3n \u2014 fronteras, compatibilidad y observabilidad",
+        "## S\u00edlabo",
+        "## Contenido te\u00f3rico",
+        "### Tema 1: La mejor frontera compartida es deliberadamente peque\u00f1a",
+        "### Tema 2: Garbage collection no cierra sockets ni rompe ciclos externos",
+        "### Tema 3: Un artefacto compatible necesita m\u00e1s que el mismo n\u00famero de versi\u00f3n",
+        "### Tema 4: Un fallo compartido necesita s\u00edmbolos y contexto de ambas plataformas",
+        "## Revisi\u00f3n oficial de plataforma \u2014 julio de 2026",
+        "### Kotlin 2.4 y estado real de cada target",
+        "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
-        "## Ejercicios de evaluaci\u00f3n",
-        "### Ejercicio 1: Proporci\u00f3n real de c\u00f3digo compartido",
-        "### Ejercicio 2: Decisi\u00f3n de arquitectura que ahorr\u00f3 m\u00e1s tiempo",
-        "### Ejercicio 3: Cierre del track \u2014 la promesa realista de KMP",
-        "## Resumen del m\u00f3dulo"
+        "### Proyecto: SDK compartido estable y operable"
       ]
     },
     {
       "path": "web/public/content/kotlin-multiplatform/modulo-2.md",
-      "lines": 195,
+      "lines": 235,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5102,17 +5861,17 @@
         "### Tema 1: suspend functions y concurrencia estructurada",
         "### Tema 2: Flow, StateFlow y SharedFlow",
         "### Tema 3: Manejo de errores y exclusi\u00f3n mutua",
+        "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
         "## Ejercicios de evaluaci\u00f3n",
         "### Ejercicio 1: Qu\u00e9 garantiza la concurrencia estructurada",
         "### Ejercicio 2: Cu\u00e1ndo usar StateFlow",
-        "### Ejercicio 3: Mutex frente a synchronized",
-        "## Resumen del m\u00f3dulo"
+        "### Ejercicio 3: Mutex frente a synchronized"
       ]
     },
     {
       "path": "web/public/content/kotlin-multiplatform/modulo-3.md",
-      "lines": 198,
+      "lines": 238,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5123,17 +5882,17 @@
         "### Tema 1: Source sets",
         "### Tema 2: expect/actual",
         "### Tema 3: Gradle multiplataforma y targets disponibles",
+        "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
         "## Ejercicios de evaluaci\u00f3n",
         "### Ejercicio 1: Qu\u00e9 resuelve expect/actual mejor que una interfaz com\u00fan",
         "### Ejercicio 2: Por qu\u00e9 commonMain no puede usar APIs espec\u00edficas",
-        "### Ejercicio 3: Targets m\u00e1s all\u00e1 de Android/iOS",
-        "## Resumen del m\u00f3dulo"
+        "### Ejercicio 3: Targets m\u00e1s all\u00e1 de Android/iOS"
       ]
     },
     {
       "path": "web/public/content/kotlin-multiplatform/modulo-4.md",
-      "lines": 194,
+      "lines": 234,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5144,17 +5903,17 @@
         "### Tema 1: Modelos de dominio y casos de uso",
         "### Tema 2: Repositorios con interfaz com\u00fan",
         "### Tema 3: Inyecci\u00f3n de dependencias multiplataforma con Koin",
+        "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
         "## Ejercicios de evaluaci\u00f3n",
         "### Ejercicio 1: Por qu\u00e9 depender de una interfaz facilita testear",
         "### Ejercicio 2: Proporci\u00f3n de l\u00f3gica compartible",
-        "### Ejercicio 3: Ventaja de Koin multiplataforma",
-        "## Resumen del m\u00f3dulo"
+        "### Ejercicio 3: Ventaja de Koin multiplataforma"
       ]
     },
     {
       "path": "web/public/content/kotlin-multiplatform/modulo-5.md",
-      "lines": 194,
+      "lines": 234,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5165,17 +5924,17 @@
         "### Tema 1: Ktor Client multiplataforma",
         "### Tema 2: Manejo de errores de red con un tipo expl\u00edcito",
         "### Tema 3: Interceptores y autenticaci\u00f3n",
+        "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
         "## Ejercicios de evaluaci\u00f3n",
         "### Ejercicio 1: Qu\u00e9 evita Ktor Client compartido",
         "### Ejercicio 2: Por qu\u00e9 modelar errores como un tipo expl\u00edcito",
-        "### Ejercicio 3: Configuraci\u00f3n centralizada de autenticaci\u00f3n",
-        "## Resumen del m\u00f3dulo"
+        "### Ejercicio 3: Configuraci\u00f3n centralizada de autenticaci\u00f3n"
       ]
     },
     {
       "path": "web/public/content/kotlin-multiplatform/modulo-6.md",
-      "lines": 204,
+      "lines": 244,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5186,17 +5945,17 @@
         "### Tema 1: Esquemas SQLDelight y queries tipadas",
         "### Tema 2: Drivers por plataforma",
         "### Tema 3: Migraciones de esquema",
+        "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
         "## Ejercicios de evaluaci\u00f3n",
         "### Ejercicio 1: Error detectado en compilaci\u00f3n por SQLDelight",
         "### Ejercicio 2: Por qu\u00e9 se necesita un driver distinto por plataforma",
-        "### Ejercicio 3: Aplicaci\u00f3n de migraciones seg\u00fan versi\u00f3n",
-        "## Resumen del m\u00f3dulo"
+        "### Ejercicio 3: Aplicaci\u00f3n de migraciones seg\u00fan versi\u00f3n"
       ]
     },
     {
       "path": "web/public/content/kotlin-multiplatform/modulo-7.md",
-      "lines": 190,
+      "lines": 230,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5207,17 +5966,17 @@
         "### Tema 1: Compose Multiplatform vs Jetpack Compose",
         "### Tema 2: Theming y navegaci\u00f3n compartidos",
         "### Tema 3: Limitaciones en iOS y otros targets",
+        "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
         "## Ejercicios de evaluaci\u00f3n",
         "### Ejercicio 1: Ganancia y riesgo de compartir UI",
         "### Ejercicio 2: Por qu\u00e9 Compose Multiplatform es m\u00e1s limitado en iOS",
-        "### Ejercicio 3: Alcance de Compose Multiplatform m\u00e1s all\u00e1 de m\u00f3vil",
-        "## Resumen del m\u00f3dulo"
+        "### Ejercicio 3: Alcance de Compose Multiplatform m\u00e1s all\u00e1 de m\u00f3vil"
       ]
     },
     {
       "path": "web/public/content/kotlin-multiplatform/modulo-8.md",
-      "lines": 192,
+      "lines": 232,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5228,17 +5987,17 @@
         "### Tema 1: El framework generado para iOS",
         "### Tema 2: Mapeo de tipos Kotlin \u2194 Swift",
         "### Tema 3: Coroutines desde Swift, y distribuci\u00f3n del framework",
+        "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
         "## Ejercicios de evaluaci\u00f3n",
         "### Ejercicio 1: Mapeo de sealed class hacia Swift",
         "### Ejercicio 2: Qu\u00e9 cambia al llamar una funci\u00f3n suspend desde Swift",
-        "### Ejercicio 3: CocoaPods vs SPM",
-        "## Resumen del m\u00f3dulo"
+        "### Ejercicio 3: CocoaPods vs SPM"
       ]
     },
     {
       "path": "web/public/content/kotlin-multiplatform/modulo-9.md",
-      "lines": 207,
+      "lines": 247,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5249,12 +6008,12 @@
         "### Tema 1: kotlin.test en commonTest",
         "### Tema 2: Fakes en vez de mocks",
         "### Tema 3: runTest para coroutines",
+        "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
         "## Ejercicios de evaluaci\u00f3n",
         "### Ejercicio 1: Confianza de testear la capa com\u00fan una sola vez",
         "### Ejercicio 2: Cu\u00e1ndo usar un fake en vez de un mock",
-        "### Ejercicio 3: Por qu\u00e9 runTest evita esperas reales",
-        "## Resumen del m\u00f3dulo"
+        "### Ejercicio 3: Por qu\u00e9 runTest evita esperas reales"
       ]
     },
     {
@@ -5645,28 +6404,28 @@
     },
     {
       "path": "web/public/content/node/modulo-0.md",
-      "lines": 228,
+      "lines": 300,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
       "headings": [
         "# M\u00f3dulo 0: El runtime de Node \u2014 V8, libuv y el Event Loop",
         "## S\u00edlabo",
+        "## Antes de comenzar: instala Node sin problemas de permisos",
         "## Contenido te\u00f3rico",
         "### Tema 1: Node no es \"JavaScript en el servidor\" sin m\u00e1s",
         "### Tema 2: Fases del Event Loop de Node",
         "### Tema 3: process, global y m\u00f3dulos core",
         "### Tema 4: Event-driven architecture y non-blocking I/O",
+        "## Ruta de proyecto progresivo desde carpeta vac\u00eda",
+        "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
-        "## Ejercicios de evaluaci\u00f3n",
-        "### Ejercicio 1: Predecir el orden de ejecuci\u00f3n",
-        "### Ejercicio 2: Por qu\u00e9 Node maneja miles de conexiones con un hilo",
-        "### Ejercicio 3: Diagnosticar bloqueo del Event Loop"
+        "## Ejercicios de evaluaci\u00f3n"
       ]
     },
     {
       "path": "web/public/content/node/modulo-1.md",
-      "lines": 222,
+      "lines": 262,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5678,16 +6437,16 @@
         "### Tema 2: Lockfiles e instalaci\u00f3n reproducible",
         "### Tema 3: Workspaces \u2014 monorepos con npm/pnpm",
         "### Tema 4: Scripts de ciclo de vida",
+        "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
         "## Ejercicios de evaluaci\u00f3n",
         "### Ejercicio 1: Interpretar rangos de semver",
-        "### Ejercicio 2: Por qu\u00e9 npm ci es m\u00e1s seguro en CI",
-        "### Ejercicio 3: Dise\u00f1ar un monorepo"
+        "### Ejercicio 2: Por qu\u00e9 npm ci es m\u00e1s seguro en CI"
       ]
     },
     {
       "path": "web/public/content/node/modulo-10.md",
-      "lines": 206,
+      "lines": 246,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5699,16 +6458,16 @@
         "### Tema 2: Rate limiting",
         "### Tema 3: Inyecci\u00f3n SQL y sanitizaci\u00f3n contra XSS",
         "### Tema 4: OWASP API Security Top 10 y auditor\u00eda de dependencias",
+        "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
         "## Ejercicios de evaluaci\u00f3n",
         "### Ejercicio 1: Por qu\u00e9 la concatenaci\u00f3n de SQL es peligrosa siempre",
-        "### Ejercicio 2: Qu\u00e9 resuelve el rate limiting m\u00e1s all\u00e1 de \"verse profesional\"",
-        "### Ejercicio 3: Auditar un endpoint contra OWASP"
+        "### Ejercicio 2: Qu\u00e9 resuelve el rate limiting m\u00e1s all\u00e1 de \"verse profesional\""
       ]
     },
     {
       "path": "web/public/content/node/modulo-11.md",
-      "lines": 228,
+      "lines": 268,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5721,15 +6480,15 @@
         "# .env.production          # .env.development",
         "### Tema 3: PM2, contenedores y zero-downtime deploys",
         "### Tema 4: Nginx como reverse proxy y serverless",
+        "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
         "## Ejercicios de evaluaci\u00f3n",
-        "### Ejercicio 1: Por qu\u00e9 multi-stage es m\u00e1s seguro y liviano",
-        "### Ejercicio 2: Ventaja de un healthcheck a nivel de Docker/Kubernetes"
+        "### Ejercicio 1: Por qu\u00e9 multi-stage es m\u00e1s seguro y liviano"
       ]
     },
     {
       "path": "web/public/content/node/modulo-12.md",
-      "lines": 214,
+      "lines": 276,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5741,16 +6500,37 @@
         "### Tema 2: Uniendo cada m\u00f3dulo del track",
         "### Tema 3: Qu\u00e9 le falta a esta API para producci\u00f3n real",
         "### Tema 4: Pr\u00f3ximos pasos \u2014 microservicios, colas de mensajes y TypeScript",
+        "## Proyecto transversal RutaFlow: Comando idempotente de entrega",
+        "### Capacidad y fundamento",
+        "### Implementaci\u00f3n guiada",
+        "### Verificaci\u00f3n profesional",
+        "## Criterio transversal de calidad del c\u00f3digo"
+      ]
+    },
+    {
+      "path": "web/public/content/node/modulo-13.md",
+      "lines": 336,
+      "kind": "course-content",
+      "symbols": [],
+      "imports": [],
+      "headings": [
+        "# M\u00f3dulo 13: TypeScript, contratos e integraciones confiables",
+        "## S\u00edlabo",
+        "## Contenido te\u00f3rico",
+        "### Tema 1: Tipos est\u00e1ticos dentro, datos desconocidos en la frontera",
+        "### Tema 2: Un contrato HTTP es comportamiento, no solo documentaci\u00f3n",
+        "### Tema 3: Reintentar sin duplicar el efecto",
+        "### Tema 4: Webhooks verificables y recuperaci\u00f3n por reconciliaci\u00f3n",
+        "## Revisi\u00f3n oficial de plataforma \u2014 julio de 2026",
+        "### L\u00ednea LTS, l\u00ednea Current y APIs del runtime",
+        "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
-        "## Ejercicios de evaluaci\u00f3n",
-        "### Ejercicio 1: Justificar decisiones de arquitectura propias",
-        "### Ejercicio 2: Reconsiderar una decisi\u00f3n de dise\u00f1o",
-        "### Ejercicio 3: Qu\u00e9 le falta a esta API para producci\u00f3n real"
+        "### Proyecto: API contractual con efectos recuperables"
       ]
     },
     {
       "path": "web/public/content/node/modulo-2.md",
-      "lines": 237,
+      "lines": 277,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5762,16 +6542,16 @@
         "### Tema 2: Streams legibles, escribibles y transform",
         "### Tema 3: Backpressure",
         "### Tema 4: pipeline() para componer streams de forma segura",
+        "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
         "## Ejercicios de evaluaci\u00f3n",
         "### Ejercicio 1: Por qu\u00e9 un archivo grande no escala en memoria",
-        "### Ejercicio 2: pipeline() frente a .pipe() encadenado",
-        "### Ejercicio 3: Diagnosticar backpressure"
+        "### Ejercicio 2: pipeline() frente a .pipe() encadenado"
       ]
     },
     {
       "path": "web/public/content/node/modulo-3.md",
-      "lines": 229,
+      "lines": 269,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5783,16 +6563,16 @@
         "### Tema 2: Routing manual",
         "### Tema 3: Parsing de body y headers",
         "### Tema 4: C\u00f3digos de estado y content negotiation",
+        "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
         "## Ejercicios de evaluaci\u00f3n",
         "### Ejercicio 1: Qu\u00e9 automatiza Express",
-        "### Ejercicio 2: Por qu\u00e9 el body llega como stream",
-        "### Ejercicio 3: Elegir el c\u00f3digo de estado correcto"
+        "### Ejercicio 2: Por qu\u00e9 el body llega como stream"
       ]
     },
     {
       "path": "web/public/content/node/modulo-4.md",
-      "lines": 223,
+      "lines": 263,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5804,16 +6584,16 @@
         "### Tema 2: Routers anidados",
         "### Tema 3: Validaci\u00f3n de entrada con Zod y manejo centralizado de errores",
         "### Tema 4: Express frente a Fastify",
+        "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
         "## Ejercicios de evaluaci\u00f3n",
         "### Ejercicio 1: Por qu\u00e9 importa el orden de middleware",
-        "### Ejercicio 2: Diagnosticar una petici\u00f3n colgada",
-        "### Ejercicio 3: Elegir entre Express y Fastify"
+        "### Ejercicio 2: Diagnosticar una petici\u00f3n colgada"
       ]
     },
     {
       "path": "web/public/content/node/modulo-5.md",
-      "lines": 226,
+      "lines": 266,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5825,16 +6605,16 @@
         "### Tema 2: Prisma \u2014 schema, migraciones y queries tipadas",
         "### Tema 3: Pool de conexiones y transacciones",
         "### Tema 4: MongoDB con Mongoose y otras alternativas de ORM",
+        "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
         "## Ejercicios de evaluaci\u00f3n",
         "### Ejercicio 1: Cu\u00e1ndo un ORM ayuda y cu\u00e1ndo estorba",
-        "### Ejercicio 2: Por qu\u00e9 un pool de conexiones",
-        "### Ejercicio 3: Dise\u00f1ar una transacci\u00f3n"
+        "### Ejercicio 2: Por qu\u00e9 un pool de conexiones"
       ]
     },
     {
       "path": "web/public/content/node/modulo-6.md",
-      "lines": 214,
+      "lines": 254,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5846,16 +6626,16 @@
         "### Tema 2: JWT \u2014 access y refresh tokens",
         "### Tema 3: Middleware de autenticaci\u00f3n y control de roles",
         "### Tema 4: OAuth 2.0 y Passport.js",
+        "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
         "## Ejercicios de evaluaci\u00f3n",
         "### Ejercicio 1: Por qu\u00e9 nunca cifrar contrase\u00f1as en vez de hashearlas",
-        "### Ejercicio 2: Dise\u00f1ar el flujo de refresh",
-        "### Ejercicio 3: Diagnosticar un fallo de autorizaci\u00f3n"
+        "### Ejercicio 2: Dise\u00f1ar el flujo de refresh"
       ]
     },
     {
       "path": "web/public/content/node/modulo-7.md",
-      "lines": 215,
+      "lines": 255,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5870,13 +6650,13 @@
         "### Tema 4: Alternativas de testing y debugging",
         "# luego, en Chrome: chrome://inspect \u2192 click en \"inspect\" bajo el proceso listado",
         "# breakpoints, inspecci\u00f3n de variables, step-through, igual que en el navegador",
-        "## Laboratorio pr\u00e1ctico",
-        "## Ejercicios de evaluaci\u00f3n"
+        "## Criterio transversal de calidad del c\u00f3digo",
+        "## Laboratorio pr\u00e1ctico"
       ]
     },
     {
       "path": "web/public/content/node/modulo-8.md",
-      "lines": 212,
+      "lines": 252,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5890,14 +6670,14 @@
         "### Tema 4: PM2, memory leaks y heap snapshots",
         "# Chrome DevTools (--inspect) \u2192 pesta\u00f1a Memory \u2192 tomar snapshot A \u2192 esperar \u2192 snapshot B",
         "# comparar A vs B: \u00bfqu\u00e9 tipo de objeto creci\u00f3 sospechosamente entre ambos?",
+        "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
-        "## Ejercicios de evaluaci\u00f3n",
-        "### Ejercicio 1: Worker Thread frente a cola de trabajo"
+        "## Ejercicios de evaluaci\u00f3n"
       ]
     },
     {
       "path": "web/public/content/node/modulo-9.md",
-      "lines": 215,
+      "lines": 255,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5909,11 +6689,11 @@
         "### Tema 2: Correlation ID por request",
         "### Tema 3: Excepciones no capturadas y graceful shutdown",
         "### Tema 4: REST, GraphQL y gRPC",
+        "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
         "## Ejercicios de evaluaci\u00f3n",
         "### Ejercicio 1: Por qu\u00e9 el correlation ID es esencial",
-        "### Ejercicio 2: Error capturado frente a no capturado",
-        "### Ejercicio 3: Por qu\u00e9 importa el graceful shutdown"
+        "### Ejercicio 2: Error capturado frente a no capturado"
       ]
     },
     {
@@ -7617,28 +8397,28 @@
     },
     {
       "path": "web/public/content/react/modulo-0.md",
-      "lines": 203,
+      "lines": 277,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
       "headings": [
         "# M\u00f3dulo 0: JSX, componentes y props",
         "## S\u00edlabo",
+        "## Antes de comenzar: instala el entorno",
+        "### Crea tu primera aplicaci\u00f3n",
         "## Contenido te\u00f3rico",
         "### Tema 1: JSX es az\u00facar sint\u00e1ctica sobre createElement",
         "### Tema 2: Listas con key estable",
         "### Tema 3: Composici\u00f3n sobre herencia, y Fragments",
         "### Tema 4: Renderizado condicional y estilos",
-        "## Laboratorio pr\u00e1ctico",
-        "## Ejercicios de evaluaci\u00f3n",
-        "### Ejercicio 1: Por qu\u00e9 el \u00edndice como key es riesgoso",
-        "### Ejercicio 2: JSX y createElement",
-        "### Ejercicio 3: && frente a ternario"
+        "## Ruta de proyecto progresivo desde carpeta vac\u00eda",
+        "## Criterio transversal de calidad del c\u00f3digo",
+        "## Laboratorio pr\u00e1ctico"
       ]
     },
     {
       "path": "web/public/content/react/modulo-1.md",
-      "lines": 203,
+      "lines": 243,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -7650,16 +8430,16 @@
         "### Tema 2: Render frente a commit",
         "### Tema 3: Batching de actualizaciones",
         "### Tema 4: Componentes controlados",
+        "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
         "## Ejercicios de evaluaci\u00f3n",
         "### Ejercicio 1: El bug de count + 1 repetido",
-        "### Ejercicio 2: Render vs commit",
-        "### Ejercicio 3: Batching de actualizaciones"
+        "### Ejercicio 2: Render vs commit"
       ]
     },
     {
       "path": "web/public/content/react/modulo-10.md",
-      "lines": 198,
+      "lines": 238,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -7671,16 +8451,16 @@
         "### Tema 2: use client para interactividad",
         "### Tema 3: Streaming con Suspense en el servidor",
         "### Tema 4: Server Actions",
+        "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
         "## Ejercicios de evaluaci\u00f3n",
         "### Ejercicio 1: Ventaja de un Server Component",
-        "### Ejercicio 2: Cu\u00e1ndo es obligatorio use client",
-        "### Ejercicio 3: Server Actions frente a un endpoint API manual"
+        "### Ejercicio 2: Cu\u00e1ndo es obligatorio use client"
       ]
     },
     {
       "path": "web/public/content/react/modulo-11.md",
-      "lines": 190,
+      "lines": 230,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -7691,17 +8471,17 @@
         "### Tema 1: Tipado de props y children",
         "### Tema 2: Hooks gen\u00e9ricos",
         "### Tema 3: Eventos tipados y componentes polim\u00f3rficos",
+        "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
         "## Ejercicios de evaluaci\u00f3n",
         "### Ejercicio 1: Beneficio de tipar props",
         "### Ejercicio 2: Por qu\u00e9 un hook gen\u00e9rico es m\u00e1s reutilizable",
-        "### Ejercicio 3: Componentes polim\u00f3rficos",
-        "## Resumen del m\u00f3dulo"
+        "### Ejercicio 3: Componentes polim\u00f3rficos"
       ]
     },
     {
       "path": "web/public/content/react/modulo-12.md",
-      "lines": 184,
+      "lines": 246,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -7712,17 +8492,38 @@
         "### Tema 1: Estructura del proyecto integrador",
         "### Tema 2: Integrando rutas, TanStack Query y Zustand",
         "### Tema 3: useTareas \u2014 hook dedicado con TanStack Query",
+        "## Proyecto transversal RutaFlow: Seguimiento del cliente",
+        "### Capacidad y fundamento",
+        "### Implementaci\u00f3n guiada",
+        "### Verificaci\u00f3n profesional",
+        "## Criterio transversal de calidad del c\u00f3digo",
+        "## Laboratorio pr\u00e1ctico"
+      ]
+    },
+    {
+      "path": "web/public/content/react/modulo-13.md",
+      "lines": 329,
+      "kind": "course-content",
+      "symbols": [],
+      "imports": [],
+      "headings": [
+        "# M\u00f3dulo 13: React en producci\u00f3n \u2014 resiliencia, accesibilidad y seguridad",
+        "## S\u00edlabo",
+        "## Contenido te\u00f3rico",
+        "### Tema 1: Dise\u00f1ar estados de carga, error y recuperaci\u00f3n",
+        "### Tema 2: La composici\u00f3n visual debe conservar sem\u00e1ntica y foco",
+        "### Tema 3: Cliente y servidor forman una sola frontera de seguridad",
+        "### Tema 4: Hidrataci\u00f3n determinista, idioma y releases medibles",
+        "## Revisi\u00f3n oficial de plataforma \u2014 julio de 2026",
+        "### React 19.2, Compiler y seguridad de Server Components",
+        "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
-        "## Ejercicios de evaluaci\u00f3n",
-        "### Ejercicio 1: Separaci\u00f3n cliente/servidor como decisi\u00f3n arquitect\u00f3nica",
-        "### Ejercicio 2: Impacto del ecosistema en la calidad del c\u00f3digo",
-        "### Ejercicio 3: Encapsular acceso a datos en un hook dedicado",
-        "## Resumen del m\u00f3dulo"
+        "### Proyecto: auditor\u00eda resiliente de la SPA y su versi\u00f3n Next.js"
       ]
     },
     {
       "path": "web/public/content/react/modulo-2.md",
-      "lines": 200,
+      "lines": 240,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -7734,16 +8535,16 @@
         "### Tema 2: useRef \u2014 valores mutables sin re-render",
         "### Tema 3: useMemo y useCallback con criterio",
         "### Tema 4: Reglas de los hooks, useReducer y useImperativeHandle",
+        "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
         "## Ejercicios de evaluaci\u00f3n",
         "### Ejercicio 1: Por qu\u00e9 useEffect sin dependencias corre en cada render",
-        "### Ejercicio 2: Cu\u00e1ndo useMemo realmente ayuda",
-        "### Ejercicio 3: Reglas de los hooks"
+        "### Ejercicio 2: Cu\u00e1ndo useMemo realmente ayuda"
       ]
     },
     {
       "path": "web/public/content/react/modulo-3.md",
-      "lines": 183,
+      "lines": 223,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -7754,17 +8555,17 @@
         "### Tema 1: React Hook Form y el problema del re-render por tecla",
         "### Tema 2: Validaci\u00f3n con zod y formularios multi-paso",
         "### Tema 3: Eventos sint\u00e9ticos",
+        "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
         "## Ejercicios de evaluaci\u00f3n",
         "### Ejercicio 1: Por qu\u00e9 React Hook Form evita re-renders",
         "### Ejercicio 2: Eventos sint\u00e9ticos",
-        "### Ejercicio 3: Estado compartido en formularios multi-paso",
-        "## Resumen del m\u00f3dulo"
+        "### Ejercicio 3: Estado compartido en formularios multi-paso"
       ]
     },
     {
       "path": "web/public/content/react/modulo-4.md",
-      "lines": 184,
+      "lines": 224,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -7775,17 +8576,17 @@
         "### Tema 1: createContext y useContext",
         "### Tema 2: Cu\u00e1ndo Context es suficiente y cu\u00e1ndo no",
         "### Tema 3: Componentes compuestos, render props y hooks personalizados",
+        "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
         "## Ejercicios de evaluaci\u00f3n",
         "### Ejercicio 1: Por qu\u00e9 Context no reemplaza a Redux completamente",
         "### Ejercicio 2: Prop drilling aceptable vs Context necesario",
-        "### Ejercicio 3: Componentes compuestos y Context interno",
-        "## Resumen del m\u00f3dulo"
+        "### Ejercicio 3: Componentes compuestos y Context interno"
       ]
     },
     {
       "path": "web/public/content/react/modulo-5.md",
-      "lines": 188,
+      "lines": 228,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -7796,17 +8597,17 @@
         "### Tema 1: Rutas anidadas y layouts compartidos",
         "### Tema 2: Loaders \u2014 datos antes de renderizar",
         "### Tema 3: Rutas protegidas y code-splitting por ruta",
+        "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
         "## Ejercicios de evaluaci\u00f3n",
         "### Ejercicio 1: Ventaja de un loader",
         "### Ejercicio 2: Code-splitting y tiempo de carga inicial",
-        "### Ejercicio 3: Rutas protegidas",
-        "## Resumen del m\u00f3dulo"
+        "### Ejercicio 3: Rutas protegidas"
       ]
     },
     {
       "path": "web/public/content/react/modulo-6.md",
-      "lines": 181,
+      "lines": 221,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -7817,17 +8618,17 @@
         "### Tema 1: useQuery y el problema que resuelve",
         "### Tema 2: Mutations e invalidaci\u00f3n",
         "### Tema 3: Optimistic updates",
+        "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
         "## Ejercicios de evaluaci\u00f3n",
         "### Ejercicio 1: Loading hell resuelto por TanStack Query",
         "### Ejercicio 2: Riesgo de los optimistic updates",
-        "### Ejercicio 3: Por qu\u00e9 invalidar en vez de actualizar directamente la cache",
-        "## Resumen del m\u00f3dulo"
+        "### Ejercicio 3: Por qu\u00e9 invalidar en vez de actualizar directamente la cache"
       ]
     },
     {
       "path": "web/public/content/react/modulo-7.md",
-      "lines": 205,
+      "lines": 245,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -7839,16 +8640,16 @@
         "### Tema 2: Redux Toolkit \u2014 slices y ceremonia",
         "### Tema 3: Estado de servidor vs estado de cliente, y cu\u00e1ndo no necesitas nada de esto",
         "### Tema 4: Jotai, Recoil y XState como alternativas",
+        "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
         "## Ejercicios de evaluaci\u00f3n",
         "### Ejercicio 1: Por qu\u00e9 mezclar estado de servidor y cliente es un error",
-        "### Ejercicio 2: Cu\u00e1ndo no necesitas ninguna librer\u00eda de estado global",
-        "### Ejercicio 3: Zustand frente a Redux Toolkit"
+        "### Ejercicio 2: Cu\u00e1ndo no necesitas ninguna librer\u00eda de estado global"
       ]
     },
     {
       "path": "web/public/content/react/modulo-8.md",
-      "lines": 175,
+      "lines": 215,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -7859,17 +8660,17 @@
         "### Tema 1: Queries por rol, no por clase CSS",
         "### Tema 2: Mock Service Worker (MSW)",
         "### Tema 3: Testing de hooks personalizados",
+        "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
         "## Ejercicios de evaluaci\u00f3n",
         "### Ejercicio 1: Por qu\u00e9 evitar queries por clase CSS",
         "### Ejercicio 2: MSW frente a mockear fetch directamente",
-        "### Ejercicio 3: Testing de hooks aislado",
-        "## Resumen del m\u00f3dulo"
+        "### Ejercicio 3: Testing de hooks aislado"
       ]
     },
     {
       "path": "web/public/content/react/modulo-9.md",
-      "lines": 196,
+      "lines": 236,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -7881,11 +8682,179 @@
         "### Tema 2: React.memo con criterio",
         "### Tema 3: Virtualizaci\u00f3n y code-splitting",
         "### Tema 4: useTransition, useDeferredValue y Fiber",
+        "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
         "## Ejercicios de evaluaci\u00f3n",
         "### Ejercicio 1: Por qu\u00e9 medir antes de optimizar",
-        "### Ejercicio 2: Cu\u00e1ndo virtualizar es necesario",
-        "### Ejercicio 3: Fiber y trabajo interrumpible"
+        "### Ejercicio 2: Cu\u00e1ndo virtualizar es necesario"
+      ]
+    },
+    {
+      "path": "web/public/content/rutaflow/modulo-0.md",
+      "lines": 153,
+      "kind": "course-content",
+      "symbols": [],
+      "imports": [],
+      "headings": [
+        "# M\u00f3dulo 0: RutaFlow desde cero: producto, entorno y dominio",
+        "## S\u00edlabo",
+        "## Antes de comenzar: instala y comprueba el entorno",
+        "## Ruta de proyecto progresivo desde carpeta vac\u00eda",
+        "## Contenido te\u00f3rico",
+        "### Tema 1: El proceso log\u00edstico como sistema",
+        "### Tema 2: Entorno reproducible en Windows, macOS y Linux",
+        "### Tema 3: Arquitectura, privacidad y amenazas",
+        "## Criterio transversal de calidad del c\u00f3digo",
+        "## Laboratorio pr\u00e1ctico",
+        "## Ejercicios de evaluaci\u00f3n",
+        "### Ejercicio 1: explica antes de programar"
+      ]
+    },
+    {
+      "path": "web/public/content/rutaflow/modulo-1.md",
+      "lines": 143,
+      "kind": "course-content",
+      "symbols": [],
+      "imports": [],
+      "headings": [
+        "# M\u00f3dulo 1: Datos, geograf\u00eda y contabilidad de una entrega",
+        "## S\u00edlabo",
+        "## Contenido te\u00f3rico",
+        "### Tema 1: Modelo relacional e historial",
+        "### Tema 2: Geograf\u00eda con precisi\u00f3n \u00fatil",
+        "### Tema 3: Ledger de doble partida",
+        "## Criterio transversal de calidad del c\u00f3digo",
+        "## Laboratorio pr\u00e1ctico",
+        "## Ejercicios de evaluaci\u00f3n",
+        "### Ejercicio 1: explica antes de programar",
+        "### Ejercicio 2: rompe la soluci\u00f3n",
+        "### Ejercicio 3: decisi\u00f3n profesional"
+      ]
+    },
+    {
+      "path": "web/public/content/rutaflow/modulo-2.md",
+      "lines": 143,
+      "kind": "course-content",
+      "symbols": [],
+      "imports": [],
+      "headings": [
+        "# M\u00f3dulo 2: Backend: env\u00edos, asignaci\u00f3n e idempotencia",
+        "## S\u00edlabo",
+        "## Contenido te\u00f3rico",
+        "### Tema 1: Contratos HTTP y autorizaci\u00f3n",
+        "### Tema 2: Casos de uso y transacciones",
+        "### Tema 3: Outbox, colas y observabilidad",
+        "## Criterio transversal de calidad del c\u00f3digo",
+        "## Laboratorio pr\u00e1ctico",
+        "## Ejercicios de evaluaci\u00f3n",
+        "### Ejercicio 1: explica antes de programar",
+        "### Ejercicio 2: rompe la soluci\u00f3n",
+        "### Ejercicio 3: decisi\u00f3n profesional"
+      ]
+    },
+    {
+      "path": "web/public/content/rutaflow/modulo-3.md",
+      "lines": 143,
+      "kind": "course-content",
+      "symbols": [],
+      "imports": [],
+      "headings": [
+        "# M\u00f3dulo 3: Frontend web: cliente y centro de operaciones",
+        "## S\u00edlabo",
+        "## Contenido te\u00f3rico",
+        "### Tema 1: Estados expl\u00edcitos y arquitectura de interfaz",
+        "### Tema 2: Mapas operativos",
+        "### Tema 3: Accesibilidad, seguridad y rendimiento",
+        "## Criterio transversal de calidad del c\u00f3digo",
+        "## Laboratorio pr\u00e1ctico",
+        "## Ejercicios de evaluaci\u00f3n",
+        "### Ejercicio 1: explica antes de programar",
+        "### Ejercicio 2: rompe la soluci\u00f3n",
+        "### Ejercicio 3: decisi\u00f3n profesional"
+      ]
+    },
+    {
+      "path": "web/public/content/rutaflow/modulo-4.md",
+      "lines": 143,
+      "kind": "course-content",
+      "symbols": [],
+      "imports": [],
+      "headings": [
+        "# M\u00f3dulo 4: Aplicaci\u00f3n Flutter del conductor: GPS, bater\u00eda y offline",
+        "## S\u00edlabo",
+        "## Contenido te\u00f3rico",
+        "### Tema 1: Arquitectura Flutter por capacidades",
+        "### Tema 2: GPS, permisos y bater\u00eda",
+        "### Tema 3: Offline-first y prueba de entrega",
+        "## Criterio transversal de calidad del c\u00f3digo",
+        "## Laboratorio pr\u00e1ctico",
+        "## Ejercicios de evaluaci\u00f3n",
+        "### Ejercicio 1: explica antes de programar",
+        "### Ejercicio 2: rompe la soluci\u00f3n",
+        "### Ejercicio 3: decisi\u00f3n profesional"
+      ]
+    },
+    {
+      "path": "web/public/content/rutaflow/modulo-5.md",
+      "lines": 143,
+      "kind": "course-content",
+      "symbols": [],
+      "imports": [],
+      "headings": [
+        "# M\u00f3dulo 5: Rutas, mapas y seguimiento en tiempo real",
+        "## S\u00edlabo",
+        "## Contenido te\u00f3rico",
+        "### Tema 1: Grafos y problema de rutas",
+        "### Tema 2: Geocoding y map matching",
+        "### Tema 3: Streaming y ETA con incertidumbre",
+        "## Criterio transversal de calidad del c\u00f3digo",
+        "## Laboratorio pr\u00e1ctico",
+        "## Ejercicios de evaluaci\u00f3n",
+        "### Ejercicio 1: explica antes de programar",
+        "### Ejercicio 2: rompe la soluci\u00f3n",
+        "### Ejercicio 3: decisi\u00f3n profesional"
+      ]
+    },
+    {
+      "path": "web/public/content/rutaflow/modulo-6.md",
+      "lines": 143,
+      "kind": "course-content",
+      "symbols": [],
+      "imports": [],
+      "headings": [
+        "# M\u00f3dulo 6: Facturaci\u00f3n, recaudo, liquidaciones y fraude",
+        "## S\u00edlabo",
+        "## Contenido te\u00f3rico",
+        "### Tema 1: Cotizaci\u00f3n y facturaci\u00f3n reproducible",
+        "### Tema 2: Recaudo, liquidaci\u00f3n y conciliaci\u00f3n",
+        "### Tema 3: Fraude responsable",
+        "## Criterio transversal de calidad del c\u00f3digo",
+        "## Laboratorio pr\u00e1ctico",
+        "## Ejercicios de evaluaci\u00f3n",
+        "### Ejercicio 1: explica antes de programar",
+        "### Ejercicio 2: rompe la soluci\u00f3n",
+        "### Ejercicio 3: decisi\u00f3n profesional"
+      ]
+    },
+    {
+      "path": "web/public/content/rutaflow/modulo-7.md",
+      "lines": 143,
+      "kind": "course-content",
+      "symbols": [],
+      "imports": [],
+      "headings": [
+        "# M\u00f3dulo 7: Producci\u00f3n: cloud, DevOps, seguridad y operaci\u00f3n",
+        "## S\u00edlabo",
+        "## Contenido te\u00f3rico",
+        "### Tema 1: Infraestructura y entrega segura",
+        "### Tema 2: SLO y respuesta a incidentes",
+        "### Tema 3: Continuidad, costes y proyecto final",
+        "## Criterio transversal de calidad del c\u00f3digo",
+        "## Laboratorio pr\u00e1ctico",
+        "## Ejercicios de evaluaci\u00f3n",
+        "### Ejercicio 1: explica antes de programar",
+        "### Ejercicio 2: rompe la soluci\u00f3n",
+        "### Ejercicio 3: decisi\u00f3n profesional"
       ]
     },
     {
@@ -7898,28 +8867,28 @@
     },
     {
       "path": "web/public/content/spring-boot/modulo-0.md",
-      "lines": 179,
+      "lines": 252,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
       "headings": [
         "# M\u00f3dulo 0: Fundamentos de Spring \u2014 IoC y DI",
         "## S\u00edlabo",
+        "## Antes de comenzar: del equipo vac\u00edo a Spring Boot",
+        "# macOS/Linux",
+        "# Windows PowerShell",
         "## Contenido te\u00f3rico",
         "### Tema 1: Inversi\u00f3n de control y el contenedor de Spring",
         "### Tema 2: Inyecci\u00f3n por constructor vs por campo",
         "### Tema 3: Estereotipos, autoconfiguraci\u00f3n y scopes",
-        "## Laboratorio pr\u00e1ctico",
-        "## Ejercicios de evaluaci\u00f3n",
-        "### Ejercicio 1: Problema resuelto por la inversi\u00f3n de control",
-        "### Ejercicio 2: Por qu\u00e9 la inyecci\u00f3n por constructor facilita tests",
-        "### Ejercicio 3: Diferencia funcional de @Repository",
-        "## Resumen del m\u00f3dulo"
+        "## Ruta de proyecto progresivo desde carpeta vac\u00eda",
+        "## Criterio transversal de calidad del c\u00f3digo",
+        "## Laboratorio pr\u00e1ctico"
       ]
     },
     {
       "path": "web/public/content/spring-boot/modulo-1.md",
-      "lines": 184,
+      "lines": 224,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -7931,16 +8900,16 @@
         "### Tema 2: application.yml vs application.properties",
         "### Tema 3: Perfiles y estructura por capas",
         "# application-dev.yml",
+        "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
         "## Ejercicios de evaluaci\u00f3n",
         "### Ejercicio 1: Ventaja de externalizar configuraci\u00f3n por perfil",
-        "### Ejercicio 2: Responsabilidad de cada capa",
-        "### Ejercicio 3: Starters y dependency hell"
+        "### Ejercicio 2: Responsabilidad de cada capa"
       ]
     },
     {
       "path": "web/public/content/spring-boot/modulo-10.md",
-      "lines": 178,
+      "lines": 218,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -7951,17 +8920,17 @@
         "### Tema 1: Config Server y service discovery",
         "### Tema 2: Spring Cloud Gateway",
         "### Tema 3: Circuit breaker con Resilience4j",
+        "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
         "## Ejercicios de evaluaci\u00f3n",
         "### Ejercicio 1: Problema resuelto por un Config Server centralizado",
         "### Ejercicio 2: Qu\u00e9 hace un circuit breaker",
-        "### Ejercicio 3: Service discovery por nombre",
-        "## Resumen del m\u00f3dulo"
+        "### Ejercicio 3: Service discovery por nombre"
       ]
     },
     {
       "path": "web/public/content/spring-boot/modulo-11.md",
-      "lines": 166,
+      "lines": 206,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -7972,17 +8941,17 @@
         "### Tema 1: Fat JAR vs capas de Docker",
         "### Tema 2: GraalVM native image",
         "### Tema 3: Health checks para Kubernetes",
+        "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
         "## Ejercicios de evaluaci\u00f3n",
         "### Ejercicio 1: Valor del arranque en milisegundos con autoscaling",
         "### Ejercicio 2: Por qu\u00e9 el empaquetado por capas reduce el tama\u00f1o de actualizaciones",
-        "### Ejercicio 3: Limitaci\u00f3n de GraalVM native image",
-        "## Resumen del m\u00f3dulo"
+        "### Ejercicio 3: Limitaci\u00f3n de GraalVM native image"
       ]
     },
     {
       "path": "web/public/content/spring-boot/modulo-12.md",
-      "lines": 183,
+      "lines": 245,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -7993,17 +8962,38 @@
         "### Tema 1: Arquitectura del microservicio integrador",
         "### Tema 2: Integrando seguridad, persistencia y observabilidad",
         "### Tema 3: Cierre del track y pr\u00f3ximos pasos",
+        "## Proyecto transversal RutaFlow: Confirmaci\u00f3n transaccional y outbox",
+        "### Capacidad y fundamento",
+        "### Implementaci\u00f3n guiada",
+        "### Verificaci\u00f3n profesional",
+        "## Criterio transversal de calidad del c\u00f3digo",
+        "## Laboratorio pr\u00e1ctico"
+      ]
+    },
+    {
+      "path": "web/public/content/spring-boot/modulo-13.md",
+      "lines": 317,
+      "kind": "course-content",
+      "symbols": [],
+      "imports": [],
+      "headings": [
+        "# M\u00f3dulo 13: Consistencia, contratos y operaci\u00f3n distribuida",
+        "## S\u00edlabo",
+        "## Contenido te\u00f3rico",
+        "### Tema 1: `@Transactional` funciona en una frontera, no como encantamiento",
+        "### Tema 2: Recuperaci\u00f3n implica duplicaci\u00f3n segura",
+        "### Tema 3: Contratos ejecutables protegen despliegues independientes",
+        "### Tema 4: Observabilidad sirve a un objetivo y a una decisi\u00f3n",
+        "## Revisi\u00f3n oficial de plataforma \u2014 julio de 2026",
+        "### Spring Boot 4.1 y actualizaci\u00f3n con compatibilidad comprobada",
+        "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
-        "## Ejercicios de evaluaci\u00f3n",
-        "### Ejercicio 1: Decisi\u00f3n de dise\u00f1o al escalar 100x",
-        "### Ejercicio 2: Parte m\u00e1s compleja del ecosistema Spring",
-        "### Ejercicio 3: Cierre del track \u2014 qu\u00e9 distingue un microservicio productivo",
-        "## Resumen del m\u00f3dulo"
+        "### Proyecto: microservicio comprobado bajo fallos"
       ]
     },
     {
       "path": "web/public/content/spring-boot/modulo-2.md",
-      "lines": 186,
+      "lines": 226,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -8014,17 +9004,17 @@
         "### Tema 1: Por qu\u00e9 DTOs en vez de entidades directamente",
         "### Tema 2: Validaci\u00f3n con Bean Validation y ResponseEntity",
         "### Tema 3: Manejo centralizado de errores con @ControllerAdvice",
+        "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
         "## Ejercicios de evaluaci\u00f3n",
         "### Ejercicio 1: Por qu\u00e9 exponer DTOs en vez de entidades",
         "### Ejercicio 2: Ventaja de centralizar el manejo de errores",
-        "### Ejercicio 3: Elegir el c\u00f3digo de estado correcto",
-        "## Resumen del m\u00f3dulo"
+        "### Ejercicio 3: Elegir el c\u00f3digo de estado correcto"
       ]
     },
     {
       "path": "web/public/content/spring-boot/modulo-3.md",
-      "lines": 183,
+      "lines": 223,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -8035,17 +9025,17 @@
         "### Tema 1: Entidades y repositorios derivados",
         "### Tema 2: El problema N+1 y su correcci\u00f3n",
         "### Tema 3: Migraciones con Flyway",
+        "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
         "## Ejercicios de evaluaci\u00f3n",
         "### Ejercicio 1: Riesgo de ddl-auto en producci\u00f3n",
         "### Ejercicio 2: Causa y detecci\u00f3n del problema N+1",
-        "### Ejercicio 3: Cu\u00e1ndo usar un m\u00e9todo derivado vs @Query",
-        "## Resumen del m\u00f3dulo"
+        "### Ejercicio 3: Cu\u00e1ndo usar un m\u00e9todo derivado vs @Query"
       ]
     },
     {
       "path": "web/public/content/spring-boot/modulo-4.md",
-      "lines": 192,
+      "lines": 232,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -8056,17 +9046,17 @@
         "### Tema 1: SecurityFilterChain moderno",
         "### Tema 2: Filtro JWT y autorizaci\u00f3n por rol",
         "### Tema 3: CORS y CSRF",
+        "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
         "## Ejercicios de evaluaci\u00f3n",
         "### Ejercicio 1: Por qu\u00e9 una API stateless con JWT no necesita CSRF",
         "### Ejercicio 2: Autenticaci\u00f3n vs autorizaci\u00f3n",
-        "### Ejercicio 3: Relevancia de CORS",
-        "## Resumen del m\u00f3dulo"
+        "### Ejercicio 3: Relevancia de CORS"
       ]
     },
     {
       "path": "web/public/content/spring-boot/modulo-5.md",
-      "lines": 175,
+      "lines": 215,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -8077,17 +9067,17 @@
         "### Tema 1: @ConfigurationProperties tipado",
         "### Tema 2: Fallar r\u00e1pido al arranque",
         "### Tema 3: Manejo global de excepciones consistente entre entornos",
+        "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
         "## Ejercicios de evaluaci\u00f3n",
         "### Ejercicio 1: Por qu\u00e9 preferir @ConfigurationProperties tipado",
         "### Ejercicio 2: Ventaja de fallar al arranque",
-        "### Ejercicio 3: Consistencia del manejo de errores entre entornos",
-        "## Resumen del m\u00f3dulo"
+        "### Ejercicio 3: Consistencia del manejo de errores entre entornos"
       ]
     },
     {
       "path": "web/public/content/spring-boot/modulo-6.md",
-      "lines": 189,
+      "lines": 229,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -8098,17 +9088,17 @@
         "### Tema 1: Slices de testing \u2014 @WebMvcTest",
         "### Tema 2: @DataJpaTest con Testcontainers",
         "### Tema 3: @SpringBootTest completo y estrategia de pir\u00e1mide de tests",
+        "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
         "## Ejercicios de evaluaci\u00f3n",
         "### Ejercicio 1: Por qu\u00e9 un slice es m\u00e1s r\u00e1pido que SpringBootTest completo",
         "### Ejercicio 2: Ventaja de Testcontainers sobre H2",
-        "### Ejercicio 3: Estrategia de pir\u00e1mide de tests",
-        "## Resumen del m\u00f3dulo"
+        "### Ejercicio 3: Estrategia de pir\u00e1mide de tests"
       ]
     },
     {
       "path": "web/public/content/spring-boot/modulo-7.md",
-      "lines": 189,
+      "lines": 229,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -8119,17 +9109,17 @@
         "### Tema 1: Actuator y health checks personalizados",
         "### Tema 2: M\u00e9tricas de negocio con Micrometer",
         "### Tema 3: Liveness vs readiness",
+        "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
         "## Ejercicios de evaluaci\u00f3n",
         "### Ejercicio 1: Liveness vs readiness",
         "### Ejercicio 2: Valor de las m\u00e9tricas de negocio",
-        "### Ejercicio 3: Health indicator personalizado",
-        "## Resumen del m\u00f3dulo"
+        "### Ejercicio 3: Health indicator personalizado"
       ]
     },
     {
       "path": "web/public/content/spring-boot/modulo-8.md",
-      "lines": 183,
+      "lines": 223,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -8140,17 +9130,17 @@
         "### Tema 1: Producers y consumers con Spring Kafka",
         "### Tema 2: Dead-letter queue",
         "### Tema 3: Kafka frente a RabbitMQ",
+        "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
         "## Ejercicios de evaluaci\u00f3n",
         "### Ejercicio 1: Problema de acoplamiento resuelto por mensajer\u00eda",
         "### Ejercicio 2: Consecuencia sin dead-letter queue",
-        "### Ejercicio 3: Kafka vs RabbitMQ",
-        "## Resumen del m\u00f3dulo"
+        "### Ejercicio 3: Kafka vs RabbitMQ"
       ]
     },
     {
       "path": "web/public/content/spring-boot/modulo-9.md",
-      "lines": 177,
+      "lines": 217,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -8161,12 +9151,12 @@
         "### Tema 1: Mono y Flux",
         "### Tema 2: WebClient y composici\u00f3n no bloqueante",
         "### Tema 3: Cu\u00e1ndo WebFlux vale la complejidad, y R2DBC",
+        "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
         "## Ejercicios de evaluaci\u00f3n",
         "### Ejercicio 1: Cu\u00e1ndo WebFlux justifica su complejidad",
         "### Ejercicio 2: Riesgo de mezclar c\u00f3digo bloqueante en un flujo reactivo",
-        "### Ejercicio 3: Mono vs Flux",
-        "## Resumen del m\u00f3dulo"
+        "### Ejercicio 3: Mono vs Flux"
       ]
     },
     {
@@ -9963,7 +10953,7 @@
     },
     {
       "path": "web/src/app/app.spec.ts",
-      "lines": 32,
+      "lines": 105,
       "kind": "angular-app",
       "symbols": [],
       "imports": [
@@ -9972,7 +10962,8 @@
         "@angular/router/testing",
         "./app",
         "./app.routes",
-        "./catalog/course-catalog"
+        "./catalog/course-catalog",
+        "./course-data"
       ],
       "headings": []
     },
@@ -9992,15 +10983,17 @@
     },
     {
       "path": "web/src/app/catalog/course-catalog.html",
-      "lines": 55,
+      "lines": 74,
       "kind": "angular-app",
-      "symbols": [],
+      "symbols": [
+        "official-title"
+      ],
       "imports": [],
       "headings": []
     },
     {
       "path": "web/src/app/catalog/course-catalog.scss",
-      "lines": 153,
+      "lines": 178,
       "kind": "angular-app",
       "symbols": [],
       "imports": [],
@@ -10008,7 +11001,7 @@
     },
     {
       "path": "web/src/app/catalog/course-catalog.ts",
-      "lines": 80,
+      "lines": 82,
       "kind": "angular-app",
       "symbols": [
         "CourseCatalogComponent",
@@ -10024,6 +11017,7 @@
         "lucide-angular",
         "../course-data",
         "../icon-registry",
+        "../official-updates",
         "../progress.service",
         "../theme.service"
       ],
@@ -10222,7 +11216,7 @@
     },
     {
       "path": "web/src/app/course/lesson-viewer.html",
-      "lines": 63,
+      "lines": 87,
       "kind": "angular-app",
       "symbols": [],
       "imports": [],
@@ -10230,7 +11224,7 @@
     },
     {
       "path": "web/src/app/course/lesson-viewer.scss",
-      "lines": 128,
+      "lines": 190,
       "kind": "angular-app",
       "symbols": [],
       "imports": [],
@@ -10238,7 +11232,7 @@
     },
     {
       "path": "web/src/app/course/lesson-viewer.ts",
-      "lines": 191,
+      "lines": 452,
       "kind": "angular-app",
       "symbols": [
         "LessonViewerComponent",
@@ -10252,6 +11246,10 @@
         "lessonLoading",
         "tocItems",
         "activeTocId",
+        "readingProgress",
+        "copiedCode",
+        "lessonMode",
+        "lessonStats",
         "isComplete"
       ],
       "imports": [
@@ -10272,7 +11270,7 @@
     },
     {
       "path": "web/src/app/course-data.ts",
-      "lines": 1003,
+      "lines": 1051,
       "kind": "angular-app",
       "symbols": [
         "ServiceGroup",
@@ -10291,7 +11289,9 @@
         "./tracks/kotlin-multiplatform.track",
         "./tracks/android.track",
         "./tracks/ios.track",
-        "./tracks/flutter.track"
+        "./tracks/flutter.track",
+        "./tracks/foundations.track",
+        "./tracks/rutaflow.track"
       ],
       "headings": []
     },
@@ -10309,12 +11309,22 @@
     },
     {
       "path": "web/src/app/icon-registry.ts",
-      "lines": 26,
+      "lines": 28,
       "kind": "angular-app",
       "symbols": [],
       "imports": [
         "lucide-angular"
       ],
+      "headings": []
+    },
+    {
+      "path": "web/src/app/official-updates.ts",
+      "lines": 22,
+      "kind": "angular-app",
+      "symbols": [
+        "OfficialUpdate"
+      ],
+      "imports": [],
       "headings": []
     },
     {
@@ -10347,7 +11357,7 @@
     },
     {
       "path": "web/src/app/tracks/android.track.ts",
-      "lines": 171,
+      "lines": 192,
       "kind": "angular-app",
       "symbols": [],
       "imports": [
@@ -10357,7 +11367,7 @@
     },
     {
       "path": "web/src/app/tracks/angular.track.ts",
-      "lines": 185,
+      "lines": 206,
       "kind": "angular-app",
       "symbols": [
         "contador"
@@ -10369,7 +11379,7 @@
     },
     {
       "path": "web/src/app/tracks/devops.track.ts",
-      "lines": 185,
+      "lines": 192,
       "kind": "angular-app",
       "symbols": [],
       "imports": [
@@ -10379,7 +11389,17 @@
     },
     {
       "path": "web/src/app/tracks/flutter.track.ts",
-      "lines": 168,
+      "lines": 175,
+      "kind": "angular-app",
+      "symbols": [],
+      "imports": [
+        "../course-module.model"
+      ],
+      "headings": []
+    },
+    {
+      "path": "web/src/app/tracks/foundations.track.ts",
+      "lines": 236,
       "kind": "angular-app",
       "symbols": [],
       "imports": [
@@ -10389,7 +11409,7 @@
     },
     {
       "path": "web/src/app/tracks/ios.track.ts",
-      "lines": 167,
+      "lines": 180,
       "kind": "angular-app",
       "symbols": [],
       "imports": [
@@ -10399,7 +11419,7 @@
     },
     {
       "path": "web/src/app/tracks/java.track.ts",
-      "lines": 186,
+      "lines": 207,
       "kind": "angular-app",
       "symbols": [],
       "imports": [
@@ -10409,7 +11429,7 @@
     },
     {
       "path": "web/src/app/tracks/javascript.track.ts",
-      "lines": 187,
+      "lines": 208,
       "kind": "angular-app",
       "symbols": [],
       "imports": [
@@ -10419,7 +11439,7 @@
     },
     {
       "path": "web/src/app/tracks/kotlin-multiplatform.track.ts",
-      "lines": 155,
+      "lines": 176,
       "kind": "angular-app",
       "symbols": [],
       "imports": [
@@ -10429,7 +11449,7 @@
     },
     {
       "path": "web/src/app/tracks/node.track.ts",
-      "lines": 186,
+      "lines": 207,
       "kind": "angular-app",
       "symbols": [],
       "imports": [
@@ -10439,7 +11459,17 @@
     },
     {
       "path": "web/src/app/tracks/react.track.ts",
-      "lines": 165,
+      "lines": 186,
+      "kind": "angular-app",
+      "symbols": [],
+      "imports": [
+        "../course-module.model"
+      ],
+      "headings": []
+    },
+    {
+      "path": "web/src/app/tracks/rutaflow.track.ts",
+      "lines": 53,
       "kind": "angular-app",
       "symbols": [],
       "imports": [
@@ -10449,7 +11479,7 @@
     },
     {
       "path": "web/src/app/tracks/spring-boot.track.ts",
-      "lines": 169,
+      "lines": 190,
       "kind": "angular-app",
       "symbols": [],
       "imports": [
@@ -10552,6 +11582,10 @@
       "target": "web/src/app/catalog/course-catalog.ts"
     },
     {
+      "source": "web/src/app/app.spec.ts",
+      "target": "web/src/app/course-data.ts"
+    },
+    {
       "source": "web/src/app/app.ts",
       "target": "web/src/app/command-palette.ts"
     },
@@ -10618,6 +11652,14 @@
     {
       "source": "web/src/app/course-data.ts",
       "target": "web/src/app/tracks/flutter.track.ts"
+    },
+    {
+      "source": "web/src/app/course-data.ts",
+      "target": "web/src/app/tracks/foundations.track.ts"
+    },
+    {
+      "source": "web/src/app/course-data.ts",
+      "target": "web/src/app/tracks/rutaflow.track.ts"
     },
     {
       "source": "web/src/main.ts",

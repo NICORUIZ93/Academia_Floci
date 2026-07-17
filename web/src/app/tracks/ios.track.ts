@@ -163,4 +163,17 @@ export const IOS_MODULES: CourseModule[] = [
     ['¿Qué decisión de arquitectura te resultó más natural en SwiftUI comparado con otros frameworks que conozcas?', '¿Qué parte del proyecto (concurrencia, persistencia, testing) requirió más iteración para sentirse "correcta"?'],
     ['SwiftUI', 'Swift Concurrency', 'SwiftData'],
     'App iOS con SwiftUI, datos reales, persistencia local y tests.'),
+  m(13, 'iOS en producción: seguridad, sincronización y operación', 'Producción', 'Experto', '4 h', '#0a84ff',
+    'Endurece y opera una app iOS real ante enlaces hostiles, pérdida de red, datos sensibles y releases imperfectos.',
+    ['Sandbox, entitlements y Universal Links', 'Keychain, Data Protection y privacidad', 'Sincronización offline y conflictos', 'MetricKit, Instruments y releases seguros'],
+    [
+      'Construye un modelo de amenazas y audita entitlements, permisos y Universal Links',
+      'Protege credenciales con Keychain y define una política de datos, logs, backups y capturas',
+      'Implementa una outbox persistente con idempotencia y resolución explícita de conflictos',
+      'Instrumenta signposts y MetricKit, y ensaya migración, rollback y despliegue gradual',
+      'Entrega evidencias verificables mediante pruebas y una rúbrica de preparación operativa',
+    ],
+    ['¿Por qué el sandbox no vuelve confiable un Universal Link?', '¿Qué diferencia hay entre reintentar una petición y garantizar idempotencia?'],
+    ['Keychain', 'BackgroundTasks', 'MetricKit', 'Instruments'],
+    'Dossier de preparación para producción con amenaza, sincronización, telemetría y plan de release.'),
 ];

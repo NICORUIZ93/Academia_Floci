@@ -29,6 +29,25 @@ Un script que demuestra el orden de ejecución entre `setImmediate`, `setTimeout
 
 ---
 
+## Antes de comenzar: instala Node sin problemas de permisos
+
+Instala una versión **LTS** de Node.js, Git y Visual Studio Code. Recomendamos un administrador de versiones porque más adelante distintos proyectos pueden requerir versiones distintas: `nvm-windows` en Windows y `nvm` en macOS/Linux.
+
+- **Windows:** instala Git, VS Code y nvm-windows; abre PowerShell nuevo, ejecuta `nvm install lts` y `nvm use lts`.
+- **macOS:** instala Homebrew/Git y luego `nvm`, o usa el instalador oficial de Node LTS.
+- **Ubuntu/Debian:** instala Git con `apt` y Node LTS mediante `nvm`; evita el paquete `nodejs` antiguo de algunas distribuciones.
+
+Verifica `node --version`, `npm --version` y `git --version`. Crea una carpeta y tu primer programa:
+
+```bash
+mkdir hola-node
+cd hola-node
+npm init -y
+node -e "console.log('Node funciona', process.version)"
+```
+
+`npm init -y` crea `package.json`, el documento que describe el proyecto. Nunca copies `node_modules` ni lo subas a Git: se reconstruye con `npm install`. Si npm muestra `EACCES`, no lo arregles con `sudo`; reinstala Node con un administrador de versiones.
+
 ## Contenido teórico
 
 ### Tema 1: Node no es "JavaScript en el servidor" sin más
@@ -140,6 +159,35 @@ emisor.emit("dato", 42); // "recibido: 42"
 
 ---
 
+## Ruta de proyecto progresivo desde carpeta vacía
+
+No crees un proyecto desechable por módulo. Conserva un único repositorio que evoluciona durante todo el track y etiqueta cada hito (`git tag modulo-N`). Empieza con `mkdir academia-node && cd academia-node && git init && npm init -y`. Ejecuta el comando paso a paso, inspecciona los archivos generados y registra versiones y precondiciones en el README.
+
+| Hito | Evolución acumulativa | Evidencia antes de avanzar |
+|---|---|---|
+| Base | CLI y HTTP. | Arranque reproducible, commit limpio y prueba mínima. |
+| Aplicación | API, datos y autenticación. | Casos normales, límite y error automatizados. |
+| Integración | Conecta capas y reemplaza dobles por infraestructura controlada. | Diagrama, contratos y prueba de integración. |
+| Experto | observabilidad, resiliencia y operación. | Perfil o threat model, telemetría y runbook de recuperación. |
+
+Al iniciar cada laboratorio crea una rama `modulo-N`, implementa el incremento, verifica el criterio de éxito y fusiona solo con pruebas verdes. Si un módulo necesita un experimento aislado, colócalo en `experiments/modulo-N/`; el producto acumulativo permanece ejecutable. Al terminar, otra persona debe poder clonar el repositorio y reproducir el último hito siguiendo únicamente el README.
+
+## Criterio transversal de calidad del código
+
+Aplica estas decisiones en todos los ejemplos y en tu entrega:
+
+- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
+- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
+- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
+- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
+- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
+- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
+- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
+
+**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
+
+**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
+
 ## Laboratorio práctico
 
 **Objetivo del laboratorio:** predecir y verificar el orden exacto de ejecución entre `setTimeout`, `setImmediate` y `process.nextTick`, y explorar el objeto `process` y los módulos core.
@@ -198,6 +246,30 @@ emisor.emit("dato", 42); // "recibido: 42"
 - Menciona al menos una alternativa correcta (delegar a Worker Thread) para cómputo intensivo de CPU.
 
 ---
+
+## Rúbrica del proyecto
+
+Esta rúbrica evalúa el laboratorio y los ejercicios como evidencia de dominio, no la mera finalización de pasos.
+
+| Criterio | Peso | Evidencia esperada |
+|---|---:|---|
+| Comprensión conceptual | 20% | Explica el mecanismo, sus límites y por qué la solución funciona. |
+| Implementación funcional | 30% | El artefacto satisface requisitos normales, límite y de error. |
+| Verificación | 20% | Incluye pruebas, mediciones o inspecciones reproducibles. |
+| Diseño y calidad | 15% | Nombres, estructura, seguridad y mantenibilidad son deliberados. |
+| Comunicación profesional | 15% | README, decisiones, comandos y resultados permiten repetir el trabajo. |
+
+Se alcanza competencia con 70/100 y sin cero en implementación o verificación. El nivel experto exige comparar alternativas, justificar trade-offs y reconocer condiciones donde la solución dejaría de ser válida.
+
+## Bibliografía y fundamento académico
+
+Estas fuentes sustentan los conceptos y deben consultarse para verificar detalles que cambian entre versiones:
+
+- OpenJS Foundation, *Node.js Documentation*.
+- IETF, especificaciones HTTP Semantics, OAuth 2.0 y JSON.
+- OWASP Foundation, *Application Security Verification Standard*.
+- ACM/IEEE-CS/AAAI, *Computer Science Curricula 2023*.
+- IEEE Computer Society, *SWEBOK Guide V4.0*.
 
 ## Resumen del módulo
 

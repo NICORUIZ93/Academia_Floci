@@ -30,6 +30,39 @@ Un proyecto Angular nuevo con un componente propio renderizando datos dinámicos
 
 ---
 
+## Antes de comenzar: prepara tu equipo desde cero
+
+No necesitas haber programado antes. Solo necesitas saber crear una carpeta y copiar un comando. Usaremos **Visual Studio Code**, **Node.js LTS**, **Git** y Angular CLI. Un comando es una instrucción escrita en una terminal; ejecútalo con `Enter` y espera a que termine antes de escribir el siguiente.
+
+### Windows
+
+1. Instala [Visual Studio Code](https://code.visualstudio.com/), [Git](https://git-scm.com/download/win) y la versión **LTS** de [Node.js](https://nodejs.org/). Acepta las opciones predeterminadas.
+2. Reinicia VS Code y abre **Terminal → New Terminal**. Debe aparecer PowerShell.
+3. Ejecuta `node --version`, `npm --version` y `git --version`. Cada comando debe mostrar una versión, no “no se reconoce”.
+4. Instala Angular CLI con `npm install -g @angular/cli` y comprueba `ng version`.
+
+### macOS
+
+1. Abre Terminal e instala Homebrew con el comando publicado en [brew.sh](https://brew.sh/).
+2. Ejecuta `brew install node git` y descarga Visual Studio Code.
+3. Comprueba `node --version`, `npm --version`, `git --version` e instala Angular CLI con `npm install -g @angular/cli`.
+
+### Linux (Ubuntu/Debian)
+
+1. Instala Git con `sudo apt update && sudo apt install -y git`.
+2. Instala Node.js LTS desde [nodejs.org](https://nodejs.org/) o mediante `nvm`; evita versiones antiguas del repositorio de tu distribución.
+3. Instala VS Code, abre su terminal y verifica las versiones. Luego ejecuta `npm install -g @angular/cli`.
+
+### Tu primer proyecto verificable
+
+```bash
+ng new mi-primera-app --style=scss --routing
+cd mi-primera-app
+ng serve --open
+```
+
+Si ves la aplicación en `http://localhost:4200`, el entorno funciona. Detén el servidor con `Ctrl+C`. Si `ng` no existe, cierra y abre la terminal; si aún falla, ejecuta `npx ng version` para distinguir un problema de instalación de uno de `PATH`.
+
 ## Contenido teórico
 
 ### Tema 1: El CLI ya no genera NgModules
@@ -129,6 +162,35 @@ AOT (moderno, por defecto): plantillas compiladas durante el build,
 
 ---
 
+## Ruta de proyecto progresivo desde carpeta vacía
+
+No crees un proyecto desechable por módulo. Conserva un único repositorio que evoluciona durante todo el track y etiqueta cada hito (`git tag modulo-N`). Empieza con `npx @angular/cli new academia-angular --standalone --routing --style=scss`. Ejecuta el comando paso a paso, inspecciona los archivos generados y registra versiones y precondiciones en el README.
+
+| Hito | Evolución acumulativa | Evidencia antes de avanzar |
+|---|---|---|
+| Base | componentes y formularios. | Arranque reproducible, commit limpio y prueba mínima. |
+| Aplicación | estado, rutas y APIs. | Casos normales, límite y error automatizados. |
+| Integración | Conecta capas y reemplaza dobles por infraestructura controlada. | Diagrama, contratos y prueba de integración. |
+| Experto | arquitectura, accesibilidad y producción. | Perfil o threat model, telemetría y runbook de recuperación. |
+
+Al iniciar cada laboratorio crea una rama `modulo-N`, implementa el incremento, verifica el criterio de éxito y fusiona solo con pruebas verdes. Si un módulo necesita un experimento aislado, colócalo en `experiments/modulo-N/`; el producto acumulativo permanece ejecutable. Al terminar, otra persona debe poder clonar el repositorio y reproducir el último hito siguiendo únicamente el README.
+
+## Criterio transversal de calidad del código
+
+Aplica estas decisiones en todos los ejemplos y en tu entrega:
+
+- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
+- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
+- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
+- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
+- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
+- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
+- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
+
+**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
+
+**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
+
 ## Laboratorio práctico
 
 **Objetivo del laboratorio:** crear un proyecto Angular nuevo, generar un componente propio, y renderizar datos dinámicos usando interpolación y property binding correctamente.
@@ -186,6 +248,30 @@ AOT (moderno, por defecto): plantillas compiladas durante el build,
 - Propone un mecanismo válido de narrowing (type guard, verificación de forma).
 
 ---
+
+## Rúbrica del proyecto
+
+Esta rúbrica evalúa el laboratorio y los ejercicios como evidencia de dominio, no la mera finalización de pasos.
+
+| Criterio | Peso | Evidencia esperada |
+|---|---:|---|
+| Comprensión conceptual | 20% | Explica el mecanismo, sus límites y por qué la solución funciona. |
+| Implementación funcional | 30% | El artefacto satisface requisitos normales, límite y de error. |
+| Verificación | 20% | Incluye pruebas, mediciones o inspecciones reproducibles. |
+| Diseño y calidad | 15% | Nombres, estructura, seguridad y mantenibilidad son deliberados. |
+| Comunicación profesional | 15% | README, decisiones, comandos y resultados permiten repetir el trabajo. |
+
+Se alcanza competencia con 70/100 y sin cero en implementación o verificación. El nivel experto exige comparar alternativas, justificar trade-offs y reconocer condiciones donde la solución dejaría de ser válida.
+
+## Bibliografía y fundamento académico
+
+Estas fuentes sustentan los conceptos y deben consultarse para verificar detalles que cambian entre versiones:
+
+- Google, *Angular Documentation* y guías oficiales de accesibilidad, seguridad y rendimiento.
+- ReactiveX, *RxJS Documentation*.
+- W3C, *Web Content Accessibility Guidelines (WCAG)*.
+- ACM/IEEE-CS/AAAI, *Computer Science Curricula 2023*.
+- IEEE Computer Society, *SWEBOK Guide V4.0*.
 
 ## Resumen del módulo
 
