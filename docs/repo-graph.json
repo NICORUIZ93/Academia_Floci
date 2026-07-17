@@ -2,7 +2,7 @@
   "files": [
     {
       "path": ".claude/settings.local.json",
-      "lines": 8,
+      "lines": 11,
       "kind": "project-file",
       "symbols": [],
       "imports": [],
@@ -101,7 +101,7 @@
     },
     {
       "path": "examples/README.md",
-      "lines": 100,
+      "lines": 129,
       "kind": "example",
       "symbols": [],
       "imports": [],
@@ -114,6 +114,7 @@
         "# Go (requiere: go get github.com/aws/aws-sdk-go-v2/config github.com/aws/aws-sdk-go-v2/service/s3)",
         "# Rust (requiere un Cargo.toml propio con aws-config, aws-sdk-s3,",
         "# aws-credential-types y tokio; cada archivo es un binario independiente)",
+        "## Ejemplos por track (`tracks/<track-id>/`)",
         "## Proyecto final de referencia"
       ]
     },
@@ -852,6 +853,38 @@
       "headings": []
     },
     {
+      "path": "examples/project-final/infra/cloudformation/stack.yaml",
+      "lines": 290,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "examples/project-final/infra/terraform/main.tf",
+      "lines": 296,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "examples/project-final/infra/terraform/outputs.tf",
+      "lines": 20,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "examples/project-final/infra/terraform/variables.tf",
+      "lines": 24,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
       "path": "examples/python/apigateway_create_api.py",
       "lines": 29,
       "kind": "example",
@@ -1458,6 +1491,456 @@
       "headings": []
     },
     {
+      "path": "examples/tracks/android/compose-ui.kt",
+      "lines": 38,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "examples/tracks/android/navigation-compose.kt",
+      "lines": 39,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "examples/tracks/android/retrofit-networking.kt",
+      "lines": 44,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "examples/tracks/android/room-persistence.kt",
+      "lines": 37,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "examples/tracks/android/stateflow-viewmodel.kt",
+      "lines": 55,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "examples/tracks/angular/di-service.ts",
+      "lines": 38,
+      "kind": "example",
+      "symbols": [
+        "TareasService",
+        "TareasComponent",
+        "Tarea",
+        "tareas"
+      ],
+      "imports": [
+        "@angular/core"
+      ],
+      "headings": []
+    },
+    {
+      "path": "examples/tracks/angular/http-interceptor.ts",
+      "lines": 30,
+      "kind": "example",
+      "symbols": [],
+      "imports": [
+        "@angular/common/http"
+      ],
+      "headings": []
+    },
+    {
+      "path": "examples/tracks/angular/reactive-form.ts",
+      "lines": 55,
+      "kind": "example",
+      "symbols": [
+        "RegistroFormComponent"
+      ],
+      "imports": [
+        "@angular/core",
+        "@angular/forms"
+      ],
+      "headings": []
+    },
+    {
+      "path": "examples/tracks/angular/routing-guard.ts",
+      "lines": 31,
+      "kind": "example",
+      "symbols": [
+        "router"
+      ],
+      "imports": [
+        "@angular/core",
+        "@angular/router",
+        "./panel/panel.component"
+      ],
+      "headings": []
+    },
+    {
+      "path": "examples/tracks/angular/signals-counter.ts",
+      "lines": 34,
+      "kind": "example",
+      "symbols": [
+        "SignalsCounterComponent",
+        "count",
+        "doubled"
+      ],
+      "imports": [
+        "@angular/core"
+      ],
+      "headings": []
+    },
+    {
+      "path": "examples/tracks/devops/Dockerfile",
+      "lines": 37,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "examples/tracks/devops/ci-pipeline.yml",
+      "lines": 48,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "examples/tracks/devops/deployment.yaml",
+      "lines": 59,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "examples/tracks/devops/docker-compose.yml",
+      "lines": 46,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "examples/tracks/devops/main.tf",
+      "lines": 46,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "examples/tracks/flutter/local-persistence.dart",
+      "lines": 50,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "examples/tracks/flutter/networking.dart",
+      "lines": 48,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "examples/tracks/flutter/responsive-layout.dart",
+      "lines": 61,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "examples/tracks/flutter/state-management.dart",
+      "lines": 70,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "examples/tracks/flutter/stateful-widget.dart",
+      "lines": 49,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "examples/tracks/ios/async-await.swift",
+      "lines": 67,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "examples/tracks/ios/state-binding.swift",
+      "lines": 44,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "examples/tracks/ios/swiftdata-persistence.swift",
+      "lines": 47,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "examples/tracks/ios/swiftui-view.swift",
+      "lines": 35,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "examples/tracks/ios/urlsession-networking.swift",
+      "lines": 45,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "examples/tracks/java/CollectionsGenerics.java",
+      "lines": 51,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "examples/tracks/java/OopBasics.java",
+      "lines": 59,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "examples/tracks/java/RecordsPatternMatching.java",
+      "lines": 37,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "examples/tracks/java/StreamsFunctional.java",
+      "lines": 40,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "examples/tracks/java/VirtualThreads.java",
+      "lines": 38,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "examples/tracks/javascript/closures-scope.js",
+      "lines": 45,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "examples/tracks/javascript/dom-events.js",
+      "lines": 44,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "examples/tracks/javascript/event-loop-promises.js",
+      "lines": 41,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "examples/tracks/javascript/prototypes-classes.js",
+      "lines": 47,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "examples/tracks/kotlin-multiplatform/coroutines-flow.kt",
+      "lines": 33,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "examples/tracks/kotlin-multiplatform/expect-actual.kt",
+      "lines": 32,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "examples/tracks/kotlin-multiplatform/ktor-client.kt",
+      "lines": 37,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "examples/tracks/kotlin-multiplatform/sqldelight-persistence.kt",
+      "lines": 47,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "examples/tracks/node/async-patterns.js",
+      "lines": 51,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "examples/tracks/node/db-orm.js",
+      "lines": 54,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "examples/tracks/node/express-middleware.js",
+      "lines": 46,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "examples/tracks/node/http-server-native.js",
+      "lines": 38,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "examples/tracks/node/jwt-auth.js",
+      "lines": 52,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "examples/tracks/react/context-provider.jsx",
+      "lines": 36,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "examples/tracks/react/custom-hook.jsx",
+      "lines": 28,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "examples/tracks/react/data-fetching.jsx",
+      "lines": 49,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "examples/tracks/react/hooks-state.jsx",
+      "lines": 27,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "examples/tracks/react/router-setup.jsx",
+      "lines": 42,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "examples/tracks/spring-boot/ActuatorMetrics.java",
+      "lines": 32,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "examples/tracks/spring-boot/JpaRepositoryExample.java",
+      "lines": 58,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "examples/tracks/spring-boot/RestControllerExample.java",
+      "lines": 49,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "examples/tracks/spring-boot/SecurityConfig.java",
+      "lines": 41,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "examples/tracks/spring-boot/WebFluxReactive.java",
+      "lines": 36,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
       "path": "install.sh",
       "lines": 99,
       "kind": "project-file",
@@ -1488,7 +1971,7 @@
     },
     {
       "path": "scripts/build_repo_graph.py",
-      "lines": 440,
+      "lines": 446,
       "kind": "automation-script",
       "symbols": [
         "FileNode",

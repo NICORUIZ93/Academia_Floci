@@ -55,20 +55,26 @@ SKIP_NAMES = {
 
 TEXT_EXTENSIONS = {
     ".css",
+    ".dart",
     ".env",
     ".go",
     ".html",
     ".java",
     ".js",
     ".json",
+    ".jsx",
+    ".kt",
     ".md",
     ".mjs",
     ".py",
     ".rs",
     ".scss",
     ".sh",
+    ".swift",
+    ".tf",
     ".ts",
     ".txt",
+    ".yaml",
     ".yml",
 }
 

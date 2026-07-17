@@ -1,8 +1,8 @@
 # Academia Floci Repo Graph
 
-Generated: 2026-07-17 19:31 UTC
+Generated: 2026-07-17 19:56 UTC
 Root: `Academia_Floci`
-Indexed files: 616
+Indexed files: 673
 Import edges: 27
 
 Use this file as the first, compact context for AI assistants. Refresh it with:
@@ -19,36 +19,43 @@ For automated lookups, use `docs/repo-graph.json`.
 - `automation-script`: 6 files
 - `course-content`: 299 files
 - `documentation`: 94 files
-- `example`: 145 files
+- `example`: 202 files
 - `local-infra`: 1 files
 - `project-file`: 25 files
 
 ## File Types
 
 - `.md`: 384
+- `.js`: 43
+- `.java`: 38
+- `.ts`: 37
 - `.py`: 35
-- `.js`: 34
-- `.ts`: 32
-- `.java`: 28
 - `.go`: 24
 - `.rs`: 24
 - `.json`: 16
+- `.kt`: 9
 - `.html`: 9
 - `.scss`: 8
+- `.yml`: 6
 - `.sh`: 6
-- `.yml`: 4
+- `.dart`: 5
+- `.swift`: 5
+- `.jsx`: 5
+- `.tf`: 4
 - `.txt`: 4
 - `.css`: 3
 - `.gitignore`: 2
 - `.mjs`: 2
+- `.yaml`: 2
 - `.example`: 1
+- `Dockerfile`: 1
 
 ## High Signal Files
 
 - `README.md` (246 lines, documentation)
   - headings: # Academia_Floci, ## Como empezar, ## Levantar Floci, # 1. Levantar todos los servicios, # 2. Verificar Floci AWS
 - `scripts/validate.sh` (448 lines, automation-script)
-- `scripts/build_repo_graph.py` (440 lines, automation-script)
+- `scripts/build_repo_graph.py` (446 lines, automation-script)
   - symbols: FileNode, repo_files, read_text, classify, parse_ts_symbols, parse_ts_imports, parse_python_symbols, parse_python_imports, parse_markdown_headings, unique
 - `web/index.html` (249 lines, project-file)
   - symbols: progressLabel, progressBar, openCloudLab, toggleNav, courseNav, resetProgress, closeNav, courseList, courseLabel, difficultyBadge
@@ -147,7 +154,7 @@ For automated lookups, use `docs/repo-graph.json`.
 ### automation-script
 
 - `scripts/build_curriculum.py` (273 lines) - symbols: source_text, normalize_ascii, clean_module_name, parse_curriculum, js_string, render_app_data, main; imports: __future__, json, re, pathlib
-- `scripts/build_repo_graph.py` (440 lines) - symbols: FileNode, repo_files, read_text, classify, parse_ts_symbols, parse_ts_imports, parse_python_symbols, parse_python_imports; imports: __future__, argparse, ast, json, re, collections, dataclasses, datetime
+- `scripts/build_repo_graph.py` (446 lines) - symbols: FileNode, repo_files, read_text, classify, parse_ts_symbols, parse_ts_imports, parse_python_symbols, parse_python_imports; imports: __future__, argparse, ast, json, re, collections, dataclasses, datetime
 - `scripts/fix_lessons.py` (205 lines) - symbols: safe_print, iter_text_check_files, find_text_quality_issues, normalized_content, fix_content, check_http, main; imports: argparse, glob, os, re, urllib.request
 - `scripts/start.sh` (10 lines)
 - `scripts/validate-floci.sh` (43 lines)
@@ -199,7 +206,7 @@ For automated lookups, use `docs/repo-graph.json`.
 
 ### example
 
-- `examples/README.md` (100 lines) - headings: # Ejemplos de referencia, ## Ejemplos por operación (node/, python/, java/, go/, rust/), # Node.js (requiere: npm install en examples/node/), # Python (requiere: pip install boto3)
+- `examples/README.md` (129 lines) - headings: # Ejemplos de referencia, ## Ejemplos por operación (node/, python/, java/, go/, rust/), # Node.js (requiere: npm install en examples/node/), # Python (requiere: pip install boto3)
 - `examples/go/apigateway_create_api.go` (43 lines)
 - `examples/go/apigateway_create_resource.go` (66 lines)
 - `examples/go/apigateway_put_method.go` (60 lines)
@@ -217,7 +224,7 @@ For automated lookups, use `docs/repo-graph.json`.
 - `examples/go/lambda_update.go` (76 lines)
 - `examples/go/s3_create_bucket.go` (44 lines)
 - `examples/go/s3_delete.go` (50 lines)
-- ... 127 more files
+- ... 184 more files
 
 ### local-infra
 
@@ -225,7 +232,7 @@ For automated lookups, use `docs/repo-graph.json`.
 
 ### project-file
 
-- `.claude/settings.local.json` (8 lines)
+- `.claude/settings.local.json` (11 lines)
 - `.env.example` (8 lines)
 - `.github/workflows/ci.yml` (42 lines)
 - `.gitignore` (24 lines)

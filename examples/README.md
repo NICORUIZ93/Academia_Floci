@@ -91,6 +91,35 @@ Notas por lenguaje:
   como los de Java, que tampoco traen `pom.xml`. Créalos en tu propio
   proyecto al copiar un ejemplo.
 
+## Ejemplos por track (`tracks/<track-id>/`)
+
+Los ejemplos de arriba son específicos del track Cloud (SDK de AWS contra
+Floci). Cada uno de los otros 11 tracks tiene su propia carpeta en
+`examples/tracks/<track-id>/`, con 4-6 archivos independientes en el
+lenguaje real de ese track, mapeados a sus módulos más distintivos — no
+sustituyen al código ya embebido en las lecciones (`web/public/content/`),
+son la versión "cópialo y ejecútalo aparte" de esos mismos conceptos.
+
+| Track | Carpeta | Lenguaje | Cubre |
+|---|---|---|---|
+| Angular | `tracks/angular/` | TypeScript | Signals, DI, routing guards, formularios reactivos, interceptores HTTP |
+| React | `tracks/react/` | JSX | Hooks, Context API, React Router, data fetching, custom hooks |
+| Java | `tracks/java/` | Java | POO, colecciones/genéricos, streams, virtual threads, records/pattern matching |
+| Spring Boot | `tracks/spring-boot/` | Java | REST controllers, Spring Data JPA, Spring Security, Actuator, WebFlux |
+| Kotlin Multiplatform | `tracks/kotlin-multiplatform/` | Kotlin | Coroutines/Flow, expect/actual, Ktor Client, SQLDelight |
+| Android | `tracks/android/` | Kotlin | Jetpack Compose, Navigation Compose, StateFlow+ViewModel, Retrofit, Room |
+| iOS | `tracks/ios/` | Swift | SwiftUI, @State/@Binding, async/await + actores, URLSession, SwiftData |
+| Flutter | `tracks/flutter/` | Dart | Stateful/Stateless widgets, layout responsive, Provider, http, sqflite |
+| Node.js | `tracks/node/` | JavaScript | `http` nativo, Express, Prisma, JWT, patrones async avanzados |
+| JavaScript | `tracks/javascript/` | JavaScript | Closures/scope, prototypes/clases, Event Loop/Promises, DOM/eventos |
+| DevOps | `tracks/devops/` | Dockerfile/YAML/HCL | Multi-stage build, Compose con healthchecks, Terraform, Kubernetes, CI |
+
+Igual que el resto de `examples/`: sin toolchains completos en este
+repositorio (sin `pom.xml`, `Package.swift`, `pubspec.yaml`, etc.) — son
+archivos de referencia para pegar en tu propio proyecto ya inicializado con
+Angular CLI / Create React App / Xcode / Android Studio / `flutter create`,
+según corresponda.
+
 ## Proyecto final de referencia
 
 `examples/project-final/` contiene una implementación de referencia completa
