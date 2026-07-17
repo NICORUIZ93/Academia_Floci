@@ -82,6 +82,17 @@ Servicios locales:
 - Azure local: `http://localhost:4577`
 - GCP local: `http://localhost:4588`
 
+Panel visual oficial (opcional, proyecto aparte — no está en este `docker-compose.yml`):
+
+```bash
+git clone https://github.com/floci-io/floci-ui
+cd floci-ui
+docker compose up                      # solo AWS
+# docker compose --profile multicloud up   # AWS + Azure + GCP
+```
+
+Ábrelo en `http://localhost:4500`.
+
 Credenciales locales para AWS CLI y SDKs:
 
 ```bash

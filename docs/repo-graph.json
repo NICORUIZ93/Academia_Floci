@@ -34,7 +34,7 @@
     },
     {
       "path": "README.md",
-      "lines": 235,
+      "lines": 246,
       "kind": "documentation",
       "symbols": [],
       "imports": [],
@@ -47,10 +47,10 @@
         "# 3. Verificar Azure",
         "# 4. Verificar GCP",
         "# 5. Validar todo el entorno",
+        "# docker compose --profile multicloud up   # AWS + Azure + GCP",
         "## Metodologia",
         "## Modulos (app estatica, `web/index.html`)",
-        "## Contenido aplicado (app estatica)",
-        "## Tracks de la app Angular (`web/src`)"
+        "## Contenido aplicado (app estatica)"
       ]
     },
     {
@@ -101,17 +101,46 @@
     },
     {
       "path": "examples/README.md",
-      "lines": 17,
+      "lines": 71,
       "kind": "example",
       "symbols": [],
       "imports": [],
       "headings": [
-        "# Ejemplos de referencia"
+        "# Ejemplos de referencia",
+        "## Ejemplos por operaci\u00f3n (node/, python/, java/)",
+        "# Node.js (requiere: npm install en examples/node/)",
+        "# Python (requiere: pip install boto3)",
+        "# Java (requiere el AWS SDK for Java v2 en el classpath, ver examples/java/FlociS3Example.java)",
+        "## Proyecto final de referencia"
       ]
     },
     {
       "path": "examples/init/ready.d/10-seed.sh",
       "lines": 20,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "examples/node/apigateway-create-api.js",
+      "lines": 24,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "examples/node/apigateway-create-resource.js",
+      "lines": 37,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "examples/node/apigateway-put-method.js",
+      "lines": 41,
       "kind": "example",
       "symbols": [],
       "imports": [],
@@ -129,6 +158,46 @@
       "headings": []
     },
     {
+      "path": "examples/node/dynamodb-create-table.js",
+      "lines": 37,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "examples/node/dynamodb-delete-item.js",
+      "lines": 28,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "examples/node/dynamodb-get-item.js",
+      "lines": 34,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "examples/node/dynamodb-put-item.js",
+      "lines": 34,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "examples/node/dynamodb-update-item.js",
+      "lines": 32,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
       "path": "examples/node/floci-example.js",
       "lines": 134,
       "kind": "example",
@@ -137,11 +206,237 @@
       "headings": []
     },
     {
-      "path": "examples/node/package.json",
-      "lines": 14,
+      "path": "examples/node/iam-attach-policy.js",
+      "lines": 28,
       "kind": "example",
       "symbols": [],
       "imports": [],
+      "headings": []
+    },
+    {
+      "path": "examples/node/iam-create-policy.js",
+      "lines": 44,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "examples/node/iam-create-user.js",
+      "lines": 28,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "examples/node/lambda-create-function.js",
+      "lines": 54,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "examples/node/lambda-invoke.js",
+      "lines": 39,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "examples/node/lambda-update.js",
+      "lines": 48,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "examples/node/package.json",
+      "lines": 15,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "examples/node/s3-create-bucket.js",
+      "lines": 27,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "examples/node/s3-delete.js",
+      "lines": 35,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "examples/node/s3-download.js",
+      "lines": 34,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "examples/node/s3-list-buckets.js",
+      "lines": 28,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "examples/node/s3-upload.js",
+      "lines": 31,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "examples/node/sqs-create-queue.js",
+      "lines": 23,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "examples/node/sqs-delete-message.js",
+      "lines": 25,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "examples/node/sqs-receive-message.js",
+      "lines": 39,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "examples/node/sqs-send-message.js",
+      "lines": 26,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "examples/project-final/README.md",
+      "lines": 93,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
+      "headings": [
+        "# Sistema de Gesti\u00f3n de Tareas \u2014 implementaci\u00f3n de referencia (M\u00f3dulo 9)",
+        "## Qu\u00e9 incluye",
+        "## Arquitectura",
+        "## C\u00f3mo desplegarlo contra Floci",
+        "# 1. Levanta Floci",
+        "# 2. Instala las dependencias del backend",
+        "# 3. Despliega la infraestructura con Terraform",
+        "# 4. Prueba la API desplegada",
+        "# 5. Limpieza",
+        "## Decisiones de dise\u00f1o que vale la pena comparar con tu propia versi\u00f3n"
+      ]
+    },
+    {
+      "path": "examples/project-final/backend/lambda/create-task.js",
+      "lines": 51,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "examples/project-final/backend/lambda/delete-task.js",
+      "lines": 22,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "examples/project-final/backend/lambda/list-tasks.js",
+      "lines": 26,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "examples/project-final/backend/lambda/update-task.js",
+      "lines": 65,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "examples/project-final/backend/package.json",
+      "lines": 9,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "examples/project-final/ci-cd/github-actions/deploy.yml",
+      "lines": 88,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "examples/python/apigateway_create_api.py",
+      "lines": 29,
+      "kind": "example",
+      "symbols": [
+        "main"
+      ],
+      "imports": [
+        "sys",
+        "boto3"
+      ],
+      "headings": []
+    },
+    {
+      "path": "examples/python/apigateway_create_resource.py",
+      "lines": 37,
+      "kind": "example",
+      "symbols": [
+        "main"
+      ],
+      "imports": [
+        "sys",
+        "boto3"
+      ],
+      "headings": []
+    },
+    {
+      "path": "examples/python/apigateway_put_method.py",
+      "lines": 41,
+      "kind": "example",
+      "symbols": [
+        "main"
+      ],
+      "imports": [
+        "sys",
+        "boto3"
+      ],
       "headings": []
     },
     {
@@ -155,6 +450,75 @@
         "json",
         "boto3",
         "botocore.exceptions"
+      ],
+      "headings": []
+    },
+    {
+      "path": "examples/python/dynamodb_create_table.py",
+      "lines": 35,
+      "kind": "example",
+      "symbols": [
+        "main"
+      ],
+      "imports": [
+        "sys",
+        "time",
+        "boto3"
+      ],
+      "headings": []
+    },
+    {
+      "path": "examples/python/dynamodb_delete_item.py",
+      "lines": 29,
+      "kind": "example",
+      "symbols": [
+        "main"
+      ],
+      "imports": [
+        "sys",
+        "boto3"
+      ],
+      "headings": []
+    },
+    {
+      "path": "examples/python/dynamodb_get_item.py",
+      "lines": 35,
+      "kind": "example",
+      "symbols": [
+        "main"
+      ],
+      "imports": [
+        "json",
+        "sys",
+        "boto3"
+      ],
+      "headings": []
+    },
+    {
+      "path": "examples/python/dynamodb_put_item.py",
+      "lines": 39,
+      "kind": "example",
+      "symbols": [
+        "main"
+      ],
+      "imports": [
+        "sys",
+        "time",
+        "boto3"
+      ],
+      "headings": []
+    },
+    {
+      "path": "examples/python/dynamodb_update_item.py",
+      "lines": 37,
+      "kind": "example",
+      "symbols": [
+        "main"
+      ],
+      "imports": [
+        "json",
+        "sys",
+        "boto3"
       ],
       "headings": []
     },
@@ -177,11 +541,222 @@
       "headings": []
     },
     {
+      "path": "examples/python/iam_attach_policy.py",
+      "lines": 33,
+      "kind": "example",
+      "symbols": [
+        "main"
+      ],
+      "imports": [
+        "sys",
+        "boto3"
+      ],
+      "headings": []
+    },
+    {
+      "path": "examples/python/iam_create_policy.py",
+      "lines": 44,
+      "kind": "example",
+      "symbols": [
+        "main"
+      ],
+      "imports": [
+        "json",
+        "sys",
+        "boto3"
+      ],
+      "headings": []
+    },
+    {
+      "path": "examples/python/iam_create_user.py",
+      "lines": 35,
+      "kind": "example",
+      "symbols": [
+        "main"
+      ],
+      "imports": [
+        "sys",
+        "boto3",
+        "botocore.exceptions"
+      ],
+      "headings": []
+    },
+    {
+      "path": "examples/python/lambda_create_function.py",
+      "lines": 53,
+      "kind": "example",
+      "symbols": [
+        "build_zip",
+        "main"
+      ],
+      "imports": [
+        "io",
+        "sys",
+        "zipfile",
+        "boto3"
+      ],
+      "headings": []
+    },
+    {
+      "path": "examples/python/lambda_invoke.py",
+      "lines": 41,
+      "kind": "example",
+      "symbols": [
+        "main"
+      ],
+      "imports": [
+        "json",
+        "sys",
+        "boto3",
+        "botocore.exceptions"
+      ],
+      "headings": []
+    },
+    {
+      "path": "examples/python/lambda_update.py",
+      "lines": 55,
+      "kind": "example",
+      "symbols": [
+        "build_zip",
+        "main"
+      ],
+      "imports": [
+        "io",
+        "json",
+        "sys",
+        "zipfile",
+        "boto3"
+      ],
+      "headings": []
+    },
+    {
       "path": "examples/python/requirements.txt",
       "lines": 3,
       "kind": "example",
       "symbols": [],
       "imports": [],
+      "headings": []
+    },
+    {
+      "path": "examples/python/s3_create_bucket.py",
+      "lines": 34,
+      "kind": "example",
+      "symbols": [
+        "main"
+      ],
+      "imports": [
+        "sys",
+        "time",
+        "boto3",
+        "botocore.exceptions"
+      ],
+      "headings": []
+    },
+    {
+      "path": "examples/python/s3_delete.py",
+      "lines": 40,
+      "kind": "example",
+      "symbols": [
+        "main"
+      ],
+      "imports": [
+        "sys",
+        "boto3",
+        "botocore.exceptions"
+      ],
+      "headings": []
+    },
+    {
+      "path": "examples/python/s3_download.py",
+      "lines": 37,
+      "kind": "example",
+      "symbols": [
+        "main"
+      ],
+      "imports": [
+        "sys",
+        "boto3",
+        "botocore.exceptions"
+      ],
+      "headings": []
+    },
+    {
+      "path": "examples/python/s3_list_buckets.py",
+      "lines": 29,
+      "kind": "example",
+      "symbols": [
+        "main"
+      ],
+      "imports": [
+        "boto3"
+      ],
+      "headings": []
+    },
+    {
+      "path": "examples/python/s3_upload.py",
+      "lines": 32,
+      "kind": "example",
+      "symbols": [
+        "main"
+      ],
+      "imports": [
+        "os",
+        "sys",
+        "boto3"
+      ],
+      "headings": []
+    },
+    {
+      "path": "examples/python/sqs_create_queue.py",
+      "lines": 28,
+      "kind": "example",
+      "symbols": [
+        "main"
+      ],
+      "imports": [
+        "sys",
+        "time",
+        "boto3"
+      ],
+      "headings": []
+    },
+    {
+      "path": "examples/python/sqs_delete_message.py",
+      "lines": 29,
+      "kind": "example",
+      "symbols": [
+        "main"
+      ],
+      "imports": [
+        "sys",
+        "boto3"
+      ],
+      "headings": []
+    },
+    {
+      "path": "examples/python/sqs_receive_message.py",
+      "lines": 37,
+      "kind": "example",
+      "symbols": [
+        "main"
+      ],
+      "imports": [
+        "sys",
+        "boto3"
+      ],
+      "headings": []
+    },
+    {
+      "path": "examples/python/sqs_send_message.py",
+      "lines": 30,
+      "kind": "example",
+      "symbols": [
+        "main"
+      ],
+      "imports": [
+        "sys",
+        "boto3"
+      ],
       "headings": []
     },
     {

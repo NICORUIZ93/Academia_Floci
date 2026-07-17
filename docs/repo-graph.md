@@ -1,8 +1,8 @@
 # Academia Floci Repo Graph
 
-Generated: 2026-07-17 04:13 UTC
+Generated: 2026-07-17 04:52 UTC
 Root: `Academia_Floci`
-Indexed files: 451
+Indexed files: 504
 Import edges: 27
 
 Use this file as the first, compact context for AI assistants. Refresh it with:
@@ -19,22 +19,22 @@ For automated lookups, use `docs/repo-graph.json`.
 - `automation-script`: 6 files
 - `course-content`: 285 files
 - `documentation`: 80 files
-- `example`: 8 files
+- `example`: 61 files
 - `local-infra`: 1 files
 - `project-file`: 25 files
 
 ## File Types
 
-- `.md`: 355
+- `.md`: 356
 - `.ts`: 32
-- `.json`: 15
+- `.py`: 31
+- `.js`: 30
+- `.json`: 16
 - `.html`: 9
-- `.py`: 8
 - `.scss`: 8
 - `.sh`: 6
+- `.yml`: 4
 - `.txt`: 4
-- `.yml`: 3
-- `.js`: 3
 - `.css`: 3
 - `.gitignore`: 2
 - `.mjs`: 2
@@ -42,7 +42,7 @@ For automated lookups, use `docs/repo-graph.json`.
 
 ## High Signal Files
 
-- `README.md` (235 lines, documentation)
+- `README.md` (246 lines, documentation)
   - headings: # Academia_Floci, ## Como empezar, ## Levantar Floci, # 1. Levantar todos los servicios, # 2. Verificar Floci AWS
 - `scripts/validate.sh` (448 lines, automation-script)
 - `scripts/build_repo_graph.py` (437 lines, automation-script)
@@ -174,7 +174,7 @@ For automated lookups, use `docs/repo-graph.json`.
 
 ### documentation
 
-- `README.md` (235 lines) - headings: # Academia_Floci, ## Como empezar, ## Levantar Floci, # 1. Levantar todos los servicios
+- `README.md` (246 lines) - headings: # Academia_Floci, ## Como empezar, ## Levantar Floci, # 1. Levantar todos los servicios
 - `docs/METODOLOGIA.md` (67 lines) - headings: # Metodología de Aprendizaje — Academia Floci, ## 1. Principios (basados en evidencia), ## 2. El ciclo de cada lección (regla 20/60/20), ## 3. Ruta por perfil
 - `docs/PLANTILLA-LECCION.md` (110 lines) - headings: # Plantilla de Lección — Prompt Maestro para Claude / Codex, ## PROMPT MAESTRO (copiar desde aquí), ## DATOS DE LA LECCIÓN, ## REGLAS DE ESTILO
 - `web/README.md` (72 lines) - headings: # Web, ## Abrir la academia, ## Que contiene, ## Archivos principales
@@ -196,14 +196,25 @@ For automated lookups, use `docs/repo-graph.json`.
 
 ### example
 
-- `examples/README.md` (17 lines) - headings: # Ejemplos de referencia
+- `examples/README.md` (71 lines) - headings: # Ejemplos de referencia, ## Ejemplos por operación (node/, python/, java/), # Node.js (requiere: npm install en examples/node/), # Python (requiere: pip install boto3)
 - `examples/init/ready.d/10-seed.sh` (20 lines)
+- `examples/node/apigateway-create-api.js` (24 lines)
+- `examples/node/apigateway-create-resource.js` (37 lines)
+- `examples/node/apigateway-put-method.js` (41 lines)
 - `examples/node/demo.mjs` (93 lines) - imports: @aws-sdk/client-s3, @aws-sdk/client-sqs
+- `examples/node/dynamodb-create-table.js` (37 lines)
+- `examples/node/dynamodb-delete-item.js` (28 lines)
+- `examples/node/dynamodb-get-item.js` (34 lines)
+- `examples/node/dynamodb-put-item.js` (34 lines)
+- `examples/node/dynamodb-update-item.js` (32 lines)
 - `examples/node/floci-example.js` (134 lines)
-- `examples/node/package.json` (14 lines)
-- `examples/python/demo.py` (90 lines) - symbols: explain_error; imports: json, boto3, botocore.exceptions
-- `examples/python/floci-example.py` (148 lines) - symbols: run_s3_example, run_sqs_example, wait_for_table, run_dynamodb_example, main; imports: time, boto3, botocore.exceptions
-- `examples/python/requirements.txt` (3 lines)
+- `examples/node/iam-attach-policy.js` (28 lines)
+- `examples/node/iam-create-policy.js` (44 lines)
+- `examples/node/iam-create-user.js` (28 lines)
+- `examples/node/lambda-create-function.js` (54 lines)
+- `examples/node/lambda-invoke.js` (39 lines)
+- `examples/node/lambda-update.js` (48 lines)
+- ... 43 more files
 
 ### local-infra
 
