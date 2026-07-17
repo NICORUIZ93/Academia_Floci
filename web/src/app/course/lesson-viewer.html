@@ -1,41 +1,57 @@
 <ng-container *ngIf="module() as m; else notFound">
-  <article class="lesson">
-    <div class="lesson-breadcrumb">
-      <span>{{ track()?.name }}</span>
-      <span class="sep">/</span>
-      <span>Capítulo {{ moduleIndex() + 1 }} de {{ track()?.modules?.length }} · {{ m.level }} · {{ m.duration }}</span>
-    </div>
-
-    <h1>{{ m.title }}</h1>
-    <p class="lesson-description">{{ m.description }}</p>
-
-    <section class="lesson-panel">
-      <div *ngIf="lessonLoading()" class="lesson-skeleton">Cargando lección…</div>
-      <div *ngIf="!lessonLoading() && lessonHtml() as html" #lessonContent class="lesson-markdown" [innerHTML]="html"></div>
-      <ng-container *ngIf="!lessonLoading() && !lessonHtml()">
-        <div class="structured-lesson">
-          <section>
-            <h2>Qué vas a dominar</h2>
-            <div class="concept-chips">
-              <span *ngFor="let concept of m.concepts">{{ concept }}</span>
-            </div>
-          </section>
-          <p class="lesson-deliverable"><strong>Entregable previsto:</strong> {{ m.deliverable }}</p>
-        </div>
-      </ng-container>
-    </section>
-
-    <footer class="lesson-footer">
-      <button class="complete-toggle" [class.done]="isComplete()" (click)="toggleComplete()">
-        <lucide-icon [img]="icons.CircleCheck" />
-        <span>{{ isComplete() ? 'Capítulo completado' : 'Marcar capítulo como completado' }}</span>
-      </button>
-      <div class="lesson-nav">
-        <button *ngIf="previousModule() as prev" (click)="goToModule(prev.id)"><lucide-icon [img]="icons.ChevronLeft" /><span>{{ prev.shortTitle }}</span></button>
-        <button *ngIf="nextModule() as next" class="next" (click)="goToModule(next.id)"><span>{{ next.shortTitle }}</span><lucide-icon [img]="icons.ChevronRight" /></button>
+  <div class="lesson-layout">
+    <article class="lesson">
+      <div class="lesson-breadcrumb">
+        <span>{{ track()?.name }}</span>
+        <span class="sep">/</span>
+        <span>Capítulo {{ moduleIndex() + 1 }} de {{ track()?.modules?.length }} · {{ m.level }} · {{ m.duration }}</span>
       </div>
-    </footer>
-  </article>
+
+      <h1>{{ m.title }}</h1>
+      <p class="lesson-description">{{ m.description }}</p>
+
+      <section class="lesson-panel">
+        <div *ngIf="lessonLoading()" class="lesson-skeleton">Cargando lección…</div>
+        <div *ngIf="!lessonLoading() && lessonHtml() as html" #lessonContent class="lesson-markdown" [innerHTML]="html"></div>
+        <ng-container *ngIf="!lessonLoading() && !lessonHtml()">
+          <div class="structured-lesson">
+            <section>
+              <h2>Qué vas a dominar</h2>
+              <div class="concept-chips">
+                <span *ngFor="let concept of m.concepts">{{ concept }}</span>
+              </div>
+            </section>
+            <p class="lesson-deliverable"><strong>Entregable previsto:</strong> {{ m.deliverable }}</p>
+          </div>
+        </ng-container>
+      </section>
+
+      <footer class="lesson-footer">
+        <button class="complete-toggle" [class.done]="isComplete()" (click)="toggleComplete()">
+          <lucide-icon [img]="icons.CircleCheck" />
+          <span>{{ isComplete() ? 'Capítulo completado' : 'Marcar capítulo como completado' }}</span>
+        </button>
+        <div class="lesson-nav">
+          <button *ngIf="previousModule() as prev" (click)="goToModule(prev.id)"><lucide-icon [img]="icons.ChevronLeft" /><span>{{ prev.shortTitle }}</span></button>
+          <button *ngIf="nextModule() as next" class="next" (click)="goToModule(next.id)"><span>{{ next.shortTitle }}</span><lucide-icon [img]="icons.ChevronRight" /></button>
+        </div>
+      </footer>
+    </article>
+
+    <aside class="lesson-toc" *ngIf="tocItems().length" aria-label="En esta lección">
+      <p class="lesson-toc-title">En esta lección</p>
+      <nav>
+        <a
+          *ngFor="let item of tocItems()"
+          [href]="'#' + item.id"
+          class="lesson-toc-link"
+          [class.level-3]="item.level === 3"
+          [class.active]="activeTocId() === item.id"
+          (click)="scrollToHeading($event, item.id)"
+        >{{ item.text }}</a>
+      </nav>
+    </aside>
+  </div>
 </ng-container>
 
 <ng-template #notFound>

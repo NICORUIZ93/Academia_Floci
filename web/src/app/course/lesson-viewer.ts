@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, ElementRef, Injector, afterNextRender, computed, effect, inject, signal, viewChild } from '@angular/core';
+import { Component, ElementRef, Injector, OnDestroy, afterNextRender, computed, effect, inject, signal, viewChild } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { CircleCheck, ChevronLeft, ChevronRight, LucideAngularModule } from 'lucide-angular';
@@ -13,6 +13,29 @@ import { applyLabVerification } from './lab-verification';
 
 let mermaidInitialized = false;
 
+export interface TocItem {
+  id: string;
+  text: string;
+  level: 2 | 3;
+}
+
+function slugify(text: string, seen: Set<string>): string {
+  const base = text
+    .normalize('NFD')
+    .replace(/\p{Diacritic}/gu, '')
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '') || 'seccion';
+  let slug = base;
+  let i = 2;
+  while (seen.has(slug)) {
+    slug = `${base}-${i}`;
+    i += 1;
+  }
+  seen.add(slug);
+  return slug;
+}
+
 /**
  * Vista de lectura tipo libro: título, teoría y navegación simple al
  * capítulo/módulo anterior y siguiente. Sin retos, preguntas ni paneles
@@ -24,7 +47,7 @@ let mermaidInitialized = false;
   templateUrl: './lesson-viewer.html',
   styleUrl: './lesson-viewer.scss',
 })
-export class LessonViewerComponent {
+export class LessonViewerComponent implements OnDestroy {
   readonly icons = { ChevronLeft, ChevronRight, CircleCheck };
 
   private readonly route = inject(ActivatedRoute);
@@ -60,6 +83,10 @@ export class LessonViewerComponent {
   private readonly lessonContent = viewChild<ElementRef<HTMLElement>>('lessonContent');
   private readonly injector = inject(Injector);
   private readonly themeService = inject(ThemeService);
+
+  readonly tocItems = signal<TocItem[]>([]);
+  readonly activeTocId = signal<string | null>(null);
+  private tocObserver: IntersectionObserver | null = null;
 
   readonly isComplete = computed(() => this.progressService.isModuleComplete(this.trackId(), this.moduleId()));
 
@@ -109,6 +136,44 @@ export class LessonViewerComponent {
     }
 
     applyLabVerification(container);
+    this.buildTableOfContents(container);
+  }
+
+  private buildTableOfContents(container: HTMLElement): void {
+    this.tocObserver?.disconnect();
+
+    const headings = Array.from(container.querySelectorAll<HTMLElement>('h2, h3'));
+    const seen = new Set<string>();
+    const items: TocItem[] = headings.map(el => {
+      const level = el.tagName === 'H2' ? 2 : 3;
+      const text = el.textContent?.trim() ?? '';
+      const id = el.id || slugify(text, seen);
+      el.id = id;
+      return { id, text, level };
+    });
+    this.tocItems.set(items);
+    this.activeTocId.set(items[0]?.id ?? null);
+
+    if (!headings.length || typeof IntersectionObserver === 'undefined') return;
+    this.tocObserver = new IntersectionObserver(
+      entries => {
+        const visible = entries.filter(e => e.isIntersecting).map(e => e.target as HTMLElement);
+        if (!visible.length) return;
+        const topmost = visible.reduce((a, b) => (a.getBoundingClientRect().top <= b.getBoundingClientRect().top ? a : b));
+        this.activeTocId.set(topmost.id);
+      },
+      { rootMargin: '-72px 0px -70% 0px', threshold: 0 },
+    );
+    headings.forEach(h => this.tocObserver!.observe(h));
+  }
+
+  scrollToHeading(event: Event, id: string): void {
+    event.preventDefault();
+    const target = this.lessonContent()?.nativeElement.querySelector(`#${CSS.escape(id)}`);
+    if (!target) return;
+    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    history.replaceState(null, '', `#${id}`);
+    this.activeTocId.set(id);
   }
 
   toggleComplete(): void {
@@ -117,5 +182,9 @@ export class LessonViewerComponent {
 
   goToModule(moduleId: number): void {
     this.router.navigate(['/curso', this.trackId(), moduleId]);
+  }
+
+  ngOnDestroy(): void {
+    this.tocObserver?.disconnect();
   }
 }

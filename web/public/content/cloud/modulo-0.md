@@ -4,18 +4,22 @@
 
 **Objetivo general**
 
-Comprender qué es Floci, por qué existe, qué servicios de AWS, Azure y GCP emula, y dejar el entorno de trabajo completamente instalado y verificado antes de escribir el primer comando real de nube en el Módulo 1.
+Partir de cero absoluto —qué es una terminal, un comando, una dirección IP, un puerto— hasta comprender qué es Floci, por qué existe, qué servicios de AWS, Azure y GCP emula, y dejar el entorno de trabajo completamente instalado y verificado antes de escribir el primer comando real de nube en el Módulo 1. Si ya tienes experiencia con la terminal y conceptos básicos de redes, los Temas 1 y 2 te servirán como repaso rápido; si nunca has abierto una terminal, son el punto de partida real del curso.
 
 **Objetivos específicos**
 
-1. Explicar con tus propias palabras qué es un emulador de nube local y en qué se diferencia de una cuenta cloud real.
-2. Comparar Floci con LocalStack e identificar qué resuelven ambos y dónde se diferencian.
-3. Enumerar los servicios de AWS, Azure y GCP que vas a practicar a lo largo del curso.
-4. Instalar y verificar Docker, AWS CLI, Python 3 y Node.js.
-5. Configurar las variables de entorno necesarias para que la AWS CLI hable con Floci en vez de con AWS real.
+1. Explicar qué es una terminal, un comando y un sistema operativo, y ejecutar tus primeros comandos.
+2. Explicar qué es una dirección IP, un puerto y el protocolo HTTP, y por qué son la base de cómo hablarás con Floci.
+3. Explicar con tus propias palabras qué es un emulador de nube local y en qué se diferencia de una cuenta cloud real.
+4. Comparar Floci con LocalStack e identificar qué resuelven ambos y dónde se diferencian.
+5. Enumerar los servicios de AWS, Azure y GCP que vas a practicar a lo largo del curso.
+6. Instalar y verificar Docker, AWS CLI, Python 3 y Node.js.
+7. Configurar las variables de entorno necesarias para que la AWS CLI hable con Floci en vez de con AWS real.
 
 **Contenido**
 
+- Fundamentos absolutos: terminal, comandos y sistema operativo.
+- Fundamentos de redes: direcciones IP, puertos, HTTP y APIs.
 - Qué vas a aprender y cómo está estructurado el curso.
 - Qué es Floci: definición, propósito y comparativa con LocalStack.
 - Servicios que emula Floci: AWS, Azure y GCP.
@@ -24,42 +28,96 @@ Comprender qué es Floci, por qué existe, qué servicios de AWS, Azure y GCP em
 
 **Evaluación**
 
-Un laboratorio de instalación y verificación de herramientas (sin código de aplicación todavía) y dos ejercicios cortos de reflexión sobre qué esperas de un emulador de nube local frente a una cuenta real. No hay proyecto de código en este módulo: es la base sobre la que se apoyan los nueve módulos siguientes.
+Un laboratorio de instalación y verificación de herramientas (sin código de aplicación todavía) y cuatro ejercicios cortos: dos de reflexión sobre qué esperas de un emulador de nube local frente a una cuenta real, uno de repaso del entorno instalado, y uno que verifica que entendiste el recorrido completo de un comando hasta convertirse en una petición HTTP. No hay proyecto de código en este módulo: es la base sobre la que se apoyan los 31 módulos siguientes.
 
 ---
 
 ## Contenido teórico
 
-### Tema 1: Qué vas a aprender y cómo está estructurado el curso
+### Tema 1: Fundamentos absolutos — qué es una terminal, un comando y un sistema operativo
 
-**Conceptos clave:** ruta de aprendizaje, módulo, nivel de dificultad progresivo, entregable.
+**Conceptos clave:** sistema operativo, terminal (línea de comandos), shell, comando, directorio de trabajo.
 
-El curso está organizado en diez módulos numerados del 0 al 9, y cada uno se apoya en el anterior. Empiezas por la preparación del entorno (este módulo), sigues con los fundamentos de contenedores (Módulo 1), y a partir de ahí cada módulo introduce un servicio de nube distinto: almacenamiento de archivos, colas de mensajes, bases de datos NoSQL, funciones serverless, APIs HTTP, gestión de identidad, y finalmente una comparación con otros proveedores de nube. El Módulo 9 no introduce un servicio nuevo: integra todos los anteriores en un solo proyecto.
+Un sistema operativo (Windows, macOS o Linux) es el programa que gestiona el hardware de tu computadora —procesador, memoria, disco— y permite que otros programas se ejecuten sobre él. Normalmente interactúas con él haciendo clic en íconos y ventanas: eso es una interfaz gráfica. Una terminal es una forma alternativa de interactuar con el sistema operativo escribiendo instrucciones de texto en vez de hacer clic. Cada instrucción que escribes se llama comando, y el programa que lee ese texto, lo interpreta y lo ejecuta se llama shell (`bash` y `zsh` en macOS/Linux, PowerShell en Windows).
 
-Esta progresión no es arbitraria. Cada módulo nuevo reutiliza al menos un servicio de un módulo previo. El Módulo 5 (Lambda) asume que ya sabes crear una tabla en DynamoDB (Módulo 4) y subir un archivo a S3 (Módulo 2), porque una función Lambda real casi nunca vive sola: lee de una base de datos, guarda un archivo, o dispara un mensaje en una cola. Si saltas un módulo, es probable que te falte una pieza que el siguiente da por sentada.
+Todo comando se ejecuta dentro de un directorio de trabajo —la carpeta en la que "estás parado" en ese momento—. El comando `pwd` (macOS/Linux) o `Get-Location` (PowerShell) te dice en qué directorio estás; `cd nombre-carpeta` te mueve dentro de una carpeta; `cd ..` te mueve un nivel hacia arriba. Casi todos los comandos de este curso asumen que sabes en qué directorio estás parado, porque muchos leen o crean archivos de forma relativa a esa ubicación (por ejemplo, un `docker-compose.yml` que crees en el Módulo 1).
 
-Cada módulo comparte la misma estructura interna: primero la teoría de los conceptos nuevos, después un laboratorio práctico con comandos reales que puedes ejecutar contra Floci, y por último ejercicios de evaluación que comprueban si puedes aplicar lo aprendido sin que te den el comando exacto. Esta estructura imita el ritmo real de aprender una tecnología de nube en el trabajo: primero entiendes el concepto, después lo usas guiado, y finalmente lo usas solo.
+Por qué los profesionales usan la terminal en vez de solo interfaces gráficas: un comando escrito se puede repetir exactamente igual mil veces, copiar y compartir con un compañero, guardar en un script que se ejecuta solo, y ejecutar en un servidor remoto que no tiene pantalla ni íconos —algo que una interfaz gráfica no puede ofrecer con la misma precisión y automatización—. Todo este curso, desde el primer `docker --version` hasta el último comando del proyecto final, ocurre en una terminal.
 
-El nivel de dificultad también progresa. Los módulos 0 y 1 están etiquetados como "Fundamentos", los módulos 2 a 4 como "Aplicación", los módulos 5 a 7 como "Integración", y los módulos 8 y 9 como "Experto". Esta etiqueta no mide cuánto contenido tiene el módulo, sino cuánto de lo anterior necesitas dominar para aprovecharlo. Un módulo de "Integración" combina dos o tres servicios que ya viste por separado.
+**Analogía:** una interfaz gráfica es como pedir comida señalando fotos en un menú; una terminal es como dictarle la orden exacta a la cocina en su propio idioma técnico ("dos tacos, sin cebolla, salsa aparte"). La segunda forma es más rápida y precisa una vez que aprendes el idioma, y es la única opción cuando le hablas a una cocina (un servidor remoto) que no tiene fotos que mostrarte.
 
-**Analogía:** piensa en el curso como aprender a cocinar en una escuela de gastronomía. No empiezas preparando un menú de cinco platos: primero aprendes a afilar un cuchillo y a manejar el fuego (Módulo 0 y 1), después dominas técnicas sueltas —cortar, saltear, hornear— (Módulos 2 a 4), luego combinas dos técnicas en un plato (Módulos 5 a 7), y al final preparas el menú completo (Módulos 8 y 9) usando todo lo anterior a la vez.
-
-**¿Por qué es importante?** Entender la estructura del curso antes de empezar evita dos errores comunes: saltarte módulos porque "ya sabes" el servicio superficialmente, o frustrarte en un módulo avanzado sin darte cuenta de que te falta una base de un módulo anterior. Saber que el curso está diseñado para acumularse te da permiso para ir despacio en los primeros módulos: el tiempo que inviertas en Docker y AWS CLI en este módulo lo vas a recuperar con creces en todos los que siguen.
+**¿Por qué es importante?** Si nunca has usado una terminal, tómate 15 minutos ahora mismo para abrirla y escribir `pwd`, `cd`, y `ls` (macOS/Linux) o `dir` (Windows) antes de continuar. Ese pequeño ejercicio es más importante para tu éxito en este curso que memorizar cualquier concepto de nube: todo lo demás se construye sobre saber moverte con soltura en una terminal.
 
 **Diagrama:**
 
 ```
-Módulo 0 ──▶ Módulo 1 ──▶ Módulo 2 ──▶ Módulo 3 ──▶ Módulo 4
-(Prepara)    (Docker)     (S3)         (SQS)        (DynamoDB)
-                                                         │
-   ┌─────────────────────────────────────────────────────┘
-   ▼
-Módulo 5 ──▶ Módulo 6 ──▶ Módulo 7 ──▶ Módulo 8 ──▶ Módulo 9
-(Lambda)     (API GW)     (IAM)        (Azure/GCP)  (Proyecto final:
-                                                      integra 2-8)
+Tú escribes:  docker --version
+                    │
+                    ▼
+      El shell interpreta el texto
+                    │
+                    ▼
+El sistema operativo ejecuta el programa "docker"
+                    │
+                    ▼
+      El resultado se imprime en tu pantalla
 ```
 
-### Tema 2: Qué es Floci — definición, propósito y comparativa con LocalStack
+### Tema 2: Fundamentos de redes — direcciones IP, puertos, HTTP y APIs
+
+**Conceptos clave:** dirección IP, `localhost`, puerto, protocolo HTTP, API, modelo cliente-servidor.
+
+Una dirección IP identifica de forma única a una computadora dentro de una red, de forma parecida a como una dirección postal identifica una casa. `localhost` (o la dirección `127.0.0.1`) es una dirección IP especial que siempre significa "esta misma computadora": cuando ejecutas `curl http://localhost:4566`, le estás hablando a un programa que corre en tu propia máquina, no a internet. Una misma computadora puede correr muchos programas que escuchan peticiones de red al mismo tiempo, así que necesita una forma de distinguir a cuál de ellos va dirigida cada petición: ese es el puerto, un número (de 0 a 65535) que funciona como el número de apartamento dentro del edificio que es tu computadora. Cuando Floci "escucha en el puerto 4566", significa que hay un programa dentro de tu máquina esperando peticiones específicamente en esa "puerta numerada".
+
+HTTP es el protocolo —el conjunto de reglas de formato y vocabulario— que usan la mayoría de los programas para pedirse cosas entre sí a través de una red: un cliente envía una petición (`request`) especificando qué quiere (por ejemplo, "dame la lista de objetos de este bucket"), y un servidor responde con una respuesta (`response`) que incluye un código de estado (200 significa éxito, 404 significa "no encontrado", 500 significa error del servidor) y normalmente datos en un formato como JSON. Una API (interfaz de programación de aplicaciones) es, en este contexto, el conjunto específico de peticiones que un servidor entiende y sabe responder: la "API de S3" es el vocabulario específico de peticiones HTTP que entiende un servicio de almacenamiento de objetos, ya sea AWS real o Floci emulándolo.
+
+Cuando ejecutas `aws s3 ls --endpoint-url http://localhost:4566`, en realidad está pasando esto: la AWS CLI traduce tu comando a una petición HTTP con el formato exacto que entiende la API de S3, la envía a la dirección `localhost` en el puerto `4566` (donde escucha Floci), Floci procesa esa petición como si fuera el servicio S3 real, y devuelve una respuesta HTTP que la AWS CLI vuelve a traducir a texto legible en tu terminal. Todo lo que vas a hacer en este curso —cada comando de cada módulo— es, por debajo, exactamente este mismo patrón: petición HTTP, puerto, respuesta.
+
+**Analogía:** una dirección IP es la dirección de un edificio; un puerto es el número de apartamento dentro de ese edificio; HTTP es el idioma y la etiqueta que usas cuando tocas la puerta y pides algo ("buenas tardes, ¿podría darme...?"); una API es la lista específica de cosas que ese apartamento en particular sabe entregarte si se las pides correctamente.
+
+**¿Por qué es importante?** Entender que un comando de AWS CLI no es magia, sino una petición HTTP a una dirección y puerto específicos, es lo que te permite diagnosticar el 90% de los errores de conexión de este curso: si un comando falla con un error de conexión, casi siempre es porque el puerto no coincide, el programa no está corriendo, o la dirección apunta al lugar equivocado — no porque el concepto de "nube" en sí sea complicado.
+
+**Diagrama:**
+
+```mermaid
+sequenceDiagram
+  participant Tú as Tu terminal
+  participant CLI as AWS CLI
+  participant Floci as Floci (localhost:4566)
+
+  Tú->>CLI: aws s3 ls
+  CLI->>Floci: Petición HTTP GET (API de S3)
+  Floci-->>CLI: Respuesta HTTP 200 + lista de buckets (JSON)
+  CLI-->>Tú: Texto legible en tu terminal
+```
+
+### Tema 3: Qué vas a aprender y cómo está estructurado el curso
+
+**Conceptos clave:** ruta de aprendizaje, módulo, nivel de dificultad progresivo, entregable.
+
+El curso está organizado en 32 módulos numerados del 0 al 31, y cada uno se apoya en el anterior. La ruta base (Módulos 0-9) te lleva desde la preparación del entorno hasta un primer proyecto integrador, cubriendo Docker, S3, SQS, DynamoDB, Lambda, API Gateway, IAM y una introducción a Azure/GCP. A partir del Módulo 10, el curso continúa con contenido avanzado —Secrets Manager, mensajería Pub/Sub, observabilidad, bases de datos relacionales, contenedores gestionados, infraestructura como código, streaming, autenticación y analítica de datos (Módulos 10-20)— y después con los servicios adicionales que completan la paridad con Floci —cómputo elástico, balanceo de carga y CDN, caché, CI/CD nativo, gobierno de cuenta, FinOps y más (Módulos 21-30)—. El Módulo 31, el proyecto integrador final, no introduce un servicio nuevo: integra lo aprendido en un sistema desplegado en los tres proveedores.
+
+Esta progresión no es arbitraria. Cada módulo nuevo reutiliza al menos un servicio de un módulo previo. El Módulo 5 (Lambda) asume que ya sabes crear una tabla en DynamoDB (Módulo 4) y subir un archivo a S3 (Módulo 2), porque una función Lambda real casi nunca vive sola: lee de una base de datos, guarda un archivo, o dispara un mensaje en una cola. Si saltas un módulo, es probable que te falte una pieza que el siguiente da por sentada.
+
+Cada módulo comparte la misma estructura interna: primero la teoría de los conceptos nuevos, después un laboratorio práctico con comandos reales que puedes ejecutar contra Floci (con verificación automática de tu evidencia), y por último ejercicios de evaluación que comprueban si puedes aplicar lo aprendido sin que te den el comando exacto. Esta estructura imita el ritmo real de aprender una tecnología de nube en el trabajo: primero entiendes el concepto, después lo usas guiado, y finalmente lo usas solo.
+
+El nivel de dificultad también progresa, agrupado en cuatro niveles: "Fundamentos" (Módulos 0-1), "Aplicación" (Módulos 2-4 y parte del contenido avanzado), "Integración" (módulos que combinan varios servicios, como EC2/Auto Scaling o RDS), y "Experto" (los módulos más avanzados: multi-nube, FinOps, IA, y los proyectos integradores). Esta etiqueta no mide cuánto contenido tiene el módulo, sino cuánto de lo anterior necesitas dominar para aprovecharlo.
+
+**Analogía:** piensa en el curso como aprender a cocinar en una escuela de gastronomía con un programa extenso. No empiezas preparando un menú de cinco platos: primero aprendes a afilar un cuchillo y a manejar el fuego (Módulos 0-1), después dominas técnicas sueltas —cortar, saltear, hornear— (Módulos 2-9), luego combinas técnicas en platos más elaborados (Módulos 10-30), y al final preparas el menú completo de un restaurante real (Módulo 31) usando todo lo anterior a la vez.
+
+**¿Por qué es importante?** Entender la estructura del curso antes de empezar evita dos errores comunes: saltarte módulos porque "ya sabes" el servicio superficialmente, o frustrarte en un módulo avanzado sin darte cuenta de que te falta una base de un módulo anterior. Saber que el curso está diseñado para acumularse te da permiso para ir despacio en los primeros módulos: el tiempo que inviertas en fundamentos, Docker y AWS CLI en este módulo lo vas a recuperar con creces en todos los que siguen.
+
+**Diagrama:**
+
+```mermaid
+flowchart LR
+  A["Módulos 0-1\nFundamentos"] --> B["Módulos 2-9\nRuta base + proyecto"]
+  B --> C["Módulos 10-20\nContenido avanzado"]
+  C --> D["Módulos 21-30\nParidad completa con Floci"]
+  D --> E["Módulo 31\nProyecto integrador multi-nube"]
+```
+
+### Tema 4: Qué es Floci — definición, propósito y comparativa con LocalStack
 
 **Conceptos clave:** emulador de nube, API-compatible, LocalStack, entorno local, coste cero.
 
@@ -88,7 +146,7 @@ Además del contenedor en sí, el proyecto ofrece dos herramientas oficiales que
                                                              └──────────────────────┘
 ```
 
-### Tema 3: Servicios que emula Floci — AWS, Azure y GCP
+### Tema 5: Servicios que emula Floci — AWS, Azure y GCP
 
 **Conceptos clave:** floci (AWS), floci-az (Azure), floci-gcp (GCP), catálogo de servicios, endpoint por proveedor.
 
@@ -134,7 +192,7 @@ flowchart TB
   GCP --> Tools3["gcloud CLI / SDKs apuntando al emulador local"]
 ```
 
-### Tema 4: Ventajas y limitaciones de practicar con un emulador local
+### Tema 6: Ventajas y limitaciones de practicar con un emulador local
 
 **Conceptos clave:** paridad de comportamiento, fidelidad parcial, límites del emulador, transferencia de conocimiento.
 
@@ -162,7 +220,7 @@ La otra ventaja, menos obvia pero igual de importante, es que aprender contra un
                  └────────────────────────┘      └────────────────────────┘
 ```
 
-### Tema 5: Metodología de estudio — teoría, laboratorio y evaluación en cada módulo
+### Tema 7: Metodología de estudio — teoría, laboratorio y evaluación en cada módulo
 
 **Conceptos clave:** ciclo teoría-práctica-evaluación, entregable verificable, autoevaluación con criterios de éxito.
 
@@ -236,7 +294,7 @@ Al final de cada módulo hay un resumen que recoge los puntos clave, lista expl�
 
 ### Ejercicio 2: Mapear servicios a proveedores
 
-**Enunciado:** completa la siguiente tabla escribiendo, para cada servicio de AWS, su equivalente aproximado en Azure y en GCP, usando lo que leíste en el Tema 3 de este módulo:
+**Enunciado:** completa la siguiente tabla escribiendo, para cada servicio de AWS, su equivalente aproximado en Azure y en GCP, usando lo que leíste en el Tema 5 de este módulo:
 
 | Servicio AWS | Equivalente Azure | Equivalente GCP |
 |---|---|---|
@@ -268,6 +326,16 @@ Al final de cada módulo hay un resumen que recoge los puntos clave, lista expl�
 - Las cuatro herramientas están completas y correctas.
 - Los cuatro comandos de verificación son correctos.
 - Ejecutaste realmente los cuatro comandos en tu propia terminal y los cuatro respondieron sin error, no solo los recordaste de memoria.
+
+### Ejercicio 4: De comando a petición HTTP
+
+**Enunciado:** sin ejecutar nada todavía, explica con tus propias palabras qué ocurre paso a paso —desde que escribes `aws s3 ls --endpoint-url http://localhost:4566` en tu terminal hasta que ves el resultado en pantalla— nombrando explícitamente dónde entra el shell, la dirección IP, el puerto, la petición HTTP y la respuesta.
+
+**Solución esperada:** el shell interpreta el texto del comando; la AWS CLI traduce ese comando a una petición HTTP con el formato de la API de S3; esa petición viaja a la dirección `localhost` (tu propia máquina) en el puerto `4566`, donde Floci está escuchando; Floci procesa la petición y devuelve una respuesta HTTP (código 200 si todo salió bien) con la lista de buckets en formato JSON; la AWS CLI traduce esa respuesta a texto legible que se imprime en tu terminal.
+
+**Criterios de éxito:**
+- Los cinco elementos (shell, IP, puerto, petición, respuesta) aparecen mencionados en el orden correcto.
+- La explicación usa tus propias palabras, no una copia literal del Tema 2.
 
 ---
 

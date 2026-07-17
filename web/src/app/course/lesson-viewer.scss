@@ -4,7 +4,34 @@
 // sin pestañas, retos, preguntas ni paneles de gamificación. ──
 
 :host { display:block; padding:34px 24px 84px; }
-.lesson { max-width:760px; margin:0 auto; }
+
+.lesson-layout { display:flex; gap:44px; align-items:flex-start; max-width:1000px; margin:0 auto; }
+.lesson { max-width:760px; min-width:0; flex:1; }
+
+// ── Índice "En esta lección": ancla lateral con scroll-spy, solo en pantallas
+// anchas. Se construye dinámicamente a partir de los h2/h3 del markdown ya
+// renderizado (ver buildTableOfContents en lesson-viewer.ts). ──
+.lesson-toc {
+  width:200px; flex-shrink:0; position:sticky; top:24px;
+  max-height:calc(100vh - 48px); overflow-y:auto;
+}
+.lesson-toc-title {
+  margin:0 0 10px; font-size:11px; font-weight:800; letter-spacing:.5px; text-transform:uppercase; color:$mul;
+}
+.lesson-toc nav { display:flex; flex-direction:column; gap:2px; border-left:2px solid $bd; }
+.lesson-toc-link {
+  display:block; padding:6px 0 6px 14px; margin-left:-2px; border-left:2px solid transparent;
+  font-size:12.5px; line-height:1.4; color:$mu; text-decoration:none;
+  transition:color $transition, border-color $transition;
+  overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
+}
+.lesson-toc-link.level-3 { padding-left:26px; font-size:12px; }
+.lesson-toc-link:hover { color:$ph; }
+.lesson-toc-link.active { color:$p; border-left-color:$p; font-weight:700; }
+
+@media (max-width: 1080px) {
+  .lesson-toc { display:none; }
+}
 
 .lesson-breadcrumb { display:flex; flex-wrap:wrap; gap:6px; font-size:11.5px; color:$mu; font-weight:600; margin-bottom:10px; }
 .lesson-breadcrumb .sep { opacity:.5; }
@@ -21,8 +48,8 @@
 // aplicarse: sin él, ninguna de estas reglas alcanzaría ese contenido.
 .lesson-markdown { font-size:15px; line-height:1.7; color:$i3; }
 .lesson-markdown ::ng-deep :first-child { margin-top:0; }
-.lesson-markdown ::ng-deep h2 { font:700 19px Inter, sans-serif; color:$ink; margin:26px 0 10px; }
-.lesson-markdown ::ng-deep h3 { font:700 16px Inter, sans-serif; color:$ink; margin:20px 0 8px; }
+.lesson-markdown ::ng-deep h2 { font:700 19px Inter, sans-serif; color:$ink; margin:26px 0 10px; scroll-margin-top:76px; }
+.lesson-markdown ::ng-deep h3 { font:700 16px Inter, sans-serif; color:$ink; margin:20px 0 8px; scroll-margin-top:76px; }
 .lesson-markdown ::ng-deep pre { background:$code-bg; color:$code-text; padding:14px 16px; border-radius:$rs; overflow-x:auto; font-size:13px; }
 .lesson-markdown ::ng-deep code { font-family:'SFMono-Regular',Consolas,monospace; font-size:.92em; }
 .lesson-markdown ::ng-deep :not(pre) > code { background:$bg2; padding:1px 5px; border-radius:4px; }

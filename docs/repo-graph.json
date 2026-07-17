@@ -1034,7 +1034,7 @@
     },
     {
       "path": "web/public/content/cloud/modulo-0.md",
-      "lines": 300,
+      "lines": 368,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -1042,15 +1042,15 @@
         "# M\u00f3dulo 0: Introducci\u00f3n y preparaci\u00f3n",
         "## S\u00edlabo",
         "## Contenido te\u00f3rico",
-        "### Tema 1: Qu\u00e9 vas a aprender y c\u00f3mo est\u00e1 estructurado el curso",
-        "### Tema 2: Qu\u00e9 es Floci \u2014 definici\u00f3n, prop\u00f3sito y comparativa con LocalStack",
-        "### Tema 3: Servicios que emula Floci \u2014 AWS, Azure y GCP",
-        "### Tema 4: Ventajas y limitaciones de practicar con un emulador local",
-        "### Tema 5: Metodolog\u00eda de estudio \u2014 teor\u00eda, laboratorio y evaluaci\u00f3n en cada m\u00f3dulo",
+        "### Tema 1: Fundamentos absolutos \u2014 qu\u00e9 es una terminal, un comando y un sistema operativo",
+        "### Tema 2: Fundamentos de redes \u2014 direcciones IP, puertos, HTTP y APIs",
+        "### Tema 3: Qu\u00e9 vas a aprender y c\u00f3mo est\u00e1 estructurado el curso",
+        "### Tema 4: Qu\u00e9 es Floci \u2014 definici\u00f3n, prop\u00f3sito y comparativa con LocalStack",
+        "### Tema 5: Servicios que emula Floci \u2014 AWS, Azure y GCP",
+        "### Tema 6: Ventajas y limitaciones de practicar con un emulador local",
+        "### Tema 7: Metodolog\u00eda de estudio \u2014 teor\u00eda, laboratorio y evaluaci\u00f3n en cada m\u00f3dulo",
         "## Laboratorio pr\u00e1ctico",
-        "## Ejercicios de evaluaci\u00f3n",
-        "### Ejercicio 1: Diferenciar emulador de cuenta real",
-        "### Ejercicio 2: Mapear servicios a proveedores"
+        "## Ejercicios de evaluaci\u00f3n"
       ]
     },
     {
@@ -8015,7 +8015,7 @@
     },
     {
       "path": "web/src/app/course/lesson-viewer.html",
-      "lines": 47,
+      "lines": 63,
       "kind": "angular-app",
       "symbols": [],
       "imports": [],
@@ -8023,7 +8023,7 @@
     },
     {
       "path": "web/src/app/course/lesson-viewer.scss",
-      "lines": 101,
+      "lines": 128,
       "kind": "angular-app",
       "symbols": [],
       "imports": [],
@@ -8031,10 +8031,11 @@
     },
     {
       "path": "web/src/app/course/lesson-viewer.ts",
-      "lines": 122,
+      "lines": 191,
       "kind": "angular-app",
       "symbols": [
         "LessonViewerComponent",
+        "TocItem",
         "track",
         "module",
         "moduleIndex",
@@ -8042,6 +8043,8 @@
         "nextModule",
         "lessonHtml",
         "lessonLoading",
+        "tocItems",
+        "activeTocId",
         "isComplete"
       ],
       "imports": [
