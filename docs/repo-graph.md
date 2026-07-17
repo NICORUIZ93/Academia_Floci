@@ -1,8 +1,8 @@
 # Academia Floci Repo Graph
 
-Generated: 2026-07-17 19:18 UTC
+Generated: 2026-07-17 19:23 UTC
 Root: `Academia_Floci`
-Indexed files: 604
+Indexed files: 616
 Import edges: 27
 
 Use this file as the first, compact context for AI assistants. Refresh it with:
@@ -19,18 +19,18 @@ For automated lookups, use `docs/repo-graph.json`.
 - `automation-script`: 6 files
 - `course-content`: 299 files
 - `documentation`: 94 files
-- `example`: 133 files
+- `example`: 145 files
 - `local-infra`: 1 files
 - `project-file`: 25 files
 
 ## File Types
 
 - `.md`: 384
+- `.py`: 35
+- `.js`: 34
 - `.ts`: 32
-- `.py`: 31
-- `.js`: 30
+- `.java`: 28
 - `.go`: 24
-- `.java`: 24
 - `.rs`: 24
 - `.json`: 16
 - `.html`: 9
@@ -199,7 +199,7 @@ For automated lookups, use `docs/repo-graph.json`.
 
 ### example
 
-- `examples/README.md` (90 lines) - headings: # Ejemplos de referencia, ## Ejemplos por operación (node/, python/, java/, go/, rust/), # Node.js (requiere: npm install en examples/node/), # Python (requiere: pip install boto3)
+- `examples/README.md` (100 lines) - headings: # Ejemplos de referencia, ## Ejemplos por operación (node/, python/, java/, go/, rust/), # Node.js (requiere: npm install en examples/node/), # Python (requiere: pip install boto3)
 - `examples/go/apigateway_create_api.go` (43 lines)
 - `examples/go/apigateway_create_resource.go` (66 lines)
 - `examples/go/apigateway_put_method.go` (60 lines)
@@ -217,7 +217,7 @@ For automated lookups, use `docs/repo-graph.json`.
 - `examples/go/lambda_update.go` (76 lines)
 - `examples/go/s3_create_bucket.go` (44 lines)
 - `examples/go/s3_delete.go` (50 lines)
-- ... 115 more files
+- ... 127 more files
 
 ### local-infra
 

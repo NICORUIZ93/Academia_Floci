@@ -39,15 +39,25 @@ asume Floci corriendo en `http://localhost:4566` (ver Módulo 1).
 | DynamoDB | Obtener item | `dynamodb-get-item.js` | `dynamodb_get_item.py` | `DynamoDbGetItem.java` | `dynamodb_get_item.go` | `dynamodb_get_item.rs` |
 | DynamoDB | Actualizar item | `dynamodb-update-item.js` | `dynamodb_update_item.py` | `DynamoDbUpdateItem.java` | `dynamodb_update_item.go` | `dynamodb_update_item.rs` |
 | DynamoDB | Eliminar item | `dynamodb-delete-item.js` | `dynamodb_delete_item.py` | `DynamoDbDeleteItem.java` | `dynamodb_delete_item.go` | `dynamodb_delete_item.rs` |
+| DynamoDB | Query (por clave) | `dynamodb-query.js` | `dynamodb_query.py` | `DynamoDbQuery.java` | — | — |
+| DynamoDB | Scan (tabla completa) | `dynamodb-scan.js` | `dynamodb_scan.py` | `DynamoDbScan.java` | — | — |
 | Lambda | Crear función | `lambda-create-function.js` | `lambda_create_function.py` | `LambdaCreateFunction.java` | `lambda_create_function.go` | `lambda_create_function.rs` |
 | Lambda | Invocar | `lambda-invoke.js` | `lambda_invoke.py` | `LambdaInvoke.java` | `lambda_invoke.go` | `lambda_invoke.rs` |
 | Lambda | Actualizar código | `lambda-update.js` | `lambda_update.py` | `LambdaUpdate.java` | `lambda_update.go` | `lambda_update.rs` |
+| Lambda | Eliminar función | `lambda-delete.js` | `lambda_delete.py` | `LambdaDelete.java` | — | — |
 | API Gateway | Crear API | `apigateway-create-api.js` | `apigateway_create_api.py` | `ApiGatewayCreateApi.java` | `apigateway_create_api.go` | `apigateway_create_api.rs` |
 | API Gateway | Crear recurso | `apigateway-create-resource.js` | `apigateway_create_resource.py` | `ApiGatewayCreateResource.java` | `apigateway_create_resource.go` | `apigateway_create_resource.rs` |
 | API Gateway | Crear método | `apigateway-put-method.js` | `apigateway_put_method.py` | `ApiGatewayPutMethod.java` | `apigateway_put_method.go` | `apigateway_put_method.rs` |
+| API Gateway | Desplegar a un stage | `apigateway-deploy.js` | `apigateway_deploy.py` | `ApiGatewayDeploy.java` | — | — |
 | IAM | Crear usuario | `iam-create-user.js` | `iam_create_user.py` | `IamCreateUser.java` | `iam_create_user.go` | `iam_create_user.rs` |
 | IAM | Crear política | `iam-create-policy.js` | `iam_create_policy.py` | `IamCreatePolicy.java` | `iam_create_policy.go` | `iam_create_policy.rs` |
 | IAM | Asignar política | `iam-attach-policy.js` | `iam_attach_policy.py` | `IamAttachPolicy.java` | `iam_attach_policy.go` | `iam_attach_policy.rs` |
+
+Las filas marcadas con "—" en Go/Rust son intencionales: esas cuatro operaciones
+(Query, Scan, borrar función Lambda, desplegar API Gateway) solo existen en los
+tres lenguajes usados en el track Cloud (Node.js, Python, Java); Go y Rust no
+son lenguajes de ningún track del curso, se añadieron como referencia extra y
+no se amplían más allá de lo ya cubierto.
 
 Ejecución:
 

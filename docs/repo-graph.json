@@ -101,7 +101,7 @@
     },
     {
       "path": "examples/README.md",
-      "lines": 90,
+      "lines": 100,
       "kind": "example",
       "symbols": [],
       "imports": [],
@@ -334,6 +334,14 @@
       "headings": []
     },
     {
+      "path": "examples/java/ApiGatewayDeploy.java",
+      "lines": 39,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
       "path": "examples/java/ApiGatewayPutMethod.java",
       "lines": 42,
       "kind": "example",
@@ -368,6 +376,22 @@
     {
       "path": "examples/java/DynamoDbPutItem.java",
       "lines": 43,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "examples/java/DynamoDbQuery.java",
+      "lines": 46,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "examples/java/DynamoDbScan.java",
+      "lines": 49,
       "kind": "example",
       "symbols": [],
       "imports": [],
@@ -416,6 +440,14 @@
     {
       "path": "examples/java/LambdaCreateFunction.java",
       "lines": 62,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "examples/java/LambdaDelete.java",
+      "lines": 34,
       "kind": "example",
       "symbols": [],
       "imports": [],
@@ -526,6 +558,14 @@
       "headings": []
     },
     {
+      "path": "examples/node/apigateway-deploy.js",
+      "lines": 33,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
       "path": "examples/node/apigateway-put-method.js",
       "lines": 41,
       "kind": "example",
@@ -577,6 +617,22 @@
       "headings": []
     },
     {
+      "path": "examples/node/dynamodb-query.js",
+      "lines": 39,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "examples/node/dynamodb-scan.js",
+      "lines": 38,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
       "path": "examples/node/dynamodb-update-item.js",
       "lines": 32,
       "kind": "example",
@@ -619,6 +675,14 @@
     {
       "path": "examples/node/lambda-create-function.js",
       "lines": 54,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "examples/node/lambda-delete.js",
+      "lines": 29,
       "kind": "example",
       "symbols": [],
       "imports": [],
@@ -814,6 +878,19 @@
       "headings": []
     },
     {
+      "path": "examples/python/apigateway_deploy.py",
+      "lines": 37,
+      "kind": "example",
+      "symbols": [
+        "main"
+      ],
+      "imports": [
+        "sys",
+        "boto3"
+      ],
+      "headings": []
+    },
+    {
       "path": "examples/python/apigateway_put_method.py",
       "lines": 41,
       "kind": "example",
@@ -891,6 +968,34 @@
       "imports": [
         "sys",
         "time",
+        "boto3"
+      ],
+      "headings": []
+    },
+    {
+      "path": "examples/python/dynamodb_query.py",
+      "lines": 43,
+      "kind": "example",
+      "symbols": [
+        "main"
+      ],
+      "imports": [
+        "json",
+        "sys",
+        "boto3"
+      ],
+      "headings": []
+    },
+    {
+      "path": "examples/python/dynamodb_scan.py",
+      "lines": 42,
+      "kind": "example",
+      "symbols": [
+        "main"
+      ],
+      "imports": [
+        "json",
+        "sys",
         "boto3"
       ],
       "headings": []
@@ -981,6 +1086,20 @@
         "sys",
         "zipfile",
         "boto3"
+      ],
+      "headings": []
+    },
+    {
+      "path": "examples/python/lambda_delete.py",
+      "lines": 35,
+      "kind": "example",
+      "symbols": [
+        "main"
+      ],
+      "imports": [
+        "sys",
+        "boto3",
+        "botocore.exceptions"
       ],
       "headings": []
     },
