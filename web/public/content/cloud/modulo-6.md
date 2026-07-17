@@ -296,3 +296,4 @@ En el Módulo 7 vas a estudiar IAM en profundidad: usuarios, grupos, roles y pol
 - Documentación oficial de Amazon API Gateway: conceptos de API REST, HTTP y WebSocket.
 - Documentación oficial sobre integración Lambda proxy en API Gateway.
 - Documentación oficial sobre despliegues y stages de API Gateway.
+- Código ejecutable de cada operación (crear API, crear recurso, crear método, desplegar) en Node.js, Python, Java, Go y Rust: carpeta [`examples/`](https://github.com/NICORUIZ93/Academia_Floci/tree/main/examples) del repositorio, archivos que empiezan por `apigateway-`/`apigateway_`/`ApiGateway` (ver [`examples/README.md`](https://github.com/NICORUIZ93/Academia_Floci/blob/main/examples/README.md) para la lista completa).

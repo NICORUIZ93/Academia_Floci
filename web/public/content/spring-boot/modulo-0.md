@@ -175,3 +175,4 @@ En el Módulo 1 aprenderás la estructura de proyecto de Spring Boot: Spring Ini
 **Recursos adicionales**
 
 - Documentación oficial de Spring Framework (docs.spring.io/spring-framework) y Spring Boot (docs.spring.io/spring-boot).
+- Ejemplos de código ejecutables de este track, en Java: carpeta [`examples/tracks/spring-boot/`](https://github.com/NICORUIZ93/Academia_Floci/tree/main/examples/tracks/spring-boot) del repositorio — `RestControllerExample.java` (Módulo 2), `JpaRepositoryExample.java` (Módulo 3), `SecurityConfig.java` (Módulo 4), `ActuatorMetrics.java` (Módulo 7), `WebFluxReactive.java` (Módulo 9).

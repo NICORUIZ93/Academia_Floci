@@ -207,3 +207,4 @@ En el Módulo 1 aprenderás que "en Flutter todo es un widget": la diferencia en
 **Recursos adicionales**
 
 - Documentación oficial de null safety en Dart (dart.dev/null-safety).
+- Ejemplos de código ejecutables de este track, en Dart: carpeta [`examples/tracks/flutter/`](https://github.com/NICORUIZ93/Academia_Floci/tree/main/examples/tracks/flutter) del repositorio — `stateful-widget.dart` (Módulo 1), `responsive-layout.dart` (Módulo 2), `state-management.dart` (Módulo 4), `networking.dart` (Módulo 5), `local-persistence.dart` (Módulo 6).

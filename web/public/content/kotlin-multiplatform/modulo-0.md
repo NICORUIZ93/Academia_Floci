@@ -177,3 +177,4 @@ En el Módulo 1 aprenderás programación funcional en Kotlin: lambdas, scope fu
 **Recursos adicionales**
 
 - Documentación oficial de Kotlin (kotlinlang.org/docs): "Null Safety" y "Data Classes".
+- Ejemplos de código ejecutables de este track, en Kotlin: carpeta [`examples/tracks/kotlin-multiplatform/`](https://github.com/NICORUIZ93/Academia_Floci/tree/main/examples/tracks/kotlin-multiplatform) del repositorio — `coroutines-flow.kt` (Módulo 2), `expect-actual.kt` (Módulos 3-4), `ktor-client.kt` (Módulo 5), `sqldelight-persistence.kt` (Módulo 6).

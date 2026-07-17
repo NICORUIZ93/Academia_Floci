@@ -282,3 +282,4 @@ En el Módulo 8 vas a repetir los patrones de almacenamiento y mensajería que y
 - Documentación oficial de AWS IAM: conceptos básicos y guía de usuario.
 - Documentación oficial sobre la evaluación de políticas IAM (lógica de Allow/Deny).
 - Documentación oficial del simulador de políticas IAM (`simulate-principal-policy`).
+- Código ejecutable de cada operación (crear usuario, crear política, asignar política) en Node.js, Python, Java, Go y Rust: carpeta [`examples/`](https://github.com/NICORUIZ93/Academia_Floci/tree/main/examples) del repositorio, archivos que empiezan por `iam-`/`iam_`/`Iam` (ver [`examples/README.md`](https://github.com/NICORUIZ93/Academia_Floci/blob/main/examples/README.md) para la lista completa).

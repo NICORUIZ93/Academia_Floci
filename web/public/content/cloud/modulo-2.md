@@ -282,3 +282,4 @@ En el Módulo 3 vas a desacoplar componentes de una aplicación usando colas de 
 - Documentación oficial de Amazon S3: conceptos básicos y guía de usuario.
 - Documentación oficial de S3 sobre versionado y gestión de ciclo de vida.
 - Guía de AWS sobre buenas prácticas de seguridad en S3 (políticas de bucket vs ACL).
+- Código ejecutable de cada operación (listar, crear, subir, descargar, eliminar) en Node.js, Python, Java, Go y Rust: carpeta [`examples/`](https://github.com/NICORUIZ93/Academia_Floci/tree/main/examples) del repositorio, archivos que empiezan por `s3-`/`s3_`/`S3` (ver [`examples/README.md`](https://github.com/NICORUIZ93/Academia_Floci/blob/main/examples/README.md) para la lista completa).

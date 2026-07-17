@@ -359,3 +359,4 @@ En el Módulo 1 vas a profundizar en Git más allá de los comandos básicos: es
 - Documentación del manual de Linux (`man bash`, `man chmod`, `man cron`) como referencia primaria y siempre disponible sin conexión.
 - Guía oficial de `ufw` y documentación de `iptables` para hardening de firewall.
 - Introducción oficial a DevOps y su ciclo de vida, publicada por las principales plataformas de CI/CD del mercado.
+- Ejemplos ejecutables de este track: carpeta [`examples/tracks/devops/`](https://github.com/NICORUIZ93/Academia_Floci/tree/main/examples/tracks/devops) del repositorio — `Dockerfile` (Módulo 2), `docker-compose.yml` (Módulo 3), `ci-pipeline.yml` (Módulo 4), `deployment.yaml` (Módulo 6), `main.tf` (Módulo 8).

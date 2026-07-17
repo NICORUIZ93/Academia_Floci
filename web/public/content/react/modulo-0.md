@@ -199,3 +199,4 @@ En el Módulo 1 aprenderás estado local y el ciclo de render: `useState`, actua
 **Recursos adicionales**
 
 - Documentación oficial de React (react.dev): "Writing Markup with JSX" y "Rendering Lists".
+- Ejemplos de código ejecutables de este track, en JSX: carpeta [`examples/tracks/react/`](https://github.com/NICORUIZ93/Academia_Floci/tree/main/examples/tracks/react) del repositorio — `hooks-state.jsx` (Módulos 1-2), `custom-hook.jsx` (Módulo 2), `context-provider.jsx` (Módulo 4), `router-setup.jsx` (Módulo 5), `data-fetching.jsx` (Módulo 6).

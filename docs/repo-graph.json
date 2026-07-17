@@ -2,7 +2,7 @@
   "files": [
     {
       "path": ".claude/settings.local.json",
-      "lines": 11,
+      "lines": 14,
       "kind": "project-file",
       "symbols": [],
       "imports": [],
@@ -2223,7 +2223,7 @@
     },
     {
       "path": "web/public/content/android/modulo-0.md",
-      "lines": 201,
+      "lines": 202,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -2496,7 +2496,7 @@
     },
     {
       "path": "web/public/content/angular/modulo-0.md",
-      "lines": 214,
+      "lines": 215,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -3042,7 +3042,7 @@
     },
     {
       "path": "web/public/content/cloud/modulo-2.md",
-      "lines": 285,
+      "lines": 286,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -3273,7 +3273,7 @@
     },
     {
       "path": "web/public/content/cloud/modulo-3.md",
-      "lines": 261,
+      "lines": 262,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -3336,7 +3336,7 @@
     },
     {
       "path": "web/public/content/cloud/modulo-4.md",
-      "lines": 316,
+      "lines": 317,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -3357,7 +3357,7 @@
     },
     {
       "path": "web/public/content/cloud/modulo-5.md",
-      "lines": 320,
+      "lines": 321,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -3378,7 +3378,7 @@
     },
     {
       "path": "web/public/content/cloud/modulo-6.md",
-      "lines": 299,
+      "lines": 300,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -3399,7 +3399,7 @@
     },
     {
       "path": "web/public/content/cloud/modulo-7.md",
-      "lines": 285,
+      "lines": 286,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -3441,7 +3441,7 @@
     },
     {
       "path": "web/public/content/cloud/modulo-9.md",
-      "lines": 386,
+      "lines": 388,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -3462,7 +3462,7 @@
     },
     {
       "path": "web/public/content/devops/modulo-0.md",
-      "lines": 362,
+      "lines": 363,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -3894,7 +3894,7 @@
     },
     {
       "path": "web/public/content/flutter/modulo-0.md",
-      "lines": 210,
+      "lines": 211,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -4167,7 +4167,7 @@
     },
     {
       "path": "web/public/content/ios/modulo-0.md",
-      "lines": 214,
+      "lines": 215,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -4440,7 +4440,7 @@
     },
     {
       "path": "web/public/content/java/modulo-0.md",
-      "lines": 200,
+      "lines": 201,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -4734,7 +4734,7 @@
     },
     {
       "path": "web/public/content/javascript/modulo-0.md",
-      "lines": 262,
+      "lines": 263,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5007,7 +5007,7 @@
     },
     {
       "path": "web/public/content/kotlin-multiplatform/modulo-0.md",
-      "lines": 180,
+      "lines": 181,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5645,7 +5645,7 @@
     },
     {
       "path": "web/public/content/node/modulo-0.md",
-      "lines": 227,
+      "lines": 228,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -7617,7 +7617,7 @@
     },
     {
       "path": "web/public/content/react/modulo-0.md",
-      "lines": 202,
+      "lines": 203,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -7898,7 +7898,7 @@
     },
     {
       "path": "web/public/content/spring-boot/modulo-0.md",
-      "lines": 178,
+      "lines": 179,
       "kind": "course-content",
       "symbols": [],
       "imports": [],

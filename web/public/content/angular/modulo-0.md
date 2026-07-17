@@ -211,3 +211,4 @@ En el Módulo 1 profundizarás en componentes, plantillas y data binding: inputs
 
 - Documentación oficial de Angular (angular.dev), sección "Essentials".
 - TypeScript Handbook: "Utility Types".
+- Ejemplos de código ejecutables de este track, en TypeScript: carpeta [`examples/tracks/angular/`](https://github.com/NICORUIZ93/Academia_Floci/tree/main/examples/tracks/angular) del repositorio — `signals-counter.ts` (Módulo 2), `di-service.ts` (Módulo 3), `routing-guard.ts` (Módulo 4), `reactive-form.ts` (Módulo 5), `http-interceptor.ts` (Módulo 7).

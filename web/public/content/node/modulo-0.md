@@ -224,3 +224,4 @@ En el Módulo 1 aprenderás a gestionar dependencias de forma reproducible con n
 
 - Documentación oficial de Node.js: "The Node.js Event Loop, Timers, and process.nextTick()".
 - Documentación de libuv (libuv.org) para quien quiera profundizar en el detalle de implementación.
+- Ejemplos de código ejecutables de este track, en JavaScript: carpeta [`examples/tracks/node/`](https://github.com/NICORUIZ93/Academia_Floci/tree/main/examples/tracks/node) del repositorio — `http-server-native.js` (Módulo 3), `express-middleware.js` (Módulo 4), `db-orm.js` (Módulo 5), `jwt-auth.js` (Módulo 6), `async-patterns.js` (Módulo 8).

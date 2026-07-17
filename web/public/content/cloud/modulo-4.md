@@ -313,3 +313,4 @@ En el Módulo 5 vas a escribir tu primera función serverless con Lambda, y vas 
 - Documentación oficial de Amazon DynamoDB: conceptos básicos y guía de desarrollador.
 - Documentación oficial sobre el diseño de claves primarias e índices secundarios en DynamoDB.
 - Guía oficial de AWS sobre patrones de modelado de datos NoSQL (single-table design).
+- Código ejecutable de cada operación (crear tabla, put, get, update, delete, query, scan) en Node.js, Python y Java: carpeta [`examples/`](https://github.com/NICORUIZ93/Academia_Floci/tree/main/examples) del repositorio, archivos que empiezan por `dynamodb-`/`dynamodb_`/`DynamoDb` (ver [`examples/README.md`](https://github.com/NICORUIZ93/Academia_Floci/blob/main/examples/README.md) para la lista completa).

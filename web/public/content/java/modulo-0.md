@@ -197,3 +197,4 @@ En el Módulo 1 aprenderás programación orientada a objetos: clases, herencia,
 **Recursos adicionales**
 
 - Documentación oficial de Java (docs.oracle.com/en/java) y la especificación de la JVM.
+- Ejemplos de código ejecutables de este track, en Java: carpeta [`examples/tracks/java/`](https://github.com/NICORUIZ93/Academia_Floci/tree/main/examples/tracks/java) del repositorio — `OopBasics.java` (Módulo 1), `CollectionsGenerics.java` (Módulo 2), `StreamsFunctional.java` (Módulo 4), `VirtualThreads.java` (Módulo 5), `RecordsPatternMatching.java` (Módulo 7).

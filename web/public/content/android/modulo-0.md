@@ -198,3 +198,4 @@ En el Módulo 1 aprenderás el ciclo de vida de Activities y cómo `ViewModel` y
 **Recursos adicionales**
 
 - Documentación oficial de Android sobre recursos de la app (developer.android.com/guide/topics/resources).
+- Ejemplos de código ejecutables de este track, en Kotlin: carpeta [`examples/tracks/android/`](https://github.com/NICORUIZ93/Academia_Floci/tree/main/examples/tracks/android) del repositorio — `compose-ui.kt` (Módulo 2), `navigation-compose.kt` (Módulo 3), `stateflow-viewmodel.kt` (Módulo 4), `retrofit-networking.kt` (Módulo 5), `room-persistence.kt` (Módulo 6).

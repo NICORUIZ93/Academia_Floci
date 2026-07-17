@@ -259,3 +259,4 @@ En el Módulo 1 profundizarás en funciones como ciudadanos de primera clase: la
 
 - MDN Web Docs: sección "JavaScript basics" y "Equality comparisons and sameness".
 - ECMAScript specification (TC39) para quien quiera profundizar en el detalle formal de la coerción de tipos.
+- Ejemplos de código ejecutables de este track, en JavaScript: carpeta [`examples/tracks/javascript/`](https://github.com/NICORUIZ93/Academia_Floci/tree/main/examples/tracks/javascript) del repositorio — `closures-scope.js` (Módulo 2), `prototypes-classes.js` (Módulo 3), `event-loop-promises.js` (Módulo 5), `dom-events.js` (Módulo 8).

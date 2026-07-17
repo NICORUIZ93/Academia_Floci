@@ -317,3 +317,4 @@ En el Módulo 6 vas a exponer esta misma función Lambda como un endpoint HTTP r
 - Documentación oficial de AWS Lambda: modelo de programación y ciclo de vida del entorno de ejecución.
 - Documentación oficial sobre versiones y alias de Lambda.
 - Documentación oficial sobre triggers de S3 y DynamoDB Streams para Lambda.
+- Código ejecutable de cada operación (crear función, invocar, actualizar código, eliminar) en Node.js, Python, Java, Go y Rust: carpeta [`examples/`](https://github.com/NICORUIZ93/Academia_Floci/tree/main/examples) del repositorio, archivos que empiezan por `lambda-`/`lambda_`/`Lambda` (ver [`examples/README.md`](https://github.com/NICORUIZ93/Academia_Floci/blob/main/examples/README.md) para la lista completa).

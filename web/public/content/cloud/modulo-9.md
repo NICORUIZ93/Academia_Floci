@@ -252,6 +252,8 @@ Con el proyecto final completo, tienes una base sólida de los servicios fundame
 
 Consulta los apéndices que cierran este módulo: la Guía de referencia rápida (comandos más usados de todo el curso), el Glosario de términos técnicos, y la Bibliografía y enlaces útiles, pensados como material de consulta permanente más allá de la finalización del curso.
 
+Implementación de referencia completa de este mismo proyecto (Lambdas, Terraform, CloudFormation y CI/CD con GitHub Actions) — consúltala **después** de intentarlo tú mismo, no como punto de partida: [`examples/project-final/`](https://github.com/NICORUIZ93/Academia_Floci/tree/main/examples/project-final).
+
 ---
 
 ## Apéndice A: Guía de referencia rápida

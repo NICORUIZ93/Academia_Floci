@@ -211,3 +211,4 @@ En el Módulo 1 aprenderás SwiftUI: describir la UI como una función del estad
 **Recursos adicionales**
 
 - Documentación oficial de Swift (docs.swift.org/swift-book).
+- Ejemplos de código ejecutables de este track, en Swift: carpeta [`examples/tracks/ios/`](https://github.com/NICORUIZ93/Academia_Floci/tree/main/examples/tracks/ios) del repositorio — `swiftui-view.swift` (Módulo 1), `state-binding.swift` (Módulo 2), `async-await.swift` (Módulo 4), `urlsession-networking.swift` (Módulo 5), `swiftdata-persistence.swift` (Módulo 6).

@@ -258,3 +258,4 @@ En el Módulo 4 vas a modelar y consultar datos en una base de datos NoSQL con D
 - Documentación oficial de Amazon SQS: conceptos básicos y guía de desarrollador.
 - Documentación oficial sobre colas FIFO de SQS y sus límites de rendimiento.
 - Documentación oficial sobre Dead Letter Queues y políticas de redrive.
+- Código ejecutable de cada operación (crear cola, enviar, recibir, eliminar mensaje) en Node.js, Python, Java, Go y Rust: carpeta [`examples/`](https://github.com/NICORUIZ93/Academia_Floci/tree/main/examples) del repositorio, archivos que empiezan por `sqs-`/`sqs_`/`Sqs` (ver [`examples/README.md`](https://github.com/NICORUIZ93/Academia_Floci/blob/main/examples/README.md) para la lista completa).
