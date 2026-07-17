@@ -108,6 +108,8 @@ Secrets Manager       → secretos sensibles, rotación automática programada, 
 
 ## Laboratorio práctico
 
+> Este laboratorio asume que ya ejecutaste `floci start` y `eval $(floci env)` (Módulo 1) en tu sesión de terminal, así que los comandos de `aws` no repiten `--endpoint-url`.
+
 **Objetivo del laboratorio:** construir una aplicación que lee todos sus secretos y configuración desde la nube, sin nada hardcodeado.
 
 **Requisitos previos:** Módulos 0-9 completados (cloud local corriendo).

@@ -1,187 +1,184 @@
-# Módulo 21: Proyecto integrador: API multi-nube con AWS, Azure y GCP
+# Módulo 21: Cómputo elástico con EC2 y Auto Scaling
 
 ## Sílabo
 
 **Objetivo general**
 
-Construir la misma API "Gestor de Tareas" tres veces (una en AWS local, una en Azure local, una en GCP local), comparando las diferencias reales entre proveedores y demostrando que el conocimiento arquitectónico fundamental es portable, aunque las APIs y detalles operativos específicos no lo sean directamente.
+Entender el modelo de ejecución de instancias EC2 en Floci —contenedores Docker reales, no simulaciones—, dominar el ciclo de vida completo de una instancia (lanzar, detener, reiniciar, terminar), el servicio de metadatos (IMDS) y la inyección de claves SSH y UserData, y usar Auto Scaling para mantener automáticamente una capacidad deseada de instancias sin intervención manual.
 
 **Objetivos específicos**
 
-1. Implementar la API completa en AWS con Lambda, API Gateway, DynamoDB, SQS, S3, CloudWatch, Cognito y CloudFormation.
-2. Implementar la misma API en Azure con Functions, Service Bus, Cosmos DB y Blob Storage.
-3. Implementar los endpoints de solo lectura en GCP con Firestore, Cloud Storage y Pub/Sub.
-4. Documentar sistemáticamente qué fue igual y qué fue diferente entre los tres proveedores.
+1. Lanzar una instancia EC2 con `RunInstances` y explicar en qué contenedor Docker real se traduce.
+2. Inyectar una clave SSH con `ImportKeyPair` y conectarte a la instancia por SSH.
+3. Consultar el servicio de metadatos de instancia (IMDS) desde dentro del contenedor, incluyendo credenciales IAM temporales.
+4. Crear un Auto Scaling Group con capacidad mínima, máxima y deseada, y observar cómo el reconciliador de Floci lanza y termina instancias para mantenerla.
 
 **Contenido**
 
-- Arquitectura multi-nube.
-- Portabilidad.
-- Feature parity.
-- Interoperabilidad.
-- CI local.
-- Documentación de diferencias.
-- Arquitectura interna de cloud local: GraalVM, arranque en ~24ms, "real engines, not mocks".
-- cloud local en CI/CD: pruebas de integración sin coste, integración con Testcontainers.
-- Migración desde LocalStack, Azurite o gcloud emulators a un único endpoint cloud local.
-- Persistencia de estado entre reinicios y límites: emulador para desarrollo, no para producción.
+- Modelo de ejecución EC2: `RunInstances` como `docker run` real, mapeo de estados.
+- AMIs soportadas y su traducción a imágenes Docker.
+- Grupos de seguridad, pares de claves e inyección SSH.
+- UserData y el servicio de metadatos de instancia (IMDS v1/v2).
+- Launch configurations y Auto Scaling Groups.
+- El reconciliador de capacidad y las políticas de escalado.
 
 **Evaluación**
 
-API completa con los mismos endpoints funcionando en AWS local, Azure local y GCP local, más tres ejercicios de evaluación.
+Dos laboratorios prácticos (lanzar una instancia real con acceso SSH y crear un Auto Scaling Group que se autorregula) y tres ejercicios de evaluación.
 
 ---
 
 ## Contenido teórico
 
-### Tema 1: Arquitectura multi-nube y portabilidad de conocimiento
+### Tema 1: El modelo de ejecución de EC2 — instancias que son contenedores Docker reales
 
-**Conceptos clave:** los principios arquitectónicos son transferibles, las APIs específicas no lo son.
+**Conceptos clave:** `RunInstances`, ciclo de vida de instancia, contenedor Docker real, `tail -f /dev/null`.
 
-```
-AWS:   API Gateway → Lambda → DynamoDB / SQS / S3, protegido con Cognito, desplegado con CloudFormation
-Azure: Functions → Cosmos DB / Service Bus / Blob Storage local
-GCP:   Firestore + Cloud Storage + Pub/Sub local (solo lectura)
-```
+A diferencia de un emulador que solo devuelve un JSON con un `instance-id` falso, Floci traduce cada llamada a `RunInstances` en un `docker run` real: se lanza un contenedor Docker verdadero que se mantiene activo con `tail -f /dev/null`, un truco que permite que funcione cualquier imagen base sin importar cuál sea su `CMD` por defecto. El ciclo de vida completo de una instancia EC2 se mapea directamente a operaciones de Docker: `pending → running` es un contenedor creado e iniciado, `stopping → stopped` es un `docker stop` (con 30 segundos de gracia antes de `SIGKILL`), y `shutting-down → terminated` es un `docker rm -f`. Las instancias terminadas siguen siendo consultables durante una hora antes de desaparecer, replicando el comportamiento real de EC2.
 
-Construir la misma API "Gestor de Tareas" tres veces, una por proveedor, revela directamente qué conocimiento es genuinamente transferible entre proveedores cloud y qué es específico de cada uno: los principios arquitectónicos fundamentales estudiados a lo largo de todo el track (funciones serverless orientadas a eventos, colas para desacoplar productores y consumidores, bases de datos NoSQL para patrones de acceso simples y conocidos, almacenamiento de objetos para archivos, autenticación delegada a un servicio especializado) se aplican de forma prácticamente idéntica en los tres proveedores, mientras que la sintaxis exacta de cada API, los nombres específicos de cada servicio, y ciertos detalles operativos particulares (cómo se configuran los triggers, el formato exacto de las políticas de permisos) sí difieren considerablemente entre AWS, Azure y GCP.
+Esta decisión de diseño —contenedores reales en vez de estado simulado— es la misma filosofía que ya viste con Lambda, RDS y ECS: Floci prioriza fidelidad de comportamiento sobre velocidad de implementación cuando el servicio lo justifica. El resultado práctico es que dentro de una instancia EC2 de Floci puedes instalar paquetes, ejecutar procesos reales y conectarte por SSH exactamente como lo harías en una instancia real, solo que el "hardware" subyacente es el motor Docker de tu máquina.
 
-Esta distinción entre "principios portables" y "sintaxis específica de proveedor" es exactamente el mismo patrón de aprendizaje observado repetidamente a lo largo de toda la Academia: UDF es el mismo principio en Android, iOS, React y Angular aunque cada uno lo exprese con herramientas distintas (StateFlow, Combine, hooks, signals); de la misma forma, "desacoplar productores de consumidores con una cola" es el mismo principio en SQS, Service Bus y Pub/Sub, aunque cada API tenga su propia sintaxis particular de configuración.
+**Analogía:** una instancia EC2 en Floci es como un departamento amueblado de verdad dentro de un edificio de pruebas: no es una maqueta de cartón, es un espacio real donde puedes vivir, solo que el edificio completo (el datacenter de AWS) es en realidad tu propio computador.
 
-**Analogía:** construir la misma app en tres proveedores cloud es como aprender a conducir vehículos de tres fabricantes distintos: los principios fundamentales de conducción (acelerar, frenar, girar, las reglas de tránsito) son completamente transferibles entre todos ellos, mientras que la ubicación exacta de cada control específico y ciertos detalles operativos particulares de cada fabricante requieren familiarización específica con cada modelo individual.
-
-**¿Por qué es importante?** Lo que aprendiste en AWS aplica directamente en Azure y GCP a nivel de principios arquitectónicos fundamentales (serverless, colas, NoSQL, auth delegada), mientras la sintaxis exacta de cada API y ciertos detalles operativos son fundamentalmente diferentes y requieren aprendizaje específico por proveedor.
+**¿Por qué es importante?** Entender que `RunInstances` lanza un contenedor real —no un stub— es lo que te permite razonar correctamente sobre qué vas a poder hacer dentro de la instancia (instalar software, correr servicios, usar SSH) y qué limitaciones existen (comparte el kernel de tu máquina, no aísla red a nivel de paquete).
 
 **Diagrama:**
 
-```
-Principio: "desacoplar productor y consumidor con una cola"  → PORTABLE
-Sintaxis:  aws sqs send-message vs az servicebus queue send  → ESPECÍFICO de cada proveedor
-```
-
-### Tema 2: Arquitectura interna de cloud local y su uso en CI/CD
-
-**Conceptos clave:** motores reales, no simulaciones aproximadas; sin costo para pruebas de integración repetidas.
-
-cloud local se distingue de simulaciones más superficiales de servicios cloud por su filosofía de "real engines, not mocks": cuando se crea una instancia RDS, corre PostgreSQL real (Módulo 13); cuando se crea un cluster ECS, corren contenedores Docker reales (Módulo 14); cuando se invoca Lambda, ejecuta el runtime real correspondiente en un contenedor Docker real, no una simulación aproximada de su comportamiento con lógica propia potencialmente divergente del comportamiento real de AWS; esta fidelidad de emulación, construida internamente sobre GraalVM (una máquina virtual que permite arranque considerablemente más rápido, en el orden de ~24 milisegundos, comparado con el arranque de una JVM tradicional) hace que cloud local sea considerablemente más confiable como entorno de pruebas que emuladores que reimplementan la lógica de cada servicio de forma aproximada y potencialmente divergente del comportamiento real.
-
-Esta fidelidad hace que cloud local sea especialmente valioso integrado en pipelines de CI/CD: ejecutar pruebas de integración completas contra servicios cloud reales (no solo unit tests con mocks) en cada pull request, sin ningún costo asociado a crear y destruir recursos reales de AWS repetidamente, y con integración directa vía Testcontainers (una librería que gestiona el ciclo de vida de contenedores Docker específicamente para pruebas automatizadas, arrancando y destruyendo cloud local automáticamente alrededor de cada suite de pruebas de integración).
-
-**Analogía:** cloud local es como un simulador de vuelo que usa los mismos sistemas de aviónica reales que un avión genuino, en vez de una recreación aproximada con lógica simplificada propia; usarlo en CI/CD es como poder entrenar con ese simulador de alta fidelidad tantas veces como sea necesario sin el costo ni el riesgo de usar un avión real para cada sesión de entrenamiento repetida.
-
-**¿Por qué es importante?** cloud local usa motores reales (PostgreSQL real, Docker real, runtimes reales) en vez de simulaciones aproximadas, ofreciendo pruebas de integración de alta fidelidad sin costo en CI/CD, integrado con Testcontainers para gestionar automáticamente su ciclo de vida alrededor de cada suite de pruebas.
-
-**Diagrama:**
-
-```
-RDS (cloud local)  → PostgreSQL REAL corriendo
-ECS (cloud local)  → contenedores Docker REALES
-Lambda (cloud local) → runtime REAL en contenedor Docker
-= "real engines, not mocks"
+```mermaid
+stateDiagram-v2
+ [*] --> pending: RunInstances (docker create + start)
+ pending --> running
+ running --> stopping: StopInstances (docker stop)
+ stopping --> stopped
+ stopped --> pending: StartInstances (docker start)
+ running --> shutting_down: TerminateInstances (docker rm -f)
+ shutting_down --> terminated
+ terminated --> [*]: consultable 1h, luego se elimina
 ```
 
-### Tema 3: Migración desde otros emuladores, y límites de un emulador
+### Tema 2: AMIs, grupos de seguridad y claves SSH
 
-**Conceptos clave:** un único endpoint unificado multi-servicio, apropiado para desarrollo, no para producción.
+**Conceptos clave:** mapeo de AMI a imagen Docker, `CreateSecurityGroup`, `ImportKeyPair`, inyección de clave pública.
 
-Migrar desde LocalStack (el emulador de AWS más establecido históricamente), Azurite (el emulador oficial de Azure Storage), o los emuladores individuales de gcloud hacia un único endpoint de cloud local que emula los tres proveedores simplifica la configuración de un entorno de desarrollo que necesita trabajar con múltiples servicios cloud simultáneamente (por ejemplo, el proyecto multi-nube de este mismo módulo), evitando gestionar tres herramientas de emulación completamente separadas con configuraciones, puertos y comportamientos potencialmente inconsistentes entre sí.
+Floci resuelve identificadores de AMI en imágenes Docker reales mediante una tabla de mapeo incorporada: `ami-amazonlinux2023` apunta a `public.ecr.aws/amazonlinux/amazonlinux:2023`, `ami-ubuntu2204` a `public.ecr.aws/docker/library/ubuntu:22.04`, y así con Debian y Alpine. Cualquier ID de AMI que no reconozca —incluyendo IDs reales de AWS como `ami-0abc12345678`— cae por defecto en Amazon Linux 2023, así que scripts existentes que referencian AMIs reales siguen funcionando sin modificación.
 
-Un límite importante que debe reconocerse explícitamente: cloud local (como cualquier emulador, sin importar su fidelidad) es una herramienta diseñada para desarrollo y pruebas, no un sustituto completo de una prueba final contra la nube real antes de un despliegue a producción; aspectos como límites reales de cuota, latencia de red genuina entre regiones geográficas reales, comportamiento bajo carga a escala de producción real, y ciertas particularidades de servicios gestionados completamente específicas de la infraestructura real de cada proveedor (no replicables ni siquiera por un emulador de alta fidelidad) requieren necesariamente una validación final contra el entorno real antes de considerar cualquier sistema listo para producción. Igualmente, la persistencia de estado entre reinicios de cloud local (para servicios como ECS, CodeBuild, Config) tiene límites específicos documentados que conviene conocer antes de depender de esa persistencia para flujos de trabajo críticos de desarrollo.
+Los grupos de seguridad se crean, almacenan y devuelven correctamente vía `CreateSecurityGroup` y `AuthorizeSecurityGroupIngress`, pero **no se aplican a nivel de red**: es la red puente de Docker la que maneja el enrutamiento real, no las reglas de tu grupo de seguridad. Esto es importante para no asumir aislamiento de red que en Floci no existe. Donde sí hay comportamiento real es en las claves SSH: `CreateKeyPair` genera un PEM ficticio que no sirve para SSH real, pero `ImportKeyPair` acepta una clave pública tuya de verdad, y Floci la copia dentro del contenedor en `/root/.ssh/authorized_keys` al arrancar, exponiendo el puerto 22 del contenedor en un puerto del host (rango por defecto 2200–2299).
 
-**Analogía:** cloud local es como un excelente campo de entrenamiento con equipo real y de alta fidelidad para practicar procedimientos, pero ninguna cantidad de entrenamiento en ese campo sustituye completamente la validación final en las condiciones reales y variables del entorno de producción genuino, con todas sus particularidades y escala que ningún entorno de práctica, por fiel que sea, puede replicar completamente.
+**Analogía:** el mapeo de AMI a imagen Docker es como pedir "una copia de Ubuntu 22.04" en un catálogo y que siempre te entreguen exactamente esa versión, sin importar qué código de catálogo internacional escribas si no lo reconocen: por defecto te dan la opción más segura y común.
 
-**¿Por qué es importante?** Un único endpoint de cloud local simplifica trabajar con múltiples proveedores simultáneamente frente a gestionar herramientas de emulación separadas; sin embargo, ninguna prueba local, sin importar su fidelidad, sustituye una prueba final contra la nube real antes de producción, dado que aspectos como escala, latencia real y cuotas no son replicables completamente por un emulador.
+**¿Por qué es importante?** Saber que los grupos de seguridad no filtran tráfico realmente en Floci evita que confundas "mi laboratorio funcionó a pesar de reglas restrictivas" con "mis reglas de seguridad son correctas": esa validación real solo la obtienes contra AWS de verdad.
 
-**Diagrama:**
+### Tema 3: UserData e IMDS — arranque automatizado y credenciales por instancia
 
-```
-LocalStack + Azurite + gcloud emulators (3 herramientas separadas)
-        ↓ migración
-cloud local (1 único endpoint, AWS + Azure + GCP)
+**Conceptos clave:** `UserData` en base64, IMDSv1 vs IMDSv2, token de sesión, credenciales IAM vía perfil de instancia.
 
-Pero: cloud local = desarrollo/pruebas, SIEMPRE requiere validación final contra la nube real antes de producción
-```
+`UserData` es un script que se ejecuta automáticamente al arrancar la instancia, codificado en base64 en la petición (igual que en AWS real). Floci lo decodifica, lo copia a `/tmp/user-data.sh` dentro del contenedor y lo ejecuta con `sh` justo después de inyectar la clave SSH, capturando su salida en los logs. Esto es lo que te permite, por ejemplo, instalar y arrancar `nginx` automáticamente al lanzar la instancia, sin conectarte manualmente después.
+
+El servicio de metadatos de instancia (IMDS) es un servidor HTTP que Floci expone en el puerto `9169` del host, y cada contenedor lanzado recibe la variable `AWS_EC2_METADATA_SERVICE_ENDPOINT` apuntando a él. IMDSv1 responde sin autenticación; IMDSv2 exige primero pedir un token con `PUT /latest/api/token` y usarlo en cada petición posterior — el flujo moderno y más seguro que ya deberías preferir siempre. Cuando lanzas una instancia con un perfil de instancia IAM (`--iam-instance-profile`), IMDS entrega credenciales temporales reales en `/latest/meta-data/iam/security-credentials/{role}`, que el AWS SDK dentro del contenedor puede usar automáticamente para llamar a otros servicios de Floci con validación SigV4 completa — el mismo patrón que usarías en producción real.
+
+**Analogía:** IMDS es como una recepción interna del edificio que solo el inquilino de un departamento específico puede consultar para pedir "¿cuál es mi dirección? ¿tengo paquetes esperando? ¿cuáles son mis llaves temporales de acceso?" — información contextual sobre uno mismo, no del edificio entero.
+
+**¿Por qué es importante?** El patrón "instancia con rol IAM que obtiene credenciales vía IMDS" es la forma correcta y recomendada de dar permisos a una instancia EC2 real, en vez de hardcodear credenciales de larga duración dentro de la instancia — un error de seguridad común que quieres evitar desde el principio.
+
+### Tema 4: Auto Scaling — configuraciones de lanzamiento y grupos
+
+**Conceptos clave:** launch configuration, Auto Scaling Group, capacidad mínima/máxima/deseada, adjunto a grupos objetivo ELB.
+
+Una configuración de lanzamiento (`CreateLaunchConfiguration`) es una plantilla que describe qué instancia lanzar: imagen, tipo de instancia, clave SSH, grupos de seguridad y UserData. Un Auto Scaling Group (`CreateAutoScalingGroup`) referencia esa plantilla y define capacidad mínima, máxima y deseada, además de las zonas de disponibilidad donde debe distribuir instancias. A partir de ahí, el grupo se encarga de mantener el número de instancias `InService` alineado con la capacidad deseada — tú declaras el resultado que quieres, no los pasos para lograrlo.
+
+Los grupos de Auto Scaling se pueden adjuntar a grupos objetivo de un Application/Network Load Balancer (`AttachLoadBalancerTargetGroups`): cuando el reconciliador lanza una instancia nueva, la registra automáticamente en esos grupos objetivo como `InService`, y cuando termina una instancia, la da de baja del balanceador antes de eliminarla — evitando que el balanceador siga enviando tráfico a una instancia que ya no existe.
+
+**Analogía:** una configuración de lanzamiento es la receta de un plato; un Auto Scaling Group es el compromiso de un restaurante de "siempre tener entre 2 y 5 porciones de ese plato listas en la cocina, ajustando cuántas se cocinan según la demanda del momento".
+
+**¿Por qué es importante?** Separar la plantilla (qué lanzar) de la política de capacidad (cuántas y cuándo) es el mismo patrón declarativo que verás una y otra vez en infraestructura moderna — Kubernetes Deployments, ECS Services — y entenderlo aquí te da una base sólida para reconocerlo en cualquier plataforma.
+
+### Tema 5: El reconciliador de capacidad y las políticas de escalado
+
+**Conceptos clave:** reconciliador de capacidad, ciclo de 10 segundos, scale-out, scale-in, lifecycle hooks, políticas de escalado.
+
+Floci ejecuta en segundo plano un reconciliador de capacidad que corre cada 10 segundos: compara el número de instancias `InService` de cada grupo contra su `DesiredCapacity`. Si faltan instancias (scale-out), llama a `RunInstances` con la configuración de lanzamiento del grupo y las nuevas instancias pasan de `Pending` a `InService` en cuanto EC2 las reporta `running`, registrándose automáticamente en cualquier grupo objetivo ELB adjunto. Si sobran instancias (scale-in), selecciona instancias no protegidas contra reducción, las da de baja de los grupos objetivo y las termina. Cada evento de escalado queda registrado en el historial de actividad del grupo (`DescribeScalingActivities`), así que siempre puedes auditar cuándo y por qué cambió la capacidad.
+
+Los lifecycle hooks (`PutLifecycleHook`) te permiten insertar una pausa controlada durante el lanzamiento o la terminación de una instancia —por ejemplo, para ejecutar un script de configuración antes de marcarla `InService`— señalizando `CONTINUE` o `ABANDON` cuando termines. Las políticas de escalado (`PutScalingPolicy`) automatizan el ajuste de `DesiredCapacity` en respuesta a eventos, aunque en este curso vas a practicar el caso más simple: cambiarlo manualmente con `SetDesiredCapacity` y observar al reconciliador reaccionar.
+
+**Analogía:** el reconciliador de capacidad es como un encargado de turno que cada 10 segundos cuenta cuántos meseros hay trabajando, y si faltan llama a alguien de la lista de guardia; si sobran, envía a alguien a casa — sin que el gerente tenga que estar pendiente minuto a minuto.
+
+**¿Por qué es importante?** Este patrón de "reconciliación continua hacia un estado deseado" es el mismo principio detrás de Kubernetes, Terraform y casi toda la infraestructura declarativa moderna: aprenderlo aquí, con un ciclo de 10 segundos que puedes observar en vivo, es mucho más intuitivo que leerlo solo en teoría.
 
 ---
 
 ## Laboratorio práctico
 
-**Objetivo del laboratorio:** construir una API completa con los mismos endpoints funcionando en AWS local, Azure local y GCP local.
+> Este laboratorio asume que ya ejecutaste `floci start` y `eval $(floci env)` (Módulo 1) en tu sesión de terminal, así que los comandos de `aws` no repiten `--endpoint-url`.
 
-**Requisitos previos:** Módulos 0-20 completados.
+**Objetivo del laboratorio:** lanzar una instancia EC2 real con acceso SSH funcional verificado vía IMDS, y luego crear un Auto Scaling Group y observar al reconciliador de Floci mantener la capacidad deseada automáticamente.
 
-| Paso | Acción | Explicación |
-|---|---|---|
-| 1 | AWS: implementar GET/POST /tareas con Lambda + API Gateway + DynamoDB + SQS + S3 + CloudWatch | Stack completo estudiado en el track |
-| 2 | AWS: agregar autenticación con Cognito y desplegar con CloudFormation | Módulos 15 y 18 |
-| 3 | Azure: implementar la misma API con Functions + Service Bus + Cosmos DB + Blob Storage local | Comparar sintaxis |
-| 4 | GCP: implementar endpoints de solo lectura con Firestore + Cloud Storage + Pub/Sub local | Comparar sintaxis |
-| 5 | Escribir pruebas de integración contra los tres emuladores, y documentar en una tabla qué fue igual y qué fue diferente | Portabilidad de conocimiento |
+**Requisitos previos:** Floci corriendo con el socket Docker montado (`-v /var/run/docker.sock:/var/run/docker.sock`) y el puerto `9169` (IMDS) expuesto si necesitas consultarlo desde fuera de la red puente de Docker.
 
-**Verificación:** el proyecto se considera exitoso si la misma funcionalidad de "Gestor de Tareas" opera correctamente en los tres proveedores locales, si las pruebas de integración pasan contra los tres, y si la tabla comparativa identifica correctamente los principios compartidos frente a las diferencias específicas de sintaxis y API de cada proveedor.
+### Laboratorio 21.1 — Lanzar una instancia EC2 con acceso SSH e IMDS
+
+| Paso | Acción | Comando | Explicación | Salida esperada |
+|---|---|---|---|---|
+| 1 | Importa tu clave pública SSH | `aws ec2 import-key-pair --key-name mi-clave --public-key-material fileb://~/.ssh/id_rsa.pub` | Registra tu clave pública real para inyectarla en la instancia | Un `KeyFingerprint` en la respuesta |
+| 2 | Lanza una instancia con UserData | `aws ec2 run-instances --image-id ami-amazonlinux2023 --instance-type t2.micro --key-name mi-clave --user-data '#!/bin/bash\necho hola > /tmp/listo.txt'` | Crea un contenedor Docker real basado en Amazon Linux 2023 y ejecuta el script al arrancar | Un `InstanceId` con estado `pending` |
+| 3 | Confirma que está en ejecución | `aws ec2 describe-instances --instance-ids <id>` | El estado debe pasar a `running` en pocos segundos | `"Name": "running"` en `State` |
+| 4 | Verifica que Docker realmente la lanzó | `docker ps \| grep <id>` | Confirma que existe un contenedor real, no solo un registro simulado | Una fila con el contenedor de la instancia |
+| 5 | Consulta IMDSv2 desde dentro del contenedor | `docker exec <container-id> sh -c 'TOKEN=$(curl -s -X PUT http://169.254.169.254/latest/api/token -H "x-aws-ec2-metadata-token-ttl-seconds: 21600"); curl -s -H "x-aws-ec2-metadata-token: $TOKEN" http://169.254.169.254/latest/meta-data/instance-id'` | Pide un token IMDSv2 y lo usa para consultar el instance-id | El mismo `InstanceId` devuelto en el paso 2 |
+
+### Laboratorio 21.2 — Auto Scaling Group con reconciliador en vivo
+
+| Paso | Acción | Comando | Explicación | Salida esperada |
+|---|---|---|---|---|
+| 1 | Crea una configuración de lanzamiento | `aws autoscaling create-launch-configuration --launch-configuration-name mi-lc --image-id ami-amazonlinux2023 --instance-type t2.micro` | Define la plantilla que usará el grupo para lanzar instancias | Sin salida (éxito silencioso) |
+| 2 | Crea el grupo con capacidad deseada 2 | `aws autoscaling create-auto-scaling-group --auto-scaling-group-name mi-asg --launch-configuration-name mi-lc --min-size 1 --max-size 5 --desired-capacity 2 --availability-zones us-east-1a` | Arranca el ciclo de reconciliación de capacidad | Sin salida (éxito silencioso) |
+| 3 | Observa cómo aparecen las instancias | `aws autoscaling describe-auto-scaling-groups --auto-scaling-group-names mi-asg` | El reconciliador lanza instancias cada 10 s hasta alcanzar la capacidad deseada | 2 instancias listadas con `LifecycleState: InService` |
+| 4 | Sube la capacidad deseada a 4 | `aws autoscaling set-desired-capacity --auto-scaling-group-name mi-asg --desired-capacity 4` | Ordena un scale-out | Sin salida (éxito silencioso) |
+| 5 | Confirma el escalado y revisa el historial | `aws autoscaling describe-scaling-activities --auto-scaling-group-name mi-asg` | El reconciliador lanza 2 instancias adicionales en los siguientes ~10 s | Actividades de tipo lanzamiento registradas hasta llegar a 4 instancias `InService` |
+
+**Verificación:** el laboratorio se considera exitoso si `docker ps` muestra un contenedor real para la instancia EC2 lanzada, la consulta a IMDSv2 devuelve el mismo `InstanceId` que reportó `run-instances`, y `describe-auto-scaling-groups` muestra que el grupo llegó a 4 instancias `InService` después de subir la capacidad deseada, sin que hayas lanzado ninguna manualmente.
 
 **Errores comunes y soluciones**
 
-- **Asumir que la sintaxis de la API es igual entre proveedores solo porque el principio arquitectónico es el mismo.** Documenta explícitamente las diferencias de sintaxis específicas de cada uno.
-- **Depender únicamente de pruebas contra cloud local sin ninguna validación final contra la nube real antes de producción.** Reconoce los límites de fidelidad de cualquier emulador.
-- **Gestionar LocalStack, Azurite y emuladores de gcloud por separado en vez de un único endpoint unificado.** Simplifica la configuración con cloud local para proyectos multi-nube.
+- **IMDS no responde desde fuera del contenedor.** El puerto `9169` no está expuesto en tu `docker-compose.yml`. Añade `"9169:9169"` a los `ports` del servicio `floci` y reinicia con `docker compose up -d`.
+- **`ImportKeyPair` funciona pero SSH pide contraseña.** Revisa que estés usando la clave privada correspondiente a la pública importada, y que el puerto SSH asignado (rango 2200–2299) sea el correcto: consúltalo con `docker port <container-id>`.
+- **El Auto Scaling Group no lanza instancias.** Verifica que el socket Docker esté montado (`-v /var/run/docker.sock:/var/run/docker.sock`); sin él, EC2 —y por lo tanto Auto Scaling— no puede lanzar contenedores reales.
+- **Las instancias no se registran en el grupo objetivo del balanceador.** Confirma que usaste `attach-load-balancer-target-groups` con el ARN correcto del Módulo 22, y que el grupo objetivo existe antes de adjuntarlo.
 
 ---
 
 ## Ejercicios de evaluación
 
-### Ejercicio 1: Qué es transferible entre proveedores
+### Ejercicio 1: RunInstances vs docker run directo
 
-**Enunciado:** ¿qué aprendiste en AWS que aplica directamente en Azure y GCP?
+**Enunciado:** lanza un contenedor con `docker run -d alpine tail -f /dev/null` directamente, y por otro lado lanza una instancia EC2 con `aws ec2 run-instances --image-id ami-alpine`. Compara ambos con `docker inspect` y explica qué hace Floci de más en el segundo caso.
 
-**Solución esperada:** los principios arquitectónicos fundamentales (serverless orientado a eventos, colas para desacoplar productores y consumidores, NoSQL para patrones de acceso simples y conocidos, almacenamiento de objetos, autenticación delegada a un servicio especializado) se aplican de forma prácticamente idéntica en los tres proveedores, aunque la sintaxis exacta de cada API sea distinta.
-
-**Criterios de éxito:**
-- Identifica correctamente al menos dos principios arquitectónicos transferibles entre los tres proveedores.
-
-### Ejercicio 2: Qué fue fundamentalmente diferente entre los proveedores
-
-**Enunciado:** ¿qué fue fundamentalmente diferente entre los 3 proveedores?
-
-**Solución esperada:** una respuesta válida identifica diferencias concretas de sintaxis de API, nomenclatura de servicios equivalentes (SQS vs Service Bus vs Pub/Sub), y detalles operativos particulares (formato de políticas de permisos, configuración de triggers) que requieren aprendizaje específico por proveedor, no transferible directamente entre ellos.
+**Solución esperada:** ambos terminan siendo contenedores Docker reales y muy similares en `docker inspect`, pero el lanzado vía EC2 tiene metadatos adicionales (variables de entorno con el endpoint IMDS, posiblemente una clave SSH inyectada) y está registrado en el estado interno de Floci como una instancia EC2 con `InstanceId`, estado y atributos consultables vía `describe-instances` — algo que el contenedor lanzado directamente con `docker run` no tiene.
 
 **Criterios de éxito:**
-- Identifica correctamente diferencias concretas de sintaxis/API como lo fundamentalmente distinto entre proveedores.
+- Ejecutaste ambos comandos y comparaste su salida real con `docker inspect`.
+- Identificas correctamente que la capa EC2 añade metadatos y registro de estado sobre el mismo mecanismo de Docker.
 
-### Ejercicio 3: Qué falta para pasar a producción en nube real
+### Ejercicio 2: Diagnosticar un IMDS que no responde
 
-**Enunciado:** ¿qué quedaría pendiente para pasar a producción en nube real?
+**Enunciado:** intenta consultar IMDS desde tu terminal (fuera de cualquier contenedor) con `curl http://localhost:9169/latest/meta-data/instance-id` y probablemente falle si no expusiste el puerto. Diagnostica el problema y corrígelo sin destruir la instancia que ya tienes corriendo.
 
-**Solución esperada:** una prueba final de validación contra el entorno real de cada proveedor, dado que aspectos como límites reales de cuota, latencia de red genuina entre regiones reales, comportamiento bajo carga a escala de producción real, y particularidades específicas de servicios gestionados no son completamente replicables ni siquiera por un emulador de alta fidelidad como cloud local.
+**Solución esperada:** el puerto `9169` no estaba expuesto en el `docker-compose.yml` del host de Floci (aunque dentro del contenedor de la instancia sí funciona vía `169.254.169.254`). La corrección es añadir el mapeo de puerto y reiniciar Floci; la instancia EC2 en sí no se ve afectada porque su ciclo de vida es independiente del reinicio de Floci si usas almacenamiento persistente.
 
 **Criterios de éxito:**
-- Menciona correctamente la validación final contra el entorno real como el paso pendiente, con al menos una razón concreta de por qué el emulador no es suficiente por sí solo.
+- Diagnosticaste correctamente que el problema es de exposición de puerto del host, no del servicio IMDS en sí.
+- Aplicaste la corrección y verificaste con un nuevo `curl` que ahora responde.
+
+### Ejercicio 3: Scale-in manual y protección de instancias
+
+**Enunciado:** con tu Auto Scaling Group en 4 instancias, baja la capacidad deseada a 1 con `set-desired-capacity`, y documenta con `describe-scaling-activities` qué instancias se terminaron y en qué orden. Luego explica cómo protegerías una instancia específica de ser terminada en un scale-in.
+
+**Solución esperada:** el reconciliador selecciona 3 instancias `InService` no protegidas, las da de baja de cualquier grupo objetivo adjunto y las termina, dejando exactamente 1 activa. Para proteger una instancia específica de terminación durante scale-in, se marcaría con protección contra reducción de escala (instance scale-in protection) antes de bajar la capacidad deseada.
+
+**Criterios de éxito:**
+- Documentaste con evidencia real de `describe-scaling-activities` las 3 terminaciones.
+- Explicas correctamente el mecanismo de protección contra scale-in, aunque no lo hayas ejecutado.
 
 ---
 
 ## Resumen del módulo
 
-**Puntos clave**
-
-- Los principios arquitectónicos fundamentales son portables entre AWS, Azure y GCP; la sintaxis exacta de cada API es específica de cada proveedor.
-- cloud local usa motores reales (PostgreSQL real, Docker real, runtimes reales) en vez de simulaciones aproximadas, con alta fidelidad para CI/CD.
-- Un único endpoint de cloud local simplifica proyectos multi-nube frente a gestionar LocalStack, Azurite y emuladores de gcloud por separado.
-- Ningún emulador, sin importar su fidelidad, sustituye completamente una prueba final contra la nube real antes de producción.
-
-**Conceptos aprendidos**
-
-- Arquitectura multi-nube.
-- Portabilidad.
-- Feature parity.
-- Interoperabilidad.
-- CI local con Testcontainers.
-- Arquitectura interna de cloud local (GraalVM).
-- Límites de un emulador para producción.
-
-**Próximos pasos**
-
-Con el track de Cloud completo (módulos 0-21), los mismos principios arquitectónicos aprendidos aquí —serverless, colas y streams, bases de datos gestionadas, IaC, autenticación delegada, observabilidad— reaparecerán en cualquier proyecto real de backend que construyas, independientemente del proveedor cloud específico que uses en producción.
-
-**Recursos adicionales**
-
-- Documentación de cloud local y comparativa multi-proveedor (consulta la tabla `CLOUD_COMPARISON` de la app para referencia rápida de servicios equivalentes).
+En este módulo aprendiste que las instancias EC2 en Floci son contenedores Docker reales, no simulaciones: `RunInstances` ejecuta un `docker run` de verdad, con un ciclo de vida que se mapea directamente a operaciones de Docker. Practicaste la inyección de claves SSH reales, el consumo del servicio de metadatos IMDS (incluyendo el flujo seguro IMDSv2 con token), y UserData para arranque automatizado. Con Auto Scaling, viste cómo un reconciliador que corre cada 10 segundos mantiene la capacidad deseada de un grupo sin intervención manual, lanzando y terminando instancias, y registrándolas automáticamente en los grupos objetivo de un balanceador de carga — el mismo patrón de reconciliación continua que sustenta la infraestructura declarativa moderna.

@@ -192,21 +192,23 @@ Finalmente, la auditoría periódica de acceso —revisar qué permisos existen,
 
 ## Laboratorio práctico
 
+> Este laboratorio asume que ya ejecutaste `floci start` y `eval $(floci env)` (Módulo 1) en tu sesión de terminal, así que los comandos de `aws` no repiten `--endpoint-url`.
+
 **Objetivo del laboratorio:** crear un usuario con permisos mínimos (solo lectura sobre un bucket específico), organizarlo en un grupo, y verificar esos permisos con el simulador de políticas de IAM.
 
 **Requisitos previos:** Floci corriendo con el servicio IAM activo, un bucket ya existente para probar los permisos (puedes reutilizar `mi-bucket` del Módulo 2, o crear uno nuevo).
 
 | Paso | Acción | Comando | Explicación | Salida esperada |
 |---|---|---|---|---|
-| 1 | Crear el bucket de prueba (si no existe) | `aws s3 mb s3://bucket-solo-lectura --endpoint-url http://localhost:4566` | Prepara un bucket específico para verificar permisos restringidos | `make_bucket: bucket-solo-lectura` |
-| 2 | Crear un usuario IAM | `aws iam create-user --user-name usuario-lectura --endpoint-url http://localhost:4566` | Crea la identidad de usuario a la que le vas a asignar permisos mínimos | Un JSON con `User` y su `Arn` |
-| 3 | Crear un grupo IAM | `aws iam create-group --group-name grupo-solo-lectura --endpoint-url http://localhost:4566` | Prepara un grupo para gestionar el permiso de forma reutilizable | Un JSON con `Group` y su `Arn` |
-| 4 | Añadir el usuario al grupo | `aws iam add-user-to-group --user-name usuario-lectura --group-name grupo-solo-lectura --endpoint-url http://localhost:4566` | El usuario hereda cualquier política que se adjunte al grupo | Sin salida (comando exitoso) |
+| 1 | Crear el bucket de prueba (si no existe) | `aws s3 mb s3://bucket-solo-lectura` | Prepara un bucket específico para verificar permisos restringidos | `make_bucket: bucket-solo-lectura` |
+| 2 | Crear un usuario IAM | `aws iam create-user --user-name usuario-lectura` | Crea la identidad de usuario a la que le vas a asignar permisos mínimos | Un JSON con `User` y su `Arn` |
+| 3 | Crear un grupo IAM | `aws iam create-group --group-name grupo-solo-lectura` | Prepara un grupo para gestionar el permiso de forma reutilizable | Un JSON con `Group` y su `Arn` |
+| 4 | Añadir el usuario al grupo | `aws iam add-user-to-group --user-name usuario-lectura --group-name grupo-solo-lectura` | El usuario hereda cualquier política que se adjunte al grupo | Sin salida (comando exitoso) |
 | 5 | Escribir la política de mínimo privilegio | Crea un archivo `politica.json` con:<br>`{`<br>`  "Version": "2012-10-17",`<br>`  "Statement": [{`<br>`    "Effect": "Allow",`<br>`    "Action": "s3:GetObject",`<br>`    "Resource": "arn:aws:s3:::bucket-solo-lectura/*"`<br>`  }]`<br>`}` | Permite únicamente leer objetos (no listarlos, no escribirlos) de ese bucket específico | El archivo se guarda sin errores de sintaxis JSON |
-| 6 | Crear la política administrada | `aws iam create-policy --policy-name PoliticaSoloLectura --policy-document file://politica.json --endpoint-url http://localhost:4566` | Registra la política como una entidad reutilizable; guarda el `Arn` devuelto | Un JSON con `Policy` y su `Arn` |
-| 7 | Adjuntar la política al grupo | `aws iam attach-group-policy --group-name grupo-solo-lectura --policy-arn <Arn-de-la-politica> --endpoint-url http://localhost:4566` | El usuario, como miembro del grupo, hereda ahora este permiso | Sin salida (comando exitoso) |
-| 8 | Verificar el permiso concedido con el simulador | `aws iam simulate-principal-policy --policy-source-arn <Arn-del-usuario> --action-names s3:GetObject --resource-arns arn:aws:s3:::bucket-solo-lectura/archivo.txt --endpoint-url http://localhost:4566` | Simula si esa acción concreta sobre ese recurso concreto sería permitida, sin necesidad de ejecutar la acción real | Un JSON con `EvalDecision: "allowed"` |
-| 9 | Verificar que una acción NO concedida es denegada | `aws iam simulate-principal-policy --policy-source-arn <Arn-del-usuario> --action-names s3:DeleteObject --resource-arns arn:aws:s3:::bucket-solo-lectura/archivo.txt --endpoint-url http://localhost:4566` | Confirma que el mínimo privilegio funciona: esta acción nunca fue concedida | Un JSON con `EvalDecision: "implicitDeny"` |
+| 6 | Crear la política administrada | `aws iam create-policy --policy-name PoliticaSoloLectura --policy-document file://politica.json` | Registra la política como una entidad reutilizable; guarda el `Arn` devuelto | Un JSON con `Policy` y su `Arn` |
+| 7 | Adjuntar la política al grupo | `aws iam attach-group-policy --group-name grupo-solo-lectura --policy-arn <Arn-de-la-politica>` | El usuario, como miembro del grupo, hereda ahora este permiso | Sin salida (comando exitoso) |
+| 8 | Verificar el permiso concedido con el simulador | `aws iam simulate-principal-policy --policy-source-arn <Arn-del-usuario> --action-names s3:GetObject --resource-arns arn:aws:s3:::bucket-solo-lectura/archivo.txt` | Simula si esa acción concreta sobre ese recurso concreto sería permitida, sin necesidad de ejecutar la acción real | Un JSON con `EvalDecision: "allowed"` |
+| 9 | Verificar que una acción NO concedida es denegada | `aws iam simulate-principal-policy --policy-source-arn <Arn-del-usuario> --action-names s3:DeleteObject --resource-arns arn:aws:s3:::bucket-solo-lectura/archivo.txt` | Confirma que el mínimo privilegio funciona: esta acción nunca fue concedida | Un JSON con `EvalDecision: "implicitDeny"` |
 
 **Verificación:** el laboratorio se considera exitoso si el paso 8 confirma `"allowed"` para `s3:GetObject`, y el paso 9 confirma `"implicitDeny"` (o `explicitDeny`) para `s3:DeleteObject`, demostrando que el usuario tiene exactamente el permiso concedido (lectura) y ningún otro (borrado), sin necesidad de haber probado la acción real de borrar un objeto para descubrirlo.
 

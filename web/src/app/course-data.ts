@@ -25,11 +25,16 @@ const m = createModule;
 
 // ── Track Cloud Local ────────────────────────────────────────────────────────
 // Módulos 0-9: ruta base "Academia Floci" (Docker, AWS local con Floci, S3, SQS,
-// DynamoDB, Lambda, API Gateway, IAM, Azure/GCP y proyecto final). Módulos 10-21:
-// contenido avanzado ya existente (Secrets, SNS/EventBridge, CloudWatch, RDS,
-// ECR/ECS, CloudFormation, Step Functions, Kinesis/MSK, Cognito, Athena/Glue,
-// Bedrock y el proyecto integrador multi-nube), conservado y renumerado para
-// continuar después de la ruta base sin perder contenido.
+// DynamoDB, Lambda, API Gateway, IAM, Azure/GCP y proyecto final). Módulos 10-20:
+// contenido avanzado (Secrets, SNS/EventBridge, CloudWatch, RDS, ECR/ECS,
+// CloudFormation, Step Functions, Kinesis/MSK, Cognito, Athena/Glue, Bedrock).
+// Módulos 21-30: servicios adicionales sin cobertura previa, para alcanzar
+// paridad completa con los servicios documentados de Floci — EC2/Auto Scaling,
+// ELB/CloudFront/Route53/ACM, ElastiCache, CodeBuild/CodeDeploy,
+// Config/AppConfig/Backup, Firehose/Pipes, AppSync/SES, Neptune/OpenSearch,
+// FinOps (Cost Explorer/Pricing/BCM/Tagging/STS) y Transfer Family. Módulo 31:
+// proyecto integrador multi-nube (antes módulo 21, renumerado al final del
+// track para conservar su rol de capstone).
 export const COURSE_MODULES: CourseModule[] = [
   m(0,
     'Introducción y preparación',
@@ -531,6 +536,196 @@ export const COURSE_MODULES: CourseModule[] = [
   ),
 
   m(21,
+    'Cómputo elástico con EC2 y Auto Scaling',
+    'EC2 y Auto Scaling',
+    'Integración', '3 h', '#137c8b',
+    'Lanza instancias EC2 respaldadas por contenedores Docker reales, inyecta claves SSH y UserData, y usa Auto Scaling para mantener automáticamente una capacidad deseada de instancias.',
+    ['Modelo de ejecución EC2 sobre Docker real', 'AMIs y su mapeo a imágenes Docker', 'IMDS v1/v2 y credenciales por instancia', 'Launch configurations y Auto Scaling Groups', 'Reconciliador de capacidad cada 10 s'],
+    [
+      'Laboratorio 21.1: importa una clave SSH real y lanza una instancia con aws ec2 run-instances --image-id ami-amazonlinux2023',
+      'Consulta IMDSv2 desde dentro del contenedor: pide un token y luego el instance-id',
+      'Laboratorio 21.2: crea una configuración de lanzamiento y un Auto Scaling Group con capacidad deseada 2',
+      'Sube la capacidad deseada a 4 con set-desired-capacity y observa al reconciliador lanzar instancias nuevas',
+      'Adjunta el grupo a un grupo objetivo ELB v2 y verifica el registro automático de instancias',
+    ],
+    ['¿Qué diferencia hay entre RunInstances y un docker run directo?', '¿Por qué los grupos de seguridad no filtran tráfico realmente en Floci?', '¿Cómo protegerías una instancia específica de terminación en un scale-in?'],
+    ['EC2', 'Auto Scaling'],
+    'Una instancia EC2 real con acceso SSH funcional verificado vía IMDS, y un Auto Scaling Group que mantiene su capacidad deseada automáticamente.',
+    ['aws']
+  ),
+
+  m(22,
+    'Balanceo de carga, CDN y DNS — ELB, CloudFront, Route53 y ACM',
+    'ELB, CDN y DNS',
+    'Integración', '3 h 30 min', '#2f6f9f',
+    'Crea un Application Load Balancer con grupos objetivo y reglas de enrutamiento, solicita certificados TLS reales con ACM, distribuye contenido con CloudFront y gestiona DNS con Route53.',
+    ['ALB, grupos objetivo y listeners', 'ACM: emisión automática con criptografía real', 'Distribuciones CloudFront y políticas de caché', 'Zonas alojadas y registros de recursos en Route53', 'La cadena ACM → ALB/CloudFront → Route53'],
+    [
+      'Laboratorio 22.1: crea un ALB, un grupo objetivo y una regla de enrutamiento por ruta /api/*',
+      'Laboratorio 22.2: solicita un certificado ACM y verifica que se emite con criptografía real',
+      'Crea una distribución CloudFront con origen S3 y una política de caché',
+      'Crea una zona alojada en Route53 y un registro apuntando a tu distribución',
+      'Exporta un certificado ACM de tipo PRIVATE junto a su clave privada',
+    ],
+    ['¿Qué parte de ELB v2 es plano de gestión y cuál es plano de datos todavía pendiente en Floci?', '¿Por qué un certificado AMAZON_ISSUED no se puede exportar pero uno PRIVATE sí?', '¿En qué punto de la cadena ACM/CloudFront/Route53 se verifica el certificado TLS?'],
+    ['ELB v2', 'CloudFront', 'Route53', 'ACM'],
+    'Un ALB con grupo objetivo y regla por ruta, más un certificado ACM, una distribución CloudFront y una zona Route53 apuntando a ella.',
+    ['aws']
+  ),
+
+  m(23,
+    'Caché en memoria con ElastiCache',
+    'ElastiCache',
+    'Integración', '2 h 30 min', '#8167a9',
+    'Crea un clúster ElastiCache respaldado por un contenedor Valkey/Redis real, aplica el patrón cache-aside, y practica autenticación IAM en vez de contraseñas fijas.',
+    ['Cache-aside, cache hit/miss y TTL', 'Contenedores Valkey/Redis reales en Floci', 'Conexión con clientes Redis estándar', 'Autenticación IAM para el plano de datos'],
+    [
+      'Crea un grupo de réplicas y obtén su puerto real con describe-replication-groups',
+      'Conéctate con redis-cli y confirma el servidor con PING',
+      'Guarda un valor con SET ... EX 60 y recupéralo con GET antes de que expire',
+      'Crea un usuario ElastiCache con autenticación IAM y una cadena de acceso',
+      'Implementa cache-aside en Python: lee de Redis, si falla consulta una "base de datos" simulada y guarda el resultado',
+    ],
+    ['¿Cuándo NO conviene usar un caché en memoria?', '¿Por qué el motor Redis/Valkey es real y no una reimplementación del protocolo?', '¿Qué ventaja de seguridad da la autenticación IAM sobre una contraseña fija?'],
+    ['ElastiCache'],
+    'Un clúster ElastiCache con datos leídos y escritos vía redis-cli, y un usuario con autenticación IAM configurado.',
+    ['aws']
+  ),
+
+  m(24,
+    'CI/CD nativo de AWS con CodeBuild y CodeDeploy',
+    'CodeBuild y CodeDeploy',
+    'Experto', '3 h 30 min', '#e85d4a',
+    'Ejecuta compilaciones reales dentro de contenedores Docker con CodeBuild, y despliega Lambda con una estrategia canary usando CodeDeploy, con reversión automática ante fallos.',
+    ['Fases de buildspec.yml: install/pre_build/build/post_build', 'Artefactos recolectados y subidos a S3', 'Aplicaciones y grupos de implementación', 'Despliegue Blue/Green de Lambda por alias', 'Lifecycle hooks y reversión automática'],
+    [
+      'Laboratorio 24.1: crea un proyecto CodeBuild y ejecuta una compilación con buildspec inline',
+      'Verifica que el artefacto generado se subió automáticamente a S3',
+      'Laboratorio 24.2: crea una aplicación y grupo CodeDeploy para Lambda con estrategia LambdaCanary10Percent5Minutes',
+      'Inicia el despliegue y confirma que el alias live cambia de tráfico gradualmente',
+      'Simula un lifecycle hook que reporta Failed y confirma la reversión automática del alias',
+    ],
+    ['¿En qué fase exacta falla una compilación cuando un comando devuelve un código de salida distinto de cero?', '¿Cuándo elegirías AllAtOnce sobre una estrategia canary?', '¿Por qué la reversión automática ante un hook fallido es preferible a una reversión manual?'],
+    ['CodeBuild', 'CodeDeploy'],
+    'Una compilación real con artefacto en S3, y un despliegue canary de Lambda completado exitosamente con CodeDeploy.',
+    ['aws']
+  ),
+
+  m(25,
+    'Gobierno, configuración y continuidad — AWS Config, AppConfig y Backup',
+    'Config, AppConfig y Backup',
+    'Experto', '3 h', '#4f7a5d',
+    'Gestiona reglas de cumplimiento con AWS Config, despliega configuración dinámica sin redeployar código con AppConfig, y centraliza tu política de respaldo con AWS Backup.',
+    ['Reglas, grabadores y paquetes de conformidad de Config', 'Aplicaciones, entornos y perfiles de AppConfig', 'Sesiones de configuración en AppConfigData', 'Bóvedas, planes y selecciones de Backup', 'El ciclo de vida CREATED → RUNNING → COMPLETED de un trabajo de respaldo'],
+    [
+      'Laboratorio 25.1: despliega un cambio de configuración con AppConfig y recupéralo desde AppConfigData',
+      'Crea una regla de Config y consulta su estado de cumplimiento con describe-compliance-by-config-rule',
+      'Laboratorio 25.2: crea una bóveda y un plan de respaldo diario para una tabla DynamoDB',
+      'Inicia un respaldo bajo demanda y sondea hasta que el trabajo llegue a COMPLETED',
+      'Intenta eliminar la bóveda antes de vaciarla y documenta el error de protección',
+    ],
+    ['¿Por qué el estado de cumplimiento en Config siempre devuelve INSUFFICIENT_DATA en Floci?', '¿Cuánto tiempo pasa entre un StartDeployment de AppConfig y que el cambio sea visible para la aplicación?', '¿Por qué AWS Backup no te deja eliminar una bóveda con puntos de recuperación?'],
+    ['AWS Config', 'AppConfig', 'AppConfigData', 'AWS Backup'],
+    'Una configuración desplegada y leída dinámicamente con AppConfig, y un plan de respaldo funcionando con un punto de recuperación real para una tabla DynamoDB.',
+    ['aws']
+  ),
+
+  m(26,
+    'Streaming e integración avanzada — Firehose y EventBridge Pipes',
+    'Firehose y Pipes',
+    'Experto', '2 h 30 min', '#e9a23b',
+    'Entrega streams de datos automáticamente a S3 con Data Firehose, y conecta un origen con un destino sin código de pegamento usando EventBridge Pipes.',
+    ['Firehose: buffer, vaciado automático y NDJSON', 'Firehose vs Kinesis Data Streams: quién consume los datos', 'Pipes: origen, destino y enriquecimiento opcional', 'Cuándo usar Pipes frente a reglas EventBridge o Step Functions'],
+    [
+      'Laboratorio 26.1: crea un stream Firehose y envía registros hasta ver el vaciado automático en S3',
+      'Inspecciona el archivo NDJSON generado en el bucket floci-firehose-results',
+      'Laboratorio 26.2: crea un pipe que conecte una cola SQS con una función Lambda sin código de polling',
+      'Envía un mensaje a la cola de origen y confirma la invocación de la Lambda en los logs',
+      'Diseña un filtro de pipe que solo deje pasar mensajes con prioridad alta',
+    ],
+    ['¿Cuándo usarías Firehose en vez de construir un consumidor Kinesis Data Streams propio?', '¿Qué complejidad de código elimina un Pipe frente a una Lambda de polling manual?', '¿Cuándo elegirías una regla EventBridge en vez de un Pipe?'],
+    ['Firehose', 'EventBridge Pipes'],
+    'Un stream Firehose entregando registros automáticamente a S3, y un pipe conectando una cola SQS con una Lambda sin código intermedio.',
+    ['aws']
+  ),
+
+  m(27,
+    'APIs GraphQL con AppSync y correo transaccional con SES',
+    'AppSync y SES',
+    'Experto', '3 h', '#137c8b',
+    'Crea una API GraphQL gestionada con AppSync y resolvers locales, y usa SES junto al simulador de buzones de correo para probar de forma determinista flujos de entrega, rebote y queja.',
+    ['Esquemas GraphQL y resolvers', 'Fuentes de datos tipo NONE para prototipar', 'Eliminación en cascada de una API GraphQL', 'Identidades, envío y plantillas en SES', 'El simulador de buzones de correo (success/bounce/complaint)'],
+    [
+      'Laboratorio 27.1: crea una API GraphQL, define un esquema y un resolver con fuente de datos NONE',
+      'Genera una clave API y documenta cómo la usarías desde un cliente',
+      'Laboratorio 27.2: verifica una identidad SES y envía correos a las tres direcciones del simulador',
+      'Inspecciona el buzón local en /_aws/ses y confirma los tres mensajes capturados',
+      'Diseña un esquema GraphQL para el Sistema de Gestión de Tareas del Módulo 9',
+    ],
+    ['¿Qué ventaja tiene GraphQL sobre REST cuando los clientes necesitan formas de datos muy variables?', '¿Por qué las direcciones del simulador de SES generan eventos deterministas?', '¿Qué implica para una migración gradual que SES v1 y v2 compartan el mismo estado?'],
+    ['AppSync', 'SES'],
+    'Una API GraphQL con un resolver local funcionando, y tres correos de prueba capturados en el buzón local de SES vía las direcciones del simulador.',
+    ['aws']
+  ),
+
+  m(28,
+    'Bases de datos de grafos y búsqueda — Neptune y OpenSearch',
+    'Neptune y OpenSearch',
+    'Experto', '3 h', '#bd4b72',
+    'Modela relaciones con un servidor Gremlin real en Neptune, y crea un dominio OpenSearch en modo real para búsqueda de texto completo, afinando tu criterio de selección de bases de datos.',
+    ['Vértices, aristas y consultas multi-salto', 'Neptune sobre un contenedor Gremlin Server real', 'OpenSearch: modo simulado vs modo real', 'Cuándo elegir Neptune, OpenSearch o DynamoDB'],
+    [
+      'Laboratorio 28.1: crea un clúster Neptune y modela un pequeño grafo de personas con gremlin-python',
+      'Ejecuta una consulta de recorrido: g.V().has(...).out(...).values(...)',
+      'Laboratorio 28.2: crea un dominio OpenSearch en modo real y espera a que /_cluster/health esté saludable',
+      'Indexa un documento y búscalo por texto completo',
+      'Diseña una consulta de grafo para "quienes compraron esto también compraron"',
+    ],
+    ['¿Qué tipo de consulta hace que una base de datos de grafos supere a una relacional?', '¿Cuándo usarías el modo mock de OpenSearch en vez del modo real?', '¿Cómo mantendrías sincronizadas DynamoDB, OpenSearch y Neptune sin duplicar lógica de escritura?'],
+    ['Neptune', 'OpenSearch'],
+    'Un grafo de relaciones consultado con Gremlin, y un dominio OpenSearch en modo real con un documento indexado y buscado por texto completo.',
+    ['aws']
+  ),
+
+  m(29,
+    'FinOps y gobierno de cuenta — Cost Explorer, Pricing, BCM Data Exports, Resource Groups Tagging y STS',
+    'FinOps y gobierno',
+    'Experto', '3 h', '#2f6f9f',
+    'Consulta el costo sintetizado de tus propios recursos con Cost Explorer, exporta reportes en formato FOCUS con BCM Data Exports, descubre recursos por etiqueta entre servicios, y profundiza en credenciales temporales con STS.',
+    ['Síntesis de costos a partir del estado real de recursos', 'El catálogo de precios estático de Pricing', 'Exportaciones CUR/FOCUS en Parquet', 'Descubrimiento centralizado por etiqueta', 'AssumeRole y resolución de cuenta multi-tenant'],
+    [
+      'Laboratorio 29.1: consulta get-cost-and-usage agrupado por SERVICE con tus recursos reales del curso',
+      'Crea una exportación BCM Data Exports y confirma el archivo Parquet generado en S3',
+      'Laboratorio 29.2: etiqueta un bucket S3 y una tabla DynamoDB con la misma etiqueta y descúbrelos juntos con get-resources',
+      'Verifica tu identidad con get-caller-identity antes y después de un assume-role',
+      'Diseña un flujo assume-role entre dos cuentas simuladas (AKID de 12 dígitos distintos)',
+    ],
+    ['¿Por qué algunos servicios aparecen con costo cero en Cost Explorer aunque los estés usando?', '¿Qué ganas al centralizar el descubrimiento de recursos por etiqueta en vez de consultar cada servicio por separado?', '¿Qué verificarías con GetCallerIdentity antes y después de un AssumeRole entre cuentas?'],
+    ['Cost Explorer', 'Pricing', 'BCM Data Exports', 'Resource Groups Tagging API', 'STS'],
+    'Un desglose de costo real de tus recursos, una exportación FOCUS en Parquet, y recursos de dos servicios distintos descubiertos con una sola consulta por etiqueta.',
+    ['aws']
+  ),
+
+  m(30,
+    'Transferencia de archivos gestionada con Transfer Family',
+    'Transfer Family',
+    'Experto', '2 h', '#8167a9',
+    'Crea un servidor SFTP gestionado con Transfer Family, gestiona usuarios con claves públicas SSH, y reconoce los límites de la Fase 1 actual: plano de gestión completo, plano de datos todavía pendiente.',
+    ['SFTP/FTP gestionado sin servidores propios', 'Ciclo de vida ONLINE/OFFLINE del servidor', 'Usuarios, directorios de inicio y claves SSH', 'Plano de gestión completo vs plano de datos pendiente'],
+    [
+      'Laboratorio 30.1: crea un servidor SFTP y confirma su estado inicial',
+      'Crea un usuario con un directorio de inicio específico',
+      'Importa una clave pública SSH para ese usuario',
+      'Detén y reinicia el servidor, confirmando la transición de estados',
+      'Diseña el aislamiento de directorios de inicio para tres proveedores externos distintos',
+    ],
+    ['¿Qué trabajo operativo elimina Transfer Family frente a un servidor SFTP autogestionado?', '¿Por qué un servidor debe estar OFFLINE antes de poder eliminarse?', '¿Qué validarías contra un Transfer Family real antes de producción?'],
+    ['Transfer Family'],
+    'Un servidor Transfer Family con un usuario, una clave SSH importada, y el ciclo de vida ONLINE/OFFLINE verificado.',
+    ['aws']
+  ),
+
+  m(31,
     'Proyecto integrador: API multi-nube con AWS, Azure y GCP',
     'Proyecto multi-nube',
     'Experto', '8 h', '#bd4b72',

@@ -205,6 +205,8 @@ Configuración actual (recursos, métodos, integraciones)
 
 ## Laboratorio práctico
 
+> Este laboratorio asume que ya ejecutaste `floci start` y `eval $(floci env)` (Módulo 1) en tu sesión de terminal, así que los comandos de `aws` no repiten `--endpoint-url`.
+
 **Objetivo del laboratorio:** crear una API REST completa con un recurso `/tareas`, conectarlo mediante integración proxy a la función Lambda del Módulo 5, desplegarla en un stage `dev`, e invocar el endpoint HTTP resultante con `curl`.
 
 **Requisitos previos:** Floci corriendo con los servicios API Gateway y Lambda activos, la función `mi-funcion` del Módulo 5 ya desplegada.
@@ -213,14 +215,14 @@ Configuración actual (recursos, métodos, integraciones)
 
 | Paso | Acción | Comando | Explicación | Salida esperada |
 |---|---|---|---|---|
-| 1 | Crear la API REST | `aws apigateway create-rest-api --name "API Tareas" --endpoint-url http://localhost:4566` | Crea el contenedor de la API; guarda el `id` devuelto | Un JSON con `id` y `name: "API Tareas"` |
-| 2 | Obtener el ID del recurso raíz | `aws apigateway get-resources --rest-api-id <api-id> --endpoint-url http://localhost:4566` | Toda API REST nace con un recurso raíz (`/`); necesitas su ID para crear recursos hijos | Un JSON con un `item` cuyo `path` es `/` |
-| 3 | Crear el recurso `/tareas` | `aws apigateway create-resource --rest-api-id <api-id> --parent-id <id-recurso-raiz> --path-part tareas --endpoint-url http://localhost:4566` | Crea el recurso `/tareas` como hijo de la raíz | Un JSON con `id` del nuevo recurso y `path: "/tareas"` |
-| 4 | Crear el método GET sobre ese recurso | `aws apigateway put-method --rest-api-id <api-id> --resource-id <id-recurso-tareas> --http-method GET --authorization-type NONE --endpoint-url http://localhost:4566` | Define que `/tareas` acepta peticiones GET, sin autorización adicional para este laboratorio | Un JSON confirmando el método `GET` |
-| 5 | Conectar el método a la Lambda con integración proxy | `aws apigateway put-integration --rest-api-id <api-id> --resource-id <id-recurso-tareas> --http-method GET --type AWS_PROXY --integration-http-method POST --uri arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/arn:aws:lambda:us-east-1:000000000000:function:mi-funcion/invocations --endpoint-url http://localhost:4566` | Define que las peticiones GET a `/tareas` se reenvían completas a `mi-funcion`, y su respuesta se devuelve tal cual (proxy) | Un JSON confirmando `type: AWS_PROXY` |
-| 6 | Desplegar la API al stage `dev` | `aws apigateway create-deployment --rest-api-id <api-id> --stage-name dev --endpoint-url http://localhost:4566` | Publica la configuración actual en el stage `dev`, haciéndola accesible por primera vez | Un JSON con `id` del despliegue |
+| 1 | Crear la API REST | `aws apigateway create-rest-api --name "API Tareas"` | Crea el contenedor de la API; guarda el `id` devuelto | Un JSON con `id` y `name: "API Tareas"` |
+| 2 | Obtener el ID del recurso raíz | `aws apigateway get-resources --rest-api-id <api-id>` | Toda API REST nace con un recurso raíz (`/`); necesitas su ID para crear recursos hijos | Un JSON con un `item` cuyo `path` es `/` |
+| 3 | Crear el recurso `/tareas` | `aws apigateway create-resource --rest-api-id <api-id> --parent-id <id-recurso-raiz> --path-part tareas` | Crea el recurso `/tareas` como hijo de la raíz | Un JSON con `id` del nuevo recurso y `path: "/tareas"` |
+| 4 | Crear el método GET sobre ese recurso | `aws apigateway put-method --rest-api-id <api-id> --resource-id <id-recurso-tareas> --http-method GET --authorization-type NONE` | Define que `/tareas` acepta peticiones GET, sin autorización adicional para este laboratorio | Un JSON confirmando el método `GET` |
+| 5 | Conectar el método a la Lambda con integración proxy | `aws apigateway put-integration --rest-api-id <api-id> --resource-id <id-recurso-tareas> --http-method GET --type AWS_PROXY --integration-http-method POST --uri arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/arn:aws:lambda:us-east-1:000000000000:function:mi-funcion/invocations` | Define que las peticiones GET a `/tareas` se reenvían completas a `mi-funcion`, y su respuesta se devuelve tal cual (proxy) | Un JSON confirmando `type: AWS_PROXY` |
+| 6 | Desplegar la API al stage `dev` | `aws apigateway create-deployment --rest-api-id <api-id> --stage-name dev` | Publica la configuración actual en el stage `dev`, haciéndola accesible por primera vez | Un JSON con `id` del despliegue |
 | 7 | Invocar el endpoint desplegado | `curl http://localhost:4566/restapis/<api-id>/dev/_user_request_/tareas` | Prueba de extremo a extremo: petición HTTP real que llega a API Gateway y este la reenvía a Lambda | El mismo JSON que devolvería invocar la Lambda directamente, por ejemplo `{"mensaje":"Hola, mundo"}` |
-| 8 | Comparar con invocar la Lambda directamente | `aws lambda invoke --function-name mi-funcion --payload '{}' --cli-binary-format raw-in-base64-out salida-directa.json --endpoint-url http://localhost:4566 && cat salida-directa.json` | Confirma que ambos caminos (API Gateway y la CLI directa) llegan al mismo resultado final de negocio | El contenido de `salida-directa.json` coincide en su parte de negocio con la respuesta del `curl` del paso 7 |
+| 8 | Comparar con invocar la Lambda directamente | `aws lambda invoke --function-name mi-funcion --payload '{}' --cli-binary-format raw-in-base64-out salida-directa.json && cat salida-directa.json` | Confirma que ambos caminos (API Gateway y la CLI directa) llegan al mismo resultado final de negocio | El contenido de `salida-directa.json` coincide en su parte de negocio con la respuesta del `curl` del paso 7 |
 
 **Verificación:** el laboratorio se considera exitoso si el `curl` del paso 7 responde con un código HTTP 200 y un cuerpo JSON coherente con lo que la función Lambda devuelve, confirmando que la cadena completa (petición HTTP → API Gateway → integración proxy → Lambda → respuesta) funciona de extremo a extremo.
 

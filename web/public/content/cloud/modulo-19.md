@@ -112,6 +112,8 @@ Con particiones + partition pruning: Athena IGNORA por completo las carpetas fue
 
 ## Laboratorio práctico
 
+> Este laboratorio asume que ya ejecutaste `floci start` y `eval $(floci env)` (Módulo 1) en tu sesión de terminal, así que los comandos de `aws` no repiten `--endpoint-url`.
+
 **Objetivo del laboratorio:** construir una query SQL que analiza 100k registros en S3 y devuelve el top 10 de clientes en menos de 1 segundo.
 
 **Requisitos previos:** Módulo 18 completado.

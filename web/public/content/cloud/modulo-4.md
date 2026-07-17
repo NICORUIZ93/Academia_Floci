@@ -212,6 +212,8 @@ Query (usuario_id = "u-001")           Scan (filtro: estado = "pendiente")
 
 ## Laboratorio práctico
 
+> Este laboratorio asume que ya ejecutaste `floci start` y `eval $(floci env)` (Módulo 1) en tu sesión de terminal, así que los comandos de `aws` no repiten `--endpoint-url`.
+
 **Objetivo del laboratorio:** crear una tabla de tareas con clave primaria simple, realizar operaciones CRUD completas, y comparar directamente el comportamiento de Query frente a Scan.
 
 **Requisitos previos:** Floci corriendo con el servicio DynamoDB activo, AWS CLI configurada contra `http://localhost:4566`.
@@ -220,21 +222,21 @@ Query (usuario_id = "u-001")           Scan (filtro: estado = "pendiente")
 
 | Paso | Acción | Comando | Explicación | Salida esperada |
 |---|---|---|---|---|
-| 1 | Crear la tabla | `aws dynamodb create-table --table-name Tareas --attribute-definitions AttributeName=id,AttributeType=S --key-schema AttributeName=id,KeyType=HASH --billing-mode PAY_PER_REQUEST --endpoint-url http://localhost:4566` | Crea una tabla con clave primaria simple `id` de tipo string | Un JSON con `TableDescription` y `TableStatus: ACTIVE` (o `CREATING`) |
-| 2 | Insertar un item | `aws dynamodb put-item --table-name Tareas --item '{"id":{"S":"t-001"},"titulo":{"S":"Comprar leche"},"estado":{"S":"pendiente"}}' --endpoint-url http://localhost:4566` | Crea un item nuevo con tres atributos | Sin salida (comando exitoso) |
-| 3 | Obtener el item por su clave | `aws dynamodb get-item --table-name Tareas --key '{"id":{"S":"t-001"}}' --endpoint-url http://localhost:4566` | Recupera el item completo por su clave primaria | Un JSON con `Item` conteniendo los tres atributos |
-| 4 | Actualizar un atributo | `aws dynamodb update-item --table-name Tareas --key '{"id":{"S":"t-001"}}' --update-expression "SET estado = :nuevo" --expression-attribute-values '{":nuevo":{"S":"hecho"}}' --endpoint-url http://localhost:4566` | Modifica solo el atributo `estado`, sin tocar los demás | Sin salida (a menos que uses `--return-values ALL_NEW`) |
-| 5 | Confirmar la actualización | `aws dynamodb get-item --table-name Tareas --key '{"id":{"S":"t-001"}}' --endpoint-url http://localhost:4566` | Verifica que `estado` cambió a `hecho` | El JSON muestra `"estado":{"S":"hecho"}` |
-| 6 | Eliminar el item | `aws dynamodb delete-item --table-name Tareas --key '{"id":{"S":"t-001"}}' --endpoint-url http://localhost:4566` | Elimina el item de la tabla | Sin salida (comando exitoso) |
-| 7 | Confirmar que ya no existe | `aws dynamodb get-item --table-name Tareas --key '{"id":{"S":"t-001"}}' --endpoint-url http://localhost:4566` | El item ya no debería existir | Un JSON vacío, sin clave `Item` |
+| 1 | Crear la tabla | `aws dynamodb create-table --table-name Tareas --attribute-definitions AttributeName=id,AttributeType=S --key-schema AttributeName=id,KeyType=HASH --billing-mode PAY_PER_REQUEST` | Crea una tabla con clave primaria simple `id` de tipo string | Un JSON con `TableDescription` y `TableStatus: ACTIVE` (o `CREATING`) |
+| 2 | Insertar un item | `aws dynamodb put-item --table-name Tareas --item '{"id":{"S":"t-001"},"titulo":{"S":"Comprar leche"},"estado":{"S":"pendiente"}}'` | Crea un item nuevo con tres atributos | Sin salida (comando exitoso) |
+| 3 | Obtener el item por su clave | `aws dynamodb get-item --table-name Tareas --key '{"id":{"S":"t-001"}}'` | Recupera el item completo por su clave primaria | Un JSON con `Item` conteniendo los tres atributos |
+| 4 | Actualizar un atributo | `aws dynamodb update-item --table-name Tareas --key '{"id":{"S":"t-001"}}' --update-expression "SET estado = :nuevo" --expression-attribute-values '{":nuevo":{"S":"hecho"}}'` | Modifica solo el atributo `estado`, sin tocar los demás | Sin salida (a menos que uses `--return-values ALL_NEW`) |
+| 5 | Confirmar la actualización | `aws dynamodb get-item --table-name Tareas --key '{"id":{"S":"t-001"}}'` | Verifica que `estado` cambió a `hecho` | El JSON muestra `"estado":{"S":"hecho"}` |
+| 6 | Eliminar el item | `aws dynamodb delete-item --table-name Tareas --key '{"id":{"S":"t-001"}}'` | Elimina el item de la tabla | Sin salida (comando exitoso) |
+| 7 | Confirmar que ya no existe | `aws dynamodb get-item --table-name Tareas --key '{"id":{"S":"t-001"}}'` | El item ya no debería existir | Un JSON vacío, sin clave `Item` |
 
 ### Laboratorio 4.2 — Query vs Scan
 
 | Paso | Acción | Comando | Explicación | Salida esperada |
 |---|---|---|---|---|
 | 1 | Insertar varios items de prueba | Repite `put-item` con `id: t-002, t-003, t-004`, variando `estado` entre `pendiente` y `hecho` | Prepara datos suficientes para comparar ambas operaciones | Cuatro items en total en la tabla (incluyendo uno nuevo con `id: t-001` si lo recreaste) |
-| 2 | Ejecutar un Scan completo | `aws dynamodb scan --table-name Tareas --endpoint-url http://localhost:4566` | Devuelve todos los items de la tabla, sin usar ninguna clave como filtro de acceso | Un JSON con `Items` conteniendo los cuatro items y `Count: 4` |
-| 3 | Ejecutar una Query por clave exacta | `aws dynamodb query --table-name Tareas --key-condition-expression "id = :valor" --expression-attribute-values '{":valor":{"S":"t-002"}}' --endpoint-url http://localhost:4566` | Devuelve únicamente el item cuya clave coincide exactamente | Un JSON con `Items` conteniendo solo el item `t-002` y `Count: 1` |
+| 2 | Ejecutar un Scan completo | `aws dynamodb scan --table-name Tareas` | Devuelve todos los items de la tabla, sin usar ninguna clave como filtro de acceso | Un JSON con `Items` conteniendo los cuatro items y `Count: 4` |
+| 3 | Ejecutar una Query por clave exacta | `aws dynamodb query --table-name Tareas --key-condition-expression "id = :valor" --expression-attribute-values '{":valor":{"S":"t-002"}}'` | Devuelve únicamente el item cuya clave coincide exactamente | Un JSON con `Items` conteniendo solo el item `t-002` y `Count: 1` |
 | 4 | Comparar el campo `ScannedCount` de ambas respuestas | Revisa el campo `ScannedCount` en la salida del Scan del paso 2 frente al de la Query del paso 3 | `ScannedCount` indica cuántos items examinó DynamoDB internamente antes de aplicar cualquier filtro | El Scan reporta `ScannedCount: 4` (examinó toda la tabla); la Query reporta `ScannedCount: 1` (fue directo al item) |
 
 **Verificación:** el laboratorio se considera exitoso si, tras el paso 7 del Laboratorio 4.1, `get-item` devuelve un resultado vacío confirmando el borrado, y si, en el Laboratorio 4.2, el `ScannedCount` de la Query es igual al número de items que realmente coinciden, mientras que el del Scan es igual al total de items de la tabla, evidenciando la diferencia de eficiencia entre ambas operaciones.
@@ -242,7 +244,7 @@ Query (usuario_id = "u-001")           Scan (filtro: estado = "pendiente")
 **Errores comunes y soluciones**
 
 - **`ValidationException: One or more parameter values were invalid` en `put-item`.** Casi siempre significa que el JSON del `--item` no anota correctamente los tipos de dato (por ejemplo, escribir `{"titulo":"texto"}` en vez de `{"titulo":{"S":"texto"}}`). Revisa que cada atributo tenga su tipo explícito.
-- **`ResourceNotFoundException` al ejecutar cualquier operación sobre la tabla.** La tabla todavía se está creando (el estado `CREATING` puede tardar unos segundos incluso en Floci), o el nombre está mal escrito. Espera con `aws dynamodb wait table-exists --table-name Tareas --endpoint-url http://localhost:4566` antes de operar sobre ella.
+- **`ResourceNotFoundException` al ejecutar cualquier operación sobre la tabla.** La tabla todavía se está creando (el estado `CREATING` puede tardar unos segundos incluso en Floci), o el nombre está mal escrito. Espera con `aws dynamodb wait table-exists --table-name Tareas` antes de operar sobre ella.
 - **`update-item` no falla pero el atributo no cambia.** Revisa que el nombre del atributo en `--update-expression` no sea una palabra reservada de DynamoDB (como `status` o `name`); si lo es, debes usar un `ExpressionAttributeNames` para referenciarlo de forma segura en vez de escribirlo directamente en la expresión.
 - **Confundir `Count` con `ScannedCount` en la salida de Query o Scan.** `Count` es cuántos items se devolvieron después de aplicar cualquier filtro; `ScannedCount` es cuántos items se examinaron internamente antes del filtro. En una Query sin filtro adicional ambos suelen coincidir; en un Scan con filtro, `ScannedCount` casi siempre será mayor que `Count`, y esa diferencia es precisamente la evidencia del coste oculto de un Scan filtrado.
 

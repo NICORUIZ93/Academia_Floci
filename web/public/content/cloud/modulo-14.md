@@ -115,6 +115,8 @@ EKS            → contenedores, Kubernetes estándar, portable multi-nube
 
 ## Laboratorio práctico
 
+> Este laboratorio asume que ya ejecutaste `floci start` y `eval $(floci env)` (Módulo 1) en tu sesión de terminal, así que los comandos de `aws` no repiten `--endpoint-url`.
+
 **Objetivo del laboratorio:** publicar una imagen Docker en ECR y ejecutarla como task en ECS.
 
 **Requisitos previos:** Módulo 13 completado.

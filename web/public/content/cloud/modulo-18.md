@@ -102,6 +102,8 @@ Cliente presenta el código + el verificador ORIGINAL → servidor valida y emit
 
 ## Laboratorio práctico
 
+> Este laboratorio asume que ya ejecutaste `floci start` y `eval $(floci env)` (Módulo 1) en tu sesión de terminal, así que los comandos de `aws` no repiten `--endpoint-url`.
+
 **Objetivo del laboratorio:** construir una API REST protegida con Cognito Authorizer donde solo usuarios autenticados pueden crear tareas.
 
 **Requisitos previos:** Módulo 17 completado.

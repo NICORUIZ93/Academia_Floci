@@ -107,6 +107,8 @@ V2__agregar_columna_prioridad.sql → aplicado consistentemente después de V1 e
 
 ## Laboratorio práctico
 
+> Este laboratorio asume que ya ejecutaste `floci start` y `eval $(floci env)` (Módulo 1) en tu sesión de terminal, así que los comandos de `aws` no repiten `--endpoint-url`.
+
 **Objetivo del laboratorio:** construir una API que usa RDS PostgreSQL como backend, con migraciones de esquema ejecutadas automáticamente.
 
 **Requisitos previos:** Módulo 12 completado.

@@ -179,6 +179,8 @@ El hilo común entre estos tres mecanismos es el principio de mínimo privilegio
 
 ## Laboratorio práctico
 
+> Este laboratorio asume que ya ejecutaste `floci start` y `eval $(floci env)` (Módulo 1) en tu sesión de terminal, así que los comandos de `aws` no repiten `--endpoint-url`.
+
 **Objetivo del laboratorio:** realizar el ciclo completo de operaciones CRUD sobre un bucket S3 en Floci, y después practicar versionado subiendo múltiples versiones de un mismo archivo.
 
 **Requisitos previos:** Floci corriendo (Módulo 1) con el servicio S3 activo, AWS CLI configurada contra `http://localhost:4566`.
@@ -187,34 +189,34 @@ El hilo común entre estos tres mecanismos es el principio de mínimo privilegio
 
 | Paso | Acción | Comando | Explicación | Salida esperada |
 |---|---|---|---|---|
-| 1 | Crear un bucket | `aws s3 mb s3://mi-bucket --endpoint-url http://localhost:4566` | Crea un bucket nuevo con nombre único dentro de tu Floci | `make_bucket: mi-bucket` |
+| 1 | Crear un bucket | `aws s3 mb s3://mi-bucket` | Crea un bucket nuevo con nombre único dentro de tu Floci | `make_bucket: mi-bucket` |
 | 2 | Crear un archivo local de prueba | `echo "Hola mundo" > hola.txt` | Prepara un archivo simple para subir | El archivo `hola.txt` aparece en tu directorio actual |
-| 3 | Subir el archivo | `aws s3 cp hola.txt s3://mi-bucket/ --endpoint-url http://localhost:4566` | Sube el archivo como un objeto con clave `hola.txt` | `upload: ./hola.txt to s3://mi-bucket/hola.txt` |
-| 4 | Listar los objetos del bucket | `aws s3 ls s3://mi-bucket/ --endpoint-url http://localhost:4566` | Confirma que el objeto existe en el bucket | Una línea con la fecha, tamaño y nombre `hola.txt` |
-| 5 | Descargar el archivo | `aws s3 cp s3://mi-bucket/hola.txt hola-descargado.txt --endpoint-url http://localhost:4566` | Descarga el objeto a un archivo local nuevo | `download: s3://mi-bucket/hola.txt to ./hola-descargado.txt` |
+| 3 | Subir el archivo | `aws s3 cp hola.txt s3://mi-bucket/` | Sube el archivo como un objeto con clave `hola.txt` | `upload: ./hola.txt to s3://mi-bucket/hola.txt` |
+| 4 | Listar los objetos del bucket | `aws s3 ls s3://mi-bucket/` | Confirma que el objeto existe en el bucket | Una línea con la fecha, tamaño y nombre `hola.txt` |
+| 5 | Descargar el archivo | `aws s3 cp s3://mi-bucket/hola.txt hola-descargado.txt` | Descarga el objeto a un archivo local nuevo | `download: s3://mi-bucket/hola.txt to ./hola-descargado.txt` |
 | 6 | Confirmar el contenido descargado | `cat hola-descargado.txt` | Verifica que el contenido descargado coincide con el original | `Hola mundo` |
-| 7 | Eliminar el objeto | `aws s3 rm s3://mi-bucket/hola.txt --endpoint-url http://localhost:4566` | Elimina el objeto del bucket | `delete: s3://mi-bucket/hola.txt` |
-| 8 | Eliminar el bucket vacío | `aws s3 rb s3://mi-bucket --endpoint-url http://localhost:4566` | Elimina el bucket, ya sin objetos dentro | `remove_bucket: mi-bucket` |
+| 7 | Eliminar el objeto | `aws s3 rm s3://mi-bucket/hola.txt` | Elimina el objeto del bucket | `delete: s3://mi-bucket/hola.txt` |
+| 8 | Eliminar el bucket vacío | `aws s3 rb s3://mi-bucket` | Elimina el bucket, ya sin objetos dentro | `remove_bucket: mi-bucket` |
 
 ### Laboratorio 2.2 — Versionado
 
 | Paso | Acción | Comando | Explicación | Salida esperada |
 |---|---|---|---|---|
-| 1 | Crear un bucket nuevo para este laboratorio | `aws s3 mb s3://mi-bucket-versionado --endpoint-url http://localhost:4566` | Bucket dedicado para practicar versionado sin interferir con el laboratorio anterior | `make_bucket: mi-bucket-versionado` |
-| 2 | Activar el versionado | `aws s3api put-bucket-versioning --bucket mi-bucket-versionado --versioning-configuration Status=Enabled --endpoint-url http://localhost:4566` | A partir de aquí, cada subida a una misma clave conserva la versión anterior en vez de sobrescribirla | Sin salida (comando exitoso) |
-| 3 | Subir la primera versión | `echo "version 1" > informe.txt && aws s3 cp informe.txt s3://mi-bucket-versionado/ --endpoint-url http://localhost:4566` | Sube el contenido inicial | `upload: ./informe.txt to s3://mi-bucket-versionado/informe.txt` |
-| 4 | Subir una segunda versión con el mismo nombre | `echo "version 2" > informe.txt && aws s3 cp informe.txt s3://mi-bucket-versionado/ --endpoint-url http://localhost:4566` | Con versionado activo, esto NO borra la versión 1; crea una versión nueva | `upload: ./informe.txt to s3://mi-bucket-versionado/informe.txt` |
-| 5 | Listar todas las versiones de la clave | `aws s3api list-object-versions --bucket mi-bucket-versionado --endpoint-url http://localhost:4566` | Muestra ambas versiones con sus IDs de versión distintos | Un JSON con dos entradas en `Versions`, cada una con un `VersionId` distinto |
-| 6 | Descargar específicamente la versión más antigua | `aws s3api get-object --bucket mi-bucket-versionado --key informe.txt --version-id <VersionId-de-la-primera-version> version-1-recuperada.txt --endpoint-url http://localhost:4566` | Recupera exactamente el contenido de la primera versión, aunque ya no sea la "versión actual" | `cat version-1-recuperada.txt` debe mostrar `version 1` |
+| 1 | Crear un bucket nuevo para este laboratorio | `aws s3 mb s3://mi-bucket-versionado` | Bucket dedicado para practicar versionado sin interferir con el laboratorio anterior | `make_bucket: mi-bucket-versionado` |
+| 2 | Activar el versionado | `aws s3api put-bucket-versioning --bucket mi-bucket-versionado --versioning-configuration Status=Enabled` | A partir de aquí, cada subida a una misma clave conserva la versión anterior en vez de sobrescribirla | Sin salida (comando exitoso) |
+| 3 | Subir la primera versión | `echo "version 1" > informe.txt && aws s3 cp informe.txt s3://mi-bucket-versionado/` | Sube el contenido inicial | `upload: ./informe.txt to s3://mi-bucket-versionado/informe.txt` |
+| 4 | Subir una segunda versión con el mismo nombre | `echo "version 2" > informe.txt && aws s3 cp informe.txt s3://mi-bucket-versionado/` | Con versionado activo, esto NO borra la versión 1; crea una versión nueva | `upload: ./informe.txt to s3://mi-bucket-versionado/informe.txt` |
+| 5 | Listar todas las versiones de la clave | `aws s3api list-object-versions --bucket mi-bucket-versionado` | Muestra ambas versiones con sus IDs de versión distintos | Un JSON con dos entradas en `Versions`, cada una con un `VersionId` distinto |
+| 6 | Descargar específicamente la versión más antigua | `aws s3api get-object --bucket mi-bucket-versionado --key informe.txt --version-id <VersionId-de-la-primera-version> version-1-recuperada.txt` | Recupera exactamente el contenido de la primera versión, aunque ya no sea la "versión actual" | `cat version-1-recuperada.txt` debe mostrar `version 1` |
 
 **Verificación:** en el Laboratorio 2.1, `aws s3 ls` tras el paso 8 debe devolver un error o lista vacía confirmando que el bucket ya no existe. En el Laboratorio 2.2, `list-object-versions` debe mostrar exactamente dos versiones para la clave `informe.txt`, con IDs distintos, y la versión recuperada explícitamente por su ID debe contener el texto `version 1`, no `version 2`.
 
 **Errores comunes y soluciones**
 
 - **`An error occurred (BucketAlreadyOwnedByYou)` al crear un bucket.** El nombre ya existe en tu instancia de Floci (por ejemplo, de un intento anterior que no eliminaste). Usa un nombre distinto o elimina primero el bucket existente con `aws s3 rb s3://nombre --force` (el `--force` elimina también los objetos que contenga).
-- **`An error occurred (NoSuchBucket)` al subir un archivo.** El bucket no se creó correctamente, o escribiste mal el nombre. Verifica con `aws s3 ls --endpoint-url http://localhost:4566` (sin especificar bucket) que el nombre aparece en la lista.
+- **`An error occurred (NoSuchBucket)` al subir un archivo.** El bucket no se creó correctamente, o escribiste mal el nombre. Verifica con `aws s3 ls` (sin especificar bucket) que el nombre aparece en la lista.
 - **`fatal error: An error occurred (BucketNotEmpty)` al intentar eliminar un bucket.** El bucket todavía tiene objetos (o versiones, si el versionado está activo) dentro. Elimina primero todos los objetos con `aws s3 rm s3://bucket --recursive`, y si hay versionado activo, puede que necesites eliminar también las versiones y marcadores de borrado individualmente antes de poder borrar el bucket.
-- **Olvidar `--endpoint-url` en algún comando.** Sin ese parámetro, la AWS CLI intenta hablar con AWS real en vez de con Floci, lo que normalmente produce un error de credenciales o de conectividad. Si te resulta incómodo repetirlo en cada comando, puedes configurar una variable de entorno `AWS_ENDPOINT_URL=http://localhost:4566` para que la CLI la use por defecto sin necesidad de repetirla.
+- **La AWS CLI intenta hablar con AWS real en vez de con Floci.** Olvidaste ejecutar `eval $(floci env)` en la sesión actual de terminal, o abriste una pestaña nueva donde esas variables no están exportadas — normalmente produce un error de credenciales o de conectividad. Vuelve a ejecutar `eval $(floci env)` (Módulo 1); si prefieres no depender de una variable de sesión, puedes añadir `--endpoint-url http://localhost:4566` a un comando puntual.
 
 ---
 

@@ -167,7 +167,7 @@ Los volúmenes resuelven el problema de la persistencia: por defecto, todo lo qu
 
 **Analogía:** si `docker run` es encender un electrodoméstico a la vez, Docker Compose es el interruptor general de una casa inteligente: con un solo comando enciendes (o apagas) todos los dispositivos configurados, cada uno con su propia configuración ya guardada, y todos conectados entre sí por la misma red doméstica sin que tengas que configurar esa conexión cada vez.
 
-**¿Por qué es importante?** Vas a usar Docker Compose para levantar Floci en el laboratorio de este módulo, y probablemente lo uses también en el proyecto final del Módulo 9, donde puede que necesites correr Floci junto a otros servicios de tu propia aplicación. Escribir un `docker-compose.yml` correcto es una habilidad que se usa a diario en el desarrollo de software moderno.
+**¿Por qué es importante?** En el laboratorio de este módulo vas a usar `floci-cli` como flujo principal, pero Docker Compose sigue siendo la herramienta correcta en cuanto necesites correr Floci junto a otros servicios de tu propia aplicación —como probablemente hagas en el proyecto final del Módulo 9— o correr AWS, Azure y GCP local a la vez. Escribir un `docker-compose.yml` correcto es una habilidad que se usa a diario en el desarrollo de software moderno, con o sin Floci de por medio.
 
 **Diagrama:**
 
@@ -190,9 +190,9 @@ docker-compose.yml
 
 ## Laboratorio práctico
 
-**Objetivo del laboratorio:** ejecutar los comandos esenciales de Docker sobre una imagen de prueba, escribir tu primer `docker-compose.yml`, y levantar Floci (AWS) por primera vez, dejándolo verificado y con la AWS CLI configurada para hablar con él.
+**Objetivo del laboratorio:** ejecutar los comandos esenciales de Docker sobre una imagen de prueba, instalar `floci-cli` —la herramienta oficial recomendada para gestionar Floci— y levantarlo por primera vez con la AWS CLI ya configurada para hablar con él.
 
-**Requisitos previos:** Docker instalado y verificado (Módulo 0), AWS CLI instalada y verificada (Módulo 0), variables de entorno `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY` y `AWS_DEFAULT_REGION` configuradas en tu sesión de terminal.
+**Requisitos previos:** Docker instalado y verificado (Módulo 0), AWS CLI instalada y verificada (Módulo 0).
 
 ### Laboratorio 1.1 — Comandos esenciales con una imagen de prueba
 
@@ -204,32 +204,51 @@ docker-compose.yml
 | 4 | Ver imágenes descargadas | `docker images` | Lista las imágenes locales, incluyendo `hello-world` | Una fila `hello-world latest ...` |
 | 5 | Eliminar el contenedor detenido | `docker rm <id-del-contenedor>` (el ID sale de `docker ps -a`) | Libera el contenedor detenido; la imagen sigue en disco | No hay salida (o se imprime el ID eliminado) |
 
-### Laboratorio 1.2 — Levantar Floci con Docker Compose
+### Laboratorio 1.2 — Instalar floci-cli y levantar Floci
+
+A partir de aquí, este curso usa `floci-cli` —la CLI oficial del proyecto— como flujo principal para levantar, verificar y detener Floci. Gestiona el contenedor por ti (incluyendo el montaje del socket de Docker) y expone comandos memorables en vez de flags largos de `docker run`.
 
 | Paso | Acción | Comando | Explicación | Salida esperada |
 |---|---|---|---|---|
-| 1 | Crear un archivo `docker-compose.yml` con este contenido:<br>`services:`<br>`  floci:`<br>`    image: floci/floci:latest`<br>`    ports:`<br>`      - "4566:4566"`<br>`    environment:`<br>`      - SERVICES=s3,sqs,dynamodb,lambda,apigateway,iam` | — | Define un único servicio llamado `floci`, expone el puerto 4566 de tu máquina hacia el 4566 del contenedor, y activa solo los servicios que vas a usar en este track | El archivo se guarda sin errores de sintaxis |
-| 2 | Levantar el servicio | `docker compose up -d` | Descarga la imagen si no la tienes y arranca el contenedor en segundo plano | Una línea `Container ..._floci_1  Started` (o similar) |
-| 3 | Confirmar que está corriendo | `docker ps` | Debe aparecer el contenedor `floci` con el puerto `4566` mapeado | Una fila con la imagen `floci/floci:latest` y `0.0.0.0:4566->4566/tcp` |
-| 4 | Ver los logs de arranque | `docker compose logs -f floci` | Floci imprime en sus logs qué servicios ha inicializado correctamente | Líneas indicando que S3, SQS, DynamoDB, Lambda, API Gateway e IAM están listos (`Ready.`) |
-| 5 | Verificar el endpoint de salud | `curl http://localhost:4566/_localstack/health` | Floci expone un endpoint de salud compatible con el de LocalStack que reporta el estado de cada servicio emulado | Un JSON con cada servicio en estado `"available"` o `"running"` |
+| 1 | Instalar floci-cli (macOS/Linux) | `curl -fsSL https://floci.io/install.sh \| sh` | Descarga e instala el binario nativo de la CLI; en Windows usa `iwr https://floci.io/install.ps1 \| iex` en PowerShell, o `brew install floci-io/floci/floci` con Homebrew | Mensaje `Floci CLI ... installed to ...` |
+| 2 | Levantar Floci (AWS) | `floci start` | Descarga la imagen si hace falta, arranca el contenedor y espera a que esté listo — sin que tengas que escribir `-p 4566:4566` ni montar el socket de Docker a mano | Un mensaje confirmando que Floci está corriendo en el puerto 4566 |
+| 3 | Diagnosticar el entorno | `floci doctor` | Verifica Docker, el socket, la conectividad y la versión de la imagen en un solo comando | Una lista de chequeos, todos en verde/OK |
+| 4 | Cargar las variables de entorno de AWS | `eval $(floci env)` | Exporta `AWS_ENDPOINT_URL`, `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY` y `AWS_DEFAULT_REGION` en tu sesión actual, apuntando a Floci — a partir de aquí, el resto del curso asume que ejecutaste este paso, así que los comandos de `aws` ya no necesitan repetir `--endpoint-url` | Sin salida visible (las variables quedan exportadas en tu shell) |
+| 5 | Confirmar el estado | `floci status` | Detecta automáticamente el puerto y consulta la salud del servidor | Estado `running` con el detalle de servicios habilitados |
 
-### Laboratorio 1.3 — Configurar y probar la AWS CLI contra Floci
+### Laboratorio 1.3 — Probar la AWS CLI contra Floci
 
 | Paso | Acción | Comando | Explicación | Salida esperada |
 |---|---|---|---|---|
-| 1 | Listar buckets S3 (debería estar vacío) | `aws s3 ls --endpoint-url=http://localhost:4566` | Prueba de extremo a extremo: la CLI habla con Floci en vez de con AWS real | Ninguna línea de salida (todavía no hay buckets) |
-| 2 | Crear un perfil dedicado (opcional pero recomendado) | `aws configure set aws_access_key_id test --profile floci`<br>`aws configure set aws_secret_access_key test --profile floci`<br>`aws configure set region us-east-1 --profile floci` | Evita depender de variables de entorno de sesión; el perfil `floci` queda guardado permanentemente | No hay salida (los valores quedan guardados en `~/.aws/credentials` y `~/.aws/config`) |
-| 3 | Repetir el listado usando el perfil | `aws s3 ls --endpoint-url=http://localhost:4566 --profile floci` | Confirma que el perfil dedicado funciona igual que las variables de entorno | Ninguna línea de salida, sin errores |
+| 1 | Listar buckets S3 (debería estar vacío) | `aws s3 ls` | Con `eval $(floci env)` ya cargado, la CLI habla con Floci sin necesidad de ningún flag adicional | Ninguna línea de salida (todavía no hay buckets) |
+| 2 | Ver los logs de arranque | `floci logs --tail 50` | Floci imprime en sus logs qué servicios ha inicializado correctamente | Líneas indicando que S3, SQS, DynamoDB, Lambda, API Gateway e IAM están listos |
+| 3 | Detener Floci al terminar | `floci stop` | Detiene el contenedor de forma ordenada; usa `floci stop --remove` si además quieres eliminarlo | Confirmación de que el contenedor se detuvo |
 
-**Verificación:** el laboratorio se considera exitoso si `docker ps` muestra el contenedor `floci` corriendo con el puerto 4566 mapeado, `curl http://localhost:4566/_localstack/health` responde con un JSON de servicios disponibles, y `aws s3 ls --endpoint-url=http://localhost:4566` se ejecuta sin errores de conexión o de credenciales.
+**Alternativa: Docker Compose.** Si prefieres orquestar Floci junto a otros servicios (o necesitas correr AWS, Azure y GCP local a la vez, como en los Módulos 8 y 31), el `docker-compose.yml` de la raíz del proyecto sigue siendo válido:
+
+```yaml
+services:
+  floci:
+    image: floci/floci:latest
+    ports:
+      - "4566:4566"
+```
+
+```bash
+docker compose up -d
+# equivalente manual a `eval $(floci env)`:
+export AWS_ENDPOINT_URL=http://localhost:4566
+export AWS_ACCESS_KEY_ID=test AWS_SECRET_ACCESS_KEY=test AWS_DEFAULT_REGION=us-east-1
+```
+
+**Verificación:** el laboratorio se considera exitoso si `floci status` reporta el servidor corriendo, `floci doctor` no muestra errores, y `aws s3 ls` se ejecuta sin errores de conexión ni de credenciales después de `eval $(floci env)`.
 
 **Errores comunes y soluciones**
 
-- **`Error response from daemon: port is already allocated`.** Otro proceso (quizá un LocalStack anterior, o una instancia previa de Floci) ya está usando el puerto 4566. Detén ese contenedor con `docker ps` + `docker stop <id>`, o cambia el mapeo de puertos en tu `docker-compose.yml` a, por ejemplo, `"4567:4566"` y usa ese puerto en tus comandos.
-- **`Could not connect to the endpoint URL` al ejecutar comandos de AWS CLI.** El contenedor de Floci no está corriendo, o todavía está inicializando. Ejecuta `docker ps` para confirmar que está `Up`, y revisa `docker compose logs -f floci` hasta ver que los servicios reportan estar listos antes de volver a intentar.
-- **`Unable to locate credentials` al ejecutar un comando de AWS CLI.** Las variables de entorno del Módulo 0 no están activas en la sesión actual de terminal (se pierden al cerrarla), o no creaste el perfil `floci`. Vuelve a exportarlas, o usa `--profile floci` si ya lo configuraste.
-- **El endpoint de salud responde pero un servicio aparece como `"disabled"`.** Revisa la variable de entorno `SERVICES` en tu `docker-compose.yml`: si un servicio no está listado ahí, Floci no lo inicializa. Añádelo a la lista separada por comas y vuelve a levantar el contenedor con `docker compose up -d`.
+- **`floci start` falla con un error de Docker.** Docker Desktop debe estar abierto y corriendo; `floci doctor` te dice exactamente qué chequeo falló (Docker no instalado, socket no accesible, daemon no iniciado).
+- **`aws s3 ls` responde `Unable to locate credentials` o intenta conectar a AWS real.** Se te olvidó ejecutar `eval $(floci env)` en la sesión actual de terminal, o abriste una pestaña nueva donde esas variables no están exportadas — las variables de entorno no persisten entre sesiones de shell.
+- **Puerto ya en uso al ejecutar `floci start`.** Otro proceso (quizá una instancia previa de Floci o de LocalStack) ya usa el puerto 4566. Usa `floci start --port 4599` para un puerto alternativo, o detén el proceso anterior con `floci stop`.
+- **`floci doctor` reporta el socket de Docker inaccesible en Podman o un daemon remoto.** Exporta `DOCKER_HOST` apuntando a tu socket o daemon (`unix:///run/user/1000/podman/podman.sock` para Podman rootless, por ejemplo); `floci start` lo detecta automáticamente sin flags adicionales.
 
 ---
 
@@ -247,23 +266,23 @@ docker-compose.yml
 
 ### Ejercicio 2: Diagnosticar con logs
 
-**Enunciado:** detén el contenedor de Floci con `docker compose down`, cambia intencionalmente el puerto del `docker-compose.yml` de `"4566:4566"` a `"4566:4567"` (un mapeo incorrecto para este ejercicio), vuelve a levantarlo, e intenta ejecutar `curl http://localhost:4566/_localstack/health`. Diagnostica el problema usando `docker logs` o `docker ps`, corrige el archivo, y vuelve a verificar que el endpoint responde.
+**Enunciado:** detén Floci con `floci stop --remove`, vuelve a levantarlo en un puerto distinto con `floci start --port 4599`, e intenta ejecutar `aws s3 ls` usando las variables de entorno cargadas con `eval $(floci env)` de un paso anterior (que todavía apuntan al puerto 4566). Diagnostica el problema con `floci status` y `floci doctor`, corrige el problema, y vuelve a verificar.
 
-**Solución esperada:** con el mapeo `"4566:4567"`, el contenedor expone el puerto 4567 interno, pero Floci en realidad escucha en el 4566 interno, así que la petición a `localhost:4566` no llega a nada válido. `docker ps` muestra el mapeo de puertos incorrecto directamente en su salida, lo que permite detectar el error sin necesidad de revisar logs. La corrección es volver el mapeo a `"4566:4566"`.
+**Solución esperada:** `aws s3 ls` falla con un error de conexión porque `AWS_ENDPOINT_URL` sigue apuntando a `http://localhost.floci.io:4566`, pero Floci ahora escucha en el 4599. `floci status` (que autodetecta el puerto del contenedor) muestra el puerto real; la corrección es volver a ejecutar `eval $(floci env)` para que recoja el nuevo puerto, o relanzar Floci en el puerto por defecto.
 
 **Criterios de éxito:**
-- Identificaste el problema usando herramientas de diagnóstico de Docker (`docker ps` o `docker logs`), no solo por ensayo y error.
-- Corregiste el archivo y verificaste que el endpoint de salud vuelve a responder correctamente.
+- Identificaste el problema usando `floci status`/`floci doctor`, no solo por ensayo y error.
+- Corregiste las variables de entorno y verificaste que `aws s3 ls` vuelve a responder correctamente.
 
 ### Ejercicio 3: Levantar y destruir el entorno completo
 
-**Enunciado:** partiendo de un estado limpio (`docker compose down`), levanta Floci de nuevo, crea un bucket con `aws s3 mb s3://prueba-modulo-1 --endpoint-url=http://localhost:4566`, confírmalo con `aws s3 ls`, y después destruye completamente el entorno con `docker compose down`. Vuelve a levantarlo y comprueba si el bucket sigue existiendo.
+**Enunciado:** partiendo de un estado limpio (`floci stop --remove`), levanta Floci de nuevo con `floci start`, crea un bucket con `aws s3 mb s3://prueba-modulo-1`, confírmalo con `aws s3 ls`, y después destruye completamente el entorno con `floci stop --remove`. Vuelve a levantarlo y comprueba si el bucket sigue existiendo.
 
-**Solución esperada:** sin un volumen persistente configurado, el bucket desaparece al destruir y recrear el contenedor, porque el estado de Floci vivía únicamente dentro de la capa efímera del contenedor eliminado. `aws s3 ls` después de recrearlo debe devolver una lista vacía.
+**Solución esperada:** sin `--persist` configurado, el bucket desaparece al destruir y recrear el contenedor, porque el estado de Floci vivía únicamente dentro de la capa efímera del contenedor eliminado. `aws s3 ls` después de recrearlo debe devolver una lista vacía.
 
 **Criterios de éxito:**
 - Confirmaste explícitamente, con el comando `aws s3 ls`, que el bucket ya no existe tras recrear el contenedor.
-- Puedes explicar por qué desapareció (falta de volumen persistente) relacionándolo con el Tema 5 de este módulo.
+- Puedes explicar por qué desapareció (falta de `floci start --persist ./data`) relacionándolo con el Tema 5 de este módulo.
 
 ---
 

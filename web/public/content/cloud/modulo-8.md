@@ -154,6 +154,8 @@ Serverless           Lambda           Azure Functions      Cloud Functions
 
 ## Laboratorio práctico
 
+> Este laboratorio asume que ya ejecutaste `floci start` y `eval $(floci env)` (Módulo 1) en tu sesión de terminal, así que los comandos de `aws` no repiten `--endpoint-url`.
+
 **Objetivo del laboratorio:** subir y descargar un archivo en Blob Storage (Azure) y en Cloud Storage (GCP), crear una cola en Azure y un topic con suscripción en GCP, y documentar el mismo caso de uso resuelto en los tres proveedores.
 
 **Requisitos previos:** floci-az y floci-gcp corriendo (imágenes separadas de Floci, como viste en el Módulo 0), CLI de Azure (`az`) y de GCP (`gcloud`) instaladas y configuradas para apuntar a los endpoints locales de floci-az y floci-gcp respectivamente.

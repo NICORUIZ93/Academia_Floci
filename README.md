@@ -45,6 +45,19 @@ Luego abre `http://localhost:4200`.
 
 ## Levantar Floci
 
+Opción recomendada — `floci-cli` (la herramienta oficial del proyecto, que usa el track Cloud del curso a partir del Módulo 1):
+
+```bash
+curl -fsSL https://floci.io/install.sh | sh   # instala floci-cli
+floci start                                    # levanta Floci AWS
+floci doctor                                   # diagnostica el entorno
+eval $(floci env)                              # exporta las variables de AWS CLI
+aws s3 ls                                      # ya sin --endpoint-url
+floci stop                                     # detén Floci al terminar
+```
+
+Opción alternativa — Docker Compose (útil para correr AWS, Azure y GCP local a la vez):
+
 ```bash
 # 1. Levantar todos los servicios
 docker compose up -d

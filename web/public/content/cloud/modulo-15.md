@@ -120,6 +120,8 @@ CloudFormation (específico AWS) vs Terraform/OpenTofu (multi-nube) vs CDK (leng
 
 ## Laboratorio práctico
 
+> Este laboratorio asume que ya ejecutaste `floci start` y `eval $(floci env)` (Módulo 1) en tu sesión de terminal, así que los comandos de `aws` no repiten `--endpoint-url`.
+
 **Objetivo del laboratorio:** construir un stack YAML que despliega S3 + SQS + DynamoDB + Lambda con un solo `aws cloudformation deploy`.
 
 **Requisitos previos:** Módulo 14 completado.

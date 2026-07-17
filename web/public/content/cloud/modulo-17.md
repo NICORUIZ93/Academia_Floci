@@ -102,6 +102,8 @@ Kinesis Data Firehose → entrega automatizada gestionada hacia S3/warehouse, si
 
 ## Laboratorio práctico
 
+> Este laboratorio asume que ya ejecutaste `floci start` y `eval $(floci env)` (Módulo 1) en tu sesión de terminal, así que los comandos de `aws` no repiten `--endpoint-url`.
+
 **Objetivo del laboratorio:** construir un pipeline de streaming que ingiere eventos de Kinesis, los procesa con Lambda y los almacena en S3.
 
 **Requisitos previos:** Módulo 16 completado.

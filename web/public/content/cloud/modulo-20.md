@@ -105,6 +105,8 @@ Bedrock real (AWS)           → verifica: calidad del contenido generado, compo
 
 ## Laboratorio práctico
 
+> Este laboratorio asume que ya ejecutaste `floci start` y `eval $(floci env)` (Módulo 1) en tu sesión de terminal, así que los comandos de `aws` no repiten `--endpoint-url`.
+
 **Objetivo del laboratorio:** construir una API que procesa documentos con Textract, guarda el texto en DynamoDB y genera un resumen con Bedrock.
 
 **Requisitos previos:** Módulo 19 completado.

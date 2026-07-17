@@ -105,6 +105,8 @@ Topic SNS → Cola SQS (Suscriptor 1) → retiene mensajes si el consumidor est�
 
 ## Laboratorio práctico
 
+> Este laboratorio asume que ya ejecutaste `floci start` y `eval $(floci env)` (Módulo 1) en tu sesión de terminal, así que los comandos de `aws` no repiten `--endpoint-url`.
+
 **Objetivo del laboratorio:** construir un sistema de notificaciones que distribuye alertas por SNS a múltiples destinos.
 
 **Requisitos previos:** Módulo 10 completado.

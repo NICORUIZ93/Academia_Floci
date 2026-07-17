@@ -112,6 +112,8 @@ X-Ray (un servicio de tracing distribuido, mencionado como complemento a estas h
 
 ## Laboratorio práctico
 
+> Este laboratorio asume que ya ejecutaste `floci start` y `eval $(floci env)` (Módulo 1) en tu sesión de terminal, así que los comandos de `aws` no repiten `--endpoint-url`.
+
 **Objetivo del laboratorio:** construir un dashboard de CloudWatch con logs, métricas de errores y alarma configurada.
 
 **Requisitos previos:** Módulo 11 completado.

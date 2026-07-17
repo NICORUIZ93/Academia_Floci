@@ -108,6 +108,8 @@ EventBridge Pipes  → conexión directa simple entre dos servicios, sin orquest
 
 ## Laboratorio práctico
 
+> Este laboratorio asume que ya ejecutaste `floci start` y `eval $(floci env)` (Módulo 1) en tu sesión de terminal, así que los comandos de `aws` no repiten `--endpoint-url`.
+
 **Objetivo del laboratorio:** construir un flujo de procesamiento de tareas con validación, guardado, notificación y manejo de errores.
 
 **Requisitos previos:** Módulo 15 completado.

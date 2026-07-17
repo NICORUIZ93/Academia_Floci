@@ -157,6 +157,8 @@ Cola Standard                      Cola FIFO (grupo A)      Cola FIFO (grupo B)
 
 ## Laboratorio práctico
 
+> Este laboratorio asume que ya ejecutaste `floci start` y `eval $(floci env)` (Módulo 1) en tu sesión de terminal, así que los comandos de `aws` no repiten `--endpoint-url`.
+
 **Objetivo del laboratorio:** enviar, recibir y eliminar mensajes en una cola Standard, configurar una Dead Letter Queue, y crear una cola FIFO con agrupación de mensajes.
 
 **Requisitos previos:** Floci corriendo con el servicio SQS activo, AWS CLI configurada contra `http://localhost:4566`.
@@ -165,23 +167,23 @@ Cola Standard                      Cola FIFO (grupo A)      Cola FIFO (grupo B)
 
 | Paso | Acción | Comando | Explicación | Salida esperada |
 |---|---|---|---|---|
-| 1 | Crear la cola principal | `aws sqs create-queue --queue-name mi-cola --endpoint-url http://localhost:4566` | Crea una cola Standard | Un JSON con `QueueUrl` |
-| 2 | Enviar un mensaje | `aws sqs send-message --queue-url <QueueUrl> --message-body "Hola mundo" --endpoint-url http://localhost:4566` | Coloca un mensaje en la cola | Un JSON con `MessageId` y `MD5OfMessageBody` |
-| 3 | Recibir el mensaje | `aws sqs receive-message --queue-url <QueueUrl> --endpoint-url http://localhost:4566` | Obtiene el mensaje y su `ReceiptHandle`, dejándolo temporalmente invisible | Un JSON con `Body: "Hola mundo"` y un `ReceiptHandle` largo |
-| 4 | Eliminar el mensaje procesado | `aws sqs delete-message --queue-url <QueueUrl> --receipt-handle <ReceiptHandle> --endpoint-url http://localhost:4566` | Confirma el procesamiento exitoso y elimina el mensaje definitivamente | Sin salida (comando exitoso) |
-| 5 | Crear una cola secundaria para la DLQ | `aws sqs create-queue --queue-name mi-cola-dlq --endpoint-url http://localhost:4566` | Esta cola recibirá los mensajes que fallen repetidamente | Un JSON con `QueueUrl` de la DLQ |
-| 6 | Obtener el ARN de la DLQ | `aws sqs get-queue-attributes --queue-url <QueueUrl-DLQ> --attribute-names QueueArn --endpoint-url http://localhost:4566` | Necesitas el ARN (no la URL) para configurar la RedrivePolicy | Un JSON con `QueueArn` |
-| 7 | Enlazar la cola principal a la DLQ | `aws sqs set-queue-attributes --queue-url <QueueUrl-principal> --attributes "RedrivePolicy={\"deadLetterTargetArn\":\"<QueueArn-DLQ>\",\"maxReceiveCount\":\"2\"}" --endpoint-url http://localhost:4566` | A partir de ahora, un mensaje que se reciba 2 veces sin ser borrado se mueve automáticamente a la DLQ | Sin salida (comando exitoso) |
+| 1 | Crear la cola principal | `aws sqs create-queue --queue-name mi-cola` | Crea una cola Standard | Un JSON con `QueueUrl` |
+| 2 | Enviar un mensaje | `aws sqs send-message --queue-url <QueueUrl> --message-body "Hola mundo"` | Coloca un mensaje en la cola | Un JSON con `MessageId` y `MD5OfMessageBody` |
+| 3 | Recibir el mensaje | `aws sqs receive-message --queue-url <QueueUrl>` | Obtiene el mensaje y su `ReceiptHandle`, dejándolo temporalmente invisible | Un JSON con `Body: "Hola mundo"` y un `ReceiptHandle` largo |
+| 4 | Eliminar el mensaje procesado | `aws sqs delete-message --queue-url <QueueUrl> --receipt-handle <ReceiptHandle>` | Confirma el procesamiento exitoso y elimina el mensaje definitivamente | Sin salida (comando exitoso) |
+| 5 | Crear una cola secundaria para la DLQ | `aws sqs create-queue --queue-name mi-cola-dlq` | Esta cola recibirá los mensajes que fallen repetidamente | Un JSON con `QueueUrl` de la DLQ |
+| 6 | Obtener el ARN de la DLQ | `aws sqs get-queue-attributes --queue-url <QueueUrl-DLQ> --attribute-names QueueArn` | Necesitas el ARN (no la URL) para configurar la RedrivePolicy | Un JSON con `QueueArn` |
+| 7 | Enlazar la cola principal a la DLQ | `aws sqs set-queue-attributes --queue-url <QueueUrl-principal> --attributes "RedrivePolicy={\"deadLetterTargetArn\":\"<QueueArn-DLQ>\",\"maxReceiveCount\":\"2\"}"` | A partir de ahora, un mensaje que se reciba 2 veces sin ser borrado se mueve automáticamente a la DLQ | Sin salida (comando exitoso) |
 | 8 | Enviar un mensaje de prueba y recibirlo dos veces sin borrarlo | Envía un mensaje, y ejecuta `receive-message` dos veces seguidas dejando expirar el tiempo de visibilidad entre cada una (o usa `change-message-visibility` para forzarlo a 0) | Simula un consumidor que nunca logra procesar el mensaje | Tras la segunda recepción sin borrado, el mensaje debería migrar a la DLQ |
-| 9 | Verificar que el mensaje llegó a la DLQ | `aws sqs receive-message --queue-url <QueueUrl-DLQ> --endpoint-url http://localhost:4566` | Confirma que el mensaje problemático quedó aislado en la DLQ | El mismo `Body` del mensaje de prueba aparece ahora en la DLQ |
+| 9 | Verificar que el mensaje llegó a la DLQ | `aws sqs receive-message --queue-url <QueueUrl-DLQ>` | Confirma que el mensaje problemático quedó aislado en la DLQ | El mismo `Body` del mensaje de prueba aparece ahora en la DLQ |
 
 ### Laboratorio 3.2 — Cola FIFO con MessageGroupId
 
 | Paso | Acción | Comando | Explicación | Salida esperada |
 |---|---|---|---|---|
-| 1 | Crear una cola FIFO | `aws sqs create-queue --queue-name mi-cola.fifo --attributes FifoQueue=true --endpoint-url http://localhost:4566` | El nombre debe terminar en `.fifo`, y se debe declarar explícitamente el atributo `FifoQueue` | Un JSON con `QueueUrl` terminando en `.fifo` |
-| 2 | Enviar tres mensajes al mismo grupo | `aws sqs send-message --queue-url <QueueUrl> --message-body "Paso 1" --message-group-id pedido-001 --message-deduplication-id d1 --endpoint-url http://localhost:4566` (repetir con "Paso 2"/`d2` y "Paso 3"/`d3`, mismo `message-group-id`) | Los tres mensajes pertenecen al mismo `MessageGroupId`, por lo que se entregarán en el orden exacto en que se enviaron | Tres respuestas, cada una con su propio `MessageId` |
-| 3 | Recibir los mensajes en orden | `aws sqs receive-message --queue-url <QueueUrl> --max-number-of-messages 3 --endpoint-url http://localhost:4566` | Confirma que los tres mensajes llegan en el orden exacto de envío: "Paso 1", "Paso 2", "Paso 3" | Un JSON con los tres mensajes en ese orden exacto |
+| 1 | Crear una cola FIFO | `aws sqs create-queue --queue-name mi-cola.fifo --attributes FifoQueue=true` | El nombre debe terminar en `.fifo`, y se debe declarar explícitamente el atributo `FifoQueue` | Un JSON con `QueueUrl` terminando en `.fifo` |
+| 2 | Enviar tres mensajes al mismo grupo | `aws sqs send-message --queue-url <QueueUrl> --message-body "Paso 1" --message-group-id pedido-001 --message-deduplication-id d1` (repetir con "Paso 2"/`d2` y "Paso 3"/`d3`, mismo `message-group-id`) | Los tres mensajes pertenecen al mismo `MessageGroupId`, por lo que se entregarán en el orden exacto en que se enviaron | Tres respuestas, cada una con su propio `MessageId` |
+| 3 | Recibir los mensajes en orden | `aws sqs receive-message --queue-url <QueueUrl> --max-number-of-messages 3` | Confirma que los tres mensajes llegan en el orden exacto de envío: "Paso 1", "Paso 2", "Paso 3" | Un JSON con los tres mensajes en ese orden exacto |
 
 **Verificación:** el laboratorio se considera exitoso si, en el Laboratorio 3.1, el mensaje de prueba aparece finalmente en la cola DLQ tras alcanzar el `maxReceiveCount`, y si, en el Laboratorio 3.2, los tres mensajes del mismo `MessageGroupId` se reciben en el orden exacto en que fueron enviados, no en un orden distinto.
 

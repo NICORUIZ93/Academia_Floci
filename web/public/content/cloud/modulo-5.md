@@ -217,6 +217,8 @@ Trigger S3 (asíncrono)          DynamoDB Streams (asíncrono)     API Gateway (
 
 ## Laboratorio práctico
 
+> Este laboratorio asume que ya ejecutaste `floci start` y `eval $(floci env)` (Módulo 1) en tu sesión de terminal, así que los comandos de `aws` no repiten `--endpoint-url`.
+
 **Objetivo del laboratorio:** escribir, empaquetar, desplegar e invocar tu primera función Lambda en Node.js, y después modificarla y actualizar tanto su código como su configuración.
 
 **Requisitos previos:** Floci corriendo con el servicio Lambda activo, AWS CLI configurada contra `http://localhost:4566`, Node.js instalado (Módulo 0), un rol de IAM para la función (Floci acepta un ARN de rol de ejemplo sin validarlo estrictamente contra permisos reales, ya que IAM se estudia en profundidad en el Módulo 7).
@@ -227,8 +229,8 @@ Trigger S3 (asíncrono)          DynamoDB Streams (asíncrono)     API Gateway (
 |---|---|---|---|---|
 | 1 | Crear el archivo de la función | Crea un archivo `index.js` con:<br>`exports.handler = async (event) => {`<br>`  return { mensaje: "Hola, " + (event.nombre || "mundo") };`<br>`};` | Handler mínimo que devuelve un saludo personalizado usando el `event` de entrada | El archivo se guarda sin errores |
 | 2 | Comprimir el código | `zip funcion.zip index.js` | Lambda requiere el código empaquetado en un archivo `.zip` para desplegarlo | Se crea `funcion.zip` en el directorio actual |
-| 3 | Crear la función Lambda | `aws lambda create-function --function-name mi-funcion --runtime nodejs20.x --handler index.handler --zip-file fileb://funcion.zip --role arn:aws:iam::000000000000:role/lambda-role --endpoint-url http://localhost:4566` | Despliega el código empaquetado como una función nueva | Un JSON con `FunctionName`, `Runtime` y `State` |
-| 4 | Invocar la función | `aws lambda invoke --function-name mi-funcion --payload '{"nombre":"Nicolás"}' --cli-binary-format raw-in-base64-out salida.json --endpoint-url http://localhost:4566` | Ejecuta la función con un payload de entrada específico y guarda la respuesta en un archivo local | Un JSON de metadatos con `StatusCode: 200` |
+| 3 | Crear la función Lambda | `aws lambda create-function --function-name mi-funcion --runtime nodejs20.x --handler index.handler --zip-file fileb://funcion.zip --role arn:aws:iam::000000000000:role/lambda-role` | Despliega el código empaquetado como una función nueva | Un JSON con `FunctionName`, `Runtime` y `State` |
+| 4 | Invocar la función | `aws lambda invoke --function-name mi-funcion --payload '{"nombre":"Nicolás"}' --cli-binary-format raw-in-base64-out salida.json` | Ejecuta la función con un payload de entrada específico y guarda la respuesta en un archivo local | Un JSON de metadatos con `StatusCode: 200` |
 | 5 | Ver el resultado de la invocación | `cat salida.json` | Muestra lo que la función devolvió realmente | `{"mensaje":"Hola, Nicolás"}` |
 
 ### Laboratorio 5.2 — Actualizar código y configuración
@@ -237,9 +239,9 @@ Trigger S3 (asíncrono)          DynamoDB Streams (asíncrono)     API Gateway (
 |---|---|---|---|---|
 | 1 | Modificar el código de la función | Edita `index.js` para que devuelva también la hora actual:<br>`exports.handler = async (event) => {`<br>`  return { mensaje: "Hola, " + (event.nombre || "mundo"), hora: new Date().toISOString() };`<br>`};` | Simula una actualización real de la lógica de negocio | El archivo se guarda con el cambio |
 | 2 | Volver a comprimir | `zip funcion.zip index.js` | Genera un nuevo paquete con el código actualizado (sobrescribe el zip anterior) | El archivo `funcion.zip` se actualiza |
-| 3 | Actualizar el código desplegado | `aws lambda update-function-code --function-name mi-funcion --zip-file fileb://funcion.zip --endpoint-url http://localhost:4566` | Reemplaza el código de `$LATEST` sin crear una función nueva | Un JSON confirmando la actualización, con un nuevo valor de `LastModified` |
-| 4 | Invocar de nuevo para confirmar el cambio | `aws lambda invoke --function-name mi-funcion --payload '{"nombre":"Nicolás"}' --cli-binary-format raw-in-base64-out salida2.json --endpoint-url http://localhost:4566 && cat salida2.json` | Verifica que la nueva invocación refleja el código actualizado | `{"mensaje":"Hola, Nicolás","hora":"2026-..."}` |
-| 5 | Actualizar la configuración (memoria y variables de entorno) | `aws lambda update-function-configuration --function-name mi-funcion --memory-size 256 --environment "Variables={ENTORNO=desarrollo}" --endpoint-url http://localhost:4566` | Cambia la memoria asignada y añade una variable de entorno, sin tocar el código | Un JSON confirmando `MemorySize: 256` y la variable `ENTORNO` |
+| 3 | Actualizar el código desplegado | `aws lambda update-function-code --function-name mi-funcion --zip-file fileb://funcion.zip` | Reemplaza el código de `$LATEST` sin crear una función nueva | Un JSON confirmando la actualización, con un nuevo valor de `LastModified` |
+| 4 | Invocar de nuevo para confirmar el cambio | `aws lambda invoke --function-name mi-funcion --payload '{"nombre":"Nicolás"}' --cli-binary-format raw-in-base64-out salida2.json && cat salida2.json` | Verifica que la nueva invocación refleja el código actualizado | `{"mensaje":"Hola, Nicolás","hora":"2026-..."}` |
+| 5 | Actualizar la configuración (memoria y variables de entorno) | `aws lambda update-function-configuration --function-name mi-funcion --memory-size 256 --environment "Variables={ENTORNO=desarrollo}"` | Cambia la memoria asignada y añade una variable de entorno, sin tocar el código | Un JSON confirmando `MemorySize: 256` y la variable `ENTORNO` |
 
 **Verificación:** el laboratorio se considera exitoso si `salida.json` (antes de la actualización) contiene solo el `mensaje`, y `salida2.json` (después de actualizar el código) contiene tanto el `mensaje` como el nuevo campo `hora`, confirmando que `update-function-code` reemplazó efectivamente la lógica ejecutada.
 

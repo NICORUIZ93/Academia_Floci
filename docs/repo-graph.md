@@ -1,8 +1,8 @@
 # Academia Floci Repo Graph
 
-Generated: 2026-07-16 04:33 UTC
+Generated: 2026-07-17 04:00 UTC
 Root: `Academia_Floci`
-Indexed files: 441
+Indexed files: 451
 Import edges: 27
 
 Use this file as the first, compact context for AI assistants. Refresh it with:
@@ -17,7 +17,7 @@ For automated lookups, use `docs/repo-graph.json`.
 
 - `angular-app`: 46 files
 - `automation-script`: 6 files
-- `course-content`: 275 files
+- `course-content`: 285 files
 - `documentation`: 80 files
 - `example`: 8 files
 - `local-infra`: 1 files
@@ -25,7 +25,7 @@ For automated lookups, use `docs/repo-graph.json`.
 
 ## File Types
 
-- `.md`: 345
+- `.md`: 355
 - `.ts`: 32
 - `.json`: 15
 - `.html`: 9
@@ -42,7 +42,7 @@ For automated lookups, use `docs/repo-graph.json`.
 
 ## High Signal Files
 
-- `README.md` (222 lines, documentation)
+- `README.md` (235 lines, documentation)
   - headings: # Academia_Floci, ## Como empezar, ## Levantar Floci, # 1. Levantar todos los servicios, # 2. Verificar Floci AWS
 - `scripts/validate.sh` (448 lines, automation-script)
 - `scripts/build_repo_graph.py` (437 lines, automation-script)
@@ -51,7 +51,7 @@ For automated lookups, use `docs/repo-graph.json`.
   - symbols: progressLabel, progressBar, openCloudLab, toggleNav, courseNav, resetProgress, closeNav, courseList, courseLabel, difficultyBadge
 - `web/src/app/app.ts` (11 lines, angular-app)
   - symbols: App
-- `web/src/app/course-data.ts` (808 lines, angular-app)
+- `web/src/app/course-data.ts` (1003 lines, angular-app)
   - symbols: ServiceGroup, CloudComparison, AltCloudGroup
 - `web/src/app/catalog/course-catalog.ts` (80 lines, angular-app)
   - symbols: CourseCatalogComponent, cards, featuredTracks, foundationTracks, mobileTracks
@@ -134,7 +134,7 @@ For automated lookups, use `docs/repo-graph.json`.
 - `web/src/app/command-palette.service.ts` (11 lines) - symbols: CommandPaletteService, isOpen; imports: @angular/core
 - `web/src/app/command-palette.ts` (78 lines) - symbols: CommandPaletteComponent, query, results; imports: @angular/common, @angular/core, @angular/forms, @angular/router, lucide-angular, ./course-data, ./command-palette.service
 - `web/src/app/content.service.ts` (27 lines) - symbols: ContentService; imports: @angular/core, marked
-- `web/src/app/course-data.ts` (808 lines) - symbols: ServiceGroup, CloudComparison, AltCloudGroup; imports: ./course-module.model, ./tracks/devops.track, ./tracks/javascript.track, ./tracks/node.track, ./tracks/angular.track, ./tracks/react.track, ./tracks/java.track, ./tracks/spring-boot.track
+- `web/src/app/course-data.ts` (1003 lines) - symbols: ServiceGroup, CloudComparison, AltCloudGroup; imports: ./course-module.model, ./tracks/devops.track, ./tracks/javascript.track, ./tracks/node.track, ./tracks/angular.track, ./tracks/react.track, ./tracks/java.track, ./tracks/spring-boot.track
 - `web/src/app/course-module.model.ts` (41 lines) - symbols: CourseModule, QuizQuestion, Track
 - `web/src/app/course/course-shell.html` (38 lines)
 - `web/src/app/course/course-shell.scss` (58 lines)
@@ -170,11 +170,11 @@ For automated lookups, use `docs/repo-graph.json`.
 - `web/public/content/angular/modulo-0.md` (214 lines) - headings: # Módulo 0: Fundamentos y Angular CLI, ## Sílabo, ## Contenido teórico, ### Tema 1: El CLI ya no genera NgModules
 - `web/public/content/angular/modulo-1.md` (238 lines) - headings: # Módulo 1: Componentes, plantillas y data binding, ## Sílabo, ## Contenido teórico, ### Tema 1: input()/output() basados en signals
 - `web/public/content/angular/modulo-10.md` (189 lines) - headings: # Módulo 10: Testing en Angular, ## Sílabo, ## Contenido teórico, ### Tema 1: TestBed y componentes standalone
-- ... 257 more files
+- ... 267 more files
 
 ### documentation
 
-- `README.md` (222 lines) - headings: # Academia_Floci, ## Como empezar, ## Levantar Floci, # 1. Levantar todos los servicios
+- `README.md` (235 lines) - headings: # Academia_Floci, ## Como empezar, ## Levantar Floci, # 1. Levantar todos los servicios
 - `docs/METODOLOGIA.md` (67 lines) - headings: # Metodología de Aprendizaje — Academia Floci, ## 1. Principios (basados en evidencia), ## 2. El ciclo de cada lección (regla 20/60/20), ## 3. Ruta por perfil
 - `docs/PLANTILLA-LECCION.md` (110 lines) - headings: # Plantilla de Lección — Prompt Maestro para Claude / Codex, ## PROMPT MAESTRO (copiar desde aquí), ## DATOS DE LA LECCIÓN, ## REGLAS DE ESTILO
 - `web/README.md` (72 lines) - headings: # Web, ## Abrir la academia, ## Que contiene, ## Archivos principales

@@ -34,7 +34,7 @@
     },
     {
       "path": "README.md",
-      "lines": 222,
+      "lines": 235,
       "kind": "documentation",
       "symbols": [],
       "imports": [],
@@ -1034,7 +1034,7 @@
     },
     {
       "path": "web/public/content/cloud/modulo-0.md",
-      "lines": 298,
+      "lines": 300,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -1055,7 +1055,7 @@
     },
     {
       "path": "web/public/content/cloud/modulo-1.md",
-      "lines": 299,
+      "lines": 318,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -1070,13 +1070,13 @@
         "### Tema 5: Docker Compose \u2014 servicios, redes y vol\u00famenes",
         "## Laboratorio pr\u00e1ctico",
         "### Laboratorio 1.1 \u2014 Comandos esenciales con una imagen de prueba",
-        "### Laboratorio 1.2 \u2014 Levantar Floci con Docker Compose",
-        "### Laboratorio 1.3 \u2014 Configurar y probar la AWS CLI contra Floci"
+        "### Laboratorio 1.2 \u2014 Instalar floci-cli y levantar Floci",
+        "### Laboratorio 1.3 \u2014 Probar la AWS CLI contra Floci"
       ]
     },
     {
       "path": "web/public/content/cloud/modulo-10.md",
-      "lines": 188,
+      "lines": 190,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -1097,7 +1097,7 @@
     },
     {
       "path": "web/public/content/cloud/modulo-11.md",
-      "lines": 187,
+      "lines": 189,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -1118,7 +1118,7 @@
     },
     {
       "path": "web/public/content/cloud/modulo-12.md",
-      "lines": 194,
+      "lines": 196,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -1139,7 +1139,7 @@
     },
     {
       "path": "web/public/content/cloud/modulo-13.md",
-      "lines": 188,
+      "lines": 190,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -1160,7 +1160,7 @@
     },
     {
       "path": "web/public/content/cloud/modulo-14.md",
-      "lines": 196,
+      "lines": 198,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -1181,7 +1181,7 @@
     },
     {
       "path": "web/public/content/cloud/modulo-15.md",
-      "lines": 200,
+      "lines": 202,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -1202,7 +1202,7 @@
     },
     {
       "path": "web/public/content/cloud/modulo-16.md",
-      "lines": 189,
+      "lines": 191,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -1223,7 +1223,7 @@
     },
     {
       "path": "web/public/content/cloud/modulo-17.md",
-      "lines": 184,
+      "lines": 186,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -1244,7 +1244,7 @@
     },
     {
       "path": "web/public/content/cloud/modulo-18.md",
-      "lines": 183,
+      "lines": 185,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -1265,7 +1265,7 @@
     },
     {
       "path": "web/public/content/cloud/modulo-19.md",
-      "lines": 194,
+      "lines": 196,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -1286,7 +1286,7 @@
     },
     {
       "path": "web/public/content/cloud/modulo-2.md",
-      "lines": 283,
+      "lines": 285,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -1307,7 +1307,7 @@
     },
     {
       "path": "web/public/content/cloud/modulo-20.md",
-      "lines": 187,
+      "lines": 189,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -1328,28 +1328,196 @@
     },
     {
       "path": "web/public/content/cloud/modulo-21.md",
-      "lines": 188,
+      "lines": 185,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
       "headings": [
-        "# M\u00f3dulo 21: Proyecto integrador: API multi-nube con AWS, Azure y GCP",
+        "# M\u00f3dulo 21: C\u00f3mputo el\u00e1stico con EC2 y Auto Scaling",
         "## S\u00edlabo",
         "## Contenido te\u00f3rico",
-        "### Tema 1: Arquitectura multi-nube y portabilidad de conocimiento",
-        "### Tema 2: Arquitectura interna de cloud local y su uso en CI/CD",
-        "### Tema 3: Migraci\u00f3n desde otros emuladores, y l\u00edmites de un emulador",
+        "### Tema 1: El modelo de ejecuci\u00f3n de EC2 \u2014 instancias que son contenedores Docker reales",
+        "### Tema 2: AMIs, grupos de seguridad y claves SSH",
+        "### Tema 3: UserData e IMDS \u2014 arranque automatizado y credenciales por instancia",
+        "### Tema 4: Auto Scaling \u2014 configuraciones de lanzamiento y grupos",
+        "### Tema 5: El reconciliador de capacidad y las pol\u00edticas de escalado",
         "## Laboratorio pr\u00e1ctico",
+        "### Laboratorio 21.1 \u2014 Lanzar una instancia EC2 con acceso SSH e IMDS",
+        "### Laboratorio 21.2 \u2014 Auto Scaling Group con reconciliador en vivo",
+        "## Ejercicios de evaluaci\u00f3n"
+      ]
+    },
+    {
+      "path": "web/public/content/cloud/modulo-22.md",
+      "lines": 170,
+      "kind": "course-content",
+      "symbols": [],
+      "imports": [],
+      "headings": [
+        "# M\u00f3dulo 22: Balanceo de carga, CDN y DNS \u2014 ELB, CloudFront, Route53 y ACM",
+        "## S\u00edlabo",
+        "## Contenido te\u00f3rico",
+        "### Tema 1: ELB v2 \u2014 balanceadores, grupos objetivo y reglas",
+        "### Tema 2: ACM \u2014 certificados TLS con criptograf\u00eda real",
+        "### Tema 3: CloudFront \u2014 distribuci\u00f3n de contenido y control de acceso al origen",
+        "### Tema 4: Route53 \u2014 zonas alojadas y registros de recursos",
+        "### Tema 5: C\u00f3mo se integran los cuatro servicios en una arquitectura de borde real",
+        "## Laboratorio pr\u00e1ctico",
+        "### Laboratorio 22.1 \u2014 Application Load Balancer con enrutamiento por ruta",
+        "### Laboratorio 22.2 \u2014 Certificado, distribuci\u00f3n CDN y zona DNS",
+        "## Ejercicios de evaluaci\u00f3n"
+      ]
+    },
+    {
+      "path": "web/public/content/cloud/modulo-23.md",
+      "lines": 154,
+      "kind": "course-content",
+      "symbols": [],
+      "imports": [],
+      "headings": [
+        "# M\u00f3dulo 23: Cach\u00e9 en memoria con ElastiCache",
+        "## S\u00edlabo",
+        "## Contenido te\u00f3rico",
+        "### Tema 1: Qu\u00e9 resuelve un cach\u00e9 en memoria \u2014 y cu\u00e1ndo no ayuda",
+        "### Tema 2: Arquitectura de ElastiCache en Floci \u2014 contenedores reales, no simulaci\u00f3n",
+        "### Tema 3: Creaci\u00f3n de cl\u00fasteres y conexi\u00f3n con clientes est\u00e1ndar",
+        "### Tema 4: Autenticaci\u00f3n IAM para el plano de datos de ElastiCache",
+        "## Laboratorio pr\u00e1ctico",
+        "### Laboratorio 23.1 \u2014 Cl\u00faster ElastiCache con cache-aside",
+        "### Laboratorio 23.2 \u2014 Usuario con autenticaci\u00f3n IAM",
         "## Ejercicios de evaluaci\u00f3n",
-        "### Ejercicio 1: Qu\u00e9 es transferible entre proveedores",
-        "### Ejercicio 2: Qu\u00e9 fue fundamentalmente diferente entre los proveedores",
-        "### Ejercicio 3: Qu\u00e9 falta para pasar a producci\u00f3n en nube real",
-        "## Resumen del m\u00f3dulo"
+        "### Ejercicio 1: Cu\u00e1ndo S\u00cd y cu\u00e1ndo NO usar cach\u00e9"
+      ]
+    },
+    {
+      "path": "web/public/content/cloud/modulo-24.md",
+      "lines": 169,
+      "kind": "course-content",
+      "symbols": [],
+      "imports": [],
+      "headings": [
+        "# M\u00f3dulo 24: CI/CD nativo de AWS con CodeBuild y CodeDeploy",
+        "## S\u00edlabo",
+        "## Contenido te\u00f3rico",
+        "### Tema 1: CodeBuild \u2014 compilaciones reales dentro de contenedores Docker",
+        "### Tema 2: buildspec.yml \u2014 fases y artefactos",
+        "### Tema 3: CodeDeploy \u2014 aplicaciones, grupos y configuraciones predefinidas",
+        "### Tema 4: Despliegue Blue/Green de Lambda \u2014 cambio de tr\u00e1fico por alias",
+        "### Tema 5: Despliegue Blue/Green de ECS \u2014 cambio de tr\u00e1fico por listener ELB",
+        "## Laboratorio pr\u00e1ctico",
+        "### Laboratorio 24.1 \u2014 Compilaci\u00f3n real con CodeBuild",
+        "### Laboratorio 24.2 \u2014 Despliegue canary de Lambda con CodeDeploy",
+        "## Ejercicios de evaluaci\u00f3n"
+      ]
+    },
+    {
+      "path": "web/public/content/cloud/modulo-25.md",
+      "lines": 169,
+      "kind": "course-content",
+      "symbols": [],
+      "imports": [],
+      "headings": [
+        "# M\u00f3dulo 25: Gobierno, configuraci\u00f3n y continuidad \u2014 AWS Config, AppConfig y Backup",
+        "## S\u00edlabo",
+        "## Contenido te\u00f3rico",
+        "### Tema 1: AWS Config \u2014 rastrear reglas sobre tus recursos",
+        "### Tema 2: AppConfig \u2014 desplegar configuraci\u00f3n sin redeployar c\u00f3digo",
+        "### Tema 3: AppConfigData \u2014 el plano de datos que consume tu aplicaci\u00f3n",
+        "### Tema 4: AWS Backup \u2014 centralizar la pol\u00edtica de respaldo de m\u00faltiples servicios",
+        "### Tema 5: El ciclo de vida de un trabajo de respaldo",
+        "## Laboratorio pr\u00e1ctico",
+        "### Laboratorio 25.1 \u2014 Configuraci\u00f3n din\u00e1mica con AppConfig",
+        "### Laboratorio 25.2 \u2014 Plan de respaldo para DynamoDB",
+        "## Ejercicios de evaluaci\u00f3n"
+      ]
+    },
+    {
+      "path": "web/public/content/cloud/modulo-26.md",
+      "lines": 154,
+      "kind": "course-content",
+      "symbols": [],
+      "imports": [],
+      "headings": [
+        "# M\u00f3dulo 26: Streaming e integraci\u00f3n avanzada \u2014 Firehose y EventBridge Pipes",
+        "## S\u00edlabo",
+        "## Contenido te\u00f3rico",
+        "### Tema 1: Amazon Data Firehose \u2014 entrega gestionada sin consumidores propios",
+        "### Tema 2: Firehose vs Kinesis Data Streams \u2014 qui\u00e9n consume los datos",
+        "### Tema 3: EventBridge Pipes \u2014 conectar origen y destino sin c\u00f3digo de pegamento",
+        "### Tema 4: Cu\u00e1ndo usar Pipes frente a reglas EventBridge o Step Functions",
+        "## Laboratorio pr\u00e1ctico",
+        "### Laboratorio 26.1 \u2014 Entrega autom\u00e1tica con Firehose",
+        "### Laboratorio 26.2 \u2014 Pipe de SQS a Lambda sin c\u00f3digo intermedio",
+        "## Ejercicios de evaluaci\u00f3n",
+        "### Ejercicio 1: Firehose vs consumidor Kinesis propio"
+      ]
+    },
+    {
+      "path": "web/public/content/cloud/modulo-27.md",
+      "lines": 157,
+      "kind": "course-content",
+      "symbols": [],
+      "imports": [],
+      "headings": [
+        "# M\u00f3dulo 27: APIs GraphQL con AppSync y correo transaccional con SES",
+        "## S\u00edlabo",
+        "## Contenido te\u00f3rico",
+        "### Tema 1: AppSync \u2014 APIs GraphQL gestionadas",
+        "### Tema 2: Fuentes de datos y resolvers",
+        "### Tema 3: SES \u2014 identidades, env\u00edo y plantillas",
+        "### Tema 4: El simulador de buzones y el punto de inspecci\u00f3n local",
+        "## Laboratorio pr\u00e1ctico",
+        "### Laboratorio 27.1 \u2014 API GraphQL con resolver local",
+        "### Laboratorio 27.2 \u2014 Simulador de entrega, rebote y queja con SES",
+        "## Ejercicios de evaluaci\u00f3n",
+        "### Ejercicio 1: Dise\u00f1a un esquema GraphQL para el proyecto del curso"
+      ]
+    },
+    {
+      "path": "web/public/content/cloud/modulo-28.md",
+      "lines": 155,
+      "kind": "course-content",
+      "symbols": [],
+      "imports": [],
+      "headings": [
+        "# M\u00f3dulo 28: Bases de datos de grafos y b\u00fasqueda \u2014 Neptune y OpenSearch",
+        "## S\u00edlabo",
+        "## Contenido te\u00f3rico",
+        "### Tema 1: Bases de datos de grafos \u2014 cuando las relaciones son el dato",
+        "### Tema 2: Neptune en Floci \u2014 un servidor Gremlin real, no una simulaci\u00f3n",
+        "### Tema 3: OpenSearch \u2014 modo simulado y modo real",
+        "### Tema 4: Eligiendo entre Neptune, OpenSearch y DynamoDB",
+        "## Laboratorio pr\u00e1ctico",
+        "### Laboratorio 28.1 \u2014 Grafo de relaciones con Neptune",
+        "### Laboratorio 28.2 \u2014 B\u00fasqueda de texto completo con OpenSearch",
+        "## Ejercicios de evaluaci\u00f3n",
+        "### Ejercicio 1: Modela un grafo de recomendaciones"
+      ]
+    },
+    {
+      "path": "web/public/content/cloud/modulo-29.md",
+      "lines": 170,
+      "kind": "course-content",
+      "symbols": [],
+      "imports": [],
+      "headings": [
+        "# M\u00f3dulo 29: FinOps y gobierno de cuenta \u2014 Cost Explorer, Pricing, BCM Data Exports, Resource Groups Tagging y STS",
+        "## S\u00edlabo",
+        "## Contenido te\u00f3rico",
+        "### Tema 1: Cost Explorer \u2014 costos sintetizados a partir de tu estado real",
+        "### Tema 2: Pricing \u2014 cat\u00e1logo de tarifas de referencia",
+        "### Tema 3: BCM Data Exports \u2014 reportes de costo en formato est\u00e1ndar",
+        "### Tema 4: Resource Groups Tagging API \u2014 descubrimiento centralizado por etiqueta",
+        "### Tema 5: STS en profundidad \u2014 identidad temporal y aislamiento multi-cuenta",
+        "## Laboratorio pr\u00e1ctico",
+        "### Laboratorio 29.1 \u2014 Costo sintetizado y exportaci\u00f3n FOCUS",
+        "### Laboratorio 29.2 \u2014 Descubrimiento centralizado por etiqueta",
+        "## Ejercicios de evaluaci\u00f3n"
       ]
     },
     {
       "path": "web/public/content/cloud/modulo-3.md",
-      "lines": 259,
+      "lines": 261,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -1369,8 +1537,50 @@
       ]
     },
     {
+      "path": "web/public/content/cloud/modulo-30.md",
+      "lines": 146,
+      "kind": "course-content",
+      "symbols": [],
+      "imports": [],
+      "headings": [
+        "# M\u00f3dulo 30: Transferencia de archivos gestionada con Transfer Family",
+        "## S\u00edlabo",
+        "## Contenido te\u00f3rico",
+        "### Tema 1: Qu\u00e9 resuelve Transfer Family",
+        "### Tema 2: Ciclo de vida del servidor y modelo de usuarios",
+        "### Tema 3: Claves p\u00fablicas SSH y autenticaci\u00f3n de usuarios",
+        "### Tema 4: Los l\u00edmites de la Fase 1 \u2014 plano de gesti\u00f3n completo, plano de datos pendiente",
+        "## Laboratorio pr\u00e1ctico",
+        "### Laboratorio 30.1 \u2014 Servidor, usuario y clave SSH",
+        "## Ejercicios de evaluaci\u00f3n",
+        "### Ejercicio 1: Justifica Transfer Family frente a un servidor SFTP propio",
+        "### Ejercicio 2: Dise\u00f1a el aislamiento de usuarios por proveedor"
+      ]
+    },
+    {
+      "path": "web/public/content/cloud/modulo-31.md",
+      "lines": 190,
+      "kind": "course-content",
+      "symbols": [],
+      "imports": [],
+      "headings": [
+        "# M\u00f3dulo 31: Proyecto integrador: API multi-nube con AWS, Azure y GCP",
+        "## S\u00edlabo",
+        "## Contenido te\u00f3rico",
+        "### Tema 1: Arquitectura multi-nube y portabilidad de conocimiento",
+        "### Tema 2: Arquitectura interna de cloud local y su uso en CI/CD",
+        "### Tema 3: Migraci\u00f3n desde otros emuladores, y l\u00edmites de un emulador",
+        "## Laboratorio pr\u00e1ctico",
+        "## Ejercicios de evaluaci\u00f3n",
+        "### Ejercicio 1: Qu\u00e9 es transferible entre proveedores",
+        "### Ejercicio 2: Qu\u00e9 fue fundamentalmente diferente entre los proveedores",
+        "### Ejercicio 3: Qu\u00e9 falta para pasar a producci\u00f3n en nube real",
+        "## Resumen del m\u00f3dulo"
+      ]
+    },
+    {
       "path": "web/public/content/cloud/modulo-4.md",
-      "lines": 314,
+      "lines": 316,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -1391,7 +1601,7 @@
     },
     {
       "path": "web/public/content/cloud/modulo-5.md",
-      "lines": 318,
+      "lines": 320,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -1412,7 +1622,7 @@
     },
     {
       "path": "web/public/content/cloud/modulo-6.md",
-      "lines": 297,
+      "lines": 299,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -1433,7 +1643,7 @@
     },
     {
       "path": "web/public/content/cloud/modulo-7.md",
-      "lines": 283,
+      "lines": 285,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -1454,7 +1664,7 @@
     },
     {
       "path": "web/public/content/cloud/modulo-8.md",
-      "lines": 267,
+      "lines": 269,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -7852,7 +8062,7 @@
     },
     {
       "path": "web/src/app/course-data.ts",
-      "lines": 808,
+      "lines": 1003,
       "kind": "angular-app",
       "symbols": [
         "ServiceGroup",
