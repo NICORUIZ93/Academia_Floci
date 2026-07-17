@@ -20,6 +20,7 @@ Organizar aplicaciones grandes con límites explícitos entre módulos usando el
 - Encapsulación fuerte entre módulos.
 - Migración de proyectos legacy sin módulos.
 - Cuándo JPMS realmente aporta valor.
+- `opens` para acceso reflexivo controlado de frameworks.
 
 **Evaluación**
 
@@ -74,6 +75,27 @@ Paso 2: sube en el árbol de dependencias agregando módulos hasta cubrir todo e
 requires transitive: cuando un módulo expone tipos de otro módulo en su propia API pública
 ```
 
+### Tema 3: `opens` para acceso reflexivo controlado de frameworks
+
+**Conceptos clave:** `exports` da acceso en tiempo de compilación, `opens` da acceso reflexivo en tiempo de ejecución; son declaraciones independientes.
+
+`exports` resuelve el acceso normal de compilación y llamada directa entre módulos, pero no basta para frameworks como Spring, Jackson o Hibernate, que necesitan inspeccionar y construir objetos de tus propias clases mediante reflexión (leer campos privados, invocar constructores sin argumentos, anotar campos) sin que tu código llame a esos frameworks directamente. Si un paquete solo está `exports`, la reflexión profunda de esos frameworks sobre tus clases falla en tiempo de ejecución con `InaccessibleObjectException`, aunque el mismo paquete compile y funcione perfectamente con llamadas directas de código. `opens com.miapp.dominio;` concede ese acceso reflexivo adicional; `opens com.miapp.dominio to com.fasterxml.jackson.databind;` lo restringe a un módulo específico en vez de abrirlo a cualquiera, igual que `exports ... to ...` restringe el acceso de compilación a módulos concretos.
+
+Es habitual necesitar ambas declaraciones sobre el mismo paquete a la vez: `exports` para que otros módulos llamen directamente a tus clases de dominio, y `opens` (normalmente acotado con `to`) para que el framework de serialización o el ORM pueda además inspeccionarlas por reflexión. Un módulo completo puede además declararse `open module com.miapp.dominio { ... }`, lo que abre todos sus paquetes a reflexión sin necesidad de una línea `opens` por paquete — una opción más simple pero que renuncia a la encapsulación fuerte del Tema 1 para todo el módulo, útil sobre todo durante una migración incremental (Tema 2) mientras terminas de identificar exactamente qué paquetes necesitan reflexión.
+
+**Analogía:** `exports` es como dar a alguien una llave para entrar por la puerta principal y usar las habitaciones normalmente; `opens` es un permiso aparte para que un inspector concreto pueda además revisar los cajones y closets sin necesidad de pedirte permiso cada vez — son dos autorizaciones independientes, y dar la llave de la puerta no incluye automáticamente el permiso de inspección.
+
+**¿Por qué es importante?** La mayoría de los frameworks Java del ecosistema real (inyección de dependencias, serialización JSON, ORMs) dependen de reflexión profunda sobre tus propias clases; olvidar `opens` es la causa más común de que una aplicación que compila perfectamente falle en tiempo de ejecución al integrarla con JPMS.
+
+**Diagrama:**
+
+```java
+module com.miapp.dominio {
+    exports com.miapp.dominio;                                    // llamada directa desde otros módulos
+    opens com.miapp.dominio to com.fasterxml.jackson.databind;     // reflexión, solo para Jackson
+}
+```
+
 ---
 
 ## Laboratorio práctico
@@ -96,6 +118,7 @@ requires transitive: cuando un módulo expone tipos de otro módulo en su propia
 - **Exportar todos los paquetes de un módulo sin necesidad.** Exporta únicamente los paquetes que realmente forman parte de la API pública del módulo.
 - **Aplicar JPMS a un proyecto pequeño sin necesidad real.** Evalúa primero si el beneficio de límites arquitectónicos verificados justifica la ceremonia adicional.
 - **Intentar migrar todo el proyecto a JPMS de una sola vez.** Migra incrementalmente comenzando por los módulos "hoja".
+- **`InaccessibleObjectException` en tiempo de ejecución con un framework (Jackson, Hibernate, Spring) aunque el proyecto compile bien.** Al paquete le falta una declaración `opens` (además de `exports`): la reflexión que usan estos frameworks internamente necesita ese permiso adicional, independiente del acceso normal de compilación.
 
 ---
 
@@ -128,6 +151,16 @@ requires transitive: cuando un módulo expone tipos de otro módulo en su propia
 **Criterios de éxito:**
 - Explica correctamente el caso de exposición de tipos de un módulo dependiente en la API pública propia como razón para usar `requires transitive`.
 
+### Ejercicio 4: exports vs. opens
+
+**Enunciado:** tu módulo `exports com.miapp.dominio;` y compila sin errores, pero al integrar Jackson para serializar esas clases a JSON, la aplicación falla en tiempo de ejecución con `InaccessibleObjectException`. ¿Qué falta, y por qué `exports` no fue suficiente?
+
+**Solución esperada:** falta declarar `opens com.miapp.dominio to com.fasterxml.jackson.databind;` (o `opens` sin `to` si se acepta abrirlo a cualquier módulo). `exports` solo concede acceso de compilación y llamada directa entre módulos; el acceso reflexivo que Jackson necesita para inspeccionar y construir instancias de esas clases es una autorización independiente que solo otorga `opens`.
+
+**Criterios de éxito:**
+- Identifica `opens` (no una variante de `exports`) como la declaración faltante.
+- Explica que `exports` y `opens` conceden dos tipos de acceso distintos (compilación/llamada directa vs. reflexión).
+
 ---
 
 ## Resumen del módulo
@@ -138,12 +171,14 @@ requires transitive: cuando un módulo expone tipos de otro módulo en su propia
 - JPMS agrega encapsulación fuerte a nivel de módulo, más allá de los modificadores de acceso tradicionales.
 - La migración incremental comienza por los módulos "hoja" y sube progresivamente en el árbol de dependencias.
 - JPMS aporta valor real en proyectos grandes de larga vida, y suele ser complejidad innecesaria en proyectos pequeños.
+- `opens` concede acceso reflexivo a frameworks, independiente y adicional al acceso de compilación que da `exports`.
 
 **Conceptos aprendidos**
 
 - `module-info.java`, `exports` y `requires`.
 - Encapsulación fuerte entre módulos.
 - Migración incremental de proyectos legacy.
+- `opens` para acceso reflexivo de frameworks (Jackson, Hibernate, Spring).
 - Criterios para decidir cuándo JPMS aporta valor.
 
 **Próximos pasos**

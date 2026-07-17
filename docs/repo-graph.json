@@ -3999,7 +3999,7 @@
     },
     {
       "path": "web/public/content/java/modulo-10.md",
-      "lines": 156,
+      "lines": 191,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -4009,12 +4009,13 @@
         "## Contenido te\u00f3rico",
         "### Tema 1: module-info.java y encapsulaci\u00f3n fuerte",
         "### Tema 2: Migraci\u00f3n incremental y cu\u00e1ndo JPMS aporta valor",
+        "### Tema 3: `opens` para acceso reflexivo controlado de frameworks",
         "## Laboratorio pr\u00e1ctico",
         "## Ejercicios de evaluaci\u00f3n",
         "### Ejercicio 1: Encapsulaci\u00f3n adicional de JPMS",
         "### Ejercicio 2: Cu\u00e1ndo JPMS aporta valor",
         "### Ejercicio 3: requires transitive",
-        "## Resumen del m\u00f3dulo"
+        "### Ejercicio 4: exports vs. opens"
       ]
     },
     {
