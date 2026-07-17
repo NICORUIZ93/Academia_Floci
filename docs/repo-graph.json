@@ -2713,7 +2713,7 @@
     },
     {
       "path": "web/public/content/cloud/modulo-31.md",
-      "lines": 190,
+      "lines": 333,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -2724,12 +2724,12 @@
         "### Tema 1: Arquitectura multi-nube y portabilidad de conocimiento",
         "### Tema 2: Arquitectura interna de cloud local y su uso en CI/CD",
         "### Tema 3: Migraci\u00f3n desde otros emuladores, y l\u00edmites de un emulador",
+        "### Tema 4: Testcontainers \u2014 pruebas de integraci\u00f3n automatizadas",
         "## Laboratorio pr\u00e1ctico",
         "## Ejercicios de evaluaci\u00f3n",
         "### Ejercicio 1: Qu\u00e9 es transferible entre proveedores",
         "### Ejercicio 2: Qu\u00e9 fue fundamentalmente diferente entre los proveedores",
-        "### Ejercicio 3: Qu\u00e9 falta para pasar a producci\u00f3n en nube real",
-        "## Resumen del m\u00f3dulo"
+        "### Ejercicio 3: Qu\u00e9 falta para pasar a producci\u00f3n en nube real"
       ]
     },
     {

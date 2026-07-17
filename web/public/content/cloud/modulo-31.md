@@ -102,6 +102,139 @@ cloud local (1 único endpoint, AWS + Azure + GCP)
 Pero: cloud local = desarrollo/pruebas, SIEMPRE requiere validación final contra la nube real antes de producción
 ```
 
+### Tema 4: Testcontainers — pruebas de integración automatizadas
+
+**Conceptos clave:** módulo Testcontainers oficial por lenguaje, ciclo de vida gestionado automáticamente, sin puerto fijo ni contenedor persistente entre suites.
+
+Floci publica módulos Testcontainers propios para los lenguajes SDK principales: `io.floci:testcontainers-floci` en Maven Central (Java), `@floci/testcontainers` en npm (Node.js/TypeScript) y `testcontainers-floci` en PyPI (Python). Cada módulo expone una clase `FlociContainer` que envuelve la imagen `floci/floci:latest`: al arrancar, espera a que el puerto 4566 esté listo dentro del contenedor y expone cuatro métodos — `getEndpoint()`, `getRegion()`, `getAccessKey()` y `getSecretKey()` — que se pasan directamente al cliente del SDK que estés probando, sin variables de entorno ni configuración manual del endpoint.
+
+La diferencia frente a levantar Floci con `floci start` o Docker Compose (como hiciste en el resto del track) es el ciclo de vida: Testcontainers arranca un contenedor Floci **nuevo y aislado** para cada suite de pruebas (o para toda la sesión de pruebas, según el scope que elijas) y lo destruye automáticamente al terminar. Esto elimina dos problemas típicos de compartir un único Floci de larga duración entre suites de test: estado que se filtra de una prueba a otra (un bucket creado en el test A todavía existe cuando corre el test B), y conflictos de puerto cuando varias suites corren en paralelo (Testcontainers asigna un puerto de host aleatorio y disponible en cada arranque, expuesto vía `getEndpoint()`).
+
+**Ejemplo en Java (JUnit 5):**
+
+```java
+import io.floci.testcontainers.FlociContainer;
+import org.junit.jupiter.api.Test;
+import org.testcontainers.junit.jupiter.Container;
+import org.testcontainers.junit.jupiter.Testcontainers;
+import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
+import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
+import software.amazon.awssdk.regions.Region;
+import software.amazon.awssdk.services.s3.S3Client;
+
+import java.net.URI;
+
+import static org.assertj.core.api.Assertions.assertThat;
+
+@Testcontainers
+class S3IntegrationTest {
+
+    @Container
+    static FlociContainer floci = new FlociContainer();
+
+    @Test
+    void shouldCreateBucket() {
+        S3Client s3 = S3Client.builder()
+                .endpointOverride(URI.create(floci.getEndpoint()))
+                .region(Region.of(floci.getRegion()))
+                .credentialsProvider(StaticCredentialsProvider.create(
+                        AwsBasicCredentials.create(floci.getAccessKey(), floci.getSecretKey())))
+                .forcePathStyle(true)
+                .build();
+
+        s3.createBucket(b -> b.bucket("my-bucket"));
+
+        assertThat(s3.listBuckets().buckets())
+                .anyMatch(b -> b.name().equals("my-bucket"));
+    }
+}
+```
+
+**Ejemplo en Node.js (Jest):**
+
+```typescript
+import { FlociContainer } from "@floci/testcontainers";
+import { S3Client, CreateBucketCommand, ListBucketsCommand } from "@aws-sdk/client-s3";
+
+describe("S3", () => {
+    let floci: FlociContainer;
+
+    beforeAll(async () => {
+        floci = await new FlociContainer().start();
+    });
+
+    afterAll(async () => {
+        await floci.stop();
+    });
+
+    it("should create and list a bucket", async () => {
+        const s3 = new S3Client({
+            endpoint: floci.getEndpoint(),
+            region: floci.getRegion(),
+            credentials: {
+                accessKeyId: floci.getAccessKey(),
+                secretAccessKey: floci.getSecretKey(),
+            },
+            forcePathStyle: true,
+        });
+
+        await s3.send(new CreateBucketCommand({ Bucket: "my-bucket" }));
+
+        const { Buckets } = await s3.send(new ListBucketsCommand({}));
+        expect(Buckets?.some(b => b.Name === "my-bucket")).toBe(true);
+    });
+});
+```
+
+**Ejemplo en Python (pytest, fixture de sesión):**
+
+```python
+import pytest
+import boto3
+from testcontainers_floci import FlociContainer
+
+
+@pytest.fixture(scope="session")
+def floci():
+    with FlociContainer() as container:
+        yield container
+
+
+@pytest.fixture(scope="session")
+def s3_client(floci):
+    return boto3.client(
+        "s3",
+        endpoint_url=floci.get_endpoint(),
+        region_name=floci.get_region(),
+        aws_access_key_id=floci.get_access_key(),
+        aws_secret_access_key=floci.get_secret_key(),
+    )
+
+
+def test_create_bucket(s3_client):
+    s3_client.create_bucket(Bucket="my-bucket")
+    buckets = [b["Name"] for b in s3_client.list_buckets()["Buckets"]]
+    assert "my-bucket" in buckets
+```
+
+Fíjate en el patrón compartido por los tres lenguajes: el contenedor se declara una sola vez con alcance de sesión o de clase (`@Container static` en Java, `beforeAll`/`afterAll` en Jest, el fixture `scope="session"` en pytest), no dentro de cada test individual — arrancar un contenedor Docker por cada test sería innecesariamente lento. El módulo Go equivalente (`testcontainers-floci-go`) está en desarrollo activo en el momento de escribir esto; para Go, sigue usando el patrón manual del Módulo 1 (`floci start` + variables de entorno) en tus pruebas de integración.
+
+**Analogía:** un Floci levantado con `floci start` para desarrollo diario es como la cocina de tu propia casa: siempre está ahí, acumula lo que vas dejando en ella entre una comida y otra. Un Floci gestionado por Testcontainers es como una cocina de alquiler por horas que llega completamente limpia y vacía para cada evento, y se desmonta por completo al terminar — ideal precisamente porque ninguna prueba puede heredar por accidente algo que dejó la prueba anterior.
+
+**¿Por qué es importante?** Los módulos Testcontainers oficiales convierten "prueba de integración contra Floci" en una línea de configuración dentro del propio código de test, sin depender de que un Floci externo esté corriendo de antemano (ni en tu máquina ni en el runner de CI) ni de gestionar manualmente su ciclo de vida — el mismo patrón que ya usaste conceptualmente en el Módulo 9 al mencionar CI/CD, pero ahora con el contenedor arrancando y destruyéndose automáticamente alrededor de cada suite.
+
+**Diagrama:**
+
+```
+Sin Testcontainers:
+  CI arranca Floci manualmente → corren las suites → CI apaga Floci manualmente
+  (estado compartido entre suites, puerto fijo, arranque/apagado a mano)
+
+Con Testcontainers:
+  Suite A: FlociContainer.start() → prueba → stop()   (aislado, puerto aleatorio)
+  Suite B: FlociContainer.start() → prueba → stop()   (aislado, puerto aleatorio)
+```
+
 ---
 
 ## Laboratorio práctico
@@ -110,7 +243,7 @@ Pero: cloud local = desarrollo/pruebas, SIEMPRE requiere validación final contr
 
 **Objetivo del laboratorio:** construir una API completa con los mismos endpoints funcionando en AWS local, Azure local y GCP local.
 
-**Requisitos previos:** Módulos 0-20 completados.
+**Requisitos previos:** Módulos 0-30 completados.
 
 | Paso | Acción | Explicación |
 |---|---|---|
@@ -159,6 +292,16 @@ Pero: cloud local = desarrollo/pruebas, SIEMPRE requiere validación final contr
 **Criterios de éxito:**
 - Menciona correctamente la validación final contra el entorno real como el paso pendiente, con al menos una razón concreta de por qué el emulador no es suficiente por sí solo.
 
+### Ejercicio 4: Por qué Testcontainers arranca un contenedor nuevo por suite
+
+**Enunciado:** un compañero de equipo propone que, para ahorrar tiempo de CI, todas las suites de test compartan un único Floci ya arrancado de antemano (en vez de que cada suite arranque su propio `FlociContainer`). ¿Qué problema concreto puede introducir esa optimización, y en qué escenario sí sería aceptable?
+
+**Solución esperada:** compartir un único Floci de larga duración entre suites reintroduce fuga de estado entre pruebas (un bucket, cola o tabla creada por la suite A todavía existe cuando corre la suite B) y conflictos si varias suites corren en paralelo contra el mismo puerto fijo — exactamente los dos problemas que el ciclo de vida aislado de Testcontainers evita. Es aceptable como optimización deliberada cuando las suites son secuenciales, no paralelas, y las propias pruebas limpian explícitamente su estado al terminar (o usan namespaces/prefijos únicos por suite para evitar colisiones).
+
+**Criterios de éxito:**
+- Identifica la fuga de estado entre pruebas y/o los conflictos de puerto en paralelo como el riesgo concreto.
+- Reconoce al menos una condición bajo la cual compartir un Floci sería razonable.
+
 ---
 
 ## Resumen del módulo
@@ -182,7 +325,7 @@ Pero: cloud local = desarrollo/pruebas, SIEMPRE requiere validación final contr
 
 **Próximos pasos**
 
-Con el track de Cloud completo (módulos 0-21), los mismos principios arquitectónicos aprendidos aquí —serverless, colas y streams, bases de datos gestionadas, IaC, autenticación delegada, observabilidad— reaparecerán en cualquier proyecto real de backend que construyas, independientemente del proveedor cloud específico que uses en producción.
+Con el track de Cloud completo (módulos 0-31), los mismos principios arquitectónicos aprendidos aquí —serverless, colas y streams, bases de datos gestionadas, IaC, autenticación delegada, observabilidad— reaparecerán en cualquier proyecto real de backend que construyas, independientemente del proveedor cloud específico que uses en producción.
 
 **Recursos adicionales**
 
