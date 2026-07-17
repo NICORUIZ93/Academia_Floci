@@ -52,6 +52,11 @@ Este mismo patrón de "función suspend que envuelve una operación de red asín
 
 **¿Por qué es importante?** Retrofit + coroutines permite leer código de red de forma lineal y secuencial, sin el anidamiento de callbacks del Retrofit clásico, y comparte el mismo principio de "función suspend para operaciones asíncronas" que Ktor Client en KMP.
 
+**Casos de uso reales:**
+- Definir toda la API de un backend (login, tareas, perfil) como una única interfaz `ApiService` clara y testeable.
+- Llamar varios endpoints en paralelo desde un ViewModel usando `async`/`await` sobre funciones suspend de Retrofit.
+- Migrar código antiguo con callbacks anidados de Retrofit clásico a coroutines para simplificar el manejo de errores.
+
 **Diagrama:**
 
 ```kotlin
@@ -86,6 +91,11 @@ Un `ViewModel` que capture indiscriminadamente `Exception` genérica sin disting
 
 **¿Por qué es importante?** Sin modelar explícitamente el estado de error (y sus categorías), la app no puede comunicar al usuario si el problema es su conexión o un error del servidor, ni decidir automáticamente si vale la pena reintentar la operación.
 
+**Casos de uso reales:**
+- Mostrar "Revisa tu conexión a internet" específicamente ante un `IOException`, con un botón de reintentar.
+- Mostrar "Sesión expirada, inicia sesión de nuevo" específicamente ante un `HttpException` con código 401.
+- Reintentar automáticamente hasta 3 veces ante errores de red transitorios, sin reintentar ante un 404 definitivo.
+
 **Diagrama:**
 
 ```
@@ -115,6 +125,11 @@ El orden en que se registran los interceptores importa: un interceptor de autent
 **Analogía:** un interceptor de OkHttp es como una estación de control aduanero por la que pasa obligatoriamente cada paquete que entra o sale de un país, aplicando el mismo sello o etiqueta a todos los paquetes sin que el remitente individual tenga que solicitarlo explícitamente en cada envío.
 
 **¿Por qué es importante?** Los interceptores centralizan transformaciones transversales (logging, autenticación) en un único punto, evitando duplicar esa lógica en cada llamada individual de la API, el mismo principio que los interceptores de HttpClient en Angular.
+
+**Casos de uso reales:**
+- Agregar el header `Authorization: Bearer <token>` a todas las llamadas de la API sin tocar cada endpoint individual.
+- Loguear cuerpo completo de request/response solo en builds de debug, desactivado automáticamente en producción.
+- Renovar un token expirado interceptando una respuesta 401 y reintentando la petición original una vez renovado.
 
 **Diagrama:**
 

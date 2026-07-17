@@ -2223,7 +2223,7 @@
     },
     {
       "path": "web/public/content/android/modulo-0.md",
-      "lines": 202,
+      "lines": 217,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -2244,7 +2244,7 @@
     },
     {
       "path": "web/public/content/android/modulo-1.md",
-      "lines": 191,
+      "lines": 206,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -2265,7 +2265,7 @@
     },
     {
       "path": "web/public/content/android/modulo-10.md",
-      "lines": 187,
+      "lines": 202,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -2286,7 +2286,7 @@
     },
     {
       "path": "web/public/content/android/modulo-11.md",
-      "lines": 206,
+      "lines": 221,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -2307,7 +2307,7 @@
     },
     {
       "path": "web/public/content/android/modulo-12.md",
-      "lines": 202,
+      "lines": 217,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -2328,7 +2328,7 @@
     },
     {
       "path": "web/public/content/android/modulo-2.md",
-      "lines": 202,
+      "lines": 217,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -2349,7 +2349,7 @@
     },
     {
       "path": "web/public/content/android/modulo-3.md",
-      "lines": 210,
+      "lines": 225,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -2370,7 +2370,7 @@
     },
     {
       "path": "web/public/content/android/modulo-4.md",
-      "lines": 208,
+      "lines": 223,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -2391,7 +2391,7 @@
     },
     {
       "path": "web/public/content/android/modulo-5.md",
-      "lines": 208,
+      "lines": 223,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -2412,7 +2412,7 @@
     },
     {
       "path": "web/public/content/android/modulo-6.md",
-      "lines": 213,
+      "lines": 228,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -2433,7 +2433,7 @@
     },
     {
       "path": "web/public/content/android/modulo-7.md",
-      "lines": 209,
+      "lines": 224,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -2454,7 +2454,7 @@
     },
     {
       "path": "web/public/content/android/modulo-8.md",
-      "lines": 205,
+      "lines": 220,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -2475,7 +2475,7 @@
     },
     {
       "path": "web/public/content/android/modulo-9.md",
-      "lines": 212,
+      "lines": 227,
       "kind": "course-content",
       "symbols": [],
       "imports": [],

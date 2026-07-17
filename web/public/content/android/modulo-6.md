@@ -59,6 +59,11 @@ Este mismo patrón de "esquema tipado con generación de código en tiempo de co
 
 **¿Por qué es importante?** Room verifica las queries SQL en tiempo de compilación, detectando errores antes de ejecutar la app, y comparte el mismo principio de SQL tipado que SQLDelight en Kotlin Multiplatform, aunque específico para Android.
 
+**Casos de uso reales:**
+- Caché local de tareas descargadas de la API, consultable instantáneamente sin esperar a la red.
+- Historial de búsquedas recientes guardado en una tabla `Busqueda` local.
+- Borrador de un formulario largo persistido en Room para no perderlo si la app se cierra a medias.
+
 **Diagrama:**
 
 ```kotlin
@@ -92,6 +97,11 @@ A medida que el esquema de la app evoluciona (agregar una columna nueva a una ta
 
 **¿Por qué es importante?** Un DAO que devuelve `Flow` mantiene la UI sincronizada automáticamente con los cambios en la base de datos, sin consultas manuales repetidas; las migraciones permiten evolucionar el esquema sin perder los datos ya almacenados en el dispositivo del usuario.
 
+**Casos de uso reales:**
+- Una lista de tareas que se actualiza visualmente en el instante en que se inserta una nueva, sin refrescar manualmente.
+- Agregar una columna `prioridad` a la tabla `Tarea` en una nueva versión de la app sin borrar tareas existentes del usuario.
+- Sincronizar cambios entre dos pantallas distintas que observan la misma tabla, sin comunicarlas explícitamente entre sí.
+
 **Diagrama:**
 
 ```
@@ -120,6 +130,11 @@ Esta estrategia mejora la experiencia de usuario incluso en condiciones de buena
 **Analogía:** offline-first es como un noticiero que siempre muestra las últimas noticias impresas disponibles en el momento (el caché local), mientras un equipo de reporteros trabaja en segundo plano recabando noticias más recientes para la próxima actualización, en vez de dejar la pantalla completamente en blanco cada vez que se espera la llegada de una noticia nueva desde el terreno.
 
 **¿Por qué es importante?** Offline-first mejora la experiencia incluso con buena conexión (datos instantáneos desde el caché local mientras la sincronización ocurre en background) y mantiene la app funcional incluso sin conexión a internet, en vez de depender directamente y de forma bloqueante de la red en cada renderizado.
+
+**Casos de uso reales:**
+- Una app de notas que sigue siendo completamente usable en un vuelo sin wifi, mostrando lo último sincronizado.
+- Un feed de noticias que carga instantáneamente desde caché al abrir la app, mientras sincroniza en segundo plano.
+- Una app de campo (inventario, inspecciones) usada en zonas con cobertura intermitente, que nunca bloquea al usuario.
 
 **Diagrama:**
 

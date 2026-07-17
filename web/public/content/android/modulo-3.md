@@ -50,6 +50,11 @@ Cada destino en el grafo se identifica por una ruta con formato de string (simil
 
 **¿Por qué es importante?** Declarar el grafo de navegación completo de antemano, en vez de gestionar transiciones imperativas dispersas por el código, centraliza la estructura de navegación de la app y permite que el sistema gestione automáticamente el historial (back stack) sin código adicional.
 
+**Casos de uso reales:**
+- Navegar de una lista de tareas a su detalle al tocar un ítem, con el botón atrás regresando automáticamente a la lista.
+- Documentar de un vistazo todas las pantallas de la app leyendo el grafo declarado en `NavHost`.
+- Añadir una nueva pantalla al flujo sin tocar el código de navegación de las pantallas existentes.
+
 **Diagrama:**
 
 ```kotlin
@@ -85,6 +90,11 @@ Un deep link mapea una URI externa (que puede llegar desde una notificación pus
 
 **¿Por qué es importante?** Los argumentos tipados evitan errores de conversión manual y hacen explícito el contrato de cada ruta; los deep links permiten que entradas externas (notificaciones, links) lleven al usuario directamente a la pantalla relevante, mejorando significativamente la experiencia percibida.
 
+**Casos de uso reales:**
+- Tocar una notificación push de "nuevo comentario" y aterrizar directamente en el detalle de esa tarea específica.
+- Compartir un link de una tarea (`miapp://tarea/42`) que abre la app directamente en esa pantalla si está instalada.
+- Pasar un ID de usuario tipado entre pantallas de perfil sin arriesgar un `ClassCastException` en tiempo de ejecución.
+
 **Diagrama:**
 
 ```kotlin
@@ -116,6 +126,11 @@ Esta necesidad de stacks independientes por sección es un patrón extremadament
 **Analogía:** stacks de navegación independientes por sección son como tener un marcador de página distinto para cada uno de varios libros que se están leyendo simultáneamente: cambiar de libro (sección) y volver preserva exactamente la página donde se quedó cada uno, en vez de que todos compartan un único marcador que se mueve de forma confusa entre libros distintos.
 
 **¿Por qué es importante?** Cada sección de una bottom navigation suele necesitar su propio stack independiente para que cambiar entre secciones no pierda el contexto de navegación profundo dentro de cada una, cumpliendo con una expectativa de UX ya establecida en apps móviles.
+
+**Casos de uso reales:**
+- Una app de e-commerce donde el usuario navega profundo en "Categorías", cambia a "Carrito" y al volver sigue donde estaba.
+- Una app bancaria con pestañas "Cuentas", "Tarjetas", "Más" que preservan el historial de cada una independientemente.
+- Evitar el bug de UX de perder el scroll y la pantalla actual al tocar dos veces la misma pestaña por accidente.
 
 **Diagrama:**
 

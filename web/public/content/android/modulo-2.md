@@ -50,6 +50,11 @@ Este modelo es conceptualmente idéntico al de React (Módulo 2 del track de Rea
 
 **¿Por qué es importante?** Entender que un composable se recompone en respuesta a cambios en sus parámetros de entrada es la base para razonar sobre cuándo y por qué se actualiza la UI, y para diagnosticar recomposiciones innecesarias más adelante (Módulo 10).
 
+**Casos de uso reales:**
+- Una tarjeta de producto que tacha el precio automáticamente cuando `enOferta` cambia, sin lógica manual de refresco.
+- Un contador de notificaciones que se actualiza en la barra superior en cuanto cambia el `StateFlow` que observa (Módulo 4).
+- Depurar por qué una lista completa se redibuja innecesariamente al cambiar un solo ítem, usando el Layout Inspector (Módulo 10).
+
 **Diagrama:**
 
 ```kotlin
@@ -85,6 +90,11 @@ Este mismo principio de "el estado vive arriba, los hijos son funciones puras qu
 
 **¿Por qué es importante?** Elevar el estado hace que el componente hijo sea reutilizable y testeable de forma aislada, y establece el mismo principio de flujo unidireccional que se generalizará a nivel de pantalla completa en el Módulo 4 con `StateFlow`.
 
+**Casos de uso reales:**
+- Reutilizar el mismo `CampoTitulo` en un formulario de crear tarea y en uno de editar tarea, sin duplicar el composable.
+- Testear `CampoTitulo` en un test de UI (Módulo 9) pasándole valores fijos, sin necesitar la pantalla completa.
+- Sincronizar la validación de un campo con el ViewModel, ya que el estado real vive fuera del composable hijo.
+
 **Diagrama:**
 
 ```kotlin
@@ -110,6 +120,11 @@ Para el layout, Compose ofrece tres contenedores fundamentales que se combinan p
 **Analogía:** `remember` es como una nota escrita en una pizarra que se borra si la sala se remodela por completo (rotación); `rememberSaveable` es como esa misma nota fotografiada y guardada aparte, de modo que puede volver a escribirse en la pizarra nueva tras la remodelación.
 
 **¿Por qué es importante?** Elegir entre `remember` y `rememberSaveable` según si el estado debe o no sobrevivir a una rotación es una decisión constante en Compose; los tres contenedores de layout (`Column`, `Row`, `Box`) son la base combinable de prácticamente cualquier estructura visual en la app.
+
+**Casos de uso reales:**
+- Usar `rememberSaveable` en el texto que el usuario está escribiendo en un formulario, para no perderlo al rotar el teléfono.
+- Usar `remember` simple para un estado puramente visual (si un tooltip está expandido) que no importa perder al rotar.
+- Construir una pantalla de perfil combinando `Column` (secciones verticales) y `Row` (avatar + nombre lado a lado).
 
 **Diagrama:**
 

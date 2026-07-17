@@ -45,6 +45,11 @@ Por defecto, Android **destruye y recrea completamente** la Activity cuando ocur
 
 **¿Por qué es importante?** Conocer el orden exacto del ciclo de vida determina cuándo es seguro iniciar o liberar recursos costosos, y entender que una rotación destruye y recrea la Activity por defecto explica por qué el estado simple se pierde al rotar, motivando la necesidad de `ViewModel`.
 
+**Casos de uso reales:**
+- Iniciar la cámara o el GPS en `onResume` y liberarlos en `onPause` para no drenar batería en segundo plano.
+- Pausar la reproducción de un video al salir de la pantalla (`onStop`) y reanudarla al volver (`onStart`).
+- Diagnosticar el bug clásico de "se resetea el formulario al rotar" identificando dónde vive el estado perdido.
+
 **Diagrama:**
 
 ```
@@ -74,6 +79,11 @@ Esta supervivencia tiene un límite claro y bien definido: el `ViewModelStore` s
 
 **¿Por qué es importante?** Un `ViewModel` sobrevive a rotación porque Android preserva deliberadamente el `ViewModelStore` a través de recreaciones por cambio de configuración, pero no sobrevive a que el sistema mate el proceso completo por falta de memoria, un escenario más agresivo que requiere una capa adicional de persistencia.
 
+**Casos de uso reales:**
+- Mantener la lista de tareas ya cargada de red visible tras rotar el dispositivo, sin volver a pedirla al servidor.
+- Conservar el estado de scroll y los filtros aplicados en una lista al girar la pantalla.
+- Compartir un mismo `ViewModel` entre varios composables de una misma pantalla sin pasar el estado manualmente entre ellos.
+
 **Diagrama:**
 
 ```
@@ -100,6 +110,11 @@ Esta distinción entre los dos niveles de supervivencia importa en la práctica 
 **Analogía:** `SavedStateHandle` es como una nota adhesiva que un huésped deja pegada en su propia maleta antes de salir del hotel, de modo que incluso si el hotel entero se demuele y se reconstruye desde cero en el mismo terreno, esa nota específica (el estado guardado) puede recuperarse y volver a colocarse en la maleta del huésped al regresar, a diferencia del registro completo de la recepción que sí se pierde con la demolición.
 
 **¿Por qué es importante?** `SavedStateHandle` sobrevive a un escenario más agresivo (muerte completa del proceso) que un `ViewModel` normal (que solo sobrevive rotación), por lo que conviene reservarlo específicamente para datos pequeños que afectan la continuidad percibida por el usuario al reabrir la app.
+
+**Casos de uso reales:**
+- Restaurar el paso actual de un formulario multi-pantalla si el sistema mata la app en background y el usuario vuelve horas después.
+- Recordar el término de búsqueda escrito para no perderlo si Android recicla el proceso por falta de memoria.
+- Guardar el ID del ítem seleccionado en una lista para reabrir exactamente ese detalle tras una interrupción del sistema.
 
 **Diagrama:**
 

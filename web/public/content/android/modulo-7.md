@@ -50,6 +50,11 @@ Este enfoque resuelve un problema de acoplamiento concreto: sin inyección de de
 
 **¿Por qué es importante?** Hilt resuelve el acoplamiento de que cada clase deba conocer cómo construir sus propias dependencias, centralizando ese conocimiento y permitiendo cambiar implementaciones (por ejemplo, para tests) sin modificar el código que las consume.
 
+**Casos de uso reales:**
+- Inyectar `TareaRepository` en varios ViewModels sin que ninguno sepa si internamente usa Retrofit, Room o ambos.
+- Cambiar de un backend REST a GraphQL reemplazando solo el módulo de red, sin tocar los ViewModels consumidores.
+- Reducir el boilerplate de construir manualmente un grafo de 10+ dependencias interconectadas en una app grande.
+
 **Diagrama:**
 
 ```kotlin
@@ -91,6 +96,11 @@ abstract class RepositoryModule {
 
 **¿Por qué es importante?** `@Provides` permite construir dependencias externas no anotables directamente; `@Binds` mapea eficientemente una interfaz a su implementación cuando esta última ya es constructible por Hilt, manteniendo el resto de la app desacoplado de la implementación concreta.
 
+**Casos de uso reales:**
+- Proveer una instancia única de `Retrofit` o `AppDatabase` (Room) compartida por toda la app con `@Provides` + `@Singleton`.
+- Mapear `TareaRepository` a `TareaRepositoryImpl` con `@Binds`, cambiando la implementación real sin tocar consumidores.
+- Proveer un `OkHttpClient` configurado con los interceptores del Módulo 5 de forma centralizada para toda la app.
+
 **Diagrama:**
 
 ```kotlin
@@ -115,6 +125,11 @@ class TareasFlowTest { /* ... */ }
 **Analogía:** los scopes de Hilt son como distintos tipos de contrato de alquiler: uno de larga duración para toda la vida del edificio (`@Singleton`), y uno de corto plazo que se renueva junto con cada inquilino específico (`@ViewModelScoped`); `@UninstallModules` es como reemplazar temporalmente el proveedor real de un servicio por un proveedor de práctica durante un simulacro, sin que el resto de la organización note ningún cambio en su forma de solicitar ese servicio.
 
 **¿Por qué es importante?** Elegir el scope correcto evita recrear objetos costosos innecesariamente o retenerlos más tiempo del necesario; `@UninstallModules` permite testear con dependencias fake sin modificar el código de producción bajo prueba.
+
+**Casos de uso reales:**
+- Marcar `AppDatabase` como `@Singleton` para evitar abrir múltiples conexiones a la misma base de datos SQLite.
+- Reemplazar `NetworkModule` por un módulo de test que apunta a un servidor de pruebas (o a Floci, Módulo 1 del track Cloud) en tests instrumentados.
+- Detectar en code review un `@Singleton` innecesario en una dependencia que debería vivir solo mientras dura una pantalla.
 
 **Diagrama:**
 

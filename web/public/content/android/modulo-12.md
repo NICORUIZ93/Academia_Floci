@@ -51,6 +51,11 @@ La clave de esta arquitectura es que cada capa tiene una única responsabilidad 
 
 **¿Por qué es importante?** Integrar cada módulo del track en una única arquitectura demuestra que los conceptos estudiados por separado (state hoisting, UDF, offline-first, DI, testing) se combinan naturalmente en un sistema real, con cada capa testeable y reemplazable de forma independiente gracias a la separación estricta de responsabilidades.
 
+**Casos de uso reales:**
+- Una app de gestión de tareas real publicada en Play Store siguiendo exactamente esta arquitectura MVVM + UDF.
+- Onboarding de un desarrollador nuevo al equipo, que entiende el flujo completo con un solo diagrama de capas.
+- Estimar el impacto de un cambio (agregar una nueva pantalla) sabiendo exactamente qué capas modificar.
+
 **Diagrama:**
 
 ```
@@ -87,6 +92,11 @@ Esta ausencia total de instanciación manual es lo que permite que, en el módul
 
 **¿Por qué es importante?** La ausencia total de instanciación manual, lograda mediante Hilt en cada capa, es precisamente lo que habilita que el sistema completo sea testeable de forma aislada reemplazando dependencias por fakes sin tocar el código de producción.
 
+**Casos de uso reales:**
+- Reemplazar `TareaRepository` real por un fake en todos los tests de ViewModels sin modificar ningún ViewModel.
+- Cambiar la implementación de red de Retrofit a Ktor Client (Módulo 5 de KMP) sin tocar ViewModels ni UI.
+- Auditar en code review que ningún composable o ViewModel instancia `Retrofit`/`Room` directamente con `new`.
+
 **Diagrama:**
 
 ```kotlin
@@ -107,6 +117,11 @@ Reflexionar sobre qué parte específica de este proyecto integrador (Compose, R
 **Analogía:** una app Android completa es como un edificio terminado que no solo se ve bien en la fachada (Compose), sino que además tiene cimientos sólidos que resisten condiciones adversas (offline-first), una instalación eléctrica y de plomería bien organizada y documentada (DI con Hilt), y un historial de inspecciones que certifica su seguridad estructural antes de habilitarlo al público (testing antes de publicar).
 
 **¿Por qué es importante?** Cerrar el track integrando todos los conceptos en un proyecto real consolida que una app profesional requiere la combinación de flujo de datos predecible, resiliencia offline, desacoplamiento testeable, y una base de tests confiable, no solo una UI visualmente atractiva.
+
+**Casos de uso reales:**
+- Evaluar en una entrevista técnica si un candidato entiende por qué offline-first y testing importan tanto como el diseño visual.
+- Decidir si escalar la app a un proyecto Gradle multi-módulo por feature al llegar a diez pantallas (Módulo 0).
+- Usar este proyecto integrador como plantilla de referencia para el siguiente proyecto Android real del equipo.
 
 **Diagrama:**
 

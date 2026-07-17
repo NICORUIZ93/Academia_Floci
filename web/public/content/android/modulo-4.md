@@ -51,6 +51,11 @@ El patrón `_estado` privado mutable (`MutableStateFlow`) expuesto públicamente
 
 **¿Por qué es importante?** `StateFlow` garantiza un valor actual siempre disponible, apropiado para representar el estado de una pantalla completa; la convención de exponerlo como mutable privado y de solo lectura público refuerza la dirección única del flujo de datos (UDF).
 
+**Casos de uso reales:**
+- Estado de carga/éxito/error de una lista de tareas que la UI observa y renderiza sin lógica adicional.
+- Estado del carrito de compras en una app de e-commerce, consultable en cualquier momento desde cualquier pantalla.
+- Contador de elementos no leídos que cualquier pantalla puede observar con el valor correcto desde el primer instante.
+
 **Diagrama:**
 
 ```kotlin
@@ -88,6 +93,11 @@ UDF (Unidirectional Data Flow) es el principio arquitectónico que generaliza el
 
 **¿Por qué es importante?** `collectAsStateWithLifecycle` evita desperdiciar recursos recolectando actualizaciones mientras la UI no es visible; UDF hace que el flujo de datos de toda la pantalla sea predecible y fácil de razonar, con una única fuente de verdad (el `ViewModel`) controlando todos los cambios de estado.
 
+**Casos de uso reales:**
+- Ahorrar batería pausando la recolección de un `StateFlow` de ubicación en tiempo real cuando la app pasa a background.
+- Depurar un bug de "estado inconsistente" verificando que ningún composable mute el `StateFlow` directamente, violando UDF.
+- Onboarding de un desarrollador nuevo al equipo explicando el flujo con una sola regla: clicks bajan, estado sube.
+
 **Diagrama:**
 
 ```
@@ -115,6 +125,11 @@ Un evento como "mostrar un Snackbar" tiene una naturaleza fundamentalmente disti
 **Analogía:** `StateFlow` es como un letrero permanente que muestra el estado actual de un semáforo (cualquiera que lo mire en cualquier momento ve el color vigente); `SharedFlow` para eventos es como el sonido de una campana que suena una única vez en el momento exacto del evento — quien no estaba escuchando en ese instante simplemente no la escucha, y no hay forma de "recuperar" ese sonido pasado consultando en un momento posterior.
 
 **¿Por qué es importante?** Modelar un evento de "mostrar Snackbar" con `SharedFlow` en vez de `StateFlow` evita que ese evento se repita incorrectamente en una recomposición posterior, dado que `SharedFlow` no retiene un "último valor" que un nuevo observador recibiría automáticamente.
+
+**Casos de uso reales:**
+- Mostrar un Snackbar de "Tarea guardada" exactamente una vez, sin que reaparezca al rotar la pantalla.
+- Disparar una navegación de un solo uso ("ir a la pantalla de éxito") tras completar un pago.
+- Emitir un evento de error puntual de red que se muestra una vez, sin quedar "pegado" como estado persistente.
 
 **Diagrama:**
 

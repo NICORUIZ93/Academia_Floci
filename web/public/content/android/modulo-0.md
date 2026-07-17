@@ -41,6 +41,11 @@ El archivo `build.gradle.kts` de cada módulo declara sus dependencias (librerí
 
 **¿Por qué es importante?** Entender esta estructura desde el primer módulo evita la confusión común de "dónde va cada cosa" que ralentiza a cualquier desarrollador nuevo en Android, y prepara el terreno para conceptos posteriores (recursos localizados, módulos Gradle separados por feature) que dependen directamente de esta organización.
 
+**Casos de uso reales:**
+- Ubicar rápidamente dónde vive un string, un color o un composable al incorporarte a un proyecto Android existente.
+- Añadir una nueva dependencia (Retrofit, Room, Módulos 5-6) sabiendo exactamente en qué `build.gradle.kts` declararla.
+- Separar `app/` de `core/` desde el día uno para que el proyecto escale sin reorganizaciones dolorosas después.
+
 **Diagrama:**
 
 ```
@@ -75,6 +80,11 @@ Este mismo mecanismo de "resolución automática según configuración" se extie
 
 **¿Por qué es importante?** Externalizar recursos evita duplicación de texto, habilita traducción sin tocar código Kotlin, y permite que Android resuelva automáticamente variantes (idioma, modo oscuro, densidad de pantalla) según la configuración del dispositivo del usuario.
 
+**Casos de uso reales:**
+- Lanzar la misma app en varios países agregando `values-es/`, `values-pt/` sin recompilar la lógica.
+- Soportar modo oscuro real (no solo colores invertidos) con `values-night/` para textos e imágenes que también cambian.
+- Corregir un error tipográfico reportado por QA editando una sola línea en `strings.xml` en vez de buscarlo en 20 composables.
+
 **Diagrama:**
 
 ```xml
@@ -108,6 +118,11 @@ Un proyecto Gradle multi-módulo divide la aplicación en unidades de compilaci�
 **Analogía:** el AndroidManifest.xml es como el formulario de aduana que se completa antes de que un envío cruce la frontera: declara de antemano qué contiene el paquete (componentes), qué permisos especiales necesita (permisos sensibles), y cómo identificarlo (ícono, nombre), permitiendo que la aduana (el sistema operativo) tome decisiones antes de que el contenido real llegue a su destino.
 
 **¿Por qué es importante?** El manifiesto es el contrato que el sistema operativo lee antes de instalar o ejecutar la app; los módulos Gradle establecen límites explícitos de compilación que se vuelven cada vez más valiosos a medida que el proyecto crece.
+
+**Casos de uso reales:**
+- Declarar el permiso `CAMERA` en el manifiesto antes de poder pedirlo en tiempo de ejecución al usuario.
+- Dividir una app grande en `:feature-login`, `:feature-tareas` para que un cambio en uno no recompile todo el proyecto.
+- Revisar el manifiesto al hacer code review de seguridad para verificar qué componentes están `exported="true"` innecesariamente.
 
 **Diagrama:**
 

@@ -52,6 +52,11 @@ Anotar una clase de datos con `@Stable` o `@Immutable` le comunica explícitamen
 
 **¿Por qué es importante?** Identificar y corregir causas de recomposición innecesaria (como lambdas recreadas) mejora directamente el rendimiento percibido de la app, especialmente en pantallas con scroll o listas largas donde recomposiciones excesivas son más perceptibles.
 
+**Casos de uso reales:**
+- Diagnosticar por qué una `LazyColumn` de cientos de ítems tiene scroll con tirones (jank) usando el Layout Inspector.
+- Marcar un modelo de UI con `@Immutable` para que Compose optimice agresivamente una lista que rara vez cambia.
+- Reemplazar lambdas inline por referencias de método en botones dentro de listas largas y medir la mejora real.
+
 **Diagrama:**
 
 ```kotlin
@@ -70,6 +75,11 @@ Un Baseline Profile precompila ahead-of-time (AOT) las rutas de código más usa
 **Analogía:** un Baseline Profile es como precalentar un horno antes de que lleguen los primeros clientes de un restaurante, en vez de esperar a que el primer pedido dispare el proceso de calentamiento desde frío; `DisposableEffect` es como la instrucción de apagar las luces y cerrar la puerta al final del turno, ejecutada automáticamente sin que el empleado deba recordarlo manualmente cada vez.
 
 **¿Por qué es importante?** Un Baseline Profile mejora directamente el tiempo de arranque percibido por el usuario; los efectos (`SideEffect`, `DisposableEffect`, `rememberUpdatedState`) son las herramientas correctas para sincronizar Compose con sistemas externos sin fugas de recursos ni closures obsoletos.
+
+**Casos de uso reales:**
+- Generar un Baseline Profile para acelerar el arranque en frío de la app tras una instalación nueva desde Play Store.
+- Usar `DisposableEffect` para registrar y desregistrar un listener de sensores (acelerómetro, GPS) sin fugas de memoria.
+- Usar `rememberUpdatedState` en un `LaunchedEffect` de larga duración que necesita el callback más reciente sin reiniciarse.
 
 **Diagrama:**
 
@@ -93,6 +103,11 @@ Un elemento interactivo sin texto visible (un ícono usado como botón) requiere
 **Analogía:** la accesibilidad es como instalar rampas y señalización en braille en un edificio público: no es un adorno opcional sino un requisito para que el edificio sea genuinamente utilizable por todos sus visitantes potenciales, no solo por quienes no tienen ninguna limitación física.
 
 **¿Por qué es importante?** La accesibilidad no es "opcional" sino parte del estándar de una app profesional, dado que excluye a usuarios reales con discapacidades visuales u otras si se omite; `AndroidView`/`ComposeView` permiten una migración incremental entre los dos sistemas de UI sin reescribir la app completa de golpe.
+
+**Casos de uso reales:**
+- Auditar una app con TalkBack activado antes de un release y corregir íconos sin `contentDescription`.
+- Embeber un `MapView` clásico de Google Maps (sin versión Compose nativa) dentro de una pantalla Compose con `AndroidView`.
+- Migrar progresivamente una app grande basada en Views clásicas a Compose, pantalla por pantalla, sin un rewrite completo.
 
 **Diagrama:**
 

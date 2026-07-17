@@ -54,6 +54,11 @@ La garantía fundamental de WorkManager, que un simple `coroutineScope.launch { 
 
 **¿Por qué es importante?** WorkManager garantiza que un trabajo eventualmente se ejecute incluso si el proceso de la app termina, una garantía que un coroutine lanzado directamente desde la UI no ofrece, dado que se cancela junto con el ciclo de vida del componente que lo lanzó.
 
+**Casos de uso reales:**
+- Subir fotos o archivos adjuntos pendientes aunque el usuario cierre la app antes de que termine la subida.
+- Sincronizar cambios locales offline-first (Módulo 6) con el servidor en cuanto haya conexión disponible.
+- Procesar y comprimir un video grande en background sin bloquear la UI ni depender de que la app siga abierta.
+
 **Diagrama:**
 
 ```kotlin
@@ -88,6 +93,11 @@ Quince minutos es el intervalo **mínimo** que Android permite configurar para t
 
 **¿Por qué es importante?** Las constraints evitan que WorkManager ejecute trabajo en momentos inoportunos para el dispositivo (sin red, con batería crítica), priorizando la salud general del dispositivo sobre la puntualidad exacta del trabajo en segundo plano.
 
+**Casos de uso reales:**
+- Sincronizar solo por wifi (`NetworkType.UNMETERED`) para no consumir datos móviles del usuario sin avisar.
+- Postergar backups automáticos de fotos hasta que el dispositivo esté cargando y con batería suficiente.
+- Ejecutar limpieza de caché periódica cada 15-30 minutos sin afectar la duración de la batería del usuario.
+
 **Diagrama:**
 
 ```kotlin
@@ -113,6 +123,11 @@ Verificar con `adb shell dumpsys jobscheduler` (o la herramienta de inspección 
 **Analogía:** una notificación desde background work es como un mensaje de texto automático que confirma la entrega de un paquete, enviado independientemente de si el destinatario está revisando activamente el estado del envío o no, permitiéndole enterarse del resultado sin tener que consultar manualmente.
 
 **¿Por qué es importante?** Las notificaciones desde background work comunican resultados relevantes al usuario sin requerir que abra la app activamente, y verificar la persistencia del trabajo tras cerrar la app confirma en la práctica la garantía central de WorkManager.
+
+**Casos de uso reales:**
+- Notificar "Backup completado" tras sincronizar fotos exitosamente en segundo plano durante la noche.
+- Avisar al usuario que una descarga grande falló y necesita reintentarse manualmente con mejor conexión.
+- Confirmar que un pedido se procesó correctamente aunque el usuario haya cerrado la app tras confirmarlo.
 
 **Diagrama:**
 

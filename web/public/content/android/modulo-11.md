@@ -54,6 +54,11 @@ Perder la keystore original de una app ya publicada es un problema grave y en gr
 
 **¿Por qué es importante?** La firma verifica que las actualizaciones futuras provienen del mismo desarrollador original; perder la keystore es en gran medida irreversible y puede forzar a republicar la app desde cero, perdiendo todo el historial acumulado.
 
+**Casos de uso reales:**
+- Configurar el CI (Fastlane, Módulo 10 de Kotlin Multiplatform) para firmar automáticamente cada build de release.
+- Guardar una copia de respaldo segura de la keystore en un gestor de secretos de la empresa, no en el laptop de una sola persona.
+- Rotar las credenciales de firma tras la salida de un desarrollador que tenía acceso a ellas.
+
 **Diagrama:**
 
 ```kotlin
@@ -80,6 +85,11 @@ Este modelo de "un artefacto de build, múltiples artefactos de distribución op
 **Analogía:** un App Bundle es como enviar el molde maestro completo de un producto a un centro de distribución que fabrica localmente la versión exacta que cada tienda regional necesita (el idioma, el empaque, las especificaciones locales), en vez de fabricar de antemano una única versión universal que deba contener todas las variantes posibles simultáneamente, aumentando innecesariamente su tamaño y costo de envío.
 
 **¿Por qué es importante?** Google Play requiere un App Bundle en vez de un APK universal porque permite generar APKs optimizados por dispositivo a partir de un único artefacto, reduciendo el tamaño de descarga real para cada usuario sin trasladar esa responsabilidad de optimización al desarrollador.
+
+**Casos de uso reales:**
+- Reducir el tamaño de descarga de una app con recursos en 10 idiomas, entregando solo el idioma del dispositivo del usuario.
+- Auditar el tamaño real de descarga por configuración con el Android Studio App Bundle Explorer antes de un release.
+- Detectar que un recurso pesado innecesario se incluye en todas las variantes por un error de configuración del bundle.
 
 **Diagrama:**
 
@@ -115,6 +125,11 @@ Cada track de Play Console permite validar la app progresivamente con un grupo c
 **Analogía:** `versionCode` es como el número de serie interno incremental de un producto industrial, usado por la fábrica para rastrear inequívocamente cuál lote es más reciente; `versionName` es como el nombre comercial de la versión que ve el consumidor en la caja; los tracks de Play son como fases sucesivas de un ensayo clínico (grupo pequeño controlado, grupo intermedio, público general), cada una reduciendo el riesgo antes de la aprobación completa.
 
 **¿Por qué es importante?** `versionCode` y `versionName` cumplen roles distintos (ordenamiento técnico interno vs comunicación legible al usuario); los tracks de Play Console permiten detectar problemas con impacto limitado antes del lanzamiento completo; las políticas de Play pueden causar rechazo o suspensión incluso después de una publicación inicial exitosa.
+
+**Casos de uso reales:**
+- Publicar una nueva versión mayor primero a "Pruebas cerradas" con el equipo interno antes de exponerla a producción.
+- Detectar un crash específico de un fabricante de dispositivo concreto en pruebas abiertas antes del rollout completo.
+- Revisar la sección Data Safety antes de cada release para evitar un rechazo automático de Play por permisos no declarados.
 
 **Diagrama:**
 

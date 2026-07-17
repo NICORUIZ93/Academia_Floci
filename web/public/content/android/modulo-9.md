@@ -52,6 +52,11 @@ Probar un `ViewModel` con un repositorio fake (una implementación real y simple
 
 **¿Por qué es importante?** Probar un ViewModel con un repositorio fake es más rápido y confiable que con la API real, dado que elimina la dependencia de factores externos (disponibilidad del servidor, latencia de red) que podrían hacer fallar el test por razones ajenas a la lógica bajo prueba.
 
+**Casos de uso reales:**
+- Verificar que `TareasViewModel` transiciona correctamente de `Cargando` a `Exito` sin depender de un servidor real.
+- Ejecutar cientos de tests de ViewModels en segundos dentro del pipeline de CI, sin latencia de red real.
+- Reproducir de forma determinista un bug de estado reportado, controlando exactamente qué devuelve el fake.
+
 **Diagrama:**
 
 ```kotlin
@@ -87,6 +92,11 @@ Esta distinción entre lo que cubre un test de ViewModel y lo que cubre adiciona
 
 **¿Por qué es importante?** Un test de Compose UI cubre la brecha entre "el estado interno es correcto" y "la UI efectivamente renderizada refleja ese estado correctamente para el usuario", algo que un test de ViewModel por sí solo no puede garantizar.
 
+**Casos de uso reales:**
+- Verificar que una tarea completada se muestra visualmente tachada, no solo que el campo `completada` es `true`.
+- Detectar un bug donde un botón queda oculto tras un cambio de layout, antes de que llegue a producción.
+- Testear que un mensaje de error se muestra visible cuando el `EstadoUI` es `Error`, no solo que el estado cambió.
+
 **Diagrama:**
 
 ```kotlin
@@ -120,6 +130,11 @@ Preferir un fake (una implementación real y simple, código Kotlin ordinario) s
 **Analogía:** Espresso es como un inspector de calidad que recorre el proceso completo de fabricación de principio a fin, verificando el producto final tal como llega al cliente, en vez de inspeccionar únicamente una pieza aislada en un banco de pruebas; un fake es como un modelo de práctica funcional reutilizable en múltiples ejercicios de entrenamiento, mientras que un mock es como una simulación puntual configurada para verificar un único gesto específico en un ejercicio particular.
 
 **¿Por qué es importante?** Espresso cubre flujos completos end-to-end que ningún test unitario aislado puede cubrir por sí solo; elegir entre fake y mock depende de si se necesita una implementación reutilizable y consistente (fake) o una verificación puntual de interacciones específicas (mock).
+
+**Casos de uso reales:**
+- Validar el flujo completo de registro de usuario (formulario → envío → pantalla de bienvenida) antes de un release.
+- Detectar regresiones de integración entre pantallas que los tests unitarios aislados no pueden atrapar.
+- Usar un mock para verificar que se llamó exactamente una vez a `analytics.track("tarea_creada")` tras guardar.
 
 **Diagrama:**
 
