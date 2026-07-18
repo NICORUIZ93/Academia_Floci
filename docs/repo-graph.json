@@ -2217,6 +2217,18 @@
       "headings": []
     },
     {
+      "path": "scripts/create_delivery_modules.py",
+      "lines": 126,
+      "kind": "automation-script",
+      "symbols": [
+        "render"
+      ],
+      "imports": [
+        "pathlib"
+      ],
+      "headings": []
+    },
+    {
       "path": "scripts/create_rutaflow_content.py",
       "lines": 178,
       "kind": "automation-script",
@@ -4436,6 +4448,27 @@
         "### Tema 4: Producci\u00f3n exige protocolo, telemetr\u00eda y contenci\u00f3n",
         "## Revisi\u00f3n oficial de plataforma \u2014 julio de 2026",
         "### Flutter 3.44, Dart 3.11 y migraciones controladas",
+        "## Criterio transversal de calidad del c\u00f3digo",
+        "## Laboratorio pr\u00e1ctico",
+        "## Ejercicios de evaluaci\u00f3n"
+      ]
+    },
+    {
+      "path": "web/public/content/flutter/modulo-14.md",
+      "lines": 213,
+      "kind": "course-content",
+      "symbols": [],
+      "imports": [],
+      "headings": [
+        "# M\u00f3dulo 14: Flutter para entregas: mapas, GPS y tiempo real",
+        "## S\u00edlabo",
+        "## Contenido te\u00f3rico",
+        "### Tema 1: Dise\u00f1o de pantallas y Riverpod",
+        "### Tema 2: Google Maps y localizaci\u00f3n en tiempo real",
+        "### Tema 3: Socket.IO y actualizaci\u00f3n de rutas",
+        "### Tema 4: Animaciones de localizaci\u00f3n",
+        "### Tema 5: Almacenamiento local, im\u00e1genes y offline",
+        "### Tema 6: Dio y notificaciones push",
         "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
         "## Ejercicios de evaluaci\u00f3n"
@@ -8992,6 +9025,27 @@
       ]
     },
     {
+      "path": "web/public/content/spring-boot/modulo-14.md",
+      "lines": 213,
+      "kind": "course-content",
+      "symbols": [],
+      "imports": [],
+      "headings": [
+        "# M\u00f3dulo 14: Backend de entregas: MySQL espacial, archivos y tiempo real",
+        "## S\u00edlabo",
+        "## Contenido te\u00f3rico",
+        "### Tema 1: CRUD API y contratos",
+        "### Tema 2: MySQL y datos espaciales",
+        "### Tema 3: JPA e Hibernate Spatial",
+        "### Tema 4: JWT Bearer y autorizaci\u00f3n por roles",
+        "### Tema 5: Socket.IO y tiempo real",
+        "### Tema 6: Archivos y notificaciones push",
+        "## Criterio transversal de calidad del c\u00f3digo",
+        "## Laboratorio pr\u00e1ctico",
+        "## Ejercicios de evaluaci\u00f3n"
+      ]
+    },
+    {
       "path": "web/public/content/spring-boot/modulo-2.md",
       "lines": 226,
       "kind": "course-content",
@@ -11389,7 +11443,7 @@
     },
     {
       "path": "web/src/app/tracks/flutter.track.ts",
-      "lines": 175,
+      "lines": 182,
       "kind": "angular-app",
       "symbols": [],
       "imports": [
@@ -11479,7 +11533,7 @@
     },
     {
       "path": "web/src/app/tracks/spring-boot.track.ts",
-      "lines": 190,
+      "lines": 197,
       "kind": "angular-app",
       "symbols": [],
       "imports": [

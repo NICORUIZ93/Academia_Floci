@@ -53,7 +53,7 @@
         {"id":"SPRING-1","level":"Fundamentos","statement":"Construir una API Spring Boot comprendiendo configuración, DI y contratos HTTP.","moduleIds":[0,1,2],"evidence":["API ejecutable","pruebas de endpoints"],"cs2023":["NC","SDF"],"swebok":["Software Construction"]},
         {"id":"SPRING-2","level":"Aplicación","statement":"Persistir y proteger recursos mediante transacciones, validación y autorización.","moduleIds":[3,4,5,6],"evidence":["migraciones y rollback","pruebas negativas de seguridad"],"cs2023":["DM","SEC"],"swebok":["Software Security","Software Testing"]},
         {"id":"SPRING-3","level":"Integración","statement":"Integrar mensajería, caché, documentación y observabilidad con fallos controlados.","moduleIds":[7,8,9,10],"evidence":["flujo asíncrono idempotente","trazas y métricas"],"cs2023":["PDC","SF"],"swebok":["Software Architecture","Software Engineering Operations"]},
-        {"id":"SPRING-4","level":"Experto","statement":"Operar servicios distribuidos con contratos compatibles, consistencia explícita y resiliencia.","moduleIds":[11,12,13],"evidence":["pruebas de contrato","game day y runbook"],"cs2023":["NC","SE"],"swebok":["Software Quality","Software Engineering Operations"]}
+        {"id":"SPRING-4","level":"Experto","statement":"Operar servicios distribuidos con contratos compatibles, consistencia explícita y resiliencia.","moduleIds":[11,12,13,14],"evidence":["pruebas de contrato","game day y runbook"],"cs2023":["NC","SE"],"swebok":["Software Quality","Software Engineering Operations"]}
       ]
     },
     {
@@ -89,7 +89,7 @@
         {"id":"FLUTTER-1","level":"Fundamentos","statement":"Construir UI Flutter con Dart comprendiendo widgets, constraints, estado e identidad.","moduleIds":[0,1,2,3],"evidence":["interfaz responsive","pruebas de widgets"],"cs2023":["FPL","HCI"],"swebok":["Software Construction"]},
         {"id":"FLUTTER-2","level":"Aplicación","statement":"Gestionar estado, red y persistencia con errores y estados offline explícitos.","moduleIds":[4,5,6],"evidence":["flujo de datos","repositorio offline probado"],"cs2023":["DM","NC"],"swebok":["Software Design","Software Testing"]},
         {"id":"FLUTTER-3","level":"Integración","statement":"Integrar plataformas nativas y optimizar UI mediante mediciones reproducibles.","moduleIds":[7,8,9,10],"evidence":["plugin/channel probado","perfil DevTools y auditoría accesible"],"cs2023":["HCI","PDC"],"swebok":["Software Quality","Software Testing"]},
-        {"id":"FLUTTER-4","level":"Experto","statement":"Publicar y operar Flutter con seguridad, isolates, sincronización y releases por plataforma.","moduleIds":[11,12,13],"evidence":["builds firmados","auditoría, outbox y runbook"],"cs2023":["SEC","SF"],"swebok":["Software Security","Software Engineering Operations"]}
+        {"id":"FLUTTER-4","level":"Experto","statement":"Publicar y operar Flutter con seguridad, isolates, sincronización y releases por plataforma.","moduleIds":[11,12,13,14],"evidence":["builds firmados","auditoría, outbox y runbook"],"cs2023":["SEC","SF"],"swebok":["Software Security","Software Engineering Operations"]}
       ]
     },
     {

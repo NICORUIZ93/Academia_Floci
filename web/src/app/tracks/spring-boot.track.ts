@@ -186,4 +186,11 @@ export const SPRING_BOOT_MODULES: CourseModule[] = [
     ],
     ['Spring Boot', 'PostgreSQL', 'Kafka', 'Spring Cloud Contract', 'OpenTelemetry'],
     'Microservicio con límites transaccionales probados, idempotencia, outbox, consumidor deduplicado, contrato ejecutable, trazas correlacionadas, SLO y recuperación de fallos ensayada.'),
+  m(14, 'Backend de entregas: MySQL espacial, archivos y tiempo real', 'Backend de entregas', 'Experto', '12 h', '#6db33f',
+    'Implementa el backend completo que consume la app móvil: CRUD, MySQL Spatial, JPA/Hibernate, JWT Bearer, roles, Socket.IO compatible, archivos y notificaciones push.',
+    ['CRUD API y contratos', 'MySQL y datos espaciales', 'JPA/Hibernate geoespacial', 'JWT Bearer y rutas por roles', 'Socket.IO y posiciones en tiempo real', 'Archivos y notificaciones push'],
+    ['Crea envíos y paradas con migraciones', 'Consulta conductores cercanos', 'Protege recursos por rol y propiedad', 'Publica posiciones a una sala', 'Almacena evidencia fuera de la base', 'Envía una asignación push idempotente'],
+    ['¿Por qué hasRole no reemplaza comprobar que el envío pertenece al usuario?', '¿Cuándo conviene WebSocket STOMP y cuándo compatibilidad Socket.IO?'],
+    ['Spring Boot', 'MySQL 8 Spatial', 'Hibernate Spatial', 'Spring Security', 'JWT', 'Socket.IO', 'Firebase Admin SDK'],
+    'Backend de paquetería con CRUD, consultas espaciales, auth Bearer, roles, tiempo real, archivos, push y pruebas de integración.'),
 ];

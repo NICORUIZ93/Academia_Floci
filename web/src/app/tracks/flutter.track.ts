@@ -171,4 +171,11 @@ export const FLUTTER_MODULES: CourseModule[] = [
     ['¿Qué riesgo introduce un plugin aunque su API Dart sea segura?', '¿Cuándo un isolate mejora la experiencia y cuándo solo añade complejidad?'],
     ['Flutter DevTools', 'Dart isolates', 'secure storage'],
     'Dossier de producción multiplataforma con pruebas, perfiles y runbook.'),
+  m(14, 'Flutter para entregas: mapas, GPS y tiempo real', 'Mapas y tiempo real', 'Experto', '10 h', '#02569b',
+    'Construye la aplicación del conductor con diseño de pantallas, Riverpod, Google Maps, GPS, Socket.IO, rutas animadas, almacenamiento local, imágenes, Dio y notificaciones push.',
+    ['Diseño de pantallas y Riverpod', 'Google Maps y localización en tiempo real', 'Socket.IO, trazado y actualización de rutas', 'Animaciones de ubicación', 'Almacenamiento local e imágenes', 'Dio y notificaciones push'],
+    ['Diseña jornada y detalle de parada', 'Muestra conductor y ruta en Google Maps', 'Actualiza posiciones con Socket.IO sin saltos', 'Guarda confirmaciones offline', 'Sube evidencia con Dio', 'Recibe una asignación mediante push'],
+    ['¿Por qué una posición recibida no debe dibujarse directamente sin validar tiempo y precisión?', '¿Cómo se evita duplicar una entrega al sincronizar después de estar offline?'],
+    ['Riverpod', 'google_maps_flutter', 'geolocator', 'socket_io_client', 'Dio', 'Firebase Cloud Messaging'],
+    'Aplicación Flutter de entregas con mapa, tracking, ruta, evidencia, caché offline y push probada en dispositivo.'),
 ];

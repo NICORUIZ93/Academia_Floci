@@ -1,8 +1,8 @@
 # Academia Floci Repo Graph
 
-Generated: 2026-07-17 22:52 UTC
+Generated: 2026-07-18 01:12 UTC
 Root: `Academia_Floci`
-Indexed files: 738
+Indexed files: 741
 Import edges: 30
 
 Use this file as the first, compact context for AI assistants. Refresh it with:
@@ -16,8 +16,8 @@ For automated lookups, use `docs/repo-graph.json`.
 ## Project Shape
 
 - `angular-app`: 49 files
-- `automation-script`: 17 files
-- `course-content`: 330 files
+- `automation-script`: 18 files
+- `course-content`: 332 files
 - `documentation`: 97 files
 - `example`: 215 files
 - `local-infra`: 1 files
@@ -25,8 +25,8 @@ For automated lookups, use `docs/repo-graph.json`.
 
 ## File Types
 
-- `.md`: 419
-- `.py`: 47
+- `.md`: 421
+- `.py`: 48
 - `.js`: 44
 - `.ts`: 42
 - `.java`: 40
@@ -158,6 +158,7 @@ For automated lookups, use `docs/repo-graph.json`.
 
 - `scripts/build_curriculum.py` (273 lines) - symbols: source_text, normalize_ascii, clean_module_name, parse_curriculum, js_string, render_app_data, main; imports: __future__, json, re, pathlib
 - `scripts/build_repo_graph.py` (446 lines) - symbols: FileNode, repo_files, read_text, classify, parse_ts_symbols, parse_ts_imports, parse_python_symbols, parse_python_imports; imports: __future__, argparse, ast, json, re, collections, dataclasses, datetime
+- `scripts/create_delivery_modules.py` (126 lines) - symbols: render; imports: pathlib
 - `scripts/create_rutaflow_content.py` (178 lines) - symbols: render; imports: pathlib
 - `scripts/enrich_code_quality.py` (44 lines) - imports: pathlib
 - `scripts/enrich_curriculum_sections.py` (172 lines) - symbols: bibliography, project_path; imports: pathlib
@@ -194,7 +195,7 @@ For automated lookups, use `docs/repo-graph.json`.
 - `web/public/content/android/modulo-9.md` (267 lines) - headings: # Módulo 9: Testing en Android, ## Sílabo, ## Contenido teórico, ### Tema 1: Testing de ViewModels con fakes y runTest
 - `web/public/content/angular/modulo-0.md` (301 lines) - headings: # Módulo 0: Fundamentos y Angular CLI, ## Sílabo, ## Antes de comenzar: prepara tu equipo desde cero, ### Windows
 - `web/public/content/angular/modulo-1.md` (278 lines) - headings: # Módulo 1: Componentes, plantillas y data binding, ## Sílabo, ## Contenido teórico, ### Tema 1: input()/output() basados en signals
-- ... 312 more files
+- ... 314 more files
 
 ### documentation
 
