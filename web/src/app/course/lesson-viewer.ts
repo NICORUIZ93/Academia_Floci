@@ -300,6 +300,7 @@ export class LessonViewerComponent implements OnDestroy {
 
   private enhanceEducationalContent(container: HTMLElement): void {
     this.groupLessonSections(container);
+    this.consolidateReferenceSections(container);
     this.collapseSecondarySections(container);
     this.addSectionGuides(container);
 
@@ -350,9 +351,6 @@ export class LessonViewerComponent implements OnDestroy {
     const secondarySelectors = [
       '.section-silabo',
       '.section-criterio-transversal-de-calidad-del-codigo',
-      '.section-rubrica-del-proyecto',
-      '.section-bibliografia-y-fundamento-academico',
-      '.section-resumen-del-modulo',
     ].join(',');
 
     container.querySelectorAll<HTMLElement>(secondarySelectors).forEach((section, index) => {
@@ -376,6 +374,25 @@ export class LessonViewerComponent implements OnDestroy {
       heading.appendChild(toggle);
       section.appendChild(body);
     });
+  }
+
+  private consolidateReferenceSections(container: HTMLElement): void {
+    const sections = [
+      container.querySelector<HTMLElement>(':scope > .section-rubrica-del-proyecto'),
+      container.querySelector<HTMLElement>(':scope > .section-bibliografia-y-fundamento-academico'),
+      container.querySelector<HTMLElement>(':scope > .section-resumen-del-modulo'),
+    ].filter((section): section is HTMLElement => Boolean(section));
+    if (!sections.length) return;
+
+    const details = document.createElement('details');
+    details.className = 'lesson-resources';
+    const summary = document.createElement('summary');
+    summary.innerHTML = '<span>Material complementario</span><small>Rúbrica, fuentes y resumen del capítulo</small>';
+    const body = document.createElement('div');
+    body.className = 'lesson-resources-body';
+    sections.forEach(section => body.appendChild(section));
+    details.append(summary, body);
+    container.appendChild(details);
   }
 
   private addSectionGuides(container: HTMLElement): void {

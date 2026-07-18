@@ -148,11 +148,12 @@ La evidencia demuestra el aprendizaje.`;
       expect(page.querySelector('.project-bootstrap')).toBeTruthy();
       expect(page.querySelector<HTMLDetailsElement>('.project-bootstrap')?.open).toBe(true);
       const secondarySections = page.querySelectorAll('.secondary-section-body');
-      expect(secondarySections.length).toBeGreaterThanOrEqual(3);
-      const bibliographyToggle = page.querySelector<HTMLButtonElement>('.section-bibliografia-y-fundamento-academico .secondary-section-toggle');
-      expect(bibliographyToggle?.getAttribute('aria-expanded')).toBe('false');
-      bibliographyToggle?.click();
-      expect(bibliographyToggle?.getAttribute('aria-expanded')).toBe('true');
+      expect(secondarySections).toHaveLength(0);
+      expect(page.querySelector('.lesson-resources')).toBeTruthy();
+      expect(page.querySelector('.lesson-resources')?.textContent).toContain('Rúbrica del proyecto');
+      expect(page.querySelector('.lesson-resources')?.textContent).toContain('Bibliografía y fundamento académico');
+      expect(page.querySelector('.lesson-resources')?.textContent).toContain('Resumen del módulo');
+      expect(page.querySelectorAll('.lesson-resources .secondary-section-toggle')).toHaveLength(0);
     } finally {
       fetchSpy.mockRestore();
     }
