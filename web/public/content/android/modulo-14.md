@@ -8,6 +8,112 @@
 
 **Evaluación:** 20 % fundamento, 35 % implementación, 25 % pruebas y fallos, 10 % seguridad, 10 % documentación y comunicación.
 
+## Comienza desde cero: prepara este capítulo
+
+Este recorrido parte de una carpeta vacía. Al finalizar tendrás **Un incremento pequeño, probado y reproducible del capítulo.** No avances ejecutando comandos que no comprendes: primero identifica la entrada, la transformación y la evidencia que comprobará el resultado.
+
+### 1. Comprueba las herramientas
+
+Los comandos funcionan en macOS, Linux y WSL. En PowerShell usa el equivalente indicado por la herramienta.
+
+```bash
+java --version
+./gradlew --version
+adb version
+```
+
+Si un comando no existe, detente e instala esa herramienta desde su sitio oficial. Cierra y abre la terminal después de modificar `PATH`. Las versiones deben ser compatibles entre sí antes de crear archivos.
+
+### 2. Crea o recupera el proyecto del track
+
+```bash
+# Android Studio: New Project → Empty Activity → Kotlin + Compose
+cd academia-labs/android-app
+git init
+./gradlew tasks
+```
+
+Trabaja dentro de `academia-labs/android-app`. Si ya existe, no lo vuelvas a generar: entra en la carpeta, confirma `git status` y continúa sobre una rama propia.
+
+### 3. Ubica cada tema antes de escribir
+
+```text
+academia-labs/android-app/
+├─ app/src/main/java/academy/
+│  └─ module-14/
+├─ tests/
+├─ docs/decisions/
+├─ evidence/module-14/
+└─ README.md
+```
+
+| Tema | Archivo o decisión | Evidencia mínima |
+|---|---|---|
+| 1. ComposeTestRule | `app/src/main/java/academy/module-14/topic-1-composetestrule.kt` | prueba + salida observable |
+| 2. Finders, assertions y actions | `app/src/main/java/academy/module-14/topic-2-finders-assertions-y-actions.kt` | prueba + salida observable |
+| 3. Semantics y clearAndSetSemantics | `app/src/main/java/academy/module-14/topic-3-semantics-y-clearandsetsemantics.kt` | prueba + salida observable |
+| 4. AccessibilityService y TalkBack | `app/src/main/java/academy/module-14/topic-4-accessibilityservice-y-talkback.kt` | prueba + salida observable |
+| 5. Animaciones de estado y visibilidad | `app/src/main/java/academy/module-14/topic-5-animaciones-de-estado-y-visibilidad.kt` | prueba + salida observable |
+| 6. AnimatedContent y AnimationSpec | `app/src/main/java/academy/module-14/topic-6-animatedcontent-y-animationspec.kt` | prueba + salida observable |
+| 7. Kotlin para Android | `docs/decisions/module-14-topic-7.md` | contexto + alternativas + decisión + consecuencias |
+| 8. Views y Widgets | `docs/decisions/module-14-topic-8.md` | contexto + alternativas + decisión + consecuencias |
+| 9. Event Handling | `docs/decisions/module-14-topic-9.md` | contexto + alternativas + decisión + consecuencias |
+| 10. Estado en Compose | `docs/decisions/module-14-topic-10.md` | contexto + alternativas + decisión + consecuencias |
+| 11. Fragments | `docs/decisions/module-14-topic-11.md` | contexto + alternativas + decisión + consecuencias |
+| 12. RecyclerView | `docs/decisions/module-14-topic-12.md` | contexto + alternativas + decisión + consecuencias |
+| 13. Menus, Dialogs, Toasts | `docs/decisions/module-14-topic-13.md` | contexto + alternativas + decisión + consecuencias |
+| 14. LazyColumn/LazyRow | `docs/decisions/module-14-topic-14.md` | contexto + alternativas + decisión + consecuencias |
+| 15. SharedPreferences | `docs/decisions/module-14-topic-15.md` | contexto + alternativas + decisión + consecuencias |
+| 16. Integración con Views | `docs/decisions/module-14-topic-16.md` | contexto + alternativas + decisión + consecuencias |
+| 17. Offline-first y sincronización | `docs/decisions/module-14-topic-17.md` | contexto + alternativas + decisión + consecuencias |
+| 18. Energía y background | `docs/decisions/module-14-topic-18.md` | contexto + alternativas + decisión + consecuencias |
+| 19. Baseline Profiles y Macrobenchmark | `docs/decisions/module-14-topic-19.md` | contexto + alternativas + decisión + consecuencias |
+| 20. Arquitectura de Android | `docs/decisions/module-14-topic-20.md` | contexto + alternativas + decisión + consecuencias |
+| 21. Lenguajes de programación actuales | `docs/decisions/module-14-topic-21.md` | contexto + alternativas + decisión + consecuencias |
+| 22. Configuraciones de tiempo de ejecución | `docs/decisions/module-14-topic-22.md` | contexto + alternativas + decisión + consecuencias |
+| 23. Servicios de dispositivos | `docs/decisions/module-14-topic-23.md` | contexto + alternativas + decisión + consecuencias |
+| 24. Monetización | `docs/decisions/module-14-topic-24.md` | contexto + alternativas + decisión + consecuencias |
+| 25. Integración de servicios en la nube | `docs/decisions/module-14-topic-25.md` | contexto + alternativas + decisión + consecuencias |
+| 26. Integración de IA/ML | `docs/decisions/module-14-topic-26.md` | contexto + alternativas + decisión + consecuencias |
+| 27. Interoperabilidad de lenguajes | `docs/decisions/module-14-topic-27.md` | contexto + alternativas + decisión + consecuencias |
+| 28. Servicios en segundo plano | `docs/decisions/module-14-topic-28.md` | contexto + alternativas + decisión + consecuencias |
+| 29. Proveedores de contenido | `docs/decisions/module-14-topic-29.md` | contexto + alternativas + decisión + consecuencias |
+| 30. Depuración avanzada | `docs/decisions/module-14-topic-30.md` | contexto + alternativas + decisión + consecuencias |
+| 31. Internals de Android | `docs/decisions/module-14-topic-31.md` | contexto + alternativas + decisión + consecuencias |
+| 32. Proceso Zygote | `docs/decisions/module-14-topic-32.md` | contexto + alternativas + decisión + consecuencias |
+| 33. Servicios de Android | `docs/decisions/module-14-topic-33.md` | contexto + alternativas + decisión + consecuencias |
+| 34. RILD y HAL | `docs/decisions/module-14-topic-34.md` | contexto + alternativas + decisión + consecuencias |
+| 35. Proceso de arranque | `docs/decisions/module-14-topic-35.md` | contexto + alternativas + decisión + consecuencias |
+| 36. Modelo de seguridad | `docs/decisions/module-14-topic-36.md` | contexto + alternativas + decisión + consecuencias |
+| 37. App widgets | `docs/decisions/module-14-topic-37.md` | contexto + alternativas + decisión + consecuencias |
+| 38. Funciones geo | `docs/decisions/module-14-topic-38.md` | contexto + alternativas + decisión + consecuencias |
+| 39. Optimización de rendimiento | `docs/decisions/module-14-topic-39.md` | contexto + alternativas + decisión + consecuencias |
+| 40. Pruebas unitarias | `docs/decisions/module-14-topic-40.md` | contexto + alternativas + decisión + consecuencias |
+
+Un ejemplo técnico vive en el archivo indicado y debe tener una prueba. Un tema conceptual vive en `docs/decisions/`: compara opciones usando restricciones medibles; no escribas código decorativo solo para llenar espacio.
+
+### 4. Ejecuta una línea base
+
+Desde `academia-labs/android-app`:
+
+```bash
+./gradlew testDebugUnitTest
+```
+
+**Resultado esperado:** el comando reconoce el proyecto y termina sin errores antes de introducir el cambio del capítulo. Después del incremento, la evidencia debe demostrar: **Un incremento pequeño, probado y reproducible del capítulo.**
+
+Si falla la línea base, no continúes. Localiza el primer mensaje que indique archivo, línea o dependencia; formula una causa y compruébala con un cambio pequeño.
+
+### 5. Provoca un fallo y recupérate
+
+Simula permiso denegado, proceso recreado o dato ausente; verifica que la pantalla conserve un estado comprensible. Guarda en `evidence/module-14/` el comando, la salida relevante, tu hipótesis y la corrección. Revierte únicamente el cambio deliberado; no borres todo el proyecto para ocultar la causa.
+
+### 6. Conecta el capítulo con RutaFlow
+
+Aplica el aprendizaje de **Compose Master: pruebas, accesibilidad y animación** a un incremento vertical de RutaFlow. Define qué componente produce el dato, qué contrato lo transporta, quién lo consume y cómo observarás un fallo. La entrega final incluye archivo o decisión, prueba, salida, error corregido y una limitación que todavía validarías en producción.
+
+---
+
 ## Contenido teórico
 
 ### Tema 1: ComposeTestRule

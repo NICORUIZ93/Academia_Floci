@@ -8,6 +8,97 @@
 
 **Evaluación:** 20 % fundamento, 35 % implementación, 25 % pruebas y fallos, 10 % seguridad, 10 % documentación y comunicación.
 
+## Comienza desde cero: prepara este capítulo
+
+Este recorrido parte de una carpeta vacía. Al finalizar tendrás **Un incremento pequeño, probado y reproducible del capítulo.** No avances ejecutando comandos que no comprendes: primero identifica la entrada, la transformación y la evidencia que comprobará el resultado.
+
+### 1. Comprueba las herramientas
+
+Los comandos funcionan en macOS, Linux y WSL. En PowerShell usa el equivalente indicado por la herramienta.
+
+```bash
+git --version
+docker --version
+bash --version
+```
+
+Si un comando no existe, detente e instala esa herramienta desde su sitio oficial. Cierra y abre la terminal después de modificar `PATH`. Las versiones deben ser compatibles entre sí antes de crear archivos.
+
+### 2. Crea o recupera el proyecto del track
+
+```bash
+mkdir -p academia-labs/devops/{app,infra,scripts,evidence}
+cd academia-labs/devops
+git init
+```
+
+Trabaja dentro de `academia-labs/devops`. Si ya existe, no lo vuelvas a generar: entra en la carpeta, confirma `git status` y continúa sobre una rama propia.
+
+### 3. Ubica cada tema antes de escribir
+
+```text
+academia-labs/devops/
+├─ infra/
+│  └─ module-15/
+├─ tests/
+├─ docs/decisions/
+├─ evidence/module-15/
+└─ README.md
+```
+
+| Tema | Archivo o decisión | Evidencia mínima |
+|---|---|---|
+| 1. Docker y Compose avanzados | `infra/module-15/topic-1-docker-y-compose-avanzados.yaml` | prueba + salida observable |
+| 2. Kubernetes extensible y Helm avanzado | `infra/module-15/topic-2-kubernetes-extensible-y-helm-avanzado.yaml` | prueba + salida observable |
+| 3. Service Mesh con Istio o Linkerd | `infra/module-15/topic-3-service-mesh-con-istio-o-linkerd.yaml` | prueba + salida observable |
+| 4. GitOps con Argo CD y Flux | `infra/module-15/topic-4-gitops-con-argo-cd-y-flux.yaml` | prueba + salida observable |
+| 5. Ansible, inventarios, roles y Vault | `infra/module-15/topic-5-ansible-inventarios-roles-y-vault.yaml` | prueba + salida observable |
+| 6. DevSecOps y métricas DORA | `infra/module-15/topic-6-devsecops-y-metricas-dora.yaml` | prueba + salida observable |
+| 7. Introducción a DevOps | `docs/decisions/module-15-topic-7.md` | contexto + alternativas + decisión + consecuencias |
+| 8. Virtualización y Contenedores | `docs/decisions/module-15-topic-8.md` | contexto + alternativas + decisión + consecuencias |
+| 9. Git y GitHub | `docs/decisions/module-15-topic-9.md` | contexto + alternativas + decisión + consecuencias |
+| 10. Jenkins | `docs/decisions/module-15-topic-10.md` | contexto + alternativas + decisión + consecuencias |
+| 11. ELK Stack | `docs/decisions/module-15-topic-11.md` | contexto + alternativas + decisión + consecuencias |
+| 12. DORA Metrics | `docs/decisions/module-15-topic-12.md` | contexto + alternativas + decisión + consecuencias |
+| 13. eBPF y observabilidad de kernel | `docs/decisions/module-15-topic-13.md` | contexto + alternativas + decisión + consecuencias |
+| 14. Ingeniería de releases | `docs/decisions/module-15-topic-14.md` | contexto + alternativas + decisión + consecuencias |
+| 15. Recuperación ante desastres | `docs/decisions/module-15-topic-15.md` | contexto + alternativas + decisión + consecuencias |
+| 16. Seguridad orientada al desarrollo | `docs/decisions/module-15-topic-16.md` | contexto + alternativas + decisión + consecuencias |
+| 17. Gestión de configuración | `docs/decisions/module-15-topic-17.md` | contexto + alternativas + decisión + consecuencias |
+| 18. Tubería de despliegue | `docs/decisions/module-15-topic-18.md` | contexto + alternativas + decisión + consecuencias |
+| 19. Parámetros de configuración | `docs/decisions/module-15-topic-19.md` | contexto + alternativas + decisión + consecuencias |
+| 20. Herramientas DevOps | `docs/decisions/module-15-topic-20.md` | contexto + alternativas + decisión + consecuencias |
+| 21. Virtualización y redes | `docs/decisions/module-15-topic-21.md` | contexto + alternativas + decisión + consecuencias |
+| 22. Medición y seguridad | `docs/decisions/module-15-topic-22.md` | contexto + alternativas + decisión + consecuencias |
+| 23. Gestión de contenedores | `docs/decisions/module-15-topic-23.md` | contexto + alternativas + decisión + consecuencias |
+| 24. Comunicación y colaboración | `docs/decisions/module-15-topic-24.md` | contexto + alternativas + decisión + consecuencias |
+| 25. Necesidades organizativas | `docs/decisions/module-15-topic-25.md` | contexto + alternativas + decisión + consecuencias |
+| 26. Pruebas de software | `docs/decisions/module-15-topic-26.md` | contexto + alternativas + decisión + consecuencias |
+
+Un ejemplo técnico vive en el archivo indicado y debe tener una prueba. Un tema conceptual vive en `docs/decisions/`: compara opciones usando restricciones medibles; no escribas código decorativo solo para llenar espacio.
+
+### 4. Ejecuta una línea base
+
+Desde `academia-labs/devops`:
+
+```bash
+docker compose config
+```
+
+**Resultado esperado:** el comando reconoce el proyecto y termina sin errores antes de introducir el cambio del capítulo. Después del incremento, la evidencia debe demostrar: **Un incremento pequeño, probado y reproducible del capítulo.**
+
+Si falla la línea base, no continúes. Localiza el primer mensaje que indique archivo, línea o dependencia; formula una causa y compruébala con un cambio pequeño.
+
+### 5. Provoca un fallo y recupérate
+
+Rompe una referencia, variable o healthcheck y localiza la causa con la validación o los logs. Guarda en `evidence/module-15/` el comando, la salida relevante, tu hipótesis y la corrección. Revierte únicamente el cambio deliberado; no borres todo el proyecto para ocultar la causa.
+
+### 6. Conecta el capítulo con RutaFlow
+
+Aplica el aprendizaje de **DevOps Master: GitOps, Service Mesh y DevSecOps** a un incremento vertical de RutaFlow. Define qué componente produce el dato, qué contrato lo transporta, quién lo consume y cómo observarás un fallo. La entrega final incluye archivo o decisión, prueba, salida, error corregido y una limitación que todavía validarías en producción.
+
+---
+
 ## Contenido teórico
 
 ### Tema 1: Docker y Compose avanzados

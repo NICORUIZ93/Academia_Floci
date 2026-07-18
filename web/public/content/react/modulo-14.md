@@ -8,6 +8,103 @@
 
 **Evaluación:** 20 % fundamento, 35 % implementación, 25 % pruebas y fallos, 10 % seguridad, 10 % documentación y comunicación.
 
+## Comienza desde cero: prepara este capítulo
+
+Este recorrido parte de una carpeta vacía. Al finalizar tendrás **Un incremento pequeño, probado y reproducible del capítulo.** No avances ejecutando comandos que no comprendes: primero identifica la entrada, la transformación y la evidencia que comprobará el resultado.
+
+### 1. Comprueba las herramientas
+
+Los comandos funcionan en macOS, Linux y WSL. En PowerShell usa el equivalente indicado por la herramienta.
+
+```bash
+node --version
+npm --version
+git --version
+```
+
+Si un comando no existe, detente e instala esa herramienta desde su sitio oficial. Cierra y abre la terminal después de modificar `PATH`. Las versiones deben ser compatibles entre sí antes de crear archivos.
+
+### 2. Crea o recupera el proyecto del track
+
+```bash
+npm create vite@latest academia-labs/react-app -- --template react-ts
+cd academia-labs/react-app
+npm install
+git init
+```
+
+Trabaja dentro de `academia-labs/react-app`. Si ya existe, no lo vuelvas a generar: entra en la carpeta, confirma `git status` y continúa sobre una rama propia.
+
+### 3. Ubica cada tema antes de escribir
+
+```text
+academia-labs/react-app/
+├─ src/features/
+│  └─ module-14/
+├─ tests/
+├─ docs/decisions/
+├─ evidence/module-14/
+└─ README.md
+```
+
+| Tema | Archivo o decisión | Evidencia mínima |
+|---|---|---|
+| 1. Server Components y streaming | `src/features/module-14/topic-1-server-components-y-streaming.tsx` | prueba + salida observable |
+| 2. Server Actions y seguridad | `src/features/module-14/topic-2-server-actions-y-seguridad.tsx` | prueba + salida observable |
+| 3. Next.js ISR, Metadata y Middleware | `src/features/module-14/topic-3-next-js-isr-metadata-y-middleware.tsx` | prueba + salida observable |
+| 4. Optimización de imágenes y fuentes | `src/features/module-14/topic-4-optimizacion-de-imagenes-y-fuentes.tsx` | prueba + salida observable |
+| 5. Accesibilidad y React Aria | `src/features/module-14/topic-5-accesibilidad-y-react-aria.tsx` | prueba + salida observable |
+| 6. i18n, pluralización y RTL | `src/features/module-14/topic-6-i18n-pluralizacion-y-rtl.tsx` | prueba + salida observable |
+| 7. Listas y Keys | `docs/decisions/module-14-topic-7.md` | contexto + alternativas + decisión + consecuencias |
+| 8. Hooks Avanzados | `docs/decisions/module-14-topic-8.md` | contexto + alternativas + decisión + consecuencias |
+| 9. Custom Hooks | `docs/decisions/module-14-topic-9.md` | contexto + alternativas + decisión + consecuencias |
+| 10. State Management | `docs/decisions/module-14-topic-10.md` | contexto + alternativas + decisión + consecuencias |
+| 11. Internals | `docs/decisions/module-14-topic-11.md` | contexto + alternativas + decisión + consecuencias |
+| 12. Formularios Avanzados | `docs/decisions/module-14-topic-12.md` | contexto + alternativas + decisión + consecuencias |
+| 13. Micro Frontends | `docs/decisions/module-14-topic-13.md` | contexto + alternativas + decisión + consecuencias |
+| 14. Seguridad de React Server Components | `docs/decisions/module-14-topic-14.md` | contexto + alternativas + decisión + consecuencias |
+| 15. Observabilidad frontend | `docs/decisions/module-14-topic-15.md` | contexto + alternativas + decisión + consecuencias |
+| 16. Ciclo de vida de componentes | `docs/decisions/module-14-topic-16.md` | contexto + alternativas + decisión + consecuencias |
+| 17. Frameworks Next.js y Remix | `docs/decisions/module-14-topic-17.md` | contexto + alternativas + decisión + consecuencias |
+| 18. Operaciones asíncronas | `docs/decisions/module-14-topic-18.md` | contexto + alternativas + decisión + consecuencias |
+| 19. Renderizado del lado del servidor (SSR) | `docs/decisions/module-14-topic-19.md` | contexto + alternativas + decisión + consecuencias |
+| 20. Patrones modernos de React | `docs/decisions/module-14-topic-20.md` | contexto + alternativas + decisión + consecuencias |
+| 21. Enrutamiento | `docs/decisions/module-14-topic-21.md` | contexto + alternativas + decisión + consecuencias |
+| 22. Integración de APIs | `docs/decisions/module-14-topic-22.md` | contexto + alternativas + decisión + consecuencias |
+| 23. DOM Virtual | `docs/decisions/module-14-topic-23.md` | contexto + alternativas + decisión + consecuencias |
+| 24. Sintaxis JSX | `docs/decisions/module-14-topic-24.md` | contexto + alternativas + decisión + consecuencias |
+| 25. Configuración de proyectos | `docs/decisions/module-14-topic-25.md` | contexto + alternativas + decisión + consecuencias |
+| 26. Estilización con CSS y Styled Components | `docs/decisions/module-14-topic-26.md` | contexto + alternativas + decisión + consecuencias |
+| 27. Pruebas con frameworks modernos | `docs/decisions/module-14-topic-27.md` | contexto + alternativas + decisión + consecuencias |
+| 28. Tailwind CSS | `docs/decisions/module-14-topic-28.md` | contexto + alternativas + decisión + consecuencias |
+| 29. Reducers y react-redux | `docs/decisions/module-14-topic-29.md` | contexto + alternativas + decisión + consecuencias |
+| 30. Componentes contenedores y de presentación | `docs/decisions/module-14-topic-30.md` | contexto + alternativas + decisión + consecuencias |
+| 31. Componentes complejos | `docs/decisions/module-14-topic-31.md` | contexto + alternativas + decisión + consecuencias |
+
+Un ejemplo técnico vive en el archivo indicado y debe tener una prueba. Un tema conceptual vive en `docs/decisions/`: compara opciones usando restricciones medibles; no escribas código decorativo solo para llenar espacio.
+
+### 4. Ejecuta una línea base
+
+Desde `academia-labs/react-app`:
+
+```bash
+npm test -- --run && npm run dev
+```
+
+**Resultado esperado:** el comando reconoce el proyecto y termina sin errores antes de introducir el cambio del capítulo. Después del incremento, la evidencia debe demostrar: **Un incremento pequeño, probado y reproducible del capítulo.**
+
+Si falla la línea base, no continúes. Localiza el primer mensaje que indique archivo, línea o dependencia; formula una causa y compruébala con un cambio pequeño.
+
+### 5. Provoca un fallo y recupérate
+
+Cambia una prop o respuesta a un caso vacío o erróneo; observa el estado visual y corrige desde la primera causa. Guarda en `evidence/module-14/` el comando, la salida relevante, tu hipótesis y la corrección. Revierte únicamente el cambio deliberado; no borres todo el proyecto para ocultar la causa.
+
+### 6. Conecta el capítulo con RutaFlow
+
+Aplica el aprendizaje de **React Master: servidor, Next.js, a11y e i18n** a un incremento vertical de RutaFlow. Define qué componente produce el dato, qué contrato lo transporta, quién lo consume y cómo observarás un fallo. La entrega final incluye archivo o decisión, prueba, salida, error corregido y una limitación que todavía validarías en producción.
+
+---
+
 ## Contenido teórico
 
 ### Tema 1: Server Components y streaming

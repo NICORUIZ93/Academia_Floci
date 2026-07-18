@@ -26,6 +26,76 @@ Dos laboratorios prácticos (un grafo de relaciones con Neptune, y un dominio Op
 
 ---
 
+## Comienza desde cero: prepara este capítulo
+
+Este recorrido parte de una carpeta vacía. Al finalizar tendrás **Dos laboratorios prácticos (un grafo de relaciones con Neptune, y un dominio OpenSearch en modo real) y tres ejercicios de evaluación.** No avances ejecutando comandos que no comprendes: primero identifica la entrada, la transformación y la evidencia que comprobará el resultado.
+
+### 1. Comprueba las herramientas
+
+Los comandos funcionan en macOS, Linux y WSL. En PowerShell usa el equivalente indicado por la herramienta.
+
+```bash
+docker --version
+aws --version
+terraform version
+```
+
+Si un comando no existe, detente e instala esa herramienta desde su sitio oficial. Cierra y abre la terminal después de modificar `PATH`. Las versiones deben ser compatibles entre sí antes de crear archivos.
+
+### 2. Crea o recupera el proyecto del track
+
+```bash
+mkdir -p academia-labs/cloud/{infra,tests,evidence}
+cd academia-labs/cloud
+git init
+docker compose up -d
+```
+
+Trabaja dentro de `academia-labs/cloud`. Si ya existe, no lo vuelvas a generar: entra en la carpeta, confirma `git status` y continúa sobre una rama propia.
+
+### 3. Ubica cada tema antes de escribir
+
+```text
+academia-labs/cloud/
+├─ infra/
+│  └─ module-28/
+├─ tests/
+├─ docs/decisions/
+├─ evidence/module-28/
+└─ README.md
+```
+
+| Tema | Archivo o decisión | Evidencia mínima |
+|---|---|---|
+| 1. Bases de datos de grafos — cuando las relaciones son el dato | `docs/decisions/module-28-topic-1.md` | contexto + alternativas + decisión + consecuencias |
+| 2. Neptune en Floci — un servidor Gremlin real, no una simulación | `docs/decisions/module-28-topic-2.md` | contexto + alternativas + decisión + consecuencias |
+| 3. OpenSearch — modo simulado y modo real | `docs/decisions/module-28-topic-3.md` | contexto + alternativas + decisión + consecuencias |
+| 4. Eligiendo entre Neptune, OpenSearch y DynamoDB | `docs/decisions/module-28-topic-4.md` | contexto + alternativas + decisión + consecuencias |
+
+Un ejemplo técnico vive en el archivo indicado y debe tener una prueba. Un tema conceptual vive en `docs/decisions/`: compara opciones usando restricciones medibles; no escribas código decorativo solo para llenar espacio.
+
+### 4. Ejecuta una línea base
+
+Desde `academia-labs/cloud`:
+
+```bash
+terraform -chdir=infra validate
+```
+
+**Resultado esperado:** el comando reconoce el proyecto y termina sin errores antes de introducir el cambio del capítulo. Después del incremento, la evidencia debe demostrar: **Dos laboratorios prácticos (un grafo de relaciones con Neptune, y un dominio OpenSearch en modo real) y tres ejercicios de evaluación.**
+
+Si falla la línea base, no continúes. Localiza el primer mensaje que indique archivo, línea o dependencia; formula una causa y compruébala con un cambio pequeño.
+
+### 5. Provoca un fallo y recupérate
+
+Cambia un endpoint, permiso o identificador por un valor inválido; inspecciona la respuesta del emulador antes de corregir. Guarda en `evidence/module-28/` el comando, la salida relevante, tu hipótesis y la corrección. Revierte únicamente el cambio deliberado; no borres todo el proyecto para ocultar la causa.
+
+### 6. Conecta el capítulo con RutaFlow
+
+Aplica el aprendizaje de **Bases de datos de grafos y búsqueda — Neptune y OpenSearch** a un incremento vertical de RutaFlow. Define qué componente produce el dato, qué contrato lo transporta, quién lo consume y cómo observarás un fallo. La entrega final incluye archivo o decisión, prueba, salida, error corregido y una limitación que todavía validarías en producción.
+
+---
+
 ## Contenido teórico
 
 ### Tema 1: Bases de datos de grafos — cuando las relaciones son el dato

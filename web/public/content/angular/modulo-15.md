@@ -8,6 +8,105 @@
 
 **Evaluación:** 20 % fundamento, 35 % implementación, 25 % pruebas y fallos, 10 % seguridad, 10 % documentación y comunicación.
 
+## Comienza desde cero: prepara este capítulo
+
+Este recorrido parte de una carpeta vacía. Al finalizar tendrás **Un incremento pequeño, probado y reproducible del capítulo.** No avances ejecutando comandos que no comprendes: primero identifica la entrada, la transformación y la evidencia que comprobará el resultado.
+
+### 1. Comprueba las herramientas
+
+Los comandos funcionan en macOS, Linux y WSL. En PowerShell usa el equivalente indicado por la herramienta.
+
+```bash
+node --version
+npm --version
+npx ng version
+```
+
+Si un comando no existe, detente e instala esa herramienta desde su sitio oficial. Cierra y abre la terminal después de modificar `PATH`. Las versiones deben ser compatibles entre sí antes de crear archivos.
+
+### 2. Crea o recupera el proyecto del track
+
+```bash
+npx @angular/cli@latest new academia-labs/angular-app --standalone --routing --style=scss
+cd academia-labs/angular-app
+git init
+```
+
+Trabaja dentro de `academia-labs/angular-app`. Si ya existe, no lo vuelvas a generar: entra en la carpeta, confirma `git status` y continúa sobre una rama propia.
+
+### 3. Ubica cada tema antes de escribir
+
+```text
+academia-labs/angular-app/
+├─ src/app/features/
+│  └─ module-15/
+├─ tests/
+├─ docs/decisions/
+├─ evidence/module-15/
+└─ README.md
+```
+
+| Tema | Archivo o decisión | Evidencia mínima |
+|---|---|---|
+| 1. TestBed y ComponentFixture | `src/app/features/module-15/topic-1-testbed-y-componentfixture.ts` | prueba + salida observable |
+| 2. Pruebas de Signals | `src/app/features/module-15/topic-2-pruebas-de-signals.ts` | prueba + salida observable |
+| 3. Cypress y Playwright | `src/app/features/module-15/topic-3-cypress-y-playwright.ts` | prueba + salida observable |
+| 4. Animaciones accesibles | `src/app/features/module-15/topic-4-animaciones-accesibles.ts` | prueba + salida observable |
+| 5. SSR y TransferState | `src/app/features/module-15/topic-5-ssr-y-transferstate.ts` | prueba + salida observable |
+| 6. Hidratación y provideServerRendering | `src/app/features/module-15/topic-6-hidratacion-y-provideserverrendering.ts` | prueba + salida observable |
+| 7. Servicios y DI | `docs/decisions/module-15-topic-7.md` | contexto + alternativas + decisión + consecuencias |
+| 8. HTTP Client | `docs/decisions/module-15-topic-8.md` | contexto + alternativas + decisión + consecuencias |
+| 9. Deferrable Views | `docs/decisions/module-15-topic-9.md` | contexto + alternativas + decisión + consecuencias |
+| 10. State Management | `docs/decisions/module-15-topic-10.md` | contexto + alternativas + decisión + consecuencias |
+| 11. Micro Frontends | `docs/decisions/module-15-topic-11.md` | contexto + alternativas + decisión + consecuencias |
+| 12. Web Components | `docs/decisions/module-15-topic-12.md` | contexto + alternativas + decisión + consecuencias |
+| 13. Clean Architecture | `docs/decisions/module-15-topic-13.md` | contexto + alternativas + decisión + consecuencias |
+| 14. Internals | `docs/decisions/module-15-topic-14.md` | contexto + alternativas + decisión + consecuencias |
+| 15. Accesibilidad Angular | `docs/decisions/module-15-topic-15.md` | contexto + alternativas + decisión + consecuencias |
+| 16. Seguridad del navegador | `docs/decisions/module-15-topic-16.md` | contexto + alternativas + decisión + consecuencias |
+| 17. Diseño de sistemas frontend | `docs/decisions/module-15-topic-17.md` | contexto + alternativas + decisión + consecuencias |
+| 18. Guardas de ruta | `docs/decisions/module-15-topic-18.md` | contexto + alternativas + decisión + consecuencias |
+| 19. Carga diferida (Lazy Loading) | `docs/decisions/module-15-topic-19.md` | contexto + alternativas + decisión + consecuencias |
+| 20. Carga diferida de Angular 17 | `docs/decisions/module-15-topic-20.md` | contexto + alternativas + decisión + consecuencias |
+| 21. Gatillos personalizados | `docs/decisions/module-15-topic-21.md` | contexto + alternativas + decisión + consecuencias |
+| 22. Angular Universal e hidratación | `docs/decisions/module-15-topic-22.md` | contexto + alternativas + decisión + consecuencias |
+| 23. Estrategias de renderizado de alto rendimiento | `docs/decisions/module-15-topic-23.md` | contexto + alternativas + decisión + consecuencias |
+| 24. Component Store | `docs/decisions/module-15-topic-24.md` | contexto + alternativas + decisión + consecuencias |
+| 25. Patrones de estructuración empresarial | `docs/decisions/module-15-topic-25.md` | contexto + alternativas + decisión + consecuencias |
+| 26. Optimización de detección de cambios | `docs/decisions/module-15-topic-26.md` | contexto + alternativas + decisión + consecuencias |
+| 27. Pruebas de servicios | `docs/decisions/module-15-topic-27.md` | contexto + alternativas + decisión + consecuencias |
+| 28. Pruebas de pipes | `docs/decisions/module-15-topic-28.md` | contexto + alternativas + decisión + consecuencias |
+| 29. Pruebas de enrutamiento | `docs/decisions/module-15-topic-29.md` | contexto + alternativas + decisión + consecuencias |
+| 30. Arquitectura escalable | `docs/decisions/module-15-topic-30.md` | contexto + alternativas + decisión + consecuencias |
+| 31. Patrones de comunicación de componentes | `docs/decisions/module-15-topic-31.md` | contexto + alternativas + decisión + consecuencias |
+| 32. Programación reactiva | `docs/decisions/module-15-topic-32.md` | contexto + alternativas + decisión + consecuencias |
+| 33. Desarrollo de aplicaciones multi-dispositivo | `docs/decisions/module-15-topic-33.md` | contexto + alternativas + decisión + consecuencias |
+| 34. Dispositivos sensoriales | `docs/decisions/module-15-topic-34.md` | contexto + alternativas + decisión + consecuencias |
+
+Un ejemplo técnico vive en el archivo indicado y debe tener una prueba. Un tema conceptual vive en `docs/decisions/`: compara opciones usando restricciones medibles; no escribas código decorativo solo para llenar espacio.
+
+### 4. Ejecuta una línea base
+
+Desde `academia-labs/angular-app`:
+
+```bash
+npm test -- --watch=false && npm start
+```
+
+**Resultado esperado:** el comando reconoce el proyecto y termina sin errores antes de introducir el cambio del capítulo. Después del incremento, la evidencia debe demostrar: **Un incremento pequeño, probado y reproducible del capítulo.**
+
+Si falla la línea base, no continúes. Localiza el primer mensaje que indique archivo, línea o dependencia; formula una causa y compruébala con un cambio pequeño.
+
+### 5. Provoca un fallo y recupérate
+
+Simula un estado vacío o un error HTTP y comprueba que la interfaz muestre recuperación y no una pantalla ambigua. Guarda en `evidence/module-15/` el comando, la salida relevante, tu hipótesis y la corrección. Revierte únicamente el cambio deliberado; no borres todo el proyecto para ocultar la causa.
+
+### 6. Conecta el capítulo con RutaFlow
+
+Aplica el aprendizaje de **Angular Master: pruebas, animación y SSR** a un incremento vertical de RutaFlow. Define qué componente produce el dato, qué contrato lo transporta, quién lo consume y cómo observarás un fallo. La entrega final incluye archivo o decisión, prueba, salida, error corregido y una limitación que todavía validarías en producción.
+
+---
+
 ## Contenido teórico
 
 ### Tema 1: TestBed y ComponentFixture

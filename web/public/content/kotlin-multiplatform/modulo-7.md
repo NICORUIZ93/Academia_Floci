@@ -28,6 +28,74 @@ Pantalla compartida en Compose Multiplatform renderizada en Android e iOS, más 
 
 ---
 
+## Comienza desde cero: prepara este capítulo
+
+Este recorrido parte de una carpeta vacía. Al finalizar tendrás **Pantalla compartida en Compose Multiplatform renderizada en Android e iOS, más tres ejercicios de evaluación.** No avances ejecutando comandos que no comprendes: primero identifica la entrada, la transformación y la evidencia que comprobará el resultado.
+
+### 1. Comprueba las herramientas
+
+Los comandos funcionan en macOS, Linux y WSL. En PowerShell usa el equivalente indicado por la herramienta.
+
+```bash
+java --version
+./gradlew --version
+```
+
+Si un comando no existe, detente e instala esa herramienta desde su sitio oficial. Cierra y abre la terminal después de modificar `PATH`. Las versiones deben ser compatibles entre sí antes de crear archivos.
+
+### 2. Crea o recupera el proyecto del track
+
+```bash
+# Crea el proyecto con el asistente oficial de Kotlin Multiplatform
+cd academia-labs/kmp-app
+git init
+./gradlew tasks
+```
+
+Trabaja dentro de `academia-labs/kmp-app`. Si ya existe, no lo vuelvas a generar: entra en la carpeta, confirma `git status` y continúa sobre una rama propia.
+
+### 3. Ubica cada tema antes de escribir
+
+```text
+academia-labs/kmp-app/
+├─ shared/src/commonMain/kotlin/
+│  └─ module-7/
+├─ tests/
+├─ docs/decisions/
+├─ evidence/module-7/
+└─ README.md
+```
+
+| Tema | Archivo o decisión | Evidencia mínima |
+|---|---|---|
+| 1. Compose Multiplatform vs Jetpack Compose | `shared/src/commonMain/kotlin/module-7/topic-1-compose-multiplatform-vs-jetpack-compose.kt` | prueba + salida observable |
+| 2. Theming y navegación compartidos | `shared/src/commonMain/kotlin/module-7/topic-2-theming-y-navegacion-compartidos.kt` | prueba + salida observable |
+| 3. Limitaciones en iOS y otros targets | `shared/src/commonMain/kotlin/module-7/topic-3-limitaciones-en-ios-y-otros-targets.kt` | prueba + salida observable |
+
+Un ejemplo técnico vive en el archivo indicado y debe tener una prueba. Un tema conceptual vive en `docs/decisions/`: compara opciones usando restricciones medibles; no escribas código decorativo solo para llenar espacio.
+
+### 4. Ejecuta una línea base
+
+Desde `academia-labs/kmp-app`:
+
+```bash
+./gradlew :shared:allTests
+```
+
+**Resultado esperado:** el comando reconoce el proyecto y termina sin errores antes de introducir el cambio del capítulo. Después del incremento, la evidencia debe demostrar: **Pantalla compartida en Compose Multiplatform renderizada en Android e iOS, más tres ejercicios de evaluación.**
+
+Si falla la línea base, no continúes. Localiza el primer mensaje que indique archivo, línea o dependencia; formula una causa y compruébala con un cambio pequeño.
+
+### 5. Provoca un fallo y recupérate
+
+Introduce un dato nulo o caso específico de plataforma; commonTest debe hacerlo visible. Guarda en `evidence/module-7/` el comando, la salida relevante, tu hipótesis y la corrección. Revierte únicamente el cambio deliberado; no borres todo el proyecto para ocultar la causa.
+
+### 6. Conecta el capítulo con RutaFlow
+
+Aplica el aprendizaje de **Compose Multiplatform — UI compartida** a un incremento vertical de RutaFlow. Define qué componente produce el dato, qué contrato lo transporta, quién lo consume y cómo observarás un fallo. La entrega final incluye archivo o decisión, prueba, salida, error corregido y una limitación que todavía validarías en producción.
+
+---
+
 ## Contenido teórico
 
 ### Tema 1: Compose Multiplatform vs Jetpack Compose

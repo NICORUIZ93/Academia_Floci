@@ -30,6 +30,74 @@ API con persistencia real en PostgreSQL y migraciones versionadas con Flyway, m�
 
 ---
 
+## Comienza desde cero: prepara este capítulo
+
+Este recorrido parte de una carpeta vacía. Al finalizar tendrás **API con persistencia real en PostgreSQL y migraciones versionadas con Flyway, más tres ejercicios de evaluación.** No avances ejecutando comandos que no comprendes: primero identifica la entrada, la transformación y la evidencia que comprobará el resultado.
+
+### 1. Comprueba las herramientas
+
+Los comandos funcionan en macOS, Linux y WSL. En PowerShell usa el equivalente indicado por la herramienta.
+
+```bash
+java --version
+javac --version
+curl --version
+```
+
+Si un comando no existe, detente e instala esa herramienta desde su sitio oficial. Cierra y abre la terminal después de modificar `PATH`. Las versiones deben ser compatibles entre sí antes de crear archivos.
+
+### 2. Crea o recupera el proyecto del track
+
+```bash
+mkdir -p academia-labs && cd academia-labs
+curl -G https://start.spring.io/starter.zip -d type=maven-project -d language=java -d javaVersion=21 -d artifactId=spring-api -d dependencies=web,validation -o spring-api.zip
+unzip spring-api.zip -d spring-api && cd spring-api
+```
+
+Trabaja dentro de `academia-labs/spring-api`. Si ya existe, no lo vuelvas a generar: entra en la carpeta, confirma `git status` y continúa sobre una rama propia.
+
+### 3. Ubica cada tema antes de escribir
+
+```text
+academia-labs/spring-api/
+├─ src/main/java/io/academia/rutaflow/
+│  └─ module-3/
+├─ tests/
+├─ docs/decisions/
+├─ evidence/module-3/
+└─ README.md
+```
+
+| Tema | Archivo o decisión | Evidencia mínima |
+|---|---|---|
+| 1. Entidades y repositorios derivados | `src/main/java/io/academia/rutaflow/module-3/topic-1-entidades-y-repositorios-derivados.java` | prueba + salida observable |
+| 2. El problema N+1 y su corrección | `src/main/java/io/academia/rutaflow/module-3/topic-2-el-problema-n-1-y-su-correccion.java` | prueba + salida observable |
+| 3. Migraciones con Flyway | `src/main/java/io/academia/rutaflow/module-3/topic-3-migraciones-con-flyway.java` | prueba + salida observable |
+
+Un ejemplo técnico vive en el archivo indicado y debe tener una prueba. Un tema conceptual vive en `docs/decisions/`: compara opciones usando restricciones medibles; no escribas código decorativo solo para llenar espacio.
+
+### 4. Ejecuta una línea base
+
+Desde `academia-labs/spring-api`:
+
+```bash
+./mvnw test  # Windows: .\mvnw.cmd test
+```
+
+**Resultado esperado:** el comando reconoce el proyecto y termina sin errores antes de introducir el cambio del capítulo. Después del incremento, la evidencia debe demostrar: **API con persistencia real en PostgreSQL y migraciones versionadas con Flyway, más tres ejercicios de evaluación.**
+
+Si falla la línea base, no continúes. Localiza el primer mensaje que indique archivo, línea o dependencia; formula una causa y compruébala con un cambio pequeño.
+
+### 5. Provoca un fallo y recupérate
+
+Envía una petición inválida o sustituye una dependencia por un fallo controlado; verifica estado, cuerpo y causa. Guarda en `evidence/module-3/` el comando, la salida relevante, tu hipótesis y la corrección. Revierte únicamente el cambio deliberado; no borres todo el proyecto para ocultar la causa.
+
+### 6. Conecta el capítulo con RutaFlow
+
+Aplica el aprendizaje de **Persistencia con Spring Data JPA** a un incremento vertical de RutaFlow. Define qué componente produce el dato, qué contrato lo transporta, quién lo consume y cómo observarás un fallo. La entrega final incluye archivo o decisión, prueba, salida, error corregido y una limitación que todavía validarías en producción.
+
+---
+
 ## Contenido teórico
 
 ### Tema 1: Entidades y repositorios derivados

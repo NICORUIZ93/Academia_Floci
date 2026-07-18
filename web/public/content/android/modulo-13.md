@@ -10,6 +10,76 @@ Una app móvil se ejecuta en un dispositivo que puede perderse, restaurarse, que
 4. ANR, crashes, rendimiento y releases graduales.
 5. Proyecto: auditoría operativa y de seguridad de la app.
 
+## Comienza desde cero: prepara este capítulo
+
+Este recorrido parte de una carpeta vacía. Al finalizar tendrás **Un incremento pequeño, probado y reproducible del capítulo.** No avances ejecutando comandos que no comprendes: primero identifica la entrada, la transformación y la evidencia que comprobará el resultado.
+
+### 1. Comprueba las herramientas
+
+Los comandos funcionan en macOS, Linux y WSL. En PowerShell usa el equivalente indicado por la herramienta.
+
+```bash
+java --version
+./gradlew --version
+adb version
+```
+
+Si un comando no existe, detente e instala esa herramienta desde su sitio oficial. Cierra y abre la terminal después de modificar `PATH`. Las versiones deben ser compatibles entre sí antes de crear archivos.
+
+### 2. Crea o recupera el proyecto del track
+
+```bash
+# Android Studio: New Project → Empty Activity → Kotlin + Compose
+cd academia-labs/android-app
+git init
+./gradlew tasks
+```
+
+Trabaja dentro de `academia-labs/android-app`. Si ya existe, no lo vuelvas a generar: entra en la carpeta, confirma `git status` y continúa sobre una rama propia.
+
+### 3. Ubica cada tema antes de escribir
+
+```text
+academia-labs/android-app/
+├─ app/src/main/java/academy/
+│  └─ module-13/
+├─ tests/
+├─ docs/decisions/
+├─ evidence/module-13/
+└─ README.md
+```
+
+| Tema | Archivo o decisión | Evidencia mínima |
+|---|---|---|
+| 1. El sistema operativo conecta tu app con entradas externas | `app/src/main/java/academy/module-13/topic-1-el-sistema-operativo-conecta-tu-app-con-entradas-exter.kt` | prueba + salida observable |
+| 2. Proteger datos exige conocer copias y ciclo de vida | `app/src/main/java/academy/module-13/topic-2-proteger-datos-exige-conocer-copias-y-ciclo-de-vida.kt` | prueba + salida observable |
+| 3. Offline-first necesita un protocolo de cambios | `app/src/main/java/academy/module-13/topic-3-offline-first-necesita-un-protocolo-de-cambios.kt` | prueba + salida observable |
+| 4. La calidad se opera por dispositivo y versión | `app/src/main/java/academy/module-13/topic-4-la-calidad-se-opera-por-dispositivo-y-version.kt` | prueba + salida observable |
+
+Un ejemplo técnico vive en el archivo indicado y debe tener una prueba. Un tema conceptual vive en `docs/decisions/`: compara opciones usando restricciones medibles; no escribas código decorativo solo para llenar espacio.
+
+### 4. Ejecuta una línea base
+
+Desde `academia-labs/android-app`:
+
+```bash
+./gradlew testDebugUnitTest
+```
+
+**Resultado esperado:** el comando reconoce el proyecto y termina sin errores antes de introducir el cambio del capítulo. Después del incremento, la evidencia debe demostrar: **Un incremento pequeño, probado y reproducible del capítulo.**
+
+Si falla la línea base, no continúes. Localiza el primer mensaje que indique archivo, línea o dependencia; formula una causa y compruébala con un cambio pequeño.
+
+### 5. Provoca un fallo y recupérate
+
+Simula permiso denegado, proceso recreado o dato ausente; verifica que la pantalla conserve un estado comprensible. Guarda en `evidence/module-13/` el comando, la salida relevante, tu hipótesis y la corrección. Revierte únicamente el cambio deliberado; no borres todo el proyecto para ocultar la causa.
+
+### 6. Conecta el capítulo con RutaFlow
+
+Aplica el aprendizaje de **Android en producción — seguridad, sincronización y calidad** a un incremento vertical de RutaFlow. Define qué componente produce el dato, qué contrato lo transporta, quién lo consume y cómo observarás un fallo. La entrega final incluye archivo o decisión, prueba, salida, error corregido y una limitación que todavía validarías en producción.
+
+---
+
 ## Contenido teórico
 
 ### Tema 1: El sistema operativo conecta tu app con entradas externas

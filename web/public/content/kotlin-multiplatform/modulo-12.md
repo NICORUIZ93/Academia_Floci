@@ -10,6 +10,75 @@ La app integradora demuestra que el código común compila y funciona. Un produc
 4. Seguridad, observabilidad y release coordinado.
 5. Proyecto: convertir el módulo compartido en SDK operable.
 
+## Comienza desde cero: prepara este capítulo
+
+Este recorrido parte de una carpeta vacía. Al finalizar tendrás **Un incremento pequeño, probado y reproducible del capítulo.** No avances ejecutando comandos que no comprendes: primero identifica la entrada, la transformación y la evidencia que comprobará el resultado.
+
+### 1. Comprueba las herramientas
+
+Los comandos funcionan en macOS, Linux y WSL. En PowerShell usa el equivalente indicado por la herramienta.
+
+```bash
+java --version
+./gradlew --version
+```
+
+Si un comando no existe, detente e instala esa herramienta desde su sitio oficial. Cierra y abre la terminal después de modificar `PATH`. Las versiones deben ser compatibles entre sí antes de crear archivos.
+
+### 2. Crea o recupera el proyecto del track
+
+```bash
+# Crea el proyecto con el asistente oficial de Kotlin Multiplatform
+cd academia-labs/kmp-app
+git init
+./gradlew tasks
+```
+
+Trabaja dentro de `academia-labs/kmp-app`. Si ya existe, no lo vuelvas a generar: entra en la carpeta, confirma `git status` y continúa sobre una rama propia.
+
+### 3. Ubica cada tema antes de escribir
+
+```text
+academia-labs/kmp-app/
+├─ shared/src/commonMain/kotlin/
+│  └─ module-12/
+├─ tests/
+├─ docs/decisions/
+├─ evidence/module-12/
+└─ README.md
+```
+
+| Tema | Archivo o decisión | Evidencia mínima |
+|---|---|---|
+| 1. La mejor frontera compartida es deliberadamente pequeña | `shared/src/commonMain/kotlin/module-12/topic-1-la-mejor-frontera-compartida-es-deliberadamente-pequen.kt` | prueba + salida observable |
+| 2. Garbage collection no cierra sockets ni rompe ciclos externos | `shared/src/commonMain/kotlin/module-12/topic-2-garbage-collection-no-cierra-sockets-ni-rompe-ciclos-e.kt` | prueba + salida observable |
+| 3. Un artefacto compatible necesita más que el mismo número de versión | `shared/src/commonMain/kotlin/module-12/topic-3-un-artefacto-compatible-necesita-mas-que-el-mismo-nume.kt` | prueba + salida observable |
+| 4. Un fallo compartido necesita símbolos y contexto de ambas plataformas | `shared/src/commonMain/kotlin/module-12/topic-4-un-fallo-compartido-necesita-simbolos-y-contexto-de-am.kt` | prueba + salida observable |
+
+Un ejemplo técnico vive en el archivo indicado y debe tener una prueba. Un tema conceptual vive en `docs/decisions/`: compara opciones usando restricciones medibles; no escribas código decorativo solo para llenar espacio.
+
+### 4. Ejecuta una línea base
+
+Desde `academia-labs/kmp-app`:
+
+```bash
+./gradlew :shared:allTests
+```
+
+**Resultado esperado:** el comando reconoce el proyecto y termina sin errores antes de introducir el cambio del capítulo. Después del incremento, la evidencia debe demostrar: **Un incremento pequeño, probado y reproducible del capítulo.**
+
+Si falla la línea base, no continúes. Localiza el primer mensaje que indique archivo, línea o dependencia; formula una causa y compruébala con un cambio pequeño.
+
+### 5. Provoca un fallo y recupérate
+
+Introduce un dato nulo o caso específico de plataforma; commonTest debe hacerlo visible. Guarda en `evidence/module-12/` el comando, la salida relevante, tu hipótesis y la corrección. Revierte únicamente el cambio deliberado; no borres todo el proyecto para ocultar la causa.
+
+### 6. Conecta el capítulo con RutaFlow
+
+Aplica el aprendizaje de **KMP en producción — fronteras, compatibilidad y observabilidad** a un incremento vertical de RutaFlow. Define qué componente produce el dato, qué contrato lo transporta, quién lo consume y cómo observarás un fallo. La entrega final incluye archivo o decisión, prueba, salida, error corregido y una limitación que todavía validarías en producción.
+
+---
+
 ## Contenido teórico
 
 ### Tema 1: La mejor frontera compartida es deliberadamente pequeña

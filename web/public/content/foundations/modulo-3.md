@@ -10,6 +10,74 @@ Explicar el recorrido de una petición web y construir una interfaz HTML/CSS sem
 
 **Prerrequisitos:** módulos 0–2; manejo de terminal, archivos, funciones y lectura de estructuras.
 
+## Comienza desde cero: prepara este capítulo
+
+Este recorrido parte de una carpeta vacía. Al finalizar tendrás **Un incremento pequeño, probado y reproducible del capítulo.** No avances ejecutando comandos que no comprendes: primero identifica la entrada, la transformación y la evidencia que comprobará el resultado.
+
+### 1. Comprueba las herramientas
+
+Los comandos funcionan en macOS, Linux y WSL. En PowerShell usa el equivalente indicado por la herramienta.
+
+```bash
+python3 --version
+git --version
+```
+
+Si un comando no existe, detente e instala esa herramienta desde su sitio oficial. Cierra y abre la terminal después de modificar `PATH`. Las versiones deben ser compatibles entre sí antes de crear archivos.
+
+### 2. Crea o recupera el proyecto del track
+
+```bash
+mkdir -p academia-labs/foundations/{src,tests,docs/evidence}
+cd academia-labs/foundations
+git init
+```
+
+Trabaja dentro de `academia-labs/foundations`. Si ya existe, no lo vuelvas a generar: entra en la carpeta, confirma `git status` y continúa sobre una rama propia.
+
+### 3. Ubica cada tema antes de escribir
+
+```text
+academia-labs/foundations/
+├─ src/
+│  └─ module-3/
+├─ tests/
+├─ docs/decisions/
+├─ evidence/module-3/
+└─ README.md
+```
+
+| Tema | Archivo o decisión | Evidencia mínima |
+|---|---|---|
+| 1. De una URL al servidor: red, DNS, IP y puertos | `src/module-3/topic-1-de-una-url-al-servidor-red-dns-ip-y-puertos.py` | prueba + salida observable |
+| 2. HTTP como contrato observable | `src/module-3/topic-2-http-como-contrato-observable.py` | prueba + salida observable |
+| 3. HTML semántico, formularios y el DOM | `src/module-3/topic-3-html-semantico-formularios-y-el-dom.py` | prueba + salida observable |
+| 4. CSS, layout responsive y accesibilidad verificable | `src/module-3/topic-4-css-layout-responsive-y-accesibilidad-verificable.py` | prueba + salida observable |
+
+Un ejemplo técnico vive en el archivo indicado y debe tener una prueba. Un tema conceptual vive en `docs/decisions/`: compara opciones usando restricciones medibles; no escribas código decorativo solo para llenar espacio.
+
+### 4. Ejecuta una línea base
+
+Desde `academia-labs/foundations`:
+
+```bash
+python3 -m unittest discover -s tests -v
+```
+
+**Resultado esperado:** el comando reconoce el proyecto y termina sin errores antes de introducir el cambio del capítulo. Después del incremento, la evidencia debe demostrar: **Un incremento pequeño, probado y reproducible del capítulo.**
+
+Si falla la línea base, no continúes. Localiza el primer mensaje que indique archivo, línea o dependencia; formula una causa y compruébala con un cambio pequeño.
+
+### 5. Provoca un fallo y recupérate
+
+Usa una entrada inválida o elimina una precondición y conserva el mensaje que explica la causa. Guarda en `evidence/module-3/` el comando, la salida relevante, tu hipótesis y la corrección. Revierte únicamente el cambio deliberado; no borres todo el proyecto para ocultar la causa.
+
+### 6. Conecta el capítulo con RutaFlow
+
+Aplica el aprendizaje de **Fundamentos de web, redes y accesibilidad** a un incremento vertical de RutaFlow. Define qué componente produce el dato, qué contrato lo transporta, quién lo consume y cómo observarás un fallo. La entrega final incluye archivo o decisión, prueba, salida, error corregido y una limitación que todavía validarías en producción.
+
+---
+
 ## Contenido teórico
 
 ### Tema 1: De una URL al servidor: red, DNS, IP y puertos

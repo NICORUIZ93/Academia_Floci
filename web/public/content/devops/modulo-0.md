@@ -34,6 +34,80 @@ Un laboratorio de Linux más un proxy inverso reproducible, y cuatro ejercicios 
 
 ---
 
+## Comienza desde cero: prepara este capítulo
+
+Este recorrido parte de una carpeta vacía. Al finalizar tendrás **Un laboratorio de Linux más un proxy inverso reproducible, y cuatro ejercicios de evaluación.** No avances ejecutando comandos que no comprendes: primero identifica la entrada, la transformación y la evidencia que comprobará el resultado.
+
+### 1. Comprueba las herramientas
+
+Los comandos funcionan en macOS, Linux y WSL. En PowerShell usa el equivalente indicado por la herramienta.
+
+```bash
+git --version
+docker --version
+bash --version
+```
+
+Si un comando no existe, detente e instala esa herramienta desde su sitio oficial. Cierra y abre la terminal después de modificar `PATH`. Las versiones deben ser compatibles entre sí antes de crear archivos.
+
+### 2. Crea o recupera el proyecto del track
+
+```bash
+mkdir -p academia-labs/devops/{app,infra,scripts,evidence}
+cd academia-labs/devops
+git init
+```
+
+Trabaja dentro de `academia-labs/devops`. Si ya existe, no lo vuelvas a generar: entra en la carpeta, confirma `git status` y continúa sobre una rama propia.
+
+### 3. Ubica cada tema antes de escribir
+
+```text
+academia-labs/devops/
+├─ infra/
+│  └─ module-0/
+├─ tests/
+├─ docs/decisions/
+├─ evidence/module-0/
+└─ README.md
+```
+
+| Tema | Archivo o decisión | Evidencia mínima |
+|---|---|---|
+| 1. Sistema de archivos y permisos (chmod/chown) | `infra/module-0/topic-1-sistema-de-archivos-y-permisos-chmod-chown.yaml` | prueba + salida observable |
+| 2. Procesos, señales y jobs en segundo plano | `infra/module-0/topic-2-procesos-senales-y-jobs-en-segundo-plano.yaml` | prueba + salida observable |
+| 3. Pipes, redirección y filtros (grep, awk, sed) | `infra/module-0/topic-3-pipes-redireccion-y-filtros-grep-awk-sed.yaml` | prueba + salida observable |
+| 4. Variables de entorno y scripts bash robustos (set -euo pipefail) | `infra/module-0/topic-4-variables-de-entorno-y-scripts-bash-robustos-set-euo-p.yaml` | prueba + salida observable |
+| 5. Cron y tareas programadas | `infra/module-0/topic-5-cron-y-tareas-programadas.yaml` | prueba + salida observable |
+| 6. Hardening básico — SSH sin contraseña, firewalls, SELinux/AppArmor | `infra/module-0/topic-6-hardening-basico-ssh-sin-contrasena-firewalls-selinux-.yaml` | prueba + salida observable |
+| 7. Redes — modelo OSI, TCP/IP, DNS y balanceadores de carga | `infra/module-0/topic-7-redes-modelo-osi-tcp-ip-dns-y-balanceadores-de-carga.yaml` | prueba + salida observable |
+| 8. Cultura DevOps y el ciclo Plan→Code→Build→Test→Release→Deploy→Operate→Monitor | `infra/module-0/topic-8-cultura-devops-y-el-ciclo-plan-code-build-test-release.yaml` | prueba + salida observable |
+| 9. NGINX y proxies desde cero | `infra/module-0/topic-9-nginx-y-proxies-desde-cero.yaml` | prueba + salida observable |
+
+Un ejemplo técnico vive en el archivo indicado y debe tener una prueba. Un tema conceptual vive en `docs/decisions/`: compara opciones usando restricciones medibles; no escribas código decorativo solo para llenar espacio.
+
+### 4. Ejecuta una línea base
+
+Desde `academia-labs/devops`:
+
+```bash
+docker compose config
+```
+
+**Resultado esperado:** el comando reconoce el proyecto y termina sin errores antes de introducir el cambio del capítulo. Después del incremento, la evidencia debe demostrar: **Un laboratorio de Linux más un proxy inverso reproducible, y cuatro ejercicios de evaluación.**
+
+Si falla la línea base, no continúes. Localiza el primer mensaje que indique archivo, línea o dependencia; formula una causa y compruébala con un cambio pequeño.
+
+### 5. Provoca un fallo y recupérate
+
+Rompe una referencia, variable o healthcheck y localiza la causa con la validación o los logs. Guarda en `evidence/module-0/` el comando, la salida relevante, tu hipótesis y la corrección. Revierte únicamente el cambio deliberado; no borres todo el proyecto para ocultar la causa.
+
+### 6. Conecta el capítulo con RutaFlow
+
+Aplica el aprendizaje de **Linux y shell scripting para DevOps** a un incremento vertical de RutaFlow. Define qué componente produce el dato, qué contrato lo transporta, quién lo consume y cómo observarás un fallo. La entrega final incluye archivo o decisión, prueba, salida, error corregido y una limitación que todavía validarías en producción.
+
+---
+
 ## Antes de comenzar: construye un laboratorio seguro
 
 DevOps trabaja intensamente con Linux, incluso si tu computador usa Windows o macOS. Necesitas Git, VS Code, Docker y una shell compatible. Practicaremos en local para no generar costos ni modificar servidores reales.

@@ -29,6 +29,77 @@ Una biblioteca de funciones utilitarias (debounce, pipe, curry) sin dependencias
 
 ---
 
+## Comienza desde cero: prepara este capítulo
+
+Este recorrido parte de una carpeta vacía. Al finalizar tendrás **Una biblioteca de funciones utilitarias (debounce, pipe, curry) sin dependencias externas, más tres ejercicios de evaluación sobre las tres formas de función, orden superior y control de flujo.** No avances ejecutando comandos que no comprendes: primero identifica la entrada, la transformación y la evidencia que comprobará el resultado.
+
+### 1. Comprueba las herramientas
+
+Los comandos funcionan en macOS, Linux y WSL. En PowerShell usa el equivalente indicado por la herramienta.
+
+```bash
+node --version
+npm --version
+git --version
+```
+
+Si un comando no existe, detente e instala esa herramienta desde su sitio oficial. Cierra y abre la terminal después de modificar `PATH`. Las versiones deben ser compatibles entre sí antes de crear archivos.
+
+### 2. Crea o recupera el proyecto del track
+
+```bash
+npm create vite@latest academia-labs/javascript -- --template vanilla-ts
+cd academia-labs/javascript
+npm install
+git init
+```
+
+Trabaja dentro de `academia-labs/javascript`. Si ya existe, no lo vuelvas a generar: entra en la carpeta, confirma `git status` y continúa sobre una rama propia.
+
+### 3. Ubica cada tema antes de escribir
+
+```text
+academia-labs/javascript/
+├─ src/
+│  └─ module-1/
+├─ tests/
+├─ docs/decisions/
+├─ evidence/module-1/
+└─ README.md
+```
+
+| Tema | Archivo o decisión | Evidencia mínima |
+|---|---|---|
+| 1. Tres formas de escribir una función | `src/module-1/topic-1-tres-formas-de-escribir-una-funcion.ts` | prueba + salida observable |
+| 2. Parámetros por defecto y rest/spread | `src/module-1/topic-2-parametros-por-defecto-y-rest-spread.ts` | prueba + salida observable |
+| 3. Funciones de orden superior | `src/module-1/topic-3-funciones-de-orden-superior.ts` | prueba + salida observable |
+| 4. Control de flujo — if, switch y loops | `src/module-1/topic-4-control-de-flujo-if-switch-y-loops.ts` | prueba + salida observable |
+| 5. IIFE y el objeto arguments | `src/module-1/topic-5-iife-y-el-objeto-arguments.ts` | prueba + salida observable |
+
+Un ejemplo técnico vive en el archivo indicado y debe tener una prueba. Un tema conceptual vive en `docs/decisions/`: compara opciones usando restricciones medibles; no escribas código decorativo solo para llenar espacio.
+
+### 4. Ejecuta una línea base
+
+Desde `academia-labs/javascript`:
+
+```bash
+npm test && npm run dev
+```
+
+**Resultado esperado:** el comando reconoce el proyecto y termina sin errores antes de introducir el cambio del capítulo. Después del incremento, la evidencia debe demostrar: **Una biblioteca de funciones utilitarias (debounce, pipe, curry) sin dependencias externas, más tres ejercicios de evaluación sobre las tres formas de función, orden superior y control de flujo.**
+
+Si falla la línea base, no continúes. Localiza el primer mensaje que indique archivo, línea o dependencia; formula una causa y compruébala con un cambio pequeño.
+
+### 5. Provoca un fallo y recupérate
+
+Prueba un valor límite, un tipo inesperado o una operación fuera de orden; compara la salida con tu predicción. Guarda en `evidence/module-1/` el comando, la salida relevante, tu hipótesis y la corrección. Revierte únicamente el cambio deliberado; no borres todo el proyecto para ocultar la causa.
+
+### 6. Conecta el capítulo con RutaFlow
+
+Aplica el aprendizaje de **Operadores, control de flujo y funciones** a un incremento vertical de RutaFlow. Define qué componente produce el dato, qué contrato lo transporta, quién lo consume y cómo observarás un fallo. La entrega final incluye archivo o decisión, prueba, salida, error corregido y una limitación que todavía validarías en producción.
+
+---
+
 ## Contenido teórico
 
 ### Tema 1: Tres formas de escribir una función

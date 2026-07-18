@@ -29,6 +29,75 @@ Un buscador con debounce y cancelación de peticiones previas usando `switchMap`
 
 ---
 
+## Comienza desde cero: prepara este capítulo
+
+Este recorrido parte de una carpeta vacía. Al finalizar tendrás **Un buscador con debounce y cancelación de peticiones previas usando `switchMap`, más tres ejercicios de evaluación.** No avances ejecutando comandos que no comprendes: primero identifica la entrada, la transformación y la evidencia que comprobará el resultado.
+
+### 1. Comprueba las herramientas
+
+Los comandos funcionan en macOS, Linux y WSL. En PowerShell usa el equivalente indicado por la herramienta.
+
+```bash
+node --version
+npm --version
+npx ng version
+```
+
+Si un comando no existe, detente e instala esa herramienta desde su sitio oficial. Cierra y abre la terminal después de modificar `PATH`. Las versiones deben ser compatibles entre sí antes de crear archivos.
+
+### 2. Crea o recupera el proyecto del track
+
+```bash
+npx @angular/cli@latest new academia-labs/angular-app --standalone --routing --style=scss
+cd academia-labs/angular-app
+git init
+```
+
+Trabaja dentro de `academia-labs/angular-app`. Si ya existe, no lo vuelvas a generar: entra en la carpeta, confirma `git status` y continúa sobre una rama propia.
+
+### 3. Ubica cada tema antes de escribir
+
+```text
+academia-labs/angular-app/
+├─ src/app/features/
+│  └─ module-6/
+├─ tests/
+├─ docs/decisions/
+├─ evidence/module-6/
+└─ README.md
+```
+
+| Tema | Archivo o decisión | Evidencia mínima |
+|---|---|---|
+| 1. Observable frente a Promise | `src/app/features/module-6/topic-1-observable-frente-a-promise.ts` | prueba + salida observable |
+| 2. Operadores clave — debounceTime, distinctUntilChanged, switchMap, combineLatest | `src/app/features/module-6/topic-2-operadores-clave-debouncetime-distinctuntilchanged-swi.ts` | prueba + salida observable |
+| 3. Manejo de suscripciones sin fugas de memoria | `src/app/features/module-6/topic-3-manejo-de-suscripciones-sin-fugas-de-memoria.ts` | prueba + salida observable |
+| 4. Subjects y operadores de aplanamiento avanzados | `src/app/features/module-6/topic-4-subjects-y-operadores-de-aplanamiento-avanzados.ts` | prueba + salida observable |
+
+Un ejemplo técnico vive en el archivo indicado y debe tener una prueba. Un tema conceptual vive en `docs/decisions/`: compara opciones usando restricciones medibles; no escribas código decorativo solo para llenar espacio.
+
+### 4. Ejecuta una línea base
+
+Desde `academia-labs/angular-app`:
+
+```bash
+npm test -- --watch=false && npm start
+```
+
+**Resultado esperado:** el comando reconoce el proyecto y termina sin errores antes de introducir el cambio del capítulo. Después del incremento, la evidencia debe demostrar: **Un buscador con debounce y cancelación de peticiones previas usando `switchMap`, más tres ejercicios de evaluación.**
+
+Si falla la línea base, no continúes. Localiza el primer mensaje que indique archivo, línea o dependencia; formula una causa y compruébala con un cambio pequeño.
+
+### 5. Provoca un fallo y recupérate
+
+Simula un estado vacío o un error HTTP y comprueba que la interfaz muestre recuperación y no una pantalla ambigua. Guarda en `evidence/module-6/` el comando, la salida relevante, tu hipótesis y la corrección. Revierte únicamente el cambio deliberado; no borres todo el proyecto para ocultar la causa.
+
+### 6. Conecta el capítulo con RutaFlow
+
+Aplica el aprendizaje de **RxJS esencial para Angular** a un incremento vertical de RutaFlow. Define qué componente produce el dato, qué contrato lo transporta, quién lo consume y cómo observarás un fallo. La entrega final incluye archivo o decisión, prueba, salida, error corregido y una limitación que todavía validarías en producción.
+
+---
+
 ## Contenido teórico
 
 ### Tema 1: Observable frente a Promise

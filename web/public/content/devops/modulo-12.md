@@ -29,6 +29,77 @@ Un laboratorio que documenta la migración de un módulo Terraform de Floci a un
 
 ---
 
+## Comienza desde cero: prepara este capítulo
+
+Este recorrido parte de una carpeta vacía. Al finalizar tendrás **Un laboratorio que documenta la migración de un módulo Terraform de Floci a un proveedor real y construye una checklist de producción propia, más tres ejercicios de evaluación sobre qué cambia al ir a producción real, GitOps frente a CD tradicional, y diseño de una checklist para un proyecto propio.** No avances ejecutando comandos que no comprendes: primero identifica la entrada, la transformación y la evidencia que comprobará el resultado.
+
+### 1. Comprueba las herramientas
+
+Los comandos funcionan en macOS, Linux y WSL. En PowerShell usa el equivalente indicado por la herramienta.
+
+```bash
+git --version
+docker --version
+bash --version
+```
+
+Si un comando no existe, detente e instala esa herramienta desde su sitio oficial. Cierra y abre la terminal después de modificar `PATH`. Las versiones deben ser compatibles entre sí antes de crear archivos.
+
+### 2. Crea o recupera el proyecto del track
+
+```bash
+mkdir -p academia-labs/devops/{app,infra,scripts,evidence}
+cd academia-labs/devops
+git init
+```
+
+Trabaja dentro de `academia-labs/devops`. Si ya existe, no lo vuelvas a generar: entra en la carpeta, confirma `git status` y continúa sobre una rama propia.
+
+### 3. Ubica cada tema antes de escribir
+
+```text
+academia-labs/devops/
+├─ infra/
+│  └─ module-12/
+├─ tests/
+├─ docs/decisions/
+├─ evidence/module-12/
+└─ README.md
+```
+
+| Tema | Archivo o decisión | Evidencia mínima |
+|---|---|---|
+| 1. De cloud local a un proveedor cloud real | `infra/module-12/topic-1-de-cloud-local-a-un-proveedor-cloud-real.yaml` | prueba + salida observable |
+| 2. Gestión de secretos cloud-native | `infra/module-12/topic-2-gestion-de-secretos-cloud-native.yaml` | prueba + salida observable |
+| 3. IaC multi-nube | `infra/module-12/topic-3-iac-multi-nube.yaml` | prueba + salida observable |
+| 4. Checklist de salida a producción | `infra/module-12/topic-4-checklist-de-salida-a-produccion.yaml` | prueba + salida observable |
+| 5. GitOps con ArgoCD y FluxCD | `infra/module-12/topic-5-gitops-con-argocd-y-fluxcd.yaml` | prueba + salida observable |
+| 6. Platform Engineering — Internal Developer Platforms (IDPs) | `infra/module-12/topic-6-platform-engineering-internal-developer-platforms-idps.yaml` | prueba + salida observable |
+
+Un ejemplo técnico vive en el archivo indicado y debe tener una prueba. Un tema conceptual vive en `docs/decisions/`: compara opciones usando restricciones medibles; no escribas código decorativo solo para llenar espacio.
+
+### 4. Ejecuta una línea base
+
+Desde `academia-labs/devops`:
+
+```bash
+docker compose config
+```
+
+**Resultado esperado:** el comando reconoce el proyecto y termina sin errores antes de introducir el cambio del capítulo. Después del incremento, la evidencia debe demostrar: **Un laboratorio que documenta la migración de un módulo Terraform de Floci a un proveedor real y construye una checklist de producción propia, más tres ejercicios de evaluación sobre qué cambia al ir a producción real, GitOps frente a CD tradicional, y diseño de una checklist para un proyecto propio.**
+
+Si falla la línea base, no continúes. Localiza el primer mensaje que indique archivo, línea o dependencia; formula una causa y compruébala con un cambio pequeño.
+
+### 5. Provoca un fallo y recupérate
+
+Rompe una referencia, variable o healthcheck y localiza la causa con la validación o los logs. Guarda en `evidence/module-12/` el comando, la salida relevante, tu hipótesis y la corrección. Revierte únicamente el cambio deliberado; no borres todo el proyecto para ocultar la causa.
+
+### 6. Conecta el capítulo con RutaFlow
+
+Aplica el aprendizaje de **DevOps y este curso — del laboratorio a la nube** a un incremento vertical de RutaFlow. Define qué componente produce el dato, qué contrato lo transporta, quién lo consume y cómo observarás un fallo. La entrega final incluye archivo o decisión, prueba, salida, error corregido y una limitación que todavía validarías en producción.
+
+---
+
 ## Contenido teórico
 
 ### Tema 1: De cloud local a un proveedor cloud real

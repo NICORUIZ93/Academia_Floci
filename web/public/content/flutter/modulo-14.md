@@ -30,6 +30,78 @@ test/features/journey/
 
 La dirección de dependencias es `presentation → application → domain`; `data` implementa interfaces del dominio. Google Maps, Geolocator, Dio y Socket.IO son adaptadores reemplazables, no tipos que deban atravesar toda la aplicación. Ejecuta después de cada incremento con `flutter analyze` y `flutter test`; prueba permisos y ejecución en segundo plano en dispositivo real porque el simulador no reproduce todas las restricciones del sistema operativo.
 
+## Comienza desde cero: prepara este capítulo
+
+Este recorrido parte de una carpeta vacía. Al finalizar tendrás **Un incremento pequeño, probado y reproducible del capítulo.** No avances ejecutando comandos que no comprendes: primero identifica la entrada, la transformación y la evidencia que comprobará el resultado.
+
+### 1. Comprueba las herramientas
+
+Los comandos funcionan en macOS, Linux y WSL. En PowerShell usa el equivalente indicado por la herramienta.
+
+```bash
+flutter doctor -v
+flutter --version
+git --version
+```
+
+Si un comando no existe, detente e instala esa herramienta desde su sitio oficial. Cierra y abre la terminal después de modificar `PATH`. Las versiones deben ser compatibles entre sí antes de crear archivos.
+
+### 2. Crea o recupera el proyecto del track
+
+```bash
+flutter create --org com.academia academia-labs/flutter_app
+cd academia-labs/flutter_app
+git init
+flutter pub get
+```
+
+Trabaja dentro de `academia-labs/flutter_app`. Si ya existe, no lo vuelvas a generar: entra en la carpeta, confirma `git status` y continúa sobre una rama propia.
+
+### 3. Ubica cada tema antes de escribir
+
+```text
+academia-labs/flutter_app/
+├─ lib/features/
+│  └─ module-14/
+├─ tests/
+├─ docs/decisions/
+├─ evidence/module-14/
+└─ README.md
+```
+
+| Tema | Archivo o decisión | Evidencia mínima |
+|---|---|---|
+| 1. Diseño de pantallas y Riverpod | `lib/features/module-14/topic-1-diseno-de-pantallas-y-riverpod.dart` | prueba + salida observable |
+| 2. Google Maps y localización en tiempo real | `lib/features/module-14/topic-2-google-maps-y-localizacion-en-tiempo-real.dart` | prueba + salida observable |
+| 3. Socket.IO y actualización de rutas | `lib/features/module-14/topic-3-socket-io-y-actualizacion-de-rutas.dart` | prueba + salida observable |
+| 4. Animaciones de localización | `lib/features/module-14/topic-4-animaciones-de-localizacion.dart` | prueba + salida observable |
+| 5. Almacenamiento local, imágenes y offline | `lib/features/module-14/topic-5-almacenamiento-local-imagenes-y-offline.dart` | prueba + salida observable |
+| 6. Dio y notificaciones push | `lib/features/module-14/topic-6-dio-y-notificaciones-push.dart` | prueba + salida observable |
+
+Un ejemplo técnico vive en el archivo indicado y debe tener una prueba. Un tema conceptual vive en `docs/decisions/`: compara opciones usando restricciones medibles; no escribas código decorativo solo para llenar espacio.
+
+### 4. Ejecuta una línea base
+
+Desde `academia-labs/flutter_app`:
+
+```bash
+flutter analyze && flutter test
+```
+
+**Resultado esperado:** el comando reconoce el proyecto y termina sin errores antes de introducir el cambio del capítulo. Después del incremento, la evidencia debe demostrar: **Un incremento pequeño, probado y reproducible del capítulo.**
+
+Si falla la línea base, no continúes. Localiza el primer mensaje que indique archivo, línea o dependencia; formula una causa y compruébala con un cambio pequeño.
+
+### 5. Provoca un fallo y recupérate
+
+Simula pérdida de red, permiso denegado o widget desmontado; comprueba la recuperación sin errores ocultos. Guarda en `evidence/module-14/` el comando, la salida relevante, tu hipótesis y la corrección. Revierte únicamente el cambio deliberado; no borres todo el proyecto para ocultar la causa.
+
+### 6. Conecta el capítulo con RutaFlow
+
+Aplica el aprendizaje de **Flutter para entregas: mapas, GPS y tiempo real** a un incremento vertical de RutaFlow. Define qué componente produce el dato, qué contrato lo transporta, quién lo consume y cómo observarás un fallo. La entrega final incluye archivo o decisión, prueba, salida, error corregido y una limitación que todavía validarías en producción.
+
+---
+
 ## Contenido teórico
 
 ### Tema 1: Diseño de pantallas y Riverpod

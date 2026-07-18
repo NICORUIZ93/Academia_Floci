@@ -8,6 +8,107 @@
 
 **Evaluación:** 20 % fundamento, 35 % implementación, 25 % pruebas y fallos, 10 % seguridad, 10 % documentación y comunicación.
 
+## Comienza desde cero: prepara este capítulo
+
+Este recorrido parte de una carpeta vacía. Al finalizar tendrás **Un incremento pequeño, probado y reproducible del capítulo.** No avances ejecutando comandos que no comprendes: primero identifica la entrada, la transformación y la evidencia que comprobará el resultado.
+
+### 1. Comprueba las herramientas
+
+Los comandos funcionan en macOS, Linux y WSL. En PowerShell usa el equivalente indicado por la herramienta.
+
+```bash
+node --version
+npm --version
+git --version
+```
+
+Si un comando no existe, detente e instala esa herramienta desde su sitio oficial. Cierra y abre la terminal después de modificar `PATH`. Las versiones deben ser compatibles entre sí antes de crear archivos.
+
+### 2. Crea o recupera el proyecto del track
+
+```bash
+npm create vite@latest academia-labs/javascript -- --template vanilla-ts
+cd academia-labs/javascript
+npm install
+git init
+```
+
+Trabaja dentro de `academia-labs/javascript`. Si ya existe, no lo vuelvas a generar: entra en la carpeta, confirma `git status` y continúa sobre una rama propia.
+
+### 3. Ubica cada tema antes de escribir
+
+```text
+academia-labs/javascript/
+├─ src/
+│  └─ module-14/
+├─ tests/
+├─ docs/decisions/
+├─ evidence/module-14/
+└─ README.md
+```
+
+| Tema | Archivo o decisión | Evidencia mínima |
+|---|---|---|
+| 1. TypeScript avanzado | `src/module-14/topic-1-typescript-avanzado.ts` | prueba + salida observable |
+| 2. Workers y ejecución fuera del hilo principal | `src/module-14/topic-2-workers-y-ejecucion-fuera-del-hilo-principal.ts` | prueba + salida observable |
+| 3. Bundlers y optimización | `src/module-14/topic-3-bundlers-y-optimizacion.ts` | prueba + salida observable |
+| 4. Accesibilidad web | `src/module-14/topic-4-accesibilidad-web.ts` | prueba + salida observable |
+| 5. WebAssembly con Rust o C | `src/module-14/topic-5-webassembly-con-rust-o-c.ts` | prueba + salida observable |
+| 6. Web3 y machine learning en navegador | `src/module-14/topic-6-web3-y-machine-learning-en-navegador.ts` | prueba + salida observable |
+| 7. HTML y CSS | `docs/decisions/module-14-topic-7.md` | contexto + alternativas + decisión + consecuencias |
+| 8. Historia de JavaScript | `docs/decisions/module-14-topic-8.md` | contexto + alternativas + decisión + consecuencias |
+| 9. Tipos de Datos | `docs/decisions/module-14-topic-9.md` | contexto + alternativas + decisión + consecuencias |
+| 10. Objetos y Arrays | `docs/decisions/module-14-topic-10.md` | contexto + alternativas + decisión + consecuencias |
+| 11. jQuery | `docs/decisions/module-14-topic-11.md` | contexto + alternativas + decisión + consecuencias |
+| 12. D3.js | `docs/decisions/module-14-topic-12.md` | contexto + alternativas + decisión + consecuencias |
+| 13. Phaser.js | `docs/decisions/module-14-topic-13.md` | contexto + alternativas + decisión + consecuencias |
+| 14. Google Maps API | `docs/decisions/module-14-topic-14.md` | contexto + alternativas + decisión + consecuencias |
+| 15. Progressive Web Apps | `docs/decisions/module-14-topic-15.md` | contexto + alternativas + decisión + consecuencias |
+| 16. Transpilación | `docs/decisions/module-14-topic-16.md` | contexto + alternativas + decisión + consecuencias |
+| 17. WebGPU | `docs/decisions/module-14-topic-17.md` | contexto + alternativas + decisión + consecuencias |
+| 18. Privacidad en navegador | `docs/decisions/module-14-topic-18.md` | contexto + alternativas + decisión + consecuencias |
+| 19. Web Components | `docs/decisions/module-14-topic-19.md` | contexto + alternativas + decisión + consecuencias |
+| 20. Depuración y flujo de trabajo | `docs/decisions/module-14-topic-20.md` | contexto + alternativas + decisión + consecuencias |
+| 21. IDE y herramientas | `docs/decisions/module-14-topic-21.md` | contexto + alternativas + decisión + consecuencias |
+| 22. Expresiones y flujo de control | `docs/decisions/module-14-topic-22.md` | contexto + alternativas + decisión + consecuencias |
+| 23. Funciones integradas | `docs/decisions/module-14-topic-23.md` | contexto + alternativas + decisión + consecuencias |
+| 24. Fecha y hora | `docs/decisions/module-14-topic-24.md` | contexto + alternativas + decisión + consecuencias |
+| 25. Manipulación de cadenas | `docs/decisions/module-14-topic-25.md` | contexto + alternativas + decisión + consecuencias |
+| 26. Manejo de eventos | `docs/decisions/module-14-topic-26.md` | contexto + alternativas + decisión + consecuencias |
+| 27. Depuración y manejo de errores | `docs/decisions/module-14-topic-27.md` | contexto + alternativas + decisión + consecuencias |
+| 28. Proyectos prácticos | `docs/decisions/module-14-topic-28.md` | contexto + alternativas + decisión + consecuencias |
+| 29. JavaScript en el navegador | `docs/decisions/module-14-topic-29.md` | contexto + alternativas + decisión + consecuencias |
+| 30. Relación con ECMAScript | `docs/decisions/module-14-topic-30.md` | contexto + alternativas + decisión + consecuencias |
+| 31. Versiones de JavaScript | `docs/decisions/module-14-topic-31.md` | contexto + alternativas + decisión + consecuencias |
+| 32. Modelo de objetos del documento | `docs/decisions/module-14-topic-32.md` | contexto + alternativas + decisión + consecuencias |
+| 33. Lenguajes de scripting del lado del cliente | `docs/decisions/module-14-topic-33.md` | contexto + alternativas + decisión + consecuencias |
+| 34. Implementación en aplicaciones web | `docs/decisions/module-14-topic-34.md` | contexto + alternativas + decisión + consecuencias |
+| 35. Manipulación de números | `docs/decisions/module-14-topic-35.md` | contexto + alternativas + decisión + consecuencias |
+
+Un ejemplo técnico vive en el archivo indicado y debe tener una prueba. Un tema conceptual vive en `docs/decisions/`: compara opciones usando restricciones medibles; no escribas código decorativo solo para llenar espacio.
+
+### 4. Ejecuta una línea base
+
+Desde `academia-labs/javascript`:
+
+```bash
+npm test && npm run dev
+```
+
+**Resultado esperado:** el comando reconoce el proyecto y termina sin errores antes de introducir el cambio del capítulo. Después del incremento, la evidencia debe demostrar: **Un incremento pequeño, probado y reproducible del capítulo.**
+
+Si falla la línea base, no continúes. Localiza el primer mensaje que indique archivo, línea o dependencia; formula una causa y compruébala con un cambio pequeño.
+
+### 5. Provoca un fallo y recupérate
+
+Prueba un valor límite, un tipo inesperado o una operación fuera de orden; compara la salida con tu predicción. Guarda en `evidence/module-14/` el comando, la salida relevante, tu hipótesis y la corrección. Revierte únicamente el cambio deliberado; no borres todo el proyecto para ocultar la causa.
+
+### 6. Conecta el capítulo con RutaFlow
+
+Aplica el aprendizaje de **JavaScript Master: TypeScript, WASM y cómputo emergente** a un incremento vertical de RutaFlow. Define qué componente produce el dato, qué contrato lo transporta, quién lo consume y cómo observarás un fallo. La entrega final incluye archivo o decisión, prueba, salida, error corregido y una limitación que todavía validarías en producción.
+
+---
+
 ## Contenido teórico
 
 ### Tema 1: TypeScript avanzado

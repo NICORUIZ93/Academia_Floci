@@ -8,6 +8,105 @@
 
 **Evaluación:** 20 % fundamento, 35 % implementación, 25 % pruebas y fallos, 10 % seguridad, 10 % documentación y comunicación.
 
+## Comienza desde cero: prepara este capítulo
+
+Este recorrido parte de una carpeta vacía. Al finalizar tendrás **Un incremento pequeño, probado y reproducible del capítulo.** No avances ejecutando comandos que no comprendes: primero identifica la entrada, la transformación y la evidencia que comprobará el resultado.
+
+### 1. Comprueba las herramientas
+
+Los comandos funcionan en macOS, Linux y WSL. En PowerShell usa el equivalente indicado por la herramienta.
+
+```bash
+docker --version
+aws --version
+terraform version
+```
+
+Si un comando no existe, detente e instala esa herramienta desde su sitio oficial. Cierra y abre la terminal después de modificar `PATH`. Las versiones deben ser compatibles entre sí antes de crear archivos.
+
+### 2. Crea o recupera el proyecto del track
+
+```bash
+mkdir -p academia-labs/cloud/{infra,tests,evidence}
+cd academia-labs/cloud
+git init
+docker compose up -d
+```
+
+Trabaja dentro de `academia-labs/cloud`. Si ya existe, no lo vuelvas a generar: entra en la carpeta, confirma `git status` y continúa sobre una rama propia.
+
+### 3. Ubica cada tema antes de escribir
+
+```text
+academia-labs/cloud/
+├─ infra/
+│  └─ module-33/
+├─ tests/
+├─ docs/decisions/
+├─ evidence/module-33/
+└─ README.md
+```
+
+| Tema | Archivo o decisión | Evidencia mínima |
+|---|---|---|
+| 1. Terraform avanzado y CI/CD cloud | `infra/module-33/topic-1-terraform-avanzado-y-ci-cd-cloud.tf` | prueba + salida observable |
+| 2. Kubernetes administrado, ECS y Service Mesh | `infra/module-33/topic-2-kubernetes-administrado-ecs-y-service-mesh.tf` | prueba + salida observable |
+| 3. EC2, VPC, RDS, S3 y DynamoDB avanzados | `infra/module-33/topic-3-ec2-vpc-rds-s3-y-dynamodb-avanzados.tf` | prueba + salida observable |
+| 4. Lambda, API Gateway y observabilidad avanzada | `infra/module-33/topic-4-lambda-api-gateway-y-observabilidad-avanzada.tf` | prueba + salida observable |
+| 5. Seguridad, auditoría y FinOps | `infra/module-33/topic-5-seguridad-auditoria-y-finops.tf` | prueba + salida observable |
+| 6. Microservicios, Big Data, AI/ML y multi-cloud | `infra/module-33/topic-6-microservicios-big-data-ai-ml-y-multi-cloud.tf` | prueba + salida observable |
+| 7. Introducción a la Nube | `docs/decisions/module-33-topic-7.md` | contexto + alternativas + decisión + consecuencias |
+| 8. Infraestructura Global | `docs/decisions/module-33-topic-8.md` | contexto + alternativas + decisión + consecuencias |
+| 9. Redes Básicas | `docs/decisions/module-33-topic-9.md` | contexto + alternativas + decisión + consecuencias |
+| 10. Arquitectura Cliente-Servidor | `docs/decisions/module-33-topic-10.md` | contexto + alternativas + decisión + consecuencias |
+| 11. IAM Básico | `docs/decisions/module-33-topic-11.md` | contexto + alternativas + decisión + consecuencias |
+| 12. S3 (Almacenamiento) | `docs/decisions/module-33-topic-12.md` | contexto + alternativas + decisión + consecuencias |
+| 13. SQS (Colas) | `docs/decisions/module-33-topic-13.md` | contexto + alternativas + decisión + consecuencias |
+| 14. Lambda (Serverless) | `docs/decisions/module-33-topic-14.md` | contexto + alternativas + decisión + consecuencias |
+| 15. EC2 (Compute) | `docs/decisions/module-33-topic-15.md` | contexto + alternativas + decisión + consecuencias |
+| 16. RDS (Bases de datos) | `docs/decisions/module-33-topic-16.md` | contexto + alternativas + decisión + consecuencias |
+| 17. VPC (Redes) | `docs/decisions/module-33-topic-17.md` | contexto + alternativas + decisión + consecuencias |
+| 18. Sostenibilidad cloud | `docs/decisions/module-33-topic-18.md` | contexto + alternativas + decisión + consecuencias |
+| 19. Policy as Code | `docs/decisions/module-33-topic-19.md` | contexto + alternativas + decisión + consecuencias |
+| 20. Arquitectura de plataforma | `docs/decisions/module-33-topic-20.md` | contexto + alternativas + decisión + consecuencias |
+| 21. Infraestructura de centros de datos | `docs/decisions/module-33-topic-21.md` | contexto + alternativas + decisión + consecuencias |
+| 22. Modelos de facturación | `docs/decisions/module-33-topic-22.md` | contexto + alternativas + decisión + consecuencias |
+| 23. Replicación y persistencia de datos | `docs/decisions/module-33-topic-23.md` | contexto + alternativas + decisión + consecuencias |
+| 24. Almacenamiento distribuido | `docs/decisions/module-33-topic-24.md` | contexto + alternativas + decisión + consecuencias |
+| 25. Bases de datos en memoria | `docs/decisions/module-33-topic-25.md` | contexto + alternativas + decisión + consecuencias |
+| 26. Migración a la nube | `docs/decisions/module-33-topic-26.md` | contexto + alternativas + decisión + consecuencias |
+| 27. Conectividad y resolución de problemas | `docs/decisions/module-33-topic-27.md` | contexto + alternativas + decisión + consecuencias |
+| 28. Algoritmos y paradigmas cloud-native | `docs/decisions/module-33-topic-28.md` | contexto + alternativas + decisión + consecuencias |
+| 29. Factores económicos de la nube | `docs/decisions/module-33-topic-29.md` | contexto + alternativas + decisión + consecuencias |
+| 30. Computación sin servidor (Serverless) | `docs/decisions/module-33-topic-30.md` | contexto + alternativas + decisión + consecuencias |
+| 31. Computación en el borde (Edge Computing) | `docs/decisions/module-33-topic-31.md` | contexto + alternativas + decisión + consecuencias |
+| 32. Computación cuántica en la nube | `docs/decisions/module-33-topic-32.md` | contexto + alternativas + decisión + consecuencias |
+| 33. Nubes híbridas y multi-cloud | `docs/decisions/module-33-topic-33.md` | contexto + alternativas + decisión + consecuencias |
+
+Un ejemplo técnico vive en el archivo indicado y debe tener una prueba. Un tema conceptual vive en `docs/decisions/`: compara opciones usando restricciones medibles; no escribas código decorativo solo para llenar espacio.
+
+### 4. Ejecuta una línea base
+
+Desde `academia-labs/cloud`:
+
+```bash
+terraform -chdir=infra validate
+```
+
+**Resultado esperado:** el comando reconoce el proyecto y termina sin errores antes de introducir el cambio del capítulo. Después del incremento, la evidencia debe demostrar: **Un incremento pequeño, probado y reproducible del capítulo.**
+
+Si falla la línea base, no continúes. Localiza el primer mensaje que indique archivo, línea o dependencia; formula una causa y compruébala con un cambio pequeño.
+
+### 5. Provoca un fallo y recupérate
+
+Cambia un endpoint, permiso o identificador por un valor inválido; inspecciona la respuesta del emulador antes de corregir. Guarda en `evidence/module-33/` el comando, la salida relevante, tu hipótesis y la corrección. Revierte únicamente el cambio deliberado; no borres todo el proyecto para ocultar la causa.
+
+### 6. Conecta el capítulo con RutaFlow
+
+Aplica el aprendizaje de **Cloud Master: plataforma, seguridad, datos y FinOps** a un incremento vertical de RutaFlow. Define qué componente produce el dato, qué contrato lo transporta, quién lo consume y cómo observarás un fallo. La entrega final incluye archivo o decisión, prueba, salida, error corregido y una limitación que todavía validarías en producción.
+
+---
+
 ## Contenido teórico
 
 ### Tema 1: Terraform avanzado y CI/CD cloud

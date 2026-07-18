@@ -1,8 +1,8 @@
 # Academia Floci Repo Graph
 
-Generated: 2026-07-18 04:50 UTC
+Generated: 2026-07-18 04:58 UTC
 Root: `Academia_Floci`
-Indexed files: 782
+Indexed files: 783
 Import edges: 33
 
 Use this file as the first, compact context for AI assistants. Refresh it with:
@@ -16,7 +16,7 @@ For automated lookups, use `docs/repo-graph.json`.
 ## Project Shape
 
 - `angular-app`: 52 files
-- `automation-script`: 31 files
+- `automation-script`: 32 files
 - `course-content`: 347 files
 - `documentation`: 99 files
 - `example`: 215 files
@@ -26,7 +26,7 @@ For automated lookups, use `docs/repo-graph.json`.
 ## File Types
 
 - `.md`: 437
-- `.py`: 61
+- `.py`: 62
 - `.ts`: 47
 - `.js`: 44
 - `.java`: 40
@@ -52,9 +52,9 @@ For automated lookups, use `docs/repo-graph.json`.
 
 ## High Signal Files
 
-- `README.md` (287 lines, documentation)
+- `README.md` (293 lines, documentation)
   - headings: # Academia_Floci, ## Como empezar, ## Levantar Floci, # 1. Levantar todos los servicios, # 2. Verificar Floci AWS
-- `scripts/validate.sh` (437 lines, automation-script)
+- `scripts/validate.sh` (438 lines, automation-script)
 - `scripts/build_repo_graph.py` (446 lines, automation-script)
   - symbols: FileNode, repo_files, read_text, classify, parse_ts_symbols, parse_ts_imports, parse_python_symbols, parse_python_imports, parse_markdown_headings, unique
 - `web/index.html` (282 lines, project-file)
@@ -172,38 +172,38 @@ For automated lookups, use `docs/repo-graph.json`.
 - `scripts/create_rutaflow_content.py` (178 lines) - symbols: render; imports: pathlib
 - `scripts/enrich_code_quality.py` (44 lines) - imports: pathlib
 - `scripts/enrich_curriculum_sections.py` (172 lines) - symbols: bibliography, project_path; imports: pathlib
+- `scripts/enrich_from_zero_guides.py` (203 lines) - symbols: TrackGuide, topic_blocks, slug, extract_evaluation, render, main; imports: __future__, argparse, re, dataclasses, pathlib
 - `scripts/enrich_official_topic_atlas.py` (127 lines) - symbols: block; imports: pathlib, json
 - `scripts/enrich_official_updates.py` (97 lines) - imports: pathlib
 - `scripts/enrich_rutaflow_projects.py` (61 lines) - imports: pathlib
 - `scripts/fix_lessons.py` (205 lines) - symbols: safe_print, iter_text_check_files, find_text_quality_issues, normalized_content, fix_content, check_http, main; imports: argparse, glob, os, re, urllib.request
-- `scripts/start.sh` (10 lines)
-- ... 13 more files
+- ... 14 more files
 
 ### course-content
 
 - `web/public/content/ATRIBUCION.md` (20 lines) - headings: # Atribucion y licencia
 - `web/public/content/LICENSE-FLOCI.txt` (21 lines)
-- `web/public/content/android/modulo-0.md` (290 lines) - headings: # Módulo 0: Kotlin aplicado a Android, ## Sílabo, ## Antes de comenzar: instala Android Studio y un dispositivo de prueba, ## Contenido teórico
-- `web/public/content/android/modulo-1.md` (246 lines) - headings: # Módulo 1: Ciclo de vida: Activities y ViewModel, ## Sílabo, ## Contenido teórico, ### Tema 1: Ciclo de vida de una Activity
-- `web/public/content/android/modulo-10.md` (242 lines) - headings: # Módulo 10: Performance, Material 3 y accesibilidad, ## Sílabo, ## Contenido teórico, ### Tema 1: Detectar y corregir recomposición innecesaria
-- `web/public/content/android/modulo-11.md` (261 lines) - headings: # Módulo 11: Publicación en Google Play, ## Sílabo, ## Contenido teórico, ### Tema 1: Firma de la app
-- `web/public/content/android/modulo-12.md` (279 lines) - headings: # Módulo 12: Proyecto integrador: app Android completa, ## Sílabo, ## Contenido teórico, ### Tema 1: Arquitectura MVVM completa con UDF
-- `web/public/content/android/modulo-13.md` (327 lines) - headings: # Módulo 13: Android en producción — seguridad, sincronización y calidad, ## Sílabo, ## Contenido teórico, ### Tema 1: El sistema operativo conecta tu app con entradas externas
-- `web/public/content/android/modulo-14.md` (935 lines) - headings: # Módulo 14: Compose Master: pruebas, accesibilidad y animación, ## Sílabo, ## Contenido teórico, ### Tema 1: ComposeTestRule
-- `web/public/content/android/modulo-2.md` (263 lines) - headings: # Módulo 2: Jetpack Compose: UI declarativa, ## Sílabo, ## Contenido teórico, ### Tema 1: Composables y recomposición
-- `web/public/content/android/modulo-3.md` (265 lines) - headings: # Módulo 3: Navegación con Navigation Compose, ## Sílabo, ## Contenido teórico, ### Tema 1: NavHost y NavController
-- `web/public/content/android/modulo-4.md` (263 lines) - headings: # Módulo 4: Estado con StateFlow y Compose, ## Sílabo, ## Contenido teórico, ### Tema 1: StateFlow en el ViewModel
-- `web/public/content/android/modulo-5.md` (263 lines) - headings: # Módulo 5: Networking con Retrofit/Ktor, ## Sílabo, ## Contenido teórico, ### Tema 1: Retrofit con coroutines
-- `web/public/content/android/modulo-6.md` (268 lines) - headings: # Módulo 6: Persistencia local con Room, ## Sílabo, ## Contenido teórico, ### Tema 1: Entities, DAOs y Database
-- `web/public/content/android/modulo-7.md` (264 lines) - headings: # Módulo 7: Inyección de dependencias con Hilt, ## Sílabo, ## Contenido teórico, ### Tema 1: Configuración básica de Hilt
-- `web/public/content/android/modulo-8.md` (281 lines) - headings: # Módulo 8: Trabajo en segundo plano, ## Sílabo, ## Contenido teórico, ### Tema 1: CoroutineWorker y garantía de ejecución
-- `web/public/content/android/modulo-9.md` (267 lines) - headings: # Módulo 9: Testing en Android, ## Sílabo, ## Contenido teórico, ### Tema 1: Testing de ViewModels con fakes y runTest
-- `web/public/content/angular/modulo-0.md` (301 lines) - headings: # Módulo 0: Fundamentos y Angular CLI, ## Sílabo, ## Antes de comenzar: prepara tu equipo desde cero, ### Windows
+- `web/public/content/android/modulo-0.md` (359 lines) - headings: # Módulo 0: Kotlin aplicado a Android, ## Sílabo, ## Comienza desde cero: prepara este capítulo, ### 1. Comprueba las herramientas
+- `web/public/content/android/modulo-1.md` (315 lines) - headings: # Módulo 1: Ciclo de vida: Activities y ViewModel, ## Sílabo, ## Comienza desde cero: prepara este capítulo, ### 1. Comprueba las herramientas
+- `web/public/content/android/modulo-10.md` (311 lines) - headings: # Módulo 10: Performance, Material 3 y accesibilidad, ## Sílabo, ## Comienza desde cero: prepara este capítulo, ### 1. Comprueba las herramientas
+- `web/public/content/android/modulo-11.md` (330 lines) - headings: # Módulo 11: Publicación en Google Play, ## Sílabo, ## Comienza desde cero: prepara este capítulo, ### 1. Comprueba las herramientas
+- `web/public/content/android/modulo-12.md` (348 lines) - headings: # Módulo 12: Proyecto integrador: app Android completa, ## Sílabo, ## Comienza desde cero: prepara este capítulo, ### 1. Comprueba las herramientas
+- `web/public/content/android/modulo-13.md` (397 lines) - headings: # Módulo 13: Android en producción — seguridad, sincronización y calidad, ## Sílabo, ## Comienza desde cero: prepara este capítulo, ### 1. Comprueba las herramientas
+- `web/public/content/android/modulo-14.md` (1041 lines) - headings: # Módulo 14: Compose Master: pruebas, accesibilidad y animación, ## Sílabo, ## Comienza desde cero: prepara este capítulo, ### 1. Comprueba las herramientas
+- `web/public/content/android/modulo-2.md` (332 lines) - headings: # Módulo 2: Jetpack Compose: UI declarativa, ## Sílabo, ## Comienza desde cero: prepara este capítulo, ### 1. Comprueba las herramientas
+- `web/public/content/android/modulo-3.md` (334 lines) - headings: # Módulo 3: Navegación con Navigation Compose, ## Sílabo, ## Comienza desde cero: prepara este capítulo, ### 1. Comprueba las herramientas
+- `web/public/content/android/modulo-4.md` (332 lines) - headings: # Módulo 4: Estado con StateFlow y Compose, ## Sílabo, ## Comienza desde cero: prepara este capítulo, ### 1. Comprueba las herramientas
+- `web/public/content/android/modulo-5.md` (332 lines) - headings: # Módulo 5: Networking con Retrofit/Ktor, ## Sílabo, ## Comienza desde cero: prepara este capítulo, ### 1. Comprueba las herramientas
+- `web/public/content/android/modulo-6.md` (337 lines) - headings: # Módulo 6: Persistencia local con Room, ## Sílabo, ## Comienza desde cero: prepara este capítulo, ### 1. Comprueba las herramientas
+- `web/public/content/android/modulo-7.md` (333 lines) - headings: # Módulo 7: Inyección de dependencias con Hilt, ## Sílabo, ## Comienza desde cero: prepara este capítulo, ### 1. Comprueba las herramientas
+- `web/public/content/android/modulo-8.md` (350 lines) - headings: # Módulo 8: Trabajo en segundo plano, ## Sílabo, ## Comienza desde cero: prepara este capítulo, ### 1. Comprueba las herramientas
+- `web/public/content/android/modulo-9.md` (336 lines) - headings: # Módulo 9: Testing en Android, ## Sílabo, ## Comienza desde cero: prepara este capítulo, ### 1. Comprueba las herramientas
+- `web/public/content/angular/modulo-0.md` (370 lines) - headings: # Módulo 0: Fundamentos y Angular CLI, ## Sílabo, ## Comienza desde cero: prepara este capítulo, ### 1. Comprueba las herramientas
 - ... 329 more files
 
 ### documentation
 
-- `README.md` (287 lines) - headings: # Academia_Floci, ## Como empezar, ## Levantar Floci, # 1. Levantar todos los servicios
+- `README.md` (293 lines) - headings: # Academia_Floci, ## Como empezar, ## Levantar Floci, # 1. Levantar todos los servicios
 - `docs/ESTANDAR-DE-CODIGO.md` (56 lines) - headings: # Estándar transversal de código y diseño, ## Prioridades, ## Clean Code con criterio, ## SOLID cuando aporta valor
 - `docs/MATRIZ-CURRICULAR.md` (71 lines) - headings: # Matriz curricular auditable, ## Progresión de competencia, ## Cobertura por módulo, ## Método de evaluación
 - `docs/METODOLOGIA-DE-APRENDIZAJE.md` (57 lines) - headings: # Metodología Aprende construyendo, ## Ciclo de cada capítulo, ## Tamaño de las experiencias, ## Regla para mostrar soluciones

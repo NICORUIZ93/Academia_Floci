@@ -10,6 +10,74 @@ Diseñar seguridad como propiedad del sistema: identificar activos y amenazas, a
 
 **Prerrequisitos:** módulos 0–5; HTTP, SQL parametrizado, pruebas, Git y CI.
 
+## Comienza desde cero: prepara este capítulo
+
+Este recorrido parte de una carpeta vacía. Al finalizar tendrás **Un incremento pequeño, probado y reproducible del capítulo.** No avances ejecutando comandos que no comprendes: primero identifica la entrada, la transformación y la evidencia que comprobará el resultado.
+
+### 1. Comprueba las herramientas
+
+Los comandos funcionan en macOS, Linux y WSL. En PowerShell usa el equivalente indicado por la herramienta.
+
+```bash
+python3 --version
+git --version
+```
+
+Si un comando no existe, detente e instala esa herramienta desde su sitio oficial. Cierra y abre la terminal después de modificar `PATH`. Las versiones deben ser compatibles entre sí antes de crear archivos.
+
+### 2. Crea o recupera el proyecto del track
+
+```bash
+mkdir -p academia-labs/foundations/{src,tests,docs/evidence}
+cd academia-labs/foundations
+git init
+```
+
+Trabaja dentro de `academia-labs/foundations`. Si ya existe, no lo vuelvas a generar: entra en la carpeta, confirma `git status` y continúa sobre una rama propia.
+
+### 3. Ubica cada tema antes de escribir
+
+```text
+academia-labs/foundations/
+├─ src/
+│  └─ module-6/
+├─ tests/
+├─ docs/decisions/
+├─ evidence/module-6/
+└─ README.md
+```
+
+| Tema | Archivo o decisión | Evidencia mínima |
+|---|---|---|
+| 1. Activos, amenazas, riesgos y límites de confianza | `src/module-6/topic-1-activos-amenazas-riesgos-y-limites-de-confianza.py` | prueba + salida observable |
+| 2. Identidad, contraseñas, sesiones y autorización | `src/module-6/topic-2-identidad-contrasenas-sesiones-y-autorizacion.py` | prueba + salida observable |
+| 3. Criptografía aplicada, TLS, claves y secretos | `src/module-6/topic-3-criptografia-aplicada-tls-claves-y-secretos.py` | prueba + salida observable |
+| 4. Validación, vulnerabilidades web, privacidad y respuesta | `src/module-6/topic-4-validacion-vulnerabilidades-web-privacidad-y-respuesta.py` | prueba + salida observable |
+
+Un ejemplo técnico vive en el archivo indicado y debe tener una prueba. Un tema conceptual vive en `docs/decisions/`: compara opciones usando restricciones medibles; no escribas código decorativo solo para llenar espacio.
+
+### 4. Ejecuta una línea base
+
+Desde `academia-labs/foundations`:
+
+```bash
+python3 -m unittest discover -s tests -v
+```
+
+**Resultado esperado:** el comando reconoce el proyecto y termina sin errores antes de introducir el cambio del capítulo. Después del incremento, la evidencia debe demostrar: **Un incremento pequeño, probado y reproducible del capítulo.**
+
+Si falla la línea base, no continúes. Localiza el primer mensaje que indique archivo, línea o dependencia; formula una causa y compruébala con un cambio pequeño.
+
+### 5. Provoca un fallo y recupérate
+
+Usa una entrada inválida o elimina una precondición y conserva el mensaje que explica la causa. Guarda en `evidence/module-6/` el comando, la salida relevante, tu hipótesis y la corrección. Revierte únicamente el cambio deliberado; no borres todo el proyecto para ocultar la causa.
+
+### 6. Conecta el capítulo con RutaFlow
+
+Aplica el aprendizaje de **Seguridad, privacidad y modelado de amenazas** a un incremento vertical de RutaFlow. Define qué componente produce el dato, qué contrato lo transporta, quién lo consume y cómo observarás un fallo. La entrega final incluye archivo o decisión, prueba, salida, error corregido y una limitación que todavía validarías en producción.
+
+---
+
 ## Contenido teórico
 
 ### Tema 1: Activos, amenazas, riesgos y límites de confianza

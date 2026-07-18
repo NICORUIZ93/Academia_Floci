@@ -27,6 +27,74 @@ Aplicación Java con lógica concurrente, tests y build reproducible documentado
 
 ---
 
+## Comienza desde cero: prepara este capítulo
+
+Este recorrido parte de una carpeta vacía. Al finalizar tendrás **Aplicación Java con lógica concurrente, tests y build reproducible documentado, más tres ejercicios de evaluación de cierre.** No avances ejecutando comandos que no comprendes: primero identifica la entrada, la transformación y la evidencia que comprobará el resultado.
+
+### 1. Comprueba las herramientas
+
+Los comandos funcionan en macOS, Linux y WSL. En PowerShell usa el equivalente indicado por la herramienta.
+
+```bash
+java --version
+javac --version
+git --version
+```
+
+Si un comando no existe, detente e instala esa herramienta desde su sitio oficial. Cierra y abre la terminal después de modificar `PATH`. Las versiones deben ser compatibles entre sí antes de crear archivos.
+
+### 2. Crea o recupera el proyecto del track
+
+```bash
+mkdir -p academia-labs/java/src/{main,test}/java/academy
+cd academia-labs/java
+git init
+```
+
+Trabaja dentro de `academia-labs/java`. Si ya existe, no lo vuelvas a generar: entra en la carpeta, confirma `git status` y continúa sobre una rama propia.
+
+### 3. Ubica cada tema antes de escribir
+
+```text
+academia-labs/java/
+├─ src/main/java/academy/
+│  └─ module-13/
+├─ tests/
+├─ docs/decisions/
+├─ evidence/module-13/
+└─ README.md
+```
+
+| Tema | Archivo o decisión | Evidencia mínima |
+|---|---|---|
+| 1. Arquitectura por capas del proyecto integrador | `src/main/java/academy/module-13/topic-1-arquitectura-por-capas-del-proyecto-integrador.java` | prueba + salida observable |
+| 2. Integrando concurrencia, modelado y testing | `src/main/java/academy/module-13/topic-2-integrando-concurrencia-modelado-y-testing.java` | prueba + salida observable |
+| 3. Build reproducible y cierre del track | `src/main/java/academy/module-13/topic-3-build-reproducible-y-cierre-del-track.java` | prueba + salida observable |
+
+Un ejemplo técnico vive en el archivo indicado y debe tener una prueba. Un tema conceptual vive en `docs/decisions/`: compara opciones usando restricciones medibles; no escribas código decorativo solo para llenar espacio.
+
+### 4. Ejecuta una línea base
+
+Desde `academia-labs/java`:
+
+```bash
+./gradlew test  # Windows: .\gradlew.bat test
+```
+
+**Resultado esperado:** el comando reconoce el proyecto y termina sin errores antes de introducir el cambio del capítulo. Después del incremento, la evidencia debe demostrar: **Aplicación Java con lógica concurrente, tests y build reproducible documentado, más tres ejercicios de evaluación de cierre.**
+
+Si falla la línea base, no continúes. Localiza el primer mensaje que indique archivo, línea o dependencia; formula una causa y compruébala con un cambio pequeño.
+
+### 5. Provoca un fallo y recupérate
+
+Viola una precondición o usa un valor frontera; la prueba debe expresar la regla incumplida. Guarda en `evidence/module-13/` el comando, la salida relevante, tu hipótesis y la corrección. Revierte únicamente el cambio deliberado; no borres todo el proyecto para ocultar la causa.
+
+### 6. Conecta el capítulo con RutaFlow
+
+Aplica el aprendizaje de **Proyecto integrador** a un incremento vertical de RutaFlow. Define qué componente produce el dato, qué contrato lo transporta, quién lo consume y cómo observarás un fallo. La entrega final incluye archivo o decisión, prueba, salida, error corregido y una limitación que todavía validarías en producción.
+
+---
+
 ## Contenido teórico
 
 ### Tema 1: Arquitectura por capas del proyecto integrador

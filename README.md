@@ -172,6 +172,12 @@ Cada tema muestra una ruta guiada de ocho pasos: conocimiento previo, archivo o
 registro de decisión, incremento, ejecución, resultado observable, fallo
 deliberado, conexión con RutaFlow y evidencia final. La guía distingue los
 temas con código de las decisiones conceptuales para no inventar implementaciones.
+Además, los 224 Markdown activos contienen una sección persistente **Comienza
+desde cero** con comprobación de herramientas, creación o recuperación del
+proyecto, árbol de carpetas, una ruta por cada tema real, línea base ejecutable,
+resultado esperado, fallo deliberado y conexión con RutaFlow. WebFlux conserva
+su tutorial manual como referencia y los otros 223 capítulos cumplen el mismo
+contrato mediante `scripts/enrich_from_zero_guides.py`.
 La auditoría editorial de `docs/topic-learning-quality.md` sigue midiendo el
 Markdown real por separado: una ayuda generada en la interfaz no convierte una
 explicación superficial en contenido editorial completo.

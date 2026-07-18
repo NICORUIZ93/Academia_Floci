@@ -8,6 +8,102 @@
 
 **Evaluación:** 20 % fundamento, 35 % implementación, 25 % pruebas y fallos, 10 % seguridad, 10 % documentación y comunicación.
 
+## Comienza desde cero: prepara este capítulo
+
+Este recorrido parte de una carpeta vacía. Al finalizar tendrás **Un incremento pequeño, probado y reproducible del capítulo.** No avances ejecutando comandos que no comprendes: primero identifica la entrada, la transformación y la evidencia que comprobará el resultado.
+
+### 1. Comprueba las herramientas
+
+Los comandos funcionan en macOS, Linux y WSL. En PowerShell usa el equivalente indicado por la herramienta.
+
+```bash
+java --version
+javac --version
+curl --version
+```
+
+Si un comando no existe, detente e instala esa herramienta desde su sitio oficial. Cierra y abre la terminal después de modificar `PATH`. Las versiones deben ser compatibles entre sí antes de crear archivos.
+
+### 2. Crea o recupera el proyecto del track
+
+```bash
+mkdir -p academia-labs && cd academia-labs
+curl -G https://start.spring.io/starter.zip -d type=maven-project -d language=java -d javaVersion=21 -d artifactId=spring-api -d dependencies=web,validation -o spring-api.zip
+unzip spring-api.zip -d spring-api && cd spring-api
+```
+
+Trabaja dentro de `academia-labs/spring-api`. Si ya existe, no lo vuelvas a generar: entra en la carpeta, confirma `git status` y continúa sobre una rama propia.
+
+### 3. Ubica cada tema antes de escribir
+
+```text
+academia-labs/spring-api/
+├─ src/main/java/io/academia/rutaflow/
+│  └─ module-15/
+├─ tests/
+├─ docs/decisions/
+├─ evidence/module-15/
+└─ README.md
+```
+
+| Tema | Archivo o decisión | Evidencia mínima |
+|---|---|---|
+| 1. WebFlux, Mono, Flux y Netty | `src/main/java/io/academia/rutaflow/module-15/topic-1-webflux-mono-flux-y-netty.java` | prueba + salida observable |
+| 2. Testing avanzado con slices y Testcontainers | `src/main/java/io/academia/rutaflow/module-15/topic-2-testing-avanzado-con-slices-y-testcontainers.java` | prueba + salida observable |
+| 3. Arquitectura hexagonal | `src/main/java/io/academia/rutaflow/module-15/topic-3-arquitectura-hexagonal.java` | prueba + salida observable |
+| 4. Spring Cloud y Resilience4j | `src/main/java/io/academia/rutaflow/module-15/topic-4-spring-cloud-y-resilience4j.java` | prueba + salida observable |
+| 5. Sagas y CQRS | `src/main/java/io/academia/rutaflow/module-15/topic-5-sagas-y-cqrs.java` | prueba + salida observable |
+| 6. Event Sourcing y Outbox | `src/main/java/io/academia/rutaflow/module-15/topic-6-event-sourcing-y-outbox.java` | prueba + salida observable |
+| 7. Dependency Injection | `docs/decisions/module-15-topic-7.md` | contexto + alternativas + decisión + consecuencias |
+| 8. Request Handling | `docs/decisions/module-15-topic-8.md` | contexto + alternativas + decisión + consecuencias |
+| 9. Key Annotations | `docs/decisions/module-15-topic-9.md` | contexto + alternativas + decisión + consecuencias |
+| 10. Spring JDBC | `docs/decisions/module-15-topic-10.md` | contexto + alternativas + decisión + consecuencias |
+| 11. Exception Handling | `docs/decisions/module-15-topic-11.md` | contexto + alternativas + decisión + consecuencias |
+| 12. Devtools | `docs/decisions/module-15-topic-12.md` | contexto + alternativas + decisión + consecuencias |
+| 13. Observabilidad OpenTelemetry | `docs/decisions/module-15-topic-13.md` | contexto + alternativas + decisión + consecuencias |
+| 14. Contratos evolutivos | `docs/decisions/module-15-topic-14.md` | contexto + alternativas + decisión + consecuencias |
+| 15. Consistencia distribuida | `docs/decisions/module-15-topic-15.md` | contexto + alternativas + decisión + consecuencias |
+| 16. Significado de Spring Boot | `docs/decisions/module-15-topic-16.md` | contexto + alternativas + decisión + consecuencias |
+| 17. Conexión a MySQL | `docs/decisions/module-15-topic-17.md` | contexto + alternativas + decisión + consecuencias |
+| 18. Manejo de autenticación | `docs/decisions/module-15-topic-18.md` | contexto + alternativas + decisión + consecuencias |
+| 19. Programación Orientada a Aspectos (AOP) | `docs/decisions/module-15-topic-19.md` | contexto + alternativas + decisión + consecuencias |
+| 20. Funciones adicionales de Spring | `docs/decisions/module-15-topic-20.md` | contexto + alternativas + decisión + consecuencias |
+| 21. Configuración de proyectos | `docs/decisions/module-15-topic-21.md` | contexto + alternativas + decisión + consecuencias |
+| 22. Trabajo con propiedades | `docs/decisions/module-15-topic-22.md` | contexto + alternativas + decisión + consecuencias |
+| 23. Trabajo con perfiles | `docs/decisions/module-15-topic-23.md` | contexto + alternativas + decisión + consecuencias |
+| 24. Registro (Logging) | `docs/decisions/module-15-topic-24.md` | contexto + alternativas + decisión + consecuencias |
+| 25. Despliegue desde IDE | `docs/decisions/module-15-topic-25.md` | contexto + alternativas + decisión + consecuencias |
+| 26. Ecosistema Spring Boot | `docs/decisions/module-15-topic-26.md` | contexto + alternativas + decisión + consecuencias |
+| 27. Desarrollo de aplicaciones web | `docs/decisions/module-15-topic-27.md` | contexto + alternativas + decisión + consecuencias |
+| 28. Cifrado | `docs/decisions/module-15-topic-28.md` | contexto + alternativas + decisión + consecuencias |
+| 29. Modelo y vista | `docs/decisions/module-15-topic-29.md` | contexto + alternativas + decisión + consecuencias |
+| 30. Programación del lado del servidor | `docs/decisions/module-15-topic-30.md` | contexto + alternativas + decisión + consecuencias |
+| 31. ORM/JPA | `docs/decisions/module-15-topic-31.md` | contexto + alternativas + decisión + consecuencias |
+
+Un ejemplo técnico vive en el archivo indicado y debe tener una prueba. Un tema conceptual vive en `docs/decisions/`: compara opciones usando restricciones medibles; no escribas código decorativo solo para llenar espacio.
+
+### 4. Ejecuta una línea base
+
+Desde `academia-labs/spring-api`:
+
+```bash
+./mvnw test  # Windows: .\mvnw.cmd test
+```
+
+**Resultado esperado:** el comando reconoce el proyecto y termina sin errores antes de introducir el cambio del capítulo. Después del incremento, la evidencia debe demostrar: **Un incremento pequeño, probado y reproducible del capítulo.**
+
+Si falla la línea base, no continúes. Localiza el primer mensaje que indique archivo, línea o dependencia; formula una causa y compruébala con un cambio pequeño.
+
+### 5. Provoca un fallo y recupérate
+
+Envía una petición inválida o sustituye una dependencia por un fallo controlado; verifica estado, cuerpo y causa. Guarda en `evidence/module-15/` el comando, la salida relevante, tu hipótesis y la corrección. Revierte únicamente el cambio deliberado; no borres todo el proyecto para ocultar la causa.
+
+### 6. Conecta el capítulo con RutaFlow
+
+Aplica el aprendizaje de **Spring Master: hexagonal, reactivo y microservicios** a un incremento vertical de RutaFlow. Define qué componente produce el dato, qué contrato lo transporta, quién lo consume y cómo observarás un fallo. La entrega final incluye archivo o decisión, prueba, salida, error corregido y una limitación que todavía validarías en producción.
+
+---
+
 ## Contenido teórico
 
 ### Tema 1: WebFlux, Mono, Flux y Netty

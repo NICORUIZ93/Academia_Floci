@@ -10,6 +10,74 @@ Elegir y utilizar estructuras de datos según las operaciones que necesita un pr
 
 **Prerrequisitos:** módulos 0 y 1; variables, condiciones, bucles, funciones y casos de prueba.
 
+## Comienza desde cero: prepara este capítulo
+
+Este recorrido parte de una carpeta vacía. Al finalizar tendrás **Un incremento pequeño, probado y reproducible del capítulo.** No avances ejecutando comandos que no comprendes: primero identifica la entrada, la transformación y la evidencia que comprobará el resultado.
+
+### 1. Comprueba las herramientas
+
+Los comandos funcionan en macOS, Linux y WSL. En PowerShell usa el equivalente indicado por la herramienta.
+
+```bash
+python3 --version
+git --version
+```
+
+Si un comando no existe, detente e instala esa herramienta desde su sitio oficial. Cierra y abre la terminal después de modificar `PATH`. Las versiones deben ser compatibles entre sí antes de crear archivos.
+
+### 2. Crea o recupera el proyecto del track
+
+```bash
+mkdir -p academia-labs/foundations/{src,tests,docs/evidence}
+cd academia-labs/foundations
+git init
+```
+
+Trabaja dentro de `academia-labs/foundations`. Si ya existe, no lo vuelvas a generar: entra en la carpeta, confirma `git status` y continúa sobre una rama propia.
+
+### 3. Ubica cada tema antes de escribir
+
+```text
+academia-labs/foundations/
+├─ src/
+│  └─ module-2/
+├─ tests/
+├─ docs/decisions/
+├─ evidence/module-2/
+└─ README.md
+```
+
+| Tema | Archivo o decisión | Evidencia mínima |
+|---|---|---|
+| 1. Elegir estructuras según las operaciones | `src/module-2/topic-1-elegir-estructuras-segun-las-operaciones.py` | prueba + salida observable |
+| 2. Pilas, colas y abstracciones de comportamiento | `src/module-2/topic-2-pilas-colas-y-abstracciones-de-comportamiento.py` | prueba + salida observable |
+| 3. Búsqueda, precondiciones y demostración de corrección | `src/module-2/topic-3-busqueda-precondiciones-y-demostracion-de-correccion.py` | prueba + salida observable |
+| 4. Complejidad, medición, ordenamiento y recursión | `src/module-2/topic-4-complejidad-medicion-ordenamiento-y-recursion.py` | prueba + salida observable |
+
+Un ejemplo técnico vive en el archivo indicado y debe tener una prueba. Un tema conceptual vive en `docs/decisions/`: compara opciones usando restricciones medibles; no escribas código decorativo solo para llenar espacio.
+
+### 4. Ejecuta una línea base
+
+Desde `academia-labs/foundations`:
+
+```bash
+python3 -m unittest discover -s tests -v
+```
+
+**Resultado esperado:** el comando reconoce el proyecto y termina sin errores antes de introducir el cambio del capítulo. Después del incremento, la evidencia debe demostrar: **Un incremento pequeño, probado y reproducible del capítulo.**
+
+Si falla la línea base, no continúes. Localiza el primer mensaje que indique archivo, línea o dependencia; formula una causa y compruébala con un cambio pequeño.
+
+### 5. Provoca un fallo y recupérate
+
+Usa una entrada inválida o elimina una precondición y conserva el mensaje que explica la causa. Guarda en `evidence/module-2/` el comando, la salida relevante, tu hipótesis y la corrección. Revierte únicamente el cambio deliberado; no borres todo el proyecto para ocultar la causa.
+
+### 6. Conecta el capítulo con RutaFlow
+
+Aplica el aprendizaje de **Estructuras de datos, algoritmos y complejidad** a un incremento vertical de RutaFlow. Define qué componente produce el dato, qué contrato lo transporta, quién lo consume y cómo observarás un fallo. La entrega final incluye archivo o decisión, prueba, salida, error corregido y una limitación que todavía validarías en producción.
+
+---
+
 ## Contenido teórico
 
 ### Tema 1: Elegir estructuras según las operaciones

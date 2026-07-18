@@ -8,6 +8,105 @@
 
 **Evaluación:** 20 % fundamento, 35 % implementación, 25 % pruebas y fallos, 10 % seguridad, 10 % documentación y comunicación.
 
+## Comienza desde cero: prepara este capítulo
+
+Este recorrido parte de una carpeta vacía. Al finalizar tendrás **Un incremento pequeño, probado y reproducible del capítulo.** No avances ejecutando comandos que no comprendes: primero identifica la entrada, la transformación y la evidencia que comprobará el resultado.
+
+### 1. Comprueba las herramientas
+
+Los comandos funcionan en macOS, Linux y WSL. En PowerShell usa el equivalente indicado por la herramienta.
+
+```bash
+flutter doctor -v
+flutter --version
+git --version
+```
+
+Si un comando no existe, detente e instala esa herramienta desde su sitio oficial. Cierra y abre la terminal después de modificar `PATH`. Las versiones deben ser compatibles entre sí antes de crear archivos.
+
+### 2. Crea o recupera el proyecto del track
+
+```bash
+flutter create --org com.academia academia-labs/flutter_app
+cd academia-labs/flutter_app
+git init
+flutter pub get
+```
+
+Trabaja dentro de `academia-labs/flutter_app`. Si ya existe, no lo vuelvas a generar: entra en la carpeta, confirma `git status` y continúa sobre una rama propia.
+
+### 3. Ubica cada tema antes de escribir
+
+```text
+academia-labs/flutter_app/
+├─ lib/features/
+│  └─ module-15/
+├─ tests/
+├─ docs/decisions/
+├─ evidence/module-15/
+└─ README.md
+```
+
+| Tema | Archivo o decisión | Evidencia mínima |
+|---|---|---|
+| 1. flutter test y WidgetTester | `lib/features/module-15/topic-1-flutter-test-y-widgettester.dart` | prueba + salida observable |
+| 2. pumpAndSettle, golden e integration tests | `lib/features/module-15/topic-2-pumpandsettle-golden-e-integration-tests.dart` | prueba + salida observable |
+| 3. Rendimiento, RepaintBoundary y Keys | `lib/features/module-15/topic-3-rendimiento-repaintboundary-y-keys.dart` | prueba + salida observable |
+| 4. Clean Architecture | `lib/features/module-15/topic-4-clean-architecture.dart` | prueba + salida observable |
+| 5. Internacionalización completa | `lib/features/module-15/topic-5-internacionalizacion-completa.dart` | prueba + salida observable |
+| 6. Builds, firma y despliegue | `lib/features/module-15/topic-6-builds-firma-y-despliegue.dart` | prueba + salida observable |
+| 7. extends, implements, with | `docs/decisions/module-15-topic-7.md` | contexto + alternativas + decisión + consecuencias |
+| 8. async/await, Future, Stream | `docs/decisions/module-15-topic-8.md` | contexto + alternativas + decisión + consecuencias |
+| 9. Componentes Básicos | `docs/decisions/module-15-topic-9.md` | contexto + alternativas + decisión + consecuencias |
+| 10. State Management | `docs/decisions/module-15-topic-10.md` | contexto + alternativas + decisión + consecuencias |
+| 11. Internationalization | `docs/decisions/module-15-topic-11.md` | contexto + alternativas + decisión + consecuencias |
+| 12. Isolates y presupuesto de frames | `docs/decisions/module-15-topic-12.md` | contexto + alternativas + decisión + consecuencias |
+| 13. Seguridad de plugins | `docs/decisions/module-15-topic-13.md` | contexto + alternativas + decisión + consecuencias |
+| 14. Offline-first resiliente | `docs/decisions/module-15-topic-14.md` | contexto + alternativas + decisión + consecuencias |
+| 15. Arquitecturas de aplicaciones móviles | `docs/decisions/module-15-topic-15.md` | contexto + alternativas + decisión + consecuencias |
+| 16. Características de arquitecturas híbridas | `docs/decisions/module-15-topic-16.md` | contexto + alternativas + decisión + consecuencias |
+| 17. Características específicas de Flutter | `docs/decisions/module-15-topic-17.md` | contexto + alternativas + decisión + consecuencias |
+| 18. Estructura de proyectos Flutter | `docs/decisions/module-15-topic-18.md` | contexto + alternativas + decisión + consecuencias |
+| 19. Programación orientada a objetos en Dart | `docs/decisions/module-15-topic-19.md` | contexto + alternativas + decisión + consecuencias |
+| 20. Escenarios de aplicación | `docs/decisions/module-15-topic-20.md` | contexto + alternativas + decisión + consecuencias |
+| 21. Uso de widgets | `docs/decisions/module-15-topic-21.md` | contexto + alternativas + decisión + consecuencias |
+| 22. Navegación por pestañas | `docs/decisions/module-15-topic-22.md` | contexto + alternativas + decisión + consecuencias |
+| 23. Cajones laterales | `docs/decisions/module-15-topic-23.md` | contexto + alternativas + decisión + consecuencias |
+| 24. Navegación basada en pila | `docs/decisions/module-15-topic-24.md` | contexto + alternativas + decisión + consecuencias |
+| 25. Diseño de UI | `docs/decisions/module-15-topic-25.md` | contexto + alternativas + decisión + consecuencias |
+| 26. Gestión de estado avanzada | `docs/decisions/module-15-topic-26.md` | contexto + alternativas + decisión + consecuencias |
+| 27. Procesamiento y validación de entrada | `docs/decisions/module-15-topic-27.md` | contexto + alternativas + decisión + consecuencias |
+| 28. Conexión a servidores backend | `docs/decisions/module-15-topic-28.md` | contexto + alternativas + decisión + consecuencias |
+| 29. Transiciones de páginas | `docs/decisions/module-15-topic-29.md` | contexto + alternativas + decisión + consecuencias |
+| 30. Directrices de Material Design | `docs/decisions/module-15-topic-30.md` | contexto + alternativas + decisión + consecuencias |
+| 31. Comunicación y persistencia de datos | `docs/decisions/module-15-topic-31.md` | contexto + alternativas + decisión + consecuencias |
+| 32. Creación de formularios | `docs/decisions/module-15-topic-32.md` | contexto + alternativas + decisión + consecuencias |
+| 33. Validación y procesamiento de datos | `docs/decisions/module-15-topic-33.md` | contexto + alternativas + decisión + consecuencias |
+
+Un ejemplo técnico vive en el archivo indicado y debe tener una prueba. Un tema conceptual vive en `docs/decisions/`: compara opciones usando restricciones medibles; no escribas código decorativo solo para llenar espacio.
+
+### 4. Ejecuta una línea base
+
+Desde `academia-labs/flutter_app`:
+
+```bash
+flutter analyze && flutter test
+```
+
+**Resultado esperado:** el comando reconoce el proyecto y termina sin errores antes de introducir el cambio del capítulo. Después del incremento, la evidencia debe demostrar: **Un incremento pequeño, probado y reproducible del capítulo.**
+
+Si falla la línea base, no continúes. Localiza el primer mensaje que indique archivo, línea o dependencia; formula una causa y compruébala con un cambio pequeño.
+
+### 5. Provoca un fallo y recupérate
+
+Simula pérdida de red, permiso denegado o widget desmontado; comprueba la recuperación sin errores ocultos. Guarda en `evidence/module-15/` el comando, la salida relevante, tu hipótesis y la corrección. Revierte únicamente el cambio deliberado; no borres todo el proyecto para ocultar la causa.
+
+### 6. Conecta el capítulo con RutaFlow
+
+Aplica el aprendizaje de **Flutter Master: calidad, arquitectura y despliegue** a un incremento vertical de RutaFlow. Define qué componente produce el dato, qué contrato lo transporta, quién lo consume y cómo observarás un fallo. La entrega final incluye archivo o decisión, prueba, salida, error corregido y una limitación que todavía validarías en producción.
+
+---
+
 ## Contenido teórico
 
 ### Tema 1: flutter test y WidgetTester

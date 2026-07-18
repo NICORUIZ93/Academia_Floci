@@ -28,6 +28,75 @@ Animación fluida propia auditada con DevTools sin frames perdidos, más tres ej
 
 ---
 
+## Comienza desde cero: prepara este capítulo
+
+Este recorrido parte de una carpeta vacía. Al finalizar tendrás **Animación fluida propia auditada con DevTools sin frames perdidos, más tres ejercicios de evaluación.** No avances ejecutando comandos que no comprendes: primero identifica la entrada, la transformación y la evidencia que comprobará el resultado.
+
+### 1. Comprueba las herramientas
+
+Los comandos funcionan en macOS, Linux y WSL. En PowerShell usa el equivalente indicado por la herramienta.
+
+```bash
+flutter doctor -v
+flutter --version
+git --version
+```
+
+Si un comando no existe, detente e instala esa herramienta desde su sitio oficial. Cierra y abre la terminal después de modificar `PATH`. Las versiones deben ser compatibles entre sí antes de crear archivos.
+
+### 2. Crea o recupera el proyecto del track
+
+```bash
+flutter create --org com.academia academia-labs/flutter_app
+cd academia-labs/flutter_app
+git init
+flutter pub get
+```
+
+Trabaja dentro de `academia-labs/flutter_app`. Si ya existe, no lo vuelvas a generar: entra en la carpeta, confirma `git status` y continúa sobre una rama propia.
+
+### 3. Ubica cada tema antes de escribir
+
+```text
+academia-labs/flutter_app/
+├─ lib/features/
+│  └─ module-8/
+├─ tests/
+├─ docs/decisions/
+├─ evidence/module-8/
+└─ README.md
+```
+
+| Tema | Archivo o decisión | Evidencia mínima |
+|---|---|---|
+| 1. Animaciones implícitas vs explícitas | `lib/features/module-8/topic-1-animaciones-implicitas-vs-explicitas.dart` | prueba + salida observable |
+| 2. Flutter DevTools y detección de jank | `lib/features/module-8/topic-2-flutter-devtools-y-deteccion-de-jank.dart` | prueba + salida observable |
+| 3. const widgets, RepaintBoundary y shouldRepaint | `lib/features/module-8/topic-3-const-widgets-repaintboundary-y-shouldrepaint.dart` | prueba + salida observable |
+
+Un ejemplo técnico vive en el archivo indicado y debe tener una prueba. Un tema conceptual vive en `docs/decisions/`: compara opciones usando restricciones medibles; no escribas código decorativo solo para llenar espacio.
+
+### 4. Ejecuta una línea base
+
+Desde `academia-labs/flutter_app`:
+
+```bash
+flutter analyze && flutter test
+```
+
+**Resultado esperado:** el comando reconoce el proyecto y termina sin errores antes de introducir el cambio del capítulo. Después del incremento, la evidencia debe demostrar: **Animación fluida propia auditada con DevTools sin frames perdidos, más tres ejercicios de evaluación.**
+
+Si falla la línea base, no continúes. Localiza el primer mensaje que indique archivo, línea o dependencia; formula una causa y compruébala con un cambio pequeño.
+
+### 5. Provoca un fallo y recupérate
+
+Simula pérdida de red, permiso denegado o widget desmontado; comprueba la recuperación sin errores ocultos. Guarda en `evidence/module-8/` el comando, la salida relevante, tu hipótesis y la corrección. Revierte únicamente el cambio deliberado; no borres todo el proyecto para ocultar la causa.
+
+### 6. Conecta el capítulo con RutaFlow
+
+Aplica el aprendizaje de **Animaciones y rendimiento** a un incremento vertical de RutaFlow. Define qué componente produce el dato, qué contrato lo transporta, quién lo consume y cómo observarás un fallo. La entrega final incluye archivo o decisión, prueba, salida, error corregido y una limitación que todavía validarías en producción.
+
+---
+
 ## Contenido teórico
 
 ### Tema 1: Animaciones implícitas vs explícitas

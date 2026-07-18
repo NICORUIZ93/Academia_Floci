@@ -10,6 +10,76 @@ Una SPA puede aprobar el flujo feliz y aun desaparecer ante un error de render, 
 4. Hidratación, internacionalización, rendimiento y releases.
 5. Proyecto: auditoría de producción de la aplicación React.
 
+## Comienza desde cero: prepara este capítulo
+
+Este recorrido parte de una carpeta vacía. Al finalizar tendrás **Un incremento pequeño, probado y reproducible del capítulo.** No avances ejecutando comandos que no comprendes: primero identifica la entrada, la transformación y la evidencia que comprobará el resultado.
+
+### 1. Comprueba las herramientas
+
+Los comandos funcionan en macOS, Linux y WSL. En PowerShell usa el equivalente indicado por la herramienta.
+
+```bash
+node --version
+npm --version
+git --version
+```
+
+Si un comando no existe, detente e instala esa herramienta desde su sitio oficial. Cierra y abre la terminal después de modificar `PATH`. Las versiones deben ser compatibles entre sí antes de crear archivos.
+
+### 2. Crea o recupera el proyecto del track
+
+```bash
+npm create vite@latest academia-labs/react-app -- --template react-ts
+cd academia-labs/react-app
+npm install
+git init
+```
+
+Trabaja dentro de `academia-labs/react-app`. Si ya existe, no lo vuelvas a generar: entra en la carpeta, confirma `git status` y continúa sobre una rama propia.
+
+### 3. Ubica cada tema antes de escribir
+
+```text
+academia-labs/react-app/
+├─ src/features/
+│  └─ module-13/
+├─ tests/
+├─ docs/decisions/
+├─ evidence/module-13/
+└─ README.md
+```
+
+| Tema | Archivo o decisión | Evidencia mínima |
+|---|---|---|
+| 1. Diseñar estados de carga, error y recuperación | `src/features/module-13/topic-1-disenar-estados-de-carga-error-y-recuperacion.tsx` | prueba + salida observable |
+| 2. La composición visual debe conservar semántica y foco | `src/features/module-13/topic-2-la-composicion-visual-debe-conservar-semantica-y-foco.tsx` | prueba + salida observable |
+| 3. Cliente y servidor forman una sola frontera de seguridad | `src/features/module-13/topic-3-cliente-y-servidor-forman-una-sola-frontera-de-segurid.tsx` | prueba + salida observable |
+| 4. Hidratación determinista, idioma y releases medibles | `src/features/module-13/topic-4-hidratacion-determinista-idioma-y-releases-medibles.tsx` | prueba + salida observable |
+
+Un ejemplo técnico vive en el archivo indicado y debe tener una prueba. Un tema conceptual vive en `docs/decisions/`: compara opciones usando restricciones medibles; no escribas código decorativo solo para llenar espacio.
+
+### 4. Ejecuta una línea base
+
+Desde `academia-labs/react-app`:
+
+```bash
+npm test -- --run && npm run dev
+```
+
+**Resultado esperado:** el comando reconoce el proyecto y termina sin errores antes de introducir el cambio del capítulo. Después del incremento, la evidencia debe demostrar: **Un incremento pequeño, probado y reproducible del capítulo.**
+
+Si falla la línea base, no continúes. Localiza el primer mensaje que indique archivo, línea o dependencia; formula una causa y compruébala con un cambio pequeño.
+
+### 5. Provoca un fallo y recupérate
+
+Cambia una prop o respuesta a un caso vacío o erróneo; observa el estado visual y corrige desde la primera causa. Guarda en `evidence/module-13/` el comando, la salida relevante, tu hipótesis y la corrección. Revierte únicamente el cambio deliberado; no borres todo el proyecto para ocultar la causa.
+
+### 6. Conecta el capítulo con RutaFlow
+
+Aplica el aprendizaje de **React en producción — resiliencia, accesibilidad y seguridad** a un incremento vertical de RutaFlow. Define qué componente produce el dato, qué contrato lo transporta, quién lo consume y cómo observarás un fallo. La entrega final incluye archivo o decisión, prueba, salida, error corregido y una limitación que todavía validarías en producción.
+
+---
+
 ## Contenido teórico
 
 ### Tema 1: Diseñar estados de carga, error y recuperación

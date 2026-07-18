@@ -29,6 +29,78 @@ Un laboratorio de operaciones CRUD completas y otro de Query vs Scan, más tres 
 
 ---
 
+## Comienza desde cero: prepara este capítulo
+
+Este recorrido parte de una carpeta vacía. Al finalizar tendrás **Un laboratorio de operaciones CRUD completas y otro de Query vs Scan, más tres ejercicios de evaluación sobre diseño de claves, tipos de datos e índices.** No avances ejecutando comandos que no comprendes: primero identifica la entrada, la transformación y la evidencia que comprobará el resultado.
+
+### 1. Comprueba las herramientas
+
+Los comandos funcionan en macOS, Linux y WSL. En PowerShell usa el equivalente indicado por la herramienta.
+
+```bash
+docker --version
+aws --version
+terraform version
+```
+
+Si un comando no existe, detente e instala esa herramienta desde su sitio oficial. Cierra y abre la terminal después de modificar `PATH`. Las versiones deben ser compatibles entre sí antes de crear archivos.
+
+### 2. Crea o recupera el proyecto del track
+
+```bash
+mkdir -p academia-labs/cloud/{infra,tests,evidence}
+cd academia-labs/cloud
+git init
+docker compose up -d
+```
+
+Trabaja dentro de `academia-labs/cloud`. Si ya existe, no lo vuelvas a generar: entra en la carpeta, confirma `git status` y continúa sobre una rama propia.
+
+### 3. Ubica cada tema antes de escribir
+
+```text
+academia-labs/cloud/
+├─ infra/
+│  └─ module-4/
+├─ tests/
+├─ docs/decisions/
+├─ evidence/module-4/
+└─ README.md
+```
+
+| Tema | Archivo o decisión | Evidencia mínima |
+|---|---|---|
+| 1. Qué es NoSQL y cuándo usarlo | `infra/module-4/topic-1-que-es-nosql-y-cuando-usarlo.tf` | prueba + salida observable |
+| 2. Tablas, items y atributos | `infra/module-4/topic-2-tablas-items-y-atributos.tf` | prueba + salida observable |
+| 3. Tipos de datos — S, N, B, BOOL, NULL, L, M | `infra/module-4/topic-3-tipos-de-datos-s-n-b-bool-null-l-m.tf` | prueba + salida observable |
+| 4. Clave primaria simple (HASH) vs compuesta (HASH + RANGE) | `infra/module-4/topic-4-clave-primaria-simple-hash-vs-compuesta-hash-range.tf` | prueba + salida observable |
+| 5. Índices secundarios globales (GSI) y locales (LSI) | `infra/module-4/topic-5-indices-secundarios-globales-gsi-y-locales-lsi.tf` | prueba + salida observable |
+| 6. Query vs Scan | `infra/module-4/topic-6-query-vs-scan.tf` | prueba + salida observable |
+
+Un ejemplo técnico vive en el archivo indicado y debe tener una prueba. Un tema conceptual vive en `docs/decisions/`: compara opciones usando restricciones medibles; no escribas código decorativo solo para llenar espacio.
+
+### 4. Ejecuta una línea base
+
+Desde `academia-labs/cloud`:
+
+```bash
+terraform -chdir=infra validate
+```
+
+**Resultado esperado:** el comando reconoce el proyecto y termina sin errores antes de introducir el cambio del capítulo. Después del incremento, la evidencia debe demostrar: **Un laboratorio de operaciones CRUD completas y otro de Query vs Scan, más tres ejercicios de evaluación sobre diseño de claves, tipos de datos e índices.**
+
+Si falla la línea base, no continúes. Localiza el primer mensaje que indique archivo, línea o dependencia; formula una causa y compruébala con un cambio pequeño.
+
+### 5. Provoca un fallo y recupérate
+
+Cambia un endpoint, permiso o identificador por un valor inválido; inspecciona la respuesta del emulador antes de corregir. Guarda en `evidence/module-4/` el comando, la salida relevante, tu hipótesis y la corrección. Revierte únicamente el cambio deliberado; no borres todo el proyecto para ocultar la causa.
+
+### 6. Conecta el capítulo con RutaFlow
+
+Aplica el aprendizaje de **Bases de datos NoSQL con DynamoDB** a un incremento vertical de RutaFlow. Define qué componente produce el dato, qué contrato lo transporta, quién lo consume y cómo observarás un fallo. La entrega final incluye archivo o decisión, prueba, salida, error corregido y una limitación que todavía validarías en producción.
+
+---
+
 ## Contenido teórico
 
 ### Tema 1: Qué es NoSQL y cuándo usarlo

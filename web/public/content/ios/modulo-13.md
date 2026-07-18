@@ -10,6 +10,75 @@ Una app no termina cuando compila ni cuando pasa revisión. En producción recib
 4. Hangs, crashes, métricas, migraciones y releases graduales.
 5. Proyecto: dossier verificable de preparación para producción.
 
+## Comienza desde cero: prepara este capítulo
+
+Este recorrido parte de una carpeta vacía. Al finalizar tendrás **Un incremento pequeño, probado y reproducible del capítulo.** No avances ejecutando comandos que no comprendes: primero identifica la entrada, la transformación y la evidencia que comprobará el resultado.
+
+### 1. Comprueba las herramientas
+
+La práctica de SwiftUI requiere macOS y Xcode. En Windows/Linux estudia el modelo y conserva la ejecución para un equipo macOS.
+
+```bash
+xcodebuild -version
+swift --version
+git --version
+```
+
+Si un comando no existe, detente e instala esa herramienta desde su sitio oficial. Cierra y abre la terminal después de modificar `PATH`. Las versiones deben ser compatibles entre sí antes de crear archivos.
+
+### 2. Crea o recupera el proyecto del track
+
+```bash
+# Xcode: New Project → iOS App → SwiftUI + Swift
+cd academia-labs/ios-app
+git init
+```
+
+Trabaja dentro de `academia-labs/ios-app`. Si ya existe, no lo vuelvas a generar: entra en la carpeta, confirma `git status` y continúa sobre una rama propia.
+
+### 3. Ubica cada tema antes de escribir
+
+```text
+academia-labs/ios-app/
+├─ Features/
+│  └─ module-13/
+├─ tests/
+├─ docs/decisions/
+├─ evidence/module-13/
+└─ README.md
+```
+
+| Tema | Archivo o decisión | Evidencia mínima |
+|---|---|---|
+| 1. El sandbox reduce superficie, pero no valida intenciones | `Features/module-13/topic-1-el-sandbox-reduce-superficie-pero-no-valida-intencione.swift` | prueba + salida observable |
+| 2. Proteger datos es controlar todas sus copias | `Features/module-13/topic-2-proteger-datos-es-controlar-todas-sus-copias.swift` | prueba + salida observable |
+| 3. Offline-first es un protocolo, no una caché | `Features/module-13/topic-3-offline-first-es-un-protocolo-no-una-cache.swift` | prueba + salida observable |
+| 4. Operar significa detectar, limitar y aprender del fallo | `Features/module-13/topic-4-operar-significa-detectar-limitar-y-aprender-del-fallo.swift` | prueba + salida observable |
+
+Un ejemplo técnico vive en el archivo indicado y debe tener una prueba. Un tema conceptual vive en `docs/decisions/`: compara opciones usando restricciones medibles; no escribas código decorativo solo para llenar espacio.
+
+### 4. Ejecuta una línea base
+
+Desde `academia-labs/ios-app`:
+
+```bash
+xcodebuild test -scheme RutaFlowLab -destination 'platform=iOS Simulator,name=iPhone 16'
+```
+
+**Resultado esperado:** el comando reconoce el proyecto y termina sin errores antes de introducir el cambio del capítulo. Después del incremento, la evidencia debe demostrar: **Un incremento pequeño, probado y reproducible del capítulo.**
+
+Si falla la línea base, no continúes. Localiza el primer mensaje que indique archivo, línea o dependencia; formula una causa y compruébala con un cambio pequeño.
+
+### 5. Provoca un fallo y recupérate
+
+Simula permiso denegado, respuesta vacía o tarea cancelada; verifica estado y mensaje. SwiftUI requiere macOS. Guarda en `evidence/module-13/` el comando, la salida relevante, tu hipótesis y la corrección. Revierte únicamente el cambio deliberado; no borres todo el proyecto para ocultar la causa.
+
+### 6. Conecta el capítulo con RutaFlow
+
+Aplica el aprendizaje de **iOS en producción — seguridad, sincronización y operación** a un incremento vertical de RutaFlow. Define qué componente produce el dato, qué contrato lo transporta, quién lo consume y cómo observarás un fallo. La entrega final incluye archivo o decisión, prueba, salida, error corregido y una limitación que todavía validarías en producción.
+
+---
+
 ## Contenido teórico
 
 ### Tema 1: El sandbox reduce superficie, pero no valida intenciones

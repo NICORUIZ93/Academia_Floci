@@ -8,6 +8,97 @@
 
 **Evaluación:** 20 % fundamento, 35 % implementación, 25 % pruebas y fallos, 10 % seguridad, 10 % documentación y comunicación.
 
+## Comienza desde cero: prepara este capítulo
+
+Este recorrido parte de una carpeta vacía. Al finalizar tendrás **Un incremento pequeño, probado y reproducible del capítulo.** No avances ejecutando comandos que no comprendes: primero identifica la entrada, la transformación y la evidencia que comprobará el resultado.
+
+### 1. Comprueba las herramientas
+
+Los comandos funcionan en macOS, Linux y WSL. En PowerShell usa el equivalente indicado por la herramienta.
+
+```bash
+java --version
+./gradlew --version
+```
+
+Si un comando no existe, detente e instala esa herramienta desde su sitio oficial. Cierra y abre la terminal después de modificar `PATH`. Las versiones deben ser compatibles entre sí antes de crear archivos.
+
+### 2. Crea o recupera el proyecto del track
+
+```bash
+# Crea el proyecto con el asistente oficial de Kotlin Multiplatform
+cd academia-labs/kmp-app
+git init
+./gradlew tasks
+```
+
+Trabaja dentro de `academia-labs/kmp-app`. Si ya existe, no lo vuelvas a generar: entra en la carpeta, confirma `git status` y continúa sobre una rama propia.
+
+### 3. Ubica cada tema antes de escribir
+
+```text
+academia-labs/kmp-app/
+├─ shared/src/commonMain/kotlin/
+│  └─ module-13/
+├─ tests/
+├─ docs/decisions/
+├─ evidence/module-13/
+└─ README.md
+```
+
+| Tema | Archivo o decisión | Evidencia mínima |
+|---|---|---|
+| 1. Kotlin/Native | `shared/src/commonMain/kotlin/module-13/topic-1-kotlin-native.kt` | prueba + salida observable |
+| 2. Interop con C | `shared/src/commonMain/kotlin/module-13/topic-2-interop-con-c.kt` | prueba + salida observable |
+| 3. Swift Export | `shared/src/commonMain/kotlin/module-13/topic-3-swift-export.kt` | prueba + salida observable |
+| 4. XCFramework y API pública | `shared/src/commonMain/kotlin/module-13/topic-4-xcframework-y-api-publica.kt` | prueba + salida observable |
+| 5. Publicación en Maven Central | `shared/src/commonMain/kotlin/module-13/topic-5-publicacion-en-maven-central.kt` | prueba + salida observable |
+| 6. Compatibilidad binaria y CI multi-target | `shared/src/commonMain/kotlin/module-13/topic-6-compatibilidad-binaria-y-ci-multi-target.kt` | prueba + salida observable |
+| 7. Kotlin Basics | `docs/decisions/module-13-topic-7.md` | contexto + alternativas + decisión + consecuencias |
+| 8. Corutinas | `docs/decisions/module-13-topic-8.md` | contexto + alternativas + decisión + consecuencias |
+| 9. KMP Structure | `docs/decisions/module-13-topic-9.md` | contexto + alternativas + decisión + consecuencias |
+| 10. Interoperability | `docs/decisions/module-13-topic-10.md` | contexto + alternativas + decisión + consecuencias |
+| 11. Wasm target | `docs/decisions/module-13-topic-11.md` | contexto + alternativas + decisión + consecuencias |
+| 12. Observabilidad compartida | `docs/decisions/module-13-topic-12.md` | contexto + alternativas + decisión + consecuencias |
+| 13. Estructura jerárquica de proyectos | `docs/decisions/module-13-topic-13.md` | contexto + alternativas + decisión + consecuencias |
+| 14. Configuración manual avanzada | `docs/decisions/module-13-topic-14.md` | contexto + alternativas + decisión + consecuencias |
+| 15. Declaraciones esperadas y reales | `docs/decisions/module-13-topic-15.md` | contexto + alternativas + decisión + consecuencias |
+| 16. Estructura de proyectos multiplataforma | `docs/decisions/module-13-topic-16.md` | contexto + alternativas + decisión + consecuencias |
+| 17. Mapeo a implementación de Gradle | `docs/decisions/module-13-topic-17.md` | contexto + alternativas + decisión + consecuencias |
+| 18. Abstracciones de bajo nivel de Gradle | `docs/decisions/module-13-topic-18.md` | contexto + alternativas + decisión + consecuencias |
+| 19. Creación de plugins de Gradle | `docs/decisions/module-13-topic-19.md` | contexto + alternativas + decisión + consecuencias |
+| 20. Jerarquías selladas | `docs/decisions/module-13-topic-20.md` | contexto + alternativas + decisión + consecuencias |
+| 21. Inmutabilidad | `docs/decisions/module-13-topic-21.md` | contexto + alternativas + decisión + consecuencias |
+| 22. Constructores DSL | `docs/decisions/module-13-topic-22.md` | contexto + alternativas + decisión + consecuencias |
+| 23. Funciones inline | `docs/decisions/module-13-topic-23.md` | contexto + alternativas + decisión + consecuencias |
+| 24. Patrones avanzados de Koin | `docs/decisions/module-13-topic-24.md` | contexto + alternativas + decisión + consecuencias |
+| 25. Lenguaje específico de dominio (Kotlin DSL) | `docs/decisions/module-13-topic-25.md` | contexto + alternativas + decisión + consecuencias |
+| 26. Patrones de arquitectura móvil | `docs/decisions/module-13-topic-26.md` | contexto + alternativas + decisión + consecuencias |
+
+Un ejemplo técnico vive en el archivo indicado y debe tener una prueba. Un tema conceptual vive en `docs/decisions/`: compara opciones usando restricciones medibles; no escribas código decorativo solo para llenar espacio.
+
+### 4. Ejecuta una línea base
+
+Desde `academia-labs/kmp-app`:
+
+```bash
+./gradlew :shared:allTests
+```
+
+**Resultado esperado:** el comando reconoce el proyecto y termina sin errores antes de introducir el cambio del capítulo. Después del incremento, la evidencia debe demostrar: **Un incremento pequeño, probado y reproducible del capítulo.**
+
+Si falla la línea base, no continúes. Localiza el primer mensaje que indique archivo, línea o dependencia; formula una causa y compruébala con un cambio pequeño.
+
+### 5. Provoca un fallo y recupérate
+
+Introduce un dato nulo o caso específico de plataforma; commonTest debe hacerlo visible. Guarda en `evidence/module-13/` el comando, la salida relevante, tu hipótesis y la corrección. Revierte únicamente el cambio deliberado; no borres todo el proyecto para ocultar la causa.
+
+### 6. Conecta el capítulo con RutaFlow
+
+Aplica el aprendizaje de **KMP Master: Native, Swift Export y publicación** a un incremento vertical de RutaFlow. Define qué componente produce el dato, qué contrato lo transporta, quién lo consume y cómo observarás un fallo. La entrega final incluye archivo o decisión, prueba, salida, error corregido y una limitación que todavía validarías en producción.
+
+---
+
 ## Contenido teórico
 
 ### Tema 1: Kotlin/Native

@@ -8,6 +8,102 @@
 
 **Evaluación:** 20 % fundamento, 35 % implementación, 25 % pruebas y fallos, 10 % seguridad, 10 % documentación y comunicación.
 
+## Comienza desde cero: prepara este capítulo
+
+Este recorrido parte de una carpeta vacía. Al finalizar tendrás **Un incremento pequeño, probado y reproducible del capítulo.** No avances ejecutando comandos que no comprendes: primero identifica la entrada, la transformación y la evidencia que comprobará el resultado.
+
+### 1. Comprueba las herramientas
+
+La práctica de SwiftUI requiere macOS y Xcode. En Windows/Linux estudia el modelo y conserva la ejecución para un equipo macOS.
+
+```bash
+xcodebuild -version
+swift --version
+git --version
+```
+
+Si un comando no existe, detente e instala esa herramienta desde su sitio oficial. Cierra y abre la terminal después de modificar `PATH`. Las versiones deben ser compatibles entre sí antes de crear archivos.
+
+### 2. Crea o recupera el proyecto del track
+
+```bash
+# Xcode: New Project → iOS App → SwiftUI + Swift
+cd academia-labs/ios-app
+git init
+```
+
+Trabaja dentro de `academia-labs/ios-app`. Si ya existe, no lo vuelvas a generar: entra en la carpeta, confirma `git status` y continúa sobre una rama propia.
+
+### 3. Ubica cada tema antes de escribir
+
+```text
+academia-labs/ios-app/
+├─ Features/
+│  └─ module-14/
+├─ tests/
+├─ docs/decisions/
+├─ evidence/module-14/
+└─ README.md
+```
+
+| Tema | Archivo o decisión | Evidencia mínima |
+|---|---|---|
+| 1. XCTest y pruebas asíncronas | `Features/module-14/topic-1-xctest-y-pruebas-asincronas.swift` | prueba + salida observable |
+| 2. ViewInspector con criterio | `Features/module-14/topic-2-viewinspector-con-criterio.swift` | prueba + salida observable |
+| 3. Combine avanzado | `Features/module-14/topic-3-combine-avanzado.swift` | prueba + salida observable |
+| 4. Animaciones y matchedGeometryEffect | `Features/module-14/topic-4-animaciones-y-matchedgeometryeffect.swift` | prueba + salida observable |
+| 5. UIViewRepresentable | `Features/module-14/topic-5-uiviewrepresentable.swift` | prueba + salida observable |
+| 6. UIViewControllerRepresentable y Coordinator | `Features/module-14/topic-6-uiviewcontrollerrepresentable-y-coordinator.swift` | prueba + salida observable |
+| 7. Struct, Class, Enum | `docs/decisions/module-14-topic-7.md` | contexto + alternativas + decisión + consecuencias |
+| 8. Protocol, Extension | `docs/decisions/module-14-topic-8.md` | contexto + alternativas + decisión + consecuencias |
+| 9. AVFoundation | `docs/decisions/module-14-topic-9.md` | contexto + alternativas + decisión + consecuencias |
+| 10. Animaciones SwiftUI | `docs/decisions/module-14-topic-10.md` | contexto + alternativas + decisión + consecuencias |
+| 11. Observation y Swift Concurrency estricta | `docs/decisions/module-14-topic-11.md` | contexto + alternativas + decisión + consecuencias |
+| 12. Privacidad y Data Protection | `docs/decisions/module-14-topic-12.md` | contexto + alternativas + decisión + consecuencias |
+| 13. MetricKit y signposts | `docs/decisions/module-14-topic-13.md` | contexto + alternativas + decisión + consecuencias |
+| 14. Xcode y estructura de proyectos | `docs/decisions/module-14-topic-14.md` | contexto + alternativas + decisión + consecuencias |
+| 15. Diseño de UI con SwiftUI | `docs/decisions/module-14-topic-15.md` | contexto + alternativas + decisión + consecuencias |
+| 16. Aplicaciones multi-ventana | `docs/decisions/module-14-topic-16.md` | contexto + alternativas + decisión + consecuencias |
+| 17. SpriteKit | `docs/decisions/module-14-topic-17.md` | contexto + alternativas + decisión + consecuencias |
+| 18. SceneKit | `docs/decisions/module-14-topic-18.md` | contexto + alternativas + decisión + consecuencias |
+| 19. ARKit | `docs/decisions/module-14-topic-19.md` | contexto + alternativas + decisión + consecuencias |
+| 20. Tipos opacos | `docs/decisions/module-14-topic-20.md` | contexto + alternativas + decisión + consecuencias |
+| 21. Vistas de texto y modificadores | `docs/decisions/module-14-topic-21.md` | contexto + alternativas + decisión + consecuencias |
+| 22. Vistas de color y materiales | `docs/decisions/module-14-topic-22.md` | contexto + alternativas + decisión + consecuencias |
+| 23. Imágenes y SF Symbols | `docs/decisions/module-14-topic-23.md` | contexto + alternativas + decisión + consecuencias |
+| 24. CoreML | `docs/decisions/module-14-topic-24.md` | contexto + alternativas + decisión + consecuencias |
+| 25. CoreData | `docs/decisions/module-14-topic-25.md` | contexto + alternativas + decisión + consecuencias |
+| 26. Clases Foundation | `docs/decisions/module-14-topic-26.md` | contexto + alternativas + decisión + consecuencias |
+| 27. Diseño de UI con Xcode | `docs/decisions/module-14-topic-27.md` | contexto + alternativas + decisión + consecuencias |
+| 28. Integración de librerías de terceros | `docs/decisions/module-14-topic-28.md` | contexto + alternativas + decisión + consecuencias |
+| 29. Navegación jerárquica | `docs/decisions/module-14-topic-29.md` | contexto + alternativas + decisión + consecuencias |
+| 30. Orientación de la aplicación | `docs/decisions/module-14-topic-30.md` | contexto + alternativas + decisión + consecuencias |
+| 31. Contenedores de diseño vertical y horizontal | `docs/decisions/module-14-topic-31.md` | contexto + alternativas + decisión + consecuencias |
+
+Un ejemplo técnico vive en el archivo indicado y debe tener una prueba. Un tema conceptual vive en `docs/decisions/`: compara opciones usando restricciones medibles; no escribas código decorativo solo para llenar espacio.
+
+### 4. Ejecuta una línea base
+
+Desde `academia-labs/ios-app`:
+
+```bash
+xcodebuild test -scheme RutaFlowLab -destination 'platform=iOS Simulator,name=iPhone 16'
+```
+
+**Resultado esperado:** el comando reconoce el proyecto y termina sin errores antes de introducir el cambio del capítulo. Después del incremento, la evidencia debe demostrar: **Un incremento pequeño, probado y reproducible del capítulo.**
+
+Si falla la línea base, no continúes. Localiza el primer mensaje que indique archivo, línea o dependencia; formula una causa y compruébala con un cambio pequeño.
+
+### 5. Provoca un fallo y recupérate
+
+Simula permiso denegado, respuesta vacía o tarea cancelada; verifica estado y mensaje. SwiftUI requiere macOS. Guarda en `evidence/module-14/` el comando, la salida relevante, tu hipótesis y la corrección. Revierte únicamente el cambio deliberado; no borres todo el proyecto para ocultar la causa.
+
+### 6. Conecta el capítulo con RutaFlow
+
+Aplica el aprendizaje de **SwiftUI Master: pruebas, animación e interoperabilidad** a un incremento vertical de RutaFlow. Define qué componente produce el dato, qué contrato lo transporta, quién lo consume y cómo observarás un fallo. La entrega final incluye archivo o decisión, prueba, salida, error corregido y una limitación que todavía validarías en producción.
+
+---
+
 ## Contenido teórico
 
 ### Tema 1: XCTest y pruebas asíncronas

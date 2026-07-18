@@ -4,6 +4,93 @@
 
 **Objetivo general:** comprender el mapa de Ciencias de la Computación, sus relaciones y prerrequisitos mediante experimentos reproducibles antes de elegir una especialización.
 
+## Comienza desde cero: prepara este capítulo
+
+Este recorrido parte de una carpeta vacía. Al finalizar tendrás **Un incremento pequeño, probado y reproducible del capítulo.** No avances ejecutando comandos que no comprendes: primero identifica la entrada, la transformación y la evidencia que comprobará el resultado.
+
+### 1. Comprueba las herramientas
+
+Los comandos funcionan en macOS, Linux y WSL. En PowerShell usa el equivalente indicado por la herramienta.
+
+```bash
+python3 --version
+git --version
+```
+
+Si un comando no existe, detente e instala esa herramienta desde su sitio oficial. Cierra y abre la terminal después de modificar `PATH`. Las versiones deben ser compatibles entre sí antes de crear archivos.
+
+### 2. Crea o recupera el proyecto del track
+
+```bash
+mkdir -p academia-labs/foundations/{src,tests,docs/evidence}
+cd academia-labs/foundations
+git init
+```
+
+Trabaja dentro de `academia-labs/foundations`. Si ya existe, no lo vuelvas a generar: entra en la carpeta, confirma `git status` y continúa sobre una rama propia.
+
+### 3. Ubica cada tema antes de escribir
+
+```text
+academia-labs/foundations/
+├─ src/
+│  └─ module-11/
+├─ tests/
+├─ docs/decisions/
+├─ evidence/module-11/
+└─ README.md
+```
+
+| Tema | Archivo o decisión | Evidencia mínima |
+|---|---|---|
+| 1. Programación y lenguajes | `docs/decisions/module-11-topic-1.md` | contexto + alternativas + decisión + consecuencias |
+| 2. Sistemas informáticos | `docs/decisions/module-11-topic-2.md` | contexto + alternativas + decisión + consecuencias |
+| 3. Arquitectura de computadores | `docs/decisions/module-11-topic-3.md` | contexto + alternativas + decisión + consecuencias |
+| 4. Ingeniería de software | `docs/decisions/module-11-topic-4.md` | contexto + alternativas + decisión + consecuencias |
+| 5. Teoría de autómatas | `docs/decisions/module-11-topic-5.md` | contexto + alternativas + decisión + consecuencias |
+| 6. Lenguajes formales | `docs/decisions/module-11-topic-6.md` | contexto + alternativas + decisión + consecuencias |
+| 7. Seguridad informática | `docs/decisions/module-11-topic-7.md` | contexto + alternativas + decisión + consecuencias |
+| 8. Hardware de computadoras | `docs/decisions/module-11-topic-8.md` | contexto + alternativas + decisión + consecuencias |
+| 9. Inteligencia Artificial | `docs/decisions/module-11-topic-9.md` | contexto + alternativas + decisión + consecuencias |
+| 10. Aprendizaje automático | `docs/decisions/module-11-topic-10.md` | contexto + alternativas + decisión + consecuencias |
+| 11. Minería de datos | `docs/decisions/module-11-topic-11.md` | contexto + alternativas + decisión + consecuencias |
+| 12. Almacenamiento de datos | `docs/decisions/module-11-topic-12.md` | contexto + alternativas + decisión + consecuencias |
+| 13. Big Data | `docs/decisions/module-11-topic-13.md` | contexto + alternativas + decisión + consecuencias |
+| 14. Procesamiento de imágenes | `docs/decisions/module-11-topic-14.md` | contexto + alternativas + decisión + consecuencias |
+| 15. Gráficos por computadora | `docs/decisions/module-11-topic-15.md` | contexto + alternativas + decisión + consecuencias |
+| 16. Sistemas de bases de datos avanzados | `docs/decisions/module-11-topic-16.md` | contexto + alternativas + decisión + consecuencias |
+| 17. Compiladores | `docs/decisions/module-11-topic-17.md` | contexto + alternativas + decisión + consecuencias |
+| 18. Computación científica | `docs/decisions/module-11-topic-18.md` | contexto + alternativas + decisión + consecuencias |
+| 19. Bioinformática | `docs/decisions/module-11-topic-19.md` | contexto + alternativas + decisión + consecuencias |
+| 20. Redes neuronales | `docs/decisions/module-11-topic-20.md` | contexto + alternativas + decisión + consecuencias |
+| 21. Diseño web | `docs/decisions/module-11-topic-21.md` | contexto + alternativas + decisión + consecuencias |
+| 22. Sistemas de información web | `docs/decisions/module-11-topic-22.md` | contexto + alternativas + decisión + consecuencias |
+| 23. Práctica profesional | `docs/decisions/module-11-topic-23.md` | contexto + alternativas + decisión + consecuencias |
+
+Un ejemplo técnico vive en el archivo indicado y debe tener una prueba. Un tema conceptual vive en `docs/decisions/`: compara opciones usando restricciones medibles; no escribas código decorativo solo para llenar espacio.
+
+### 4. Ejecuta una línea base
+
+Desde `academia-labs/foundations`:
+
+```bash
+python3 -m unittest discover -s tests -v
+```
+
+**Resultado esperado:** el comando reconoce el proyecto y termina sin errores antes de introducir el cambio del capítulo. Después del incremento, la evidencia debe demostrar: **Un incremento pequeño, probado y reproducible del capítulo.**
+
+Si falla la línea base, no continúes. Localiza el primer mensaje que indique archivo, línea o dependencia; formula una causa y compruébala con un cambio pequeño.
+
+### 5. Provoca un fallo y recupérate
+
+Usa una entrada inválida o elimina una precondición y conserva el mensaje que explica la causa. Guarda en `evidence/module-11/` el comando, la salida relevante, tu hipótesis y la corrección. Revierte únicamente el cambio deliberado; no borres todo el proyecto para ocultar la causa.
+
+### 6. Conecta el capítulo con RutaFlow
+
+Aplica el aprendizaje de **Ciencias de la Computación: mapa de especializaciones** a un incremento vertical de RutaFlow. Define qué componente produce el dato, qué contrato lo transporta, quién lo consume y cómo observarás un fallo. La entrega final incluye archivo o decisión, prueba, salida, error corregido y una limitación que todavía validarías en producción.
+
+---
+
 ## Contenido teórico
 
 ## Criterio transversal de calidad del código

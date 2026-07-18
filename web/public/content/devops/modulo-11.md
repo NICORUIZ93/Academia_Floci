@@ -29,6 +29,77 @@ Un laboratorio que escanea una imagen propia, la integra al pipeline como gate o
 
 ---
 
+## Comienza desde cero: prepara este capítulo
+
+Este recorrido parte de una carpeta vacía. Al finalizar tendrás **Un laboratorio que escanea una imagen propia, la integra al pipeline como gate obligatorio, y configura secretos correctamente; tres ejercicios de evaluación sobre interpretar un reporte de Trivy, diseñar permisos mínimos de un token de CI, y elegir entre SAST/DAST/SCA.** No avances ejecutando comandos que no comprendes: primero identifica la entrada, la transformación y la evidencia que comprobará el resultado.
+
+### 1. Comprueba las herramientas
+
+Los comandos funcionan en macOS, Linux y WSL. En PowerShell usa el equivalente indicado por la herramienta.
+
+```bash
+git --version
+docker --version
+bash --version
+```
+
+Si un comando no existe, detente e instala esa herramienta desde su sitio oficial. Cierra y abre la terminal después de modificar `PATH`. Las versiones deben ser compatibles entre sí antes de crear archivos.
+
+### 2. Crea o recupera el proyecto del track
+
+```bash
+mkdir -p academia-labs/devops/{app,infra,scripts,evidence}
+cd academia-labs/devops
+git init
+```
+
+Trabaja dentro de `academia-labs/devops`. Si ya existe, no lo vuelvas a generar: entra en la carpeta, confirma `git status` y continúa sobre una rama propia.
+
+### 3. Ubica cada tema antes de escribir
+
+```text
+academia-labs/devops/
+├─ infra/
+│  └─ module-11/
+├─ tests/
+├─ docs/decisions/
+├─ evidence/module-11/
+└─ README.md
+```
+
+| Tema | Archivo o decisión | Evidencia mínima |
+|---|---|---|
+| 1. Escaneo de imágenes y dependencias (Trivy, Snyk) | `infra/module-11/topic-1-escaneo-de-imagenes-y-dependencias-trivy-snyk.yaml` | prueba + salida observable |
+| 2. Integración en el pipeline | `infra/module-11/topic-2-integracion-en-el-pipeline.yaml` | prueba + salida observable |
+| 3. Gestión de secretos (Vault, SOPS) | `infra/module-11/topic-3-gestion-de-secretos-vault-sops.yaml` | prueba + salida observable |
+| 4. Menor privilegio en CI/CD | `infra/module-11/topic-4-menor-privilegio-en-ci-cd.yaml` | prueba + salida observable |
+| 5. SBOM y supply chain security | `infra/module-11/topic-5-sbom-y-supply-chain-security.yaml` | prueba + salida observable |
+| 6. SAST, DAST y SCA — diferencias y herramientas | `infra/module-11/topic-6-sast-dast-y-sca-diferencias-y-herramientas.yaml` | prueba + salida observable |
+
+Un ejemplo técnico vive en el archivo indicado y debe tener una prueba. Un tema conceptual vive en `docs/decisions/`: compara opciones usando restricciones medibles; no escribas código decorativo solo para llenar espacio.
+
+### 4. Ejecuta una línea base
+
+Desde `academia-labs/devops`:
+
+```bash
+docker compose config
+```
+
+**Resultado esperado:** el comando reconoce el proyecto y termina sin errores antes de introducir el cambio del capítulo. Después del incremento, la evidencia debe demostrar: **Un laboratorio que escanea una imagen propia, la integra al pipeline como gate obligatorio, y configura secretos correctamente; tres ejercicios de evaluación sobre interpretar un reporte de Trivy, diseñar permisos mínimos de un token de CI, y elegir entre SAST/DAST/SCA.**
+
+Si falla la línea base, no continúes. Localiza el primer mensaje que indique archivo, línea o dependencia; formula una causa y compruébala con un cambio pequeño.
+
+### 5. Provoca un fallo y recupérate
+
+Rompe una referencia, variable o healthcheck y localiza la causa con la validación o los logs. Guarda en `evidence/module-11/` el comando, la salida relevante, tu hipótesis y la corrección. Revierte únicamente el cambio deliberado; no borres todo el proyecto para ocultar la causa.
+
+### 6. Conecta el capítulo con RutaFlow
+
+Aplica el aprendizaje de **Seguridad DevSecOps** a un incremento vertical de RutaFlow. Define qué componente produce el dato, qué contrato lo transporta, quién lo consume y cómo observarás un fallo. La entrega final incluye archivo o decisión, prueba, salida, error corregido y una limitación que todavía validarías en producción.
+
+---
+
 ## Contenido teórico
 
 ### Tema 1: Escaneo de imágenes y dependencias (Trivy, Snyk)

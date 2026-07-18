@@ -29,6 +29,77 @@ Un pipeline de transformación de datos (CSV a JSON agregado) usando solo métod
 
 ---
 
+## Comienza desde cero: prepara este capítulo
+
+Este recorrido parte de una carpeta vacía. Al finalizar tendrás **Un pipeline de transformación de datos (CSV a JSON agregado) usando solo métodos funcionales, más tres ejercicios de evaluación.** No avances ejecutando comandos que no comprendes: primero identifica la entrada, la transformación y la evidencia que comprobará el resultado.
+
+### 1. Comprueba las herramientas
+
+Los comandos funcionan en macOS, Linux y WSL. En PowerShell usa el equivalente indicado por la herramienta.
+
+```bash
+node --version
+npm --version
+git --version
+```
+
+Si un comando no existe, detente e instala esa herramienta desde su sitio oficial. Cierra y abre la terminal después de modificar `PATH`. Las versiones deben ser compatibles entre sí antes de crear archivos.
+
+### 2. Crea o recupera el proyecto del track
+
+```bash
+npm create vite@latest academia-labs/javascript -- --template vanilla-ts
+cd academia-labs/javascript
+npm install
+git init
+```
+
+Trabaja dentro de `academia-labs/javascript`. Si ya existe, no lo vuelvas a generar: entra en la carpeta, confirma `git status` y continúa sobre una rama propia.
+
+### 3. Ubica cada tema antes de escribir
+
+```text
+academia-labs/javascript/
+├─ src/
+│  └─ module-4/
+├─ tests/
+├─ docs/decisions/
+├─ evidence/module-4/
+└─ README.md
+```
+
+| Tema | Archivo o decisión | Evidencia mínima |
+|---|---|---|
+| 1. map, filter, reduce, find, some/every | `src/module-4/topic-1-map-filter-reduce-find-some-every.ts` | prueba + salida observable |
+| 2. Set y Map frente a Array y Object | `src/module-4/topic-2-set-y-map-frente-a-array-y-object.ts` | prueba + salida observable |
+| 3. Inmutabilidad y actualización de estructuras anidadas | `src/module-4/topic-3-inmutabilidad-y-actualizacion-de-estructuras-anidadas.ts` | prueba + salida observable |
+| 4. WeakMap y WeakSet | `src/module-4/topic-4-weakmap-y-weakset.ts` | prueba + salida observable |
+| 5. Métodos inmutables modernos | `src/module-4/topic-5-metodos-inmutables-modernos.ts` | prueba + salida observable |
+
+Un ejemplo técnico vive en el archivo indicado y debe tener una prueba. Un tema conceptual vive en `docs/decisions/`: compara opciones usando restricciones medibles; no escribas código decorativo solo para llenar espacio.
+
+### 4. Ejecuta una línea base
+
+Desde `academia-labs/javascript`:
+
+```bash
+npm test && npm run dev
+```
+
+**Resultado esperado:** el comando reconoce el proyecto y termina sin errores antes de introducir el cambio del capítulo. Después del incremento, la evidencia debe demostrar: **Un pipeline de transformación de datos (CSV a JSON agregado) usando solo métodos funcionales, más tres ejercicios de evaluación.**
+
+Si falla la línea base, no continúes. Localiza el primer mensaje que indique archivo, línea o dependencia; formula una causa y compruébala con un cambio pequeño.
+
+### 5. Provoca un fallo y recupérate
+
+Prueba un valor límite, un tipo inesperado o una operación fuera de orden; compara la salida con tu predicción. Guarda en `evidence/module-4/` el comando, la salida relevante, tu hipótesis y la corrección. Revierte únicamente el cambio deliberado; no borres todo el proyecto para ocultar la causa.
+
+### 6. Conecta el capítulo con RutaFlow
+
+Aplica el aprendizaje de **Arrays y estructuras de datos funcionales** a un incremento vertical de RutaFlow. Define qué componente produce el dato, qué contrato lo transporta, quién lo consume y cómo observarás un fallo. La entrega final incluye archivo o decisión, prueba, salida, error corregido y una limitación que todavía validarías en producción.
+
+---
+
 ## Contenido teórico
 
 ### Tema 1: map, filter, reduce, find, some/every

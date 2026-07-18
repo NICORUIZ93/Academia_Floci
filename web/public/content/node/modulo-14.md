@@ -8,6 +8,101 @@
 
 **Evaluación:** 20 % fundamento, 35 % implementación, 25 % pruebas y fallos, 10 % seguridad, 10 % documentación y comunicación.
 
+## Comienza desde cero: prepara este capítulo
+
+Este recorrido parte de una carpeta vacía. Al finalizar tendrás **Un incremento pequeño, probado y reproducible del capítulo.** No avances ejecutando comandos que no comprendes: primero identifica la entrada, la transformación y la evidencia que comprobará el resultado.
+
+### 1. Comprueba las herramientas
+
+Los comandos funcionan en macOS, Linux y WSL. En PowerShell usa el equivalente indicado por la herramienta.
+
+```bash
+node --version
+npm --version
+git --version
+```
+
+Si un comando no existe, detente e instala esa herramienta desde su sitio oficial. Cierra y abre la terminal después de modificar `PATH`. Las versiones deben ser compatibles entre sí antes de crear archivos.
+
+### 2. Crea o recupera el proyecto del track
+
+```bash
+mkdir -p academia-labs/node-api/src
+cd academia-labs/node-api
+npm init -y
+npm install fastify
+npm install -D typescript tsx @types/node
+git init
+```
+
+Trabaja dentro de `academia-labs/node-api`. Si ya existe, no lo vuelvas a generar: entra en la carpeta, confirma `git status` y continúa sobre una rama propia.
+
+### 3. Ubica cada tema antes de escribir
+
+```text
+academia-labs/node-api/
+├─ src/
+│  └─ module-14/
+├─ tests/
+├─ docs/decisions/
+├─ evidence/module-14/
+└─ README.md
+```
+
+| Tema | Archivo o decisión | Evidencia mínima |
+|---|---|---|
+| 1. TypeScript en Node.js | `src/module-14/topic-1-typescript-en-node-js.ts` | prueba + salida observable |
+| 2. GraphQL avanzado y Federation | `src/module-14/topic-2-graphql-avanzado-y-federation.ts` | prueba + salida observable |
+| 3. Microservicios, Kafka, RabbitMQ y sagas | `src/module-14/topic-3-microservicios-kafka-rabbitmq-y-sagas.ts` | prueba + salida observable |
+| 4. Serverless multi-cloud | `src/module-14/topic-4-serverless-multi-cloud.ts` | prueba + salida observable |
+| 5. Docker productivo con Node | `src/module-14/topic-5-docker-productivo-con-node.ts` | prueba + salida observable |
+| 6. CI/CD y promoción de artefactos | `src/module-14/topic-6-ci-cd-y-promocion-de-artefactos.ts` | prueba + salida observable |
+| 7. Introducción a Node.js | `docs/decisions/module-14-topic-7.md` | contexto + alternativas + decisión + consecuencias |
+| 8. JavaScript Avanzado | `docs/decisions/module-14-topic-8.md` | contexto + alternativas + decisión + consecuencias |
+| 9. HTTP y REST | `docs/decisions/module-14-topic-9.md` | contexto + alternativas + decisión + consecuencias |
+| 10. Template Engines | `docs/decisions/module-14-topic-10.md` | contexto + alternativas + decisión + consecuencias |
+| 11. Contratos y compatibilidad | `docs/decisions/module-14-topic-11.md` | contexto + alternativas + decisión + consecuencias |
+| 12. Diagnóstico de runtime | `docs/decisions/module-14-topic-12.md` | contexto + alternativas + decisión + consecuencias |
+| 13. Protección ante abuso | `docs/decisions/module-14-topic-13.md` | contexto + alternativas + decisión + consecuencias |
+| 14. Fundamentos de HTTP y redes | `docs/decisions/module-14-topic-14.md` | contexto + alternativas + decisión + consecuencias |
+| 15. Seguridad en aplicaciones web | `docs/decisions/module-14-topic-15.md` | contexto + alternativas + decisión + consecuencias |
+| 16. Conexión a bases de datos SQL | `docs/decisions/module-14-topic-16.md` | contexto + alternativas + decisión + consecuencias |
+| 17. Desarrollo full-stack | `docs/decisions/module-14-topic-17.md` | contexto + alternativas + decisión + consecuencias |
+| 18. Enrutamiento Next.js | `docs/decisions/module-14-topic-18.md` | contexto + alternativas + decisión + consecuencias |
+| 19. Renderizado del lado del servidor (SSR) | `docs/decisions/module-14-topic-19.md` | contexto + alternativas + decisión + consecuencias |
+| 20. Generación de sitios estáticos (SSG) | `docs/decisions/module-14-topic-20.md` | contexto + alternativas + decisión + consecuencias |
+| 21. Creación de rutas API | `docs/decisions/module-14-topic-21.md` | contexto + alternativas + decisión + consecuencias |
+| 22. Estrategias de despliegue seguro | `docs/decisions/module-14-topic-22.md` | contexto + alternativas + decisión + consecuencias |
+| 23. Integración de bases de datos | `docs/decisions/module-14-topic-23.md` | contexto + alternativas + decisión + consecuencias |
+| 24. Configuración de proyecto | `docs/decisions/module-14-topic-24.md` | contexto + alternativas + decisión + consecuencias |
+| 25. Pruebas con Postman | `docs/decisions/module-14-topic-25.md` | contexto + alternativas + decisión + consecuencias |
+| 26. Arquitectura MEAN/MERN | `docs/decisions/module-14-topic-26.md` | contexto + alternativas + decisión + consecuencias |
+| 27. Estructuras de datos y algoritmos | `docs/decisions/module-14-topic-27.md` | contexto + alternativas + decisión + consecuencias |
+
+Un ejemplo técnico vive en el archivo indicado y debe tener una prueba. Un tema conceptual vive en `docs/decisions/`: compara opciones usando restricciones medibles; no escribas código decorativo solo para llenar espacio.
+
+### 4. Ejecuta una línea base
+
+Desde `academia-labs/node-api`:
+
+```bash
+npm test && npm run dev
+```
+
+**Resultado esperado:** el comando reconoce el proyecto y termina sin errores antes de introducir el cambio del capítulo. Después del incremento, la evidencia debe demostrar: **Un incremento pequeño, probado y reproducible del capítulo.**
+
+Si falla la línea base, no continúes. Localiza el primer mensaje que indique archivo, línea o dependencia; formula una causa y compruébala con un cambio pequeño.
+
+### 5. Provoca un fallo y recupérate
+
+Envía una entrada inválida o desconecta una dependencia; verifica estado HTTP, cuerpo y log con contexto. Guarda en `evidence/module-14/` el comando, la salida relevante, tu hipótesis y la corrección. Revierte únicamente el cambio deliberado; no borres todo el proyecto para ocultar la causa.
+
+### 6. Conecta el capítulo con RutaFlow
+
+Aplica el aprendizaje de **Node.js Master: GraphQL, eventos y entrega** a un incremento vertical de RutaFlow. Define qué componente produce el dato, qué contrato lo transporta, quién lo consume y cómo observarás un fallo. La entrega final incluye archivo o decisión, prueba, salida, error corregido y una limitación que todavía validarías en producción.
+
+---
+
 ## Contenido teórico
 
 ### Tema 1: TypeScript en Node.js

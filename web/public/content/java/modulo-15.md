@@ -8,6 +8,113 @@
 
 **Evaluación:** 20 % fundamento, 35 % implementación, 25 % pruebas y fallos, 10 % seguridad, 10 % documentación y comunicación.
 
+## Comienza desde cero: prepara este capítulo
+
+Este recorrido parte de una carpeta vacía. Al finalizar tendrás **Un incremento pequeño, probado y reproducible del capítulo.** No avances ejecutando comandos que no comprendes: primero identifica la entrada, la transformación y la evidencia que comprobará el resultado.
+
+### 1. Comprueba las herramientas
+
+Los comandos funcionan en macOS, Linux y WSL. En PowerShell usa el equivalente indicado por la herramienta.
+
+```bash
+java --version
+javac --version
+git --version
+```
+
+Si un comando no existe, detente e instala esa herramienta desde su sitio oficial. Cierra y abre la terminal después de modificar `PATH`. Las versiones deben ser compatibles entre sí antes de crear archivos.
+
+### 2. Crea o recupera el proyecto del track
+
+```bash
+mkdir -p academia-labs/java/src/{main,test}/java/academy
+cd academia-labs/java
+git init
+```
+
+Trabaja dentro de `academia-labs/java`. Si ya existe, no lo vuelvas a generar: entra en la carpeta, confirma `git status` y continúa sobre una rama propia.
+
+### 3. Ubica cada tema antes de escribir
+
+```text
+academia-labs/java/
+├─ src/main/java/academy/
+│  └─ module-15/
+├─ tests/
+├─ docs/decisions/
+├─ evidence/module-15/
+└─ README.md
+```
+
+| Tema | Archivo o decisión | Evidencia mínima |
+|---|---|---|
+| 1. Maven avanzado | `src/main/java/academy/module-15/topic-1-maven-avanzado.java` | prueba + salida observable |
+| 2. Gradle y builds reproducibles | `src/main/java/academy/module-15/topic-2-gradle-y-builds-reproducibles.java` | prueba + salida observable |
+| 3. Proyectos multi-módulo | `src/main/java/academy/module-15/topic-3-proyectos-multi-modulo.java` | prueba + salida observable |
+| 4. JUnit 5, Mockito y assertions | `src/main/java/academy/module-15/topic-4-junit-5-mockito-y-assertions.java` | prueba + salida observable |
+| 5. Pruebas de integración | `src/main/java/academy/module-15/topic-5-pruebas-de-integracion.java` | prueba + salida observable |
+| 6. SLF4J, Logback, MDC y logging estructurado | `src/main/java/academy/module-15/topic-6-slf4j-logback-mdc-y-logging-estructurado.java` | prueba + salida observable |
+| 7. Introducción a Java | `docs/decisions/module-15-topic-7.md` | contexto + alternativas + decisión + consecuencias |
+| 8. Sintaxis Básica | `docs/decisions/module-15-topic-8.md` | contexto + alternativas + decisión + consecuencias |
+| 9. Estructuras de Control | `docs/decisions/module-15-topic-9.md` | contexto + alternativas + decisión + consecuencias |
+| 10. Streams API | `docs/decisions/module-15-topic-10.md` | contexto + alternativas + decisión + consecuencias |
+| 11. Novedades Java 8-21 | `docs/decisions/module-15-topic-11.md` | contexto + alternativas + decisión + consecuencias |
+| 12. Sintaxis Básica | `docs/decisions/module-15-topic-12.md` | contexto + alternativas + decisión + consecuencias |
+| 13. Estructuras de Control | `docs/decisions/module-15-topic-13.md` | contexto + alternativas + decisión + consecuencias |
+| 14. Streams API | `docs/decisions/module-15-topic-14.md` | contexto + alternativas + decisión + consecuencias |
+| 15. Novedades Java 8-21 | `docs/decisions/module-15-topic-15.md` | contexto + alternativas + decisión + consecuencias |
+| 16. Executor Framework | `docs/decisions/module-15-topic-16.md` | contexto + alternativas + decisión + consecuencias |
+| 17. JVM Tuning | `docs/decisions/module-15-topic-17.md` | contexto + alternativas + decisión + consecuencias |
+| 18. Internals | `docs/decisions/module-15-topic-18.md` | contexto + alternativas + decisión + consecuencias |
+| 19. Performance | `docs/decisions/module-15-topic-19.md` | contexto + alternativas + decisión + consecuencias |
+| 20. Clean Code | `docs/decisions/module-15-topic-20.md` | contexto + alternativas + decisión + consecuencias |
+| 21. Java Modules | `docs/decisions/module-15-topic-21.md` | contexto + alternativas + decisión + consecuencias |
+| 22. Flight Recorder y JFR | `docs/decisions/module-15-topic-22.md` | contexto + alternativas + decisión + consecuencias |
+| 23. Convenciones de estilo | `docs/decisions/module-15-topic-23.md` | contexto + alternativas + decisión + consecuencias |
+| 24. Frameworks y APIs principales | `docs/decisions/module-15-topic-24.md` | contexto + alternativas + decisión + consecuencias |
+| 25. Pruebas y depuración | `docs/decisions/module-15-topic-25.md` | contexto + alternativas + decisión + consecuencias |
+| 26. Modelado de conceptos | `docs/decisions/module-15-topic-26.md` | contexto + alternativas + decisión + consecuencias |
+| 27. Historia de Java | `docs/decisions/module-15-topic-27.md` | contexto + alternativas + decisión + consecuencias |
+| 28. Ediciones y versiones | `docs/decisions/module-15-topic-28.md` | contexto + alternativas + decisión + consecuencias |
+| 29. Prioridad de operadores | `docs/decisions/module-15-topic-29.md` | contexto + alternativas + decisión + consecuencias |
+| 30. Palabras clave | `docs/decisions/module-15-topic-30.md` | contexto + alternativas + decisión + consecuencias |
+| 31. Conceptos de clase | `docs/decisions/module-15-topic-31.md` | contexto + alternativas + decisión + consecuencias |
+| 32. Herencia y encapsulamiento | `docs/decisions/module-15-topic-32.md` | contexto + alternativas + decisión + consecuencias |
+| 33. JDK e IDEs | `docs/decisions/module-15-topic-33.md` | contexto + alternativas + decisión + consecuencias |
+| 34. Conversión de tipos | `docs/decisions/module-15-topic-34.md` | contexto + alternativas + decisión + consecuencias |
+| 35. Aplicaciones de escritorio | `docs/decisions/module-15-topic-35.md` | contexto + alternativas + decisión + consecuencias |
+| 36. Aplicaciones web | `docs/decisions/module-15-topic-36.md` | contexto + alternativas + decisión + consecuencias |
+| 37. Trabajo con archivos | `docs/decisions/module-15-topic-37.md` | contexto + alternativas + decisión + consecuencias |
+| 38. Interfaz gráfica de usuario | `docs/decisions/module-15-topic-38.md` | contexto + alternativas + decisión + consecuencias |
+| 39. Multithreading | `docs/decisions/module-15-topic-39.md` | contexto + alternativas + decisión + consecuencias |
+| 40. Diseño orientado a objetos | `docs/decisions/module-15-topic-40.md` | contexto + alternativas + decisión + consecuencias |
+| 41. Entorno de programación | `docs/decisions/module-15-topic-41.md` | contexto + alternativas + decisión + consecuencias |
+| 42. Flujos de procesamiento | `docs/decisions/module-15-topic-42.md` | contexto + alternativas + decisión + consecuencias |
+
+Un ejemplo técnico vive en el archivo indicado y debe tener una prueba. Un tema conceptual vive en `docs/decisions/`: compara opciones usando restricciones medibles; no escribas código decorativo solo para llenar espacio.
+
+### 4. Ejecuta una línea base
+
+Desde `academia-labs/java`:
+
+```bash
+./gradlew test  # Windows: .\gradlew.bat test
+```
+
+**Resultado esperado:** el comando reconoce el proyecto y termina sin errores antes de introducir el cambio del capítulo. Después del incremento, la evidencia debe demostrar: **Un incremento pequeño, probado y reproducible del capítulo.**
+
+Si falla la línea base, no continúes. Localiza el primer mensaje que indique archivo, línea o dependencia; formula una causa y compruébala con un cambio pequeño.
+
+### 5. Provoca un fallo y recupérate
+
+Viola una precondición o usa un valor frontera; la prueba debe expresar la regla incumplida. Guarda en `evidence/module-15/` el comando, la salida relevante, tu hipótesis y la corrección. Revierte únicamente el cambio deliberado; no borres todo el proyecto para ocultar la causa.
+
+### 6. Conecta el capítulo con RutaFlow
+
+Aplica el aprendizaje de **Java Master: builds, testing y logging operacional** a un incremento vertical de RutaFlow. Define qué componente produce el dato, qué contrato lo transporta, quién lo consume y cómo observarás un fallo. La entrega final incluye archivo o decisión, prueba, salida, error corregido y una limitación que todavía validarías en producción.
+
+---
+
 ## Contenido teórico
 
 ### Tema 1: Maven avanzado

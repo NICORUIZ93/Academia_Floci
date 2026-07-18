@@ -31,6 +31,78 @@ Un laboratorio que provisiona, modifica y modulariza infraestructura con Terrafo
 
 ---
 
+## Comienza desde cero: prepara este capítulo
+
+Este recorrido parte de una carpeta vacía. Al finalizar tendrás **Un laboratorio que provisiona, modifica y modulariza infraestructura con Terraform, y tres ejercicios de evaluación sobre riesgo de editar el estado manualmente, diseño de módulos, y elección entre Terraform, Ansible y Pulumi.** No avances ejecutando comandos que no comprendes: primero identifica la entrada, la transformación y la evidencia que comprobará el resultado.
+
+### 1. Comprueba las herramientas
+
+Los comandos funcionan en macOS, Linux y WSL. En PowerShell usa el equivalente indicado por la herramienta.
+
+```bash
+git --version
+docker --version
+bash --version
+```
+
+Si un comando no existe, detente e instala esa herramienta desde su sitio oficial. Cierra y abre la terminal después de modificar `PATH`. Las versiones deben ser compatibles entre sí antes de crear archivos.
+
+### 2. Crea o recupera el proyecto del track
+
+```bash
+mkdir -p academia-labs/devops/{app,infra,scripts,evidence}
+cd academia-labs/devops
+git init
+```
+
+Trabaja dentro de `academia-labs/devops`. Si ya existe, no lo vuelvas a generar: entra en la carpeta, confirma `git status` y continúa sobre una rama propia.
+
+### 3. Ubica cada tema antes de escribir
+
+```text
+academia-labs/devops/
+├─ infra/
+│  └─ module-8/
+├─ tests/
+├─ docs/decisions/
+├─ evidence/module-8/
+└─ README.md
+```
+
+| Tema | Archivo o decisión | Evidencia mínima |
+|---|---|---|
+| 1. Providers, resources y data sources | `infra/module-8/topic-1-providers-resources-y-data-sources.yaml` | prueba + salida observable |
+| 2. State remoto y locking | `infra/module-8/topic-2-state-remoto-y-locking.yaml` | prueba + salida observable |
+| 3. Módulos reutilizables | `infra/module-8/topic-3-modulos-reutilizables.yaml` | prueba + salida observable |
+| 4. terraform plan vs apply | `infra/module-8/topic-4-terraform-plan-vs-apply.yaml` | prueba + salida observable |
+| 5. Workspaces para múltiples entornos | `infra/module-8/topic-5-workspaces-para-multiples-entornos.yaml` | prueba + salida observable |
+| 6. Ansible — playbooks, roles, inventory y módulos | `infra/module-8/topic-6-ansible-playbooks-roles-inventory-y-modulos.yaml` | prueba + salida observable |
+| 7. Pulumi como alternativa a HCL | `infra/module-8/topic-7-pulumi-como-alternativa-a-hcl.yaml` | prueba + salida observable |
+
+Un ejemplo técnico vive en el archivo indicado y debe tener una prueba. Un tema conceptual vive en `docs/decisions/`: compara opciones usando restricciones medibles; no escribas código decorativo solo para llenar espacio.
+
+### 4. Ejecuta una línea base
+
+Desde `academia-labs/devops`:
+
+```bash
+docker compose config
+```
+
+**Resultado esperado:** el comando reconoce el proyecto y termina sin errores antes de introducir el cambio del capítulo. Después del incremento, la evidencia debe demostrar: **Un laboratorio que provisiona, modifica y modulariza infraestructura con Terraform, y tres ejercicios de evaluación sobre riesgo de editar el estado manualmente, diseño de módulos, y elección entre Terraform, Ansible y Pulumi.**
+
+Si falla la línea base, no continúes. Localiza el primer mensaje que indique archivo, línea o dependencia; formula una causa y compruébala con un cambio pequeño.
+
+### 5. Provoca un fallo y recupérate
+
+Rompe una referencia, variable o healthcheck y localiza la causa con la validación o los logs. Guarda en `evidence/module-8/` el comando, la salida relevante, tu hipótesis y la corrección. Revierte únicamente el cambio deliberado; no borres todo el proyecto para ocultar la causa.
+
+### 6. Conecta el capítulo con RutaFlow
+
+Aplica el aprendizaje de **Infraestructura como código con Terraform** a un incremento vertical de RutaFlow. Define qué componente produce el dato, qué contrato lo transporta, quién lo consume y cómo observarás un fallo. La entrega final incluye archivo o decisión, prueba, salida, error corregido y una limitación que todavía validarías en producción.
+
+---
+
 ## Contenido teórico
 
 ### Tema 1: Providers, resources y data sources
