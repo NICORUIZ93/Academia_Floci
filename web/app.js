@@ -4,7 +4,11 @@ let viewStep = Math.min(progressStep, steps.length);
 const NOTES_KEY = "academia-master-notes";
 const ACTIVE_KEY = "academia-master-active-learning";
 const EXERCISE_KEY = "academia-master-exercise-evidence";
+const GAME_KEY = "academia-floci-game-v1";
+const QUIZ_KEY = "academia-floci-quizzes-v1";
 const NEARBY_LESSON_WINDOW = 2;
+let game = readGame();
+let quizAnswers = readJson(QUIZ_KEY, {});
 
 const $ = (id) => document.getElementById(id);
 
@@ -55,7 +59,32 @@ const elements = {
   predictionText: $("predictionText"),
   explanationText: $("explanationText"),
   activeStatus: $("activeStatus"),
+  curiosityText: $("curiosityText"), levelLabel: $("levelLabel"), nextLevelLabel: $("nextLevelLabel"),
+  xpValue: $("xpValue"), streakValue: $("streakValue"), badgeValue: $("badgeValue"), timeValue: $("timeValue"),
+  openBadges: $("openBadges"), closeBadges: $("closeBadges"), badgesDialog: $("badgesDialog"), badgesGrid: $("badgesGrid"),
+  quizQuestions: $("quizQuestions"), quizScore: $("quizScore"), quizFeedback: $("quizFeedback"), feedbackToast: $("feedbackToast"),
+  solutionPanel: $("solutionPanel"), revealSolution: $("revealSolution"), solutionStatus: $("solutionStatus"),
 };
+
+function readJson(key, fallback) { try { return JSON.parse(localStorage.getItem(key)) || fallback; } catch { return fallback; } }
+function localDateKey(date = new Date()) { return `${date.getFullYear()}-${String(date.getMonth()+1).padStart(2,"0")}-${String(date.getDate()).padStart(2,"0")}`; }
+function readGame() {
+  const value = readJson(GAME_KEY, { xp:0, streak:0, lastStudyDate:"", awardedLessons:[], awardedModules:[], minutes:0 });
+  const today=localDateKey();
+  if(value.lastStudyDate!==today){const yesterday=new Date();yesterday.setDate(yesterday.getDate()-1);value.streak=value.lastStudyDate===localDateKey(yesterday)?(value.streak||0)+1:1;value.lastStudyDate=today;localStorage.setItem(GAME_KEY,JSON.stringify(value));}
+  return value;
+}
+function saveGame(){localStorage.setItem(GAME_KEY,JSON.stringify(game));}
+function completedModulesCount(){return courses.filter(course=>progressStep>course.end).length;}
+function gameLevel(){return [...GAMIFICATION.levels].reverse().find(level=>game.xp>=level.minXp)||GAMIFICATION.levels[0];}
+function unlockedBadges(){const count=completedModulesCount();return GAMIFICATION.badges.filter(badge=>count>=badge.requirement);}
+function renderDashboard(){
+  const level=gameLevel(), next=GAMIFICATION.levels.find(item=>item.minXp>game.xp), badges=unlockedBadges();
+  elements.levelLabel.textContent=`Nivel ${level.name}`; elements.nextLevelLabel.textContent=next?`${next.minXp-game.xp} XP para ${next.name}`:"Nivel máximo alcanzado";
+  elements.xpValue.textContent=`${game.xp} XP`; elements.streakValue.textContent=`${game.streak} ${game.streak===1?"día":"días"}`; elements.badgeValue.textContent=`${badges.length} / ${GAMIFICATION.badges.length}`; elements.timeValue.textContent=`${game.minutes||0} min`;
+  elements.badgesGrid.replaceChildren(); GAMIFICATION.badges.forEach(badge=>{const unlocked=badges.some(item=>item.id===badge.id),card=document.createElement("article");card.className=`achievement ${unlocked?"is-unlocked":"is-locked"}`;card.innerHTML=`<span>${unlocked?badge.icon:"🔒"}</span><div><strong>${escapeHtml(badge.name)}</strong><p>${escapeHtml(badge.description)}</p><small>${unlocked?"Desbloqueada":`Requiere ${badge.requirement} módulo(s)`}</small></div>`;elements.badgesGrid.appendChild(card);});
+}
+function showToast(message,tone="success"){elements.feedbackToast.textContent=message;elements.feedbackToast.className=`feedback-toast is-visible ${tone}`;clearTimeout(showToast.timer);showToast.timer=setTimeout(()=>elements.feedbackToast.classList.remove("is-visible"),2600);}
 
 // Cambio P2: verificacion visual del laboratorio local desde la interfaz.
 async function verificarFloci() {
@@ -166,6 +195,7 @@ function render() {
   elements.lessonHint.textContent = current.command
     ? "Haz la practica, escribe una nota corta y marca la leccion cuando puedas explicarla."
     : "Lee el concepto y explicalo con tus palabras antes de avanzar.";
+  elements.curiosityText.textContent = current.curiosity;
 
   renderCommand(current);
   renderMethod(current);
@@ -174,8 +204,24 @@ function render() {
   renderNote(current);
   renderActiveResponses(current);
   renderExerciseEvidence(current);
+  lockSolution();
+  renderQuiz(current);
+  renderDashboard();
   renderActions();
 }
+
+function lockSolution(){elements.solutionPanel.classList.add("is-locked");elements.revealSolution.textContent="Ver solución";elements.solutionStatus.textContent="Escribe primero tu predicción para desbloquear la solución.";}
+function revealSolution(){if(!elements.predictionText.value.trim()){elements.solutionStatus.textContent="Escribe tu predicción antes de revelar la solución.";elements.predictionText.focus();showToast("Primero predice qué ocurrirá","error");return;}elements.solutionPanel.classList.remove("is-locked");elements.revealSolution.textContent="Solución visible";elements.solutionStatus.textContent="Compara el resultado con tu predicción y explica la diferencia.";}
+
+function renderQuiz(current) {
+  const answers=quizAnswers[current.number]||{}; elements.quizQuestions.replaceChildren();
+  current.quiz.forEach((quiz,questionIndex)=>{const article=document.createElement("article"),title=document.createElement("h4"),options=document.createElement("div");article.className="quiz-question";title.textContent=`${questionIndex+1}. ${quiz.question}`;options.className="quiz-options";
+    quiz.options.forEach((option,optionIndex)=>{const button=document.createElement("button");button.type="button";button.textContent=option;if(answers[questionIndex]!==undefined){button.disabled=true;if(optionIndex===quiz.correct)button.classList.add("is-correct");if(answers[questionIndex]===optionIndex&&optionIndex!==quiz.correct)button.classList.add("is-wrong");}button.addEventListener("click",()=>answerQuiz(current,questionIndex,optionIndex));options.appendChild(button);});article.append(title,options);
+    if(answers[questionIndex]!==undefined){const feedback=document.createElement("p"),correct=answers[questionIndex]===quiz.correct;feedback.className=`answer-feedback ${correct?"correct":"wrong"}`;feedback.textContent=correct?`✅ ${quiz.explanation}`:`❌ Incorrecto. ${quiz.hint} Respuesta correcta: ${quiz.options[quiz.correct]}`;article.appendChild(feedback);}elements.quizQuestions.appendChild(article);});
+  const score=current.quiz.filter((quiz,index)=>answers[index]===quiz.correct).length;elements.quizScore.textContent=`${score} / ${current.quiz.length}`;elements.quizFeedback.textContent=score===current.quiz.length?"¡Dominio comprobado! Ya puedes continuar.":"Responde y recibe retroalimentación inmediata.";
+}
+
+function answerQuiz(current,questionIndex,optionIndex){const answers=quizAnswers[current.number]||{};if(answers[questionIndex]!==undefined)return;answers[questionIndex]=optionIndex;quizAnswers[current.number]=answers;localStorage.setItem(QUIZ_KEY,JSON.stringify(quizAnswers));const correct=current.quiz[questionIndex].correct===optionIndex;if(correct){game.xp+=5;saveGame();showToast("✅ ¡Correcto! +5 XP");}else showToast(`❌ Incorrecto. Pista: ${current.quiz[questionIndex].hint}`,"error");renderQuiz(current);renderDashboard();}
 
 function renderCommand(current) {
   elements.copyStatus.textContent = "";
@@ -389,6 +435,19 @@ function completeCurrentStep() {
   }
 
   if (viewStep >= progressStep) {
+    if (!game.awardedLessons.includes(viewStep)) {
+      game.awardedLessons.push(viewStep);
+      game.xp += GAMIFICATION.xpPerLesson;
+      game.minutes += Number.parseInt(currentStep().estimatedTime, 10) || 10;
+      showToast(`⚡ Lección completada · +${GAMIFICATION.xpPerLesson} XP`);
+    }
+    const course = courseForStep(viewStep);
+    if (viewStep === course.end && !game.awardedModules.includes(course.id)) {
+      game.awardedModules.push(course.id);
+      game.xp += GAMIFICATION.xpPerModule;
+      setTimeout(() => showToast(`🏅 Módulo completado · +${GAMIFICATION.xpPerModule} XP`), 700);
+    }
+    saveGame();
     progressStep = Math.min(viewStep + 1, steps.length + 1);
     saveProgress();
   }
@@ -436,34 +495,33 @@ function validateCurrentExercise() {
   const current = currentStep();
   const evidence = elements.exerciseEvidence.value.trim();
   const hasActiveReflection = isActiveResponseComplete(viewStep);
-  const expectedTokens = current.title
-    .toLowerCase()
-    .split(/[^a-z0-9áéíóúñ]+/i)
-    .filter((token) => token.length > 4)
-    .slice(0, 3);
+  const expectedTokens = current.exercise.keywords
+    .flatMap((value) => value.toLowerCase().split(/[^a-z0-9áéíóúñ]+/i))
+    .filter((token) => token.length > 4);
   const mentionsTopic = expectedTokens.length === 0
     || expectedTokens.some((token) => evidence.toLowerCase().includes(token));
 
-  if (evidence.length < 80) {
-    elements.exerciseStatus.textContent = "Validacion incompleta: agrega al menos 80 caracteres de evidencia concreta.";
+  if (evidence.length < current.exercise.minLength) {
+    elements.exerciseStatus.textContent = `❌ Aún no. Agrega ${current.exercise.minLength} caracteres de evidencia. Pista: ${current.exercise.hint}`;
     elements.exerciseEvidence.focus();
     return;
   }
 
   if (!mentionsTopic) {
-    elements.exerciseStatus.textContent = "Validacion incompleta: menciona el concepto del paso o el resultado observado.";
+    elements.exerciseStatus.textContent = `❌ Falta relacionar la evidencia con el tema. Pista: ${current.exercise.hint}`;
     elements.exerciseEvidence.focus();
     return;
   }
 
   if (!hasActiveReflection) {
-    elements.exerciseStatus.textContent = "Validacion incompleta: completa tambien prediccion y explicacion.";
+    elements.exerciseStatus.textContent = "❌ Completa también tu predicción y explicación para comparar lo esperado con lo observado.";
     elements.predictionText.focus();
     return;
   }
 
   saveExerciseResponse();
-  elements.exerciseStatus.textContent = "Ejercicio validado: tienes evidencia, relacion con el tema y reflexion activa.";
+  elements.exerciseStatus.textContent = "✅ ¡Correcto! La evidencia incluye el tema, una comprobación y reflexión activa.";
+  showToast("✅ Ejercicio verificado correctamente");
 }
 
 function toggleNavigation(open) {
@@ -529,6 +587,9 @@ $("openCloudLab").addEventListener("click", openCloudLab);
 $("closeCloudLab").addEventListener("click", () => elements.cloudLabDialog.close());
 $("toggleNav").addEventListener("click", () => toggleNavigation(!document.body.classList.contains("nav-open")));
 $("closeNav").addEventListener("click", () => toggleNavigation(false));
+elements.openBadges.addEventListener("click", () => elements.badgesDialog.showModal());
+elements.closeBadges.addEventListener("click", () => elements.badgesDialog.close());
+elements.revealSolution.addEventListener("click", revealSolution);
 
 render();
 elements.sourceStatus.textContent = `${courses.length} modulos · ${steps.length} lecciones generadas.`;

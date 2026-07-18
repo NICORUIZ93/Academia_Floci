@@ -10,6 +10,23 @@ const METHOD = [
   "Recursos para seguir profundizando.",
 ];
 
+const GAMIFICATION = {
+  xpPerLesson: 10,
+  xpPerModule: 50,
+  levels: [
+    { name: "Básico", minXp: 0 },
+    { name: "Intermedio", minXp: 300 },
+    { name: "Avanzado", minXp: 900 },
+    { name: "Master", minXp: 1800 },
+  ],
+  badges: [
+    { id: "explorer", name: "Explorador", icon: "🧭", requirement: 1, description: "Completa tu primer módulo." },
+    { id: "builder", name: "Constructor", icon: "🛠️", requirement: 3, description: "Completa tres módulos." },
+    { id: "architect", name: "Arquitecto", icon: "🏛️", requirement: 6, description: "Completa seis módulos." },
+    { id: "master", name: "Maestro", icon: "🏆", requirement: 8, description: "Completa toda la ruta." },
+  ],
+};
+
 const COURSE_BLUEPRINTS = [
   {
     "id": "javascript",
@@ -2361,6 +2378,51 @@ function step(number, course, level, topic) {
       ...subtopics,
     ],
     output: `Resultado esperado: puedes explicar ${topic.title}, aplicar sus subtemas, detectar errores comunes y defender una solucion practica.`,
+    curiosity: `¿Sabías que? ${topic.title} deja de ser teoría cuando puedes predecir un fallo, reproducirlo y explicar por qué la solución lo corrige.`,
+    exercise: {
+      prompt: `Explica cómo aplicarías ${topic.title} en ${course.project}. Incluye una decisión, un posible fallo y una forma concreta de verificarla.`,
+      minLength: 100,
+      keywords: [topic.title, course.title, "prueba", "error", "verificar"],
+      hint: `Menciona ${topic.title}, describe una entrada y una salida, y propone una prueba observable.`,
+    },
+    quiz: [
+      {
+        question: `¿Cuál es el objetivo principal de esta lección sobre ${topic.title}?`,
+        options: [
+          `Aplicarlo y verificarlo dentro de ${course.project}`,
+          "Memorizar todos los nombres sin ejecutar nada",
+          "Instalar dependencias sin comprender el problema",
+          "Evitar documentar decisiones técnicas",
+        ],
+        correct: 0,
+        explanation: `Correcto: la meta es aplicar ${topic.title} y demostrar el resultado con evidencia.`,
+        hint: "Busca la opción que combina práctica y verificación.",
+      },
+      {
+        question: `¿Qué evidencia demuestra mejor que comprendiste ${topic.title}?`,
+        options: [
+          "Una captura sin contexto",
+          "Código copiado que no puedes explicar",
+          "Una prueba reproducible, su resultado y una explicación propia",
+          "Una lista de términos aislados",
+        ],
+        correct: 2,
+        explanation: "Correcto: una evidencia profesional debe ser reproducible y explicable.",
+        hint: "La evidencia debe permitir que otra persona repita la comprobación.",
+      },
+      {
+        question: "¿Qué debes hacer cuando el ejemplo falla?",
+        options: [
+          "Ocultar el error y avanzar",
+          "Cambiar muchas cosas al mismo tiempo",
+          "Copiar otra solución sin comparar",
+          "Aislar la causa, formular una hipótesis y conservar una prueba de regresión",
+        ],
+        correct: 3,
+        explanation: "Correcto: diagnosticar de forma controlada convierte el error en aprendizaje.",
+        hint: "Piensa en el método científico aplicado al código.",
+      },
+    ],
   };
 }
 

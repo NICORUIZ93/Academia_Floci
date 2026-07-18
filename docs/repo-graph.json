@@ -2336,7 +2336,7 @@
     },
     {
       "path": "scripts/validate.sh",
-      "lines": 457,
+      "lines": 474,
       "kind": "automation-script",
       "symbols": [],
       "imports": [],
@@ -2466,7 +2466,7 @@
     },
     {
       "path": "web/app-data.js",
-      "lines": 2389,
+      "lines": 2451,
       "kind": "project-file",
       "symbols": [],
       "imports": [
@@ -2479,7 +2479,7 @@
     },
     {
       "path": "web/app.css",
-      "lines": 698,
+      "lines": 824,
       "kind": "project-file",
       "symbols": [],
       "imports": [],
@@ -2487,7 +2487,7 @@
     },
     {
       "path": "web/app.js",
-      "lines": 535,
+      "lines": 596,
       "kind": "project-file",
       "symbols": [],
       "imports": [],
@@ -2505,13 +2505,20 @@
     },
     {
       "path": "web/index.html",
-      "lines": 249,
+      "lines": 282,
       "kind": "project-file",
       "symbols": [
         "progressLabel",
         "progressBar",
         "openCloudLab",
         "toggleNav",
+        "levelLabel",
+        "nextLevelLabel",
+        "xpValue",
+        "streakValue",
+        "openBadges",
+        "badgeValue",
+        "timeValue",
         "courseNav",
         "resetProgress",
         "closeNav",
@@ -2524,14 +2531,7 @@
         "lessonHint",
         "objectiveText",
         "theoryText",
-        "commandPanel",
-        "copyCommand",
-        "commandText",
-        "copyStatus",
-        "breakdownList",
-        "deepDiveText",
-        "errorsList",
-        "challengeText"
+        "curiosityText"
       ],
       "imports": [],
       "headings": []

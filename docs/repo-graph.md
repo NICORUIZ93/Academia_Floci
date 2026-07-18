@@ -1,6 +1,6 @@
 # Academia Floci Repo Graph
 
-Generated: 2026-07-18 01:12 UTC
+Generated: 2026-07-18 01:19 UTC
 Root: `Academia_Floci`
 Indexed files: 741
 Import edges: 30
@@ -54,11 +54,11 @@ For automated lookups, use `docs/repo-graph.json`.
 
 - `README.md` (276 lines, documentation)
   - headings: # Academia_Floci, ## Como empezar, ## Levantar Floci, # 1. Levantar todos los servicios, # 2. Verificar Floci AWS
-- `scripts/validate.sh` (457 lines, automation-script)
+- `scripts/validate.sh` (474 lines, automation-script)
 - `scripts/build_repo_graph.py` (446 lines, automation-script)
   - symbols: FileNode, repo_files, read_text, classify, parse_ts_symbols, parse_ts_imports, parse_python_symbols, parse_python_imports, parse_markdown_headings, unique
-- `web/index.html` (249 lines, project-file)
-  - symbols: progressLabel, progressBar, openCloudLab, toggleNav, courseNav, resetProgress, closeNav, courseList, courseLabel, difficultyBadge
+- `web/index.html` (282 lines, project-file)
+  - symbols: progressLabel, progressBar, openCloudLab, toggleNav, levelLabel, nextLevelLabel, xpValue, streakValue, openBadges, badgeValue
 - `web/src/app/app.ts` (11 lines, angular-app)
   - symbols: App
 - `web/src/app/course-data.ts` (1051 lines, angular-app)
@@ -168,7 +168,7 @@ For automated lookups, use `docs/repo-graph.json`.
 - `scripts/fix_lessons.py` (205 lines) - symbols: safe_print, iter_text_check_files, find_text_quality_issues, normalized_content, fix_content, check_http, main; imports: argparse, glob, os, re, urllib.request
 - `scripts/start.sh` (10 lines)
 - `scripts/validate-floci.sh` (43 lines)
-- `scripts/validate.sh` (457 lines)
+- `scripts/validate.sh` (474 lines)
 - `scripts/validate_code_quality.py` (44 lines) - imports: pathlib
 - `scripts/validate_curriculum.py` (163 lines) - imports: json, pathlib, re
 - `scripts/validate_official_sources.py` (88 lines) - imports: datetime, json, pathlib, urllib.parse
@@ -262,7 +262,7 @@ For automated lookups, use `docs/repo-graph.json`.
 - `web/.vscode/mcp.json` (10 lines)
 - `web/.vscode/tasks.json` (43 lines)
 - `web/angular.json` (80 lines)
-- `web/app-data.js` (2389 lines) - imports: ./Component.module.css, ./module, ./component, ./Component
-- `web/app.css` (698 lines)
-- `web/app.js` (535 lines)
+- `web/app-data.js` (2451 lines) - imports: ./Component.module.css, ./module, ./component, ./Component
+- `web/app.css` (824 lines)
+- `web/app.js` (596 lines)
 - ... 11 more files

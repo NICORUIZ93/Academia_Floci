@@ -146,6 +146,15 @@ for (const lesson of fallbackSteps) {
   if (!lesson.resources.some((item) => item.includes('https://'))) {
     throw new Error(`La leccion ${lesson.number} debe incluir documentacion oficial`);
   }
+  if (!Array.isArray(lesson.quiz) || lesson.quiz.length < 3 || lesson.quiz.length > 5) {
+    throw new Error(`La leccion ${lesson.number} debe incluir entre 3 y 5 preguntas interactivas`);
+  }
+  if (!lesson.exercise?.prompt || !lesson.exercise?.hint || lesson.exercise.minLength < 80) {
+    throw new Error(`La leccion ${lesson.number} debe incluir ejercicio verificable y pista`);
+  }
+  if (!lesson.curiosity?.includes('¿Sabías que?')) {
+    throw new Error(`La leccion ${lesson.number} debe incluir un dato escaneable`);
+  }
 }
 
 for (const course of courses) {
@@ -259,10 +268,18 @@ for (const expected of ['id="noteText"', 'id="saveNote"', 'id="difficultyBadge"'
   }
 }
 
+for (const expected of ['id="xpValue"', 'id="streakValue"', 'id="badgeValue"', 'id="timeValue"', 'id="quizQuestions"', 'id="quizFeedback"', 'id="badgesDialog"', 'id="feedbackToast"', 'id="curiosityText"', 'id="revealSolution"', 'id="solutionPanel"']) {
+  if (!html.includes(expected)) throw new Error(`web/index.html no contiene experiencia interactiva: ${expected}`);
+}
+
 for (const expected of ['saveCurrentNote', 'highlightCommand', 'token-command', 'saveActiveResponse', 'isActiveResponseComplete', 'saveExerciseResponse', 'validateCurrentExercise', 'EXERCISE_KEY', 'toggleNavigation', 'NEARBY_LESSON_WINDOW = 2', 'renderFullOutline', 'openFullOutline', 'openCloudLab', '✅']) {
   if (!app.includes(expected)) {
     throw new Error(`web/app.js no contiene ${expected}`);
   }
+}
+
+for (const expected of ['GAMIFICATION', 'renderDashboard', 'renderQuiz', 'answerQuiz', 'showToast', 'xpPerLesson', 'xpPerModule', 'localDateKey', 'unlockedBadges']) {
+  if (!app.includes(expected) && !data.includes(expected)) throw new Error(`Gamificación incompleta: falta ${expected}`);
 }
 
 for (const expected of ['@media (max-width: 760px)', 'body.nav-open .sidebar', '.mobile-nav-button', '.active-learning-panel', '.exercise-check-panel', 'position: sticky', 'bottom: 0', 'overflow-x: auto', 'white-space: pre', '.service-icons', '#16a34a', '.outline-dialog', '.full-course-lessons', '.cloud-dialog', '.topbar-actions']) {

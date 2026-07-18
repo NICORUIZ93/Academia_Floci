@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Academia Master Hacker</title>
+  <title>Academia Floci · Aprende construyendo</title>
   <link rel="stylesheet" href="app.css">
   <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
   <script>
@@ -23,9 +23,13 @@
 </head>
 <body>
   <header class="topbar">
-    <div>
-      <p class="eyebrow">Ruta profesional de cero a avanzado</p>
-      <h1>Academia Master Hacker</h1>
+    <a class="brand" href="#" aria-label="Inicio de Academia Floci">
+      <span class="brand-icon" aria-hidden="true">F</span>
+      <span><small>ACADEMIA</small><strong>Floci</strong></span>
+    </a>
+    <div class="topbar-title">
+      <p class="eyebrow">Ruta profesional · Aprende construyendo</p>
+      <h1>Tu espacio de aprendizaje</h1>
     </div>
     <div class="topbar-actions">
       <div class="progress-box" aria-live="polite">
@@ -36,6 +40,17 @@
     </div>
     <button id="toggleNav" class="mobile-nav-button" type="button" aria-expanded="false" aria-controls="courseNav">☰ Pasos</button>
   </header>
+
+  <section class="student-dashboard" aria-label="Tu progreso de aprendizaje">
+    <div class="welcome-card">
+      <span class="dashboard-icon" aria-hidden="true">🚀</span>
+      <div><small>CONTINÚA TU CAMINO</small><strong id="levelLabel">Nivel Básico</strong><span id="nextLevelLabel">Tu próxima meta está cerca</span></div>
+    </div>
+    <div class="stat-card xp-card"><span aria-hidden="true">⚡</span><div><strong id="xpValue">0 XP</strong><small>Experiencia</small></div></div>
+    <div class="stat-card streak-card"><span aria-hidden="true">🔥</span><div><strong id="streakValue">1 día</strong><small>Racha actual</small></div></div>
+    <button id="openBadges" class="stat-card badge-card" type="button"><span aria-hidden="true">🏅</span><div><strong id="badgeValue">0 / 4</strong><small>Insignias</small></div></button>
+    <div class="stat-card time-card"><span aria-hidden="true">⏱️</span><div><strong id="timeValue">0 min</strong><small>Tiempo estudiado</small></div></div>
+  </section>
 
   <div class="layout">
     <nav id="courseNav" class="sidebar" aria-label="Cursos">
@@ -61,18 +76,19 @@
       <p id="lessonHint" class="lesson-hint"></p>
 
       <section class="panel method-panel">
-        <h3>Objetivo</h3>
+        <h3><span class="section-icon icon-target">◎</span> Objetivo</h3>
         <p id="objectiveText"></p>
       </section>
 
       <section class="panel">
-        <h3>Teoria</h3>
+        <h3><span class="section-icon icon-theory">◈</span> Teoría esencial</h3>
         <p id="theoryText"></p>
+        <aside class="curiosity"><strong>💡 ¿Sabías que?</strong><span id="curiosityText"></span></aside>
       </section>
 
       <section id="commandPanel" class="panel">
         <div class="panel-header">
-          <h3>Practica</h3>
+          <h3><span class="section-icon icon-practice">⌘</span> Práctica guiada</h3>
           <button id="copyCommand" type="button">Copiar practica</button>
         </div>
         <pre><code id="commandText"></code></pre>
@@ -80,28 +96,28 @@
       </section>
 
       <section class="panel">
-        <h3>Aprenderas</h3>
+        <h3><span class="section-icon icon-map">☷</span> Mapa de aprendizaje</h3>
         <ul id="breakdownList"></ul>
       </section>
 
       <section class="panel">
-        <h3>Profundizacion</h3>
+        <h3><span class="section-icon icon-deep">◇</span> Profundización</h3>
         <p id="deepDiveText"></p>
       </section>
 
       <section class="panel">
-        <h3>Errores comunes</h3>
+        <h3><span class="section-icon icon-warning">!</span> Errores comunes</h3>
         <ul id="errorsList"></ul>
       </section>
 
       <section class="panel">
-        <h3>Reto</h3>
+        <h3><span class="section-icon icon-challenge">◆</span> Reto profesional</h3>
         <p id="challengeText"></p>
       </section>
 
       <section class="panel exercise-check-panel">
         <div class="panel-header">
-          <h3>Verificacion del ejercicio</h3>
+          <h3><span class="section-icon icon-check">✓</span> Ejercicio con verificación</h3>
           <button id="validateExercise" type="button">Validar ejercicio</button>
         </div>
         <label for="exerciseEvidence">Evidencia de tu practica</label>
@@ -109,9 +125,10 @@
         <p id="exerciseStatus" class="status-text"></p>
       </section>
 
-      <section class="panel">
-        <h3>Resultado esperado</h3>
-        <pre><code id="expectedOutput"></code></pre>
+      <section id="solutionPanel" class="panel solution-panel is-locked">
+        <div class="panel-header"><h3><span class="section-icon icon-solution">⌁</span> Solución esperada</h3><button id="revealSolution" type="button">Ver solución</button></div>
+        <div class="solution-content"><pre><code id="expectedOutput"></code></pre></div>
+        <p id="solutionStatus" class="status-text">Escribe primero tu predicción para desbloquear la solución.</p>
       </section>
 
       <section class="panel">
@@ -120,8 +137,17 @@
       </section>
 
       <section class="panel check-panel">
-        <h3>Pregunta de control</h3>
+        <h3><span class="section-icon icon-question">?</span> Pregunta de control</h3>
         <p id="controlQuestion"></p>
+      </section>
+
+      <section class="panel quiz-panel" aria-labelledby="quizTitle">
+        <div class="panel-header">
+          <div><p class="eyebrow">COMPRUEBA LO APRENDIDO</p><h3 id="quizTitle"><span class="section-icon icon-quiz">★</span> Quiz rápido</h3></div>
+          <span id="quizScore" class="quiz-score">0 / 3</span>
+        </div>
+        <div id="quizQuestions" class="quiz-questions"></div>
+        <p id="quizFeedback" class="quiz-feedback" aria-live="polite"></p>
       </section>
 
       <!-- Cambio P1: metodologia activa. El estudiante predice y explica antes de completar. -->
@@ -241,6 +267,13 @@ flowchart TB
       </div>
     </section>
   </dialog>
+
+  <dialog id="badgesDialog" class="badges-dialog" aria-labelledby="badgesTitle">
+    <div class="dialog-header"><div><p class="eyebrow">TUS LOGROS</p><h2 id="badgesTitle">Galería de insignias</h2></div><button id="closeBadges" class="ghost-button" type="button">Cerrar</button></div>
+    <p>Las insignias reconocen constancia real: se desbloquean al completar módulos, no solo por abrir páginas.</p>
+    <div id="badgesGrid" class="badges-grid"></div>
+  </dialog>
+  <div id="feedbackToast" class="feedback-toast" role="status" aria-live="polite"></div>
 
   <script src="app-data.js"></script>
   <script src="app.js"></script>
