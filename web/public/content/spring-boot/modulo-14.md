@@ -156,20 +156,6 @@ sequenceDiagram
 ## Criterio transversal de calidad del código
 
 Usa nombres del dominio, dependencias dirigidas hacia políticas estables y errores tipados. Escribe una prueba antes de corregir cada fallo. SOLID se aplica para separar mapas, transporte, persistencia y notificaciones, no para crear capas vacías. No abstraer hasta encontrar repetición con el mismo significado. Revisa nombres, errores, prueba, privacidad, permisos y operación.
-
-## Laboratorio práctico
-
-Parte de una carpeta vacía de feature dentro de RutaFlow. Define primero el contrato `DeliveryUpdate` con identificador, secuencia, instante y precisión. Implementa una pantalla de jornada, un endpoint protegido y persistencia durable. Luego conecta mapa y canal en tiempo real. Finalmente captura evidencia, trabaja sin red y sincroniza.
-
-1. Dibuja pantalla, estados y amenazas antes de instalar paquetes.
-2. Implementa el camino feliz con datos simulados y una prueba automatizada.
-3. Sustituye un adaptador a la vez: mapa, GPS, socket, datos, archivos y push.
-4. Desconecta la red, repite el comando, vence el token y envía eventos fuera de orden.
-5. Mide batería o consulta, latencia, frames y backlog; registra resultados en README.
-
-La definición de terminado exige comandos reproducibles, datos ficticios, secretos fuera del repositorio y una demostración en dispositivo o entorno de integración. No basta con que el marcador se mueva.
-
-
 ## Rúbrica del proyecto
 
 | Criterio | Inicial | Competente | Profesional |

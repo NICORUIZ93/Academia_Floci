@@ -111,26 +111,6 @@ Al terminar, podrás explicar las decisiones con vocabulario técnico sencillo, 
 {''.join(theory)}
 {QUALITY}
 
-## Laboratorio práctico
-
-Trabaja sobre `examples/rutaflow` y crea una rama para el módulo. Empieza con una prueba roja que represente la regla central; implementa el camino mínimo y luego agrega un fallo deliberado. Ejecuta linters y pruebas desde terminal para que el resultado no dependa del editor.
-
-1. Dibuja el flujo entrada → regla → persistencia → evento → interfaz y escribe dos invariantes.
-2. Implementa una vertical pequeña con tipos explícitos y un límite de infraestructura sustituible.
-3. Añade pruebas para éxito, entrada inválida, repetición y dependencia no disponible.
-4. Registra logs estructurados sin PII, una métrica de resultado y un correlation ID.
-5. Explica en el README cómo iniciar, verificar, detener y limpiar el laboratorio.
-
-Usa este contrato como guía, adaptándolo al lenguaje del módulo:
-
-```text
-Given un envío existente y una identidad autorizada
-When se ejecuta el comando con una clave idempotente
-Then cambia una sola vez, persiste un evento y expone el mismo resultado ante reintento
-```
-
-**Definición de terminado:** otra persona puede clonar el repositorio, seguir instrucciones, ejecutar la prueba, observar el fallo controlado y comprender la decisión sin preguntarte qué botón presionar.
-
 
 ## Rúbrica del proyecto
 

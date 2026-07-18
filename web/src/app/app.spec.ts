@@ -127,6 +127,7 @@ La evidencia demuestra el aprendizaje.`;
       expect(page.querySelector('.lesson-toc')?.textContent).not.toContain('Abrir tema');
       expect(page.querySelector('.lesson-toc')?.textContent).not.toContain('Ocultar tema');
       expect(page.querySelector('.module-checkpoint')).toBeFalsy();
+      expect(page.querySelector('.module-lab-link')).toBeFalsy();
       expect(page.querySelector('.code-example .window-controls')).toBeTruthy();
       expect(page.querySelector('.code-example .code-example-language')).toBeTruthy();
       expect(text).toContain('TypeScript');

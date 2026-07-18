@@ -55,7 +55,7 @@ for module_id in range(8):
         errors.append(f"falta el capítulo visible RutaFlow {module_id}")
         continue
     text = path.read_text(encoding="utf-8")
-    for heading in ("## Aprende construyendo", "## Laboratorio práctico", "## Rúbrica del proyecto"):
+    for heading in ("## Aprende construyendo", "## Rúbrica del proyecto"):
         if heading not in text:
             errors.append(f"rutaflow/{path.name}: falta {heading}")
 

@@ -2,7 +2,6 @@ import { CommonModule } from '@angular/common';
 import { Component, Input, computed, inject, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { NavigationEnd, Router, RouterLink, RouterLinkActive } from '@angular/router';
-import { FlaskConical, LucideAngularModule } from 'lucide-angular';
 import { filter, map, startWith } from 'rxjs';
 import { CourseModule, findTrack } from '../course-data';
 import { ProgressService } from '../progress.service';
@@ -19,14 +18,12 @@ const LEVEL_ORDER: CourseModule['level'][] = ['Fundamentos', 'Aplicación', 'Int
 
 @Component({
   selector: 'app-lesson-index',
-  imports: [CommonModule, RouterLink, RouterLinkActive, LucideAngularModule],
+  imports: [CommonModule, RouterLink, RouterLinkActive],
   templateUrl: './lesson-index.html',
   styleUrl: './lesson-index.scss',
 })
 export class LessonIndexComponent {
   @Input({ required: true }) trackId!: string;
-  readonly icons = { FlaskConical };
-
   private readonly router = inject(Router);
   readonly topicIndex = inject(TopicIndexService);
   readonly topicQuery = signal('');

@@ -19,7 +19,7 @@ else:
         text=path.read_text(encoding="utf-8").lower()
         for topic in item["requestedTopics"]:
             if topic.lower() not in text: errors.append(f"{item['track']}: falta hacer visible {topic}")
-        for heading in ("## Trazabilidad de la auditoría original","## Laboratorio práctico","## Rúbrica del proyecto"):
+        for heading in ("## Trazabilidad de la auditoría original","## Rúbrica del proyecto"):
             if heading.lower() not in text: errors.append(f"{item['track']}: falta {heading}")
 if errors:
     print("Temas Master solicitados FALLÓ:")

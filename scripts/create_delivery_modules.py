@@ -64,18 +64,6 @@ sequenceDiagram
 
 {''.join(sections)}
 {QUALITY}
-## Laboratorio práctico
-
-Parte de una carpeta vacía de feature dentro de RutaFlow. Define primero el contrato `DeliveryUpdate` con identificador, secuencia, instante y precisión. Implementa una pantalla de jornada, un endpoint protegido y persistencia durable. Luego conecta mapa y canal en tiempo real. Finalmente captura evidencia, trabaja sin red y sincroniza.
-
-1. Dibuja pantalla, estados y amenazas antes de instalar paquetes.
-2. Implementa el camino feliz con datos simulados y una prueba automatizada.
-3. Sustituye un adaptador a la vez: mapa, GPS, socket, datos, archivos y push.
-4. Desconecta la red, repite el comando, vence el token y envía eventos fuera de orden.
-5. Mide batería o consulta, latencia, frames y backlog; registra resultados en README.
-
-La definición de terminado exige comandos reproducibles, datos ficticios, secretos fuera del repositorio y una demostración en dispositivo o entorno de integración. No basta con que el marcador se mueva.
-
 
 ## Rúbrica del proyecto
 

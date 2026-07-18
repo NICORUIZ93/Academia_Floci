@@ -40,9 +40,6 @@
 .status-dot.current { background:$p; box-shadow:0 0 0 3px $pl; }
 .status-dot.pending { background:$bd2; }
 
-.module-topics .module-lab-link { display:flex; align-items:center; gap:7px; color:$p; font-weight:750; }
-.module-topics .module-lab-link lucide-icon { width:14px; flex:0 0 auto; }
-
 .sr-only {
   position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden;
   clip:rect(0,0,0,0); white-space:nowrap; border:0;

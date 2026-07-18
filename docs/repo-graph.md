@@ -1,6 +1,6 @@
 # Academia Floci Repo Graph
 
-Generated: 2026-07-18 06:14 UTC
+Generated: 2026-07-18 06:18 UTC
 Root: `Academia_Floci`
 Indexed files: 768
 Import edges: 31
@@ -136,7 +136,7 @@ For automated lookups, use `docs/repo-graph.json`.
 - `web/src/app/app.config.ts` (12 lines) - imports: @angular/core, @angular/router, ./app.routes
 - `web/src/app/app.html` (3 lines)
 - `web/src/app/app.routes.ts` (27 lines) - imports: @angular/router, ./catalog/course-catalog, ./course/course-shell, ./course/lesson-viewer
-- `web/src/app/app.spec.ts` (157 lines) - imports: @angular/core/testing, @angular/router, @angular/router/testing, ./app, ./app.routes, ./catalog/course-catalog, ./course-data
+- `web/src/app/app.spec.ts` (158 lines) - imports: @angular/core/testing, @angular/router, @angular/router/testing, ./app, ./app.routes, ./catalog/course-catalog, ./course-data
 - `web/src/app/app.ts` (11 lines) - symbols: App; imports: @angular/core, @angular/router, ./command-palette
 - `web/src/app/catalog/course-catalog.html` (92 lines) - symbols: catalog-title, tracks-title, official-title
 - `web/src/app/catalog/course-catalog.scss` (198 lines)
@@ -160,9 +160,9 @@ For automated lookups, use `docs/repo-graph.json`.
 - `scripts/audit_topic_learning_quality.py` (135 lines) - symbols: student_visible_content, topic_blocks, evaluate, classify, build, render_markdown, main; imports: __future__, argparse, json, re, collections, pathlib
 - `scripts/build_repo_graph.py` (445 lines) - symbols: FileNode, repo_files, read_text, classify, parse_ts_symbols, parse_ts_imports, parse_python_symbols, parse_python_imports; imports: __future__, argparse, ast, json, re, collections, dataclasses, datetime
 - `scripts/build_web_topic_index.py` (72 lines) - symbols: slugify, clean_topic_title, main; imports: __future__, json, re, sys, unicodedata, collections, pathlib
-- `scripts/create_delivery_modules.py` (109 lines) - symbols: render; imports: pathlib
-- `scripts/create_master_gap_modules.py` (133 lines) - symbols: render; imports: pathlib, json
-- `scripts/create_rutaflow_content.py` (165 lines) - symbols: render; imports: pathlib
+- `scripts/create_delivery_modules.py` (97 lines) - symbols: render; imports: pathlib
+- `scripts/create_master_gap_modules.py` (120 lines) - symbols: render; imports: pathlib, json
+- `scripts/create_rutaflow_content.py` (145 lines) - symbols: render; imports: pathlib
 - `scripts/enrich_code_quality.py` (44 lines) - imports: pathlib
 - `scripts/enrich_curriculum_sections.py` (172 lines) - symbols: bibliography, project_path; imports: pathlib
 - `scripts/enrich_official_topic_atlas.py` (127 lines) - symbols: block; imports: pathlib, json
@@ -185,7 +185,7 @@ For automated lookups, use `docs/repo-graph.json`.
 - `web/public/content/android/modulo-11.md` (231 lines) - headings: # Módulo 11: Publicación en Google Play, ## Sílabo, ## Aprende construyendo, ### Tema 1: Firma de la app
 - `web/public/content/android/modulo-12.md` (249 lines) - headings: # Módulo 12: Proyecto integrador: app Android completa, ## Sílabo, ## Aprende construyendo, ### Tema 1: Arquitectura MVVM completa con UDF
 - `web/public/content/android/modulo-13.md` (299 lines) - headings: # Módulo 13: Android en producción — seguridad, sincronización y calidad, ## Sílabo, ## Aprende construyendo, ### Tema 1: El sistema operativo conecta tu app con entradas externas
-- `web/public/content/android/modulo-14.md` (208 lines) - headings: # Módulo 14: Compose Master: pruebas, accesibilidad y animación, ## Sílabo, ## Aprende construyendo, ### Tema 1: ComposeTestRule
+- `web/public/content/android/modulo-14.md` (193 lines) - headings: # Módulo 14: Compose Master: pruebas, accesibilidad y animación, ## Sílabo, ## Aprende construyendo, ### Tema 1: ComposeTestRule
 - `web/public/content/android/modulo-2.md` (233 lines) - headings: # Módulo 2: Jetpack Compose: UI declarativa, ## Sílabo, ## Aprende construyendo, ### Tema 1: Composables y recomposición
 - `web/public/content/android/modulo-3.md` (235 lines) - headings: # Módulo 3: Navegación con Navigation Compose, ## Sílabo, ## Aprende construyendo, ### Tema 1: NavHost y NavController
 - `web/public/content/android/modulo-4.md` (233 lines) - headings: # Módulo 4: Estado con StateFlow y Compose, ## Sílabo, ## Aprende construyendo, ### Tema 1: StateFlow en el ViewModel

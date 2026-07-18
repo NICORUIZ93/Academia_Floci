@@ -85,19 +85,6 @@ flowchart LR
 
 Usa nombres del dominio, errores tipados y límites claros. Escribe una prueba que exprese el comportamiento antes de corregir el defecto. SOLID se aplica cuando reduce el coste real de sustituir infraestructura o política; no abstraer antes de observar repetición con el mismo significado. Revisa nombres, cohesión, dependencias, errores, prueba, mínimo privilegio y capacidad de diagnóstico.
 
-## Laboratorio práctico
-
-Selecciona una vertical de RutaFlow —cotización, asignación, tracking, evidencia o liquidación— y crea una rama desde un estado verificable. Para cada tema agrega una capacidad pequeña, no una aplicación paralela. Mantén un diario con hipótesis, comando, resultado, métrica y decisión.
-
-1. Define requisito, amenaza y atributo de calidad medible.
-2. Construye la versión mínima con configuración reproducible.
-3. Prueba camino feliz, entrada inválida y fallo de dependencia.
-4. Ejecuta análisis de seguridad y registra datos sensibles tratados.
-5. Mide latencia, coste, tamaño, accesibilidad o recuperación según corresponda.
-6. Automatiza la comprobación en CI y documenta rollback.
-
-La definición de terminado requiere código ejecutable, prueba automatizada, diagrama, ADR, enlace oficial con versión, medición antes/después y un procedimiento de limpieza. No se aceptan capturas sin comandos ni resultados imposibles de repetir.
-
 
 ## Rúbrica del proyecto
 
