@@ -13,6 +13,35 @@
         </div>
       </header>
 
+      <section class="floci-overview" *ngIf="isCloudIntroduction()" aria-labelledby="floci-overview-title">
+        <div class="floci-overview-intro">
+          <span>Documentación oficial · explicada en español</span>
+          <h2 id="floci-overview-title">Una nube local para aprender construyendo</h2>
+          <p>Usarás las mismas CLI, SDK y definiciones de infraestructura que en AWS, pero contra un entorno aislado en tu computador. Comprende el modelo, observa, reproduce y después modifica el resultado sin ayuda.</p>
+          <div class="floci-overview-actions">
+            <a href="#antes-de-comenzar-instalacion-guiada-por-sistema-operativo">Preparar mi entorno</a>
+            <a class="secondary" href="https://floci.io/aws/" target="_blank" rel="noopener noreferrer">Fuente oficial</a>
+          </div>
+        </div>
+        <dl class="floci-metrics" aria-label="Datos técnicos publicados por Floci">
+          <div *ngFor="let metric of flociMetrics"><dt>{{ metric.value }}</dt><dd>{{ metric.label }}<small>{{ metric.detail }}</small></dd></div>
+        </dl>
+        <div class="floci-capabilities">
+          <article *ngFor="let capability of flociCapabilities"><lucide-icon [img]="capability.icon" /><h3>{{ capability.title }}</h3><p>{{ capability.text }}</p></article>
+        </div>
+        <div class="floci-real-engines">
+          <div><small>Modelo mental importante</small><h3>APIs emuladas y motores reales cuando aportan fidelidad</h3><p>Floci implementa el plano de control local y coordina motores existentes para varias capacidades complejas. Esto es más útil que una respuesta fija, pero no reproduce escala, cuotas, regiones ni operación administrada.</p></div>
+          <ul><li *ngFor="let engine of flociEngines"><lucide-icon [img]="engine.icon" /><span><strong>{{ engine.name }}</strong><small>{{ engine.detail }}</small></span></li></ul>
+        </div>
+        <ol class="floci-study-loop" aria-label="Metodología de estudio del track Cloud">
+          <li><span>1</span><strong>Comprende</strong><small>Qué problema resuelve.</small></li>
+          <li><span>2</span><strong>Predice</strong><small>Qué esperas observar.</small></li>
+          <li><span>3</span><strong>Construye</strong><small>Ejecuta y guarda evidencia.</small></li>
+          <li><span>4</span><strong>Rompe</strong><small>Provoca y diagnostica un error.</small></li>
+          <li><span>5</span><strong>Transfiere</strong><small>Define qué validarás en cloud real.</small></li>
+        </ol>
+      </section>
+
       <section class="learning-toolbar" aria-label="Modo de estudio">
         <div class="learning-modes">
           <button [class.active]="lessonMode() === 'learn'" (click)="setLessonMode('learn')">Aprender</button>
@@ -48,6 +77,27 @@
             <p class="lesson-deliverable"><strong>Entregable previsto:</strong> {{ m.deliverable }}</p>
           </div>
         </ng-container>
+      </section>
+
+      <section class="module-checkpoint" *ngIf="moduleQuiz().length" aria-labelledby="checkpoint-title">
+        <div class="checkpoint-heading">
+          <div><small>Evaluación del capítulo</small><h2 id="checkpoint-title">Comprueba antes de continuar</h2><p>Cinco preguntas construidas desde el sílabo de este módulo. Reconoce qué pertenece aquí y qué corresponde estudiar después.</p></div>
+          <button type="button" class="exam-toggle" [class.active]="examMode()" (click)="toggleExamMode()">{{ examMode() ? 'Salir del examen' : 'Modo examen' }}</button>
+        </div>
+        <div class="exam-banner" *ngIf="examMode()"><span>Soluciones ocultas hasta entregar</span><strong>{{ examTime() }}</strong></div>
+        <ol class="checkpoint-questions">
+          <li *ngFor="let question of moduleQuiz(); let qi = index" [class.correct]="moduleQuizChecked() && moduleQuizAnswers()[qi] === question.answer" [class.incorrect]="moduleQuizChecked() && moduleQuizAnswers()[qi] !== question.answer">
+            <p><strong>{{ qi + 1 }}.</strong> {{ question.question }}</p>
+            <div class="checkpoint-options">
+              <button *ngFor="let option of question.options; let oi = index" type="button" [class.selected]="moduleQuizAnswers()[qi] === oi" [class.correct-answer]="moduleQuizChecked() && oi === question.answer" [disabled]="moduleQuizChecked()" (click)="selectModuleQuizAnswer(qi, oi)">{{ option }}</button>
+            </div>
+            <p class="checkpoint-feedback" *ngIf="moduleQuizChecked()" aria-live="polite">{{ moduleQuizAnswers()[qi] === question.answer ? '✅ Correcto. ' : '❌ Revisa este límite. ' }}{{ question.explanation }}</p>
+          </li>
+        </ol>
+        <footer class="checkpoint-footer">
+          <button type="button" class="checkpoint-submit" [disabled]="!moduleQuizReady()" (click)="checkModuleQuiz()">{{ examMode() ? 'Entregar examen' : 'Verificar respuestas' }}</button>
+          <p *ngIf="moduleQuizChecked()"><strong>{{ moduleQuizScore() }}/{{ moduleQuiz().length }}</strong> · {{ moduleQuizScore() === moduleQuiz().length ? 'Dominio completo del mapa del capítulo.' : 'Vuelve únicamente a los conceptos que confundiste.' }}</p>
+        </footer>
       </section>
 
       <footer class="lesson-footer">

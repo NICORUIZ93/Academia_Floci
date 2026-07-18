@@ -163,6 +163,22 @@
       "headings": []
     },
     {
+      "path": "docs/floci-official-curriculum.json",
+      "lines": 14,
+      "kind": "project-file",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "docs/official-learning-guides.json",
+      "lines": 22,
+      "kind": "project-file",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
       "path": "docs/official-sources.json",
       "lines": 21,
       "kind": "project-file",
@@ -2500,7 +2516,7 @@
     },
     {
       "path": "scripts/validate.sh",
-      "lines": 480,
+      "lines": 482,
       "kind": "automation-script",
       "symbols": [],
       "imports": [],
@@ -2539,6 +2555,30 @@
         "pathlib",
         "json",
         "unicodedata"
+      ],
+      "headings": []
+    },
+    {
+      "path": "scripts/validate_floci_official_curriculum.py",
+      "lines": 24,
+      "kind": "automation-script",
+      "symbols": [],
+      "imports": [
+        "json",
+        "pathlib"
+      ],
+      "headings": []
+    },
+    {
+      "path": "scripts/validate_official_learning_paths.py",
+      "lines": 54,
+      "kind": "automation-script",
+      "symbols": [],
+      "imports": [
+        "__future__",
+        "json",
+        "re",
+        "pathlib"
       ],
       "headings": []
     },
@@ -4023,6 +4063,27 @@
         "## Trazabilidad de la auditor\u00eda original",
         "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico"
+      ]
+    },
+    {
+      "path": "web/public/content/cloud/modulo-34.md",
+      "lines": 218,
+      "kind": "course-content",
+      "symbols": [],
+      "imports": [],
+      "headings": [
+        "# M\u00f3dulo 34: Floci oficial completo \u2014 plataforma, servicios y laboratorios",
+        "## Qu\u00e9 construir\u00e1s y por qu\u00e9 importa",
+        "## S\u00edlabo",
+        "## Antes de empezar",
+        "## Contenido te\u00f3rico",
+        "### 1. Instalaci\u00f3n en macOS, Linux y Windows",
+        "### macOS",
+        "### Instalaci\u00f3n en Linux",
+        "### Instalaci\u00f3n en Windows",
+        "## 2. Modelo mental de la plataforma",
+        "## 3. AWS CLI y SDK, Azure CLI y SDK, GCP CLI y SDK",
+        "## 4. Configuraci\u00f3n avanzada y ciclo de vida"
       ]
     },
     {
@@ -9702,7 +9763,7 @@
     },
     {
       "path": "web/public/content/topic-index.json",
-      "lines": 5301,
+      "lines": 5302,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -11502,7 +11563,7 @@
     },
     {
       "path": "web/src/app/app.spec.ts",
-      "lines": 118,
+      "lines": 132,
       "kind": "angular-app",
       "symbols": [],
       "imports": [
@@ -11532,9 +11593,11 @@
     },
     {
       "path": "web/src/app/catalog/course-catalog.html",
-      "lines": 74,
+      "lines": 92,
       "kind": "angular-app",
       "symbols": [
+        "catalog-title",
+        "tracks-title",
         "official-title"
       ],
       "imports": [],
@@ -11542,7 +11605,7 @@
     },
     {
       "path": "web/src/app/catalog/course-catalog.scss",
-      "lines": 178,
+      "lines": 198,
       "kind": "angular-app",
       "symbols": [],
       "imports": [],
@@ -11550,14 +11613,15 @@
     },
     {
       "path": "web/src/app/catalog/course-catalog.ts",
-      "lines": 82,
+      "lines": 88,
       "kind": "angular-app",
       "symbols": [
         "CourseCatalogComponent",
         "cards",
         "featuredTracks",
         "foundationTracks",
-        "mobileTracks"
+        "mobileTracks",
+        "totalModules"
       ],
       "imports": [
         "@angular/common",
@@ -11636,15 +11700,17 @@
     },
     {
       "path": "web/src/app/course/course-shell.html",
-      "lines": 47,
+      "lines": 62,
       "kind": "angular-app",
-      "symbols": [],
+      "symbols": [
+        "official-path-title"
+      ],
       "imports": [],
       "headings": []
     },
     {
       "path": "web/src/app/course/course-shell.scss",
-      "lines": 68,
+      "lines": 89,
       "kind": "angular-app",
       "symbols": [],
       "imports": [],
@@ -11652,12 +11718,14 @@
     },
     {
       "path": "web/src/app/course/course-shell.ts",
-      "lines": 51,
+      "lines": 57,
       "kind": "angular-app",
       "symbols": [
         "CourseShellComponent",
         "track",
+        "officialPath",
         "sidebarOpen",
+        "trackLogo",
         "percent",
         "stats"
       ],
@@ -11672,7 +11740,8 @@
         "../command-palette.service",
         "../progress.service",
         "../theme.service",
-        "./lesson-index"
+        "./lesson-index",
+        "../official-learning-paths"
       ],
       "headings": []
     },
@@ -11769,15 +11838,18 @@
     },
     {
       "path": "web/src/app/course/lesson-viewer.html",
-      "lines": 87,
+      "lines": 137,
       "kind": "angular-app",
-      "symbols": [],
+      "symbols": [
+        "floci-overview-title",
+        "checkpoint-title"
+      ],
       "imports": [],
       "headings": []
     },
     {
       "path": "web/src/app/course/lesson-viewer.scss",
-      "lines": 202,
+      "lines": 306,
       "kind": "angular-app",
       "symbols": [],
       "imports": [],
@@ -11785,7 +11857,7 @@
     },
     {
       "path": "web/src/app/course/lesson-viewer.ts",
-      "lines": 526,
+      "lines": 653,
       "kind": "angular-app",
       "symbols": [
         "LessonViewerComponent",
@@ -11794,6 +11866,7 @@
         "track",
         "module",
         "moduleIndex",
+        "isCloudIntroduction",
         "previousModule",
         "nextModule",
         "lessonHtml",
@@ -11804,7 +11877,13 @@
         "copiedCode",
         "lessonMode",
         "lessonStats",
-        "isComplete"
+        "moduleQuizAnswers",
+        "moduleQuizChecked",
+        "examMode",
+        "examSeconds",
+        "isComplete",
+        "moduleQuiz",
+        "moduleQuizScore"
       ],
       "imports": [
         "@angular/common",
@@ -11825,7 +11904,7 @@
     },
     {
       "path": "web/src/app/course-data.ts",
-      "lines": 1057,
+      "lines": 1069,
       "kind": "angular-app",
       "symbols": [
         "ServiceGroup",
@@ -11864,12 +11943,23 @@
     },
     {
       "path": "web/src/app/icon-registry.ts",
-      "lines": 28,
+      "lines": 36,
       "kind": "angular-app",
       "symbols": [],
       "imports": [
         "lucide-angular"
       ],
+      "headings": []
+    },
+    {
+      "path": "web/src/app/official-learning-paths.ts",
+      "lines": 121,
+      "kind": "angular-app",
+      "symbols": [
+        "LearningStage",
+        "OfficialLearningPath"
+      ],
+      "imports": [],
       "headings": []
     },
     {
@@ -12087,7 +12177,7 @@
     },
     {
       "path": "web/src/styles.scss",
-      "lines": 85,
+      "lines": 90,
       "kind": "angular-app",
       "symbols": [],
       "imports": [],

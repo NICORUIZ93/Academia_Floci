@@ -16,6 +16,8 @@
 }
 .back-link:hover { color:$p; }
 .back-link lucide-icon { width:15px; }
+.shell-track-logo { width:32px; height:32px; display:grid; place-items:center; flex:0 0 auto; border-radius:10px; box-shadow:$sh; }
+.shell-track-logo img { width:18px; height:18px; object-fit:contain; }
 .shell-title { flex:1; min-width:0; }
 .shell-title strong { display:block; font:700 14px Inter, sans-serif; color:$ink; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
 .shell-progress { height:3px; border-radius:3px; background:$bg2; margin-top:4px; max-width:240px; overflow:hidden; }
@@ -44,6 +46,25 @@
 .learning-stats-grid strong { max-width:100%; overflow:hidden; color:$ink; font:700 9px Inter,sans-serif; text-overflow:ellipsis; }
 .learning-stats-grid small { color:$mu; font:600 8px Inter,sans-serif; }
 .learning-stats > p { margin:10px 0 0; color:$mu; font:600 9.5px Inter,sans-serif; text-align:center; }
+.official-path { margin:0 4px 16px; padding:13px; border:1px solid $bd; border-radius:12px; background:$wh; }
+.official-path-heading { display:flex; align-items:center; gap:8px; }
+.official-path-heading > lucide-icon { width:16px; color:var(--track-color); }
+.official-path-heading div { display:grid; gap:1px; }
+.official-path-heading small { color:$mu; font:700 8px Inter,sans-serif; letter-spacing:.06em; text-transform:uppercase; }
+.official-path-heading strong { color:$ink; font:750 11px Inter,sans-serif; }
+.official-path-heading > a { margin-left:auto; width:30px; height:30px; display:grid; place-items:center; border-radius:7px; color:$mu; }
+.official-path-heading > a:hover { color:$p; background:$bg2; }
+.official-path-heading > a lucide-icon { width:13px; }
+.official-path ol { display:grid; gap:10px; margin:13px 0 0; padding:0; list-style:none; }
+.official-path li { display:grid; grid-template-columns:20px minmax(0,1fr); gap:8px; position:relative; }
+.official-path li:not(:last-child)::after { content:''; position:absolute; left:9px; top:21px; bottom:-10px; width:1px; background:$bd; }
+.official-path li > span { width:20px; height:20px; display:grid; place-items:center; z-index:1; border-radius:50%; color:#fff; background:var(--track-color); font:800 8px Inter,sans-serif; }
+.official-path li div { display:grid; gap:3px; min-width:0; }
+.official-path li strong { color:$ink; font:750 10px Inter,sans-serif; }
+.official-path li small { color:$mu; font:500 9px/1.45 Inter,sans-serif; }
+.official-path li em { color:var(--track-color); font:700 8px Inter,sans-serif; }
+.official-path > p { margin:12px 0 0; padding-top:9px; border-top:1px solid $bd; color:$mu; font:500 8.5px/1.4 Inter,sans-serif; }
+.official-path > p a { color:$p; font-weight:700; }
 .shell-main { flex:1; min-width:0; }
 .shell-scrim { display:none; }
 

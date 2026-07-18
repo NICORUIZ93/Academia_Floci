@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, ElementRef, Injector, OnDestroy, afterNextRender, computed, effect, inject, signal, viewChild } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
-import { BookOpen, Check, CircleCheck, ChevronLeft, ChevronRight, Clock3, Code2, Copy, ListTree, LucideAngularModule } from 'lucide-angular';
+import { BookOpen, Boxes, Check, CircleCheck, ChevronLeft, ChevronRight, Clock3, Code2, Copy, Database, Gauge, ListTree, LockKeyhole, LucideAngularModule, ShieldCheck, Zap } from 'lucide-angular';
 import mermaid from 'mermaid';
 import { map } from 'rxjs';
 import { findTrack } from '../course-data';
@@ -32,6 +32,13 @@ interface ImplementationProfile {
   command: string;
   language: string;
   scaffold: (topic: string) => string;
+}
+
+interface ModuleQuizItem {
+  question: string;
+  options: string[];
+  answer: number;
+  explanation: string;
 }
 
 function slugify(text: string, seen: Set<string>): string {
@@ -67,7 +74,7 @@ function escapeHtml(text: string): string {
   styleUrl: './lesson-viewer.scss',
 })
 export class LessonViewerComponent implements OnDestroy {
-  readonly icons = { BookOpen, Check, ChevronLeft, ChevronRight, CircleCheck, Clock3, Code2, Copy, ListTree };
+  readonly icons = { BookOpen, Boxes, Check, ChevronLeft, ChevronRight, CircleCheck, Clock3, Code2, Copy, Database, Gauge, ListTree, LockKeyhole, ShieldCheck, Zap };
 
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
@@ -89,6 +96,25 @@ export class LessonViewerComponent implements OnDestroy {
   readonly track = computed(() => findTrack(this.trackId()));
   readonly module = computed(() => this.track()?.modules.find(m => m.id === this.moduleId()));
   readonly moduleIndex = computed(() => this.track()?.modules.findIndex(m => m.id === this.moduleId()) ?? -1);
+  readonly isCloudIntroduction = computed(() => this.trackId() === 'cloud' && this.moduleId() === 0);
+  readonly flociMetrics = [
+    { value: '24 ms', label: 'Arranque de referencia', detail: 'Binario nativo' },
+    { value: '13 MiB', label: 'Memoria en reposo', detail: 'Huella local reducida' },
+    { value: '68', label: 'Servicios AWS', detail: 'Sin niveles de pago' },
+    { value: '1.925/1.925', label: 'Pruebas SDK', detail: 'Suite publicada por Floci' },
+  ];
+  readonly flociCapabilities = [
+    { icon: Zap, title: 'Ciclo de trabajo inmediato', text: 'Levanta, prueba y destruye recursos dentro del mismo ciclo de edición, sin esperar una cuenta remota.' },
+    { icon: LockKeyhole, title: 'Sin secretos cloud reales', text: 'Los clientes usan credenciales locales desechables. El estudiante aprende endpoints e IAM sin exponer una cuenta productiva.' },
+    { icon: Boxes, title: 'Herramientas conocidas', text: 'AWS CLI, SDK, Terraform, OpenTofu y tests cambian el endpoint; no necesitas una API educativa diferente.' },
+    { icon: ShieldCheck, title: 'Radio de impacto local', text: 'Un error afecta el contenedor de práctica. La validación final de seguridad y operación todavía debe ocurrir en nube real.' },
+  ];
+  readonly flociEngines = [
+    { icon: Boxes, name: 'Lambda y ECS', detail: 'Ejecución en contenedores Docker reales' },
+    { icon: Database, name: 'RDS', detail: 'PostgreSQL, MySQL y MariaDB reales' },
+    { icon: Zap, name: 'MSK', detail: 'Kafka compatible mediante Redpanda' },
+    { icon: Gauge, name: 'Athena', detail: 'Consultas SQL locales mediante DuckDB' },
+  ];
   readonly previousModule = computed(() => {
     const track = this.track();
     const index = this.moduleIndex();
@@ -112,8 +138,13 @@ export class LessonViewerComponent implements OnDestroy {
   readonly copiedCode = signal<string | null>(null);
   readonly lessonMode = signal<LessonMode>('learn');
   readonly lessonStats = signal<LessonStats>({ topics: 0, examples: 0, activities: 0 });
+  readonly moduleQuizAnswers = signal<(number | null)[]>([]);
+  readonly moduleQuizChecked = signal(false);
+  readonly examMode = signal(false);
+  readonly examSeconds = signal(0);
   private tocObserver: IntersectionObserver | null = null;
   private copyTimer: ReturnType<typeof setTimeout> | null = null;
+  private examTimer: ReturnType<typeof setInterval> | null = null;
   private readonly updateReadingProgress = (): void => {
     const article = this.lessonContent()?.nativeElement;
     if (!article) return;
@@ -123,12 +154,29 @@ export class LessonViewerComponent implements OnDestroy {
   };
 
   readonly isComplete = computed(() => this.progressService.isModuleComplete(this.trackId(), this.moduleId()));
+  readonly moduleQuiz = computed<ModuleQuizItem[]>(() => {
+    const current = this.module();
+    const track = this.track();
+    if (!current || !track) return [];
+    const distractors = track.modules.filter(module => module.id !== current.id).flatMap(module => module.concepts);
+    const assessedContents = [...new Set([...current.concepts, ...current.services, ...current.challenges])].slice(0, 5);
+    return assessedContents.map((concept, index) => {
+      const wrong = [distractors[(index * 3) % distractors.length], distractors[(index * 3 + 1) % distractors.length], distractors[(index * 3 + 2) % distractors.length]];
+      const answer = index % 4;
+      const options = [...wrong]; options.splice(answer, 0, concept);
+      return { question: `¿Qué contenido pertenece explícitamente a “${current.shortTitle}”?`, options, answer, explanation: `“${concept}” forma parte del sílabo de este capítulo. Las demás opciones pertenecen a otros módulos y ayudan a reconocer sus límites.` };
+    });
+  });
+  readonly moduleQuizScore = computed(() => this.moduleQuiz().reduce((score, item, index) => score + (this.moduleQuizAnswers()[index] === item.answer ? 1 : 0), 0));
+  readonly moduleQuizReady = computed(() => this.moduleQuizAnswers().length === this.moduleQuiz().length && this.moduleQuizAnswers().every(answer => answer !== null));
+  readonly examTime = computed(() => `${String(Math.floor(this.examSeconds() / 60)).padStart(2, '0')}:${String(this.examSeconds() % 60).padStart(2, '0')}`);
 
   constructor() {
     effect(() => {
       const trackId = this.trackId();
       const module = this.module();
       if (!module) return;
+      this.resetModuleQuiz();
       this.lessonLoading.set(true);
       this.contentService.loadLessonHtml(trackId, module.id).then(html => {
         this.lessonHtml.set(html);
@@ -152,6 +200,36 @@ export class LessonViewerComponent implements OnDestroy {
         if (container) this.scrollToRequestedFragment(container, fragment);
       }, { injector: this.injector });
     });
+  }
+
+  selectModuleQuizAnswer(question: number, option: number): void {
+    if (this.moduleQuizChecked()) return;
+    this.moduleQuizAnswers.update(answers => answers.map((answer, index) => index === question ? option : answer));
+  }
+
+  checkModuleQuiz(): void {
+    if (!this.moduleQuizReady()) return;
+    this.moduleQuizChecked.set(true);
+    this.stopExamTimer();
+  }
+
+  toggleExamMode(): void {
+    this.examMode.update(value => !value);
+    this.resetModuleQuiz(false);
+    if (this.examMode()) this.examTimer = setInterval(() => this.examSeconds.update(value => value + 1), 1000);
+  }
+
+  resetModuleQuiz(resetMode = true): void {
+    this.stopExamTimer();
+    if (resetMode) this.examMode.set(false);
+    this.examSeconds.set(0);
+    this.moduleQuizChecked.set(false);
+    this.moduleQuizAnswers.set(new Array(this.moduleQuiz().length).fill(null));
+  }
+
+  private stopExamTimer(): void {
+    if (this.examTimer) clearInterval(this.examTimer);
+    this.examTimer = null;
   }
 
   private enhanceRenderedLesson(): void {
@@ -209,9 +287,14 @@ export class LessonViewerComponent implements OnDestroy {
       const code = pre.querySelector('code');
       const languageClass = Array.from(code?.classList ?? []).find(name => name.startsWith('language-'));
       const language = languageClass?.replace('language-', '') || 'código';
+      const isTerminal = /^(bash|sh|shell|console|powershell|zsh)$/i.test(language);
+      const previousText = pre.previousElementSibling?.textContent?.trim() ?? '';
+      const path = previousText.match(/(?:[\w.-]+\/)+(?:[\w.-]+\.[a-z0-9]+|[\w.-]+)/i)?.[0];
+      const label = path ?? (isTerminal ? 'Terminal' : language);
       const wrapper = document.createElement('div');
       wrapper.className = 'code-example';
-      wrapper.innerHTML = `<div class="code-example-bar"><span>${language}</span><button type="button" data-copy-code="${index}" aria-label="Copiar bloque de código">Copiar</button></div>`;
+      wrapper.dataset['language'] = language.toLowerCase();
+      wrapper.innerHTML = `<div class="code-example-bar"><span class="window-controls" aria-hidden="true"><i></i><i></i><i></i></span><span class="code-example-label">${escapeHtml(label)}</span><span class="code-example-language">${escapeHtml(isTerminal ? language : `.${language}`)}</span><button type="button" data-copy-code="${index}" aria-label="Copiar ${escapeHtml(label)}">Copiar</button></div>`;
       pre.parentNode?.insertBefore(wrapper, pre);
       wrapper.appendChild(pre);
     });
@@ -305,7 +388,8 @@ export class LessonViewerComponent implements OnDestroy {
   }
 
   private groupTopics(container: HTMLElement): void {
-    container.querySelectorAll<HTMLHeadingElement>('h3.topic-heading').forEach((heading, index) => {
+    const headings = Array.from(container.querySelectorAll<HTMLHeadingElement>('h3.topic-heading'));
+    headings.forEach((heading, index) => {
       if (heading.parentElement?.classList.contains('topic-card')) return;
       const card = document.createElement('section');
       card.className = 'topic-card';
@@ -337,6 +421,11 @@ export class LessonViewerComponent implements OnDestroy {
         note.value = localStorage.getItem(this.topicStorageKey(index, 'note')) ?? '';
         if (note.value) practice.open = true;
       }
+      const previous = this.previousModule();
+      const contract = document.createElement('aside');
+      contract.className = 'learning-contract';
+      contract.innerHTML = `<div><small>Antes de empezar</small><strong>${escapeHtml(previous ? `Haber completado: ${previous.shortTitle}` : 'No necesitas experiencia previa')}</strong></div><div><small>Meta de este tema</small><strong>Explicar y aplicar ${title} sin copiar el ejemplo</strong></div><div><small>No avances hasta</small><strong>Poder ejecutarlo, modificarlo y diagnosticar un fallo</strong></div>`;
+      heading.insertAdjacentElement('afterend', contract);
       this.addImplementationGuide(card, heading, index);
       if (!card.textContent?.includes('Diagrama:') && !card.querySelector('pre.mermaid')) {
         const visual = document.createElement('figure');
@@ -346,6 +435,23 @@ export class LessonViewerComponent implements OnDestroy {
       }
       card.appendChild(practice);
       card.appendChild(action);
+      const body = document.createElement('div');
+      body.className = 'topic-body';
+      let bodyNode = heading.nextSibling;
+      while (bodyNode) {
+        const next = bodyNode.nextSibling;
+        body.appendChild(bodyNode);
+        bodyNode = next;
+      }
+      const toggle = document.createElement('button');
+      toggle.type = 'button';
+      toggle.className = 'topic-toggle';
+      toggle.dataset['topicToggle'] = String(index);
+      toggle.setAttribute('aria-expanded', String(index === 0));
+      toggle.innerHTML = `<span>Tema ${index + 1} de ${headings.length}</span><strong>${index === 0 ? 'Ocultar contenido' : 'Estudiar este tema'}</strong>`;
+      card.classList.toggle('expanded', index === 0);
+      card.appendChild(toggle);
+      card.appendChild(body);
     });
   }
 
@@ -364,7 +470,8 @@ export class LessonViewerComponent implements OnDestroy {
     if (!card.querySelector('.code-example')) {
       const generated = document.createElement('div');
       generated.className = 'code-example generated-starter';
-      generated.innerHTML = `<div class="code-example-bar"><span>${escapeHtml(profile.language)} · punto de partida</span><button type="button" data-copy-code="generated-${index}" aria-label="Copiar punto de partida">Copiar</button></div><pre><code>${escapeHtml(profile.scaffold(topic))}</code></pre>`;
+      generated.dataset['language'] = profile.language.toLowerCase();
+      generated.innerHTML = `<div class="code-example-bar"><span class="window-controls" aria-hidden="true"><i></i><i></i><i></i></span><span class="code-example-label">${escapeHtml(profile.path)}</span><span class="code-example-language">.${escapeHtml(profile.language)}</span><button type="button" data-copy-code="generated-${index}" aria-label="Copiar punto de partida">Copiar</button></div><pre><code>${escapeHtml(profile.scaffold(topic))}</code></pre>`;
       guide.appendChild(generated);
     }
     const firstPractice = card.querySelector('.topic-practice');
@@ -425,6 +532,17 @@ export class LessonViewerComponent implements OnDestroy {
   }
 
   async copyCode(event: Event): Promise<void> {
+    const topicToggle = (event.target as HTMLElement).closest<HTMLButtonElement>('[data-topic-toggle]');
+    if (topicToggle) {
+      const card = topicToggle.closest<HTMLElement>('.topic-card');
+      if (!card) return;
+      const expanded = card.classList.toggle('expanded');
+      topicToggle.setAttribute('aria-expanded', String(expanded));
+      const label = topicToggle.querySelector('strong');
+      if (label) label.textContent = expanded ? 'Ocultar contenido' : 'Estudiar este tema';
+      if (expanded) card.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      return;
+    }
     const topicButton = (event.target as HTMLElement).closest<HTMLButtonElement>('[data-topic-check]');
     if (topicButton) {
       topicButton.classList.toggle('done');
@@ -443,6 +561,7 @@ export class LessonViewerComponent implements OnDestroy {
     this.copiedCode.set(id);
     button.textContent = 'Copiado';
     if (this.copyTimer) clearTimeout(this.copyTimer);
+    this.stopExamTimer();
     this.copyTimer = setTimeout(() => {
       button.textContent = 'Copiar';
       this.copiedCode.set(null);
@@ -504,6 +623,14 @@ export class LessonViewerComponent implements OnDestroy {
     event.preventDefault();
     const target = this.lessonContent()?.nativeElement.querySelector(`#${CSS.escape(id)}`);
     if (!target) return;
+    const topicCard = target.closest<HTMLElement>('.topic-card');
+    if (topicCard && !topicCard.classList.contains('expanded')) {
+      topicCard.classList.add('expanded');
+      const toggle = topicCard.querySelector<HTMLButtonElement>('[data-topic-toggle]');
+      toggle?.setAttribute('aria-expanded', 'true');
+      const label = toggle?.querySelector('strong');
+      if (label) label.textContent = 'Ocultar contenido';
+    }
     target.scrollIntoView({ behavior: 'smooth', block: 'start' });
     history.replaceState(null, '', `#${id}`);
     this.activeTocId.set(id);

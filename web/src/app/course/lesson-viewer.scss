@@ -20,6 +20,42 @@
 .lesson-meta lucide-icon { width:15px; height:15px; }
 .lesson-meta .level { margin-left:auto; padding:5px 9px; border-radius:99px; background:$pl; color:$ph; font-weight:800; }
 
+.floci-overview { margin:-18px 0 52px; overflow:hidden; border:1px solid color-mix(in srgb,var(--track-color) 24%,#{$bd}); border-radius:24px; background:$wh; box-shadow:$shm; }
+.floci-overview-intro { padding:42px; color:#dbeafe; background:radial-gradient(circle at 85% 10%,rgba(56,189,248,.23),transparent 30%),linear-gradient(145deg,#071426,#0b2940 60%,#104e55); }
+.floci-overview-intro > span { display:block; margin-bottom:12px; color:#7dd3fc; font:800 10px/1.2 Inter,sans-serif; letter-spacing:.08em; text-transform:uppercase; }
+.floci-overview-intro h2 { max-width:650px; margin:0 0 14px; color:#fff; font:750 clamp(28px,4vw,42px)/1.08 Inter,sans-serif; letter-spacing:-.045em; }
+.floci-overview-intro p { max-width:680px; margin:0; color:#bfd3e6; font:400 15px/1.7 Inter,sans-serif; }
+.floci-overview-actions { display:flex; flex-wrap:wrap; gap:10px; margin-top:25px; }
+.floci-overview-actions a { min-height:42px; display:inline-flex; align-items:center; padding:0 16px; border-radius:999px; color:#082f49; background:#7dd3fc; font:800 12px Inter,sans-serif; text-decoration:none; }
+.floci-overview-actions a.secondary { border:1px solid rgba(255,255,255,.25); color:#fff; background:rgba(255,255,255,.07); }
+.floci-metrics { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); margin:0; border-bottom:1px solid $bd; }
+.floci-metrics div { min-width:0; padding:22px; border-right:1px solid $bd; }
+.floci-metrics div:last-child { border-right:0; }
+.floci-metrics dt { color:$ink; font:800 22px/1 Inter,sans-serif; letter-spacing:-.04em; }
+.floci-metrics dd { margin:8px 0 0; color:$i3; font:700 10px/1.4 Inter,sans-serif; }
+.floci-metrics small { display:block; margin-top:3px; color:$mu; font-weight:500; }
+.floci-capabilities { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:1px; background:$bd; }
+.floci-capabilities article { padding:26px; background:$wh; }
+.floci-capabilities lucide-icon { width:22px; color:var(--track-color); }
+.floci-capabilities h3 { margin:13px 0 7px; color:$ink; font:750 15px/1.3 Inter,sans-serif; }
+.floci-capabilities p { margin:0; color:$mu; font:400 12.5px/1.6 Inter,sans-serif; }
+.floci-real-engines { display:grid; grid-template-columns:1.15fr .85fr; gap:28px; padding:32px; border-top:1px solid $bd; background:$bg2; }
+.floci-real-engines > div > small { color:$p; font:800 9px Inter,sans-serif; letter-spacing:.08em; text-transform:uppercase; }
+.floci-real-engines h3 { margin:7px 0 10px; color:$ink; font:750 20px/1.25 Inter,sans-serif; letter-spacing:-.02em; }
+.floci-real-engines p { margin:0; color:$mu; font:400 12.5px/1.65 Inter,sans-serif; }
+.floci-real-engines ul { display:grid; gap:8px; margin:0; padding:0; list-style:none; }
+.floci-real-engines li { display:flex; align-items:center; gap:10px; padding:10px 12px; border:1px solid $bd; border-radius:10px; background:$wh; }
+.floci-real-engines li lucide-icon { width:17px; color:var(--track-color); }
+.floci-real-engines li span { display:grid; gap:2px; }
+.floci-real-engines li strong { color:$ink; font:750 11px Inter,sans-serif; }
+.floci-real-engines li small { color:$mu; font:500 9px Inter,sans-serif; }
+.floci-study-loop { display:grid; grid-template-columns:repeat(5,minmax(0,1fr)); margin:0; padding:0; border-top:1px solid $bd; list-style:none; }
+.floci-study-loop li { display:grid; align-content:start; gap:5px; padding:20px 15px; border-right:1px solid $bd; }
+.floci-study-loop li:last-child { border-right:0; }
+.floci-study-loop span { width:23px; height:23px; display:grid; place-items:center; border-radius:50%; color:#fff; background:var(--track-color); font:800 9px Inter,sans-serif; }
+.floci-study-loop strong { margin-top:4px; color:$ink; font:750 11px Inter,sans-serif; }
+.floci-study-loop small { color:$mu; font:500 9px/1.45 Inter,sans-serif; }
+
 .learning-toolbar { position:sticky; top:70px; z-index:12; display:flex; align-items:center; justify-content:space-between; gap:16px; margin:-24px 14px 40px; padding:10px 12px; border:1px solid $bd; border-radius:12px; background:color-mix(in srgb,$wh 92%,transparent); box-shadow:$shm; backdrop-filter:blur(14px); }
 .learning-modes { display:flex; gap:4px; padding:3px; border-radius:9px; background:$bg2; }
 .learning-modes button { padding:7px 11px; border:0; border-radius:7px; background:transparent; color:$mu; font:700 11.5px Inter,sans-serif; }
@@ -82,8 +118,20 @@
 .lesson-markdown ::ng-deep .cases-callout { background:$gl; border-color:color-mix(in srgb,var(--success) 28%,transparent); }
 .lesson-markdown ::ng-deep .cases-callout::before { content:'✓'; color:$g; background:color-mix(in srgb,var(--success) 15%,transparent); }
 
-.lesson-markdown ::ng-deep .topic-card { position:relative; margin:36px 0 54px; padding:0 24px 24px; border:1px solid $bd; border-radius:18px; background:$wh; box-shadow:$sh; }
+.lesson-markdown ::ng-deep .topic-card { position:relative; margin:20px 0; padding:0 24px; border:1px solid $bd; border-radius:18px; background:$wh; box-shadow:$sh; scroll-margin-top:92px; }
 .lesson-markdown ::ng-deep .topic-card > .topic-heading { margin:0 -24px 24px; border-width:0 0 1px; border-radius:18px 18px 0 0; }
+.lesson-markdown ::ng-deep .topic-card:not(.expanded) > .topic-heading { margin-bottom:0; border-bottom:0; background:$wh; }
+.lesson-markdown ::ng-deep .topic-body { display:none; padding-bottom:24px; }
+.lesson-markdown ::ng-deep .topic-card.expanded > .topic-body { display:block; animation:section-in .2s ease both; }
+.lesson-markdown ::ng-deep .topic-toggle { width:calc(100% + 48px); min-height:48px; margin:0 -24px; padding:0 20px; display:flex; align-items:center; justify-content:space-between; gap:12px; border:0; border-top:1px solid $bd; border-radius:0 0 17px 17px; color:$mu; background:$bg2; font:700 11px Inter,sans-serif; text-align:left; }
+.lesson-markdown ::ng-deep .topic-card.expanded > .topic-toggle { border-radius:0; }
+.lesson-markdown ::ng-deep .topic-toggle strong { color:$p; font:800 11px Inter,sans-serif; }
+.lesson-markdown ::ng-deep .topic-toggle:hover { background:color-mix(in srgb,var(--track-color) 8%,#{$bg2}); }
+.lesson-markdown ::ng-deep .topic-toggle:focus-visible { outline:3px solid color-mix(in srgb,var(--track-color) 40%,transparent); outline-offset:2px; }
+.lesson-markdown ::ng-deep .learning-contract { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:1px; margin:0 0 26px; overflow:hidden; border:1px solid $bd; border-radius:12px; background:$bd; }
+.lesson-markdown ::ng-deep .learning-contract div { display:grid; align-content:start; gap:5px; padding:13px; background:$bg2; }
+.lesson-markdown ::ng-deep .learning-contract small { color:$p; font:800 9px Inter,sans-serif; letter-spacing:.06em; text-transform:uppercase; }
+.lesson-markdown ::ng-deep .learning-contract strong { color:$ink; font:650 11px/1.5 Inter,sans-serif; }
 .lesson-markdown ::ng-deep .section-guide { display:flex; gap:10px; align-items:baseline; margin:-6px 0 24px; padding:11px 14px; border-left:3px solid var(--track-color); border-radius:0 10px 10px 0; background:color-mix(in srgb,var(--track-color) 7%,transparent); }
 .lesson-markdown ::ng-deep .section-guide strong { flex:0 0 auto; color:var(--track-color); font:750 11px Inter,sans-serif; text-transform:uppercase; letter-spacing:.045em; }
 .lesson-markdown ::ng-deep .section-guide span { color:$mu; font:500 12px/1.55 Inter,sans-serif; }
@@ -128,11 +176,23 @@
 
 .lesson-markdown ::ng-deep code { font-family:'SFMono-Regular',Consolas,monospace; font-size:.86em; }
 .lesson-markdown ::ng-deep :not(pre) > code { padding:2px 6px; border:1px solid $bd; border-radius:5px; background:$bg2; color:$ph; }
-.lesson-markdown ::ng-deep .code-example { margin:28px 0; overflow:hidden; border:1px solid #27344e; border-radius:14px; background:$code-bg; box-shadow:$shm; }
-.lesson-markdown ::ng-deep .code-example-bar { display:flex; justify-content:space-between; align-items:center; padding:9px 13px; border-bottom:1px solid rgba(255,255,255,.1); color:#93a4c2; background:#121b2c; font:700 10px/1 Inter,sans-serif; text-transform:uppercase; letter-spacing:.08em; }
-.lesson-markdown ::ng-deep .code-example-bar button { border:0; border-radius:6px; padding:5px 9px; color:#c7d2e8; background:rgba(255,255,255,.08); font:600 10px/1 Inter,sans-serif; text-transform:none; letter-spacing:0; }
-.lesson-markdown ::ng-deep .code-example-bar button:hover { background:rgba(255,255,255,.15); color:white; }
-.lesson-markdown ::ng-deep pre { margin:0; padding:20px 22px; overflow:auto; color:$code-text; background:$code-bg; font:13px/1.72 'SFMono-Regular',Consolas,monospace; tab-size:2; }
+.lesson-markdown ::ng-deep .code-example { margin:32px 0; overflow:hidden; border:1px solid rgba(255,255,255,.12); border-radius:18px; background:#0b1020; box-shadow:0 22px 50px rgba(2,6,23,.22),0 2px 8px rgba(2,6,23,.18); }
+.lesson-markdown ::ng-deep .code-example-bar { min-height:46px; display:grid; grid-template-columns:auto minmax(0,1fr) auto auto; gap:10px; align-items:center; padding:0 12px; border-bottom:1px solid rgba(255,255,255,.08); color:#a8b3cf; background:linear-gradient(180deg,#1d2538,#161d2d); font:650 10px/1 Inter,sans-serif; }
+.lesson-markdown ::ng-deep .window-controls { display:flex; gap:6px; padding-right:4px; }
+.lesson-markdown ::ng-deep .window-controls i { width:10px; height:10px; border-radius:50%; background:#ff5f57; box-shadow:inset 0 0 0 1px rgba(0,0,0,.12); }
+.lesson-markdown ::ng-deep .window-controls i:nth-child(2) { background:#febc2e; }
+.lesson-markdown ::ng-deep .window-controls i:nth-child(3) { background:#28c840; }
+.lesson-markdown ::ng-deep .code-example-label { min-width:0; overflow:hidden; white-space:nowrap; text-overflow:ellipsis; color:#d7deef; font-family:'SFMono-Regular',Consolas,monospace; }
+.lesson-markdown ::ng-deep .code-example-language { padding:4px 7px; border:1px solid rgba(255,255,255,.08); border-radius:999px; color:#8ea0c7; background:rgba(255,255,255,.04); text-transform:uppercase; letter-spacing:.06em; }
+.lesson-markdown ::ng-deep .code-example-bar button { min-height:28px; border:1px solid rgba(255,255,255,.1); border-radius:8px; padding:5px 10px; color:#d7deef; background:rgba(255,255,255,.07); font:650 10px/1 Inter,sans-serif; }
+.lesson-markdown ::ng-deep .code-example-bar button:hover { border-color:rgba(255,255,255,.2); background:rgba(255,255,255,.13); color:white; }
+.lesson-markdown ::ng-deep .code-example[data-language='bash'],
+.lesson-markdown ::ng-deep .code-example[data-language='sh'],
+.lesson-markdown ::ng-deep .code-example[data-language='shell'] { border-color:rgba(40,200,64,.25); }
+.lesson-markdown ::ng-deep .code-example[data-language='bash'] .code-example-language,
+.lesson-markdown ::ng-deep .code-example[data-language='sh'] .code-example-language,
+.lesson-markdown ::ng-deep .code-example[data-language='shell'] .code-example-language { color:#73dc8a; }
+.lesson-markdown ::ng-deep pre { margin:0; padding:24px 26px 27px; overflow:auto; color:#e6edf7; background:radial-gradient(circle at 10% 0%,rgba(99,102,241,.08),transparent 34%),#0b1020; font:13px/1.75 'SFMono-Regular','Cascadia Code',Consolas,monospace; tab-size:2; }
 .lesson-markdown ::ng-deep pre.mermaid { margin:30px 0; padding:24px; display:flex; justify-content:center; overflow:auto; border:1px solid $bd; border-radius:14px; background:$wh; box-shadow:$sh; }
 .lesson-markdown ::ng-deep pre.mermaid svg { max-width:100%; }
 
@@ -155,6 +215,30 @@
 .concept-chips { display:flex; flex-wrap:wrap; gap:8px; }
 .concept-chips span { padding:7px 10px; border-radius:99px; background:$pl; color:$ph; font:700 12px Inter,sans-serif; }
 .lesson-deliverable { padding:15px 17px; border-radius:10px; background:$pl; }
+
+.module-checkpoint { margin-top:52px; padding:28px; border:1px solid $bd; border-radius:20px; background:$wh; box-shadow:$shm; }
+.checkpoint-heading { display:flex; align-items:start; justify-content:space-between; gap:24px; }
+.checkpoint-heading small { color:$p; font:800 10px Inter,sans-serif; letter-spacing:.08em; text-transform:uppercase; }
+.checkpoint-heading h2 { margin:5px 0 8px; color:$ink; font:750 27px/1.2 Inter,sans-serif; letter-spacing:-.035em; }
+.checkpoint-heading p { max-width:620px; margin:0; color:$mu; font-size:14px; line-height:1.6; }
+.exam-toggle { min-height:40px; flex:0 0 auto; padding:0 14px; border:1px solid $bd2; border-radius:999px; color:$i3; background:$bg2; font:700 12px Inter,sans-serif; }
+.exam-toggle.active { border-color:$p; color:#fff; background:$p; }
+.exam-banner { display:flex; justify-content:space-between; margin-top:18px; padding:12px 15px; border-radius:10px; color:$ph; background:$pl; font:700 12px Inter,sans-serif; }
+.exam-banner strong { font-variant-numeric:tabular-nums; }
+.checkpoint-questions { display:grid; gap:14px; margin:24px 0 0; padding:0; list-style:none; }
+.checkpoint-questions > li { margin:0; padding:18px; border:1px solid $bd; border-radius:14px; background:$bg2; }
+.checkpoint-questions > li.correct { border-color:$g; background:$gl; }
+.checkpoint-questions > li.incorrect { border-color:$r; background:var(--error-soft); }
+.checkpoint-questions > li > p { margin:0 0 12px; color:$ink; font-size:14px; line-height:1.55; }
+.checkpoint-options { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:8px; }
+.checkpoint-options button { min-height:44px; padding:9px 11px; border:1px solid $bd; border-radius:9px; color:$i3; background:$wh; font:600 12px/1.4 Inter,sans-serif; text-align:left; }
+.checkpoint-options button:hover:not(:disabled), .checkpoint-options button.selected { border-color:$p; color:$ph; background:$pl; }
+.checkpoint-options button.correct-answer { border-color:$g; color:$g; background:$gl; }
+.checkpoint-feedback { margin:12px 0 0 !important; color:$i3 !important; }
+.checkpoint-footer { display:flex; align-items:center; gap:16px; margin-top:20px; }
+.checkpoint-submit { min-height:44px; padding:0 18px; border:0; border-radius:999px; color:#fff; background:$p; font:750 13px Inter,sans-serif; }
+.checkpoint-submit:disabled { opacity:.45; cursor:not-allowed; }
+.checkpoint-footer p { margin:0; color:$mu; font-size:13px; }
 
 .lesson-footer { margin-top:58px; padding-top:26px; border-top:1px solid $bd; display:flex; flex-direction:column; gap:22px; }
 .complete-toggle { align-self:flex-start; display:flex; align-items:center; gap:9px; padding:10px 15px; border:1px solid $bd2; border-radius:9px; background:$wh; color:$i3; font:700 13px Inter,sans-serif; }
@@ -179,6 +263,15 @@
   .lesson h1 { font-size:31px; }
   .lesson-description { font-size:16px; line-height:1.65; }
   .lesson-meta .level { margin-left:0; }
+  .floci-overview { margin:-8px 0 38px; border-radius:17px; }
+  .floci-overview-intro { padding:28px 22px; }
+  .floci-metrics { grid-template-columns:repeat(2,minmax(0,1fr)); }
+  .floci-metrics div:nth-child(2) { border-right:0; }
+  .floci-metrics div:nth-child(-n+2) { border-bottom:1px solid $bd; }
+  .floci-capabilities { grid-template-columns:1fr; }
+  .floci-real-engines { grid-template-columns:1fr; padding:24px 20px; }
+  .floci-study-loop { display:flex; overflow-x:auto; scroll-snap-type:x proximity; }
+  .floci-study-loop li { flex:0 0 145px; scroll-snap-align:start; }
   .learning-toolbar { position:relative; top:auto; margin:-15px 0 30px; align-items:stretch; flex-direction:column; }
   .learning-modes { display:grid; grid-template-columns:repeat(3,1fr); }
   .build-method { display:flex; overflow-x:auto; padding-bottom:4px; scroll-snap-type:x proximity; }
@@ -188,14 +281,25 @@
   .lesson-markdown ::ng-deep h2 { margin-top:50px; font-size:24px; }
   .lesson-markdown ::ng-deep h3 { margin-top:38px; font-size:20px; }
   .lesson-markdown ::ng-deep h3.topic-heading { padding:16px 17px 16px 21px; }
-  .lesson-markdown ::ng-deep .topic-card { margin:28px -2px 42px; padding:0 16px 18px; border-radius:15px; }
+  .lesson-markdown ::ng-deep .topic-card { margin:14px -2px; padding:0 16px; border-radius:15px; }
   .lesson-markdown ::ng-deep .topic-card > .topic-heading { margin:0 -16px 20px; }
+  .lesson-markdown ::ng-deep .topic-card:not(.expanded) > .topic-heading { margin-bottom:0; }
+  .lesson-markdown ::ng-deep .topic-body { padding-bottom:18px; }
+  .lesson-markdown ::ng-deep .topic-toggle { width:calc(100% + 32px); margin:0 -16px; padding:0 16px; }
   .lesson-markdown ::ng-deep .section-guide { align-items:flex-start; flex-direction:column; gap:4px; }
+  .lesson-markdown ::ng-deep .learning-contract { grid-template-columns:1fr; }
   .lesson-markdown ::ng-deep .concept-flow > div { grid-template-columns:1fr; }
   .lesson-markdown ::ng-deep .concept-flow b { transform:rotate(90deg); text-align:center; }
   .lesson-markdown ::ng-deep .learning-callout { padding:18px; }
   .lesson-markdown ::ng-deep .learning-callout::before { display:none; }
   .lesson-markdown ::ng-deep pre { padding:17px; font-size:12px; }
+  .lesson-markdown ::ng-deep .code-example-bar { grid-template-columns:auto minmax(0,1fr) auto; }
+  .lesson-markdown ::ng-deep .code-example-language { display:none; }
   .lesson-nav { grid-template-columns:1fr; }
+  .module-checkpoint { padding:19px; }
+  .checkpoint-heading { display:grid; }
+  .exam-toggle { justify-self:start; }
+  .checkpoint-options { grid-template-columns:1fr; }
+  .checkpoint-footer { align-items:flex-start; flex-direction:column; }
   .lesson-nav button, .lesson-nav button.next { grid-column:1; width:100%; justify-content:center; text-align:center; }
 }

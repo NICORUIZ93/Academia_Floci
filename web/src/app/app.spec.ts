@@ -29,6 +29,7 @@ describe('App', () => {
     expect(text).toContain('Biblioteca de cursos');
     expect(TRACKS).toHaveLength(14);
     expect(harness.routeNativeElement?.querySelectorAll('.track-card').length).toBeGreaterThanOrEqual(14);
+    expect(harness.routeNativeElement?.querySelectorAll('.track-card-icon img').length).toBeGreaterThanOrEqual(12);
     expect(text).toContain('Fundamentos de Ingeniería de Software');
     expect(text).toContain('Cloud Local — AWS, Azure y GCP');
     expect(text).toContain('RutaFlow — Plataforma profesional de entregas');
@@ -103,6 +104,10 @@ La evidencia demuestra el aprendizaje.`;
       expect(page.querySelector('.lesson-markdown')).toBeTruthy();
       expect(page.querySelector('.build-method')).toBeTruthy();
       expect(page.querySelector('.implementation-guide')).toBeTruthy();
+      expect(page.querySelector('.learning-contract')).toBeTruthy();
+      expect(page.querySelector('.topic-card.expanded')).toBeTruthy();
+      expect(page.querySelector('.topic-toggle')?.getAttribute('aria-expanded')).toBe('true');
+      expect(text).toContain('Tema 1 de 1');
       expect(text).toContain('Crea el archivo');
       expect(text).toContain('Ejecuta desde la raíz del repositorio');
       expect(text).toContain('Resultado esperado');
@@ -110,6 +115,15 @@ La evidencia demuestra el aprendizaje.`;
       expect(text).toContain('XP');
       expect(text).toContain('Racha');
       expect(text).toContain('Insignia');
+      expect(text).toContain('Guía oficial');
+      expect(text).toContain('Preparar');
+      expect(text).toContain('Llevar a producción');
+      expect(page.querySelectorAll('.official-path li')).toHaveLength(5);
+      expect(page.querySelector('.module-checkpoint')).toBeTruthy();
+      expect(page.querySelector('.code-example .window-controls')).toBeTruthy();
+      expect(page.querySelector('.code-example .code-example-language')).toBeTruthy();
+      expect(text).toContain('Comprueba antes de continuar');
+      expect(text).toContain('Modo examen');
     } finally {
       fetchSpy.mockRestore();
     }

@@ -3,7 +3,7 @@ import { Component, computed, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { CloudCog, LucideAngularModule, LucideIconData, Moon, Sun } from 'lucide-angular';
 import { TRACKS } from '../course-data';
-import { TRACK_ICONS } from '../icon-registry';
+import { TRACK_ICONS, TRACK_MARKS } from '../icon-registry';
 import { OFFICIAL_UPDATES } from '../official-updates';
 import { ProgressService } from '../progress.service';
 import { ThemeService } from '../theme.service';
@@ -15,6 +15,8 @@ interface TrackCard {
   tagline: string;
   color: string;
   icon: LucideIconData;
+  mark: string;
+  logo: string | null;
   moduleCount: number;
   percent: number;
   totalHours: string;
@@ -46,6 +48,8 @@ export class CourseCatalogComponent {
       tagline: track.tagline,
       color: track.color,
       icon: TRACK_ICONS[track.icon],
+      mark: TRACK_MARKS[track.id],
+      logo: track.id === 'rutaflow' ? null : `brands/${track.id}.svg`,
       moduleCount: track.modules.length,
       percent: this.percentFor(track.id, track.modules.length),
       totalHours: this.totalHours(track.modules),
@@ -55,8 +59,8 @@ export class CourseCatalogComponent {
     }))
   );
 
-  readonly featuredTracks = computed(() => this.cards().filter(card => ['rutaflow', 'cloud', 'flutter', 'spring-boot', 'devops'].includes(card.id)));
-  readonly foundationTracks = computed(() => this.cards().filter(card => ['foundations', 'javascript', 'java', 'node', 'angular', 'react'].includes(card.id)));
+  readonly featuredTracks = computed(() => this.cards().filter(card => ['rutaflow', 'cloud', 'devops'].includes(card.id)));
+  readonly foundationTracks = computed(() => this.cards().filter(card => ['foundations', 'javascript', 'java', 'node', 'angular', 'react', 'spring-boot'].includes(card.id)));
   readonly mobileTracks = computed(() => this.cards().filter(card => ['flutter', 'android', 'ios', 'kotlin-multiplatform'].includes(card.id)));
 
   trackGroups() {
@@ -66,6 +70,8 @@ export class CourseCatalogComponent {
       { title: 'Móvil', cards: this.mobileTracks() },
     ];
   }
+
+  readonly totalModules = computed(() => this.cards().reduce((sum, card) => sum + card.moduleCount, 0));
 
   private percentFor(trackId: string, totalModules: number): number {
     return this.progressService.percentComplete(trackId, totalModules);

@@ -773,6 +773,18 @@ export const COURSE_MODULES: CourseModule[] = [
     ['Construye módulos Terraform con estado remoto', 'Despliega y autoescala un workload', 'Prueba backup y réplica', 'Optimiza cold start', 'Investiga un evento de auditoría', 'Calcula coste por entrega'],
     ['¿Qué complejidad añade multi-cloud?', '¿Cómo demuestra FinOps una mejora sin degradar confiabilidad?'],
     ['Terraform', 'EKS/AKS/GKE', 'OpenTelemetry', 'CloudTrail', 'Bedrock/SageMaker'], 'Arquitectura cloud Master con IaC, plataforma, datos, seguridad, observabilidad, FinOps y DR.', ['aws','azure','gcp']),
+  m(34,
+    'Floci oficial completo: plataforma, servicios y laboratorios',
+    'Floci oficial',
+    'Experto', '12 h', '#137c8b',
+    'Recorre en español la documentación oficial actual de Floci, floci-az y floci-gcp: instalación multiplataforma, CLI, configuración avanzada, servicios diferenciales, UI, Testcontainers y laboratorios 101.',
+    ['Instalación en macOS, Linux y Windows', 'CLI, Docker Compose, persistencia, snapshots, TLS y hooks', 'Aislamiento por cuenta AWS y proyecto GCP', '68 servicios AWS, 22 Azure y 22 GCP', 'Testcontainers en Java, Node.js, Python y Go', 'floci-ui y desarrollo asistido por IA sin credenciales reales', 'Límites del emulador y validación final en nube real'],
+    ['Instala la CLI con el método propio de tu sistema y ejecuta floci doctor', 'Levanta AWS, Azure y GCP y verifica sus puertos', 'Configura persistencia, guarda un snapshot y restaura evidencia', 'Completa los cuatro laboratorios 101 con predicción y diagnóstico', 'Ejecuta una prueba aislada con Testcontainers', 'Explora recursos con floci-ui', 'Documenta qué comportamiento debes volver a validar en una cuenta cloud real'],
+    ['¿Por qué Floci reduce el radio de impacto pero no sustituye las pruebas finales en nube real?', '¿Cuándo elegirías persistencia y cuándo un entorno efímero por suite?', '¿Qué diferencia existe entre compatibilidad de API y paridad operacional completa?'],
+    ['floci-cli', 'floci-ui', 'floci', 'floci-az', 'floci-gcp', 'Testcontainers'],
+    'Portafolio reproducible con los tres emuladores, cuatro laboratorios, prueba automatizada aislada, capturas de floci-ui y matriz de límites.',
+    ['aws', 'azure', 'gcp']
+  ),
 ];
 
 export const SERVICE_GROUPS: ServiceGroup[] = [

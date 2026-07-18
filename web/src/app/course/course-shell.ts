@@ -2,13 +2,14 @@ import { CommonModule } from '@angular/common';
 import { Component, computed, effect, inject, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, RouterLink, RouterOutlet } from '@angular/router';
-import { ArrowLeft, Award, Flame, Gauge, LucideAngularModule, Menu, Moon, Search, Sparkles, Sun, X } from 'lucide-angular';
+import { ArrowLeft, Award, BookOpenCheck, ExternalLink, Flame, Gauge, LucideAngularModule, Menu, Moon, Search, Sparkles, Sun, X } from 'lucide-angular';
 import { map } from 'rxjs';
 import { findTrack } from '../course-data';
 import { CommandPaletteService } from '../command-palette.service';
 import { ProgressService } from '../progress.service';
 import { ThemeService } from '../theme.service';
 import { LessonIndexComponent } from './lesson-index';
+import { findOfficialLearningPath } from '../official-learning-paths';
 
 @Component({
   selector: 'app-course-shell',
@@ -17,7 +18,7 @@ import { LessonIndexComponent } from './lesson-index';
   styleUrl: './course-shell.scss',
 })
 export class CourseShellComponent {
-  readonly icons = { ArrowLeft, Award, Flame, Gauge, Menu, Search, Sparkles, X, Sun, Moon };
+  readonly icons = { ArrowLeft, Award, BookOpenCheck, ExternalLink, Flame, Gauge, Menu, Search, Sparkles, X, Sun, Moon };
   readonly progressService = inject(ProgressService);
   readonly paletteService = inject(CommandPaletteService);
   readonly themeService = inject(ThemeService);
@@ -30,7 +31,12 @@ export class CourseShellComponent {
     { initialValue: this.route.snapshot.paramMap.get('trackId') ?? '' },
   );
   readonly track = computed(() => findTrack(this.trackId()));
+  readonly officialPath = computed(() => findOfficialLearningPath(this.trackId()));
   readonly sidebarOpen = signal(false);
+  readonly trackLogo = computed(() => {
+    const id = this.trackId();
+    return id && id !== 'rutaflow' ? `brands/${id}.svg` : null;
+  });
 
   readonly percent = computed(() => {
     const track = this.track();

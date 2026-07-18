@@ -1,8 +1,8 @@
 # Academia Floci Repo Graph
 
-Generated: 2026-07-18 01:58 UTC
+Generated: 2026-07-18 02:45 UTC
 Root: `Academia_Floci`
-Indexed files: 772
+Indexed files: 778
 Import edges: 30
 
 Use this file as the first, compact context for AI assistants. Refresh it with:
@@ -15,22 +15,22 @@ For automated lookups, use `docs/repo-graph.json`.
 
 ## Project Shape
 
-- `angular-app`: 50 files
-- `automation-script`: 28 files
-- `course-content`: 346 files
+- `angular-app`: 51 files
+- `automation-script`: 30 files
+- `course-content`: 347 files
 - `documentation`: 98 files
 - `example`: 215 files
 - `local-infra`: 1 files
-- `project-file`: 34 files
+- `project-file`: 36 files
 
 ## File Types
 
-- `.md`: 435
-- `.py`: 58
+- `.md`: 436
+- `.py`: 60
 - `.js`: 44
-- `.ts`: 43
+- `.ts`: 44
 - `.java`: 40
-- `.json`: 26
+- `.json`: 28
 - `.go`: 24
 - `.rs`: 24
 - `.kt`: 11
@@ -54,21 +54,21 @@ For automated lookups, use `docs/repo-graph.json`.
 
 - `README.md` (276 lines, documentation)
   - headings: # Academia_Floci, ## Como empezar, ## Levantar Floci, # 1. Levantar todos los servicios, # 2. Verificar Floci AWS
-- `scripts/validate.sh` (480 lines, automation-script)
+- `scripts/validate.sh` (482 lines, automation-script)
 - `scripts/build_repo_graph.py` (446 lines, automation-script)
   - symbols: FileNode, repo_files, read_text, classify, parse_ts_symbols, parse_ts_imports, parse_python_symbols, parse_python_imports, parse_markdown_headings, unique
 - `web/index.html` (282 lines, project-file)
   - symbols: progressLabel, progressBar, openCloudLab, toggleNav, levelLabel, nextLevelLabel, xpValue, streakValue, openBadges, badgeValue
 - `web/src/app/app.ts` (11 lines, angular-app)
   - symbols: App
-- `web/src/app/course-data.ts` (1057 lines, angular-app)
+- `web/src/app/course-data.ts` (1069 lines, angular-app)
   - symbols: ServiceGroup, CloudComparison, AltCloudGroup
-- `web/src/app/catalog/course-catalog.ts` (82 lines, angular-app)
-  - symbols: CourseCatalogComponent, cards, featuredTracks, foundationTracks, mobileTracks
-- `web/src/app/course/course-shell.ts` (51 lines, angular-app)
-  - symbols: CourseShellComponent, track, sidebarOpen, percent, stats
-- `web/src/app/course/lesson-viewer.ts` (526 lines, angular-app)
-  - symbols: LessonViewerComponent, TocItem, verified, track, module, moduleIndex, previousModule, nextModule, lessonHtml, lessonLoading
+- `web/src/app/catalog/course-catalog.ts` (88 lines, angular-app)
+  - symbols: CourseCatalogComponent, cards, featuredTracks, foundationTracks, mobileTracks, totalModules
+- `web/src/app/course/course-shell.ts` (57 lines, angular-app)
+  - symbols: CourseShellComponent, track, officialPath, sidebarOpen, trackLogo, percent, stats
+- `web/src/app/course/lesson-viewer.ts` (653 lines, angular-app)
+  - symbols: LessonViewerComponent, TocItem, verified, track, module, moduleIndex, isCloudIntroduction, previousModule, nextModule, lessonHtml
 - `web/public/content/manifest.json` (819 lines, course-content)
 - `web/public/content/es/pasos.md` (1122 lines, course-content)
   - headings: # 45 pasos de Academia Floci, ## Cursos, ## Paso 1: ¿Qué es Docker?, ## Paso 2: Instalar Docker, ## Paso 3: Verificar Docker
@@ -137,22 +137,22 @@ For automated lookups, use `docs/repo-graph.json`.
 - `web/src/app/app.config.ts` (12 lines) - imports: @angular/core, @angular/router, ./app.routes
 - `web/src/app/app.html` (3 lines)
 - `web/src/app/app.routes.ts` (28 lines) - imports: @angular/router, ./catalog/course-catalog, ./course/course-shell, ./course/final-quiz, ./course/lesson-viewer
-- `web/src/app/app.spec.ts` (118 lines) - imports: @angular/core/testing, @angular/router, @angular/router/testing, ./app, ./app.routes, ./catalog/course-catalog, ./course-data
+- `web/src/app/app.spec.ts` (132 lines) - imports: @angular/core/testing, @angular/router, @angular/router/testing, ./app, ./app.routes, ./catalog/course-catalog, ./course-data
 - `web/src/app/app.ts` (11 lines) - symbols: App; imports: @angular/core, @angular/router, ./command-palette
-- `web/src/app/catalog/course-catalog.html` (74 lines) - symbols: official-title
-- `web/src/app/catalog/course-catalog.scss` (178 lines)
-- `web/src/app/catalog/course-catalog.ts` (82 lines) - symbols: CourseCatalogComponent, cards, featuredTracks, foundationTracks, mobileTracks; imports: @angular/common, @angular/core, @angular/router, lucide-angular, ../course-data, ../icon-registry, ../official-updates, ../progress.service
+- `web/src/app/catalog/course-catalog.html` (92 lines) - symbols: catalog-title, tracks-title, official-title
+- `web/src/app/catalog/course-catalog.scss` (198 lines)
+- `web/src/app/catalog/course-catalog.ts` (88 lines) - symbols: CourseCatalogComponent, cards, featuredTracks, foundationTracks, mobileTracks, totalModules; imports: @angular/common, @angular/core, @angular/router, lucide-angular, ../course-data, ../icon-registry, ../official-updates, ../progress.service
 - `web/src/app/command-palette.html` (23 lines)
 - `web/src/app/command-palette.scss` (30 lines)
 - `web/src/app/command-palette.service.ts` (11 lines) - symbols: CommandPaletteService, isOpen; imports: @angular/core
 - `web/src/app/command-palette.ts` (78 lines) - symbols: CommandPaletteComponent, query, results; imports: @angular/common, @angular/core, @angular/forms, @angular/router, lucide-angular, ./course-data, ./command-palette.service
 - `web/src/app/content.service.ts` (27 lines) - symbols: ContentService; imports: @angular/core, marked
-- `web/src/app/course-data.ts` (1057 lines) - symbols: ServiceGroup, CloudComparison, AltCloudGroup; imports: ./course-module.model, ./tracks/devops.track, ./tracks/javascript.track, ./tracks/node.track, ./tracks/angular.track, ./tracks/react.track, ./tracks/java.track, ./tracks/spring-boot.track
+- `web/src/app/course-data.ts` (1069 lines) - symbols: ServiceGroup, CloudComparison, AltCloudGroup; imports: ./course-module.model, ./tracks/devops.track, ./tracks/javascript.track, ./tracks/node.track, ./tracks/angular.track, ./tracks/react.track, ./tracks/java.track, ./tracks/spring-boot.track
 - `web/src/app/course-module.model.ts` (41 lines) - symbols: CourseModule, QuizQuestion, Track
-- `web/src/app/course/course-shell.html` (47 lines)
-- `web/src/app/course/course-shell.scss` (68 lines)
-- `web/src/app/course/course-shell.ts` (51 lines) - symbols: CourseShellComponent, track, sidebarOpen, percent, stats; imports: @angular/common, @angular/core, @angular/core/rxjs-interop, @angular/router, lucide-angular, rxjs, ../course-data, ../command-palette.service
-- ... 32 more files
+- `web/src/app/course/course-shell.html` (62 lines) - symbols: official-path-title
+- `web/src/app/course/course-shell.scss` (89 lines)
+- `web/src/app/course/course-shell.ts` (57 lines) - symbols: CourseShellComponent, track, officialPath, sidebarOpen, trackLogo, percent, stats; imports: @angular/common, @angular/core, @angular/core/rxjs-interop, @angular/router, lucide-angular, rxjs, ../course-data, ../command-palette.service
+- ... 33 more files
 
 ### automation-script
 
@@ -174,7 +174,7 @@ For automated lookups, use `docs/repo-graph.json`.
 - `scripts/fix_lessons.py` (205 lines) - symbols: safe_print, iter_text_check_files, find_text_quality_issues, normalized_content, fix_content, check_http, main; imports: argparse, glob, os, re, urllib.request
 - `scripts/start.sh` (10 lines)
 - `scripts/validate-floci.sh` (43 lines)
-- ... 10 more files
+- ... 12 more files
 
 ### course-content
 
@@ -196,7 +196,7 @@ For automated lookups, use `docs/repo-graph.json`.
 - `web/public/content/android/modulo-8.md` (281 lines) - headings: # Módulo 8: Trabajo en segundo plano, ## Sílabo, ## Contenido teórico, ### Tema 1: CoroutineWorker y garantía de ejecución
 - `web/public/content/android/modulo-9.md` (267 lines) - headings: # Módulo 9: Testing en Android, ## Sílabo, ## Contenido teórico, ### Tema 1: Testing de ViewModels con fakes y runTest
 - `web/public/content/angular/modulo-0.md` (301 lines) - headings: # Módulo 0: Fundamentos y Angular CLI, ## Sílabo, ## Antes de comenzar: prepara tu equipo desde cero, ### Windows
-- ... 328 more files
+- ... 329 more files
 
 ### documentation
 
@@ -254,6 +254,8 @@ For automated lookups, use `docs/repo-graph.json`.
 - `.gitignore` (24 lines)
 - `docs/curriculum-matrix.json` (155 lines)
 - `docs/definitive-track-topics.json` (3168 lines)
+- `docs/floci-official-curriculum.json` (14 lines)
+- `docs/official-learning-guides.json` (22 lines)
 - `docs/official-sources.json` (21 lines)
 - `docs/official-topic-atlas.json` (175 lines)
 - `docs/requested-master-topics.json` (189 lines)
@@ -264,6 +266,4 @@ For automated lookups, use `docs/repo-graph.json`.
 - `install.sh` (99 lines)
 - `web/.gitignore` (48 lines)
 - `web/.vscode/extensions.json` (5 lines)
-- `web/.vscode/launch.json` (21 lines)
-- `web/.vscode/mcp.json` (10 lines)
-- ... 16 more files
+- ... 18 more files
