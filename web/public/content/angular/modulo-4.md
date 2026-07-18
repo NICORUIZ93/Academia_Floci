@@ -114,7 +114,7 @@ Esta configuración declarativa centralizada de todas las rutas de la aplicació
 
 **¿Por qué es importante?** La configuración declarativa de rutas centraliza toda la navegación posible de una aplicación en un lugar auditable, y `provideRouter` reemplaza el patrón anterior basado en NgModules, alineándose con la arquitectura standalone moderna estudiada en el Módulo 8.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```ts
 export const routes: Routes = [
@@ -140,7 +140,7 @@ Encadenar múltiples guards en el array `canActivate` de una misma ruta (`canAct
 
 **¿Por qué es importante?** Los guards funcionales son considerablemente más fáciles de testear que las clases guard clásicas, y el patrón de devolver una `UrlTree` para redirigir (en vez de simplemente bloquear) ofrece una experiencia de usuario más amigable ante un acceso denegado.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```ts
 export const authGuard: CanActivateFn = () => {
@@ -164,7 +164,7 @@ Combinar lazy loading de rutas con guards (Tema 2) en la misma ruta es perfectam
 
 **¿Por qué es importante?** `loadComponent` reduce directamente el tamaño del bundle inicial, mejorando el tiempo de carga percibido, especialmente valioso en aplicaciones con muchas rutas o funcionalidades opcionales de uso poco frecuente.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```ts
 { path: 'tareas', loadComponent: () => import('./tareas/lista').then(m => m.Lista) }
@@ -185,7 +185,7 @@ Los query params (`?estado=pendiente`), a diferencia de los parámetros de ruta 
 
 **¿Por qué es importante?** El input binding de rutas simplifica la lectura de parámetros integrándose directamente con signals; los guards avanzados (`CanDeactivate`, `CanMatch`, `canActivateChild`) y `ResolveFn` cubren escenarios de navegación más sofisticados que un simple `CanActivate` no resuelve por sí solo.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```ts
 @Component({ /* ... */ })

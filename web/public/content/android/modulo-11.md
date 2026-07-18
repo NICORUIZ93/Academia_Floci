@@ -128,7 +128,7 @@ Perder la keystore original de una app ya publicada es un problema grave y en gr
 - Guardar una copia de respaldo segura de la keystore en un gestor de secretos de la empresa, no en el laptop de una sola persona.
 - Rotar las credenciales de firma tras la salida de un desarrollador que tenía acceso a ellas.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```kotlin
 signingConfigs {

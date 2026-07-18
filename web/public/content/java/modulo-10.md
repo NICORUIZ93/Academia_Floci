@@ -110,7 +110,7 @@ Esta es la encapsulación fuerte que JPMS agrega, algo que los modificadores de 
 
 **¿Por qué es importante?** JPMS agrega encapsulación fuerte a nivel de módulo, más allá de lo que los modificadores de acceso tradicionales `public`/`private` ofrecían por sí solos, permitiendo ocultar paquetes completos (incluso con clases `public`) del resto de la aplicación.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```java
 // core/src/main/java/module-info.java
@@ -155,7 +155,7 @@ Es habitual necesitar ambas declaraciones sobre el mismo paquete a la vez: `expo
 
 **¿Por qué es importante?** La mayoría de los frameworks Java del ecosistema real (inyección de dependencias, serialización JSON, ORMs) dependen de reflexión profunda sobre tus propias clases; olvidar `opens` es la causa más común de que una aplicación que compila perfectamente falle en tiempo de ejecución al integrarla con JPMS.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```java
 module com.miapp.dominio {

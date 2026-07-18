@@ -125,7 +125,7 @@ WindowGroup { ContentView() }
 
 **¿Por qué es importante?** `@Model` simplifica drásticamente la definición de una entidad persistente frente a configurar Core Data manualmente (`NSManagedObject`, `NSFetchRequest`), generando la infraestructura necesaria automáticamente mediante una macro declarativa.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```swift
 @Model

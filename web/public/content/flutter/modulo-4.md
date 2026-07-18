@@ -148,7 +148,7 @@ Riverpod (evolución de Provider, el paquete de gestión de estado más antiguo 
 
 **¿Por qué es importante?** Riverpod verifica providers en tiempo de compilación, detectando errores de "provider no encontrado" antes de ejecutar la app, a diferencia de Provider, que depende del árbol de widgets en runtime y descubre esos errores solo al ejecutar el código afectado.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```dart
 final contadorProvider = StateProvider<int>((ref) => 0);

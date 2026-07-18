@@ -115,7 +115,7 @@ Escribir la primera prueba de un proyecto —por trivial que sea, como verificar
 
 **¿Por qué es importante?** El testing automatizado convierte la verificación de correctitud de "revisar manualmente cada vez que algo cambia" en "ejecutar la suite en segundos y confiar en el resultado", habilitando refactorizaciones y cambios con mucha mayor confianza y velocidad.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```js
 import { describe, it, expect } from "vitest";
@@ -144,7 +144,7 @@ Usar mocks y spies con moderación es importante: sobre-mockear una prueba (reem
 
 **¿Por qué es importante?** Mocks, spies y fakes permiten aislar la unidad de código realmente bajo prueba de sus dependencias externas costosas o no deterministas, haciendo las pruebas rápidas, deterministas y enfocadas exclusivamente en verificar el comportamiento específico que interesa en cada caso.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```js
 vi.useFakeTimers();
@@ -171,7 +171,7 @@ Es importante restaurar el comportamiento original de `fetch` después de cada p
 
 **¿Por qué es importante?** Mockear `fetch` es la técnica estándar para probar código dependiente de red de forma rápida, determinista y capaz de simular exactamente los escenarios de error que serían difíciles de provocar confiablemente contra servidores reales.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```js
 vi.spyOn(global, "fetch").mockResolvedValue({
@@ -198,7 +198,7 @@ Sin embargo, un 100% de cobertura no garantiza en absoluto la ausencia de bugs: 
 
 **¿Por qué es importante?** ESLint y Prettier automatizan dos aspectos distintos y complementarios de calidad de código, eliminando tanto errores de lógica detectables como discusiones de estilo; la cobertura es una señal útil de código no probado, pero nunca una garantía de corrección real del comportamiento verificado.
 
-**Diagrama:**
+**Prueba en terminal:**
 
 ```bash
 npm init @eslint/config@latest    # configura reglas de calidad de lógica

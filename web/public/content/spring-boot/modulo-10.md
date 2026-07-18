@@ -120,7 +120,7 @@ En un sistema con muchos microservicios independientes, cada uno manteniendo su 
 
 **¿Por qué es importante?** Un Config Server centralizado evita tener que redesplegar cada microservicio individualmente ante un cambio de configuración compartida; el service discovery permite que los servicios se comuniquen por nombre lógico, tolerando cambios de ubicación o escalado de instancias sin actualizar el código cliente.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```java
 @EnableEurekaServer // servidor de registro
@@ -142,7 +142,7 @@ Centralizar el enrutamiento en un gateway único es también un lugar natural pa
 
 **¿Por qué es importante?** Un gateway centraliza enrutamiento y controles de borde, pero mantener autorización en el servicio propietario evita que una ruta interna alternativa convierta el gateway en el único punto de seguridad de todo el sistema.
 
-**Diagrama:**
+**Configuración del ejemplo:**
 
 ```yaml
 spring:
@@ -166,7 +166,7 @@ Sin un circuit breaker, un servicio caído puede arrastrar en cascada a todos lo
 
 **¿Por qué es importante?** Un circuit breaker evita que las llamadas hacia un servicio caído se acumulen esperando indefinidamente, previniendo que un fallo se propague en cascada hacia los servicios dependientes por agotamiento de recursos compartidos.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```java
 @CircuitBreaker(name = "servicioPedidos", fallbackMethod = "fallbackPedidos")

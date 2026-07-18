@@ -109,7 +109,7 @@ Gradle, usando su Kotlin DSL, declara las mismas dependencias con una sintaxis c
 
 **¿Por qué es importante?** Gradle (Kotlin DSL) ofrece mayor flexibilidad para lógica de configuración condicional que el XML puramente declarativo de Maven, a cambio de una curva de aprendizaje ligeramente mayor y menor previsibilidad estructural que la rigidez estándar de Maven.
 
-**Diagrama:**
+**Configuración del ejemplo:**
 
 ```xml
 <dependencies>
@@ -139,7 +139,7 @@ Las dependencias declaradas para un proyecto pueden restringirse a un scope espe
 
 **¿Por qué es importante?** Separar dependencias por scope (compile, test, runtime) evita incluir dependencias innecesarias en el artefacto final de producción, reduciendo su tamaño y su superficie de exposición a vulnerabilidades no relevantes para producción.
 
-**Diagrama:**
+**Prueba en terminal:**
 
 ```bash
 mvn clean compile test package   # ciclo de vida: limpia, compila, prueba, empaqueta

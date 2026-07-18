@@ -160,7 +160,7 @@ Esta misma técnica se extiende naturalmente a mutaciones relacionadas (por ejem
 
 **¿Por qué es importante?** Encapsular `queryKey`/`queryFn` detrás de un hook con nombre significativo centraliza los detalles de acceso a datos en un único lugar, facilitando cambios futuros sin tocar cada componente consumidor individual.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```tsx
 function useTareas() {

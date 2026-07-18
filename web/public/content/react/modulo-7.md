@@ -113,7 +113,7 @@ La característica más importante de Zustand para el rendimiento es la suscripc
 
 **¿Por qué es importante?** La suscripción selectiva de Zustand evita re-renders innecesarios de componentes que no dependen de la porción específica del estado que cambió, un problema que Context no resuelve de forma nativa.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```jsx
 const useCarrito = create((set, get) => ({
@@ -140,7 +140,7 @@ A pesar de esta reducción significativa de boilerplate respecto al Redux clási
 
 **¿Por qué es importante?** Redux Toolkit reduce drásticamente el boilerplate del Redux clásico mediante `createSlice` e Immer, pero sigue trayendo más ceremonia estructural que Zustand, justificada cuando se necesitan sus herramientas de depuración o su ecosistema (RTK Query).
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```jsx
 const carritoSlice = createSlice({

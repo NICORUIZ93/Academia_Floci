@@ -116,7 +116,7 @@ Observar una ejecución específica con `describe-execution` muestra exactamente
 
 **¿Por qué es importante?** Una state machine declara explícitamente la secuencia y lógica de un flujo de trabajo, ofreciendo visibilidad operativa clara sobre en qué estado se encuentra cada ejecución, en contraste con coordinar la misma lógica de forma imperativa dentro de una única función donde esa estructura queda implícita.
 
-**Diagrama:**
+**Configuración del ejemplo:**
 
 ```json
 {
@@ -146,7 +146,7 @@ Un Choice state enruta la ejecución hacia distintos estados siguientes según u
 
 **¿Por qué es importante?** `Choice` expresa lógica condicional de forma declarativa y visible en la definición del flujo; `Retry`/`Catch` declaran manejo de errores explícito (con backoff automático) sin código imperativo disperso, haciendo el comportamiento ante fallos parte visible de la definición del flujo mismo.
 
-**Diagrama:**
+**Configuración del ejemplo:**
 
 ```json
 "Retry": [{"ErrorEquals": ["States.TaskFailed"], "IntervalSeconds": 2, "MaxAttempts": 3, "BackoffRate": 2}],

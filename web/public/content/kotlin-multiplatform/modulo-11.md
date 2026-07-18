@@ -157,7 +157,7 @@ Este patrón de "red primero, con fallback a caché local" (u otras variantes si
 - Un catálogo de productos de e-commerce que muestra precios de la última sincronización exitosa durante un corte de red.
 - Cola de cambios pendientes de subir (Módulo 6) que se sincroniza automáticamente al recuperar conexión.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```kotlin
 override suspend fun obtenerTodas(): List<Tarea> = try {

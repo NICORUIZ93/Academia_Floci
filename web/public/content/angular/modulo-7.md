@@ -112,7 +112,7 @@ Combinar `HttpClient` con `toSignal()` (Módulo 6) convierte directamente el Obs
 
 **¿Por qué es importante?** `provideHttpClient(withFetch())` moderniza el transporte subyacente de las peticiones; tipar las respuestas atrapa errores de uso en tiempo de compilación; `toSignal` integra los datos de red en el mismo modelo reactivo que el resto de la aplicación.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```ts
 // app.config.ts
@@ -137,7 +137,7 @@ Un interceptor es una función que se inserta en la cadena de procesamiento de c
 
 **¿Por qué es importante?** Los interceptores centralizan comportamiento transversal (autenticación, manejo de errores) que de otro modo tendría que repetirse manualmente en cada llamada HTTP individual de la aplicación, un ejemplo directo del principio DRY.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```ts
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
@@ -168,7 +168,7 @@ Sin un interceptor centralizado de errores, cada componente o servicio que reali
 
 **¿Por qué es importante?** El orden de registro de interceptores determina el orden real de ejecución; centralizar el manejo de errores en un único interceptor evita duplicar la misma lógica de manejo en cada llamada HTTP individual de la aplicación.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```ts
 // app.config.ts

@@ -196,7 +196,7 @@ Entender estos tres campos —`type`, `exports`, `scripts`— es esencial no sol
 
 **¿Por qué es importante?** Configurar correctamente estos campos evita problemas de compatibilidad frecuentes al integrar bibliotecas de terceros, y hace que un proyecto sea más fácil de entender y operar para cualquier nuevo colaborador.
 
-**Diagrama:**
+**Configuración del ejemplo:**
 
 ```json
 {
@@ -226,7 +226,7 @@ Combinar `import()` dinámico con un framework de routing (como el router manual
 
 **¿Por qué es importante?** `import()` dinámico es la base técnica del lazy loading de rutas y funcionalidades, una de las optimizaciones de rendimiento más directamente impactantes y ampliamente adoptadas en aplicaciones web modernas de cualquier escala no trivial.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```js
 boton.addEventListener("click", async () => {

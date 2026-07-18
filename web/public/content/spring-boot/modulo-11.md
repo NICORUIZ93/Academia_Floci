@@ -108,7 +108,7 @@ Spring Boot soporta empaquetado por capas (`spring-boot:build-image`, o un Docke
 
 **¿Por qué es importante?** Empaquetar por capas separa dependencias (estables) del código de la aplicación (cambiante), reduciendo significativamente el tamaño de las actualizaciones de imagen que Docker necesita re-subir en cada deploy.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```dockerfile
 FROM eclipse-temurin:21-jre-alpine
@@ -130,7 +130,7 @@ Un arranque en milisegundos aporta un valor real y concreto específicamente par
 
 **¿Por qué es importante?** Un arranque en milisegundos con GraalVM native image aporta valor concreto en sistemas con autoscaling agresivo, donde nuevas instancias deben estar disponibles casi instantáneamente ante picos de tráfico, a costa de un build más lento y limitaciones con reflexión.
 
-**Diagrama:**
+**Prueba en terminal:**
 
 ```bash
 ./mvnw -Pnative native:compile
@@ -147,7 +147,7 @@ Configurar los health checks de Actuator (Módulo 7) como probes explícitos de 
 
 **¿Por qué es importante?** Conectar los health checks de Actuator directamente a los probes de Kubernetes automatiza decisiones operativas críticas (reiniciar, recibir tráfico) sin necesidad de intervención manual constante.
 
-**Diagrama:**
+**Configuración del ejemplo:**
 
 ```yaml
 livenessProbe: { httpGet: { path: /actuator/health/liveness, port: 8080 } }

@@ -113,7 +113,7 @@ Aplica el aprendizaje de **Networking compartido con Ktor Client** a un incremen
 - Sincronizar el catálogo de productos de una app de e-commerce compartida entre ambas plataformas.
 - Subir archivos adjuntos (fotos, documentos) reutilizando la misma configuración de multipart en ambas plataformas.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```kotlin
 val client = HttpClient {
@@ -142,7 +142,7 @@ suspend fun obtenerTareas(): List<TareaDTO> =
 - Reintentar automáticamente solo los errores de timeout, no los errores de validación del servidor (400 Bad Request).
 - Propagar el `Resultado` tal cual desde el repositorio hasta el `StateFlow` de UI (Módulo 2), sin excepciones no manejadas en ningún punto intermedio.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```kotlin
 sealed class Resultado<out T> {
@@ -171,7 +171,7 @@ suspend fun obtenerTareasSeguro(): Resultado<List<TareaDTO>> = try {
 - Agregar un header `X-App-Version` a todas las peticiones para depuración en producción, sin tocar cada llamada individual.
 - Cerrar sesión automáticamente en ambas plataformas cuando el interceptor detecta una respuesta 401 repetida.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```kotlin
 val client = HttpClient {

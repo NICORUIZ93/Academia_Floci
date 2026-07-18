@@ -246,7 +246,7 @@ Ambos tipos son perezosos por diseño (de forma similar a los Observables de RxJ
 
 **¿Por qué es importante?** `Mono` y `Flux` modelan explícitamente la cardinalidad esperada del resultado asíncrono (cero-o-uno frente a cero-a-N), con evaluación perezosa que no ejecuta nada hasta que existe un suscriptor real interesado en el resultado.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```java
 Mono<Tarea> tarea = repositorio.findById(id);     // 0 o 1 elemento
@@ -265,7 +265,7 @@ Flux<Tarea> tareas = repositorio.findAll();        // 0 a N elementos
 
 **¿Por qué es importante?** `WebClient` realiza llamadas HTTP sin bloquear el thread durante la espera de la respuesta, liberándolo para atender otras peticiones concurrentes, un beneficio directo para sistemas con alta concurrencia de I/O.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```java
 Mono<Usuario> usuario = webClient.get().uri("/usuarios/{id}", id)
@@ -290,7 +290,7 @@ Mezclar código bloqueante tradicional (como JDBC clásico) dentro de un pipelin
 
 **¿Por qué es importante?** WebFlux se justifica específicamente para alta concurrencia con recursos limitados, no para CRUDs simples donde Spring MVC (o virtual threads) es más simple; mezclar código bloqueante en un pipeline reactivo puede agotar el pool de threads reactivos compartido, afectando a todas las peticiones concurrentes.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```java
 Flux<Tarea> tareas = databaseClient.sql("SELECT * FROM tarea").map(this::mapearFila).all();

@@ -122,7 +122,7 @@ Un servicio con `providedIn: "root"` es el patrón por defecto y correcto para l
 
 **¿Por qué es importante?** `providedIn: "root"` es la forma estándar de registrar un servicio como singleton de aplicación con beneficios de tree-shaking, y es el patrón correcto por defecto para la gran mayoría de servicios que comparten estado o lógica entre múltiples partes de una aplicación.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```ts
 @Injectable({ providedIn: 'root' }) // singleton de toda la app, tree-shakeable
@@ -147,7 +147,7 @@ La elección entre ambas formas, para el caso común de inyectar dependencias di
 
 **¿Por qué es importante?** `inject()` es más flexible que la inyección por constructor, siendo la única opción viable en contextos funcionales modernos (guards, interceptores) y simplificando la herencia de clases, razones por las que el ecosistema Angular moderno la favorece consistentemente.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```ts
 @Component({ /* ... */ })
@@ -196,7 +196,7 @@ Estos decoradores de resolución son herramientas relativamente especializadas, 
 
 **¿Por qué es importante?** Los tokens de inyección personalizados permiten inyectar configuración y valores no basados en clases de forma desacoplada y testeable; los decoradores de resolución dan control preciso sobre en qué nivel exacto de la jerarquía se resuelve una dependencia, relevante especialmente al construir bibliotecas de componentes reutilizables.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```ts
 export const API_URL = new InjectionToken<string>('API_URL');

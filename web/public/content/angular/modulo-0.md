@@ -148,7 +148,7 @@ Recorrer la estructura generada por `ng new` —`src/app` con el componente raí
 
 **¿Por qué es importante?** Entender que los proyectos Angular modernos no usan `NgModule` es el punto de partida indispensable para todo lo demás en este track: gran parte de la complejidad organizativa que Angular tenía fama de requerir en el pasado ya no aplica al Angular que se enseña y se usa hoy.
 
-**Diagrama:**
+**Prueba en terminal:**
 
 ```bash
 ng new mi-app
@@ -174,7 +174,7 @@ Elegir correctamente entre interpolación y property binding no es una cuestión
 
 **¿Por qué es importante?** Distinguir correctamente cuándo usar interpolación frente a property binding evita errores sutiles al intentar controlar dinámicamente propiedades del DOM (como `disabled` o `value`) usando la herramienta equivocada.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```html
 <h2>{{ titulo }}</h2>              <!-- interpolación: texto -->
@@ -196,7 +196,7 @@ Los utility types integrados en TypeScript transforman tipos existentes sin nece
 
 **¿Por qué es importante?** `unknown` preserva seguridad de tipos donde `any` la sacrifica completamente; `never` permite verificaciones exhaustivas verificadas por el compilador; los utility types evitan redeclarar manualmente variantes de un mismo tipo base, patrones que aparecerán constantemente en el código Angular idiomático de los módulos siguientes.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```ts
 function procesar(valor: unknown) {

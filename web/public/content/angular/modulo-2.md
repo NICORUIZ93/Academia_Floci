@@ -115,7 +115,7 @@ Un signal es un contenedor de valor reactivo: `signal(0)` crea un signal con val
 
 **¿Por qué es importante?** Signals ofrecen un modelo de reactividad síncrono, preciso y memoizado automáticamente, donde Angular sabe exactamente qué depende de qué, sentando las bases conceptuales para todo el resto del modelo de reactividad moderno de Angular estudiado en los módulos siguientes.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```ts
 const contador = signal(0);
@@ -139,7 +139,7 @@ Este requisito de inmutabilidad no es una limitación arbitraria de Angular, sin
 
 **¿Por qué es importante?** Entender que los signals detectan cambios por referencia (no por contenido profundo) es esencial para evitar el bug extremadamente común de mutar in-place una estructura de datos dentro de un signal y no entender por qué la interfaz de usuario no se actualiza en respuesta.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```ts
 const tareas = signal<Tarea[]>([]);
@@ -163,7 +163,7 @@ Comparar la misma pieza de estado implementada primero con un `BehaviorSubject` 
 
 **¿Por qué es importante?** Elegir correctamente entre signals (estado síncrono simple) y RxJS (flujos asíncronos complejos con composición temporal) según la naturaleza real del problema evita tanto la sobrecomplicación de usar RxJS donde un signal simple bastaría, como la limitación de forzar signals en escenarios que genuinamente requieren la composición temporal que RxJS ofrece.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```ts
 // Signal: estado síncrono simple, leído directamente

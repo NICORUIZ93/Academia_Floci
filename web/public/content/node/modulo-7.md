@@ -116,7 +116,7 @@ Probar tanto el camino feliz (una petición válida que produce el resultado esp
 
 **¿Por qué es importante?** Las pruebas de integración con Supertest verifican el comportamiento real de un endpoint completo (routing, middleware, lógica de negocio operando juntos), dando una confianza sustancialmente mayor que pruebas unitarias aisladas de cada pieza por separado.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```js
 import request from "supertest";
@@ -143,7 +143,7 @@ Esta combinación —base de datos real (no mockeada) pero completamente efímer
 
 **¿Por qué es importante?** Testcontainers combina la confianza de probar contra un motor de base de datos real con el aislamiento completo entre ejecuciones que una base de datos compartida de pruebas persistente no puede garantizar de forma confiable.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```js
 import { PostgreSqlContainer } from "@testcontainers/postgresql";
@@ -170,7 +170,7 @@ Combinar esta estrategia de testing con el pipeline CI/CD completo estudiado en 
 
 **¿Por qué es importante?** Mockear servicios externos hace las pruebas rápidas, deterministas y libres de costes reales de terceros; un pipeline de CI con `npm ci` y Testcontainers reproduce con alta fidelidad las condiciones reales de producción sin depender de infraestructura compartida frágil.
 
-**Diagrama:**
+**Configuración del ejemplo:**
 
 ```yaml
 # .github/workflows/ci.yml
@@ -192,7 +192,7 @@ El flag `--inspect` (`node --inspect script.js`) habilita el protocolo de depura
 
 **¿Por qué es importante?** Conocer el panorama de alternativas de testing (Jest, Mocha/Chai/Sinon) es útil para trabajar con proyectos existentes que ya las adoptaron, y `--inspect` con Chrome DevTools proporciona una capacidad de depuración considerablemente más potente que `console.log` disperso para diagnosticar bugs complejos en código de servidor.
 
-**Diagrama:**
+**Prueba en terminal:**
 
 ```bash
 node --inspect servidor.js

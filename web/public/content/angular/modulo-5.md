@@ -112,7 +112,7 @@ El template HTML de un formulario reactivo simplemente enlaza cada elemento visu
 
 **¿Por qué es importante?** La definición explícita de Reactive Forms en TypeScript es lo que permite testear formularios completos sin renderizar HTML real, y mostrar mensajes de error específicos según el validador exacto que falló mejora significativamente la experiencia de corrección del usuario.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```ts
 form = new FormGroup({
@@ -141,7 +141,7 @@ Combinar validadores síncronos y asíncronos en el mismo control es común y na
 
 **¿Por qué es importante?** Los validadores asíncronos permiten verificaciones contra fuentes externas (como disponibilidad de un email) integradas transparentemente con el mismo mecanismo de reporte de errores que los validadores síncronos, siempre que se combinen apropiadamente con debounce para evitar peticiones excesivas.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```ts
 function emailDisponibleValidator(servicio: UsuariosService): AsyncValidatorFn {
@@ -166,7 +166,7 @@ Este patrón de formularios dinámicos con `FormArray` es un ejemplo concreto de
 
 **¿Por qué es importante?** `FormArray` es la herramienta correcta para campos de formulario cuyo número exacto no se conoce de antemano y debe poder crecer o reducirse dinámicamente según la interacción del usuario, con validación independiente por cada entrada y validación agregada sobre el conjunto completo.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```ts
 form = new FormGroup({ telefonos: new FormArray([new FormControl('')]) });
@@ -189,7 +189,7 @@ La recomendación práctica, y la que la mayoría de equipos de Angular experime
 
 **¿Por qué es importante?** Elegir conscientemente entre Reactive Forms y template-driven forms según la complejidad real del formulario (no por hábito automático) equilibra la simplicidad de `ngModel` para casos triviales con la robustez y testabilidad de Reactive Forms para cualquier cosa más allá de lo más simple.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```html
 <!-- template-driven: apropiado solo para casos muy simples -->

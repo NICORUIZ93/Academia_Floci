@@ -140,7 +140,7 @@ Esta capacidad de restaurar hacia una instancia nueva e independiente (en vez de
 
 **¿Por qué es importante?** Los snapshots permiten recuperación ante desastres y clonación de entornos hacia instancias nuevas e independientes, sin afectar la instancia original, una característica de diseño que previene que una restauración accidental dañe un sistema productivo en uso.
 
-**Diagrama:**
+**Prueba en terminal:**
 
 ```bash
 aws rds create-db-snapshot --db-instance-identifier mi-postgres --db-snapshot-identifier snap-001

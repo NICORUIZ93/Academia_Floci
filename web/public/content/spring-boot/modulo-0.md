@@ -131,7 +131,7 @@ En código sin un contenedor de inversión de control, una clase que necesita co
 
 **¿Por qué es importante?** La inversión de control desacopla a cada clase de cómo se construyen sus dependencias, permitiendo sustituir implementaciones (por ejemplo, con mocks durante tests) sin modificar el código de la clase consumidora.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```java
 @Service
@@ -155,7 +155,7 @@ Con inyección por constructor, el campo puede declararse `final` (garantizando 
 
 **¿Por qué es importante?** La inyección por constructor permite declarar dependencias como `final` (inmutabilidad real) y facilita escribir tests unitarios simples con `new` directo, sin necesidad de levantar el contenedor de Spring.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```java
 // Evita: campo mutable, difícil de testear sin el contenedor de Spring

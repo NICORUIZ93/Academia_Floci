@@ -127,7 +127,7 @@ Ambos formatos son completamente válidos y Spring Boot los soporta indistintame
 
 **¿Por qué es importante?** YAML mejora la legibilidad visual de configuración anidada extensa mediante indentación jerárquica, aunque ambos formatos sean funcionalmente equivalentes y completamente soportados por Spring Boot.
 
-**Diagrama:**
+**Configuración del ejemplo:**
 
 ```yaml
 spring:
@@ -149,7 +149,7 @@ Externalizar configuración por perfil, en vez de mantener un único `applicatio
 
 **¿Por qué es importante?** Externalizar configuración por perfil permite desplegar el mismo artefacto en múltiples entornos variando solo qué perfil se activa; la estructura por capas delimita claramente qué responsabilidad tiene (y no tiene) cada capa del proyecto.
 
-**Diagrama:**
+**Configuración del ejemplo:**
 
 ```yaml
 # application-dev.yml

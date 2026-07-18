@@ -128,7 +128,7 @@ Una animación explícita con `AnimationController` y `Tween` da control total s
 
 **¿Por qué es importante?** Una animación implícita es suficiente cuando basta con interpolar automáticamente entre dos valores; se necesita el control de una explícita para curvas no lineales, repetición controlada, o composición de múltiples animaciones coordinadas entre sí.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```dart
 AnimatedContainer(duration: Duration(milliseconds: 300), width: expandido ? 200 : 100)  // implícita
@@ -171,7 +171,7 @@ Marcar un widget que no depende de ningún estado mutable como `const` (verifica
 
 **¿Por qué es importante?** Marcar un widget como `const` permite a Flutter omitirlo por completo durante reconstrucciones futuras, reduciendo trabajo innecesario de forma medible; `RepaintBoundary` aísla repinturas frecuentes evitando que afecten innecesariamente al resto del árbol de renderizado circundante.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```dart
 const Text("Texto estático")   // omitido por completo en reconstrucciones futuras

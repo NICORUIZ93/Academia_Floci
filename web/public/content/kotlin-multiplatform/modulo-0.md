@@ -133,7 +133,7 @@ Kotlin distingue en su sistema de tipos entre `String` (que nunca puede contener
 - Resultados de búsqueda en una base de datos local (Room, SQLDelight) que pueden no encontrar ningún registro.
 - Parámetros de configuración con valor por defecto vía operador Elvis (`puerto ?: 8080`) en vez de lanzar una excepción.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```kotlin
 var nombre: String = "Ana"     // nunca puede ser null
@@ -161,7 +161,7 @@ Las funciones de extensión (`fun String.esEmailValido(): Boolean = this.contain
 - Funciones de extensión de validación (`String.esEmailValido()`) reutilizables en toda la app sin heredar de `String`.
 - `copy()` para actualizar inmutablemente un solo campo de un estado de UI sin reconstruir el objeto completo a mano.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```kotlin
 data class Persona(val nombre: String, val edad: Int)
@@ -189,7 +189,7 @@ Esta capacidad de `when` como expresión se combina naturalmente con sealed clas
 - Decidir qué Composable mostrar según un rango de tamaño de pantalla (`when { ancho < 600 -> ...; else -> ... }`).
 - Clasificar una entrada de usuario en categorías (edad, nivel de suscripción, rol) para aplicar reglas de negocio distintas.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```kotlin
 val descripcion = when (edad) {

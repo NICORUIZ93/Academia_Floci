@@ -116,7 +116,7 @@ Reconocer y poder leer las tres formas es, sin embargo, necesario en la práctic
 
 **¿Por qué es importante?** `fs/promises` es la interfaz recomendada para código nuevo por su composición natural con `async`/`await` y el manejo de errores unificado, pero reconocer el estilo de callbacks clásico sigue siendo necesario para trabajar con código legado ampliamente presente en el ecosistema Node.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```js
 // Síncrono: bloquea el hilo, solo para scripts de configuración inicial
@@ -145,7 +145,7 @@ Este modelo de streams no es exclusivo del manejo de archivos: subyace también 
 
 **¿Por qué es importante?** Los streams son el patrón fundamental que hace posible que Node procese archivos y datos de red de tamaño arbitrariamente grande con un uso de memoria acotado y predecible, un mecanismo que subyace a gran parte de la API core de Node, incluyendo el manejo de peticiones HTTP.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```js
 import { createReadStream, createWriteStream } from "node:fs";
@@ -203,7 +203,7 @@ Usar `await pipeline(lectura, transformacion, escritura)` dentro de una función
 
 **¿Por qué es importante?** `pipeline()` es la forma correcta y recomendada de componer streams en Node, gestionando automáticamente tanto la propagación de errores como el backpressure a través de toda la cadena, evitando fugas de recursos que `.pipe()` encadenado manualmente no previene de forma segura.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```js
 import { pipeline } from "node:stream/promises";

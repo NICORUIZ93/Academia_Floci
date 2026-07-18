@@ -110,7 +110,7 @@ Al estar registrado con `providedIn: 'root'` (Módulo 3), cualquier componente e
 
 **¿Por qué es importante?** Un store de signals encapsulado evita que cualquier parte de la aplicación modifique el estado compartido de forma descontrolada, y evita el "prop drilling" de pasar estado manualmente a través de componentes intermedios que no lo necesitan.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```ts
 @Injectable({ providedIn: 'root' })
@@ -138,7 +138,7 @@ Este flujo estrictamente unidireccional (acción despachada → reducer puro →
 
 **¿Por qué es importante?** El flujo unidireccional estricto de NgRx, con reducers puros y actions explícitas, produce un historial de cambios completamente inspeccionable y reproducible, a costa de más ceremonia de código que un store de signals directo.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```ts
 const agregarItem = createAction('[Carrito] Agregar', props<{ item: Item }>());

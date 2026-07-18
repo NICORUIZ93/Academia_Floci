@@ -117,7 +117,7 @@ Definir un `ThemeData` centralizado en el punto de entrada de la app (colores, t
 
 **¿Por qué es importante?** Centralizar el `ThemeData` con Material 3 garantiza coherencia visual en toda la app sin repetir configuración en cada widget, y `ThemeMode.system` respeta automáticamente la preferencia de modo oscuro/claro del sistema operativo del usuario.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```dart
 MaterialApp(
@@ -147,7 +147,7 @@ Esta decisión de "una sola base de código Dart, pero apariencia adaptada segú
 
 **¿Por qué es importante?** Adaptar Material/Cupertino según la plataforma hace que una app Flutter se sienta más nativa en cada sistema operativo, cumpliendo con las expectativas visuales y de interacción específicas que los usuarios de cada plataforma ya tienen formadas por el uso de otras apps nativas.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```dart
 Platform.isIOS
@@ -179,7 +179,7 @@ Probar la app explícitamente en ambos modos (claro y oscuro) en un dispositivo 
 
 **¿Por qué es importante?** Activar un lector de pantalla en la propia app revela huecos de accesibilidad que una inspección visual no puede detectar; probar ambos modos de color explícitamente revela contrastes insuficientes o iconografía invisible que no se notarían probando solo uno de los dos modos.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```dart
 Semantics(label: 'Eliminar tarea', button: true, child: IconButton(icon: Icon(Icons.delete), onPressed: eliminar))

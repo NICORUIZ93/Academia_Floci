@@ -108,7 +108,7 @@ Las excepciones unchecked (subclases de `RuntimeException`, como `IndexOutOfBoun
 
 **¿Por qué es importante?** El compilador obliga a manejar las checked exceptions porque representan condiciones externas previsibles que el desarrollador debe considerar explícitamente; las unchecked no se obligan porque típicamente indican bugs de programación, no condiciones externas esperables en cada punto del código.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```java
 // checked: el compilador OBLIGA a manejarla o declararla con throws
@@ -130,7 +130,7 @@ Cualquier clase que implemente la interfaz `AutoCloseable` (que declara un únic
 
 **¿Por qué es importante?** try-with-resources garantiza el cierre correcto de un recurso incluso ante una excepción, eliminando la necesidad de un bloque `finally` manual repetitivo y propenso a errores de omisión.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```java
 try (BufferedReader reader = Files.newBufferedReader(ruta)) {
@@ -150,7 +150,7 @@ Un catch vacío (`try { operacionRiesgosa(); } catch (Exception e) { }`) es un a
 
 **¿Por qué es importante?** Las excepciones personalizadas comunican con precisión qué condición de error específica ocurrió; un catch vacío oculta errores reales haciendo el bug correspondiente invisible y mucho más difícil de diagnosticar posteriormente.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```java
 class SaldoInsuficienteException extends RuntimeException {

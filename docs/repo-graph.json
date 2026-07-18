@@ -34,7 +34,7 @@
     },
     {
       "path": "README.md",
-      "lines": 293,
+      "lines": 301,
       "kind": "documentation",
       "symbols": [],
       "imports": [],
@@ -144,6 +144,25 @@
         "## \ud83c\udfaf Qu\u00e9 vas a lograr",
         "## \ud83d\udcd6 El concepto (el QU\u00c9 y el PORQU\u00c9)",
         "## \ud83d\udcbb Manos a la obra (el C\u00d3MO)"
+      ]
+    },
+    {
+      "path": "docs/code-visual-quality.json",
+      "lines": 7812,
+      "kind": "project-file",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "docs/code-visual-quality.md",
+      "lines": 26,
+      "kind": "documentation",
+      "symbols": [],
+      "imports": [],
+      "headings": [
+        "# Auditor\u00eda de c\u00f3digo y visuales",
+        "## Regla editorial"
       ]
     },
     {
@@ -2256,6 +2275,27 @@
       "headings": []
     },
     {
+      "path": "scripts/audit_code_visual_quality.py",
+      "lines": 105,
+      "kind": "automation-script",
+      "symbols": [
+        "blocks",
+        "evaluate",
+        "build",
+        "render",
+        "main"
+      ],
+      "imports": [
+        "__future__",
+        "argparse",
+        "json",
+        "re",
+        "collections",
+        "pathlib"
+      ],
+      "headings": []
+    },
+    {
       "path": "scripts/audit_student_journey.py",
       "lines": 146,
       "kind": "automation-script",
@@ -2570,6 +2610,21 @@
       "headings": []
     },
     {
+      "path": "scripts/fix_misleading_diagram_labels.py",
+      "lines": 43,
+      "kind": "automation-script",
+      "symbols": [
+        "replace",
+        "main"
+      ],
+      "imports": [
+        "__future__",
+        "re",
+        "pathlib"
+      ],
+      "headings": []
+    },
+    {
       "path": "scripts/start.sh",
       "lines": 10,
       "kind": "automation-script",
@@ -2587,7 +2642,7 @@
     },
     {
       "path": "scripts/validate.sh",
-      "lines": 438,
+      "lines": 439,
       "kind": "automation-script",
       "symbols": [],
       "imports": [],
@@ -11633,7 +11688,7 @@
     },
     {
       "path": "web/src/app/app.spec.ts",
-      "lines": 146,
+      "lines": 155,
       "kind": "angular-app",
       "symbols": [],
       "imports": [
@@ -11888,7 +11943,7 @@
     },
     {
       "path": "web/src/app/course/lesson-viewer.scss",
-      "lines": 311,
+      "lines": 338,
       "kind": "angular-app",
       "symbols": [],
       "imports": [],
@@ -11896,7 +11951,7 @@
     },
     {
       "path": "web/src/app/course/lesson-viewer.ts",
-      "lines": 608,
+      "lines": 655,
       "kind": "angular-app",
       "symbols": [
         "LessonViewerComponent",
@@ -11935,6 +11990,7 @@
         "../progress.service",
         "../theme.service",
         "../project-bootstrap",
+        "../official-learning-paths",
         "./lab-verification"
       ],
       "headings": []

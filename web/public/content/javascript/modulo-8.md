@@ -119,7 +119,7 @@ Dominar la manipulación directa del DOM, aunque frameworks como Angular o React
 
 **¿Por qué es importante?** Entender la manipulación directa del DOM es la base indispensable para comprender qué automatizan realmente los frameworks de UI, y sigue siendo directamente relevante para cualquier optimización de rendimiento de bajo nivel en aplicaciones reales.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```js
 const fragmento = document.createDocumentFragment();
@@ -147,7 +147,7 @@ Frameworks modernos de UI (React, notablemente) usan delegación de eventos inte
 
 **¿Por qué es importante?** La delegación de eventos es más eficiente en memoria y funciona automáticamente con elementos añadidos dinámicamente después del registro inicial del listener, siendo el patrón estándar recomendado para listas y colecciones de elementos similares en JavaScript sin frameworks.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```js
 lista.addEventListener("click", (event) => {
@@ -173,7 +173,7 @@ Confiar en la validación nativa del lado del cliente nunca reemplaza la necesid
 
 **¿Por qué es importante?** La validación nativa reduce significativamente la cantidad de JavaScript necesario para casos comunes de formularios, mejorando la experiencia del usuario con feedback inmediato, aunque nunca sustituye la validación obligatoria del lado del servidor.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```html
 <input type="email" required pattern=".+@.+\..+" id="correo" />
@@ -201,7 +201,7 @@ Ambas APIs —`localStorage` e `IntersectionObserver`— ilustran un principio r
 
 **¿Por qué es importante?** `IntersectionObserver` es sustancialmente más eficiente que escuchar `scroll` manualmente para detectar visibilidad, y `localStorage` es la forma más simple de persistencia del lado del cliente sin requerir un backend, ambas ampliamente usadas en interfaces web reales.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```js
 input.addEventListener("input", e => localStorage.setItem("borrador", e.target.value));
@@ -228,7 +228,7 @@ Es importante desconectar estos observadores explícitamente (`observer.disconne
 
 **¿Por qué es importante?** Estos observadores permiten reaccionar eficientemente a cambios de tamaño o de estructura del DOM sin recurrir a sondeo costoso e ineficiente, un patrón de diseño consistente y recomendado en las Web APIs modernas del navegador.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```js
 new ResizeObserver(entradas => {
@@ -256,7 +256,7 @@ Ambas APIs, junto con los observadores del Tema 5, forman parte de un conjunto m
 
 **¿Por qué es importante?** Usar la API correcta según la naturaleza del trabajo —animaciones sincronizadas frente a trabajo de baja prioridad diferible— evita competir innecesariamente por recursos del hilo principal con la interactividad y fluidez visual que el usuario percibe directamente.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```js
 function animar() {

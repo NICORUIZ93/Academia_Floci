@@ -118,7 +118,7 @@ Esta integración con signals significa que un input declarado con `input()` par
 
 **¿Por qué es importante?** `input()`/`output()` integran nativamente los inputs y outputs de un componente con el grafo de reactividad de signals, simplificando el modelo mental general de reactividad de Angular al usar un único mecanismo consistente (signals) en vez de mezclar propiedades de clase ordinarias con el sistema de detección de cambios tradicional.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```ts
 @Component({ selector: 'app-tarjeta', template: `
@@ -148,7 +148,7 @@ Usar `track tarea.id` (un identificador único y estable de cada elemento) en ve
 
 **¿Por qué es importante?** La sintaxis nativa de control de flujo es más legible y permite mejores optimizaciones del compilador; usar `track` con un identificador estable en `@for` es esencial para el rendimiento de listas que cambian con frecuencia, evitando recreaciones innecesarias de elementos del DOM.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```html
 @if (tareas().length > 0) {
@@ -176,7 +176,7 @@ Este patrón es fundamentalmente distinto de pasar datos mediante un `input()`: 
 
 **¿Por qué es importante?** Content projection permite construir componentes de layout verdaderamente genéricos y reutilizables cuyo contenido interno específico lo determina completamente quien los consume, un patrón de composición fundamental en cualquier biblioteca de componentes de UI madura.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```ts
 @Component({ selector: 'app-modal', template: `<div class="modal"><ng-content /></div>` })
@@ -200,7 +200,7 @@ Angular invoca una secuencia bien definida de "hooks" de ciclo de vida en moment
 
 **¿Por qué es importante?** Conocer el propósito específico de cada hook, y especialmente la importancia crítica de `ngOnDestroy` para prevenir fugas de memoria, es esencial para escribir componentes Angular correctos y de larga vida en una aplicación real.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```ts
 export class MiComponente implements OnChanges, OnInit, AfterViewInit, OnDestroy {

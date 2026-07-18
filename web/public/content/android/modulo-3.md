@@ -124,7 +124,7 @@ Cada destino en el grafo se identifica por una ruta con formato de string (simil
 - Documentar de un vistazo todas las pantallas de la app leyendo el grafo declarado en `NavHost`.
 - Añadir una nueva pantalla al flujo sin tocar el código de navegación de las pantallas existentes.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```kotlin
 NavHost(navController, startDestination = "lista") {
@@ -164,7 +164,7 @@ Un deep link mapea una URI externa (que puede llegar desde una notificación pus
 - Compartir un link de una tarea (`miapp://tarea/42`) que abre la app directamente en esa pantalla si está instalada.
 - Pasar un ID de usuario tipado entre pantallas de perfil sin arriesgar un `ClassCastException` en tiempo de ejecución.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```kotlin
 composable(

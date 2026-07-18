@@ -113,7 +113,7 @@ Aplica el aprendizaje de **Lógica de negocio compartida** a un incremento verti
 - Caso de uso `IniciarSesionUseCase` que valida credenciales igual en ambas plataformas, delegando el almacenamiento seguro a `expect`/`actual` (Módulo 3).
 - Reglas de negocio de facturación o descuentos escritas una sola vez y consumidas por Android, iOS y un backend JVM (Módulo 3).
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```kotlin
 // commonMain
@@ -142,7 +142,7 @@ Definir la interfaz en `commonMain` con al menos dos implementaciones (una real,
 - Un `FakeTareaRepository` en memoria usado en los tests de `commonTest` (Módulo 9) sin tocar red ni base de datos real.
 - Cambiar de backend (de REST a GraphQL) implementando una nueva clase que satisface la misma interfaz, sin tocar los casos de uso.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```kotlin
 interface TareaRepository {
@@ -171,7 +171,7 @@ Koin funciona de forma idéntica en `commonMain`, resolviendo dependencias sin n
 - Cambiar la implementación de `TareaRepository` (real vs. fake) según el build type sin tocar el código que la consume.
 - Evitar mantener configuraciones de Dagger/Hilt (Android) y un inyector manual (iOS) por separado para las mismas dependencias.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```kotlin
 val sharedModule = module {

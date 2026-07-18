@@ -115,7 +115,7 @@ Definir tipos precisos para las estructuras de datos centrales de una aplicació
 
 **¿Por qué es importante?** Definir tipos precisos convierte errores que de otro modo se descubrirían en producción (accediendo a una propiedad que no existe, pasando un tipo incorrecto a una función) en errores detectados inmediatamente en tiempo de compilación, antes de que el código llegue siquiera a ejecutarse.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```ts
 interface Usuario {
@@ -145,7 +145,7 @@ Los generics se extienden más allá de funciones simples a interfaces y clases 
 
 **¿Por qué es importante?** Los generics permiten escribir código verdaderamente reutilizable sin sacrificar seguridad de tipos, y son omnipresentes en TypeScript real (incluyendo tipos integrados del lenguaje como `Array`, `Promise` y `Map`), haciendo indispensable entenderlos para leer y escribir TypeScript idiomático con fluidez.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```ts
 function primero<T>(lista: T[]): T | undefined {
@@ -171,7 +171,7 @@ El narrowing es lo que hace que trabajar con tipos unión en TypeScript sea segu
 
 **¿Por qué es importante?** El narrowing permite trabajar con tipos unión de forma completamente segura, sin conversiones de tipo forzadas e inseguras, garantizando en tiempo de compilación que operaciones específicas de un tipo nunca se aplican accidentalmente al otro tipo de la unión.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```ts
 function formatear(valor: string | number): string {
@@ -198,7 +198,7 @@ Es fundamental entender un límite real e importante de TypeScript, incluso en s
 
 **¿Por qué es importante?** El modo estricto maximiza las garantías que TypeScript puede ofrecer en tiempo de compilación, pero entender que esas garantías no se extienden a datos externos verificados únicamente en tiempo de ejecución es esencial para diseñar aplicaciones robustas frente a APIs externas que puedan cambiar o comportarse de forma inesperada.
 
-**Diagrama:**
+**Configuración del ejemplo:**
 
 ```json
 {

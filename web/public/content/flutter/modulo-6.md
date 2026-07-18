@@ -116,7 +116,7 @@ Esta distinción de "para qué sirve cada mecanismo de persistencia" es análoga
 
 **¿Por qué es importante?** `shared_preferences` NO es apropiado para guardar una lista grande de objetos estructurados, dado que su modelo de almacenamiento clave-valor simple no está diseñado para consultas eficientes sobre datos relacionales o en volumen, a diferencia de `sqflite` o Hive.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```dart
 await prefs.setBool('tema_oscuro', true);   // apropiado: valor simple

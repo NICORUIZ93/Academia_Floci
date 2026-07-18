@@ -133,7 +133,7 @@ Este mismo patrón de "esquema tipado con generación de código en tiempo de co
 - Historial de búsquedas recientes guardado en una tabla `Busqueda` local.
 - Borrador de un formulario largo persistido en Room para no perderlo si la app se cierra a medias.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```kotlin
 @Entity

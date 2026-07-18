@@ -111,7 +111,7 @@ Aplica el aprendizaje de **Testing en Angular** a un incremento vertical de Ruta
 
 **¿Por qué es importante?** `setInput` respeta el mecanismo real de propagación de inputs signal que Angular usa en producción, haciendo que la prueba verifique el comportamiento genuino del componente en vez de un atajo que podría no reflejar el comportamiento real.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```ts
 describe('Tarjeta', () => {
@@ -139,7 +139,7 @@ Este enfoque produce pruebas que sobreviven refactors internos de implementació
 
 **¿Por qué es importante?** Consultar el DOM como lo haría un usuario real (por texto, por rol) hace que las pruebas sobrevivan a refactors internos de implementación que no cambian el comportamiento observable de la aplicación.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```ts
 import { render, screen } from '@testing-library/angular';
@@ -165,7 +165,7 @@ Históricamente, las pruebas de Angular se ejecutaban con Karma (un ejecutor de 
 
 **¿Por qué es importante?** `HttpTestingController` aísla completamente las pruebas de un backend real, haciendo que sean deterministas y ejecutables sin red; el builder basado en Vitest reduce significativamente el tiempo de arranque y de iteración durante el desarrollo con pruebas.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```ts
 const httpMock = TestBed.inject(HttpTestingController);

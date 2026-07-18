@@ -132,7 +132,7 @@ Profiler graba una interacción → muestra QUÉ componentes se re-renderizaron 
 
 **¿Por qué es importante?** `React.memo` solo ayuda cuando un componente recibe las mismas props con frecuencia significativa; aplicarlo indiscriminadamente agrega overhead de comparación sin beneficio real en componentes que de todas formas cambian de props frecuentemente.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```jsx
 const Fila = React.memo(function Fila({ item }) {
@@ -152,7 +152,7 @@ Renderizar una lista de 10,000 elementos completos en el DOM, incluso si la mayo
 
 **¿Por qué es importante?** La virtualización reduce drásticamente el costo de renderizar listas largas al mantener en el DOM solo los elementos visibles; el code-splitting reduce el bundle inicial descargado, mejorando el tiempo hasta que la aplicación se vuelve interactiva.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```jsx
 import { FixedSizeList } from 'react-window';

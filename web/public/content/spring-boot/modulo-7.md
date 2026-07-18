@@ -109,7 +109,7 @@ Aplica el aprendizaje de **Observabilidad con Actuator** a un incremento vertica
 
 **¿Por qué es importante?** Actuator expone endpoints estándar de observabilidad listos para consumir por cualquier sistema de monitoreo; un health indicator personalizado extiende esa verificación para incluir dependencias externas críticas específicas de la aplicación.
 
-**Diagrama:**
+**Configuración del ejemplo:**
 
 ```yaml
 management:
@@ -139,7 +139,7 @@ Exponer este tipo de métrica de negocio (cuántos pedidos se crearon, no solo c
 
 **¿Por qué es importante?** Las métricas de negocio custom expuestas con Micrometer le dan valor directo al equipo de producto, permitiendo observar tendencias reales de negocio, no solo el estado técnico de la infraestructura subyacente.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```java
 @Service
@@ -164,7 +164,7 @@ Esta distinción importa concretamente: una aplicación podría estar perfectame
 
 **¿Por qué es importante?** Distinguir liveness de readiness evita reinicios innecesarios de un pod que simplemente está temporalmente no listo para tráfico, reservando el reinicio (liveness) específicamente para casos donde la aplicación está genuinamente en un estado roto.
 
-**Diagrama:**
+**Configuración del ejemplo:**
 
 ```yaml
 management.endpoint.health.probes.enabled: true

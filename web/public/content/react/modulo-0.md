@@ -134,7 +134,7 @@ Comprender que JSX se convierte en llamadas a función explica comportamientos q
 
 **¿Por qué es importante?** Entender que JSX es azúcar sintáctica sobre `createElement` explica por qué las llaves embeben cualquier expresión JavaScript, por qué un componente devuelve un único elemento raíz, y por qué se usa `className` en vez de `class`.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```jsx
 function Boton({ texto, onClick }) {
@@ -156,7 +156,7 @@ Usar el índice del array como `key` (`key={indice}`) parece funcionar en casos 
 
 **¿Por qué es importante?** Una `key` estable e inherente al dato (no la posición circunstancial) evita que React asocie estado o referencias del DOM al elemento equivocado cuando una lista se reordena, filtra, o modifica.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```jsx
 {tareas.map(tarea => <li key={tarea.id}>{tarea.titulo}</li>)}
@@ -178,7 +178,7 @@ Los Fragments (`<> </>`, o explícitamente `<React.Fragment>`) resuelven la rest
 
 **¿Por qué es importante?** Componer componentes pequeños con `children` produce piezas de UI más reutilizables e independientes entre sí que una jerarquía de herencia rígida; los Fragments evitan contenedores DOM innecesarios que la restricción de un único elemento raíz de otro modo forzaría.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```jsx
 function Tarjeta({ children }) {
@@ -203,7 +203,7 @@ En cuanto a estilos, CSS Modules generan nombres de clase únicos automáticamen
 
 **¿Por qué es importante?** Elegir entre `&&` y el ternario según si existe una única alternativa condicional o dos alternativas de contenido reales produce código de renderizado condicional más claro y predecible.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```jsx
 {cargando && <Spinner />}                              // algo o nada

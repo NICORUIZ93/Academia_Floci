@@ -108,7 +108,7 @@ Los DTOs actúan como una capa de traducción explícita entre el modelo interno
 
 **¿Por qué es importante?** Los DTOs evitan filtrar detalles internos de persistencia hacia el contrato público de la API, previenen errores de serialización con relaciones lazy, y permiten que el modelo interno y el contrato público evolucionen de forma independiente.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```java
 @RestController
@@ -134,7 +134,7 @@ public class TareaController {
 
 **¿Por qué es importante?** Bean Validation automatiza la verificación de restricciones de entrada sin código imperativo repetido; usar el código de estado HTTP correcto comunica con precisión semántica el resultado real de cada operación a los clientes de la API.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```java
 public record CrearTareaRequest(
@@ -155,7 +155,7 @@ Este enfoque centralizado garantiza que absolutamente todos los controllers de l
 
 **¿Por qué es importante?** `@ControllerAdvice` centraliza el manejo de errores en un único lugar, garantizando un formato de respuesta de error consistente en toda la API sin duplicar lógica de manejo en cada controller individual.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```java
 @RestControllerAdvice

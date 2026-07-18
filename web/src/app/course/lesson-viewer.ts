@@ -10,6 +10,7 @@ import { ContentService } from '../content.service';
 import { ProgressService } from '../progress.service';
 import { ThemeService } from '../theme.service';
 import { findProjectBootstrap } from '../project-bootstrap';
+import { findOfficialLearningPath } from '../official-learning-paths';
 import { applyLabVerification } from './lab-verification';
 
 let mermaidInitialized = false;
@@ -185,9 +186,14 @@ export class LessonViewerComponent implements OnDestroy {
 
     const diagrams = container.querySelectorAll<HTMLElement>('pre.mermaid');
     if (diagrams.length) {
+      this.prepareMermaidDiagrams(container);
       if (!mermaidInitialized) {
         mermaid.initialize({
           startOnLoad: false,
+          securityLevel: 'strict',
+          fontFamily: 'Inter, system-ui, sans-serif',
+          flowchart: { htmlLabels: true, curve: 'basis', padding: 18 },
+          sequence: { diagramMarginX: 24, diagramMarginY: 18, actorMargin: 48 },
           theme: 'base',
           themeVariables: {
             primaryColor: this.themeService.isDark() ? '#1e3a5f' : '#e4f2ef',
@@ -217,6 +223,27 @@ export class LessonViewerComponent implements OnDestroy {
     this.updateReadingProgress();
   }
 
+  private prepareMermaidDiagrams(container: HTMLElement): void {
+    container.querySelectorAll<HTMLElement>('pre.mermaid').forEach((diagram, index) => {
+      if (diagram.parentElement?.classList.contains('visual-diagram')) return;
+      let previous: Element | null = diagram.previousElementSibling;
+      while (previous && previous.tagName !== 'H3' && previous.tagName !== 'H2') previous = previous.previousElementSibling;
+      const context = diagram.closest('.topic-card')?.querySelector('.topic-heading')?.textContent?.trim()
+        ?? previous?.textContent?.trim()
+        ?? `Diagrama ${index + 1}`;
+      const figure = document.createElement('figure');
+      figure.className = 'visual-diagram';
+      figure.setAttribute('aria-label', `Diagrama técnico: ${context}`);
+      const caption = document.createElement('figcaption');
+      caption.innerHTML = `<span aria-hidden="true">◇</span><div><small>Modelo visual</small><strong>${escapeHtml(context)}</strong><p>Sigue las conexiones en el orden de las flechas; cada bloque representa una responsabilidad o estado.</p></div>`;
+      diagram.parentNode?.insertBefore(figure, diagram);
+      figure.append(caption, diagram);
+      diagram.setAttribute('role', 'img');
+      diagram.setAttribute('aria-label', `Relaciones y flujo de ${context}`);
+      diagram.tabIndex = 0;
+    });
+  }
+
   private enhanceEducationalContent(container: HTMLElement): void {
     this.groupLessonSections(container);
     this.addSectionGuides(container);
@@ -243,12 +270,22 @@ export class LessonViewerComponent implements OnDestroy {
       const previousText = pre.previousElementSibling?.textContent?.trim() ?? '';
       const path = previousText.match(/(?:[\w.-]+\/)+(?:[\w.-]+\.[a-z0-9]+|[\w.-]+)/i)?.[0];
       const label = path ?? (isTerminal ? 'Terminal' : language);
+      const languageLabels: Record<string, string> = {
+        bash: 'Terminal', sh: 'Terminal', shell: 'Terminal', console: 'Terminal', powershell: 'PowerShell', zsh: 'Terminal',
+        js: 'JavaScript', javascript: 'JavaScript', ts: 'TypeScript', typescript: 'TypeScript', jsx: 'React JSX', tsx: 'React TSX',
+        java: 'Java', kotlin: 'Kotlin', swift: 'Swift', dart: 'Dart', python: 'Python', py: 'Python', json: 'JSON', yaml: 'YAML', yml: 'YAML',
+        html: 'HTML', css: 'CSS', scss: 'SCSS', sql: 'SQL', hcl: 'Terraform HCL', go: 'Go', rust: 'Rust', xml: 'XML',
+      };
+      const languageLabel = languageLabels[language.toLowerCase()] ?? language;
+      const lineCount = code?.textContent?.replace(/\n$/, '').split('\n').length ?? 0;
       const wrapper = document.createElement('div');
       wrapper.className = 'code-example';
       wrapper.dataset['language'] = language.toLowerCase();
-      wrapper.innerHTML = `<div class="code-example-bar"><span class="window-controls" aria-hidden="true"><i></i><i></i><i></i></span><span class="code-example-label">${escapeHtml(label)}</span><span class="code-example-language">${escapeHtml(isTerminal ? language : `.${language}`)}</span><button type="button" data-copy-code="${index}" aria-label="Copiar ${escapeHtml(label)}">Copiar</button></div>`;
+      wrapper.innerHTML = `<div class="code-example-bar"><span class="window-controls" aria-hidden="true"><i></i><i></i><i></i></span><span class="code-example-label">${escapeHtml(label)}</span><span class="code-example-meta"><span class="code-example-language">${escapeHtml(languageLabel)}</span><span>${lineCount} ${lineCount === 1 ? 'línea' : 'líneas'}</span></span><button type="button" data-wrap-code aria-pressed="false" aria-label="Ajustar líneas de ${escapeHtml(label)}">Ajustar</button><button type="button" data-copy-code="${index}" aria-label="Copiar ${escapeHtml(label)}">Copiar</button></div>`;
       pre.parentNode?.insertBefore(wrapper, pre);
       wrapper.appendChild(pre);
+      pre.setAttribute('tabindex', '0');
+      pre.setAttribute('aria-label', `${isTerminal ? 'Comandos' : 'Código'} en ${languageLabel}: ${label}`);
     });
 
     this.groupTopics(container);
@@ -404,6 +441,7 @@ export class LessonViewerComponent implements OnDestroy {
     const topic = heading.textContent?.replace(/^Tema(?:\s+(?:complementario|suplementario))?(?:\s+\d+)?\s*:\s*/i, '').trim() || `tema-${index + 1}`;
     const profile = this.implementationProfile(index, hasCode);
     const deliverable = this.module()?.deliverable ?? 'Un incremento funcional, comprobable y documentado.';
+    const official = findOfficialLearningPath(this.trackId());
     const guide = document.createElement('section');
     guide.className = 'implementation-guide';
     guide.innerHTML = `<div class="implementation-guide-heading"><small>Ruta guiada desde cero</small><strong>Dónde trabajar, cómo probar y qué hacer si falla</strong></div>
@@ -416,6 +454,7 @@ export class LessonViewerComponent implements OnDestroy {
         <li><span>6</span><div><strong>Provoca y diagnostica un fallo</strong><p>${escapeHtml(profile.failure)} Lee el primer mensaje útil, formula una causa, compruébala y registra la corrección.</p></div></li>
         <li><span>7</span><div><strong>Conecta con el proyecto integrador</strong><p>${escapeHtml(profile.projectConnection)} Explica qué contrato protege y qué otro componente consumirá el resultado.</p></div></li>
         <li><span>8</span><div><strong>Demuestra que aprendiste</strong><p>Entrega el archivo, el comando exacto, la salida observada, el fallo corregido y una decisión que tomarías diferente en producción.</p></div></li>
+        ${official ? `<li><span>9</span><div><strong>Contrasta con la documentación oficial</strong><p>Confirma nombres, límites y versión en <a href="${escapeHtml(official.sourceUrl)}" target="_blank" rel="noopener noreferrer">${escapeHtml(official.source)}</a>. La academia explica y practica; la fuente primaria confirma el contrato vigente.</p></div></li>` : ''}
       </ol>`;
     const firstPractice = card.querySelector('.topic-practice');
     card.insertBefore(guide, firstPractice);
@@ -482,6 +521,14 @@ export class LessonViewerComponent implements OnDestroy {
   }
 
   async copyCode(event: Event): Promise<void> {
+    const wrapButton = (event.target as HTMLElement).closest<HTMLButtonElement>('[data-wrap-code]');
+    if (wrapButton) {
+      const wrapper = wrapButton.closest<HTMLElement>('.code-example');
+      const wrapped = wrapper?.classList.toggle('wrap-lines') ?? false;
+      wrapButton.setAttribute('aria-pressed', String(wrapped));
+      wrapButton.textContent = wrapped ? 'Sin ajuste' : 'Ajustar';
+      return;
+    }
     const topicButton = (event.target as HTMLElement).closest<HTMLButtonElement>('[data-topic-check]');
     if (topicButton) {
       const index = Number(topicButton.dataset['topicCheck'] ?? 0);

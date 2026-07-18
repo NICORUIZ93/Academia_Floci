@@ -128,7 +128,7 @@ Esta evolución de framework de testing (de una API más verbosa basada en heren
 
 **¿Por qué es importante?** Swift Testing ofrece una sintaxis considerablemente más concisa que XCTest clásico, además de mejor soporte para tests parametrizados y paralelización por defecto, aunque ambos frameworks cumplen la misma función fundamental de verificación de comportamiento.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```swift
 // XCTest
@@ -157,7 +157,7 @@ Esta simplificación de testing async es directamente análoga a `runTest` en Ko
 
 **¿Por qué es importante?** Marcar el test mismo como `async` permite usar `await` directamente, sin necesidad de expectativas manuales (`XCTestExpectation`) como en el modelo basado en callbacks previo, simplificando considerablemente el testing de código asíncrono.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```swift
 @Test func obtieneUsuario() async throws {

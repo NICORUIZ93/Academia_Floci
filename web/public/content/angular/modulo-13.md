@@ -164,7 +164,7 @@ Esta combinación de signals para el estado local reactivo, `computed()` para es
 
 **¿Por qué es importante?** `TareasStore` demuestra en una única clase compacta cómo combinar los tres pilares estudiados a lo largo del track — reactividad de signals, estado derivado con `computed`, y comunicación asíncrona con `HttpClient` — en un patrón de store simple y suficiente para la gran mayoría de aplicaciones reales.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```ts
 @Injectable({ providedIn: 'root' })

@@ -139,7 +139,7 @@ Este mecanismo resuelve un problema que una simple interfaz común no resolverí
 - Acceder al almacenamiento seguro de credenciales (Keystore en Android, Keychain en iOS) tras una API `expect` común.
 - Formatear fechas usando la API nativa de cada plataforma sin que `commonMain` conozca los detalles de ninguna de las dos.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```kotlin
 // commonMain
@@ -169,7 +169,7 @@ KMP no se limita conceptualmente a la combinación Android/iOS: también puede c
 - Añadir un target Desktop (Compose Multiplatform) para una versión de escritorio de la misma app sin reescribir la lógica.
 - Elegir deliberadamente NO compilar a todos los targets disponibles cuando el proyecto real solo necesita Android + iOS.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```kotlin
 kotlin {

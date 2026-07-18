@@ -123,7 +123,7 @@ Este modelo de "flujo continuo de valores observables" es conceptualmente el mis
 
 **¿Por qué es importante?** Combine modela flujos continuos de valores en el tiempo, un caso de uso distinto al de `async`/`await` (una única operación con resultado final), compartiendo el mismo principio fundamental que `Flow` en Kotlin o RxJS en JavaScript.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```swift
 $texto
@@ -150,7 +150,7 @@ Publishers.CombineLatest($filtro, $orden)
 
 **¿Por qué es importante?** `debounce` evita disparar acciones costosas en cada cambio individual, esperando un silencio antes de reaccionar; `combineLatest` reacciona a cambios de múltiples fuentes de estado independientes sin coordinación manual explícita.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```swift
 Publishers.CombineLatest($filtro, $orden)

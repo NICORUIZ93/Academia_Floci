@@ -110,7 +110,7 @@ Este enfoque basado en `@Bean` en vez de heredar de una clase base específica d
 
 **¿Por qué es importante?** La configuración moderna vía `@Bean` reemplaza la herencia de `WebSecurityConfigurerAdapter`, declarando de forma fluida y explícita qué rutas requieren autenticación y en qué punto se insertan filtros personalizados.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```java
 @Bean
@@ -137,7 +137,7 @@ SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
 **¿Por qué es importante?** El filtro JWT establece la identidad autenticada en cada petición mediante `SecurityContextHolder`; `@PreAuthorize` expresa reglas de autorización declarativamente sobre cada método protegido, sin lógica imperativa repetida.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```java
 public class JwtFilter extends OncePerRequestFilter {
@@ -167,7 +167,7 @@ CSRF (Cross-Site Request Forgery) es un ataque relevante específicamente para a
 
 **¿Por qué es importante?** CORS restringe qué orígenes de navegador pueden consumir la API; CSRF explota el envío automático de cookies de sesión, una superficie de ataque que las APIs stateless con JWT generalmente no tienen, dado que el token debe incluirse explícitamente en cada petición.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```java
 @Bean

@@ -128,7 +128,7 @@ La garantía fundamental de WorkManager, que un simple `coroutineScope.launch { 
 - Sincronizar cambios locales offline-first (Módulo 6) con el servidor en cuanto haya conexión disponible.
 - Procesar y comprimir un video grande en background sin bloquear la UI ni depender de que la app siga abierta.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```kotlin
 class SincronizarWorker(context: Context, params: WorkerParameters) : CoroutineWorker(context, params) {
@@ -167,7 +167,7 @@ Quince minutos es el intervalo **mínimo** que Android permite configurar para t
 - Postergar backups automáticos de fotos hasta que el dispositivo esté cargando y con batería suficiente.
 - Ejecutar limpieza de caché periódica cada 15-30 minutos sin afectar la duración de la batería del usuario.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```kotlin
 Constraints.Builder()

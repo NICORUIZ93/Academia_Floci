@@ -117,7 +117,7 @@ Usar una imagen base ligera como `node:22-alpine` (basada en Alpine Linux, una d
 
 **¿Por qué es importante?** Un Dockerfile multi-stage produce imágenes de producción considerablemente más pequeñas y con menor superficie de ataque, excluyendo herramientas de build y dependencias de desarrollo que no tienen ninguna razón de estar presentes en el entorno de ejecución final.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```dockerfile
 FROM node:22-alpine AS build
@@ -149,7 +149,7 @@ Este healthcheck es lo que permite a un orquestador tomar decisiones automatizad
 
 **¿Por qué es importante?** Externalizar la configuración garantiza que la misma imagen probada se despliega idénticamente en todos los entornos; un healthcheck a nivel de aplicación permite que el orquestador detecte y responda automáticamente a fallos internos que un simple chequeo de "el proceso sigue vivo" no capturaría.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```dockerfile
 HEALTHCHECK CMD node -e "fetch('http://localhost:3000/health').then(r=>process.exit(r.ok?0:1))"

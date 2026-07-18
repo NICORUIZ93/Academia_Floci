@@ -112,7 +112,7 @@ Además de mejorar el tiempo hasta que el usuario ve contenido real (particularm
 
 **¿Por qué es importante?** SSR reduce el tiempo hasta que el usuario ve contenido real, especialmente en conexiones lentas, y hace que el contenido sea directamente indexable por motores de búsqueda sin depender de la ejecución de JavaScript del lado del cliente.
 
-**Diagrama:**
+**Prueba en terminal:**
 
 ```bash
 ng add @angular/ssr
@@ -157,7 +157,7 @@ Reducir el bundle inicial descargado mediante `@defer` mejora directamente el ti
 
 **¿Por qué es importante?** `@defer` reduce el bundle inicial descargado, mejorando el tiempo hasta que la aplicación se vuelve interactiva, sin sacrificar la experiencia del usuario gracias a los estados de `@placeholder` y `@loading`.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```html
 @defer (on viewport) {

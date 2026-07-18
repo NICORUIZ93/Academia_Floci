@@ -117,7 +117,7 @@ Trabajar con el driver puro es apropiado cuando se necesita control preciso sobr
 
 **¿Por qué es importante?** Entender el driver puro y las consultas parametrizadas es la base indispensable para entender qué hace un ORM automáticamente por debajo, y las consultas parametrizadas son la defensa fundamental contra inyección SQL, sin importar si finalmente se usa un ORM o el driver directamente.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```js
 import pg from "pg";
@@ -149,7 +149,7 @@ El cliente generado por Prisma expone métodos tipados como `prisma.tarea.create
 
 **¿Por qué es importante?** Prisma reduce considerablemente el código repetitivo de acceso a datos y aporta seguridad de tipos verificada en tiempo de compilación, a cambio de una capa de abstracción que, en casos de consultas extremadamente complejas u optimización crítica, puede requerir recurrir a SQL crudo complementario.
 
-**Diagrama:**
+**Configuración del ejemplo:**
 
 ```prisma
 model Tarea {
@@ -181,7 +181,7 @@ Una transacción agrupa múltiples operaciones de base de datos en una unidad at
 
 **¿Por qué es importante?** El pool de conexiones es indispensable para que una aplicación escale bajo tráfico real sin agotar los límites de conexión de la base de datos; las transacciones son la herramienta correcta y necesaria para prevenir condiciones de carrera al modificar datos compartidos concurrentemente.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```js
 await prisma.$transaction(async (tx) => {
@@ -206,7 +206,7 @@ Sequelize y TypeORM son alternativas de ORM para bases de datos relacionales que
 
 **¿Por qué es importante?** Elegir entre un modelo relacional y uno de documentos depende de la naturaleza de los datos y las consultas de la aplicación; conocer Mongoose y las alternativas de ORM relacional amplía el panorama de herramientas disponibles más allá de Prisma para tomar esa decisión con criterio informado.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```js
 const tareaSchema = new mongoose.Schema({

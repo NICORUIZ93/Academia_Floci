@@ -126,7 +126,7 @@ Anotar una clase de datos con `@Stable` o `@Immutable` le comunica explícitamen
 - Marcar un modelo de UI con `@Immutable` para que Compose optimice agresivamente una lista que rara vez cambia.
 - Reemplazar lambdas inline por referencias de método en botones dentro de listas largas y medir la mejora real.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```kotlin
 Boton(onClick = { viewModel.accion() })   // nueva lambda cada recomposición

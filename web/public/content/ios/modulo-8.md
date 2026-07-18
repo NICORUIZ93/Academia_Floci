@@ -138,7 +138,7 @@ Una vista "gorda" que mezcla directamente la lógica de fetching de red, validac
 
 **¿Por qué es importante?** Separar la lógica de negocio de la vista resuelve el problema concreto de testeabilidad (no se puede testear lógica de negocio sin renderizar toda la UI) y mantenibilidad (una vista con múltiples responsabilidades mezcladas crece de forma difícil de razonar).
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```swift
 struct TareasView: View {
@@ -166,7 +166,7 @@ Pasar el servicio en el inicializador del ViewModel (con un valor por defecto ap
 
 **¿Por qué es importante?** La organización explícita en capas hace visible la arquitectura en la estructura del proyecto; la inyección por inicializador permite sustituir dependencias por fakes en tests sin singletons globales difíciles de testear.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```swift
 init(servicio: ServicioTareas = ServicioTareasReal()) { self.servicio = servicio }

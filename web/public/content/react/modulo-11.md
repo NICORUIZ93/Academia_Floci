@@ -110,7 +110,7 @@ Tipar las props de un componente con una interface (`interface TarjetaProps { ti
 
 **¿Por qué es importante?** Tipar las props detecta en tiempo de compilación errores de uso del componente (props faltantes, tipos incorrectos) que de otro modo solo se manifestarían como errores en tiempo de ejecución, potencialmente en producción.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```tsx
 interface TarjetaProps {
@@ -136,7 +136,7 @@ Este mismo principio de generics aplicado a hooks es exactamente el mismo concep
 
 **¿Por qué es importante?** Un hook genérico se escribe una única vez y se reutiliza correctamente tipado para cualquier tipo de dato concreto, evitando duplicar la implementación para cada tipo específico que pudiera necesitarse.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```tsx
 function useLocalStorage<T>(clave: string, valorInicial: T) {
@@ -163,7 +163,7 @@ Un componente polimórfico es aquel que puede renderizarse como distintos elemen
 
 **¿Por qué es importante?** Tipar eventos sintéticos correctamente detecta accesos inválidos a propiedades del evento en tiempo de compilación; tipar componentes polimórficos preserva la seguridad de tipos incluso cuando el elemento final renderizado es configurable dinámicamente.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```tsx
 function manejarCambio(e: React.ChangeEvent<HTMLInputElement>) {

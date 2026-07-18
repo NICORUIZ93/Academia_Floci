@@ -113,7 +113,7 @@ Esta capacidad de tratar funciones como valores de primera clase (que pueden pas
 - Estrategias de reintento configurables al llamar una API: pasar la lógica de backoff como parámetro en vez de repetirla en cada llamada de red.
 - Operaciones de colección personalizadas (`ordenarPor { it.campo }`) reutilizando la misma función base con distintos criterios.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```kotlin
 fun procesarLista(lista: List<Int>, accion: (Int) -> Unit) {
@@ -139,7 +139,7 @@ procesarLista(listOf(1, 2, 3)) { numero -> println(numero * 2) }
 - `let` para ejecutar lógica solo si un valor nullable proveniente de una API o un formulario efectivamente existe.
 - `also` para logging o analítica de paso, sin alterar el objeto ni interrumpir una cadena de llamadas.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```kotlin
 usuario?.let { u -> println("Hola ${u.nombre}") }  // solo ejecuta si usuario no es null
@@ -167,7 +167,7 @@ val resultado = obtenerDatos().run { procesar(this) } // ejecuta un bloque y dev
 - Modelar el resultado de validar un formulario (`Valido`, `ErrorCampo(campo, mensaje)`) manejado exhaustivamente en la UI.
 - Filtrar y transformar una respuesta de API antes de mostrarla (`response.filter { it.activo }.map { it.toUiModel() }`).
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```kotlin
 sealed class EstadoUI {

@@ -111,7 +111,7 @@ Este ciclo de vida (`@BeforeEach` antes de cada prueba, con `@AfterEach` como su
 
 **¿Por qué es importante?** El ciclo de vida de JUnit 5 garantiza aislamiento entre pruebas sucesivas, ejecutando configuración y limpieza en momentos predecibles relativos a cada prueba individual.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```java
 class CalculadoraTest {
@@ -136,7 +136,7 @@ Mockito permite reemplazar las dependencias reales de la clase bajo prueba por o
 
 **¿Por qué es importante?** Mockear dependencias externas aísla la prueba de infraestructura real (bases de datos, servicios externos), haciendo la prueba más rápida, determinista y confiable, sin depender de la disponibilidad o el estado de sistemas externos.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```java
 @ExtendWith(MockitoExtension.class)
@@ -166,7 +166,7 @@ JaCoCo mide cobertura de código: qué porcentaje de líneas (y opcionalmente de
 
 **¿Por qué es importante?** Los tests parametrizados evitan duplicar el mismo cuerpo de prueba para múltiples casos de datos; JaCoCo identifica visualmente qué partes del código de producción carecen de cobertura de pruebas, señalando riesgos potenciales no verificados.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```java
 @ParameterizedTest

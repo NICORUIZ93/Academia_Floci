@@ -144,7 +144,7 @@ Es importante reconocer cuándo la memoización es contraproducente: para funcio
 
 **¿Por qué es importante?** La memoización puede transformar el rendimiento de funciones recursivas con subproblemas superpuestos de exponencial a lineal, pero solo es aplicable a funciones puras, y su beneficio real depende de que los mismos argumentos se repitan efectivamente con frecuencia suficiente para justificar el coste de memoria del caché.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```js
 function memoize(fn) {
@@ -175,7 +175,7 @@ Identificar correctamente qué trabajo es apropiado para mover a un Worker —c�
 
 **¿Por qué es importante?** Los Web Workers son la solución correcta y específica para cómputo pesado que, de otro modo, congelaría perceptiblemente la interfaz de usuario durante su ejecución en el hilo único principal, siempre que ese trabajo no requiera acceso directo al DOM.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```js
 // worker.js

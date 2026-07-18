@@ -115,7 +115,7 @@ Adoptar `helmet` (o el equivalente para el framework elegido) desde el inicio de
 
 **¿Por qué es importante?** `helmet` mitiga con una única línea de configuración una categoría amplia de vulnerabilidades conocidas del lado del navegador, delegando experiencia de seguridad acumulada de la comunidad hacia una configuración por defecto sensata y ampliamente probada.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```js
 import helmet from "helmet";
@@ -137,7 +137,7 @@ Rate limiting no es solo una medida "para verse profesional": resuelve un proble
 
 **¿Por qué es importante?** Rate limiting protege tanto la disponibilidad del servicio ante saturación (maliciosa o accidental) como la seguridad de endpoints sensibles como login, dificultando significativamente ataques de fuerza bruta al limitar el volumen posible de intentos en un período de tiempo dado.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```js
 import rateLimit from "express-rate-limit";
@@ -159,7 +159,7 @@ Escapar o sanitizar contenido generado por usuarios antes de renderizarlo como H
 
 **¿Por qué es importante?** Concatenar directamente entrada de usuario en SQL o renderizarla sin escape como HTML son las dos formas más comunes y con mayor impacto potencial de comprometer una aplicación, y ambas se previenen sistemáticamente con la misma disciplina: nunca tratar entrada no confiable como instrucciones ejecutables directas.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```js
 // PELIGROSO: concatenación directa (inyección SQL)
@@ -184,7 +184,7 @@ Revisar los ítems más relevantes de este marco de referencia para una API espe
 
 **¿Por qué es importante?** El OWASP API Security Top 10 proporciona un marco sistemático y bien fundamentado para auditar la seguridad de una API, reduciendo la probabilidad de omitir categorías completas de riesgo; `npm audit` extiende esa vigilancia hacia las dependencias de terceros, una superficie de riesgo frecuentemente invisible sin una herramienta que la audite activamente.
 
-**Diagrama:**
+**Prueba en terminal:**
 
 ```bash
 npm audit          # lista vulnerabilidades conocidas en las dependencias instaladas

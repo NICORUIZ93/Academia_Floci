@@ -113,7 +113,7 @@ Este proceso de compilación produce un binario real y nativo (no una capa de in
 - Publicar el framework como dependencia interna reutilizable entre varias apps iOS de la misma empresa.
 - Medir el impacto en tamaño de binario del framework generado antes de decidir cuánta lógica mover a `commonMain`.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```kotlin
 // build.gradle.kts
@@ -170,7 +170,7 @@ CocoaPods fue históricamente la forma estándar y más común de distribuir el 
 - Migrar la distribución del framework compartido de CocoaPods a SPM en un proyecto iOS existente.
 - Envolver el callback generado por Kotlin/Native en una función `async` propia de Swift para integrarlo naturalmente con `Task {}`.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```swift
 sharedRepository.obtenerTareas { tareas, error in

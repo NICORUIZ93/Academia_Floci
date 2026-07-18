@@ -156,7 +156,7 @@ El manejo de errores con `try?` en `sincronizar()` refleja una decisión deliber
 
 **¿Por qué es importante?** Mantener la orquestación entre red y persistencia local completamente dentro del ViewModel, sin que la vista conozca ninguna de las dos fuentes directamente, preserva la separación estricta de responsabilidades que hace que cada capa sea testeable y reemplazable de forma independiente.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```swift
 @Observable

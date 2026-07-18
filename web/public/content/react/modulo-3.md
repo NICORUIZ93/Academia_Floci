@@ -112,7 +112,7 @@ React Hook Form (`const { register, handleSubmit, formState: { errors } } = useF
 
 **¿Por qué es importante?** React Hook Form evita el costo de re-renderizar el formulario completo en cada tecla, un problema de rendimiento mensurable en formularios con muchos campos, sin sacrificar la capacidad de validar y reaccionar a los valores ingresados.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```jsx
 const { register, handleSubmit, formState: { errors } } = useForm();
@@ -135,7 +135,7 @@ Un formulario multi-paso mantiene el estado combinado de todos los pasos en un c
 
 **¿Por qué es importante?** Un schema de zod centraliza y hace reutilizable la lógica de validación, potencialmente compartida entre cliente y servidor; conservar el estado combinado entre pasos evita que el usuario pierda datos ya ingresados al navegar entre pasos de un formulario largo.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```jsx
 const schema = z.object({ email: z.string().email(), edad: z.number().min(18) });
@@ -161,7 +161,7 @@ Este envoltorio sintético también permite a React optimizar internamente cómo
 
 **¿Por qué es importante?** El envoltorio de eventos sintéticos garantiza una API de eventos consistente entre distintos motores de navegador, y permite a React optimizar internamente el registro y despacho de eventos sin afectar cómo se escribe el código de manejo de eventos.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```jsx
 function manejarSubmit(e) {

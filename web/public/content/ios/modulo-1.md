@@ -120,7 +120,7 @@ Cualquier tipo que implemente el protocolo `View` (con una propiedad computada `
 
 **¿Por qué es importante?** El protocolo `View` unifica vistas nativas de SwiftUI y vistas propias bajo el mismo mecanismo de composición, permitiendo construir UIs complejas a partir de piezas pequeñas y reutilizables sin ninguna distinción especial entre ellas.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```swift
 struct TarjetaTarea: View {
@@ -148,7 +148,7 @@ Cada modificador en SwiftUI (`.padding()`, `.background()`) no muta la vista ori
 
 **¿Por qué es importante?** Entender que cada modificador envuelve la vista anterior en una nueva capa explica por qué el orden cambia el resultado visual, un comportamiento que sorprende a quien no conoce este mecanismo subyacente pero que se vuelve predecible una vez internalizado.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```swift
 VStack(spacing: 8) {
@@ -175,7 +175,7 @@ El sistema de Previews de Xcode renderiza una vista directamente en el canvas de
 
 **¿Por qué es importante?** El sistema de Previews acelera drásticamente la iteración de diseño de una vista específica, evitando el costo de recompilar y navegar manualmente en la app completa para cada ajuste visual menor.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```swift
 #Preview {

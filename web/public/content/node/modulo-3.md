@@ -117,7 +117,7 @@ Escuchar peticiones en un puerto específico se logra con `servidor.listen(puert
 
 **¿Por qué es importante?** Construir un servidor con `http` puro revela exactamente el trabajo que Express y Fastify automatizan (parsing de body, routing, formato de respuesta), un conocimiento que facilita depurar comportamientos inesperados de esos frameworks al entender qué está ocurriendo realmente por debajo de sus abstracciones.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```js
 import { createServer } from "node:http";
@@ -147,7 +147,7 @@ Comparar explícitamente el código de este servidor manual con el equivalente e
 
 **¿Por qué es importante?** Implementar routing manual revela exactamente el trabajo repetitivo que un router de framework automatiza, dando una apreciación concreta y bien fundamentada del valor real que aportan esas abstracciones antes de depender de ellas sin cuestionarlas.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```js
 if (req.method === "GET" && req.url === "/tareas") { /* ... */ }
@@ -172,7 +172,7 @@ Este proceso manual de acumulación de chunks es, precisamente, el trabajo exact
 
 **¿Por qué es importante?** Entender el proceso manual de acumulación de chunks y parsing de JSON revela por qué el body de una petición HTTP en Node no llega "gratis" ya parseado, y qué trabajo específico automatiza un middleware como `express.json()`.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```js
 const chunks = [];
@@ -201,7 +201,7 @@ Practicar la construcción manual de estas decisiones —qué código de estado 
 
 **¿Por qué es importante?** Elegir el código de estado HTTP correcto y practicar content negotiation básica son decisiones de diseño de API que comunican significado preciso tanto a humanos como a sistemas automatizados que consumen la API, con consecuencias reales de comportamiento (reintentos, manejo de errores) más allá de una simple formalidad.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```js
 const aceptaJson = req.headers.accept?.includes("application/json");

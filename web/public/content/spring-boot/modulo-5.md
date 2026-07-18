@@ -108,7 +108,7 @@ Usar `@Value` disperso por distintas clases del código, en cambio, disemina el 
 
 **¿Por qué es importante?** `@ConfigurationProperties` agrupa configuración relacionada en un único tipo fuertemente tipado, con autocompletado y validación centralizada, frente a la dispersión y falta de estructura de `@Value` repartido por el código.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```java
 @ConfigurationProperties("app.jwt")

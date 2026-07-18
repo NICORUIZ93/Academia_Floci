@@ -191,7 +191,7 @@ Prefijar las importaciones de módulos core con `node:` (por ejemplo, `import { 
 
 **¿Por qué es importante?** `process` y los módulos core proporcionan las capacidades fundamentales de un runtime de servidor (acceso a variables de entorno, información del sistema, datos binarios, criptografía) que JavaScript en el navegador nunca necesitó exponer de la misma forma directa.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```js
 process.argv;         // argumentos de línea de comandos
@@ -219,7 +219,7 @@ Reconocer esta arquitectura orientada a eventos y el principio de no bloqueo com
 
 **¿Por qué es importante?** Reconocer la arquitectura orientada a eventos y el no bloqueo como los principios de diseño unificadores de Node da un marco predictivo para entender rápidamente cualquier nueva API del ecosistema, y explica por qué código bloqueante en el camino crítico de una petición es un error de diseño serio, no solo una preferencia de estilo.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```js
 import { EventEmitter } from "node:events";

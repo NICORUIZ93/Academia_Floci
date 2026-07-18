@@ -119,7 +119,7 @@ Elegir incorrectamente entre ambos mecanismos es una fuente común de bugs sutil
 
 **¿Por qué es importante?** `LayoutBuilder` es más preciso que `MediaQuery` cuando el widget que decide su layout no ocupa toda la pantalla, dado que refleja el espacio real y específico disponible para ese widget en su posición actual del árbol, no el tamaño total del dispositivo.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```dart
 MediaQuery.of(context).size.width       // tamaño de la PANTALLA completa
@@ -171,7 +171,7 @@ Scaffold(body: SafeArea(child: ContenidoPrincipal()))
 
 **¿Por qué es importante?** Centralizar los breakpoints en una función reutilizable evita inconsistencias de comparaciones numéricas dispersas; `SafeArea` importa de forma variable según el dispositivo específico dado que los elementos físicos y del sistema que invaden los bordes de pantalla (notch, controles de gestos) difieren considerablemente entre modelos.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```dart
 enum TipoDispositivo { movil, tablet, escritorio }

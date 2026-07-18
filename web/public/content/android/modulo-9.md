@@ -126,7 +126,7 @@ Probar un `ViewModel` con un repositorio fake (una implementación real y simple
 - Ejecutar cientos de tests de ViewModels en segundos dentro del pipeline de CI, sin latencia de red real.
 - Reproducir de forma determinista un bug de estado reportado, controlando exactamente qué devuelve el fake.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```kotlin
 class TareasViewModelTest {
@@ -166,7 +166,7 @@ Esta distinción entre lo que cubre un test de ViewModel y lo que cubre adiciona
 - Detectar un bug donde un botón queda oculto tras un cambio de layout, antes de que llegue a producción.
 - Testear que un mensaje de error se muestra visible cuando el `EstadoUI` es `Error`, no solo que el estado cambió.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```kotlin
 @get:Rule val composeTestRule = createComposeRule()

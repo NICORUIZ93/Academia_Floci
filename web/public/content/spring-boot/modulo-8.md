@@ -109,7 +109,7 @@ Este desacoplamiento resuelve un problema estructural concreto: sin mensajería,
 
 **¿Por qué es importante?** Publicar un evento en vez de llamar directamente a otro servicio desacopla completamente al publicador de sus consumidores, permitiendo agregar o modificar consumidores sin afectar al código publicador original.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```java
 @Service
@@ -137,7 +137,7 @@ Sin una dead-letter queue configurada, un mensaje que falla repetidamente al pro
 
 **¿Por qué es importante?** Una dead-letter queue aísla mensajes que fallan repetidamente sin bloquear el procesamiento de mensajes exitosos posteriores, y sin perder silenciosamente el registro de esos mensajes problemáticos.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```java
 @Bean
@@ -159,7 +159,7 @@ Elegir entre ambas tecnologías depende del patrón de uso real necesario: Kafka
 
 **¿Por qué es importante?** Elegir Kafka frente a RabbitMQ depende del patrón de consumo real necesario: retención y relectura del historial completo de eventos (Kafka) frente a distribución simple de trabajo punto-a-punto (RabbitMQ).
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```java
 @RabbitListener(queues = "tareas.creadas")

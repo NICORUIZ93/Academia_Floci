@@ -127,7 +127,7 @@ Validar ambos targets en cada push individual (no solo antes de un release) dete
 - Ejecutar `commonTest` (Módulo 9) en cada push para atrapar regresiones de lógica compartida temprano.
 - Presupuestar el costo de CI sabiendo que los runners macOS para iOS son más caros que los runners Linux para Android.
 
-**Diagrama:**
+**Configuración del ejemplo:**
 
 ```yaml
 jobs:
@@ -168,7 +168,7 @@ Esta automatización es particularmente valiosa en un contexto multiplataforma c
 - Subir simultáneamente builds de Android e iOS de la misma versión en un único paso de CI coordinado.
 - Evitar el error humano clásico de subir a producción una build firmada con el certificado de desarrollo equivocado.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```ruby
 lane :beta do

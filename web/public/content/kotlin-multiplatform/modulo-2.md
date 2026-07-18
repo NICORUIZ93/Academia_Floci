@@ -116,7 +116,7 @@ Aplica el aprendizaje de **Coroutines y Flow** a un incremento vertical de RutaF
 - Llamadas de red desde un ViewModel (Módulo 4 del track Android) que se cancelan automáticamente cuando la pantalla se destruye.
 - Sincronizar datos remotos con caché local (Módulo 11) sin dejar la sincronización corriendo tras cerrar la app.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```kotlin
 suspend fun cargarPantalla() = coroutineScope {
@@ -143,7 +143,7 @@ suspend fun cargarPantalla() = coroutineScope {
 - `SharedFlow` para eventos de navegación de un solo disparo ("mostrar este Snackbar una vez") que no deben repetirse al rotar la pantalla.
 - `Flow` para observar cambios en una tabla SQLDelight (Módulo 6) y actualizar la UI automáticamente en cada `insert`/`update`.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```kotlin
 fun contarHasta(n: Int): Flow<Int> = flow {
@@ -170,7 +170,7 @@ Manejar errores dentro de una coroutine sigue el mismo mecanismo estructural de 
 - `Mutex` para proteger una caché en memoria compartida entre varias coroutines que la leen y escriben concurrentemente.
 - `kotlinx.atomicfu` para un contador de peticiones en curso, consistente en Android, iOS y JVM sin código específico por plataforma.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```kotlin
 try {

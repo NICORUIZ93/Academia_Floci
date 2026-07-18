@@ -142,7 +142,7 @@ Swift incorpora la ausencia de valor directamente en el sistema de tipos mediant
 
 **¿Por qué es importante?** El sistema de optionals de Swift previene la categoría completa de errores de "acceder a un valor ausente" detectándolos en tiempo de compilación, en vez de dejar que se manifiesten como crashes en producción como ocurre en lenguajes sin este mecanismo incorporado al sistema de tipos.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```swift
 var nombre: String? = nil
@@ -171,7 +171,7 @@ Esta elección tiene consecuencias prácticas directas en el razonamiento sobre 
 
 **¿Por qué es importante?** Elegir `struct` para un modelo de datos previene mutaciones inesperadas compartidas entre distintas partes del código, mientras que `class` es apropiada cuando la identidad compartida y la observación de mutaciones desde múltiples lugares es exactamente el comportamiento deseado.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```swift
 struct Punto { var x: Int; var y: Int }   // value type: copia independiente
@@ -212,7 +212,7 @@ Un enum con valores asociados modela un estado como un conjunto cerrado y exhaus
 
 **¿Por qué es importante?** Los protocolos permiten composición de comportamiento entre tipos no relacionados sin depender de herencia rígida; los enums con valores asociados modelan estado de forma exhaustiva y verificada por el compilador, previniendo casos no manejados que pasarían desapercibidos en un modelo menos estricto.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```swift
 enum Resultado {

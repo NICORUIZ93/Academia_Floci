@@ -115,7 +115,7 @@ Leer el secreto desde Python (`client.get_secret_value(SecretId="/app/db-passwor
 
 **¿Por qué es importante?** Guardar secretos en variables de entorno hardcodeadas expone el valor a cualquiera con acceso al código (incluyendo el historial de versiones), sin auditoría ni control de acceso granular; Secrets Manager centraliza, cifra, audita y permite rotar secretos sin redesplegar la aplicación.
 
-**Diagrama:**
+**Prueba en terminal:**
 
 ```bash
 aws secretsmanager create-secret --name /app/db-password --secret-string "mi-password-segura"

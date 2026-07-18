@@ -110,7 +110,7 @@ Manejar fetching manualmente con `useState` + `useEffect` (guardar el resultado,
 
 **¿Por qué es importante?** `useQuery` elimina el "loading hell" de gestionar manualmente estado de carga/error/cache en cada componente, y agrega automáticamente deduplicación, cache compartida y revalidación en segundo plano sin código adicional.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```jsx
 const { data, isLoading, error } = useQuery({
@@ -131,7 +131,7 @@ Esta invalidación explícita tras una mutación exitosa es el mecanismo estánd
 
 **¿Por qué es importante?** Invalidar la query relacionada tras una mutación exitosa garantiza que la vista refleje el estado real y actualizado del servidor, sin necesidad de sincronizar manualmente la cache local con el resultado exacto de cada mutación.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```jsx
 const queryClient = useQueryClient();
@@ -155,7 +155,7 @@ Este patrón introduce un riesgo inherente: durante la ventana de tiempo entre l
 
 **¿Por qué es importante?** Los optimistic updates mejoran la percepción de velocidad al reflejar cambios instantáneamente, a costa del riesgo de tener que revertir visualmente la interfaz si la operación finalmente falla en el servidor.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```jsx
 useMutation({

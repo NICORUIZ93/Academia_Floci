@@ -126,7 +126,7 @@ Este mismo patrón de "función suspend que envuelve una operación de red asín
 - Llamar varios endpoints en paralelo desde un ViewModel usando `async`/`await` sobre funciones suspend de Retrofit.
 - Migrar código antiguo con callbacks anidados de Retrofit clásico a coroutines para simplificar el manejo de errores.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```kotlin
 interface ApiService {
@@ -200,7 +200,7 @@ El orden en que se registran los interceptores importa: un interceptor de autent
 - Loguear cuerpo completo de request/response solo en builds de debug, desactivado automáticamente en producción.
 - Renovar un token expirado interceptando una respuesta 401 y reintentando la petición original una vez renovado.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```kotlin
 OkHttpClient.Builder()

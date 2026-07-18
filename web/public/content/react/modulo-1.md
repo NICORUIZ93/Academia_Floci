@@ -130,7 +130,7 @@ Esta distinción importa especialmente en cualquier escenario donde múltiples a
 
 **¿Por qué es importante?** La forma funcional del setter evita el bug clásico de actualizaciones de estado que se sobreescriben mutuamente al depender de un valor capturado obsoleto en el closure de la ejecución de render en curso.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```jsx
 const [count, setCount] = useState(0);
@@ -176,7 +176,7 @@ Este comportamiento es una optimización de rendimiento deliberada: sin batching
 
 **¿Por qué es importante?** El batching evita ciclos de render y commit redundantes cuando múltiples actualizaciones de estado ocurren en el mismo manejador de evento, aplicando únicamente el estado final combinado en un único ciclo.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```jsx
 function manejarClick() {
@@ -199,7 +199,7 @@ Esto contrasta con un componente no controlado, donde el DOM mantiene su propio 
 
 **¿Por qué es importante?** Los componentes controlados hacen del estado de React la única fuente de verdad del valor de un input, permitiendo validación y transformación centralizada en cada cambio, a costa de un re-render adicional por cada tecla.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```jsx
 const [valor, setValor] = useState('');

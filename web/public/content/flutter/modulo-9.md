@@ -130,7 +130,7 @@ Un unit test verifica lógica pura (como una función de validación) completame
 
 **¿Por qué es importante?** Los widget tests verifican tanto el renderizado como la interacción en un entorno simulado considerablemente más rápido que un dispositivo real, cerrando la brecha entre "la lógica es correcta" (unit test) y "la UI refleja correctamente esa lógica" sin el costo de un integration test completo.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```dart
 testWidgets('incrementa el contador al tocar el botón', (tester) async {
@@ -163,7 +163,7 @@ Esta necesidad de aislar dependencias externas para hacer los tests más rápido
 
 **¿Por qué es importante?** Aislar dependencias externas con `mocktail` hace los widget tests más rápidos (sin latencia real de red/disco) y más confiables (sin depender de la disponibilidad de servicios externos reales que podrían fallar o variar entre ejecuciones del test).
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```dart
 class RepositorioFake extends Mock implements TareaRepository {}

@@ -111,7 +111,7 @@ La consecuencia más significativa de esto es que un Server Component nunca env�
 
 **¿Por qué es importante?** Un Server Component reduce el bundle de JavaScript del cliente al no enviar su propio código de ejecución, y permite acceso directo a recursos del servidor sin necesidad de un endpoint API intermedio.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```jsx
 // app/tareas/page.tsx — Server Component (sin "use client")
@@ -133,7 +133,7 @@ Esta directiva establece un límite explícito y deliberado en el árbol de comp
 
 **¿Por qué es importante?** `"use client"` es obligatorio para cualquier componente que use hooks de estado o manejadores de eventos interactivos; colocar ese límite lo más profundo posible en el árbol maximiza la cantidad de código que permanece exclusivamente en el servidor.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```jsx
 "use client";
@@ -155,7 +155,7 @@ Este mismo `Suspense` que en el Módulo 5 se usaba para mostrar un `fallback` mi
 
 **¿Por qué es importante?** El streaming con Suspense evita que una sección particularmente lenta de una página retrase la percepción de toda la página, mostrando de inmediato el contenido que ya está listo.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```jsx
 <Suspense fallback={<Spinner />}>
@@ -175,7 +175,7 @@ Next.js genera automáticamente la infraestructura de comunicación necesaria en
 
 **¿Por qué es importante?** Las Server Actions eliminan la necesidad de un endpoint API separado y de código manual de serialización/envío para conectar un formulario del cliente con lógica de procesamiento del servidor.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```jsx
 async function crearTarea(formData) {

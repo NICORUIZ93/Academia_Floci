@@ -114,7 +114,7 @@ La distinción entre `dependencies` y `devDependencies` en `package.json` comuni
 
 **¿Por qué es importante?** Entender semver y los rangos de versión permite tomar decisiones informadas sobre cuánta actualización automática aceptar en un proyecto, equilibrando la comodidad de recibir correcciones automáticamente contra el riesgo de una actualización inesperada que rompa algo.
 
-**Diagrama:**
+**Configuración del ejemplo:**
 
 ```json
 {
@@ -139,7 +139,7 @@ Committear siempre el lockfile al control de versiones (nunca añadirlo a `.giti
 
 **¿Por qué es importante?** El lockfile es la garantía de reproducibilidad exacta entre el entorno de desarrollo, el pipeline de CI y producción; `npm ci` en vez de `npm install` en esos contextos automatizados es la práctica estándar que hace cumplir esa garantía estrictamente, fallando explícitamente ante cualquier desincronización en vez de resolverla silenciosamente.
 
-**Diagrama:**
+**Prueba en terminal:**
 
 ```bash
 npm install   # respeta el lockfile si existe, lo actualiza si hace falta
@@ -163,7 +163,7 @@ La decisión de adoptar un monorepo con workspaces frente a mantener paquetes co
 
 **¿Por qué es importante?** Los workspaces automatizan el enlace entre paquetes internos relacionados de un monorepo, eliminando la fricción de publicar y reinstalar manualmente paquetes internos en cada cambio, un flujo de trabajo especialmente valioso cuando varios paquetes evolucionan conjuntamente con frecuencia.
 
-**Diagrama:**
+**Configuración del ejemplo:**
 
 ```json
 // package.json raíz
@@ -193,7 +193,7 @@ Comprender qué scripts se ejecutan automáticamente y en qué momento, además 
 
 **¿Por qué es importante?** Los scripts de ciclo de vida automatizan pasos de configuración necesarios tras la instalación, pero también representan un vector de seguridad real de la cadena de suministro de software que vale la pena entender y mitigar conscientemente en proyectos de producción.
 
-**Diagrama:**
+**Configuración del ejemplo:**
 
 ```json
 {

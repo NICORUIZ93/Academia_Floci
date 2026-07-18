@@ -166,7 +166,7 @@ Esta ausencia total de instanciación manual es lo que permite que, en el módul
 - Cambiar la implementación de red de Retrofit a Ktor Client (Módulo 5 de KMP) sin tocar ViewModels ni UI.
 - Auditar en code review que ningún composable o ViewModel instancia `Retrofit`/`Room` directamente con `new`.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```kotlin
 @HiltViewModel

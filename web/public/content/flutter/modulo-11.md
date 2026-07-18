@@ -119,7 +119,7 @@ Esta necesidad de generar dos artefactos de build completamente distintos y espe
 
 **¿Por qué es importante?** Aunque el código Dart es compartido, cada tienda requiere un artefacto de build específico y un proceso de firma completamente distinto, reflejando que la unificación de Flutter ocurre a nivel de código fuente, no a nivel del proceso de publicación en sí.
 
-**Diagrama:**
+**Prueba en terminal:**
 
 ```bash
 flutter build appbundle --release   # → .aab para Google Play Console
@@ -149,7 +149,7 @@ Los paquetes `flutter_launcher_icons` y `flutter_native_splash` toman una única
 
 **¿Por qué es importante?** Generar automáticamente las variantes de ícono y splash screen requeridas por cada plataforma a partir de una única imagen fuente evita el trabajo manual tedioso y propenso a inconsistencias de producir cada variante por separado.
 
-**Diagrama:**
+**Prueba en terminal:**
 
 ```bash
 dart run flutter_launcher_icons        # genera todas las variantes de ícono por plataforma
@@ -178,7 +178,7 @@ Este matiz es importante para calibrar expectativas realistas sobre "una sola ba
 
 **¿Por qué es importante?** Automatizar ambos builds con un solo pipeline ahorra el esfuerzo manual repetido de cada release, pero no elimina la necesidad de pasos específicos y separados por plataforma dentro de ese pipeline, dado que cada tienda exige su propio proceso de firma y distribución independiente.
 
-**Diagrama:**
+**Configuración del ejemplo:**
 
 ```yaml
 workflows:

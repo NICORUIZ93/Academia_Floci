@@ -116,7 +116,7 @@ Un User Pool es el directorio de usuarios completo (gestiona su registro, verifi
 
 **¿Por qué es importante?** NO debes construir tu propio sistema de autenticación porque requiere resolver correctamente numerosos detalles críticos de seguridad donde un único error puede comprometer completamente la seguridad de todos los usuarios, mientras que Cognito encapsula esa complejidad ya auditada y resuelta por expertos.
 
-**Diagrama:**
+**Prueba en terminal:**
 
 ```bash
 aws cognito-idp create-user-pool --pool-name MiApp --auto-verified-attributes email

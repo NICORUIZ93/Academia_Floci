@@ -185,7 +185,7 @@ En este ejemplo, `@Auditable` tiene un elemento obligatorio llamado `accion`. Su
 
 **¿Por qué es importante?** El polimorfismo de subtipo permite que el mismo código que opera sobre una referencia `Animal` ejecute automáticamente el comportamiento específico de la subclase real en tiempo de ejecución, sin necesidad de conocer de antemano esa subclase concreta.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```java
 class Animal {
@@ -209,7 +209,7 @@ Una clase abstracta (`abstract class Forma { abstract double area(); void descri
 
 **¿Por qué es importante?** Elegir entre clase abstracta e interfaz según si existe comportamiento compartido real (clase abstracta) o solo un contrato puro (interfaz) produce un diseño de jerarquía de clases más claro y correctamente alineado con la relación real entre los tipos involucrados.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```java
 interface Volador {
@@ -237,7 +237,7 @@ Los modificadores de acceso controlan la visibilidad de un miembro de una clase 
 
 **¿Por qué es importante?** Sobrecarga y sobreescritura resuelven problemas distintos (múltiples formas de invocar un método según sus argumentos, frente a redefinir el comportamiento heredado); los modificadores de acceso controlan con precisión granular quién puede ver y usar cada miembro de una clase.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```java
 int sumar(int a, int b) { return a + b; }

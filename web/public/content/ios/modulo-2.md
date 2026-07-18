@@ -132,7 +132,7 @@ struct BotonContador: View {
 
 **¿Por qué es importante?** `@State` posee el valor y pertenece exclusivamente a una vista; `@Binding` es una referencia mutable hacia el estado de otra, permitiendo el mismo patrón de state hoisting que existe en otros frameworks de UI declarativa como Jetpack Compose y React.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```swift
 struct PantallaContador: View {
@@ -168,7 +168,7 @@ Esta granularidad de redibujado bajo `@Observable` es análoga a la optimizació
 
 **¿Por qué es importante?** `@Observable` mejora el rendimiento al redibujar solo las vistas que leen la propiedad específica que cambió, resolviendo la sobre-notificación del modelo anterior `ObservableObject` + `@Published`, que redibujaba cualquier observador del objeto completo sin distinción.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```swift
 @Observable
@@ -201,7 +201,7 @@ La distinción entre identidad y valor en SwiftUI (relacionada con el `struct` v
 
 **¿Por qué es importante?** `@Environment` evita el "prop drilling" de pasar una dependencia manualmente por cada inicializador intermedio, un problema resuelto de forma análoga por Context API en React; la identidad de una vista determina si su estado se preserva o se reinicia entre renderizados sucesivos.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```swift
 WindowGroup { ContentView().environment(ServicioAPI()) }

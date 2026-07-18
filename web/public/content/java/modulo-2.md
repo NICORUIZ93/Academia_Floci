@@ -113,7 +113,7 @@ Aplica el aprendizaje de **Colecciones y genéricos** a un incremento vertical d
 
 **¿Por qué es importante?** Elegir `ArrayList` frente a `LinkedList` según si el patrón de acceso predominante es indexado o de inserción/eliminación frecuente en los extremos evita costos de rendimiento innecesarios; elegir `HashSet` frente a `TreeSet` según si se necesita o no orden automático evita el costo adicional de mantener ese orden cuando no es requerido.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```java
 List<String> lista = new ArrayList<>();   // acceso indexado rápido, inserción al final eficiente
@@ -138,7 +138,7 @@ Los wildcards (`List<? extends Number>`, aceptando una lista de `Number` o cualq
 
 **¿Por qué es importante?** Los genéricos proporcionan seguridad de tipos en tiempo de compilación sin necesidad de castear manualmente; el type erasure explica por qué esa información de tipo genérico no está disponible para inspección en tiempo de ejecución, una limitación relevante al usar reflexión o al diseñar ciertas APIs genéricas avanzadas.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```java
 class Caja<T> {
@@ -162,7 +162,7 @@ Recorrer un `Map` con for-each requiere iterar sobre `entrySet()` (`for (Map.Ent
 
 **¿Por qué es importante?** `Comparable` define el único orden natural de una clase; `Comparator` permite múltiples órdenes alternativos externos sin modificar esa clase, siendo la elección correcta según si se necesita un único criterio canónico o múltiples criterios intercambiables.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```java
 class Persona implements Comparable<Persona> {

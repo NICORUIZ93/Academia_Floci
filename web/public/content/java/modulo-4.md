@@ -112,7 +112,7 @@ Un stream describe una secuencia de operaciones a aplicar sobre una colección d
 
 **¿Por qué es importante?** El estilo declarativo de Streams describe qué transformación se desea en vez de los detalles mecánicos de iteración manual, y su evaluación perezosa (solo disparada por la operación terminal) evita crear colecciones intermedias innecesarias entre cada paso de la cadena.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```java
 List<String> nombresMayores = personas.stream()
@@ -137,7 +137,7 @@ double totalSalarios = empleados.stream()
 
 **¿Por qué es importante?** `Optional` obliga, en el propio tipo de retorno, a que el código que llama considere explícitamente el caso de ausencia de valor, reemplazando con ventaja la práctica de devolver `null` directamente y confiar en que se verifique manualmente sin ninguna garantía del compilador.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```java
 Optional<Persona> buscarPorId(int id) {
@@ -160,7 +160,7 @@ Las referencias a métodos (`Persona::getNombre`, equivalente exacto a la lambda
 
 **¿Por qué es importante?** Un stream paralelo solo mejora el rendimiento con datasets grandes y operaciones CPU-intensivas sin efectos secundarios compartidos; usarlo indiscriminadamente en casos pequeños o simples puede empeorar el rendimiento por el overhead de coordinación.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```java
 long conteo = numeros.parallelStream().filter(this::esPrimo).count();

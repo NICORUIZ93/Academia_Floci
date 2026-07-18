@@ -117,7 +117,7 @@ Esta estructura consistente permite que un sistema de agregación de logs realic
 
 **¿Por qué es importante?** Los logs estructurados en JSON son indexables y consultables de forma confiable por herramientas de agregación, una capacidad esencial para diagnosticar incidentes reales de producción que el texto libre de `console.log` no proporciona de forma consistente.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```js
 import pino from "pino";
@@ -140,7 +140,7 @@ Este mecanismo se vuelve especialmente valioso en arquitecturas de microservicio
 
 **¿Por qué es importante?** El correlation ID es la herramienta fundamental que permite reconstruir el rastro completo de una petición específica entre el volumen masivo de logs concurrentes de un sistema de producción real, particularmente indispensable en arquitecturas distribuidas de microservicios.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```js
 app.use((req, res, next) => {
@@ -165,7 +165,7 @@ Graceful shutdown (apagado ordenado) responde a `SIGTERM` (la señal estándar q
 
 **¿Por qué es importante?** Manejar excepciones no capturadas terminando deliberadamente el proceso evita continuar en un estado corrupto impredecible; graceful shutdown evita que despliegues rutinarios o escalados normales corten peticiones de usuarios reales a la mitad.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```js
 process.on("uncaughtException", (err) => { log.fatal(err); process.exit(1); });

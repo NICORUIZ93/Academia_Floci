@@ -125,7 +125,7 @@ El patrón `_estado` privado mutable (`MutableStateFlow`) expuesto públicamente
 - Estado del carrito de compras en una app de e-commerce, consultable en cualquier momento desde cualquier pantalla.
 - Contador de elementos no leídos que cualquier pantalla puede observar con el valor correcto desde el primer instante.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```kotlin
 class TareasViewModel(private val repo: TareaRepository) : ViewModel() {
@@ -200,7 +200,7 @@ Un evento como "mostrar un Snackbar" tiene una naturaleza fundamentalmente disti
 - Disparar una navegación de un solo uso ("ir a la pantalla de éxito") tras completar un pago.
 - Emitir un evento de error puntual de red que se muestra una vez, sin quedar "pegado" como estado persistente.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```kotlin
 private val _eventos = MutableSharedFlow<Evento>()

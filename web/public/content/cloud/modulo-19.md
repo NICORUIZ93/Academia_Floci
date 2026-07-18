@@ -148,7 +148,7 @@ Athena ejecuta SQL estándar directamente sobre los datos en S3 usando el esquem
 
 **¿Por qué es importante?** El Glue Crawler descubre automáticamente el esquema de datos sin declaración manual, especialmente valioso cuando el formato evoluciona con el tiempo; Athena consulta esos datos con SQL estándar sin servidor persistente, cobrando por consulta según los bytes efectivamente escaneados.
 
-**Diagrama:**
+**Prueba en terminal:**
 
 ```bash
 aws glue start-crawler --name crawler-pedidos

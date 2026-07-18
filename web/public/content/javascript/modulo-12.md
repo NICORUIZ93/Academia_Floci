@@ -115,7 +115,7 @@ Un router manual mínimo, aunque simplificado comparado con las capacidades de u
 
 **¿Por qué es importante?** Entender el mecanismo exacto de la History API es la base sobre la que se construye cualquier sistema de routing de una SPA, incluyendo los routers de Angular y React que se estudiarán en sus tracks correspondientes, que automatizan esta misma sincronización de forma más sofisticada pero conceptualmente equivalente.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```js
 function navegar(ruta) {
@@ -147,7 +147,7 @@ Construir este patrón desde cero, aunque considerablemente más simplificado qu
 
 **¿Por qué es importante?** Construir un store propio desde cero revela el mecanismo esencial de sincronización entre estado y UI que automatizan Angular y React, dando una base conceptual sólida para entender por qué esos frameworks están diseñados como están, antes de depender de sus abstracciones específicas.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```js
 function createStore(estadoInicial) {
@@ -180,7 +180,7 @@ Esta separación entre "la lógica que dispara y gestiona la petición asíncron
 
 **¿Por qué es importante?** Modelar explícitamente carga, datos y error como parte del estado (en vez de dejarlos implícitos o parcialmente gestionados) es el patrón estándar para construir interfaces que comunican claramente al usuario qué está sucediendo en cada momento de una operación asíncrona, un patrón que reaparece consistentemente en cualquier framework de UI moderno.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```js
 async function cargarUsuarios(store) {

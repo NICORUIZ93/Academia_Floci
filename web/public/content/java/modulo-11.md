@@ -111,7 +111,7 @@ G1 (Garbage-First, el recolector por defecto desde Java 9) ofrece un buen balanc
 
 **¿Por qué es importante?** La división generacional concentra el esfuerzo de recolección frecuente donde efectivamente se encuentra la mayoría de la basura recolectable; elegir G1 frente a ZGC depende de si la aplicación prioriza throughput general o latencia mínima extrema.
 
-**Diagrama:**
+**Prueba en terminal:**
 
 ```bash
 java -XX:+UseZGC -jar mi-app.jar
@@ -134,7 +134,7 @@ La JVM inicialmente interpreta el bytecode (Módulo 0) en vez de compilarlo dire
 
 **¿Por qué es importante?** JFR permite diagnosticar problemas de rendimiento con evidencia real de producción, con overhead mínimo; el JIT explica por qué el rendimiento de una aplicación Java mejora progresivamente tras sus primeros momentos de ejecución.
 
-**Diagrama:**
+**Prueba en terminal:**
 
 ```bash
 java -XX:StartFlightRecording=filename=perfil.jfr -jar mi-app.jar

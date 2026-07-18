@@ -144,7 +144,7 @@ EventBridge Scheduler complementa esta capacidad de enrutamiento basado en event
 
 **¿Por qué es importante?** EventBridge agrega enrutamiento basado en filtros de contenido declarativos sobre la estructura del evento, permitiendo que un único bus centralice eventos de múltiples orígenes y los distribuya selectivamente según reglas de filtrado, sin que cada consumidor filtre manualmente eventos irrelevantes.
 
-**Diagrama:**
+**Prueba en terminal:**
 
 ```bash
 aws events put-rule --name ReglaEjemplo --event-bus-name mi-bus --event-pattern '{"source":["mi.app"]}'

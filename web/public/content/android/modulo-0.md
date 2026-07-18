@@ -174,7 +174,7 @@ Este mismo mecanismo de "resolución automática según configuración" se extie
 - Soportar modo oscuro real (no solo colores invertidos) con `values-night/` para textos e imágenes que también cambian.
 - Corregir un error tipográfico reportado por QA editando una sola línea en `strings.xml` en vez de buscarlo en 20 composables.
 
-**Diagrama:**
+**Configuración del ejemplo:**
 
 ```xml
 <!-- res/values/strings.xml -->
@@ -213,7 +213,7 @@ Un proyecto Gradle multi-módulo divide la aplicación en unidades de compilaci�
 - Dividir una app grande en `:feature-login`, `:feature-tareas` para que un cambio en uno no recompile todo el proyecto.
 - Revisar el manifiesto al hacer code review de seguridad para verificar qué componentes están `exported="true"` innecesariamente.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```kotlin
 // app/build.gradle.kts

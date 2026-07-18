@@ -139,7 +139,7 @@ El operador `?.` (null-aware access) accede a una propiedad o método solo si el
 
 **¿Por qué es importante?** El sound null safety de Dart garantiza, verificado en todo el programa incluyendo librerías externas, que un valor no-nullable nunca será `null`, una garantía estructural que JavaScript no ofrece por defecto en su sistema de tipos.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```dart
 String nombre = "Ana";     // garantizado no-null en TODO el programa
@@ -181,7 +181,7 @@ Este patrón de composición de comportamiento transversal es conceptualmente si
 
 **¿Por qué es importante?** Un mixin permite compartir comportamiento reutilizable entre clases sin depender de herencia múltiple tradicional (no soportada en Dart), resolviendo el mismo problema que protocolos con extensiones en Swift o interfaces con implementación por defecto en otros lenguajes orientados a objetos.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```dart
 mixin Volador {
@@ -220,7 +220,7 @@ final total = pedidos.fold<double>(0, (acumulado, p) => acumulado + p.monto);
 
 **¿Por qué es importante?** `Future` con `async`/`await` permite código asíncrono legible de forma lineal, el mismo modelo convergente que otros lenguajes modernos; encadenar operaciones funcionales sobre colecciones expresa transformaciones complejas de forma declarativa y legible, sin bucles imperativos con estado mutable manual.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```dart
 Future<Usuario> obtenerUsuario() async {

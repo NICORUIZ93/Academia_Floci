@@ -139,7 +139,7 @@ Este mismo principio de "probar activamente con la herramienta de accesibilidad 
 
 **¿Por qué es importante?** Verificar activamente la app con VoiceOver expone huecos de accesibilidad que una inspección visual del diseño no puede revelar, dado que un desarrollador vidente evalúa naturalmente la UI de forma visual, no de la forma en que un usuario con discapacidad visual la experimenta.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```swift
 Image(systemName: "trash").accessibilityLabel("Eliminar tarea")

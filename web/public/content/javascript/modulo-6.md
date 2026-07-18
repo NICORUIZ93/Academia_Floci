@@ -147,7 +147,7 @@ Combinar `try/catch` con un bloque `finally` es útil para ejecutar lógica de l
 
 **¿Por qué es importante?** Manejar explícitamente los errores en cada punto de `await` que pueda fallar de forma esperada es la diferencia entre una aplicación que degrada de forma controlada ante fallos de red (mostrando un mensaje útil al usuario) y una que simplemente se rompe silenciosamente o produce errores no manejados en la consola.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```js
 async function obtenerUsuarios() {
@@ -180,7 +180,7 @@ Combinar `AbortController` con `debounce` (visto en el Módulo 1) es un patrón 
 
 **¿Por qué es importante?** La cancelación explícita de peticiones evita condiciones de carrera donde una respuesta desactualizada sobrescribe una más reciente, un bug sutil y frecuente en interfaces de búsqueda o de filtrado dinámico sin esta protección.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```js
 const controlador = new AbortController();
@@ -208,7 +208,7 @@ Estas dos técnicas —reintentos con backoff y timeout manual— son extremadam
 
 **¿Por qué es importante?** Reintentos con backoff y timeouts manuales son prácticas de robustez estándar en cualquier cliente de API de producción seria, protegiendo a la aplicación de fallos transitorios de red sin requerir intervención manual del usuario.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```js
 async function fetchConReintentos(url, intentos = 3) {
@@ -244,7 +244,7 @@ Aunque los generadores son una herramienta relativamente especializada en el uso
 
 **¿Por qué es importante?** Los generadores permiten expresar secuencias perezosas e infinitas de forma natural, y son la base conceptual de mecanismos avanzados de control de flujo asíncrono en bibliotecas especializadas del ecosistema JavaScript.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```js
 function* contarHasta(n) {
@@ -273,7 +273,7 @@ Aunque Proxy es una herramienta de uso relativamente avanzado y especializado (r
 
 **¿Por qué es importante?** Proxy y Reflect son la base de metaprogramación transparente en JavaScript, usada internamente por frameworks reactivos modernos para detectar cambios de estado automáticamente, un mecanismo que vale la pena entender conceptualmente aunque rara vez se implemente Proxies propios en código de aplicación típico.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```js
 const configuracion = new Proxy({}, {

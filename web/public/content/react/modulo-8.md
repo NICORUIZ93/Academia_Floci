@@ -110,7 +110,7 @@ Esta elección deliberada produce pruebas que sobreviven a refactors internos de
 
 **¿Por qué es importante?** Consultar por rol/texto en vez de por selectores de implementación hace que las pruebas sobrevivan a refactors internos cosméticos que no afectan el comportamiento real observable del componente.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```jsx
 render(<Formulario />);
@@ -131,7 +131,7 @@ MSW intercepta peticiones HTTP a nivel de red (registrando un service worker o, 
 
 **¿Por qué es importante?** MSW intercepta a nivel de red, permitiendo que el código de producción se pruebe exactamente como se ejecutaría en producción real, sin necesidad de modificarlo ni de mockear directamente `fetch` de forma frágil.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```js
 const server = setupServer(
@@ -155,7 +155,7 @@ Probar hooks personalizados de forma aislada, sin envolverlos en un componente v
 
 **¿Por qué es importante?** `renderHook` aísla la prueba de un hook personalizado de cualquier componente visual innecesario, manteniendo la prueba enfocada específicamente en la lógica de estado y efectos del hook.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```jsx
 const { result } = renderHook(() => useContador());

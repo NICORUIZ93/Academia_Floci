@@ -132,7 +132,7 @@ Un `StatelessWidget` describe su UI únicamente en función de los datos que rec
 
 **¿Por qué es importante?** La distinción entre `StatelessWidget` y `StatefulWidget` determina si un widget puede mantener estado mutable propio persistente entre reconstrucciones; `setState()` es el mecanismo explícito que dispara la reconstrucción eficiente del árbol de widgets tras un cambio de estado.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```dart
 class Contador extends StatefulWidget {
@@ -163,7 +163,7 @@ Column(children: [
 
 **¿Por qué es importante?** `Row`/`Column`/`Stack` son las primitivas combinables de cualquier layout Flutter, compartidas conceptualmente con Compose y SwiftUI; los hooks del ciclo de vida (`initState`, `dispose`, `didUpdateWidget`) son el mecanismo correcto para gestionar recursos y reaccionar a cambios de configuración sin fugas de memoria.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```dart
 Column(children: [
@@ -188,7 +188,7 @@ Sin una `Key` estable, Flutter identifica widgets del mismo tipo dentro de una l
 
 **¿Por qué es importante?** Una `Key` estable es necesaria específicamente cuando se reordena una lista de widgets con estado interno propio, evitando que Flutter confunda qué estado pertenece a qué elemento tras el reordenamiento; sin reordenamiento ni estado interno relevante, una `Key` explícita suele ser innecesaria.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```dart
 items.map((item) => TarjetaTarea(key: ValueKey(item.id), titulo: item.titulo)).toList()

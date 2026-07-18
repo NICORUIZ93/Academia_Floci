@@ -109,7 +109,7 @@ Aplica el aprendizaje de **I/O, NIO.2 y serialización** a un incremento vertica
 
 **¿Por qué es importante?** NIO.2 ofrece una API más expresiva y con mejor manejo de errores que la antigua clase `File`, simplificando operaciones comunes de archivos que antes requerían código considerablemente más verboso.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```java
 Path ruta = Path.of("datos.txt");
@@ -129,7 +129,7 @@ Usar records (Módulo 7) como modelos de datos serializables con Jackson es una 
 
 **¿Por qué es importante?** Jackson automatiza la conversión entre objetos Java y JSON basándose en la estructura de la clase, eliminando la necesidad de escribir manualmente lógica de parsing y serialización campo por campo.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```java
 record Persona(String nombre, int edad) {}
@@ -151,7 +151,7 @@ Leer un archivo grande completo de una sola vez (con `Files.readAllBytes` o `Fil
 
 **¿Por qué es importante?** Leer un archivo grande línea por línea con un buffer evita problemas de memoria que cargar el archivo completo (`readAllBytes`) no evita; los recursos del classpath garantizan disponibilidad empaquetada junto con el código, sin depender de la ubicación específica del sistema de archivos del entorno de destino.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```java
 try (BufferedReader reader = Files.newBufferedReader(rutaGrande)) {

@@ -110,7 +110,7 @@ Esta estructura anidada refleja directamente la jerarquía visual real de la apl
 
 **¿Por qué es importante?** Anidar rutas bajo un layout compartido centraliza ese layout en un único lugar, evitando duplicarlo manualmente en cada componente de vista individual.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```jsx
 const router = createBrowserRouter([
@@ -137,7 +137,7 @@ Esta diferencia de timing es la ventaja concreta de un loader: con fetching dent
 
 **¿Por qué es importante?** Un loader evita el parpadeo de un estado intermedio "cargando" al asegurar que los datos ya están disponibles antes de que el componente de la ruta se renderice por primera vez.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```jsx
 {
@@ -161,7 +161,7 @@ Una ruta protegida verifica, antes de mostrar su contenido real, si el usuario c
 
 **¿Por qué es importante?** Las rutas protegidas centralizan la lógica de redirección según autenticación; el code-splitting por ruta reduce el bundle inicial descargado, mejorando el tiempo de carga inicial de la aplicación.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```jsx
 function RutaProtegida({ children }) {

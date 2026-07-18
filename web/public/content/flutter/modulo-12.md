@@ -164,7 +164,7 @@ La internacionalización con `intl` y `flutter_localizations` (mencionada en el 
 
 **¿Por qué es importante?** Integrar cada módulo del track en un proyecto real demuestra que los conceptos estudiados por separado (navegación, estado, networking, persistencia, testing) se combinan naturalmente en un sistema coherente, reflejando cómo se construyen apps Flutter profesionales reales.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```dart
 tareasAsync.when(

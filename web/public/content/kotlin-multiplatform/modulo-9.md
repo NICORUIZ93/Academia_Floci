@@ -127,7 +127,7 @@ Esta capacidad de "escribir una vez, probar en ambas plataformas" es el compleme
 - Detectar en CI (Módulo 10) si un cambio en `commonMain` rompe la lógica compartida antes de compilar ambas apps completas.
 - Cubrir reglas de negocio críticas (cálculo de precios, validaciones) con un único test suite mantenido por un solo equipo.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```kotlin
 class ObtenerTareasPendientesUseCaseTest {
@@ -160,7 +160,7 @@ Preferir fakes sobre mocks en el contexto específico de `commonTest` tiene una 
 - Un `FakeApiClient` que simula respuestas de red exitosas y de error, sin levantar un servidor real ni Floci.
 - Fakes compartidos entre el equipo Android y el equipo iOS, ya que ambos ejecutan exactamente los mismos tests de `commonTest`.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```kotlin
 class TareaRepositoryFake(private val datos: List<Tarea>) : TareaRepository {
@@ -185,7 +185,7 @@ Esta capacidad es crucial para mantener una suite de tests rápida y ágil: sin 
 - Verificar timeouts de red configurados en el cliente Ktor (Módulo 5) sin esperar el timeout real completo.
 - Mantener una suite de cientos de tests rápida en CI (Módulo 10) aunque varios simulen esperas de red o de UI.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```kotlin
 @Test

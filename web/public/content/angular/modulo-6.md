@@ -136,7 +136,7 @@ Observable: MÚLTIPLES valores posibles a lo largo del tiempo, cancelable
 
 **¿Por qué es importante?** `switchMap` cancela automáticamente la petición anterior cuando el usuario dispara una nueva, resolviendo el problema clásico de condiciones de carrera en buscadores en vivo sin necesidad de gestión manual de cancelación.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```ts
 resultados = toSignal(
@@ -163,7 +163,7 @@ El `async` pipe, usado directamente en la plantilla (`{{ observable$ | async }}`
 
 **¿Por qué es importante?** El `async` pipe evita la fuga de memoria clásica de un `subscribe()` sin `unsubscribe()` de forma completamente automática; `takeUntilDestroyed` extiende esa misma automatización a los casos donde una suscripción manual explícita es genuinamente necesaria.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```html
 <!-- async pipe: se suscribe Y se desuscribe automáticamente -->

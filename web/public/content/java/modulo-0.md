@@ -143,7 +143,7 @@ Esta arquitectura de dos pasos es la base del lema histórico de Java "write onc
 
 **¿Por qué es importante?** Compilar a bytecode en vez de código máquina nativo directamente es lo que permite que un mismo programa Java compilado una sola vez se ejecute sin recompilar en cualquier plataforma que tenga una JVM disponible.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```java
 public class Hola {
@@ -211,7 +211,7 @@ Los tipos wrapper (`Integer edadObjeto = 30;`, la versión objeto correspondient
 
 **¿Por qué es importante?** Los tipos primitivos almacenan su valor directamente, siendo más eficientes; los tipos referencia apuntan a objetos en el heap, necesarios cuando Java requiere tratar ese valor como un objeto completo (por ejemplo, dentro de colecciones genéricas).
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```java
 int edad = 30;              // primitivo: valor directo en la pila

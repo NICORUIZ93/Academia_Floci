@@ -112,7 +112,7 @@ Crear un `Thread` manualmente por cada tarea concurrente es costoso (cada thread
 
 **¿Por qué es importante?** `ExecutorService` reutiliza un pool de hilos existente en vez de crear y destruir hilos individuales por cada tarea, reduciendo significativamente el overhead para cargas con muchas tareas concurrentes.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```java
 ExecutorService pool = Executors.newFixedThreadPool(4);
@@ -132,7 +132,7 @@ Esta composición fluida resuelve el problema de anidar callbacks asíncronos su
 
 **¿Por qué es importante?** `CompletableFuture` permite componer operaciones asíncronas dependientes entre sí de forma legible y lineal, con manejo de errores centralizado, evitando la anidación progresiva de callbacks manuales.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```java
 CompletableFuture.supplyAsync(() -> obtenerDatos())
@@ -153,7 +153,7 @@ Un thread de plataforma tradicional está respaldado directamente por un hilo de
 
 **¿Por qué es importante?** Los virtual threads consumen una fracción de la memoria de los threads de plataforma y permiten lanzar cientos de miles de tareas concurrentes con código síncrono familiar, siendo especialmente apropiados para cargas dominadas por I/O bloqueante.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```java
 try (var executor = Executors.newVirtualThreadPerTaskExecutor()) {
@@ -175,7 +175,7 @@ Una condición de carrera ocurre cuando múltiples hilos acceden y modifican el 
 
 **¿Por qué es importante?** Una condición de carrera produce resultados incorrectos silenciosos dependientes del orden impredecible de ejecución de los hilos; `synchronized` y otras primitivas de coordinación garantizan acceso exclusivo o coordinado a estado compartido mutable, eliminando esa impredecibilidad.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```java
 synchronized void incrementar() { contador++; } // garantiza acceso exclusivo a la sección crítica

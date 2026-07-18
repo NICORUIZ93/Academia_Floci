@@ -116,7 +116,7 @@ Identificar correctamente qué trabajo es genuinamente CPU-bound (y por tanto ca
 
 **¿Por qué es importante?** Los Worker Threads son la herramienta correcta y específica para cómputo pesado CPU-bound que, de otro modo, bloquearía perceptiblemente el Event Loop principal, sin aportar ningún beneficio para trabajo I/O-bound que Node ya maneja de forma no bloqueante de forma nativa.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```js
 import { Worker } from "node:worker_threads";
@@ -139,7 +139,7 @@ Node balancea automáticamente las conexiones entrantes entre los procesos traba
 
 **¿Por qué es importante?** El módulo cluster permite que una aplicación Node aproveche todos los núcleos de CPU de un servidor, multiplicando su capacidad de throughput, a costa de requerir externalizar cualquier estado compartido hacia un almacén accesible por todos los procesos, dado el aislamiento completo de memoria entre ellos.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```js
 import cluster from "node:cluster";
@@ -166,7 +166,7 @@ Configurar reintentos automáticos con backoff exponencial (`{attempts: 3, backo
 
 **¿Por qué es importante?** Las colas de trabajo mejoran drásticamente la latencia percibida por el cliente al desacoplar trabajo pesado del ciclo de respuesta inmediata, y el backoff exponencial en reintentos aumenta la resiliencia del sistema ante fallos transitorios de servicios externos.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```js
 const colaEmails = new Queue("emails", { connection: { host: "localhost", port: 6379 } });
@@ -190,7 +190,7 @@ Un heap snapshot captura el estado completo de la memoria del heap de un proceso
 
 **¿Por qué es importante?** Entender PM2 en contraste con las responsabilidades que asume un orquestador de contenedores, y saber usar heap snapshots para diagnosticar fugas de memoria reales en un proceso Node de larga duración, son habilidades operativas esenciales para mantener aplicaciones Node saludables en producción.
 
-**Diagrama:**
+**Prueba en terminal:**
 
 ```bash
 node --max-old-space-size=4096 servidor.js   # ajusta el límite de memoria de V8

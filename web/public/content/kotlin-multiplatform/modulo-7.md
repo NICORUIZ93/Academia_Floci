@@ -121,7 +121,7 @@ Esta extensión representa un salto conceptual más allá de compartir solo lóg
 - Herramientas internas de empresa donde la consistencia visual exacta entre plataformas importa más que seguir cada convención nativa.
 - Prototipos y MVPs donde iterar rápido en una única base de código de UI vale más que la integración nativa profunda.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```kotlin
 @Composable
@@ -149,7 +149,7 @@ Librerías de navegación compatibles con KMP (como Voyager, o el Navigation Com
 - Rebranding de la app (cambio de paleta de colores corporativa) editando un solo archivo en vez de dos temas nativos separados.
 - Flujo de onboarding con varias pantallas navegables, definido una vez y consistente en ambas plataformas.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```kotlin
 @Composable

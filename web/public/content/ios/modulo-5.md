@@ -125,7 +125,7 @@ El compilador de Swift genera automáticamente la conformidad completa a `Codabl
 
 **¿Por qué es importante?** `Codable` elimina gran parte del parsing manual de JSON necesario en versiones anteriores de Objective-C/Swift, generando automáticamente la conformidad completa siempre que todas las propiedades del `struct` también sean `Codable`.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```swift
 let (datos, respuesta) = try await URLSession.shared.data(from: url)
@@ -152,7 +152,7 @@ Esta distinción de categorías de error (`sinConexion` frente a `servidor` fren
 
 **¿Por qué es importante?** Modelar errores con un enum propio frente a propagar `NSError` genérico permite un manejo específico y verificado exhaustivamente por el compilador para cada categoría de fallo, comunicando mensajes más útiles y precisos que un error genérico indiferenciado.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```swift
 enum ErrorRed: Error {
@@ -191,7 +191,7 @@ Cancelar explícitamente una `Task` en curso (por ejemplo, cuando el usuario ini
 
 **¿Por qué es importante?** Los reintentos con backoff mejoran la resiliencia ante fallos transitorios de red sin sobrecargar el servidor; cancelar tareas obsoletas evita procesar resultados desactualizados que ya no corresponden a la intención actual del usuario.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```swift
 let tarea = Task { try await obtenerTareas() }

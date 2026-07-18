@@ -116,7 +116,7 @@ Una contraseña nunca debe almacenarse en texto plano, ni siquiera cifrada (encr
 
 **¿Por qué es importante?** El hashing correcto de contraseñas es la defensa fundamental contra el robo masivo de credenciales en caso de una brecha de la base de datos; usar bcrypt/argon2 en vez de una implementación propia es una decisión de seguridad no negociable en cualquier sistema de autenticación real.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```js
 import bcrypt from "bcrypt";
@@ -138,7 +138,7 @@ Este patrón de dos tokens equilibra seguridad (limitando la ventana de exposici
 
 **¿Por qué es importante?** El patrón de access/refresh token es el estándar de la industria para autenticación con JWT, equilibrando la seguridad de tokens de corta duración con una experiencia de usuario fluida que no requiere reautenticación constante.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```js
 const accessToken = jwt.sign({ sub: usuario.id }, SECRETO, { expiresIn: "15m" });
@@ -160,7 +160,7 @@ Encadenar ambos middleware en una ruta específica (`app.delete("/tareas/:id", r
 
 **¿Por qué es importante?** Separar la verificación de autenticación (quién eres) del control de roles (qué puedes hacer) en middleware independientes y componibles permite expresar declarativamente los requisitos exactos de cada ruta, facilitando la auditoría de seguridad de una API completa.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```js
 function requireAuth(req, res, next) {

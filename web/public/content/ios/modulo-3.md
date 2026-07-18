@@ -121,7 +121,7 @@ path.append(tarea) // navega programáticamente, sin depender de NavigationLink 
 
 **¿Por qué es importante?** `NavigationPath` habilita navegación programática y flujos complejos (deep linking, resetear el stack completo) que serían difíciles de expresar con el modelo anterior basado únicamente en `NavigationLink` anidados dentro de cada vista.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```swift
 NavigationStack(path: $path) {
@@ -181,7 +181,7 @@ TabView
 
 **¿Por qué es importante?** El deep linking mediante `.onOpenURL` lleva al usuario directamente al contenido relevante desde una entrada externa; los controles estándar de formulario y los gestos de swipe/delete cumplen con las convenciones de interacción esperadas en apps iOS nativas.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```swift
 .onOpenURL { url in

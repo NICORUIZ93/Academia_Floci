@@ -111,7 +111,7 @@ Sin `AppModule`, tampoco existen `declarations` ni el concepto de "módulo de fe
 
 **¿Por qué es importante?** Eliminar el `AppModule` y los NgModules de features simplifica el árbol de dependencias de la aplicación: cada componente declara explícitamente lo que necesita, sin capas intermedias de configuración de módulos que rastrear.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```ts
 // main.ts

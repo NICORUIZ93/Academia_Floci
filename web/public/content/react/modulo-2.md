@@ -115,7 +115,7 @@ La función que un efecto puede devolver opcionalmente es su función de limpiez
 
 **¿Por qué es importante?** El array de dependencias controla con precisión cuándo un efecto se re-ejecuta; la función de limpieza evita fugas de recursos externos (suscripciones, temporizadores, conexiones) que sobrevivirían innecesariamente al componente o a un cambio de dependencias.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```jsx
 useEffect(() => {
@@ -137,7 +137,7 @@ Otro uso extremadamente común de `useRef` es obtener una referencia directa a u
 
 **¿Por qué es importante?** `useRef` permite mantener valores mutables persistentes entre renders (o acceder directamente a nodos del DOM) sin el costo ni la semántica de disparar un nuevo render cada vez que cambian.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```jsx
 const renderCount = useRef(0);
@@ -158,7 +158,7 @@ Usar `useMemo`/`useCallback` indiscriminadamente en todo el código, sin evidenc
 
 **¿Por qué es importante?** `useMemo`/`useCallback` solo aportan beneficio real cuando el cálculo es genuinamente costoso o cuando previenen un re-render mensurable de un hijo memoizado; usarlos sin esa justificación agrega complejidad sin beneficio.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```jsx
 const resultado = useMemo(() => calculoCostoso(datos), [datos]); // memoiza un VALOR

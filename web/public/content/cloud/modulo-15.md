@@ -130,7 +130,7 @@ CloudFormation resuelve todos estos problemas al tratar la infraestructura compl
 
 **¿Por qué es importante?** CloudFormation ofrece infraestructura versionada, reproducible entre entornos, y con eliminación garantizada sin residuos huérfanos, ventajas concretas frente a crear y gestionar recursos manualmente con comandos individuales de la CLI sin ningún registro estructurado.
 
-**Diagrama:**
+**Configuración del ejemplo:**
 
 ```yaml
 Resources:
@@ -158,7 +158,7 @@ Esta capacidad de previsualización es especialmente crítica en infraestructura
 
 **¿Por qué es importante?** Revisar un change set antes de aplicarlo convierte el riesgo implícito de un cambio potencialmente destructivo (reemplazo completo de un recurso, pérdida de datos) en una decisión explícita e informada, evitando sorpresas al aplicar modificaciones de infraestructura en producción.
 
-**Diagrama:**
+**Prueba en terminal:**
 
 ```bash
 create-change-set   → calcula el impacto SIN aplicar el cambio

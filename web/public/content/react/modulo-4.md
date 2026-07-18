@@ -110,7 +110,7 @@ Esto resuelve directamente el problema conocido como "prop drilling": sin Contex
 
 **¿Por qué es importante?** Context permite que un componente lea un valor compartido sin que cada componente intermedio en el árbol tenga que reenviarlo manualmente, evitando el acoplamiento innecesario del prop drilling.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```jsx
 const ThemeContext = createContext('claro');
@@ -161,7 +161,7 @@ Antes de que los hooks existieran (previo a React 16.8), dos patrones eran comun
 
 **¿Por qué es importante?** Los componentes compuestos ofrecen una API declarativa y limpia para el usuario final del componente, ocultando la coordinación interna necesaria; los hooks personalizados reemplazaron patrones anteriores más verbosos (render props, HOCs) para reutilizar lógica con estado.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```jsx
 <Tabs>

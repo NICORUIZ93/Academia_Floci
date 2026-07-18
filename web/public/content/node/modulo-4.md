@@ -117,7 +117,7 @@ Un middleware de logging propio, escuchando el evento `finish` del objeto `res` 
 
 **¿Por qué es importante?** El orden de registro de middleware determina directamente el comportamiento de la aplicación, y olvidar `next()` es la causa más común de peticiones "colgadas" sin respuesta en aplicaciones Express, un error de diagnóstico frecuente para quien aprende el framework.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```js
 app.use(express.json());                    // 1: parsea el body
@@ -143,7 +143,7 @@ Esta modularización mediante routers anidados escala naturalmente a aplicacione
 
 **¿Por qué es importante?** Los routers anidados son la forma estándar y escalable de organizar una API con múltiples grupos de rutas relacionadas, facilitando el trabajo en equipo y la aplicación selectiva de middleware a subconjuntos específicos de rutas.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```js
 // routers/tareas.js
@@ -170,7 +170,7 @@ Es importante notar que este manejo automático de errores de Express solo captu
 
 **¿Por qué es importante?** Validar con una biblioteca como Zod evita la fragilidad de revisar manualmente cada campo del body, y el manejo centralizado de errores evita duplicar lógica de manejo de errores en cada ruta individual de una API que crece con el tiempo.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```js
 const TareaSchema = z.object({ titulo: z.string().min(1), prioridad: z.enum(["baja","alta"]) });

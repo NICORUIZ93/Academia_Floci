@@ -111,7 +111,7 @@ Esta carga parcial del contexto (un "slice" específico, en la terminología de 
 
 **¿Por qué es importante?** `@WebMvcTest` levanta únicamente el contexto necesario para probar la capa web, considerablemente más rápido que levantar la aplicación completa, permitiendo una suite de pruebas de controller ágil y enfocada.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```java
 @WebMvcTest(TareaController.class) // solo levanta la capa web, mockea el resto
@@ -139,7 +139,7 @@ Esta aproximación es preferible a usar una base de datos H2 en memoria (una alt
 
 **¿Por qué es importante?** Testcontainers proporciona una base de datos real (no una aproximación como H2) durante los tests, evitando discrepancias de comportamiento entre lo probado y lo efectivamente desplegado en producción.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```java
 @DataJpaTest

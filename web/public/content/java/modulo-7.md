@@ -109,7 +109,7 @@ Los componentes de un record son inherentemente inmutables (no existe ningún m�
 
 **¿Por qué es importante?** `record` elimina el boilerplate que una clase POJO tradicional requeriría para constructor, getters, `equals`, `hashCode` y `toString`, mientras impone inmutabilidad estructural como parte del diseño del lenguaje.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```java
 record Punto(int x, int y) {}
@@ -131,7 +131,7 @@ Esta restricción deliberada habilita una capacidad adicional en el pattern matc
 
 **¿Por qué es importante?** `sealed` permite que el compilador verifique exhaustividad en un switch sin necesidad de una rama `default`, detectando en tiempo de compilación cualquier caso nuevo agregado a la jerarquía que se haya olvidado cubrir en algún switch existente.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```java
 sealed interface Forma permits Circulo, Cuadrado {}
@@ -151,7 +151,7 @@ record Cuadrado(double lado) implements Forma {}
 
 **¿Por qué es importante?** El pattern matching exhaustivo garantiza, verificado por el compilador, que ningún caso posible de una sealed interface quede sin cubrir; el pattern matching para instanceof elimina la redundancia y el riesgo del casteo manual clásico.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```java
 double area(Forma forma) {

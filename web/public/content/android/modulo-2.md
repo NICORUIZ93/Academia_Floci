@@ -130,7 +130,7 @@ Este modelo es conceptualmente idéntico al de React (Módulo 2 del track de Rea
 - Un contador de notificaciones que se actualiza en la barra superior en cuanto cambia el `StateFlow` que observa (Módulo 4).
 - Depurar por qué una lista completa se redibuja innecesariamente al cambiar un solo ítem, usando el Layout Inspector (Módulo 10).
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```kotlin
 @Composable
@@ -170,7 +170,7 @@ Este mismo principio de "el estado vive arriba, los hijos son funciones puras qu
 - Testear `CampoTitulo` en un test de UI (Módulo 9) pasándole valores fijos, sin necesitar la pantalla completa.
 - Sincronizar la validación de un campo con el ViewModel, ya que el estado real vive fuera del composable hijo.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```kotlin
 @Composable
@@ -201,7 +201,7 @@ Para el layout, Compose ofrece tres contenedores fundamentales que se combinan p
 - Usar `remember` simple para un estado puramente visual (si un tooltip está expandido) que no importa perder al rotar.
 - Construir una pantalla de perfil combinando `Column` (secciones verticales) y `Row` (avatar + nombre lado a lado).
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```kotlin
 Column(modifier = Modifier.fillMaxWidth().padding(16.dp)) {

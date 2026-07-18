@@ -126,7 +126,7 @@ La diferencia crucial frente a un ORM dinámico tradicional (que construye y val
 - Historial de búsquedas recientes persistido localmente en ambas plataformas con las mismas queries.
 - Cola de acciones pendientes de sincronizar (`pendienteDeEnvio: INTEGER`) cuando el dispositivo recupera conexión.
 
-**Diagrama:**
+**Configuración del ejemplo:**
 
 ```sql
 -- Tarea.sq
@@ -159,7 +159,7 @@ Esta separación entre queries compartidas (código de alto nivel, expresando qu
 - Usar un driver en memoria (`inMemoryDriver`) en tests de `commonTest` (Módulo 9) para no tocar disco en cada test.
 - Depurar un problema de datos corruptos abriendo el mismo archivo `app.db` con herramientas nativas distintas por plataforma.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```kotlin
 // androidMain
@@ -185,7 +185,7 @@ SQLDelight aplica estas migraciones en orden secuencial estricto según la versi
 - Renombrar o dividir una tabla existente conservando los datos históricos del usuario tras actualizar.
 - Probar que las migraciones aplican correctamente desde cualquier versión antigua hasta la más reciente, como parte del test suite (Módulo 9).
 
-**Diagrama:**
+**Configuración del ejemplo:**
 
 ```sql
 -- 2.sqm

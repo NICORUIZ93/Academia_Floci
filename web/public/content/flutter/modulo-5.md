@@ -120,7 +120,7 @@ Para una app de tamaño real que necesita manejar autenticación (agregando un h
 
 **¿Por qué es importante?** `dio` ofrece interceptores, cancelación y timeouts configurables como parte de su API central, capacidades que una app de tamaño real necesita y que `http` no ofrece nativamente, requiriendo construir esa infraestructura manualmente si se usara el paquete más básico.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```dart
 final dio = Dio();
@@ -150,7 +150,7 @@ Este mismo principio de generación de código de parsing tipado en tiempo de co
 
 **¿Por qué es importante?** Generar modelos con `json_serializable` es más seguro que parsear JSON manualmente con `Map<String, dynamic>` porque un campo faltante o mal tipado falla de forma clara y explícita en el punto de deserialización, en vez de propagar un error silencioso que se manifiesta de forma confusa más adelante en el código.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```dart
 @JsonSerializable()
@@ -189,7 +189,7 @@ Modelar explícitamente los tres estados posibles de una pantalla que depende de
 
 **¿Por qué es importante?** Los interceptores centralizan transformaciones transversales sin duplicar lógica en cada llamada; modelar estados explícitos con sealed classes, verificados exhaustivamente por el compilador, previene omitir el manejo de algún estado (especialmente el de error) en la UI.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```dart
 sealed class EstadoTareas {}

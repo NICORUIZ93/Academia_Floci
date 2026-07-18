@@ -133,7 +133,7 @@ Cada tarea se envía a un `Executors.newVirtualThreadPerTaskExecutor()` (Módulo
 
 **¿Por qué es importante?** Modelar el resultado de un procesamiento concurrente como una sealed interface permite manejar explícitamente éxito y error sin recurrir a excepciones para casos esperados, con el compilador garantizando el manejo exhaustivo de ambos casos; probar la lógica de negocio aislada con mocks permite verificarla sin depender de infraestructura real.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```java
 sealed interface ResultadoProcesamiento permits Exito, Error {}
@@ -161,7 +161,7 @@ Java moderno (17 hasta 21) reduce significativamente el boilerplate que históri
 
 **¿Por qué es importante?** Un build reproducible ejecutable con un solo comando elimina fricción de configuración manual y garantiza el mismo resultado en cualquier máquina; las features modernas de Java reducen boilerplate histórico sin sacrificar el tipado fuerte ni el rendimiento maduro de la JVM.
 
-**Diagrama:**
+**Prueba en terminal:**
 
 ```bash
 ./gradlew run   # o: mvn compile exec:java

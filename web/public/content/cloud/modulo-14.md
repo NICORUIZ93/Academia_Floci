@@ -118,7 +118,7 @@ Esta integración nativa con IAM es especialmente valiosa para imágenes que con
 
 **¿Por qué es importante?** ECR ofrece control de acceso granular integrado nativamente con IAM sobre repositorios privados de imágenes, apropiado para código propietario que requiere ese nivel de control de acceso auditado, integrado con el resto de la infraestructura de permisos de la misma cuenta.
 
-**Diagrama:**
+**Prueba en terminal:**
 
 ```bash
 docker build -t mi-api:latest .

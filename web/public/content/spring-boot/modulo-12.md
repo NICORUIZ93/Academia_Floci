@@ -134,7 +134,7 @@ Esta combinación en un único endpoint refleja el nivel de integración esperad
 
 **¿Por qué es importante?** Un endpoint real integra seguridad, validación, lógica de negocio y persistencia colaborando activamente en una única operación, reflejando cómo un microservicio productivo combina todas sus capas en cada petición individual.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```java
 @RestController

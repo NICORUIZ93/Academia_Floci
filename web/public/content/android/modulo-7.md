@@ -124,7 +124,7 @@ Este enfoque resuelve un problema de acoplamiento concreto: sin inyección de de
 - Cambiar de un backend REST a GraphQL reemplazando solo el módulo de red, sin tocar los ViewModels consumidores.
 - Reducir el boilerplate de construir manualmente un grafo de 10+ dependencias interconectadas en una app grande.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```kotlin
 @HiltAndroidApp
@@ -170,7 +170,7 @@ abstract class RepositoryModule {
 - Mapear `TareaRepository` a `TareaRepositoryImpl` con `@Binds`, cambiando la implementación real sin tocar consumidores.
 - Proveer un `OkHttpClient` configurado con los interceptores del Módulo 5 de forma centralizada para toda la app.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```kotlin
 @Provides fun provideRetrofit(): Retrofit = Retrofit.Builder().baseUrl(URL).build()  // clase externa

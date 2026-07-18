@@ -124,7 +124,7 @@ Este modelo declarativo es considerablemente más natural para deep linking (Tem
 
 **¿Por qué es importante?** go_router resuelve el problema de que el Navigator 1.0 imperativo no tiene ninguna representación explícita de "en qué ruta está la app", un problema crítico específicamente para deep linking y Flutter Web, donde la URL debe ser la fuente de verdad sincronizada del estado de navegación.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```dart
 final router = GoRouter(routes: [
@@ -154,7 +154,7 @@ Con go_router, un link externo (`miapp://tareas/42`) simplemente navega a la rut
 
 **¿Por qué es importante?** Los guards declarativos centralizan la protección de rutas directamente en su definición, evitando verificaciones dispersas y propensas a omisión; el deep linking es más directo de configurar con un router declarativo porque la navegación ya es una función de la URL, sin requerir un mecanismo paralelo separado.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```dart
 GoRoute(
@@ -186,7 +186,7 @@ Personalizar transiciones de forma consistente en puntos clave de la app (no en 
 
 **¿Por qué es importante?** Las transiciones personalizadas, aplicadas deliberadamente en puntos clave, comunican mejor la relación semántica entre pantallas que la transición por defecto genérica, un detalle de pulido perceptible por el usuario aunque sutil.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```dart
 CustomTransitionPage(

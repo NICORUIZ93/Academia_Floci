@@ -122,7 +122,7 @@ El modificador `.task { }` en una vista SwiftUI lanza una `Task` vinculada autom
 
 **¿Por qué es importante?** `async`/`await` permite leer código asíncrono de forma lineal, mucho más fácil de razonar que el "callback hell" de versiones anteriores de Swift; `.task` cancela automáticamente su trabajo si la vista desaparece, evitando actualizaciones sobre una vista ya inexistente.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```swift
 func obtenerUsuario(id: String) async throws -> Usuario {
@@ -151,7 +151,7 @@ Esta garantía elimina una categoría completa de bugs de concurrencia (data rac
 
 **¿Por qué es importante?** Un actor previene data races (corrupción de estado mutable por acceso concurrente no serializado) que una `class` normal no previene, con la garantía verificada por el compilador en vez de depender de la disciplina manual del desarrollador con locks explícitos.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```swift
 actor CacheTareas {
@@ -188,7 +188,7 @@ Marcar una clase (o una propiedad específica) con `@MainActor` garantiza, verif
 
 **¿Por qué es importante?** `TaskGroup` garantiza que las tareas hijas lanzadas en paralelo completen dentro de un ámbito bien definido, evitando tareas huérfanas; `@MainActor` previene, verificado por el compilador, actualizaciones inseguras de UI desde hilos en segundo plano.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```swift
 withThrowingTaskGroup(of: Any.self) { group in

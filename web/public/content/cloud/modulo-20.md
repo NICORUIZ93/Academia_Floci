@@ -116,7 +116,7 @@ Esta determinismo del stub es una característica deliberada y valiosa para test
 
 **¿Por qué es importante?** cloud local usa stubs deterministas para IA en vez de modelos reales porque permite escribir pruebas automatizadas confiables sobre la estructura del flujo de integración, sin la variabilidad no determinista inherente de un modelo real que haría frágil cualquier aserción sobre contenido exacto.
 
-**Diagrama:**
+**Prueba en terminal:**
 
 ```bash
 aws bedrock-runtime invoke-model --model-id ... --body '{"prompt":"Hola"}' ...

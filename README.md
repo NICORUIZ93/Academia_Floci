@@ -182,6 +182,14 @@ La auditoría editorial de `docs/topic-learning-quality.md` sigue midiendo el
 Markdown real por separado: una ayuda generada en la interfaz no convierte una
 explicación superficial en contenido editorial completo.
 
+`docs/code-visual-quality.md` mide además, sin contar las guías generadas, qué
+temas tienen código, comentarios didácticos, ubicación, comando, Mermaid y
+fuente oficial. Los bloques ejecutables ya no se presentan falsamente como
+“Diagrama”: código, terminal y configuración tienen etiquetas propias; los
+diagramas Mermaid se renderizan como figuras accesibles con contexto y guía de
+lectura. Los visuales ASCII restantes se conservan como deuda explícita hasta
+que puedan redibujarse sin alterar su significado.
+
 | Track | Modulos | Enfoque |
 |---|---|---|
 | Fundamentos | 12 | Computador, programación, web, datos e ingeniería de software |

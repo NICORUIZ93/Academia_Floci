@@ -112,7 +112,7 @@ Aplica el aprendizaje de **Persistencia con Spring Data JPA** a un incremento ve
 
 **¿Por qué es importante?** Los métodos derivados eliminan la necesidad de escribir SQL repetitivo para consultas simples, generándolo automáticamente a partir del nombre del método; `@Query` da control explícito cuando la consulta necesaria es demasiado compleja para expresarse por convención de nombres.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```java
 @Entity
@@ -140,7 +140,7 @@ public interface TareaRepository extends JpaRepository<Tarea, Long> {
 
 **¿Por qué es importante?** El problema N+1 multiplica el número de queries ejecutadas proporcionalmente al tamaño de la colección iterada, un problema de rendimiento que empeora directamente con la escala de datos; `JOIN FETCH`/`@EntityGraph` lo corrigen cargando las relaciones necesarias en una única query.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```java
 // por cada usuario, Hibernate ejecuta una query SEPARADA para cargar sus tareas: N+1 queries
@@ -163,7 +163,7 @@ List<Usuario> buscarConTareas();
 
 **¿Por qué es importante?** Confiar en `ddl-auto=update` en producción es riesgoso porque los cambios de esquema no quedan versionados, revisables, ni son completamente predecibles; las migraciones de Flyway son explícitas, revisables en code review, y se aplican de forma idéntica en cada entorno.
 
-**Diagrama:**
+**Configuración del ejemplo:**
 
 ```sql
 -- V1__crear_tabla_tareas.sql

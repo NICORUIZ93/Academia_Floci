@@ -109,7 +109,7 @@ Esta legibilidad mejorada es particularmente valiosa cuando el número de campos
 
 **¿Por qué es importante?** El patrón Builder evita la confusión de orden de argumentos posicionales de un constructor con muchos parámetros, especialmente cuando varios son opcionales o comparten el mismo tipo.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```java
 Pedido pedido = Pedido.builder()
@@ -131,7 +131,7 @@ Strategy encapsula un algoritmo intercambiable detrás de una interfaz común (`
 
 **¿Por qué es importante?** Factory centraliza la lógica de creación según un criterio, facilitando agregar nuevas implementaciones sin tocar el código consumidor; Strategy permite intercambiar algoritmos completos sin que el código que los usa necesite lógica condicional propia para elegir entre ellos.
 
-**Diagrama:**
+**Código del ejemplo:**
 
 ```java
 interface Notificador { void enviar(String mensaje); }
