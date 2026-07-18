@@ -34,6 +34,14 @@ jobs:
         run: |
           cd web
           npm test -- --watch=false
+      - name: Install browser for end-to-end tests
+        run: |
+          cd web
+          npx playwright install --with-deps chromium
+      - name: Test complete learning journeys
+        run: |
+          cd web
+          npm run e2e
       - name: Setup Python
         uses: actions/setup-python@v4
         with:

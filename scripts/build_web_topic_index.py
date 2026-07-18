@@ -16,6 +16,7 @@ CONTENT = ROOT / "web" / "public" / "content"
 OUTPUT = CONTENT / "topic-index.json"
 HEADING = re.compile(r"^(#{2,3})\s+(.+?)\s*$", re.MULTILINE)
 MODULE_FILE = re.compile(r"modulo-(\d+)\.md$")
+EXCLUDED_CONTENT_GROUPS = {"lecciones", "oficial-es"}
 
 
 def slugify(text: str, seen: set[str]) -> str:
@@ -43,6 +44,8 @@ def clean_topic_title(title: str) -> str:
 def main() -> None:
     index: dict[str, dict[str, list[dict[str, str]]]] = defaultdict(dict)
     for path in sorted(CONTENT.glob("*/modulo-*.md")):
+        if path.parent.name in EXCLUDED_CONTENT_GROUPS:
+            continue
         match = MODULE_FILE.search(path.name)
         if not match:
             continue

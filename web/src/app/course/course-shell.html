@@ -19,7 +19,7 @@
     <aside class="shell-sidebar" [class.open]="sidebarOpen()">
       <div class="shell-sidebar-header mobile-only">
         <strong>Índice del curso</strong>
-        <button class="icon-button" (click)="sidebarOpen.set(false)"><lucide-icon [img]="icons.X" /></button>
+        <button class="icon-button" aria-label="Cerrar índice del curso" (click)="sidebarOpen.set(false)"><lucide-icon [img]="icons.X" /></button>
       </div>
       <section class="official-path" *ngIf="officialPath() as path" aria-labelledby="official-path-title">
         <div class="official-path-heading">
@@ -38,7 +38,7 @@
       <app-lesson-index [trackId]="t.id" />
     </aside>
     <div class="shell-scrim mobile-only" *ngIf="sidebarOpen()" (click)="sidebarOpen.set(false)"></div>
-    <main class="shell-main">
+    <main id="main-content" class="shell-main" tabindex="-1">
       <router-outlet />
     </main>
   </div>

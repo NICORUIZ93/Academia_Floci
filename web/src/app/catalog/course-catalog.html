@@ -12,7 +12,7 @@
     </button>
   </header>
 
-  <main>
+  <main id="main-content" tabindex="-1">
     <section class="catalog-hero" aria-labelledby="catalog-title">
       <p class="eyebrow">Aprende construyendo · de cero a nivel profesional</p>
       <h1 id="catalog-title">Elige una ruta. Construye un producto real.</h1>
@@ -20,8 +20,7 @@
       <div class="hero-stats" aria-label="Contenido de la academia">
         <span><strong>{{ cards().length }}</strong><small>rutas</small></span>
         <span><strong>{{ totalModules() }}</strong><small>módulos</small></span>
-        <span><strong>1.201</strong><small>temas</small></span>
-        <span><strong>1.388</strong><small>ejemplos</small></span>
+        <span><strong>{{ topicIndex.totalTopics() || '—' }}</strong><small>temas reales</small></span>
       </div>
     </section>
 

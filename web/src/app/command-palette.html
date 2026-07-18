@@ -1,5 +1,6 @@
 <div class="palette-scrim" *ngIf="paletteService.isOpen()" (click)="close()">
-  <div class="palette" (click)="$event.stopPropagation()">
+  <div class="palette" role="dialog" aria-modal="true" aria-labelledby="palette-title" (click)="$event.stopPropagation()">
+    <h2 id="palette-title" class="visually-hidden">Buscar cursos, módulos y temas</h2>
     <div class="palette-input">
       <lucide-icon [img]="icons.Search" />
       <input
@@ -8,15 +9,16 @@
         [ngModel]="query()"
         (ngModelChange)="query.set($event)"
         autofocus
+        aria-label="Buscar cursos, módulos y temas"
       />
-      <button class="icon-button" (click)="close()"><lucide-icon [img]="icons.X" /></button>
+      <button class="icon-button" (click)="close()" aria-label="Cerrar búsqueda"><lucide-icon [img]="icons.X" /></button>
     </div>
     <div class="palette-results">
       <button class="palette-result" *ngFor="let entry of results()" (click)="select(entry)">
         <strong>{{ entry.label }}</strong>
         <span>{{ entry.sublabel }}</span>
       </button>
-      <p class="palette-empty" *ngIf="!results().length">Sin resultados para "{{ query() }}".</p>
+      <p class="palette-empty" role="status" aria-live="polite" *ngIf="!results().length">Sin resultados para "{{ query() }}".</p>
     </div>
   </div>
 </div>

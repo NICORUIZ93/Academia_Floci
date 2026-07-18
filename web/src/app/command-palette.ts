@@ -1,16 +1,18 @@
 import { CommonModule } from '@angular/common';
-import { Component, HostListener, computed, signal } from '@angular/core';
+import { Component, HostListener, computed, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { LucideAngularModule, Search, X } from 'lucide-angular';
 import { TRACKS } from './course-data';
 import { CommandPaletteService } from './command-palette.service';
+import { TopicIndexService } from './topic-index.service';
 
 interface SearchEntry {
   label: string;
   sublabel: string;
   keywords: string;
   route: string[];
+  fragment?: string;
 }
 
 const isMac = typeof navigator !== 'undefined' && /mac/i.test(navigator.platform ?? navigator.userAgent ?? '');
@@ -26,25 +28,34 @@ export class CommandPaletteComponent {
   readonly shortcutLabel = isMac ? '⌘K' : 'Ctrl+K';
   readonly query = signal('');
 
-  private readonly index: SearchEntry[] = TRACKS.flatMap(track => {
-    if (track.id === 'cloud') {
-      return [{ label: track.name, sublabel: `Curso completo · ${track.modules.length} módulos`, keywords: track.tagline, route: ['/curso', 'cloud'] }];
-    }
+  private readonly topicIndex = inject(TopicIndexService);
+  private readonly index = computed<SearchEntry[]>(() => TRACKS.flatMap(track => {
+    const modules = track.modules.map(module => ({
+      label: module.title,
+      sublabel: `${track.name} · ${module.level}`,
+      keywords: module.concepts.join(' '),
+      route: ['/curso', track.id, String(module.id)],
+    }));
+    const topics = this.topicIndex.allTopics()
+      .filter(topic => topic.trackId === track.id)
+      .map(topic => ({
+        label: topic.title,
+        sublabel: `${track.name} · tema`,
+        keywords: `${track.name} ${track.tagline}`,
+        route: ['/curso', track.id, String(topic.moduleId)],
+        fragment: topic.fragment,
+      }));
     return [
       { label: track.name, sublabel: `Curso completo · ${track.modules.length} módulos`, keywords: track.tagline, route: ['/curso', track.id] },
-      ...track.modules.map(module => ({
-        label: module.title,
-        sublabel: `${track.name} · ${module.level}`,
-        keywords: module.concepts.join(' '),
-        route: ['/curso', track.id, String(module.id)],
-      })),
+      ...modules,
+      ...topics,
     ];
-  });
+  }));
 
   readonly results = computed<SearchEntry[]>(() => {
     const q = this.query().trim().toLowerCase();
-    if (!q) return this.index.slice(0, 8);
-    return this.index
+    if (!q) return this.index().slice(0, 8);
+    return this.index()
       .filter(entry => `${entry.label} ${entry.sublabel} ${entry.keywords}`.toLowerCase().includes(q))
       .slice(0, 20);
   });
@@ -66,7 +77,8 @@ export class CommandPaletteComponent {
   }
 
   select(entry: SearchEntry): void {
-    this.router.navigate(entry.route);
+    const fragment = entry.fragment;
+    this.router.navigate(entry.route, fragment ? { fragment } : undefined);
     this.paletteService.close();
     this.query.set('');
   }

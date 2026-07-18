@@ -7,6 +7,7 @@ import { TRACK_ICONS, TRACK_MARKS } from '../icon-registry';
 import { OFFICIAL_UPDATES } from '../official-updates';
 import { ProgressService } from '../progress.service';
 import { ThemeService } from '../theme.service';
+import { TopicIndexService } from '../topic-index.service';
 
 interface TrackCard {
   id: string;
@@ -36,6 +37,7 @@ export class CourseCatalogComponent {
   readonly brandIcon = CloudCog;
   readonly icons = { Sun, Moon };
   readonly themeService = inject(ThemeService);
+  readonly topicIndex = inject(TopicIndexService);
   readonly officialUpdates = OFFICIAL_UPDATES;
 
   constructor(private readonly progressService: ProgressService) {}
