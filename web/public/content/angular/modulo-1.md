@@ -13,6 +13,7 @@ Dominar el componente como unidad básica de Angular: inputs y outputs basados e
 3. Implementar content projection con `<ng-content>`.
 4. Explicar el ciclo de vida completo de un componente y cuándo se invoca cada hook.
 5. Usar pipes integrados y crear un pipe personalizado.
+6. Consultar elementos con `viewChild()` y medir el DOM en una fase de render segura.
 
 **Contenido**
 
@@ -23,10 +24,11 @@ Dominar el componente como unidad básica de Angular: inputs y outputs basados e
 - Hooks completos: `ngOnChanges`, `ngDoCheck`, `ngAfterContentInit/Checked`, `ngAfterViewInit/Checked`.
 - Pipes integrados (Date, Currency, Async, Json) y pipes personalizados con `@Pipe`.
 - `ngClass`, `ngStyle` y directivas personalizadas.
+- Consultas signal (`viewChild`/`contentChild`) y callbacks `afterNextRender`.
 
 **Evaluación**
 
-Un componente reutilizable (tarjeta/lista) parametrizado con inputs y outputs, más tres ejercicios de evaluación.
+Un componente reutilizable con consultas signal y medición posterior al render, más cuatro ejercicios de evaluación.
 
 ---
 
@@ -139,6 +141,92 @@ export class MiComponente implements OnChanges, OnInit, AfterViewInit, OnDestroy
 }
 ```
 
+### Tema 5: Consultas signal y trabajo posterior al render
+
+**Conceptos clave:** `viewChild.required`, `contentChild`, `ElementRef`, `afterNextRender`, fases `write/read`, SSR y separación entre datos y DOM.
+
+Construiremos el panel de seguimiento de RutaFlow que ajusta la altura de un mapa según el espacio disponible. La mayoría de interfaces debe expresarse con plantilla, CSS y signals; una consulta del DOM se justifica cuando necesitas integrar una biblioteca visual o medir una dimensión que el modelo de datos no contiene.
+
+**Requisitos previos:** Node.js compatible con la versión Angular del proyecto y temas 1–4. Crea:
+
+```text
+src/app/features/tracking/
+├── tracking-panel.component.ts
+├── tracking-panel.component.html
+├── tracking-panel.component.css
+└── tracking-panel.component.spec.ts
+```
+
+`viewChild()` devuelve una signal: antes de que exista el elemento puede ser `undefined`; `viewChild.required()` declara que la plantilla siempre debe contenerlo y falla si esa promesa se rompe. Usa una referencia de plantilla tipada en `tracking-panel.component.html`:
+
+```html
+<section class="tracking-panel" #panel>
+  <header #header>
+    <h2>Seguimiento de la entrega</h2>
+  </header>
+  <div class="map" [style.height.px]="mapHeight()" aria-label="Mapa de seguimiento"></div>
+</section>
+```
+
+En `tracking-panel.component.ts`, escribe cambios en una fase y mide en otra. Separar escritura y lectura evita alternarlas repetidamente, patrón que puede forzar recalcular layout varias veces en un frame.
+
+```ts
+import { Component, ElementRef, afterNextRender, signal, viewChild } from '@angular/core';
+
+@Component({
+  selector: 'app-tracking-panel',
+  standalone: true,
+  templateUrl: './tracking-panel.component.html',
+  styleUrl: './tracking-panel.component.css'
+})
+export class TrackingPanelComponent {
+  private readonly panel = viewChild.required<ElementRef<HTMLElement>>('panel');
+  private readonly header = viewChild.required<ElementRef<HTMLElement>>('header');
+  readonly mapHeight = signal(320);
+
+  constructor() {
+    afterNextRender({
+      write: () => {
+        this.panel().nativeElement.style.setProperty('--panel-ready', '1');
+      },
+      read: () => {
+        const panelHeight = this.panel().nativeElement.getBoundingClientRect().height;
+        const headerHeight = this.header().nativeElement.getBoundingClientRect().height;
+        this.mapHeight.set(Math.max(240, panelHeight - headerHeight - 24));
+      }
+    });
+  }
+}
+```
+
+`afterNextRender` se registra en un contexto de inyección —por ejemplo, el constructor— y se ejecuta después de que Angular renderiza la aplicación en el navegador. No equivale a `ngAfterViewChecked`, que puede ejecutarse muchas veces y no es un lugar seguro para escribir estado indiscriminadamente. Los callbacks de render no se ejecutan durante SSR; por eso no deben contener una regla de negocio necesaria para producir HTML correcto en el servidor.
+
+`contentChild()` consulta contenido que el padre proyectó mediante `ng-content`; `viewChild()` consulta la propia plantilla del componente. No uses cualquiera de las dos para que un padre controle detalles internos de un hijo: inputs y outputs siguen siendo el contrato público adecuado.
+
+```mermaid
+sequenceDiagram
+  participant A as Angular
+  participant C as TrackingPanel
+  participant D as DOM navegador
+  A->>D: renderiza plantilla
+  A->>C: afterNextRender.write
+  C->>D: escribe estilo
+  A->>C: afterNextRender.read
+  C->>D: mide panel y encabezado
+  C->>A: actualiza signal mapHeight
+  A->>D: renderiza altura calculada
+```
+
+**Analogía:** `viewChild` es una ventana de inspección a una pieza ya instalada; las fases de render son el turno del equipo de montaje y después el del equipo de medición. Medir mientras todavía se mueve la estructura produce trabajo repetido y resultados inestables.
+
+**¿Por qué es importante?** Las consultas signal se integran con el modelo reactivo moderno y las fases de render reducen lecturas/escrituras intercaladas. Reconocer el límite de SSR evita que el HTML inicial dependa de una medición exclusiva del navegador.
+
+**Ejecución y resultado esperado:** ejecuta `npm test -- --watch=false` y `ng serve`. El mapa nunca mide menos de 240 px, cambia después del primer render sin `ExpressionChangedAfterItHasBeenCheckedError` y el render del servidor conserva una altura inicial válida de 320 px.
+
+**Fallo deliberado:** mueve `mapHeight.set(...)` a `ngAfterViewChecked` sin guarda. Observa ciclos o el error de expresión cambiada; después lee y escribe layout dentro de un bucle de 100 elementos y registra el coste con Performance DevTools. Restablece las fases y compara.
+
+**Modificación sin copiar:** reemplaza la medición única por `ResizeObserver`, registra su limpieza con `DestroyRef` y prueba que deja de emitir después de destruir el fixture.
+
 ---
 
 ## Criterio transversal de calidad del código
@@ -170,6 +258,8 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 | 3 | Usar `track` por id en `@for` | Ver Tema 2 | Explica qué problema de rendimiento evita frente a `track $index` |
 | 4 | Crear un componente Modal con `ng-content` | Ver Tema 3 | Proyecta contenido arbitrario del padre |
 | 5 | Implementar `ngOnInit` y `ngOnDestroy` | Registra en consola cuándo se invoca cada uno | Verifica el orden exacto de invocación |
+| 6 | Consultar y medir el panel | Ver Tema 5 | Usa `viewChild.required` y fases `write/read` |
+| 7 | Renderizar con SSR | Ver Tema 5 | Conserva un valor inicial sin depender del navegador |
 
 **Verificación:** el laboratorio se considera exitoso si la Tarjeta emite correctamente su evento de salida al padre, si la lista renderizada con `@for` mantiene la identidad correcta de sus elementos al reordenarse (verificado con `track`), y si `ngOnDestroy` se invoca correctamente al eliminar el componente de la vista.
 
@@ -178,6 +268,8 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 - **Usar `track $index` cuando los datos tienen un identificador único disponible.** Usa siempre el identificador único real de cada elemento para evitar recreaciones innecesarias del DOM.
 - **Olvidar los paréntesis al leer un input declarado con `input()`.** Recuerda que `titulo` (la función) y `titulo()` (su valor actual) son cosas distintas; siempre invócalo como función para leer su valor.
 - **No limpiar recursos en `ngOnDestroy`.** Cualquier suscripción manual, temporizador u observer registrado debe limpiarse explícitamente para evitar fugas de memoria.
+- **Usar `ngAfterViewChecked` para medir y actualizar estado en cada ciclo.** Prefiere callbacks de render y separa lecturas de escrituras.
+- **Depender de una medición del DOM para el HTML SSR.** Define un estado inicial correcto porque esos callbacks solo existen en el navegador.
 
 ---
 
@@ -225,6 +317,17 @@ export class Panel {}
 - Usa correctamente `<ng-content select="...">` con dos slots nombrados distintos.
 - El HTML de consumo asigna correctamente cada elemento a su slot correspondiente.
 
+### Ejercicio 4: Medición del DOM compatible con SSR
+
+**Enunciado:** una tarjeta calcula su altura en `ngAfterViewChecked`, modifica una signal y falla de forma intermitente. Además, el servidor produce HTML sin altura. Rediseña el flujo.
+
+**Solución esperada:** define una altura inicial válida para SSR, consulta el elemento con `viewChild`, registra `afterNextRender` en contexto de inyección y separa escritura/lectura por fases. Si necesita reaccionar a cambios posteriores, usa `ResizeObserver` con limpieza al destruirse; la regla de negocio no depende del DOM.
+
+**Criterios de éxito:**
+- Distingue render inicial del servidor y medición del navegador.
+- Evita actualizar estado desde `ngAfterViewChecked` sin control.
+- Incluye limpieza de cualquier observer persistente.
+
 ---
 
 ## Rúbrica del proyecto
@@ -260,6 +363,7 @@ Estas fuentes sustentan los conceptos y deben consultarse para verificar detalle
 - `track` en `@for` es esencial para el rendimiento de listas que cambian, evitando recreaciones innecesarias del DOM.
 - Content projection (`ng-content`) permite construir componentes de layout genéricos cuyo contenido lo determina quien los consume.
 - El ciclo de vida completo de un componente tiene hooks específicos para cada momento; `ngOnDestroy` es indispensable para prevenir fugas de memoria.
+- Las consultas signal y callbacks de render permiten integrar el DOM sin convertirlo en fuente de verdad del negocio.
 
 **Conceptos aprendidos**
 
@@ -267,6 +371,7 @@ Estas fuentes sustentan los conceptos y deben consultarse para verificar detalle
 - Control de flujo nativo y la importancia de `track`.
 - Content projection con `ng-content`.
 - El ciclo de vida completo de un componente y el propósito de cada hook.
+- `viewChild`, `contentChild`, `afterNextRender` y fases de render.
 
 **Próximos pasos**
 

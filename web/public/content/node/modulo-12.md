@@ -13,6 +13,8 @@ Unir todo lo aprendido en este track en una API lista para producción real: arq
 3. Escribir tests de integración que cubran el flujo crítico de principio a fin.
 4. Añadir logging estructurado con correlation ID y un endpoint de health.
 5. Construir el Dockerfile de producción y documentar el plan de despliegue.
+6. Persistir posiciones geográficas y distribuir eventos recuperables hacia la app Flutter.
+7. Procesar evidencia fotográfica y notificaciones sin confiar en el cliente ni acoplar la transición principal.
 
 **Contenido**
 
@@ -20,6 +22,7 @@ Unir todo lo aprendido en este track en una API lista para producción real: arq
 - Autenticación, persistencia y testing integrados.
 - Observabilidad básica.
 - Contenedor listo para desplegar.
+- MySQL espacial, Socket.IO, archivos y Firebase Admin integrados con límites explícitos.
 - Qué sigue: microservicios, message queues (Kafka/RabbitMQ) y TypeScript con ts-node/tsx.
 
 **Evaluación**
@@ -128,6 +131,112 @@ Monolito (este proyecto) → descomposición en microservicios independientes
 TypeScript + tsx/ts-node → mismos beneficios de tipos del track de JavaScript, aplicados al backend
 ```
 
+### Tema 5: Posiciones espaciales y Socket.IO con orden recuperable
+
+**Conceptos clave:** validación geográfica, SRID, índice espacial, autorización por recurso, secuencia y reanudación.
+
+El backend móvil no debería recibir un objeto genérico y guardarlo directamente. En `src/features/journeys/http/position.schema.ts`, Zod valida coordenadas, precisión, instante y secuencia en la frontera. Latitud pertenece a `[-90, 90]`, longitud a `[-180, 180]`, precisión no puede ser negativa y una secuencia debe ser un entero positivo. La validación de forma no decide todavía si el conductor está autorizado ni si la muestra es suficientemente reciente: esas son reglas del caso de uso.
+
+```ts
+import { z } from 'zod';
+
+export const positionInput = z.object({
+  journeyId: z.string().uuid(),
+  sequence: z.number().int().positive(),
+  latitude: z.number().min(-90).max(90),
+  longitude: z.number().min(-180).max(180),
+  accuracyMeters: z.number().finite().nonnegative().max(5_000),
+  capturedAt: z.string().datetime({ offset: true }),
+}).strict();
+```
+
+MySQL debe almacenar el punto con SRID conocido y orden correcto: `POINT(longitude, latitude)`. Invertirlos puede producir una coordenada válida numéricamente pero ubicada en otro continente. Prisma puede conservar el resto del modelo y delegar la operación espacial específica a un repositorio con consulta parametrizada; la capa de aplicación no debe conocer SQL ni el tipo geométrico del motor.
+
+```ts
+await prisma.$executeRaw`
+  INSERT INTO driver_positions
+    (journey_id, sequence_number, captured_at, accuracy_m, location)
+  VALUES
+    (${input.journeyId}, ${input.sequence}, ${capturedAt}, ${input.accuracyMeters},
+     ST_SRID(POINT(${input.longitude}, ${input.latitude}), 4326))
+  ON DUPLICATE KEY UPDATE journey_id = journey_id
+`;
+```
+
+La tabla necesita una restricción única `(journey_id, sequence_number)` para que un reintento no cree otra muestra. Antes de insertar, el caso de uso comprueba que la identidad autenticada es el conductor asignado a esa jornada y rechaza muestras demasiado antiguas según una política explícita. El `ON DUPLICATE` evita duplicar el efecto, pero el servicio debe devolver el mismo resultado conocido, no fingir que procesó una nueva posición.
+
+Socket.IO distribuye el evento **después** de persistirlo. El servidor autentica el *handshake*, autoriza la jornada antes de `socket.join()` y permite reanudar desde `lastSequence`. Emitir primero y persistir después crea un estado imposible de recuperar si el proceso cae entre ambas operaciones; para garantías mayores se usa outbox y un publicador separado.
+
+```ts
+io.use(async (socket, next) => {
+  try {
+    socket.data.identity = await verifyAccessToken(socket.handshake.auth.token);
+    next();
+  } catch { next(new Error('unauthorized')); }
+});
+
+io.on('connection', socket => {
+  socket.on('journey:subscribe', async ({ journeyId, lastSequence }, acknowledge) => {
+    await journeyAuthorizer.assertDriver(socket.data.identity.subject, journeyId);
+    await socket.join(`journey:${journeyId}`);
+    acknowledge(await positionRepository.findAfter(journeyId, lastSequence));
+  });
+});
+```
+
+**Analogía:** una secuencia es la numeración de páginas de un expediente: permite reconocer duplicados, detectar huecos y continuar desde la última página confirmada después de una interrupción.
+
+**¿Por qué es importante?** Coordenadas válidas no son automáticamente posiciones confiables, y un socket autenticado no está automáticamente autorizado para cualquier jornada. Validación, propiedad, persistencia y distribución protegen riesgos distintos.
+
+**Diagrama: frontera de aceptación y publicación:**
+
+```mermaid
+sequenceDiagram
+  participant F as Flutter
+  participant H as HTTP/Zod
+  participant U as Caso de uso
+  participant M as MySQL espacial
+  participant S as Socket.IO
+  F->>H: position + sequence
+  H->>H: validar forma y rangos
+  H->>U: comando tipado + identidad
+  U->>U: propiedad, tiempo y precisión
+  U->>M: insertar con clave única
+  M-->>U: persistida o duplicada conocida
+  U->>S: publicar evento confirmado
+  S-->>F: evento ordenado
+```
+
+### Tema 6: Archivos y notificaciones push sin convertirlos en autorización
+
+**Conceptos clave:** carga multipart, límites, almacenamiento de objetos, metadatos mínimos, Firebase Admin y fuente de verdad.
+
+Una foto de evidencia no debe cargarse completa en memoria sin límites ni guardarse como BLOB en la misma transacción principal. El endpoint acepta `multipart/form-data`, limita tamaño y tipo, genera una clave interna no predecible y transmite el archivo hacia almacenamiento de objetos. Extensión y `Content-Type` enviados por el cliente no prueban el formato; valida la firma del archivo y procesa imágenes en un entorno aislado. Conserva en MySQL únicamente identificador, propietario, hash, tamaño, estado de escaneo y clave del objeto.
+
+El flujo correcto tiene estados explícitos: `UPLOADING → QUARANTINED → AVAILABLE` o `REJECTED`. Una entrega no queda confirmada únicamente porque la transferencia terminó; el caso de uso decide si la evidencia requerida está disponible, pertenece a esa entrega y cumple retención. Las URL de descarga deben ser temporales y autorizadas, no públicas permanentes.
+
+Firebase Admin envía una notificación con datos mínimos después de confirmar un cambio. El token FCM identifica una instalación, no una persona ni un permiso. Los tokens rotan y las respuestas de Firebase que indican un registro inválido deben desactivar esa instalación. El cliente usa el mensaje para volver a consultar la API; nunca aplica como verdad un estado sensible recibido por push.
+
+```ts
+await firebase.messaging().send({
+  token: installation.fcmToken,
+  data: {
+    type: 'delivery.updated',
+    deliveryId: delivery.id,
+    version: String(delivery.version),
+  },
+  android: { priority: 'high' },
+});
+```
+
+No incluyas JWT, dirección completa, fotografía, PIN ni nombre del destinatario en el payload: puede aparecer en registros del proveedor o en una pantalla bloqueada. Si el push falla, la transición de entrega no se revierte; registra el intento y reintenta desde una cola con límite y *dead-letter*, porque la notificación es un efecto posterior, no parte atómica del dominio.
+
+**Analogía:** el push es el timbre que avisa que llegó correspondencia; no contiene todo el expediente ni otorga permiso para abrirlo. La aplicación debe identificarse y consultar la fuente oficial.
+
+**¿Por qué es importante?** Separar archivo, transición de dominio y notificación evita que una dependencia externa convierta una entrega válida en fallida, y reduce exposición de información sensible.
+
+**Práctica verificable:** prueba archivo mayor al límite, contenido cuya firma no coincide con la extensión, entrega ajena, token FCM inválido y caída del proveedor después de confirmar. La API debe responder con errores diferenciados, no dejar archivos huérfanos silenciosos y conservar la entrega confirmada aunque el push vaya a reintento.
+
 ---
 
 ## Proyecto transversal RutaFlow: Comando idempotente de entrega
@@ -182,6 +291,8 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 | 4 | Escribir tests de integración del flujo crítico | Supertest + Testcontainers | Cubre de principio a fin, no solo funciones aisladas |
 | 5 | Agregar logging estructurado y `/health` | Correlation ID en cada log de cada request | Verifica la conexión a la base de datos en el healthcheck |
 | 6 | Construir el Dockerfile de producción | Multi-stage, optimizado | Documenta cómo desplegarías esta API a un proveedor real |
+| 7 | Persistir posiciones y reanudar el canal | Zod + MySQL Spatial + Socket.IO | Repite secuencia y recupera desde la última confirmada |
+| 8 | Subir evidencia y enviar una señal push | Storage + Firebase Admin | Prueba archivo inválido y token FCM rotado |
 
 **Verificación:** el laboratorio se considera exitoso si la API completa funciona de principio a fin (registro, login, operación protegida, refresh), si los tests de integración pasan contra una base de datos real y efímera, y si la imagen Docker de producción construida es funcional y optimizada.
 

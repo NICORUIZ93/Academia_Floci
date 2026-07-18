@@ -127,7 +127,7 @@
     },
     {
       "path": "docs/PLANTILLA-LECCION.md",
-      "lines": 110,
+      "lines": 118,
       "kind": "documentation",
       "symbols": [],
       "imports": [],
@@ -136,14 +136,14 @@
         "## PROMPT MAESTRO (copiar desde aqu\u00ed)",
         "## DATOS DE LA LECCI\u00d3N",
         "## REGLAS DE ESTILO",
+        "### Regla para conceptos t\u00e9cnicos",
+        "### Regla para diagramas",
         "## ESTRUCTURA OBLIGATORIA DE LA P\u00c1GINA",
         "# {{numero}}. {{TEMA}}",
         "## \ud83d\udd04 Repaso rel\u00e1mpago (2 min)",
         "## \ud83c\udfaf Qu\u00e9 vas a lograr",
         "## \ud83d\udcd6 El concepto (el QU\u00c9 y el PORQU\u00c9)",
-        "## \ud83d\udcbb Manos a la obra (el C\u00d3MO)",
-        "## \ud83d\udd28 R\u00f3mpelo a prop\u00f3sito",
-        "## \ud83e\udde9 Ejercicios (sin soluci\u00f3n visible)"
+        "## \ud83d\udcbb Manos a la obra (el C\u00d3MO)"
       ]
     },
     {
@@ -228,7 +228,7 @@
     },
     {
       "path": "docs/topic-learning-quality.json",
-      "lines": 17013,
+      "lines": 24597,
       "kind": "project-file",
       "symbols": [],
       "imports": [],
@@ -242,7 +242,7 @@
       "imports": [],
       "headings": [
         "# Auditor\u00eda pedag\u00f3gica tema por tema",
-        "## Cobertura garantizada por el lector"
+        "## Regla editorial"
       ]
     },
     {
@@ -2228,11 +2228,12 @@
     },
     {
       "path": "scripts/audit_topic_learning_quality.py",
-      "lines": 81,
+      "lines": 113,
       "kind": "automation-script",
       "symbols": [
         "topic_blocks",
         "evaluate",
+        "classify",
         "build",
         "render_markdown",
         "main"
@@ -2975,7 +2976,7 @@
     },
     {
       "path": "web/public/content/android/modulo-2.md",
-      "lines": 257,
+      "lines": 263,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -2984,14 +2985,14 @@
         "## S\u00edlabo",
         "## Contenido te\u00f3rico",
         "### Tema 1: Composables y recomposici\u00f3n",
+        "#### Qu\u00e9 hace realmente `@Composable`",
         "### Tema 2: State hoisting",
         "### Tema 3: remember, rememberSaveable y layout b\u00e1sico",
         "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
         "## Ejercicios de evaluaci\u00f3n",
         "### Ejercicio 1: Por qu\u00e9 Compose recompone",
-        "### Ejercicio 2: Qu\u00e9 problema resuelve state hoisting",
-        "### Ejercicio 3: remember vs rememberSaveable"
+        "### Ejercicio 2: Qu\u00e9 problema resuelve state hoisting"
       ]
     },
     {
@@ -3164,7 +3165,7 @@
     },
     {
       "path": "web/public/content/angular/modulo-1.md",
-      "lines": 278,
+      "lines": 383,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -3176,11 +3177,11 @@
         "### Tema 2: Control de flujo nativo \u2014 @if, @for, @switch",
         "### Tema 3: Content projection con ng-content",
         "### Tema 4: Ciclo de vida completo de un componente",
+        "### Tema 5: Consultas signal y trabajo posterior al render",
         "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
         "## Ejercicios de evaluaci\u00f3n",
-        "### Ejercicio 1: Por qu\u00e9 @for exige track",
-        "### Ejercicio 2: Ventaja de input()/output() sobre los decoradores cl\u00e1sicos"
+        "### Ejercicio 1: Por qu\u00e9 @for exige track"
       ]
     },
     {
@@ -3332,7 +3333,7 @@
     },
     {
       "path": "web/public/content/angular/modulo-3.md",
-      "lines": 252,
+      "lines": 260,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -3341,14 +3342,14 @@
         "## S\u00edlabo",
         "## Contenido te\u00f3rico",
         "### Tema 1: @Injectable y providedIn: root",
+        "#### Qu\u00e9 significa `@` aqu\u00ed: decoradores y metadatos de Angular",
         "### Tema 2: inject() frente a inyecci\u00f3n por constructor",
         "### Tema 3: Jerarqu\u00eda de inyectores",
         "### Tema 4: Tokens de inyecci\u00f3n y decoradores de resoluci\u00f3n",
         "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
         "## Ejercicios de evaluaci\u00f3n",
-        "### Ejercicio 1: inject() frente a inyecci\u00f3n por constructor",
-        "### Ejercicio 2: Resoluci\u00f3n en niveles m\u00faltiples"
+        "### Ejercicio 1: inject() frente a inyecci\u00f3n por constructor"
       ]
     },
     {
@@ -4214,7 +4215,7 @@
     },
     {
       "path": "web/public/content/devops/modulo-0.md",
-      "lines": 443,
+      "lines": 570,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -4340,7 +4341,7 @@
     },
     {
       "path": "web/public/content/devops/modulo-14.md",
-      "lines": 224,
+      "lines": 228,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -4688,7 +4689,7 @@
     },
     {
       "path": "web/public/content/flutter/modulo-0.md",
-      "lines": 285,
+      "lines": 298,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -4699,12 +4700,12 @@
         "## Contenido te\u00f3rico",
         "### Tema 1: Sound null safety",
         "### Tema 2: Clases y mixins",
+        "#### `extends`, `implements`, `with` y `@override` no significan lo mismo",
         "### Tema 3: Futures, async/await y colecciones funcionales",
         "## Ruta de proyecto progresivo desde carpeta vac\u00eda",
         "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
-        "## Ejercicios de evaluaci\u00f3n",
-        "### Ejercicio 1: Qu\u00e9 garantiza sound null safety"
+        "## Ejercicios de evaluaci\u00f3n"
       ]
     },
     {
@@ -4814,13 +4815,14 @@
     },
     {
       "path": "web/public/content/flutter/modulo-14.md",
-      "lines": 253,
+      "lines": 374,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
       "headings": [
         "# M\u00f3dulo 14: Flutter para entregas: mapas, GPS y tiempo real",
         "## S\u00edlabo",
+        "## Antes de escribir c\u00f3digo: vertical y estructura de carpetas",
         "## Contenido te\u00f3rico",
         "### Tema 1: Dise\u00f1o de pantallas y Riverpod",
         "### Tema 2: Google Maps y localizaci\u00f3n en tiempo real",
@@ -4829,8 +4831,7 @@
         "### Tema 5: Almacenamiento local, im\u00e1genes y offline",
         "### Tema 6: Dio y notificaciones push",
         "## Criterio transversal de calidad del c\u00f3digo",
-        "## Laboratorio pr\u00e1ctico",
-        "## Ejercicios de evaluaci\u00f3n"
+        "## Laboratorio pr\u00e1ctico"
       ]
     },
     {
@@ -4898,7 +4899,7 @@
     },
     {
       "path": "web/public/content/flutter/modulo-4.md",
-      "lines": 239,
+      "lines": 407,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -4909,12 +4910,12 @@
         "### Tema 1: setState y sus l\u00edmites",
         "### Tema 2: Riverpod",
         "### Tema 3: Bloc/Cubit y otras alternativas",
+        "### Tema 4: Formularios profesionales con Formz y Riverpod",
         "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
         "## Ejercicios de evaluaci\u00f3n",
         "### Ejercicio 1: Qu\u00e9 garantiza Riverpod en tiempo de compilaci\u00f3n",
-        "### Ejercicio 2: Ventaja del modelo de eventos de Bloc/Cubit",
-        "### Ejercicio 3: L\u00edmite de setState al compartir estado"
+        "### Ejercicio 2: Ventaja del modelo de eventos de Bloc/Cubit"
       ]
     },
     {
@@ -4961,7 +4962,7 @@
     },
     {
       "path": "web/public/content/flutter/modulo-7.md",
-      "lines": 239,
+      "lines": 397,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -4972,12 +4973,12 @@
         "### Tema 1: MethodChannel",
         "### Tema 2: Plugins federados",
         "### Tema 3: Permisos de plataforma y cu\u00e1ndo escribir un platform channel propio",
+        "### Tema 4: C\u00e1mara, galer\u00eda y carga multipart de una evidencia",
         "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
         "## Ejercicios de evaluaci\u00f3n",
         "### Ejercicio 1: Cu\u00e1ndo escribir un platform channel propio",
-        "### Ejercicio 2: Qu\u00e9 distingue a un plugin federado",
-        "### Ejercicio 3: Por qu\u00e9 un MethodChannel requiere implementaci\u00f3n en ambos lados"
+        "### Ejercicio 2: Qu\u00e9 distingue a un plugin federado"
       ]
     },
     {
@@ -5276,7 +5277,7 @@
     },
     {
       "path": "web/public/content/ios/modulo-0.md",
-      "lines": 286,
+      "lines": 411,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5290,9 +5291,9 @@
         "### Tema 1: Optionals y unwrapping seguro",
         "### Tema 2: struct vs class",
         "### Tema 3: Protocolos y enums con valores asociados",
+        "### Tema 4: Closures, colecciones y gen\u00e9ricos con prop\u00f3sito",
         "## Ruta de proyecto progresivo desde carpeta vac\u00eda",
-        "## Criterio transversal de calidad del c\u00f3digo",
-        "## Laboratorio pr\u00e1ctico"
+        "## Criterio transversal de calidad del c\u00f3digo"
       ]
     },
     {
@@ -5318,7 +5319,7 @@
     },
     {
       "path": "web/public/content/ios/modulo-10.md",
-      "lines": 244,
+      "lines": 395,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5329,12 +5330,12 @@
         "### Tema 1: Instruments",
         "### Tema 2: Accesibilidad con VoiceOver",
         "### Tema 3: Human Interface Guidelines, Dynamic Type e interop con UIKit",
+        "### Tema 4: UIKit desde cero para mantener aplicaciones reales",
         "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
         "## Ejercicios de evaluaci\u00f3n",
         "### Ejercicio 1: Qu\u00e9 revela Instruments que el simulador no revela",
-        "### Ejercicio 2: Por qu\u00e9 las HIG hacen que una app se sienta nativa",
-        "### Ejercicio 3: Por qu\u00e9 usar el propio \u00edcono sin descripci\u00f3n es un problema real"
+        "### Ejercicio 2: Por qu\u00e9 las HIG hacen que una app se sienta nativa"
       ]
     },
     {
@@ -5423,7 +5424,7 @@
     },
     {
       "path": "web/public/content/ios/modulo-2.md",
-      "lines": 254,
+      "lines": 262,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5432,14 +5433,14 @@
         "## S\u00edlabo",
         "## Contenido te\u00f3rico",
         "### Tema 1: @State y @Binding",
+        "#### C\u00f3mo leer `@State`, `@Binding` y el prefijo `$`",
         "### Tema 2: @Observable",
         "### Tema 3: @Environment y identidad vs valor",
         "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
         "## Ejercicios de evaluaci\u00f3n",
         "### Ejercicio 1: Diferencia entre @State y @Binding",
-        "### Ejercicio 2: Qu\u00e9 resuelve @Observable",
-        "### Ejercicio 3: Problema que resuelve @Environment"
+        "### Ejercicio 2: Qu\u00e9 resuelve @Observable"
       ]
     },
     {
@@ -5591,7 +5592,7 @@
     },
     {
       "path": "web/public/content/java/modulo-0.md",
-      "lines": 276,
+      "lines": 419,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5604,15 +5605,15 @@
         "### Tema 2: public static void main \u2014 qu\u00e9 significa cada palabra",
         "### Tema 3: JDK, JRE y JVM",
         "### Tema 4: Tipos primitivos vs referencias",
-        "## Ruta de proyecto progresivo desde carpeta vac\u00eda",
-        "## Criterio transversal de calidad del c\u00f3digo",
-        "## Laboratorio pr\u00e1ctico",
-        "## Ejercicios de evaluaci\u00f3n"
+        "### Tema 5: Variables, conversiones y `String`",
+        "### Tema 6: Operadores, precedencia y control de flujo",
+        "### Tema 7: Arreglos, wrappers y paso de argumentos",
+        "### Tema 8: Entrada y APIs est\u00e1ndar sin aprender APIs obsoletas como modelo principal"
       ]
     },
     {
       "path": "web/public/content/java/modulo-1.md",
-      "lines": 225,
+      "lines": 301,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5620,15 +5621,15 @@
         "# M\u00f3dulo 1: Programaci\u00f3n orientada a objetos",
         "## S\u00edlabo",
         "## Contenido te\u00f3rico",
-        "### Tema 1: Herencia y sobreescritura",
-        "### Tema 2: Interfaces, clases abstractas y cu\u00e1ndo usar cada una",
-        "### Tema 3: Sobrecarga vs sobreescritura, y modificadores de acceso",
+        "### Tema 1: Clases, objetos, constructores y encapsulaci\u00f3n",
+        "### Tema 2: Herencia y sobreescritura",
+        "#### Enfoque t\u00e9cnico: qu\u00e9 significa `@` en Java",
+        "### Tema 3: Interfaces, clases abstractas y cu\u00e1ndo usar cada una",
+        "### Tema 4: Sobrecarga vs sobreescritura, y modificadores de acceso",
         "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
         "## Ejercicios de evaluaci\u00f3n",
-        "### Ejercicio 1: Sobrecarga vs sobreescritura",
-        "### Ejercicio 2: Clase abstracta vs interfaz",
-        "### Ejercicio 3: Modificadores de acceso"
+        "### Ejercicio 1: Sobrecarga vs sobreescritura"
       ]
     },
     {
@@ -6473,7 +6474,7 @@
     },
     {
       "path": "web/public/content/kotlin-multiplatform/modulo-7.md",
-      "lines": 230,
+      "lines": 236,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -6482,14 +6483,14 @@
         "## S\u00edlabo",
         "## Contenido te\u00f3rico",
         "### Tema 1: Compose Multiplatform vs Jetpack Compose",
+        "#### Contrato t\u00e9cnico de `@Composable` en c\u00f3digo compartido",
         "### Tema 2: Theming y navegaci\u00f3n compartidos",
         "### Tema 3: Limitaciones en iOS y otros targets",
         "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
         "## Ejercicios de evaluaci\u00f3n",
         "### Ejercicio 1: Ganancia y riesgo de compartir UI",
-        "### Ejercicio 2: Por qu\u00e9 Compose Multiplatform es m\u00e1s limitado en iOS",
-        "### Ejercicio 3: Alcance de Compose Multiplatform m\u00e1s all\u00e1 de m\u00f3vil"
+        "### Ejercicio 2: Por qu\u00e9 Compose Multiplatform es m\u00e1s limitado en iOS"
       ]
     },
     {
@@ -7006,7 +7007,7 @@
     },
     {
       "path": "web/public/content/node/modulo-12.md",
-      "lines": 276,
+      "lines": 387,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -7018,11 +7019,11 @@
         "### Tema 2: Uniendo cada m\u00f3dulo del track",
         "### Tema 3: Qu\u00e9 le falta a esta API para producci\u00f3n real",
         "### Tema 4: Pr\u00f3ximos pasos \u2014 microservicios, colas de mensajes y TypeScript",
+        "### Tema 5: Posiciones espaciales y Socket.IO con orden recuperable",
+        "### Tema 6: Archivos y notificaciones push sin convertirlos en autorizaci\u00f3n",
         "## Proyecto transversal RutaFlow: Comando idempotente de entrega",
         "### Capacidad y fundamento",
-        "### Implementaci\u00f3n guiada",
-        "### Verificaci\u00f3n profesional",
-        "## Criterio transversal de calidad del c\u00f3digo"
+        "### Implementaci\u00f3n guiada"
       ]
     },
     {
@@ -7132,7 +7133,7 @@
     },
     {
       "path": "web/public/content/node/modulo-5.md",
-      "lines": 266,
+      "lines": 274,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -7142,13 +7143,13 @@
         "## Contenido te\u00f3rico",
         "### Tema 1: PostgreSQL desde Node con el driver puro",
         "### Tema 2: Prisma \u2014 schema, migraciones y queries tipadas",
+        "#### C\u00f3mo leer `@id`, `@default`, `@relation` y `@@index`",
         "### Tema 3: Pool de conexiones y transacciones",
         "### Tema 4: MongoDB con Mongoose y otras alternativas de ORM",
         "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
         "## Ejercicios de evaluaci\u00f3n",
-        "### Ejercicio 1: Cu\u00e1ndo un ORM ayuda y cu\u00e1ndo estorba",
-        "### Ejercicio 2: Por qu\u00e9 un pool de conexiones"
+        "### Ejercicio 1: Cu\u00e1ndo un ORM ayuda y cu\u00e1ndo estorba"
       ]
     },
     {
@@ -8957,7 +8958,7 @@
     },
     {
       "path": "web/public/content/react/modulo-1.md",
-      "lines": 243,
+      "lines": 260,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -8966,14 +8967,14 @@
         "## S\u00edlabo",
         "## Contenido te\u00f3rico",
         "### Tema 1: useState y actualizaciones funcionales",
+        "#### Por qu\u00e9 los Hooks dependen del orden de llamada",
         "### Tema 2: Render frente a commit",
         "### Tema 3: Batching de actualizaciones",
         "### Tema 4: Componentes controlados",
         "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
         "## Ejercicios de evaluaci\u00f3n",
-        "### Ejercicio 1: El bug de count + 1 repetido",
-        "### Ejercicio 2: Render vs commit"
+        "### Ejercicio 1: El bug de count + 1 repetido"
       ]
     },
     {
@@ -9469,7 +9470,7 @@
     },
     {
       "path": "web/public/content/spring-boot/modulo-10.md",
-      "lines": 218,
+      "lines": 383,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -9480,12 +9481,12 @@
         "### Tema 1: Config Server y service discovery",
         "### Tema 2: Spring Cloud Gateway",
         "### Tema 3: Circuit breaker con Resilience4j",
+        "### Tema 4: OAuth2/OIDC, Keycloak y Token Relay sin perder la frontera de autorizaci\u00f3n",
+        "### Tema 5: HTTP Interfaces, deadlines y descubrimiento seg\u00fan el entorno",
+        "### Tema 6: DDD para decidir l\u00edmites y propiedad de datos",
         "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
-        "## Ejercicios de evaluaci\u00f3n",
-        "### Ejercicio 1: Problema resuelto por un Config Server centralizado",
-        "### Ejercicio 2: Qu\u00e9 hace un circuit breaker",
-        "### Ejercicio 3: Service discovery por nombre"
+        "## Ejercicios de evaluaci\u00f3n"
       ]
     },
     {
@@ -9763,7 +9764,7 @@
     },
     {
       "path": "web/public/content/topic-index.json",
-      "lines": 5302,
+      "lines": 5366,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -11563,7 +11564,7 @@
     },
     {
       "path": "web/src/app/app.spec.ts",
-      "lines": 132,
+      "lines": 134,
       "kind": "angular-app",
       "symbols": [],
       "imports": [
@@ -11849,7 +11850,7 @@
     },
     {
       "path": "web/src/app/course/lesson-viewer.scss",
-      "lines": 306,
+      "lines": 308,
       "kind": "angular-app",
       "symbols": [],
       "imports": [],
@@ -11857,12 +11858,11 @@
     },
     {
       "path": "web/src/app/course/lesson-viewer.ts",
-      "lines": 653,
+      "lines": 637,
       "kind": "angular-app",
       "symbols": [
         "LessonViewerComponent",
         "TocItem",
-        "verified",
         "track",
         "module",
         "moduleIndex",
@@ -11883,7 +11883,8 @@
         "examSeconds",
         "isComplete",
         "moduleQuiz",
-        "moduleQuizScore"
+        "moduleQuizScore",
+        "moduleQuizReady"
       ],
       "imports": [
         "@angular/common",
@@ -11897,8 +11898,7 @@
         "../content.service",
         "../progress.service",
         "../theme.service",
-        "./lab-verification",
-        "react"
+        "./lab-verification"
       ],
       "headings": []
     },

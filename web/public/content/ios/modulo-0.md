@@ -13,6 +13,8 @@ Dominar los fundamentos de Swift que lo distinguen de la mayoría de los lenguaj
 3. Distinguir `struct` (value type) de `class` (reference type) mediante un experimento de copia.
 4. Definir un protocolo y hacer que dos tipos distintos lo implementen.
 5. Modelar un estado con un enum con valores asociados.
+6. Usar closures y transformaciones de colecciones sin ocultar efectos ni errores.
+7. Crear una función genérica con restricciones que preserve seguridad de tipos.
 
 **Contenido**
 
@@ -20,10 +22,12 @@ Dominar los fundamentos de Swift que lo distinguen de la mayoría de los lenguaj
 - `struct` vs `class`: value types vs reference types.
 - Protocolos y extensiones.
 - Enums con valores asociados.
+- Closures, captura de valores y funciones de orden superior.
+- Genéricos, restricciones y algoritmos de colecciones.
 
 **Evaluación**
 
-Modelo de dominio usando structs, enums con valores asociados y sin force-unwrap, más tres ejercicios de evaluación.
+Modelo de dominio seguro y transformación genérica de una ruta, más cuatro ejercicios de evaluación.
 
 ---
 
@@ -149,6 +153,110 @@ enum Resultado {
 // El compilador exige manejar TODOS los casos en un switch, o un default explícito
 ```
 
+### Tema 4: Closures, colecciones y genéricos con propósito
+
+**Conceptos clave:** función como valor, closure de escape, lista de captura, `map`, `filter`, `compactMap`, `reduce`, parámetro genérico y cláusula `where`.
+
+Construiremos una preparación de ruta para RutaFlow. Una closure es una función que puede almacenarse, pasarse y ejecutarse después. SwiftUI, `URLSession`, Combine y UIKit dependen de ellas; por eso debes comprender parámetros, retorno, captura y duración antes de usar sintaxis abreviada como `$0` en todas partes.
+
+**Requisitos previos:** temas 1–3 y Swift instalado. Crea `Sources/RutaFoundation/RoutePreparation.swift` y `Tests/RutaFoundationTests/RoutePreparationTests.swift`. En macOS, Windows o Linux puedes practicar este tema como paquete independiente:
+
+```bash
+mkdir RutaFoundation && cd RutaFoundation
+swift package init --type library
+swift test
+```
+
+Empieza con transformaciones pequeñas y nombradas. `filter` conserva elementos, `map` transforma uno por uno, `compactMap` transforma y descarta resultados `nil`, y `reduce` acumula todos en un resultado.
+
+```swift
+public struct Stop: Equatable, Sendable {
+    public let id: UUID
+    public let sequence: Int
+    public let address: String
+    public let latitude: Double?
+    public let longitude: Double?
+}
+
+public struct Coordinate: Equatable, Sendable {
+    public let latitude: Double
+    public let longitude: Double
+}
+
+public func validCoordinates(from stops: [Stop]) -> [Coordinate] {
+    stops
+        .sorted { $0.sequence < $1.sequence }
+        .compactMap { stop in
+            guard let latitude = stop.latitude,
+                  let longitude = stop.longitude,
+                  (-90...90).contains(latitude),
+                  (-180...180).contains(longitude) else { return nil }
+            return Coordinate(latitude: latitude, longitude: longitude)
+        }
+}
+```
+
+La forma larga `{ stop in ... }` es preferible cuando hay varias reglas; `$0` funciona bien en una expresión corta. `compactMap` no debe usarse para esconder datos inválidos sin una decisión: aquí el nombre de la función declara que solo devuelve coordenadas válidas; en un proceso contable quizá debas devolver errores en vez de descartar.
+
+Un algoritmo genérico expresa una relación entre tipos sin perder información en `Any`. La restricción `ID: Hashable` permite usar un diccionario y mantiene el tipo concreto del identificador:
+
+```swift
+public enum DuplicateID<ID: Hashable>: Error, Equatable {
+    case found(ID)
+}
+
+public func indexed<Element, ID: Hashable>(
+    _ elements: [Element],
+    by id: (Element) -> ID
+) throws -> [ID: Element] {
+    try elements.reduce(into: [:]) { result, element in
+        let key = id(element)
+        guard result.updateValue(element, forKey: key) == nil else {
+            throw DuplicateID.found(key)
+        }
+    }
+}
+
+let stopsByID = try indexed(stops, by: \.id)
+```
+
+El parámetro `by` es una closure no escapante: se usa antes de que termine `indexed`. Cuando una función guarda una closure para ejecutarla después, el parámetro necesita `@escaping`. Esa diferencia importa para vida de objetos y captura de `self`.
+
+```swift
+public final class RouteObserver {
+    private var onUpdate: (([Stop]) -> Void)?
+
+    public func observe(_ action: @escaping ([Stop]) -> Void) {
+        onUpdate = action
+    }
+
+    public func publish(_ stops: [Stop]) { onUpdate?(stops) }
+}
+```
+
+Una lista de captura fija cómo se toma un valor. `[expectedRouteID]` captura el valor actual; capturar una clase toma su referencia. `[weak self]` es relevante solamente cuando la closure puede sobrevivir a la llamada y existe una cadena de propiedad capaz de formar ciclo, no como decoración obligatoria de cada closure.
+
+```mermaid
+flowchart LR
+  A[Paradas crudas] --> S[sorted por secuencia]
+  S --> C[compactMap valida coordenadas]
+  C --> R[Coordenadas de ruta]
+  A --> I[indexed genérico por ID]
+  I --> D{ID repetido?}
+  D -->|sí| E[DuplicateID]
+  D -->|no| M[Diccionario tipado]
+```
+
+**Analogía:** las funciones de orden superior son estaciones de una banda transportadora: cada una ordena, selecciona o transforma. Un genérico describe la forma de la máquina sin exigir que todos los paquetes se conviertan en cajas sin etiqueta como ocurriría con `Any`.
+
+**¿Por qué es importante?** Closures permiten separar una política variable del algoritmo que la usa; genéricos reutilizan el algoritmo conservando comprobación del compilador. Sin comprender captura y restricciones aparecen ciclos de memoria, errores escondidos y APIs difíciles de entender.
+
+**Ejecución y resultado esperado:** ejecuta `swift test`. Una lista desordenada debe producir coordenadas ordenadas, las posiciones imposibles deben quedar fuera y dos paradas con el mismo ID deben producir `DuplicateID.found(id)` sin crash ni `Any`.
+
+**Fallo deliberado:** cambia `compactMap` por `map` y observa que el resultado se vuelve `[Coordinate?]`; después elimina la detección de duplicados y verifica cómo el último elemento sobrescribe silenciosamente al primero. Restablece ambas garantías y documenta cuándo descartar un inválido sería incorrecto.
+
+**Modificación sin copiar:** generaliza la preparación para aceptar una política `(Stop) -> Result<Coordinate, ValidationError>`. Devuelve válidos y errores por separado, y demuestra con tests que ninguna parada desaparece sin explicación.
+
 ---
 
 ## Ruta de proyecto progresivo desde carpeta vacía
@@ -193,6 +301,8 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 | 3 | Crear un `struct` y una `class`, comparar copias | Ver Tema 2 | Value type vs reference type |
 | 4 | Definir un protocolo y dos implementaciones | Ver Tema 3 | Tipos no relacionados compartiendo contrato |
 | 5 | Modelar un estado con un enum con valores asociados | Ver Tema 3 | `switch` exhaustivo |
+| 6 | Preparar coordenadas con closures | Ver Tema 4 | Ordena, valida y transforma sin force-unwrap |
+| 7 | Indexar elementos genéricamente | Ver Tema 4 | Conserva tipos y detecta IDs duplicados |
 
 **Verificación:** el laboratorio se considera exitoso si el código no contiene ningún force-unwrap (`!`) innecesario, y si el `switch` sobre el enum modelado maneja explícitamente todos los casos posibles sin un `default` genérico que oculte casos no considerados.
 
@@ -201,6 +311,8 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 - **Usar force-unwrap (`!`) por comodidad en vez de `if let`/`guard let`.** Arriesga un crash en producción; resérvalo solo para certeza absoluta verificada manualmente.
 - **Usar `class` por defecto para modelos de datos simples.** Prefiere `struct` para prevenir mutaciones compartidas inesperadas.
 - **Agregar un `default` genérico a un `switch` sobre un enum propio.** Oculta la falta de manejo explícito de casos nuevos agregados en el futuro.
+- **Usar `$0` en closures con varias reglas.** Nombra el parámetro cuando mejore la lectura y separa reglas que necesiten prueba propia.
+- **Borrar duplicados o inválidos silenciosamente.** Decide si descartar es parte explícita del contrato o si debes devolver un error.
 
 ---
 
@@ -232,6 +344,17 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 
 **Criterios de éxito:**
 - Explica correctamente la detección forzada de casos nuevos no manejados como la ventaja.
+
+### Ejercicio 4: Closure, genérico y pérdida silenciosa de información
+
+**Enunciado:** una función convierte `[Stop]` en `[UUID: Stop]` mediante `Dictionary(uniqueKeysWithValues:)` y la aplicación falla cuando llegan IDs repetidos. Diseña una alternativa genérica y explica la función de la closure que extrae la identidad.
+
+**Solución esperada:** una función `indexed<Element, ID: Hashable>(_:by:) throws -> [ID: Element]` recibe una closure `(Element) -> ID`, detecta el ID antes de sobrescribir y devuelve un error tipado. La closure permite reutilizar el algoritmo con cualquier elemento e identidad sin convertirlos a `Any`.
+
+**Criterios de éxito:**
+- Mantiene tipos genéricos y la restricción `Hashable` mínima necesaria.
+- Detecta duplicados de forma explícita.
+- Explica por qué la closure separa política de identidad y algoritmo de indexación.
 
 ---
 
@@ -267,6 +390,7 @@ Estas fuentes sustentan los conceptos y deben consultarse para verificar detalle
 - `struct` (value type, copia independiente) se prefiere para modelos de datos; `class` (reference type, instancia compartida) para identidad y mutación compartida intencional.
 - Los protocolos permiten composición de comportamiento entre tipos no relacionados, incluso tipos ya definidos por Swift.
 - Los enums con valores asociados modelan estado de forma exhaustiva, verificada por el compilador en cada `switch`.
+- Closures expresan políticas y transformaciones; genéricos las reutilizan sin perder seguridad de tipos.
 
 **Conceptos aprendidos**
 
@@ -274,6 +398,7 @@ Estas fuentes sustentan los conceptos y deben consultarse para verificar detalle
 - `struct` vs `class`.
 - Protocolos y extensiones.
 - Enums con valores asociados.
+- Closures, captura, transformaciones de colecciones y genéricos.
 
 **Próximos pasos**
 

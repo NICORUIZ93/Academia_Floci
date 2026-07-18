@@ -30,12 +30,33 @@ def evaluate(block: str) -> dict[str, bool]:
     return {
         "explanation": len(re.findall(r"\b\w+\b", block)) >= 90,
         "code": bool(re.search(r"^```(?!mermaid)", block, re.MULTILINE)),
-        "visual": "```mermaid" in block or "Diagrama:" in block,
+        "visual": "```mermaid" in block or bool(re.search(r"[┌┐└┘├┤┬┴┼─│]", block)),
         "filePath": bool(re.search(r"(?:src/|lib/|app/|\.github/|[\w-]+\.(?:ts|tsx|js|java|kt|swift|dart|py|tf|ya?ml|json))", block)),
         "runCommand": bool(re.search(r"\b(npm|npx|node|python|java|gradle|mvn|flutter|swift|docker|kubectl|terraform|aws)\b", block, re.IGNORECASE)),
         "expectedResult": bool(re.search(r"(resultado esperado|salida esperada|debe mostrar|verifica)", block, re.IGNORECASE)),
         "practice": bool(re.search(r"(práctica|ejercicio|laboratorio|predice|modifica)", block, re.IGNORECASE)),
         "project": "RutaFlow" in block,
+        "modelMental": bool(re.search(r"(analogía|modelo mental|por qué es importante)", block, re.IGNORECASE)),
+        "limitsDecision": bool(re.search(r"(cuándo|límite|limitación|no usar|no conviene|diferencia|frente a|trade.?off)", block, re.IGNORECASE)),
+    }
+
+
+def classify(criteria: dict[str, bool], block: str) -> dict[str, bool]:
+    """Distingue presencia editorial de una lección realmente practicable."""
+    required = (
+        "explanation", "code", "filePath", "runCommand", "expectedResult",
+        "practice", "project", "modelMental", "limitsDecision",
+    )
+    generic_markers = (
+        "Este tema se incorpora de forma explícita porque no aparecía",
+        "Este tema se estudia identificando el problema, sus prerrequisitos",
+        "amplía el mapa mental y permite comprender decisiones",
+        "Evidence(topic:",
+        "passed: true",
+    )
+    return {
+        "practicable": all(criteria[name] for name in required),
+        "genericScaffold": any(marker in block for marker in generic_markers),
     }
 
 
@@ -44,23 +65,34 @@ def build() -> dict:
     for path in sorted(CONTENT.glob("*/modulo-*.md")):
         module = int(re.search(r"\d+", path.stem).group())
         for title, block in topic_blocks(path.read_text(encoding="utf-8")):
-            tracks[path.parent.name].append({"module": module, "topic": title, "criteria": evaluate(block)})
+            criteria = evaluate(block)
+            tracks[path.parent.name].append({
+                "module": module,
+                "topic": title,
+                "criteria": criteria,
+                "classification": classify(criteria, block),
+            })
     summary = {}
     for track, topics in sorted(tracks.items()):
         counts = Counter()
         for topic in topics:
             counts.update(name for name, passed in topic["criteria"].items() if passed)
-        summary[track] = {"topics": len(topics), **{name: counts[name] for name in next(iter(topics))["criteria"]}}
-    return {"criteria": ["explanation", "code", "visual", "filePath", "runCommand", "expectedResult", "practice", "project"], "summary": summary, "topics": tracks}
+        summary[track] = {
+            "topics": len(topics),
+            **{name: counts[name] for name in next(iter(topics))["criteria"]},
+            "practicable": sum(topic["classification"]["practicable"] for topic in topics),
+            "genericScaffold": sum(topic["classification"]["genericScaffold"] for topic in topics),
+        }
+    return {"criteria": ["explanation", "code", "visual", "filePath", "runCommand", "expectedResult", "practice", "project", "modelMental", "limitsDecision"], "summary": summary, "topics": tracks}
 
 
 def render_markdown(data: dict) -> str:
-    lines = ["# Auditoría pedagógica tema por tema", "", "Esta auditoría mide el contenido editorial real. El lector completa en pantalla las rutas, comandos, resultado esperado, práctica y gráfico conceptual que falten, pero el informe conserva la deuda del Markdown para orientar la revisión humana.", "", "| Track | Temas | Explicación | Código | Gráfico | Ruta | Ejecución | Resultado | Práctica | Proyecto |", "|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|"]
+    lines = ["# Auditoría pedagógica tema por tema", "", "Esta auditoría mide exclusivamente el contenido editorial real. **Explicación** solo indica extensión mínima; no demuestra calidad. **Practicable** exige simultáneamente explicación, código, ruta, ejecución, resultado, práctica, proyecto, modelo mental y límites. **Texto genérico** detecta plantillas que nombran un tema sin enseñarlo. Una ausencia o plantilla es deuda editorial explícita.", "", "| Track | Temas | Explicación | Código | Ruta | Ejecución | Resultado | Práctica | Proyecto | Modelo mental | Límites | Practicable | Texto genérico |", "|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|"]
     for track, row in data["summary"].items():
-        lines.append(f"| {track} | {row['topics']} | {row['explanation']} | {row['code']} | {row['visual']} | {row['filePath']} | {row['runCommand']} | {row['expectedResult']} | {row['practice']} | {row['project']} |")
-    total = {key: sum(row[key] for row in data["summary"].values()) for key in ["topics", *data["criteria"]]}
-    lines.append(f"| **Total** | **{total['topics']}** | **{total['explanation']}** | **{total['code']}** | **{total['visual']}** | **{total['filePath']}** | **{total['runCommand']}** | **{total['expectedResult']}** | **{total['practice']}** | **{total['project']}** |")
-    lines.extend(["", "## Cobertura garantizada por el lector", "", "Los 1.201 temas reciben en tiempo de ejecución una guía de cuatro pasos con ruta de archivo, ubicación dentro del proyecto, comando, resultado esperado y práctica. Cuando el Markdown no posee código, el lector añade un punto de partida específico para el lenguaje del track; cuando no posee diagrama, añade un mapa concepto → aplicación → evidencia.", ""])
+        lines.append(f"| {track} | {row['topics']} | {row['explanation']} | {row['code']} | {row['filePath']} | {row['runCommand']} | {row['expectedResult']} | {row['practice']} | {row['project']} | {row['modelMental']} | {row['limitsDecision']} | {row['practicable']} | {row['genericScaffold']} |")
+    total = {key: sum(row[key] for row in data["summary"].values()) for key in ["topics", *data["criteria"], "practicable", "genericScaffold"]}
+    lines.append(f"| **Total** | **{total['topics']}** | **{total['explanation']}** | **{total['code']}** | **{total['filePath']}** | **{total['runCommand']}** | **{total['expectedResult']}** | **{total['practice']}** | **{total['project']}** | **{total['modelMental']}** | **{total['limitsDecision']}** | **{total['practicable']}** | **{total['genericScaffold']}** |")
+    lines.extend(["", "## Regla editorial", "", "Un término listado en el sílabo no está cubierto hasta que el Markdown explique su modelo mental, muestre una aplicación específica, indique una decisión o límite y proponga evidencia verificable. El lector no genera diagramas decorativos para ocultar esa deuda.", ""])
     return "\n".join(lines)
 
 
@@ -73,7 +105,7 @@ def main() -> None:
     else:
         JSON_REPORT.write_text(json_text, encoding="utf-8"); MD_REPORT.write_text(md_text, encoding="utf-8")
     count = sum(row["topics"] for row in data["summary"].values())
-    if count != 1201: raise SystemExit(f"Se esperaban 1201 temas; se encontraron {count}")
+    if count != 1217: raise SystemExit(f"Se esperaban 1217 temas; se encontraron {count}")
     print(f"Auditoría pedagógica detallada OK: {count} temas en {len(data['summary'])} tracks")
 
 

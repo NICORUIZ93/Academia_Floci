@@ -35,6 +35,12 @@ Pantalla Compose con estado elevado (state hoisting) correctamente aplicado, má
 
 **Conceptos clave:** UI como función pura del estado, re-ejecución automática ante cambios.
 
+#### Qué hace realmente `@Composable`
+
+`@Composable` es una anotación que activa un tratamiento especial del **plugin de compilación de Compose**. No transforma la función en una vista por reflexión ni es un comentario para humanos: el compilador modifica su contrato interno para que participe en la composición, pueda recordar su posición en el árbol y registrar las lecturas de estado que determinan futuras recomposiciones. Por eso una función composable solo puede invocarse desde otra función composable o desde un punto de entrada de Compose, como `setContent`.
+
+La anotación describe una capacidad y también impone restricciones. Una función composable puede ejecutarse muchas veces, saltarse durante una recomposición o cancelarse; su cuerpo no debe enviar una petición, escribir en base de datos ni modificar estado externo directamente. Esos efectos se coordinan con APIs como `LaunchedEffect`, `DisposableEffect` o callbacks de usuario. Si el compilador muestra «Composable invocations can only happen from the context of a @Composable function», el problema no se resuelve añadiendo `@Composable` indiscriminadamente: primero decide si esa función describe UI o si la llamada debe moverse a una frontera composable.
+
 ```kotlin
 @Composable
 fun TarjetaTarea(titulo: String, completada: Boolean) {

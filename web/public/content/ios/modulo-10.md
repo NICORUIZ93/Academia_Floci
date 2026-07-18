@@ -12,6 +12,7 @@ Construir una app rápida, accesible y que respeta las Human Interface Guideline
 2. Activar VoiceOver y navegar la app solo con gestos de accesibilidad.
 3. Agregar `.accessibilityLabel` a elementos sin texto visible.
 4. Verificar la app con Dynamic Type en su tamaño más grande y en modo oscuro.
+5. Construir una pantalla UIKit programática con ciclo de vida, Auto Layout, tabla reutilizable y memoria segura.
 
 **Contenido**
 
@@ -22,10 +23,11 @@ Construir una app rápida, accesible y que respeta las Human Interface Guideline
 - `@ViewBuilder` y `.matchedGeometryEffect()`.
 - Interop con UIKit: `UIViewRepresentable` y `UIViewControllerRepresentable`.
 - Novedades recientes: Liquid Glass, layouts volumétricos y WebView nativo.
+- UIKit profesional: `UIViewController`, Auto Layout, `UITableView` y ARC.
 
 **Evaluación**
 
-Auditoría de accesibilidad (VoiceOver) de una pantalla con mejoras aplicadas, más tres ejercicios de evaluación.
+Auditoría de accesibilidad y pantalla UIKit verificable, más cuatro ejercicios de evaluación.
 
 ---
 
@@ -99,6 +101,138 @@ UIViewRepresentable            → embebe una View de UIKit DENTRO de SwiftUI
 UIViewControllerRepresentable  → embebe un ViewController de UIKit DENTRO de SwiftUI
 ```
 
+### Tema 4: UIKit desde cero para mantener aplicaciones reales
+
+**Conceptos clave:** `UIViewController`, ciclo de vida, vista programática, Auto Layout, `UITableViewDiffableDataSource`, reutilización, ARC, captura débil y migración gradual.
+
+Construiremos en UIKit la lista de paradas de RutaFlow. Aunque un proyecto nuevo pueda elegir SwiftUI, muchas aplicaciones empresariales conservan pantallas UIKit, Storyboards o componentes de terceros. Saber envolver un controlador no basta: necesitas comprender quién crea la vista, cuándo se carga, cómo se actualiza y por qué una referencia fuerte puede impedir que salga de memoria.
+
+**Requisitos previos:** módulos 0–9, Xcode y un proyecto iOS existente. Crea un grupo `Features/Stops/UIKit` y estos archivos:
+
+```text
+RutaFlow/
+├── Features/Stops/Domain/StopSummary.swift
+├── Features/Stops/UIKit/StopsViewController.swift
+├── Features/Stops/UIKit/StopCell.swift
+├── Features/Stops/UIKit/StopsViewModel.swift
+└── Features/Stops/UIKit/StopsViewControllerRepresentable.swift
+RutaFlowTests/Features/Stops/StopsViewModelTests.swift
+```
+
+`loadView()` construye la jerarquía cuando no usas Storyboard. `viewDidLoad()` configura lo que debe ocurrir una vez; `viewWillAppear` sirve para trabajo que debe repetirse antes de cada presentación. No hagas una petición de red incondicional en cada aparición sin definir caché, cancelación y actualización.
+
+```swift
+import UIKit
+
+@MainActor
+final class StopsViewController: UIViewController {
+    enum Section { case main }
+
+    private let tableView = UITableView(frame: .zero, style: .insetGrouped)
+    private let viewModel: StopsViewModel
+    private lazy var dataSource = makeDataSource()
+
+    init(viewModel: StopsViewModel) {
+        self.viewModel = viewModel
+        super.init(nibName: nil, bundle: nil)
+    }
+
+    @available(*, unavailable)
+    required init?(coder: NSCoder) { fatalError("Usa init(viewModel:)") }
+
+    override func loadView() {
+        view = UIView()
+        view.backgroundColor = .systemBackground
+        tableView.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(tableView)
+        NSLayoutConstraint.activate([
+            tableView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
+            tableView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
+            tableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+        ])
+    }
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        title = "Paradas"
+        tableView.register(StopCell.self, forCellReuseIdentifier: StopCell.reuseID)
+        viewModel.onChange = { [weak self] stops in self?.render(stops) }
+        Task { await viewModel.load() }
+    }
+}
+```
+
+Auto Layout expresa relaciones, no posiciones absolutas. Al anclar la tabla a `safeAreaLayoutGuide`, el contenido respeta cámara, barra y orientaciones. `translatesAutoresizingMaskIntoConstraints = false` evita que UIKit genere restricciones implícitas que compitan con las tuyas.
+
+Usa una fuente diffable para que identidad y cambios sean explícitos. `StopSummary.ID` debe ser estable; no uses el índice de la fila como identidad porque ordenar o insertar haría que la selección apunte a otra parada.
+
+```swift
+private func makeDataSource() -> UITableViewDiffableDataSource<Section, StopSummary.ID> {
+    UITableViewDiffableDataSource(tableView: tableView) { [weak viewModel] table, path, id in
+        let cell = table.dequeueReusableCell(
+            withIdentifier: StopCell.reuseID,
+            for: path
+        ) as! StopCell
+        if let stop = viewModel?.stop(id: id) { cell.configure(with: stop) }
+        return cell
+    }
+}
+
+private func render(_ stops: [StopSummary]) {
+    var snapshot = NSDiffableDataSourceSnapshot<Section, StopSummary.ID>()
+    snapshot.appendSections([.main])
+    snapshot.appendItems(stops.map(\.id))
+    dataSource.apply(snapshot, animatingDifferences: true)
+}
+```
+
+La celda reutilizable debe restablecer contenido que podría pertenecer a una fila anterior. Si carga imágenes, conserva y cancela la tarea correspondiente en `prepareForReuse()`.
+
+```swift
+final class StopCell: UITableViewCell {
+    static let reuseID = "StopCell"
+    private var imageTask: Task<Void, Never>?
+
+    func configure(with stop: StopSummary) {
+        var content = defaultContentConfiguration()
+        content.text = stop.recipientName
+        content.secondaryText = stop.address
+        contentConfiguration = content
+        accessibilityLabel = "Entrega para \(stop.recipientName), \(stop.address)"
+    }
+
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        imageTask?.cancel()
+        imageTask = nil
+        contentConfiguration = nil
+        accessibilityLabel = nil
+    }
+}
+```
+
+ARC libera instancias cuando ya no existen referencias fuertes. El controlador retiene al ViewModel y, si el closure del ViewModel retiene al controlador, ambos forman un ciclo. `[weak self]` rompe ese ciclo cuando el callback no necesita prolongar la vida de la pantalla. No uses `unowned` por costumbre: fallará si el objeto ya fue liberado.
+
+```mermaid
+flowchart LR
+  VC[StopsViewController] -->|fuerte| VM[StopsViewModel]
+  VM -->|onChange fuerte| C[Closure]
+  C -. weak self .-> VC
+  VC --> TV[UITableView]
+  TV --> DS[Diffable data source]
+```
+
+**Analogía:** el controlador es el director de una terminal, Auto Layout define acuerdos de espacio y la fuente diffable mantiene el tablero de salidas por identificadores. La celda es una pantalla reutilizada: debe limpiarse antes de anunciar otra parada.
+
+**¿Por qué es importante?** UIKit sigue presente en aplicaciones productivas y SDKs. Comprender ciclo de vida, restricciones, reutilización y ARC permite mantenerlas, diagnosticar fugas y migrar pantalla por pantalla sin reescribir todo el producto.
+
+**Ejecución y resultado esperado:** desde Xcode ejecuta el esquema en un iPhone pequeño y uno grande. Deben mostrarse paradas sin advertencias de constraints, Dynamic Type debe expandir texto sin superposición y al entrar/salir diez veces Instruments no debe conservar diez controladores.
+
+**Fallo deliberado:** elimina `[weak self]`, abre y cierra la pantalla diez veces y usa Memory Graph. Identifica el ciclo `controller → viewModel → closure → controller`; restáuralo y verifica que `deinit` se ejecute. Después omite `prepareForReuse` y desplázate rápidamente para observar contenido incorrecto heredado.
+
+**Modificación sin copiar:** presenta este controlador desde SwiftUI mediante `UIViewControllerRepresentable`, luego implementa el camino inverso con `UIHostingController`. Documenta cuál lado posee navegación y ciclo de vida durante una migración gradual.
+
 ---
 
 ## Criterio transversal de calidad del código
@@ -129,6 +263,8 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 | 2 | Activar VoiceOver y navegar solo con gestos | Ver Tema 2 | Sin mirar la pantalla |
 | 3 | Agregar `.accessibilityLabel` donde falte | Ver Tema 2 | Elementos sin texto visible |
 | 4 | Verificar con Dynamic Type en tamaño más grande y dark mode | Ver Tema 3 | Revisa layouts rotos |
+| 5 | Construir la lista UIKit de paradas | Ver Tema 4 | Ciclo de vida, constraints y fuente diffable |
+| 6 | Buscar una fuga con Memory Graph | Ver Tema 4 | Rompe y corrige el ciclo de retención |
 
 **Verificación:** el laboratorio se considera exitoso si VoiceOver describe correctamente todos los elementos interactivos tras las mejoras aplicadas, y si la pantalla se ve correctamente sin layouts rotos con el tamaño de texto más grande disponible.
 
@@ -137,6 +273,8 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 - **Confiar en la percepción subjetiva de fluidez en el simulador sin medir con Instruments.** El hardware de desarrollo es más potente; mide en dispositivo real.
 - **Omitir `.accessibilityLabel` en íconos interactivos.** Sin él, VoiceOver los describe genéricamente como "imagen", inútil para el usuario.
 - **Ignorar las HIG asumiendo que usar SwiftUI garantiza automáticamente una sensación nativa.** Revisa activamente las convenciones documentadas por Apple.
+- **Usar índices como identidad de una tabla.** Usa IDs estables para que inserciones y ordenamientos no cambien el significado de una fila.
+- **Capturar `self` fuertemente en un callback retenido.** Dibuja el grafo de referencias y usa captura débil cuando el callback no sea propietario.
 
 ---
 
@@ -168,6 +306,17 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 
 **Criterios de éxito:**
 - Explica correctamente la descripción genérica e inútil de VoiceOver como el problema concreto.
+
+### Ejercicio 4: Diagnóstico de una pantalla UIKit que no se libera
+
+**Enunciado:** `StopsViewController` desaparece visualmente, pero `deinit` nunca se ejecuta. El controlador posee un ViewModel y este guarda un closure que actualiza la tabla. Explica cómo comprobar y corregir el problema sin aplicar `weak` indiscriminadamente.
+
+**Solución esperada:** usa Memory Graph o Instruments para inspeccionar la cadena de retención. Si el closure retenido por el ViewModel captura fuertemente al controlador, existe el ciclo controlador→ViewModel→closure→controlador. Captura `self` débilmente o cambia la propiedad del callback; después repite el flujo y verifica `deinit`. Las dependencias que sí representan propiedad estable permanecen fuertes.
+
+**Criterios de éxito:**
+- Identifica la cadena completa de referencias.
+- Verifica el diagnóstico con una herramienta.
+- Justifica dónde usar referencia fuerte, débil o ninguna captura.
 
 ---
 
@@ -224,6 +373,7 @@ actor InteroperabilidadConUikitVerifier {
 - Navegar activamente con VoiceOver expone huecos de accesibilidad que una inspección visual no puede revelar.
 - Seguir las Human Interface Guidelines hace que una app se sienta genuinamente nativa, más allá de simplemente usar SwiftUI.
 - Dynamic Type y dark mode requieren verificación activa en sus configuraciones extremas para detectar layouts rotos.
+- UIKit exige comprender ciclo de vida, Auto Layout, reutilización e identidad, además de sintaxis visual.
 
 **Conceptos aprendidos**
 
@@ -233,6 +383,7 @@ actor InteroperabilidadConUikitVerifier {
 - Dynamic Type y dark mode.
 - `@ViewBuilder` y `.matchedGeometryEffect()`.
 - Interop con UIKit.
+- `UIViewController`, `UITableViewDiffableDataSource`, Auto Layout y ARC.
 
 **Próximos pasos**
 

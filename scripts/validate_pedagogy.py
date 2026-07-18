@@ -76,5 +76,5 @@ print(
     f"{totals['files']} lecciones, {totals['topics']} temas, "
     f"{totals['code']} bloques de código, {totals['labs']} laboratorios y "
     f"{totals['exercises']} ejercicios. Casos reales explícitos: {totals['cases']}/{totals['topics']}; "
-    f"diagramas editoriales: {totals['diagrams']}/{totals['topics']} (el lector completa los faltantes)."
+    f"diagramas editoriales: {totals['diagrams']}/{totals['topics']} (los faltantes permanecen como deuda; no se generan gráficos decorativos)."
 )

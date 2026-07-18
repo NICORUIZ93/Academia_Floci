@@ -14,6 +14,7 @@ Dominar la terminal de Linux como herramienta principal de trabajo: navegación,
 4. Escribir scripts bash robustos con `set -euo pipefail` y variables de entorno.
 5. Programar tareas con `cron` y aplicar hardening básico (SSH, firewall).
 6. Explicar el modelo OSI/TCP-IP a un nivel práctico y situar la cultura DevOps en el ciclo completo de entrega de software.
+7. Configurar NGINX como proxy inverso, preservar identidad de petición y diagnosticar un `502` desde logs.
 
 **Contenido**
 
@@ -25,10 +26,11 @@ Dominar la terminal de Linux como herramienta principal de trabajo: navegación,
 - Hardening: SSH sin contraseña, firewalls (`ufw`/`iptables`), SELinux/AppArmor.
 - Redes: modelo OSI, TCP/IP, DNS y balanceadores de carga.
 - Cultura DevOps y el ciclo Plan→Code→Build→Test→Release→Deploy→Operate→Monitor.
+- Servidor frontal con NGINX: proxy inverso, cabeceras, logs y fallos upstream.
 
 **Evaluación**
 
-Un laboratorio que construye un script bash idempotente de preparación de entorno, y tres ejercicios de evaluación sobre permisos, señales y robustez de scripts.
+Un laboratorio de Linux más un proxy inverso reproducible, y cuatro ejercicios de evaluación.
 
 ---
 
@@ -284,6 +286,116 @@ Cada uno de los módulos siguientes de este track —Git, Docker, CI, CD, Kubern
          en Monitor retroalimenta el siguiente Plan)
 ```
 
+### Tema 9: NGINX y proxies desde cero
+
+**Conceptos clave:** servidor web, proxy directo, proxy inverso, upstream, terminación TLS, cabeceras reenviadas, access log, error log y `502 Bad Gateway`.
+
+Construiremos la entrada local de RutaFlow. El navegador llamará a `http://localhost:8080/api/health`; NGINX recibirá la petición y la reenviará al backend sin exponer su puerto directamente. Esto prepara el modelo mental para balanceadores cloud e Ingress/Gateway de Kubernetes.
+
+Un **proxy directo** representa al cliente: una organización puede obligar a sus equipos a salir a internet por él para aplicar políticas. Un **proxy inverso** representa a servidores: recibe tráfico público y decide qué backend interno atiende. NGINX puede servir archivos estáticos y actuar como proxy inverso; no confundas esta función con que la aplicación de negocio «viva dentro de NGINX».
+
+**Requisitos previos:** Docker y Compose funcionando. Crea:
+
+```text
+labs/nginx-rutaflow/
+├── compose.yaml
+├── nginx/default.conf
+└── backend/server.js
+```
+
+En `backend/server.js`, crea un backend mínimo que devuelve la identidad de la instancia y el correlation ID recibido:
+
+```js
+const http = require('node:http');
+const instance = process.env.INSTANCE_NAME ?? 'unknown';
+
+http.createServer((request, response) => {
+  if (request.url !== '/health') {
+    response.writeHead(404).end('not found');
+    return;
+  }
+  response.writeHead(200, {'content-type': 'application/json'});
+  response.end(JSON.stringify({
+    status: 'ok',
+    instance,
+    requestId: request.headers['x-request-id'] ?? null
+  }));
+}).listen(3000, '0.0.0.0');
+```
+
+En `nginx/default.conf`, define un upstream por nombre DNS de Compose. `proxy_set_header Host` conserva el host solicitado; `X-Forwarded-For` añade la IP del cliente a la cadena; `X-Forwarded-Proto` informa si la entrada original fue HTTP o HTTPS. La aplicación solo debe confiar en estas cabeceras cuando provienen de proxies conocidos, porque un cliente puede falsificarlas si llega directamente.
+
+```nginx
+upstream rutaflow_api {
+    server backend:3000 max_fails=3 fail_timeout=10s;
+    keepalive 16;
+}
+
+log_format rutaflow_json escape=json
+  '{"time":"$time_iso8601","request_id":"$request_id",'
+  '"status":$status,"method":"$request_method","uri":"$uri",'
+  '"upstream":"$upstream_addr","upstream_time":"$upstream_response_time"}';
+
+server {
+    listen 80;
+    access_log /var/log/nginx/access.log rutaflow_json;
+
+    location /api/ {
+        proxy_pass http://rutaflow_api/;
+        proxy_http_version 1.1;
+        proxy_set_header Connection "";
+        proxy_set_header Host $host;
+        proxy_set_header X-Request-ID $request_id;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_connect_timeout 2s;
+        proxy_read_timeout 5s;
+    }
+}
+```
+
+`proxy_pass http://rutaflow_api/;` incluye una barra final: dentro de `location /api/` reemplaza ese prefijo, por lo que `/api/health` llega como `/health`. Sin la barra, el backend recibiría `/api/health`. Esta diferencia debe ser una decisión, no prueba y error.
+
+En `compose.yaml` conecta ambos servicios en una red privada y publica solamente NGINX:
+
+```yaml
+services:
+  backend:
+    image: node:20-alpine
+    working_dir: /app
+    command: ["node", "server.js"]
+    environment:
+      INSTANCE_NAME: backend-a
+    volumes:
+      - ./backend:/app:ro
+    expose: ["3000"]
+
+  edge:
+    image: nginx:1.27-alpine
+    ports: ["8080:80"]
+    volumes:
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
+    depends_on: [backend]
+```
+
+```mermaid
+flowchart LR
+  C[Cliente :8080] --> E[NGINX edge]
+  E -->|/api/health se convierte en /health| B[backend:3000]
+  E --> A[access log JSON]
+  B -. no publica puerto al host .- E
+```
+
+**Analogía:** el proxy inverso es la recepción del edificio: conoce qué oficina interna atiende cada solicitud y registra el recorrido. El visitante no necesita ni debería conocer la puerta privada de cada oficina.
+
+**¿Por qué es importante?** Centralizar entrada permite aplicar TLS, límites y observabilidad sin duplicarlos en cada servicio, pero también crea una dependencia crítica. Timeouts, logs y pruebas de fallo son necesarios para no convertir el proxy en una caja negra.
+
+**Ejecución y resultado esperado:** desde `labs/nginx-rutaflow` ejecuta `docker compose up -d`, `curl -i http://localhost:8080/api/health` y `docker compose logs edge`. Debes recibir `200`, `instance: backend-a` y un `requestId`; el puerto `3000` no debe responder desde el host.
+
+**Fallo deliberado:** ejecuta `docker compose stop backend` y repite `curl`. Debes observar `502 Bad Gateway`; inspecciona `docker compose logs edge` y relaciona `connect() failed` con el upstream detenido. Inicia el backend, repite hasta obtener `200` y registra tiempo de detección y recuperación.
+
+**Modificación sin copiar:** agrega `backend-b`, configura pesos 80/20 y ejecuta 100 peticiones. Cuenta respuestas por `instance`; explica por qué una muestra pequeña no demuestra exactamente la proporción y cómo añadirías health checks y TLS en producción.
+
 ---
 
 ## Ruta de proyecto progresivo desde carpeta vacía
@@ -330,6 +442,8 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 | 5 | Corregir definiendo la variable con un valor por defecto | Cambia la línea anterior a `ENTORNO="${ENTORNO:-desarrollo}"` antes del `echo` | La sintaxis `${VAR:-valor}` usa "desarrollo" si `ENTORNO` no está definida, sin fallar | El script imprime `Entorno: desarrollo` sin error |
 | 6 | Añadir un paso que dependa de un pipe | Añade: `echo "preparando..." \| tee -a "$DIR_PROYECTO/log.txt"` | Verifica el comportamiento de `pipefail`: si `tee` fallara, todo el pipe se consideraría fallido | El mensaje aparece en pantalla y se añade a `log.txt` |
 | 7 | Ejecutar el script completo dos veces seguidas | `./preparar-entorno.sh && ./preparar-entorno.sh` | Confirma la idempotencia: ejecutarlo dos veces no produce ningún error ni efecto duplicado indeseado | Ambas ejecuciones terminan exitosamente, sin errores de "el directorio ya existe" |
+| 8 | Levantar NGINX y el backend | Ver Tema 9 | Expone solo `8080`, conserva request ID y verifica `200` |
+| 9 | Detener el upstream | Ver Tema 9 | Diagnostica `502` desde error log y recupera el servicio |
 
 **Verificación:** el laboratorio se considera exitoso si el script se ejecuta sin errores tanto la primera vez como en ejecuciones sucesivas (idempotencia), y si forzar una variable no definida (paso 4) efectivamente detiene el script con un error claro, confirmando que `set -euo pipefail` está protegiendo el script como se espera.
 
@@ -339,6 +453,8 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 - **El script continúa ejecutándose después de un comando fallido, a pesar de tener `set -e`.** Algunos contextos específicos de bash (como dentro de una condición `if`, o el lado izquierdo de un `&&`) no disparan `set -e` de la misma forma; revisa la documentación de bash sobre las excepciones conocidas de `set -e` si te encuentras con este caso.
 - **`unbound variable` en un lugar inesperado del script.** Con `set -u` activo, cualquier variable no definida (incluyendo errores tipográficos en el nombre de una variable) provoca este error; revisa cuidadosamente que el nombre de la variable esté escrito exactamente igual en su definición y en su uso.
 - **El script funciona en tu terminal pero falla al programarlo con cron.** Recuerda del Tema 5 que cron ejecuta con un entorno mínimo; usa siempre rutas absolutas dentro de scripts destinados a cron, y no asumas que el `PATH` incluye todo lo que tienes disponible interactivamente.
+- **Publicar también el puerto del backend.** Mantén el backend en la red privada y expón solamente el proxy salvo una necesidad de diagnóstico controlada.
+- **Aceptar `X-Forwarded-For` de cualquier origen.** Configura proxies confiables; una cabecera enviada directamente por el cliente no prueba identidad.
 
 ---
 
@@ -380,6 +496,17 @@ npm run build
 **Criterios de éxito:**
 - Propone añadir `set -euo pipefail` (o como mínimo `set -e`) como la corrección principal.
 - Explica correctamente la consecuencia concreta de no tenerlo: seguir ejecutando comandos en un directorio incorrecto si el `cd` falla.
+
+### Ejercicio 4: Diagnosticar un 502 sin culpar a la red
+
+**Enunciado:** NGINX responde `502`, pero su proceso está activo y el DNS público resuelve correctamente. Describe una secuencia de diagnóstico desde el proxy hasta el backend.
+
+**Solución esperada:** correlacionar access/error log mediante request ID; inspeccionar `$upstream_addr`; resolver el nombre del upstream desde la red del proxy; comprobar puerto y proceso; solicitar `/health` directamente desde el contenedor edge; revisar timeout y ruta transformada por `proxy_pass`; confirmar que el backend escucha en `0.0.0.0`, no solo en localhost; restaurar y verificar `200`.
+
+**Criterios de éxito:**
+- Distingue disponibilidad del proxy de disponibilidad del upstream.
+- Recorre DNS, conexión, ruta y respuesta en orden.
+- Verifica recuperación con la misma petición y evidencia de logs.
 
 ---
 

@@ -59,6 +59,14 @@ const { rows } = await pool.query("SELECT * FROM usuarios WHERE email = $1", [em
 
 **Conceptos clave:** `schema.prisma`, migraciones versionadas, cliente generado y tipado.
 
+#### Cómo leer `@id`, `@default`, `@relation` y `@@index`
+
+En el lenguaje de esquema de Prisma, `@` introduce un **atributo de campo**: modifica el contrato del campo escrito inmediatamente a su izquierda. `id Int @id @default(autoincrement())` declara que `id` forma la clave primaria y que su valor predeterminado lo genera la base de datos. `@relation(fields: [usuarioId], references: [id])` conecta el campo de relación de Prisma con la clave foránea escalar `usuarioId` y con la columna referenciada del otro modelo.
+
+`@@` introduce un **atributo de bloque** y afecta al modelo completo. Por ejemplo, `@@index([usuarioId, completada])` solicita un índice compuesto y `@@unique([transportadoraId, numeroGuia])` expresa una unicidad de negocio entre varios campos. No son decoradores de TypeScript ni código que Node ejecute: el motor de Prisma analiza el schema, la migración traduce esos contratos a SQL y el cliente generado refleja después el modelo resultante.
+
+**Límite:** un atributo no sustituye el diseño de datos. Añadir índices a todas las columnas aumenta almacenamiento y coste de escritura; una relación sin una política explícita de borrado puede producir registros huérfanos o eliminaciones inesperadas. Antes de migrar, revisa el SQL generado y prueba tanto la inserción válida como la violación de clave o unicidad.
+
 Prisma es un ORM moderno para Node y TypeScript que centraliza la definición del modelo de datos en un único archivo declarativo (`schema.prisma`), describiendo cada tabla como un modelo con sus campos, tipos y relaciones (`model Tarea { id Int @id @default(autoincrement()) titulo String usuario Usuario @relation(...) }`), a partir del cual Prisma genera automáticamente tanto las migraciones SQL necesarias para crear o modificar las tablas reales en la base de datos, como un cliente JavaScript/TypeScript completamente tipado que refleja exactamente esa estructura de datos declarada.
 
 `prisma migrate dev --name descripcion` genera un archivo de migración SQL versionado (committeado al control de versiones junto con el resto del código) que captura exactamente qué cambios de esquema se aplicaron y en qué orden, y aplica esa migración inmediatamente contra la base de datos de desarrollo configurada. Este enfoque de migraciones versionadas resuelve un problema real de coordinación en equipo: cualquier colaborador que aplique las migraciones en el mismo orden reproducirá exactamente la misma estructura de base de datos, sin depender de que cada persona modifique manualmente y de forma no sincronizada la estructura de tablas de forma directa e independiente.

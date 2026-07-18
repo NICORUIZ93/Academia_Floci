@@ -33,6 +33,14 @@ el orden ni los títulos.
 5. Máximo 2 pantallas de teoría antes del primer código. Si el tema necesita más
    teoría, intercala código entre las explicaciones.
 6. Si el tema usa servicios cloud, usa Floci en local
+
+### Regla para conceptos técnicos
+
+Nombrar un término no equivale a enseñarlo. La primera aparición importante debe explicar: definición operativa, mecanismo interno, sintaxis o contrato, quién lo interpreta, cuándo elegirlo, un límite o fallo frecuente y una evidencia ejecutable. Para símbolos con significado propio —por ejemplo `@` en Java, decoradores, annotations, hooks, modifiers o directivas— explica primero el mecanismo general y después las variantes del framework.
+
+### Regla para diagramas
+
+Todo diagrama debe responder una pregunta técnica concreta. Antes del gráfico indica qué relación debe observar el estudiante; después explica cómo leer nodos, flechas, estados o límites y qué decisión permite tomar. No uses el mismo flujo “concepto → aplicación → evidencia” como sustituto de arquitectura específica. Si una relación se entiende mejor con una tabla o tres frases, no añadas un gráfico.
    (endpoint http://localhost:4566 para AWS) — nunca pidas crear cuentas de pago.
 
 ## ESTRUCTURA OBLIGATORIA DE LA PÁGINA

@@ -83,6 +83,19 @@ print(apodo ?? "Sin apodo"); // valor por defecto
 
 **Conceptos clave:** comportamiento reutilizable sin herencia múltiple tradicional.
 
+#### `extends`, `implements`, `with` y `@override` no significan lo mismo
+
+`extends` hereda implementación y establece una relación «es un» con una sola superclase; `implements` obliga a satisfacer el contrato público de uno o varios tipos, pero no hereda sus implementaciones; `with` aplica el comportamiento de un mixin compatible. `@override` es una anotación de Dart que comunica al analizador que el miembro pretende reemplazar uno heredado o exigido por un contrato. No realiza el reemplazo: la firma y la jerarquía son las que lo determinan.
+
+Usar `@override` hace visible un error frecuente. Si se escribe mal `build` o cambia la firma, el analizador avisa que no existe ningún miembro compatible para sobrescribir; sin la anotación, el método mal escrito podría quedar como un método nuevo y el framework seguiría llamando al original. En widgets, `build` debe limitarse a describir UI: puede ejecutarse muchas veces y no es el lugar para peticiones HTTP o escrituras persistentes.
+
+```dart
+class Ave extends Animal with Volador implements Rastreable {
+  @override
+  String obtenerId() => 'ave-01';
+}
+```
+
 ```dart
 mixin Volador {
   void volar() => print("Volando");

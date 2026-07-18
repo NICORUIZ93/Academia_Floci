@@ -13,6 +13,7 @@ Entender que Flutter no impone una única solución de gestión de estado, apren
 3. Consumir ese estado desde 2 widgets distintos sin pasarlo manualmente.
 4. Reimplementar la misma feature con Bloc/Cubit y comparar la ceremonia.
 5. Documentar un criterio propio de elección entre los tres enfoques.
+6. Modelar un formulario complejo con entradas inmutables, validación progresiva y envío sin duplicados.
 
 **Contenido**
 
@@ -22,10 +23,11 @@ Entender que Flutter no impone una única solución de gestión de estado, apren
 - Bloc/Cubit: estado predecible basado en eventos.
 - GetX como alternativa todo-en-uno.
 - `get_it` e `injectable` para inyección de dependencias.
+- Formularios con Formz, Riverpod y estados de envío explícitos.
 
 **Evaluación**
 
-Feature completa implementada con Riverpod (o Bloc) en vez de `setState`, más tres ejercicios de evaluación.
+Feature completa implementada con Riverpod (o Bloc), formulario validado y cuatro ejercicios de evaluación.
 
 ---
 
@@ -114,6 +116,155 @@ Riverpod  → balance simplicidad/robustez, mayoría de apps
 Bloc      → equipos grandes, estructura explícita basada en eventos
 ```
 
+### Tema 4: Formularios profesionales con Formz y Riverpod
+
+**Conceptos clave:** valor `pure`/`dirty`, validación determinista, estado inmutable, feedback progresivo, envío único y error de servidor.
+
+Construiremos el formulario «No fue posible entregar» de RutaFlow. El conductor debe elegir un motivo y escribir una observación de 10 a 300 caracteres. Un formulario real no es solamente un conjunto de `TextEditingController`: necesita distinguir lo que el usuario todavía no tocó, una entrada inválida, un envío en curso, un rechazo del backend y una confirmación exitosa.
+
+**Requisitos previos:** Módulos 0–3, proyecto `rutaflow_driver` y Riverpod configurado. Desde la raíz ejecuta:
+
+```bash
+flutter pub add flutter_riverpod formz
+```
+
+```text
+lib/features/delivery_issue/
+├── domain/delivery_issue_repository.dart
+├── application/report_issue.dart
+└── presentation/
+    ├── issue_form_inputs.dart
+    ├── issue_form_state.dart
+    ├── issue_form_notifier.dart
+    └── issue_form_page.dart
+test/features/delivery_issue/presentation/issue_form_notifier_test.dart
+```
+
+En `issue_form_inputs.dart`, cada entrada contiene su valor y su validación. `pure` significa «aún no hubo interacción»; `dirty` significa «el usuario ya la modificó». Esto evita mostrar una pantalla llena de errores antes de escribir.
+
+```dart
+import 'package:formz/formz.dart';
+
+enum ReasonError { empty }
+final class ReasonInput extends FormzInput<String, ReasonError> {
+  const ReasonInput.pure() : super.pure('');
+  const ReasonInput.dirty([super.value = '']) : super.dirty();
+  @override
+  ReasonError? validator(String value) => value.isEmpty ? ReasonError.empty : null;
+}
+
+enum NoteError { tooShort, tooLong }
+final class NoteInput extends FormzInput<String, NoteError> {
+  const NoteInput.pure() : super.pure('');
+  const NoteInput.dirty([super.value = '']) : super.dirty();
+  @override
+  NoteError? validator(String value) {
+    final text = value.trim();
+    if (text.length < 10) return NoteError.tooShort;
+    if (text.length > 300) return NoteError.tooLong;
+    return null;
+  }
+}
+```
+
+En `issue_form_state.dart`, el estado es inmutable y separa validez de estado de red:
+
+```dart
+enum SubmitStatus { idle, sending, success, failure }
+
+final class IssueFormState {
+  const IssueFormState({
+    this.reason = const ReasonInput.pure(),
+    this.note = const NoteInput.pure(),
+    this.submitStatus = SubmitStatus.idle,
+    this.serverMessage,
+  });
+
+  final ReasonInput reason;
+  final NoteInput note;
+  final SubmitStatus submitStatus;
+  final String? serverMessage;
+  bool get isValid => Formz.validate([reason, note]);
+
+  IssueFormState copyWith({ReasonInput? reason, NoteInput? note,
+      SubmitStatus? submitStatus, String? serverMessage}) => IssueFormState(
+    reason: reason ?? this.reason,
+    note: note ?? this.note,
+    submitStatus: submitStatus ?? this.submitStatus,
+    serverMessage: serverMessage,
+  );
+}
+```
+
+El `Notifier` de `issue_form_notifier.dart` es el único lugar que coordina cambios y envío. La guarda inicial impide doble toque mientras la petición está activa:
+
+```dart
+final class IssueFormNotifier extends Notifier<IssueFormState> {
+  @override
+  IssueFormState build() => const IssueFormState();
+
+  void reasonChanged(String value) {
+    state = state.copyWith(reason: ReasonInput.dirty(value));
+  }
+
+  void noteChanged(String value) {
+    state = state.copyWith(note: NoteInput.dirty(value));
+  }
+
+  Future<void> submit() async {
+    if (!state.isValid || state.submitStatus == SubmitStatus.sending) return;
+    state = state.copyWith(submitStatus: SubmitStatus.sending);
+    try {
+      await ref.read(deliveryIssueRepositoryProvider).report(
+        reason: state.reason.value,
+        note: state.note.value.trim(),
+      );
+      state = state.copyWith(submitStatus: SubmitStatus.success);
+    } catch (_) {
+      state = state.copyWith(
+        submitStatus: SubmitStatus.failure,
+        serverMessage: 'No pudimos guardar el reporte. Intenta nuevamente.',
+      );
+    }
+  }
+}
+```
+
+La página observa el estado, traduce errores tipados a español y anuncia el resultado con `Semantics` o `SnackBar`. El botón se deshabilita si el formulario no es válido o ya está enviando; no borres lo escrito cuando el servidor falla.
+
+```dart
+FilledButton(
+  onPressed: form.isValid && form.submitStatus != SubmitStatus.sending
+      ? notifier.submit
+      : null,
+  child: form.submitStatus == SubmitStatus.sending
+      ? const SizedBox.square(dimension: 20, child: CircularProgressIndicator())
+      : const Text('Reportar novedad'),
+)
+```
+
+```mermaid
+stateDiagram-v2
+  [*] --> Pure
+  Pure --> Invalid: primera edición inválida
+  Pure --> Valid: primera edición válida
+  Invalid --> Valid: corrige entradas
+  Valid --> Sending: enviar
+  Sending --> Failure: red o servidor
+  Failure --> Sending: reintentar sin borrar
+  Sending --> Success: confirmación remota
+```
+
+**Analogía:** las entradas Formz son inspectores especializados y el estado del formulario es el tablero de despacho. El tablero coordina resultados, pero no repite las reglas de inspección de cada campo.
+
+**¿Por qué es importante?** Centralizar validación en tipos puros permite probar reglas sin renderizar widgets. Separar `isValid` de `SubmitStatus` evita confundir «datos correctos» con «datos ya guardados» y previene envíos duplicados.
+
+**Ejecución y resultado esperado:** ejecuta `flutter test test/features/delivery_issue/presentation/issue_form_notifier_test.dart` y luego `flutter run`. El botón permanece inactivo con observación corta, se activa con entradas válidas, muestra progreso durante una única petición y conserva valores ante un error recuperable.
+
+**Fallo deliberado:** toca dos veces rápidamente el botón y configura el repositorio falso para tardar dos segundos. La prueba debe demostrar que `report` se invoca una sola vez. Después haz que el backend responda `422`; conserva un mensaje general y asigna errores de campo solamente si el contrato del servidor los identifica explícitamente.
+
+**Modificación sin copiar:** agrega fotografía obligatoria solo para el motivo `damaged_package`. Decide si esa regla pertenece a una entrada compuesta o al formulario, y prueba las transiciones sin usar `pumpWidget`.
+
 ---
 
 ## Criterio transversal de calidad del código
@@ -145,6 +296,8 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 | 3 | Consumirlo desde 2 widgets distintos | Ver Tema 2 | Sin pasar el estado manualmente |
 | 4 | Reimplementarla con Bloc/Cubit | Ver Tema 3 | Compara ceremonia y curva de aprendizaje |
 | 5 | Documentar un criterio propio | Ver Tema 3 | setState vs Riverpod vs Bloc |
+| 6 | Construir el formulario de novedad | Ver Tema 4 | Entradas tipadas, feedback progresivo y envío único |
+| 7 | Probar doble toque y error remoto | Ver Tema 4 | Una petición y valores conservados para reintento |
 
 **Verificación:** el laboratorio se considera exitoso si el estado se comparte correctamente entre los dos widgets distantes sin prop drilling manual usando Riverpod, y si el documento comparativo identifica correctamente las diferencias de ceremonia entre los tres enfoques.
 
@@ -153,6 +306,8 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 - **Usar `setState` para estado que necesita compartirse entre widgets distantes.** Migra a Riverpod o Bloc antes de que el prop drilling se vuelva insostenible.
 - **Adoptar Bloc para una feature muy simple sin necesidad real de esa ceremonia.** Considera Riverpod como balance para la mayoría de los casos.
 - **Confundir `ref.watch` con `ref.read` dentro de un callback.** Usa `ref.read` cuando no necesitas suscribirte a cambios, típicamente dentro de callbacks de eventos.
+- **Mostrar todos los errores al abrir el formulario.** Usa el estado `pure` hasta que exista interacción o intento de envío.
+- **Usar la validez como confirmación remota.** Un formulario válido todavía puede estar pendiente, fallar o ser rechazado por el servidor.
 
 ---
 
@@ -184,6 +339,17 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 
 **Criterios de éxito:**
 - Explica correctamente el prop drilling manual como la razón de la incomodidad al escalar.
+
+### Ejercicio 4: Estados de un formulario que puede fallar
+
+**Enunciado:** explica por qué `isValid == true` no basta para representar el formulario y diseña la reacción de la interfaz ante doble toque, timeout y error de campo devuelto por el servidor.
+
+**Solución esperada:** la validez representa solamente reglas locales. El envío necesita estados `idle/sending/success/failure`; durante `sending` se bloquea otro envío, un timeout conserva entradas y ofrece reintento, y un error de campo remoto se asocia a la entrada correspondiente sin reemplazar las reglas locales ni mostrar datos sensibles.
+
+**Criterios de éxito:**
+- Separa validación local de resultado remoto.
+- Evita peticiones duplicadas.
+- Mantiene datos y feedback accesible ante errores recuperables.
 
 ---
 
@@ -219,6 +385,7 @@ Estas fuentes sustentan los conceptos y deben consultarse para verificar detalle
 - Riverpod verifica providers en tiempo de compilación, resolviendo el problema de errores de runtime del Provider anterior.
 - Bloc/Cubit fuerza una separación explícita entre evento y cambio de estado, predecible y testeable, a costa de más ceremonia.
 - GetX ofrece un enfoque todo-en-uno; `get_it`/`injectable` son alternativas más ligeras de inyección de dependencias.
+- Formz modela entradas puras y modificadas; el estado de envío sigue siendo una preocupación separada.
 
 **Conceptos aprendidos**
 
@@ -228,6 +395,7 @@ Estas fuentes sustentan los conceptos y deben consultarse para verificar detalle
 - Bloc/Cubit.
 - GetX.
 - `get_it` e `injectable`.
+- Formz, validación progresiva y estados de envío.
 
 **Próximos pasos**
 

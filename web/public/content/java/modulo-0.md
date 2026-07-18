@@ -13,6 +13,9 @@ Entender que Java compila a bytecode y se ejecuta sobre una máquina virtual, do
 3. Leer entrada del usuario con `Scanner` y validar tipos.
 4. Diferenciar JDK, JRE y JVM.
 5. Inspeccionar el bytecode generado con `javap`.
+6. Convertir datos sin perder información de forma accidental.
+7. Razonar sobre precedencia, cortocircuito y control de flujo.
+8. Explicar la diferencia entre copiar un valor y copiar una referencia.
 
 **Contenido**
 
@@ -20,6 +23,10 @@ Entender que Java compila a bytecode y se ejecuta sobre una máquina virtual, do
 - `public static void main`: qué significa cada palabra.
 - JDK vs JRE vs JVM.
 - Tipos primitivos vs referencias.
+- Variables, conversiones, `String` e inmutabilidad.
+- Operadores, precedencia y control de flujo.
+- Arreglos, wrappers y paso de argumentos por valor.
+- Entrada, fechas, entorno y aleatoriedad con APIs estándar modernas.
 
 **Evaluación**
 
@@ -139,6 +146,128 @@ String nombre = "Ana";       // referencia: variable apunta a un objeto en el he
 Integer edadObjeto = 30;     // wrapper: versión objeto del primitivo int
 ```
 
+### Tema 5: Variables, conversiones y `String`
+
+**Conceptos clave:** inferencia local, conversión segura, precisión e inmutabilidad.
+
+Una variable tiene un tipo estático que limita qué valores y operaciones son válidos. `var` permite que el compilador infiera ese tipo a partir del inicializador, pero no vuelve dinámica la variable: después de `var intentos = 3`, `intentos` continúa siendo `int` y no puede recibir un `String`. Usa `var` cuando el tipo resulte evidente en la misma línea; escribe el tipo explícito cuando comunique una unidad o contrato importante.
+
+Una conversión ampliadora, como `int` a `long`, conserva todos los valores posibles y Java puede aplicarla implícitamente. Una conversión reductora necesita un *cast* porque puede descartar información. `(int) 3_000_000_000L` no “convierte correctamente” el número: conserva solo los bits que caben y produce otro valor. Para datos externos usa `Integer.parseInt` y maneja `NumberFormatException`; para cálculos monetarios evita `double` y modela decimales con `BigDecimal` construido desde texto.
+
+`String` es una referencia a un objeto inmutable. Métodos como `toUpperCase()` devuelven otra cadena; no modifican la original. Compara contenido con `equals`, no con `==`: `==` compara si dos referencias apuntan al mismo objeto, algo que puede parecer funcionar con literales por el *string pool* y fallar cuando una cadena llega desde entrada o red.
+
+```java
+package academia.fundamentos;
+
+import java.math.BigDecimal;
+
+public final class Conversiones {
+    public static void main(String[] args) {
+        var textoCantidad = "12";                 // el tipo inferido sigue siendo String
+        int cantidad = Integer.parseInt(textoCantidad);
+        long cantidadAmpliada = cantidad;          // ampliación segura
+        BigDecimal tarifa = new BigDecimal("19.90");
+
+        String estado = new String("ENTREGADO");
+        System.out.println(estado == "ENTREGADO");      // false: identidad
+        System.out.println(estado.equals("ENTREGADO")); // true: contenido
+        System.out.println(tarifa.multiply(BigDecimal.valueOf(cantidadAmpliada)));
+    }
+}
+```
+
+**Ejecución y diagnóstico:** guarda el ejemplo en `src/main/java/academia/fundamentos/Conversiones.java`, compílalo con `javac -d out src/main/java/academia/fundamentos/Conversiones.java` y ejecútalo con `java -cp out academia.fundamentos.Conversiones`. Cambia `"12"` por `"doce"`: el error esperado es `NumberFormatException`. Corrígelo validando la entrada en la frontera, no ocultando la excepción con un valor arbitrario.
+
+**Analogía:** convertir un `long` a `int` es intentar guardar el contenido de un depósito grande en uno pequeño: el recipiente no amplía su capacidad y parte de la información queda fuera.
+
+**¿Por qué es importante?** Tipos, conversiones e igualdad determinan si el programa conserva el dato real o toma una decisión silenciosamente equivocada.
+
+### Tema 6: Operadores, precedencia y control de flujo
+
+**Conceptos clave:** agrupación explícita, cortocircuito, ramas exhaustivas y ciclos terminables.
+
+La precedencia determina qué operación se evalúa primero, pero depender de que el lector memorice toda la tabla dificulta mantener el código. Usa paréntesis para expresar la intención cuando se combinan operadores. `&&` y `||` realizan cortocircuito: la expresión derecha no se evalúa si el resultado ya está decidido. Ese mecanismo permite verificar `paquete != null && paquete.pesoKg() > 0` sin desreferenciar `null`; usar `&` obliga a evaluar ambos lados y produciría `NullPointerException`.
+
+Elige `if` para rangos o reglas heterogéneas y `switch` para decidir según un conjunto discreto. Un `switch` moderno puede ser una expresión que devuelve un valor y evita variables mutables temporales. En ciclos, define antes la condición de salida y comprueba los límites: `i < elementos.length` visita índices válidos; `i <= elementos.length` intenta acceder una posición inexistente.
+
+```java
+enum Estado { CREADO, EN_RUTA, ENTREGADO, CANCELADO }
+
+static String mensaje(Estado estado) {
+    return switch (estado) {
+        case CREADO -> "Guía registrada";
+        case EN_RUTA -> "Conductor en recorrido";
+        case ENTREGADO -> "Entrega confirmada";
+        case CANCELADO -> "Envío cancelado";
+    };
+}
+
+static boolean pesoValido(Paquete paquete) {
+    return paquete != null && paquete.pesoKg() > 0 && paquete.pesoKg() <= 50;
+}
+```
+
+**Fallo deliberado:** reemplaza el primer `&&` por `&` y llama `pesoValido(null)`. Lee la línea exacta del *stack trace* y explica por qué se evaluó `paquete.pesoKg()`. Después agrega un nuevo valor al `enum`: el compilador señalará que el `switch` dejó de ser exhaustivo, convirtiendo una evolución del dominio en feedback inmediato.
+
+**Analogía:** el cortocircuito es un control de acceso por etapas: si la primera condición ya rechaza la entrada, no se ejecutan controles que requieren que esa entrada exista.
+
+**¿Por qué es importante?** Una condición correcta no solo produce `true` o `false`; también controla qué operaciones llegan a ejecutarse y qué fallos quedan imposibilitados.
+
+### Tema 7: Arreglos, wrappers y paso de argumentos
+
+**Conceptos clave:** tamaño fijo, autoboxing, aliasing y Java siempre pasa por valor.
+
+Un arreglo conserva una secuencia contigua de elementos de un mismo tipo y su longitud no cambia después de crearlo. Los índices comienzan en cero; el último índice válido es `length - 1`. Para una colección que crece o decrece usa `ArrayList` (Módulo 2), no copies arreglos manualmente en cada inserción.
+
+Java **siempre pasa argumentos por valor**. Al pasar un `int`, el método recibe una copia del número. Al pasar un objeto, recibe una copia de la referencia: ambas referencias apuntan inicialmente al mismo objeto, por lo que el método puede mutarlo si el tipo es mutable, pero reasignar su parámetro no cambia la variable del llamador. Decir “Java pasa objetos por referencia” oculta esta diferencia y produce predicciones equivocadas.
+
+Los wrappers permiten representar primitivos como objetos y admitir `null`, pero el autounboxing puede fallar. `Integer intentos = null; int total = intentos + 1;` lanza `NullPointerException` al intentar extraer el `int`. No uses `null` como un tercer estado implícito: valida o modela la ausencia explícitamente.
+
+```java
+static void reemplazar(int[] copiaReferencia) {
+    copiaReferencia[0] = 99;       // muta el mismo arreglo observado por el llamador
+    copiaReferencia = new int[]{7}; // solo reasigna la copia local de la referencia
+}
+
+int[] paradas = {1, 2, 3};
+reemplazar(paradas);
+System.out.println(java.util.Arrays.toString(paradas)); // [99, 2, 3]
+```
+
+**Predicción antes de ejecutar:** explica por qué el resultado no es `[7]`. Luego cambia el ciclo que recorre `paradas` de `< paradas.length` a `<= paradas.length`; identifica `ArrayIndexOutOfBoundsException`, el índice solicitado y el rango válido informado por el error.
+
+**Analogía:** copiar una referencia es entregar una segunda dirección de la misma bodega, no construir otra bodega; cambiar mercancía se observa desde ambas direcciones, pero sustituir el papel con la dirección no mueve la bodega original.
+
+**¿Por qué es importante?** Entender qué se copia permite anticipar mutaciones, aliasing y errores de límites antes de ejecutar el programa.
+
+### Tema 8: Entrada y APIs estándar sin aprender APIs obsoletas como modelo principal
+
+**Conceptos clave:** validación en la frontera, `java.time`, configuración y aleatoriedad apropiada.
+
+`Scanner` es adecuado para ejercicios de consola si verificas `hasNextInt()` antes de `nextInt()` y consumes correctamente el salto de línea antes de llamar `nextLine()`. En aplicaciones reales, la entrada puede venir de HTTP, mensajería o archivos, pero la regla se conserva: convierte y valida en la frontera; el dominio debe recibir tipos válidos, no texto sin interpretar.
+
+Para fechas nuevas prefiere `java.time`: `LocalDate` representa una fecha sin hora ni zona; `Instant`, un punto global en el tiempo; `ZonedDateTime`, una fecha-hora asociada a reglas de zona. `Date` y `Calendar` siguen existiendo por compatibilidad, pero su mutabilidad y API difícil de razonar no los convierten en el punto de partida recomendado. Para dinero, fechas y medidas, el tipo debe expresar la semántica y evitar valores ambiguos.
+
+`System.getenv()` lee configuración del entorno; no registres secretos al imprimir su contenido. `Math.random()` sirve para demostraciones simples, `Random` para simulaciones reproducibles con semilla y `SecureRandom` para tokens u otros valores sensibles. Una semilla fija es una ventaja en pruebas porque reproduce el mismo escenario, y una vulnerabilidad si se usa para generar credenciales.
+
+```java
+import java.time.LocalDate;
+import java.time.Period;
+import java.util.Random;
+
+LocalDate nacimiento = LocalDate.parse("1995-08-17");
+int edad = Period.between(nacimiento, LocalDate.now()).getYears();
+Random simulacion = new Random(42); // reproducible para una prueba
+int demoraMinutos = simulacion.nextInt(5, 31);
+System.out.printf("edad=%d, demora=%d min%n", edad, demoraMinutos);
+```
+
+**Decisión profesional:** no uses `LocalDate.now()` directamente dentro de una regla que debas probar de forma determinista; recibe un `Clock` o la fecha actual como dependencia. Provoca una fecha inválida (`"31/02/2025"`), observa `DateTimeParseException` y muestra un mensaje de dominio sin perder la causa técnica en el registro interno.
+
+**Analogía:** las APIs estándar son instrumentos de medición distintos: una fecha civil, un instante global y una fecha con zona responden preguntas diferentes, aunque todas parezcan “tiempo”.
+
+**¿Por qué es importante?** Elegir el tipo y la API según la semántica evita pruebas inestables, fechas ambiguas, secretos expuestos y números supuestamente aleatorios que no cumplen su propósito.
+
 ---
 
 ## Ruta de proyecto progresivo desde carpeta vacía
@@ -183,6 +312,10 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 | 3 | Leer un número con `Scanner` y validar | — | Maneja el caso de entrada incorrecta |
 | 4 | Investigar JDK vs JRE vs JVM | Ver Tema 3 | Documenta cuál necesitas para cada caso |
 | 5 | Inspeccionar el bytecode con `javap -c` | Ver Tema 1 | Observa las instrucciones generadas |
+| 6 | Procesar cantidad y tarifa sin perder precisión | Ver Tema 5 | Compara `double` y `BigDecimal` construido desde texto |
+| 7 | Modelar estados del envío con `enum` y `switch` | Ver Tema 6 | Agrega un estado y observa la exhaustividad |
+| 8 | Predecir mutaciones y reasignaciones de un arreglo | Ver Tema 7 | Explica valor frente a copia de referencia |
+| 9 | Calcular una fecha con `java.time` | Ver Tema 8 | Prueba una entrada válida y una fecha imposible |
 
 **Verificación:** el laboratorio se considera exitoso si el programa compila y ejecuta correctamente, si maneja apropiadamente una entrada inválida del usuario sin terminar abruptamente, y si puedes explicar al menos tres instrucciones del bytecode generado por `javap`.
 
@@ -191,6 +324,9 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 - **Confundir `JRE` con `JDK` al instalar el entorno de desarrollo.** Para desarrollar necesitas el JDK, que incluye `javac`.
 - **Olvidar que `main` debe ser exactamente `public static void main(String[] args)`.** Cualquier desviación de esa firma exacta impide que la JVM lo reconozca como punto de entrada.
 - **Asumir que un tipo primitivo puede usarse directamente en una colección genérica.** Usa el wrapper correspondiente (`Integer`, no `int`, dentro de `List<Integer>`).
+- **Comparar texto con `==`.** Usa `equals` para contenido; `==` solo responde si las referencias son idénticas.
+- **Afirmar que Java pasa objetos por referencia.** Java copia la referencia por valor; se puede mutar el objeto apuntado, pero no reasignar la variable del llamador.
+- **Usar `double` para una tarifa monetaria.** Usa `BigDecimal` desde una representación decimal textual y define la política de redondeo.
 
 ---
 
@@ -257,6 +393,10 @@ Estas fuentes sustentan los conceptos y deben consultarse para verificar detalle
 - Cada palabra de `public static void main(String[] args)` cumple un propósito necesario para que la JVM lo reconozca como punto de entrada.
 - El JDK incluye herramientas de desarrollo (como `javac`) que el JRE, y este a su vez la JVM, no incluyen por sí solos.
 - Los tipos primitivos almacenan su valor directamente; los tipos referencia apuntan a objetos en el heap.
+- `String` es inmutable y su contenido se compara con `equals`; una conversión reductora puede perder información.
+- El cortocircuito, la exhaustividad de `switch` y los límites de un arreglo convierten errores frecuentes en decisiones verificables.
+- Java siempre pasa argumentos por valor, incluso cuando el valor copiado es una referencia.
+- `java.time` es el punto de partida moderno para fechas; la aleatoriedad y la configuración se eligen según su propósito.
 
 **Conceptos aprendidos**
 
@@ -264,6 +404,9 @@ Estas fuentes sustentan los conceptos y deben consultarse para verificar detalle
 - Significado de cada parte de `main`.
 - Diferencias entre JDK, JRE y JVM.
 - Tipos primitivos frente a referencias y wrappers.
+- Variables, conversiones, cadenas y precisión decimal.
+- Operadores, control de flujo, arreglos y paso de argumentos.
+- Entrada validada y APIs estándar de fecha, entorno y aleatoriedad.
 
 **Próximos pasos**
 

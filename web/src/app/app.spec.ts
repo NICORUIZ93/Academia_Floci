@@ -119,11 +119,13 @@ La evidencia demuestra el aprendizaje.`;
       expect(text).toContain('Preparar');
       expect(text).toContain('Llevar a producción');
       expect(page.querySelectorAll('.official-path li')).toHaveLength(5);
-      expect(page.querySelector('.module-checkpoint')).toBeTruthy();
+      // No mostrar cuestionarios fabricados a partir de nombres del sílabo:
+      // una evaluación debe medir comprensión y contar con autoría editorial.
+      expect(page.querySelector('.module-checkpoint')).toBeFalsy();
       expect(page.querySelector('.code-example .window-controls')).toBeTruthy();
       expect(page.querySelector('.code-example .code-example-language')).toBeTruthy();
-      expect(text).toContain('Comprueba antes de continuar');
-      expect(text).toContain('Modo examen');
+      expect(text).toContain('Practica ahora');
+      expect(text).toContain('Ver solución razonada');
     } finally {
       fetchSpy.mockRestore();
     }

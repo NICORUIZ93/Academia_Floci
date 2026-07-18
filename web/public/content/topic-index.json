@@ -398,6 +398,10 @@
       {
         "title": "Ciclo de vida completo de un componente",
         "fragment": "tema-4-ciclo-de-vida-completo-de-un-componente"
+      },
+      {
+        "title": "Consultas signal y trabajo posterior al render",
+        "fragment": "tema-5-consultas-signal-y-trabajo-posterior-al-render"
       }
     ],
     "10": [
@@ -1533,6 +1537,10 @@
       {
         "title": "Cultura DevOps y el ciclo Plan→Code→Build→Test→Release→Deploy→Operate→Monitor",
         "fragment": "tema-8-cultura-devops-y-el-ciclo-plan-code-build-test-release-deploy-operate-monitor"
+      },
+      {
+        "title": "NGINX y proxies desde cero",
+        "fragment": "tema-9-nginx-y-proxies-desde-cero"
       }
     ],
     "1": [
@@ -2263,6 +2271,10 @@
       {
         "title": "Bloc/Cubit y otras alternativas",
         "fragment": "tema-3-bloc-cubit-y-otras-alternativas"
+      },
+      {
+        "title": "Formularios profesionales con Formz y Riverpod",
+        "fragment": "tema-4-formularios-profesionales-con-formz-y-riverpod"
       }
     ],
     "5": [
@@ -2305,6 +2317,10 @@
       {
         "title": "Permisos de plataforma y cuándo escribir un platform channel propio",
         "fragment": "tema-3-permisos-de-plataforma-y-cuando-escribir-un-platform-channel-propio"
+      },
+      {
+        "title": "Cámara, galería y carga multipart de una evidencia",
+        "fragment": "tema-4-camara-galeria-y-carga-multipart-de-una-evidencia"
       }
     ],
     "8": [
@@ -2643,6 +2659,10 @@
       {
         "title": "Protocolos y enums con valores asociados",
         "fragment": "tema-3-protocolos-y-enums-con-valores-asociados"
+      },
+      {
+        "title": "Closures, colecciones y genéricos con propósito",
+        "fragment": "tema-4-closures-colecciones-y-genericos-con-proposito"
       }
     ],
     "1": [
@@ -2671,6 +2691,10 @@
       {
         "title": "Human Interface Guidelines, Dynamic Type e interop con UIKit",
         "fragment": "tema-3-human-interface-guidelines-dynamic-type-e-interop-con-uikit"
+      },
+      {
+        "title": "UIKit desde cero para mantener aplicaciones reales",
+        "fragment": "tema-4-uikit-desde-cero-para-mantener-aplicaciones-reales"
       }
     ],
     "11": [
@@ -2975,20 +2999,40 @@
       {
         "title": "Tipos primitivos vs referencias",
         "fragment": "tema-4-tipos-primitivos-vs-referencias"
+      },
+      {
+        "title": "Variables, conversiones y `String`",
+        "fragment": "tema-5-variables-conversiones-y-string"
+      },
+      {
+        "title": "Operadores, precedencia y control de flujo",
+        "fragment": "tema-6-operadores-precedencia-y-control-de-flujo"
+      },
+      {
+        "title": "Arreglos, wrappers y paso de argumentos",
+        "fragment": "tema-7-arreglos-wrappers-y-paso-de-argumentos"
+      },
+      {
+        "title": "Entrada y APIs estándar sin aprender APIs obsoletas como modelo principal",
+        "fragment": "tema-8-entrada-y-apis-estandar-sin-aprender-apis-obsoletas-como-modelo-principal"
       }
     ],
     "1": [
       {
+        "title": "Clases, objetos, constructores y encapsulación",
+        "fragment": "tema-1-clases-objetos-constructores-y-encapsulacion"
+      },
+      {
         "title": "Herencia y sobreescritura",
-        "fragment": "tema-1-herencia-y-sobreescritura"
+        "fragment": "tema-2-herencia-y-sobreescritura"
       },
       {
         "title": "Interfaces, clases abstractas y cuándo usar cada una",
-        "fragment": "tema-2-interfaces-clases-abstractas-y-cuando-usar-cada-una"
+        "fragment": "tema-3-interfaces-clases-abstractas-y-cuando-usar-cada-una"
       },
       {
         "title": "Sobrecarga vs sobreescritura, y modificadores de acceso",
-        "fragment": "tema-3-sobrecarga-vs-sobreescritura-y-modificadores-de-acceso"
+        "fragment": "tema-4-sobrecarga-vs-sobreescritura-y-modificadores-de-acceso"
       }
     ],
     "10": [
@@ -4203,6 +4247,14 @@
       {
         "title": "Próximos pasos — microservicios, colas de mensajes y TypeScript",
         "fragment": "tema-4-proximos-pasos-microservicios-colas-de-mensajes-y-typescript"
+      },
+      {
+        "title": "Posiciones espaciales y Socket.IO con orden recuperable",
+        "fragment": "tema-5-posiciones-espaciales-y-socket-io-con-orden-recuperable"
+      },
+      {
+        "title": "Archivos y notificaciones push sin convertirlos en autorización",
+        "fragment": "tema-6-archivos-y-notificaciones-push-sin-convertirlos-en-autorizacion"
       }
     ],
     "13": [
@@ -4985,6 +5037,18 @@
       {
         "title": "Circuit breaker con Resilience4j",
         "fragment": "tema-3-circuit-breaker-con-resilience4j"
+      },
+      {
+        "title": "OAuth2/OIDC, Keycloak y Token Relay sin perder la frontera de autorización",
+        "fragment": "tema-4-oauth2-oidc-keycloak-y-token-relay-sin-perder-la-frontera-de-autorizacion"
+      },
+      {
+        "title": "HTTP Interfaces, deadlines y descubrimiento según el entorno",
+        "fragment": "tema-5-http-interfaces-deadlines-y-descubrimiento-segun-el-entorno"
+      },
+      {
+        "title": "DDD para decidir límites y propiedad de datos",
+        "fragment": "tema-6-ddd-para-decidir-limites-y-propiedad-de-datos"
       }
     ],
     "11": [

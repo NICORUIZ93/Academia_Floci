@@ -110,6 +110,8 @@
 .lesson-markdown ::ng-deep blockquote { margin:26px 0; padding:18px 22px; border-left:4px solid var(--track-color); background:$pl; border-radius:0 12px 12px 0; }
 
 .lesson-markdown ::ng-deep .learning-callout { position:relative; margin:28px 0; padding:20px 22px 20px 58px; border:1px solid $bd; border-radius:14px; background:$wh; box-shadow:$sh; }
+.lesson-markdown ::ng-deep .concept-keyline { margin:0 0 24px; padding:13px 15px; border:1px solid color-mix(in srgb,var(--track-color) 22%,#{$bd}); border-radius:11px; color:$i3; background:color-mix(in srgb,var(--track-color) 6%,#{$wh}); font:500 13px/1.65 Inter,sans-serif; }
+.lesson-markdown ::ng-deep .concept-keyline strong:first-child { display:block; margin-bottom:3px; color:var(--track-color); font:800 9px/1.2 Inter,sans-serif; letter-spacing:.08em; text-transform:uppercase; }
 .lesson-markdown ::ng-deep .learning-callout::before { position:absolute; left:20px; top:19px; display:grid; place-items:center; width:25px; height:25px; border-radius:8px; font:700 15px/1 Inter,sans-serif; }
 .lesson-markdown ::ng-deep .analogy-callout { background:var(--warning-soft); border-color:color-mix(in srgb,var(--warning) 32%,transparent); }
 .lesson-markdown ::ng-deep .analogy-callout::before { content:'≈'; color:#a16207; background:color-mix(in srgb,var(--warning) 18%,transparent); }
