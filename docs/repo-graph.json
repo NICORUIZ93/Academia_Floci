@@ -211,6 +211,25 @@
       "headings": []
     },
     {
+      "path": "docs/topic-learning-quality.json",
+      "lines": 17013,
+      "kind": "project-file",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "docs/topic-learning-quality.md",
+      "lines": 26,
+      "kind": "documentation",
+      "symbols": [],
+      "imports": [],
+      "headings": [
+        "# Auditor\u00eda pedag\u00f3gica tema por tema",
+        "## Cobertura garantizada por el lector"
+      ]
+    },
+    {
       "path": "examples/README.md",
       "lines": 129,
       "kind": "example",
@@ -2192,6 +2211,27 @@
       "headings": []
     },
     {
+      "path": "scripts/audit_topic_learning_quality.py",
+      "lines": 81,
+      "kind": "automation-script",
+      "symbols": [
+        "topic_blocks",
+        "evaluate",
+        "build",
+        "render_markdown",
+        "main"
+      ],
+      "imports": [
+        "__future__",
+        "argparse",
+        "json",
+        "re",
+        "collections",
+        "pathlib"
+      ],
+      "headings": []
+    },
+    {
       "path": "scripts/build_curriculum.py",
       "lines": 273,
       "kind": "automation-script",
@@ -2460,7 +2500,7 @@
     },
     {
       "path": "scripts/validate.sh",
-      "lines": 479,
+      "lines": 480,
       "kind": "automation-script",
       "symbols": [],
       "imports": [],
@@ -11462,7 +11502,7 @@
     },
     {
       "path": "web/src/app/app.spec.ts",
-      "lines": 110,
+      "lines": 118,
       "kind": "angular-app",
       "symbols": [],
       "imports": [
@@ -11596,7 +11636,7 @@
     },
     {
       "path": "web/src/app/course/course-shell.html",
-      "lines": 38,
+      "lines": 47,
       "kind": "angular-app",
       "symbols": [],
       "imports": [],
@@ -11604,7 +11644,7 @@
     },
     {
       "path": "web/src/app/course/course-shell.scss",
-      "lines": 58,
+      "lines": 68,
       "kind": "angular-app",
       "symbols": [],
       "imports": [],
@@ -11612,13 +11652,14 @@
     },
     {
       "path": "web/src/app/course/course-shell.ts",
-      "lines": 40,
+      "lines": 51,
       "kind": "angular-app",
       "symbols": [
         "CourseShellComponent",
         "track",
         "sidebarOpen",
-        "percent"
+        "percent",
+        "stats"
       ],
       "imports": [
         "@angular/common",
@@ -11653,7 +11694,7 @@
     },
     {
       "path": "web/src/app/course/final-quiz.ts",
-      "lines": 77,
+      "lines": 80,
       "kind": "angular-app",
       "symbols": [
         "FinalQuizComponent",
@@ -11671,7 +11712,8 @@
         "@angular/router",
         "lucide-angular",
         "rxjs",
-        "../course-data"
+        "../course-data",
+        "../progress.service"
       ],
       "headings": []
     },
@@ -11735,7 +11777,7 @@
     },
     {
       "path": "web/src/app/course/lesson-viewer.scss",
-      "lines": 190,
+      "lines": 202,
       "kind": "angular-app",
       "symbols": [],
       "imports": [],
@@ -11743,11 +11785,12 @@
     },
     {
       "path": "web/src/app/course/lesson-viewer.ts",
-      "lines": 474,
+      "lines": 526,
       "kind": "angular-app",
       "symbols": [
         "LessonViewerComponent",
         "TocItem",
+        "verified",
         "track",
         "module",
         "moduleIndex",
@@ -11775,7 +11818,8 @@
         "../content.service",
         "../progress.service",
         "../theme.service",
-        "./lab-verification"
+        "./lab-verification",
+        "react"
       ],
       "headings": []
     },
@@ -11840,11 +11884,12 @@
     },
     {
       "path": "web/src/app/progress.service.ts",
-      "lines": 77,
+      "lines": 126,
       "kind": "angular-app",
       "symbols": [
         "ProgressService",
         "TrackProgress",
+        "LearningStats",
         "state"
       ],
       "imports": [

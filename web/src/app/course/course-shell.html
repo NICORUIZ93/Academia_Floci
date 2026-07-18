@@ -1,15 +1,15 @@
 <div class="shell" *ngIf="track() as t; else missing" [style.--track-color]="t.color">
   <header class="shell-topbar">
-    <button class="icon-button mobile-only" title="Abrir índice" (click)="sidebarOpen.set(true)"><lucide-icon [img]="icons.Menu" /></button>
+    <button class="icon-button mobile-only" title="Abrir índice" aria-label="Abrir índice del curso" (click)="sidebarOpen.set(true)"><lucide-icon [img]="icons.Menu" /></button>
     <a class="back-link" routerLink="/catalogo"><lucide-icon [img]="icons.ArrowLeft" /><span>Catálogo</span></a>
     <div class="shell-title">
       <strong>{{ t.shortName }}</strong>
-      <div class="shell-progress"><span [style.width.%]="percent()"></span></div>
+      <div class="shell-progress" role="progressbar" aria-label="Progreso del track" aria-valuemin="0" aria-valuemax="100" [attr.aria-valuenow]="percent()"><span [style.width.%]="percent()"></span></div>
     </div>
-    <button class="search-trigger" (click)="paletteService.open()">
+    <button class="search-trigger" aria-label="Buscar cursos, módulos y temas" (click)="paletteService.open()">
       <lucide-icon [img]="icons.Search" /><span>Buscar</span><kbd>⌘K</kbd>
     </button>
-    <button class="icon-button theme-toggle" (click)="themeService.toggle()" [title]="themeService.isDark() ? 'Modo claro' : 'Modo oscuro'">
+    <button class="icon-button theme-toggle" (click)="themeService.toggle()" [attr.aria-label]="themeService.isDark() ? 'Activar modo claro' : 'Activar modo oscuro'" [title]="themeService.isDark() ? 'Modo claro' : 'Modo oscuro'">
       <lucide-icon [img]="themeService.isDark() ? icons.Sun : icons.Moon" />
     </button>
   </header>
@@ -20,6 +20,15 @@
         <strong>Índice del curso</strong>
         <button class="icon-button" (click)="sidebarOpen.set(false)"><lucide-icon [img]="icons.X" /></button>
       </div>
+      <section class="learning-stats" *ngIf="stats() as s" aria-label="Estadísticas de aprendizaje">
+        <div class="learning-stats-title"><lucide-icon [img]="icons.Sparkles" /><span>Tu avance</span><strong>{{ s.xp }} XP</strong></div>
+        <div class="learning-stats-grid">
+          <span><lucide-icon [img]="icons.Gauge" /><strong>{{ s.level }}</strong><small>Nivel</small></span>
+          <span><lucide-icon [img]="icons.Flame" /><strong>{{ s.streak }}</strong><small>Racha</small></span>
+          <span><lucide-icon [img]="icons.Award" /><strong>{{ s.badge }}</strong><small>Insignia</small></span>
+        </div>
+        <p>{{ s.completedModules }}/{{ t.modules.length }} módulos · Quiz {{ s.bestQuizScore }}/10</p>
+      </section>
       <app-lesson-index [trackId]="t.id" />
     </aside>
     <div class="shell-scrim mobile-only" *ngIf="sidebarOpen()" (click)="sidebarOpen.set(false)"></div>

@@ -1,8 +1,8 @@
 import { CommonModule } from '@angular/common';
-import { Component, computed, inject, signal } from '@angular/core';
+import { Component, computed, effect, inject, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, RouterLink, RouterOutlet } from '@angular/router';
-import { ArrowLeft, LucideAngularModule, Menu, Moon, Search, Sun, X } from 'lucide-angular';
+import { ArrowLeft, Award, Flame, Gauge, LucideAngularModule, Menu, Moon, Search, Sparkles, Sun, X } from 'lucide-angular';
 import { map } from 'rxjs';
 import { findTrack } from '../course-data';
 import { CommandPaletteService } from '../command-palette.service';
@@ -17,7 +17,7 @@ import { LessonIndexComponent } from './lesson-index';
   styleUrl: './course-shell.scss',
 })
 export class CourseShellComponent {
-  readonly icons = { ArrowLeft, Menu, Search, X, Sun, Moon };
+  readonly icons = { ArrowLeft, Award, Flame, Gauge, Menu, Search, Sparkles, X, Sun, Moon };
   readonly progressService = inject(ProgressService);
   readonly paletteService = inject(CommandPaletteService);
   readonly themeService = inject(ThemeService);
@@ -36,4 +36,15 @@ export class CourseShellComponent {
     const track = this.track();
     return track ? this.progressService.percentComplete(track.id, track.modules.length) : 0;
   });
+  readonly stats = computed(() => {
+    const track = this.track();
+    return track ? this.progressService.learningStats(track.id, track.modules.length) : null;
+  });
+
+  constructor() {
+    effect(() => {
+      const trackId = this.trackId();
+      if (trackId) this.progressService.recordStudyDay(trackId);
+    });
+  }
 }

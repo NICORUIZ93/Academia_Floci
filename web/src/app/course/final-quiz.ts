@@ -5,6 +5,7 @@ import { ActivatedRoute, RouterLink } from '@angular/router';
 import { CircleCheck, CircleX, LucideAngularModule, RotateCcw } from 'lucide-angular';
 import { map } from 'rxjs';
 import { findTrack } from '../course-data';
+import { ProgressService } from '../progress.service';
 
 /**
  * Cuestionario final de 10 preguntas, genérico para cualquier track (ver
@@ -22,6 +23,7 @@ export class FinalQuizComponent {
   readonly icons = { CircleCheck, CircleX, RotateCcw };
 
   private readonly route = inject(ActivatedRoute);
+  private readonly progressService = inject(ProgressService);
 
   private readonly trackId = toSignal(
     this.route.parent!.paramMap.pipe(map(params => params.get('trackId') ?? '')),
@@ -67,6 +69,7 @@ export class FinalQuizComponent {
   submit(): void {
     if (!this.allAnswered()) return;
     this.submitted.set(true);
+    this.progressService.recordQuizScore(this.trackId(), this.score());
   }
 
   retry(): void {

@@ -474,5 +474,6 @@ python3 scripts/validate_requested_master_topics.py
 python3 scripts/validate_definitive_topics.py
 python3 scripts/validate_supplemental_topics.py
 python3 scripts/validate_requested_practical_examples.py
+python3 scripts/audit_topic_learning_quality.py --check
 python3 scripts/build_web_topic_index.py --check
 python3 scripts/build_repo_graph.py --check

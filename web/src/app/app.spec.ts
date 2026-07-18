@@ -102,6 +102,14 @@ La evidencia demuestra el aprendizaje.`;
       expect(text).toContain('Bibliografía y fundamento académico');
       expect(page.querySelector('.lesson-markdown')).toBeTruthy();
       expect(page.querySelector('.build-method')).toBeTruthy();
+      expect(page.querySelector('.implementation-guide')).toBeTruthy();
+      expect(text).toContain('Crea el archivo');
+      expect(text).toContain('Ejecuta desde la raíz del repositorio');
+      expect(text).toContain('Resultado esperado');
+      expect(text).toContain('Tu avance');
+      expect(text).toContain('XP');
+      expect(text).toContain('Racha');
+      expect(text).toContain('Insignia');
     } finally {
       fetchSpy.mockRestore();
     }

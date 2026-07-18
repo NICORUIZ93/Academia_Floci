@@ -2,6 +2,17 @@ import { Injectable, signal } from '@angular/core';
 
 export interface TrackProgress {
   completedModules: number[];
+  studyDates?: string[];
+  bestQuizScore?: number;
+}
+
+export interface LearningStats {
+  completedModules: number;
+  xp: number;
+  streak: number;
+  level: 'Básico' | 'Intermedio' | 'Avanzado' | 'Master';
+  badge: 'Inicio' | 'Explorador' | 'Constructor' | 'Arquitecto' | 'Maestro';
+  bestQuizScore: number;
 }
 
 type ProgressState = Record<string, TrackProgress>;
@@ -64,6 +75,44 @@ export class ProgressService {
       : [...current.completedModules, moduleId];
     this.state.update(s => ({ ...s, [trackId]: { ...current, completedModules } }));
     this.persist();
+  }
+
+  recordStudyDay(trackId: string): void {
+    const current = this.trackProgress(trackId);
+    const today = new Date().toISOString().slice(0, 10);
+    const studyDates = current.studyDates ?? [];
+    if (studyDates.includes(today)) return;
+    this.state.update(state => ({ ...state, [trackId]: { ...current, studyDates: [...studyDates, today] } }));
+    this.persist();
+  }
+
+  recordQuizScore(trackId: string, score: number): void {
+    const current = this.trackProgress(trackId);
+    if ((current.bestQuizScore ?? 0) >= score) return;
+    this.state.update(state => ({ ...state, [trackId]: { ...current, bestQuizScore: score } }));
+    this.persist();
+  }
+
+  learningStats(trackId: string, totalModules: number): LearningStats {
+    const progress = this.trackProgress(trackId);
+    const completed = progress.completedModules.length;
+    const bestQuizScore = progress.bestQuizScore ?? 0;
+    const xp = completed * 50 + bestQuizScore * 10;
+    const ratio = totalModules ? completed / totalModules : 0;
+    const level = ratio >= 1 ? 'Master' : ratio >= .66 ? 'Avanzado' : ratio >= .33 ? 'Intermedio' : 'Básico';
+    const badge = completed >= totalModules && totalModules > 0 ? 'Maestro' : completed >= 6 ? 'Arquitecto' : completed >= 3 ? 'Constructor' : completed >= 1 ? 'Explorador' : 'Inicio';
+    return { completedModules: completed, xp, streak: this.calculateStreak(progress.studyDates ?? []), level, badge, bestQuizScore };
+  }
+
+  private calculateStreak(dates: string[]): number {
+    const studied = new Set(dates);
+    const cursor = new Date();
+    let streak = 0;
+    while (studied.has(cursor.toISOString().slice(0, 10))) {
+      streak += 1;
+      cursor.setUTCDate(cursor.getUTCDate() - 1);
+    }
+    return streak;
   }
 
   nextPendingModuleId(trackId: string, totalModules: number): number {

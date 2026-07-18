@@ -1,8 +1,8 @@
 # Academia Floci Repo Graph
 
-Generated: 2026-07-18 01:48 UTC
+Generated: 2026-07-18 01:58 UTC
 Root: `Academia_Floci`
-Indexed files: 769
+Indexed files: 772
 Import edges: 30
 
 Use this file as the first, compact context for AI assistants. Refresh it with:
@@ -16,21 +16,21 @@ For automated lookups, use `docs/repo-graph.json`.
 ## Project Shape
 
 - `angular-app`: 50 files
-- `automation-script`: 27 files
+- `automation-script`: 28 files
 - `course-content`: 346 files
-- `documentation`: 97 files
+- `documentation`: 98 files
 - `example`: 215 files
 - `local-infra`: 1 files
-- `project-file`: 33 files
+- `project-file`: 34 files
 
 ## File Types
 
-- `.md`: 434
-- `.py`: 57
+- `.md`: 435
+- `.py`: 58
 - `.js`: 44
 - `.ts`: 43
 - `.java`: 40
-- `.json`: 25
+- `.json`: 26
 - `.go`: 24
 - `.rs`: 24
 - `.kt`: 11
@@ -54,7 +54,7 @@ For automated lookups, use `docs/repo-graph.json`.
 
 - `README.md` (276 lines, documentation)
   - headings: # Academia_Floci, ## Como empezar, ## Levantar Floci, # 1. Levantar todos los servicios, # 2. Verificar Floci AWS
-- `scripts/validate.sh` (479 lines, automation-script)
+- `scripts/validate.sh` (480 lines, automation-script)
 - `scripts/build_repo_graph.py` (446 lines, automation-script)
   - symbols: FileNode, repo_files, read_text, classify, parse_ts_symbols, parse_ts_imports, parse_python_symbols, parse_python_imports, parse_markdown_headings, unique
 - `web/index.html` (282 lines, project-file)
@@ -65,10 +65,10 @@ For automated lookups, use `docs/repo-graph.json`.
   - symbols: ServiceGroup, CloudComparison, AltCloudGroup
 - `web/src/app/catalog/course-catalog.ts` (82 lines, angular-app)
   - symbols: CourseCatalogComponent, cards, featuredTracks, foundationTracks, mobileTracks
-- `web/src/app/course/course-shell.ts` (40 lines, angular-app)
-  - symbols: CourseShellComponent, track, sidebarOpen, percent
-- `web/src/app/course/lesson-viewer.ts` (474 lines, angular-app)
-  - symbols: LessonViewerComponent, TocItem, track, module, moduleIndex, previousModule, nextModule, lessonHtml, lessonLoading, tocItems
+- `web/src/app/course/course-shell.ts` (51 lines, angular-app)
+  - symbols: CourseShellComponent, track, sidebarOpen, percent, stats
+- `web/src/app/course/lesson-viewer.ts` (526 lines, angular-app)
+  - symbols: LessonViewerComponent, TocItem, verified, track, module, moduleIndex, previousModule, nextModule, lessonHtml, lessonLoading
 - `web/public/content/manifest.json` (819 lines, course-content)
 - `web/public/content/es/pasos.md` (1122 lines, course-content)
   - headings: # 45 pasos de Academia Floci, ## Cursos, ## Paso 1: ¿Qué es Docker?, ## Paso 2: Instalar Docker, ## Paso 3: Verificar Docker
@@ -137,7 +137,7 @@ For automated lookups, use `docs/repo-graph.json`.
 - `web/src/app/app.config.ts` (12 lines) - imports: @angular/core, @angular/router, ./app.routes
 - `web/src/app/app.html` (3 lines)
 - `web/src/app/app.routes.ts` (28 lines) - imports: @angular/router, ./catalog/course-catalog, ./course/course-shell, ./course/final-quiz, ./course/lesson-viewer
-- `web/src/app/app.spec.ts` (110 lines) - imports: @angular/core/testing, @angular/router, @angular/router/testing, ./app, ./app.routes, ./catalog/course-catalog, ./course-data
+- `web/src/app/app.spec.ts` (118 lines) - imports: @angular/core/testing, @angular/router, @angular/router/testing, ./app, ./app.routes, ./catalog/course-catalog, ./course-data
 - `web/src/app/app.ts` (11 lines) - symbols: App; imports: @angular/core, @angular/router, ./command-palette
 - `web/src/app/catalog/course-catalog.html` (74 lines) - symbols: official-title
 - `web/src/app/catalog/course-catalog.scss` (178 lines)
@@ -149,13 +149,14 @@ For automated lookups, use `docs/repo-graph.json`.
 - `web/src/app/content.service.ts` (27 lines) - symbols: ContentService; imports: @angular/core, marked
 - `web/src/app/course-data.ts` (1057 lines) - symbols: ServiceGroup, CloudComparison, AltCloudGroup; imports: ./course-module.model, ./tracks/devops.track, ./tracks/javascript.track, ./tracks/node.track, ./tracks/angular.track, ./tracks/react.track, ./tracks/java.track, ./tracks/spring-boot.track
 - `web/src/app/course-module.model.ts` (41 lines) - symbols: CourseModule, QuizQuestion, Track
-- `web/src/app/course/course-shell.html` (38 lines)
-- `web/src/app/course/course-shell.scss` (58 lines)
-- `web/src/app/course/course-shell.ts` (40 lines) - symbols: CourseShellComponent, track, sidebarOpen, percent; imports: @angular/common, @angular/core, @angular/core/rxjs-interop, @angular/router, lucide-angular, rxjs, ../course-data, ../command-palette.service
+- `web/src/app/course/course-shell.html` (47 lines)
+- `web/src/app/course/course-shell.scss` (68 lines)
+- `web/src/app/course/course-shell.ts` (51 lines) - symbols: CourseShellComponent, track, sidebarOpen, percent, stats; imports: @angular/common, @angular/core, @angular/core/rxjs-interop, @angular/router, lucide-angular, rxjs, ../course-data, ../command-palette.service
 - ... 32 more files
 
 ### automation-script
 
+- `scripts/audit_topic_learning_quality.py` (81 lines) - symbols: topic_blocks, evaluate, build, render_markdown, main; imports: __future__, argparse, json, re, collections, pathlib
 - `scripts/build_curriculum.py` (273 lines) - symbols: source_text, normalize_ascii, clean_module_name, parse_curriculum, js_string, render_app_data, main; imports: __future__, json, re, pathlib
 - `scripts/build_definitive_topic_registry.py` (95 lines) - symbols: clean, fold, module_number; imports: pathlib, argparse, json, re, unicodedata
 - `scripts/build_repo_graph.py` (446 lines) - symbols: FileNode, repo_files, read_text, classify, parse_ts_symbols, parse_ts_imports, parse_python_symbols, parse_python_imports; imports: __future__, argparse, ast, json, re, collections, dataclasses, datetime
@@ -173,8 +174,7 @@ For automated lookups, use `docs/repo-graph.json`.
 - `scripts/fix_lessons.py` (205 lines) - symbols: safe_print, iter_text_check_files, find_text_quality_issues, normalized_content, fix_content, check_http, main; imports: argparse, glob, os, re, urllib.request
 - `scripts/start.sh` (10 lines)
 - `scripts/validate-floci.sh` (43 lines)
-- `scripts/validate.sh` (479 lines)
-- ... 9 more files
+- ... 10 more files
 
 ### course-content
 
@@ -206,6 +206,7 @@ For automated lookups, use `docs/repo-graph.json`.
 - `docs/METODOLOGIA-DE-APRENDIZAJE.md` (57 lines) - headings: # Metodología Aprende construyendo, ## Ciclo de cada capítulo, ## Tamaño de las experiencias, ## Regla para mostrar soluciones
 - `docs/METODOLOGIA.md` (67 lines) - headings: # Metodología de Aprendizaje — Academia Floci, ## 1. Principios (basados en evidencia), ## 2. El ciclo de cada lección (regla 20/60/20), ## 3. Ruta por perfil
 - `docs/PLANTILLA-LECCION.md` (110 lines) - headings: # Plantilla de Lección — Prompt Maestro para Claude / Codex, ## PROMPT MAESTRO (copiar desde aquí), ## DATOS DE LA LECCIÓN, ## REGLAS DE ESTILO
+- `docs/topic-learning-quality.md` (26 lines) - headings: # Auditoría pedagógica tema por tema, ## Cobertura garantizada por el lector
 - `web/README.md` (72 lines) - headings: # Web, ## Abrir la academia, ## Que contiene, ## Archivos principales
 - `web/scripts/source-docs-en/configuration/advanced/application-yml.md` (356 lines) - headings: # application.yml Reference, ## URL configuration, ## Full Reference, ### Initialization hooks
 - `web/scripts/source-docs-en/configuration/application-yml.md` (7 lines) - headings: # application.yml Reference
@@ -217,8 +218,7 @@ For automated lookups, use `docs/repo-graph.json`.
 - `web/scripts/source-docs-en/configuration/multi-account.md` (176 lines) - headings: # Multi-Account Isolation, ## How It Works, ## Temporary Credentials (AssumeRole), ## Default Behavior (Single Account)
 - `web/scripts/source-docs-en/configuration/ports.md` (165 lines) - headings: # Ports Reference, ## Port Overview, ## Why some ports don't need docker-compose mapping, ### Proxy-in-Floci (ElastiCache, RDS)
 - `web/scripts/source-docs-en/configuration/storage.md` (177 lines) - headings: # Storage Modes, ## Modes, ## Global Configuration, ## Per-Service Override
-- `web/scripts/source-docs-en/configuration/tls.md` (177 lines) - headings: # TLS / HTTPS, ## Quick Start, # AWS CLI, # Node.js
-- ... 79 more files
+- ... 80 more files
 
 ### example
 
@@ -260,10 +260,10 @@ For automated lookups, use `docs/repo-graph.json`.
 - `docs/requested-practical-examples.json` (1290 lines)
 - `docs/specialization-outcomes.json` (116 lines)
 - `docs/supplemental-track-topics.json` (2127 lines)
+- `docs/topic-learning-quality.json` (17013 lines)
 - `install.sh` (99 lines)
 - `web/.gitignore` (48 lines)
 - `web/.vscode/extensions.json` (5 lines)
 - `web/.vscode/launch.json` (21 lines)
 - `web/.vscode/mcp.json` (10 lines)
-- `web/.vscode/tasks.json` (43 lines)
-- ... 15 more files
+- ... 16 more files

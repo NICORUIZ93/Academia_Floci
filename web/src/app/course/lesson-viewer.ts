@@ -27,6 +27,13 @@ interface LessonStats {
   activities: number;
 }
 
+interface ImplementationProfile {
+  path: string;
+  command: string;
+  language: string;
+  scaffold: (topic: string) => string;
+}
+
 function slugify(text: string, seen: Set<string>): string {
   const base = text
     .normalize('NFD')
@@ -330,6 +337,7 @@ export class LessonViewerComponent implements OnDestroy {
         note.value = localStorage.getItem(this.topicStorageKey(index, 'note')) ?? '';
         if (note.value) practice.open = true;
       }
+      this.addImplementationGuide(card, heading, index);
       if (!card.textContent?.includes('Diagrama:') && !card.querySelector('pre.mermaid')) {
         const visual = document.createElement('figure');
         visual.className = 'concept-flow';
@@ -339,6 +347,50 @@ export class LessonViewerComponent implements OnDestroy {
       card.appendChild(practice);
       card.appendChild(action);
     });
+  }
+
+  private addImplementationGuide(card: HTMLElement, heading: HTMLHeadingElement, index: number): void {
+    const topic = heading.textContent?.replace(/^Tema(?:\s+(?:complementario|suplementario))?(?:\s+\d+)?\s*:\s*/i, '').trim() || `tema-${index + 1}`;
+    const profile = this.implementationProfile(index);
+    const guide = document.createElement('section');
+    guide.className = 'implementation-guide';
+    guide.innerHTML = `<div class="implementation-guide-heading"><small>Implementación guiada</small><strong>Dónde escribir y cómo comprobarlo</strong></div>
+      <ol>
+        <li><span>1</span><div><strong>Crea el archivo</strong><code>${escapeHtml(profile.path)}</code></div></li>
+        <li><span>2</span><div><strong>Implementa el incremento</strong><p>Empieza con el ejemplo de este tema. Si todavía no hay uno, usa el punto de partida generado abajo y reemplázalo con la capacidad de <em>${escapeHtml(topic)}</em>.</p></div></li>
+        <li><span>3</span><div><strong>Ejecuta desde la raíz del repositorio</strong><code>${escapeHtml(profile.command)}</code></div></li>
+        <li><span>4</span><div><strong>Resultado esperado</strong><p>La ejecución termina sin errores, produce una evidencia observable y la prueba de fallo explica qué condición se incumplió.</p></div></li>
+      </ol>`;
+    if (!card.querySelector('.code-example')) {
+      const generated = document.createElement('div');
+      generated.className = 'code-example generated-starter';
+      generated.innerHTML = `<div class="code-example-bar"><span>${escapeHtml(profile.language)} · punto de partida</span><button type="button" data-copy-code="generated-${index}" aria-label="Copiar punto de partida">Copiar</button></div><pre><code>${escapeHtml(profile.scaffold(topic))}</code></pre>`;
+      guide.appendChild(generated);
+    }
+    const firstPractice = card.querySelector('.topic-practice');
+    card.insertBefore(guide, firstPractice);
+  }
+
+  private implementationProfile(topicIndex: number): ImplementationProfile {
+    const moduleId = this.moduleId();
+    const topic = topicIndex + 1;
+    const profiles: Record<string, ImplementationProfile> = {
+      foundations: { path: `examples/tracks/foundations/module-${moduleId}/topic-${topic}.py`, command: `python3 examples/tracks/foundations/module-${moduleId}/topic-${topic}.py`, language: 'python', scaffold: name => `def verify_${topic}():\n    # Implementa: ${name}\n    evidence = {"topic": ${JSON.stringify(name)}, "passed": True}\n    assert evidence["passed"]\n    return evidence\n\nprint(verify_${topic}())` },
+      cloud: { path: `examples/tracks/cloud/module-${moduleId}/topic-${topic}/main.tf`, command: `terraform -chdir=examples/tracks/cloud/module-${moduleId}/topic-${topic} init && terraform -chdir=examples/tracks/cloud/module-${moduleId}/topic-${topic} validate`, language: 'hcl', scaffold: name => `locals {\n  topic = ${JSON.stringify(name)}\n  tags  = { system = "rutaflow", module = "${moduleId}" }\n}\n\noutput "evidence" { value = { topic = local.topic, verified = true } }` },
+      devops: { path: `examples/tracks/devops/module-${moduleId}/topic-${topic}.yaml`, command: `docker compose config && ./scripts/validate.sh`, language: 'yaml', scaffold: name => `topic: ${JSON.stringify(name)}\nservice: rutaflow\nverification:\n  success: true\n  evidence: [logs, metrics, trace_id]` },
+      javascript: { path: `examples/tracks/javascript/module-${moduleId}/topic-${topic}.ts`, command: `npx tsx examples/tracks/javascript/module-${moduleId}/topic-${topic}.ts`, language: 'typescript', scaffold: name => `const topic = ${JSON.stringify(name)};\nconst verify = () => ({ topic, passed: true, observedAt: new Date().toISOString() });\nconsole.log(verify());` },
+      node: { path: `examples/tracks/node/src/module-${moduleId}/topic-${topic}.ts`, command: `npx tsx examples/tracks/node/src/module-${moduleId}/topic-${topic}.ts`, language: 'typescript', scaffold: name => `type Evidence = Readonly<{ topic: string; passed: boolean }>;\nconst run = (): Evidence => ({ topic: ${JSON.stringify(name)}, passed: true });\nconsole.log(run());` },
+      angular: { path: `examples/tracks/angular/src/app/module-${moduleId}/topic-${topic}.ts`, command: `npm --prefix examples/tracks/angular test`, language: 'typescript', scaffold: name => `import { signal } from '@angular/core';\nexport const topic = ${JSON.stringify(name)};\nexport const verified = signal(false);\nexport const verify = () => verified.set(true);` },
+      react: { path: `examples/tracks/react/src/module-${moduleId}/Topic${topic}.tsx`, command: `npm --prefix examples/tracks/react test`, language: 'tsx', scaffold: name => `import { useState } from 'react';\nexport function Topic${topic}() {\n  const [verified, setVerified] = useState(false);\n  return <button onClick={() => setVerified(true)}>${name}: {verified ? 'verificado' : 'probar'}</button>;\n}` },
+      java: { path: `examples/tracks/java/src/main/java/academy/module${moduleId}/Topic${topic}.java`, command: `./gradlew test`, language: 'java', scaffold: name => `record Evidence(String topic, boolean passed) {}\nclass Topic${topic} {\n  static Evidence verify() { return new Evidence(${JSON.stringify(name)}, true); }\n}` },
+      'spring-boot': { path: `examples/tracks/spring-boot/src/main/java/academy/module${moduleId}/Topic${topic}Service.java`, command: `./mvnw test`, language: 'java', scaffold: name => `@Service\nfinal class Topic${topic}Service {\n  Evidence verify() { return new Evidence(${JSON.stringify(name)}, true); }\n}\nrecord Evidence(String topic, boolean passed) {}` },
+      'kotlin-multiplatform': { path: `examples/tracks/kotlin-multiplatform/shared/src/commonMain/kotlin/module${moduleId}/Topic${topic}.kt`, command: `./gradlew :shared:allTests`, language: 'kotlin', scaffold: name => `data class Evidence(val topic: String, val passed: Boolean)\nfun verifyTopic${topic}() = Evidence(${JSON.stringify(name)}, true)` },
+      android: { path: `examples/tracks/android/app/src/main/java/academy/module${moduleId}/Topic${topic}.kt`, command: `./gradlew testDebugUnitTest`, language: 'kotlin', scaffold: name => `data class Evidence(val topic: String, val passed: Boolean)\nclass Topic${topic}UseCase { operator fun invoke() = Evidence(${JSON.stringify(name)}, true) }` },
+      ios: { path: `examples/tracks/ios/Sources/RutaFlow/Module${moduleId}/Topic${topic}.swift`, command: `swift test --package-path examples/tracks/ios`, language: 'swift', scaffold: name => `struct Evidence: Sendable { let topic: String; let passed: Bool }\nfunc verifyTopic${topic}() -> Evidence { Evidence(topic: ${JSON.stringify(name)}, passed: true) }` },
+      flutter: { path: `examples/tracks/flutter/lib/features/module_${moduleId}/topic_${topic}.dart`, command: `flutter test examples/tracks/flutter`, language: 'dart', scaffold: name => `class Evidence {\n  const Evidence(this.topic, this.passed);\n  final String topic;\n  final bool passed;\n}\nconst evidence = Evidence(${JSON.stringify(name)}, true);` },
+      rutaflow: { path: `examples/project-final/module-${moduleId}/topic-${topic}.md`, command: `./scripts/validate.sh`, language: 'text', scaffold: name => `Tema: ${name}\nHipótesis: describe qué debe ocurrir.\nEvidencia: registra entrada, salida, error y métrica.` },
+    };
+    return profiles[this.trackId()] ?? profiles['foundations'];
   }
 
   private collapseExerciseSolutions(container: HTMLElement): void {
