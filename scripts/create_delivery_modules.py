@@ -65,16 +65,6 @@ sequenceDiagram
 {''.join(sections)}
 {QUALITY}
 
-## Rúbrica del proyecto
-
-| Criterio | Inicial | Competente | Profesional |
-|---|---|---|---|
-| Funcionalidad | Demo aislada | Flujo integrado | Offline, reintentos y recuperación |
-| Geografía | Dibuja puntos | Valida precisión/tiempo | Índices, secuencia y medición |
-| Seguridad | Solo login | Bearer y roles | Propiedad, amenazas y mínimo dato |
-| Código | Plugins acoplados | Límites probados | Adaptadores sustituibles con criterio |
-| Operación | Logs manuales | Métricas básicas | Correlación, runbook y prueba de fallo |
-
 ## Bibliografía y fundamento académico
 
 - Documentación oficial de Flutter, Riverpod, Google Maps Platform, Dio, Firebase y Socket.IO para el cliente.

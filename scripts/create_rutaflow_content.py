@@ -112,16 +112,6 @@ Al terminar, podrás explicar las decisiones con vocabulario técnico sencillo, 
 {QUALITY}
 
 
-## Rúbrica del proyecto
-
-| Criterio | Inicial | Competente | Profesional |
-|---|---|---|---|
-| Fundamento | Repite términos | Explica la decisión | Compara alternativas y límites |
-| Funcionamiento | Solo camino feliz | Maneja fallos previstos | Demuestra recuperación e idempotencia |
-| Código | Acoplado y ambiguo | Claro y probado | Límites cohesionados y deuda explícita |
-| Datos y seguridad | Usa datos reales | Minimiza y autoriza | Audita, retiene y modela amenazas |
-| Operación | Requiere pasos ocultos | README reproducible | Métricas, runbook y evidencia |
-
 ## Bibliografía y fundamento académico
 
 - Documentación oficial de las tecnologías enlazadas desde el panel **Actualizaciones oficiales** de la Academia; verifica versión y fecha antes de aplicar una API.

@@ -2356,7 +2356,7 @@
     },
     {
       "path": "scripts/create_delivery_modules.py",
-      "lines": 97,
+      "lines": 87,
       "kind": "automation-script",
       "symbols": [
         "render"
@@ -2368,7 +2368,7 @@
     },
     {
       "path": "scripts/create_master_gap_modules.py",
-      "lines": 120,
+      "lines": 110,
       "kind": "automation-script",
       "symbols": [
         "render"
@@ -2381,7 +2381,7 @@
     },
     {
       "path": "scripts/create_rutaflow_content.py",
-      "lines": 145,
+      "lines": 135,
       "kind": "automation-script",
       "symbols": [
         "render"

@@ -1,6 +1,6 @@
 # Academia Floci Repo Graph
 
-Generated: 2026-07-18 07:10 UTC
+Generated: 2026-07-18 07:12 UTC
 Root: `Academia_Floci`
 Indexed files: 771
 Import edges: 33
@@ -162,9 +162,9 @@ For automated lookups, use `docs/repo-graph.json`.
 - `scripts/audit_topic_learning_quality.py` (135 lines) - symbols: student_visible_content, topic_blocks, evaluate, classify, build, render_markdown, main; imports: __future__, argparse, json, re, collections, pathlib
 - `scripts/build_repo_graph.py` (445 lines) - symbols: FileNode, repo_files, read_text, classify, parse_ts_symbols, parse_ts_imports, parse_python_symbols, parse_python_imports; imports: __future__, argparse, ast, json, re, collections, dataclasses, datetime
 - `scripts/build_web_topic_index.py` (75 lines) - symbols: slugify, clean_topic_title, main; imports: __future__, json, re, sys, unicodedata, collections, pathlib
-- `scripts/create_delivery_modules.py` (97 lines) - symbols: render; imports: pathlib
-- `scripts/create_master_gap_modules.py` (120 lines) - symbols: render; imports: pathlib, json
-- `scripts/create_rutaflow_content.py` (145 lines) - symbols: render; imports: pathlib
+- `scripts/create_delivery_modules.py` (87 lines) - symbols: render; imports: pathlib
+- `scripts/create_master_gap_modules.py` (110 lines) - symbols: render; imports: pathlib, json
+- `scripts/create_rutaflow_content.py` (135 lines) - symbols: render; imports: pathlib
 - `scripts/enrich_code_quality.py` (44 lines) - imports: pathlib
 - `scripts/enrich_curriculum_sections.py` (154 lines) - symbols: bibliography, project_path; imports: pathlib
 - `scripts/enrich_official_topic_atlas.py` (127 lines) - symbols: block; imports: pathlib, json
