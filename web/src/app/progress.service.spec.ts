@@ -7,26 +7,11 @@ describe('ProgressService', () => {
     TestBed.configureTestingModule({});
   });
 
-  it('awards XP once for demonstrated learning steps', () => {
+  it('stores simple module completion without gamification', () => {
     const service = TestBed.inject(ProgressService);
 
-    service.recordLearningStep('javascript', 'topic', '0:0');
-    service.recordLearningStep('javascript', 'practice', '0:0');
-    service.recordLearningStep('javascript', 'topic', '0:0');
-
-    expect(service.learningStats('javascript', 15).xp).toBe(30);
-    expect(service.hasLearningStep('javascript', 'topic', '0:0')).toBe(true);
-  });
-
-  it('combines evidence and module XP without requiring an exam', () => {
-    const service = TestBed.inject(ProgressService);
-
-    service.recordLearningStep('java', 'topic', '0:0');
-    service.recordLearningStep('java', 'practice', '0:0');
     service.toggleModuleComplete('java', 0);
-
-    const stats = service.learningStats('java', 15);
-    expect(stats.xp).toBe(80);
-    expect(stats.badge).toBe('Explorador');
+    expect(service.isModuleComplete('java', 0)).toBe(true);
+    expect(service.percentComplete('java', 15)).toBe(7);
   });
 });

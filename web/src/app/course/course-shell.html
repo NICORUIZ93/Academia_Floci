@@ -21,15 +21,6 @@
         <strong>Índice del curso</strong>
         <button class="icon-button" (click)="sidebarOpen.set(false)"><lucide-icon [img]="icons.X" /></button>
       </div>
-      <section class="learning-stats" *ngIf="stats() as s" aria-label="Estadísticas de aprendizaje">
-        <div class="learning-stats-title"><lucide-icon [img]="icons.Sparkles" /><span>Tu avance</span><strong>{{ s.xp }} XP</strong></div>
-        <div class="learning-stats-grid">
-          <span><lucide-icon [img]="icons.Gauge" /><strong>{{ s.level }}</strong><small>Nivel</small></span>
-          <span><lucide-icon [img]="icons.Flame" /><strong>{{ s.streak }}</strong><small>Racha</small></span>
-          <span><lucide-icon [img]="icons.Award" /><strong>{{ s.badge }}</strong><small>Insignia</small></span>
-        </div>
-        <p>{{ s.completedModules }}/{{ t.modules.length }} módulos · aprendizaje libre, sin examen</p>
-      </section>
       <section class="official-path" *ngIf="officialPath() as path" aria-labelledby="official-path-title">
         <div class="official-path-heading">
           <lucide-icon [img]="icons.BookOpenCheck" />

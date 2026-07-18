@@ -300,6 +300,7 @@ WebFlux: justificado con muchas conexiones I/O concurrentes + recursos limitados
 Spring MVC / virtual threads: más simple, suficiente para CRUDs de concurrencia moderada
 ```
 
+
 ---
 
 ## Criterio transversal de calidad del código

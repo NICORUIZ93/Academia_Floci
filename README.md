@@ -123,21 +123,15 @@ Cada tema sigue una estructura simple:
 
 La version Angular tiene su propio contenido, mas amplio, en formato Markdown
 (`web/public/content/<track>/modulo-N.md`), organizado en 14 tracks, 224
-modulos y 1.217 temas. Cada modulo sigue la misma plantilla: Silabo, Contenido
+módulos y 877 temas editoriales visibles. Cada módulo sigue la misma plantilla: Sílabo, Contenido
 teorico, Laboratorio practico, Ejercicios de evaluacion y Resumen. Los temas
 permanecen abiertos y el laboratorio vive dentro de la misma ruta del modulo;
 no existe una ruta de cuestionario o examen separada.
 
-Cada tema muestra una ruta guiada de ocho pasos: conocimiento previo, archivo o
-registro de decisión, incremento, ejecución, resultado observable, fallo
-deliberado, conexión con RutaFlow y evidencia final. La guía distingue los
-temas con código de las decisiones conceptuales para no inventar implementaciones.
-Además, los 224 Markdown activos contienen una sección persistente **Comienza
-desde cero** con comprobación de herramientas, creación o recuperación del
-proyecto, árbol de carpetas, una ruta por cada tema real, línea base ejecutable,
-resultado esperado, fallo deliberado y conexión con RutaFlow. WebFlux conserva
-su tutorial manual como referencia y los otros 223 capítulos cumplen el mismo
-contrato mediante `scripts/enrich_from_zero_guides.py`.
+La preparación completa se presenta una vez, en el módulo inicial de cada track.
+Los capítulos posteriores priorizan explicación, código, ejecución y práctica
+específicos, sin repetir una guía genérica. WebFlux conserva su tutorial manual
+como referencia editorial porque explica un proyecto concreto de principio a fin.
 La auditoría editorial de `docs/topic-learning-quality.md` sigue midiendo el
 Markdown real por separado: una ayuda generada en la interfaz no convierte una
 explicación superficial en contenido editorial completo.

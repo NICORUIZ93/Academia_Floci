@@ -31,77 +31,6 @@ Un laboratorio que empaqueta una aplicación como Helm chart, expone con Ingress
 
 ---
 
-## Comienza desde cero: prepara este capítulo
-
-Este recorrido parte de una carpeta vacía. Al finalizar tendrás **Un laboratorio que empaqueta una aplicación como Helm chart, expone con Ingress, configura autoscaling y probes, y tres ejercicios de evaluación sobre Helm vs YAML suelto, liveness vs readiness, y diseño de RBAC.** No avances ejecutando comandos que no comprendes: primero identifica la entrada, la transformación y la evidencia que comprobará el resultado.
-
-### 1. Comprueba las herramientas
-
-Los comandos funcionan en macOS, Linux y WSL. En PowerShell usa el equivalente indicado por la herramienta.
-
-```bash
-git --version
-docker --version
-bash --version
-```
-
-Si un comando no existe, detente e instala esa herramienta desde su sitio oficial. Cierra y abre la terminal después de modificar `PATH`. Las versiones deben ser compatibles entre sí antes de crear archivos.
-
-### 2. Crea o recupera el proyecto del track
-
-```bash
-mkdir -p academia-labs/devops/{app,infra,scripts,evidence}
-cd academia-labs/devops
-git init
-```
-
-Trabaja dentro de `academia-labs/devops`. Si ya existe, no lo vuelvas a generar: entra en la carpeta, confirma `git status` y continúa sobre una rama propia.
-
-### 3. Ubica cada tema antes de escribir
-
-```text
-academia-labs/devops/
-├─ infra/
-│  └─ module-7/
-├─ tests/
-├─ docs/decisions/
-├─ evidence/module-7/
-└─ README.md
-```
-
-| Tema | Archivo o decisión | Evidencia mínima |
-|---|---|---|
-| 1. Helm charts y values | `infra/module-7/topic-1-helm-charts-y-values.yaml` | prueba + salida observable |
-| 2. Ingress Controllers y reglas de enrutamiento | `infra/module-7/topic-2-ingress-controllers-y-reglas-de-enrutamiento.yaml` | prueba + salida observable |
-| 3. HorizontalPodAutoscaler | `infra/module-7/topic-3-horizontalpodautoscaler.yaml` | prueba + salida observable |
-| 4. Probes de liveness y readiness | `infra/module-7/topic-4-probes-de-liveness-y-readiness.yaml` | prueba + salida observable |
-| 5. RBAC en Kubernetes | `infra/module-7/topic-5-rbac-en-kubernetes.yaml` | prueba + salida observable |
-| 6. Service Mesh — Istio, Linkerd, Envoy y mTLS | `infra/module-7/topic-6-service-mesh-istio-linkerd-envoy-y-mtls.yaml` | prueba + salida observable |
-
-Un ejemplo técnico vive en el archivo indicado y debe tener una prueba. Un tema conceptual vive en `docs/decisions/`: compara opciones usando restricciones medibles; no escribas código decorativo solo para llenar espacio.
-
-### 4. Ejecuta una línea base
-
-Desde `academia-labs/devops`:
-
-```bash
-docker compose config
-```
-
-**Resultado esperado:** el comando reconoce el proyecto y termina sin errores antes de introducir el cambio del capítulo. Después del incremento, la evidencia debe demostrar: **Un laboratorio que empaqueta una aplicación como Helm chart, expone con Ingress, configura autoscaling y probes, y tres ejercicios de evaluación sobre Helm vs YAML suelto, liveness vs readiness, y diseño de RBAC.**
-
-Si falla la línea base, no continúes. Localiza el primer mensaje que indique archivo, línea o dependencia; formula una causa y compruébala con un cambio pequeño.
-
-### 5. Provoca un fallo y recupérate
-
-Rompe una referencia, variable o healthcheck y localiza la causa con la validación o los logs. Guarda en `evidence/module-7/` el comando, la salida relevante, tu hipótesis y la corrección. Revierte únicamente el cambio deliberado; no borres todo el proyecto para ocultar la causa.
-
-### 6. Conecta el capítulo con RutaFlow
-
-Aplica el aprendizaje de **Kubernetes avanzado — Helm e Ingress** a un incremento vertical de RutaFlow. Define qué componente produce el dato, qué contrato lo transporta, quién lo consume y cómo observarás un fallo. La entrega final incluye archivo o decisión, prueba, salida, error corregido y una limitación que todavía validarías en producción.
-
----
-
 ## Contenido teórico
 
 ### Tema 1: Helm charts y values
@@ -379,27 +308,6 @@ Estas fuentes sustentan los conceptos y deben consultarse para verificar detalle
 - ACM/IEEE-CS/AAAI, *Computer Science Curricula 2023*.
 - IEEE Computer Society, *SWEBOK Guide V4.0*.
 
-<!-- REQUESTED-PRACTICAL-EXAMPLES:START -->
-## Ejemplos guiados de los temas solicitados
-
-Estos ejemplos acompañan la ampliación académica. No son código para copiar sin contexto: ejecuta, modifica, provoca un fallo y conserva la evidencia.
-
-### Ejemplo guiado: Service Mesh (Istio, Linkerd)
-
-**Qué demuestra:** convierte el concepto en una evidencia pequeña, explícita y verificable dentro de RutaFlow. El ejemplo separa la decisión del framework para poder probarla y cambiarla.
-
-```yaml
-capability: "Service Mesh (Istio, Linkerd)"
-service: rutaflow-delivery
-verification:
-  success: "deployment_health == 1"
-  failure: "rollback_completed == 1"
-  evidence: [logs, metrics, trace_id]
-```
-
-**Práctica:** reemplaza el resultado exitoso por un fallo realista, agrega una aserción automatizada y registra qué señal permitiría diagnosticarlo en producción.
-
-<!-- REQUESTED-PRACTICAL-EXAMPLES:END -->
 
 ## Resumen del módulo
 

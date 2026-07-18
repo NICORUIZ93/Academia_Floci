@@ -62,8 +62,9 @@ for track in TRACKS:
                 if marker not in section:
                     errors.append(f"{path.relative_to(ROOT)} · {title}: falta {marker}")
 
-        if len(text.split()) < 900:
-            errors.append(f"{path.relative_to(ROOT)}: contenido insuficiente (<900 palabras)")
+        # No se exige una cantidad artificial de palabras: la profundidad se mide
+        # tema por tema en audit_topic_learning_quality.py. Un mínimo global
+        # incentivaba párrafos repetidos y anexos que simulaban cobertura.
 
 if errors:
     print("Validación pedagógica FALLÓ:", file=sys.stderr)

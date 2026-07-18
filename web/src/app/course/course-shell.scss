@@ -36,16 +36,6 @@
   padding:16px 8px; overflow-y:auto;
 }
 .shell-sidebar-header { display:none; }
-.learning-stats { margin:0 4px 16px; padding:13px; border:1px solid $bd; border-radius:12px; background:linear-gradient(145deg,$wh,$bg2); box-shadow:$sh; }
-.learning-stats-title { display:flex; align-items:center; gap:6px; color:$ink; font:750 11px Inter,sans-serif; }
-.learning-stats-title lucide-icon { width:14px; color:$p; }
-.learning-stats-title strong { margin-left:auto; color:$p; }
-.learning-stats-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:6px; margin-top:11px; }
-.learning-stats-grid span { min-width:0; display:grid; justify-items:center; gap:2px; padding:8px 3px; border:1px solid $bd; border-radius:8px; background:$wh; text-align:center; }
-.learning-stats-grid lucide-icon { width:13px; color:$p; }
-.learning-stats-grid strong { max-width:100%; overflow:hidden; color:$ink; font:700 9px Inter,sans-serif; text-overflow:ellipsis; }
-.learning-stats-grid small { color:$mu; font:600 8px Inter,sans-serif; }
-.learning-stats > p { margin:10px 0 0; color:$mu; font:600 9.5px Inter,sans-serif; text-align:center; }
 .official-path { margin:0 4px 16px; padding:13px; border:1px solid $bd; border-radius:12px; background:$wh; }
 .official-path-heading { display:flex; align-items:center; gap:8px; }
 .official-path-heading > lucide-icon { width:16px; color:var(--track-color); }

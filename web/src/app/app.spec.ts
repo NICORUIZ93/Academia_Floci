@@ -5,18 +5,8 @@ import { App } from './app';
 import { routes } from './app.routes';
 import { CourseCatalogComponent } from './catalog/course-catalog';
 import { TRACKS } from './course-data';
-import { stripEditorialScaffolds } from './content.service';
 
 describe('App', () => {
-  it('keeps generated editorial inventories out of the student lesson', () => {
-    const markdown = `# Lección\n\nContenido revisado.\n\n<!-- SUPPLEMENTAL-COMPLEMENTS:START -->\n### Tema suplementario: plantilla\nEvidence(true)\n<!-- SUPPLEMENTAL-COMPLEMENTS:END -->\n\n## Laboratorio\nCódigo real.`;
-    const result = stripEditorialScaffolds(markdown);
-    expect(result).toContain('Contenido revisado');
-    expect(result).toContain('## Laboratorio');
-    expect(result).not.toContain('Tema suplementario');
-    expect(result).not.toContain('Evidence(true)');
-  });
-
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [App],
@@ -45,7 +35,7 @@ describe('App', () => {
     expect(text).toContain('RutaFlow — Plataforma profesional de entregas');
   });
 
-  it('renders a lesson as an educational book with study modes and academic evidence', async () => {
+  it('renders a clean educational lesson with progressive topics', async () => {
     const markdown = `# título repetido
 
 ## Contenido teórico
@@ -111,33 +101,21 @@ La evidencia demuestra el aprendizaje.`;
       const page = harness.fixture.nativeElement as HTMLElement;
       const text = page.textContent ?? '';
       expect(fetchSpy).toHaveBeenCalled();
-      expect(text).toContain('Aprender');
-      expect(text).toContain('Practicar');
-      expect(text).toContain('Repasar');
+      expect(text).not.toContain('XP');
+      expect(text).not.toContain('Racha');
+      expect(text).not.toContain('Insignia');
       expect(text).toContain('Rúbrica del proyecto');
       expect(text).toContain('Bibliografía y fundamento académico');
       expect(page.querySelector('.lesson-markdown')).toBeTruthy();
       expect(page.querySelector('.build-method')).toBeFalsy();
-      expect(page.querySelectorAll('.implementation-guide')).toHaveLength(2);
-      expect(text).toContain('Crea el registro de decisión');
-      expect(text).toContain('Provoca y diagnostica un fallo');
-      expect(text).toContain('Conecta con el proyecto integrador');
-      expect(text).toContain('Demuestra que aprendiste');
-      expect(text).toContain('Contrasta con la documentación oficial');
-      expect(page.querySelector('.implementation-guide a[href="https://developer.mozilla.org/en-US/curriculum/"]')).toBeTruthy();
+      expect(page.querySelectorAll('.implementation-guide')).toHaveLength(0);
       expect(page.querySelector('.learning-contract')).toBeFalsy();
       expect(page.querySelectorAll('.topic-card.expanded')).toHaveLength(1);
       const secondTopicToggle = page.querySelectorAll<HTMLButtonElement>('.topic-toggle')[1];
       expect(secondTopicToggle?.getAttribute('aria-expanded')).toBe('false');
       secondTopicToggle?.click();
       expect(secondTopicToggle?.getAttribute('aria-expanded')).toBe('true');
-      expect(text).toContain('Crea el archivo');
-      expect(text).toContain('Ejecuta desde la raíz del proyecto');
       expect(text).toContain('Resultado esperado');
-      expect(text).toContain('Tu avance');
-      expect(text).toContain('XP');
-      expect(text).toContain('Racha');
-      expect(text).toContain('Insignia');
       expect(text).toContain('Guía oficial');
       expect(text).toContain('Preparar');
       expect(text).toContain('Llevar a producción');
@@ -152,13 +130,12 @@ La evidencia demuestra el aprendizaje.`;
       wrapCode?.click();
       expect(page.querySelector('.code-example.wrap-lines')).toBeTruthy();
       expect(wrapCode?.getAttribute('aria-pressed')).toBe('true');
-      expect(text).toContain('Practica ahora');
+      expect(text).toContain('Práctica opcional');
       expect(text).toContain('Ver solución razonada');
       expect(text).toContain('Desde una carpeta vacía');
       expect(text).toContain('Prepara el proyecto para Cómo funciona tu entorno de desarrollo');
       expect(page.querySelector('.project-bootstrap')).toBeTruthy();
       expect(page.querySelector<HTMLDetailsElement>('.project-bootstrap')?.open).toBe(false);
-      expect(page.querySelector<HTMLDetailsElement>('.implementation-guide')?.open).toBe(false);
       const secondarySections = page.querySelectorAll('.secondary-section-body');
       expect(secondarySections.length).toBeGreaterThanOrEqual(3);
       const bibliographyToggle = page.querySelector<HTMLButtonElement>('.section-bibliografia-y-fundamento-academico .secondary-section-toggle');

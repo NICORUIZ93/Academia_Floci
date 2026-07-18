@@ -10,7 +10,6 @@ import { ContentService } from '../content.service';
 import { ProgressService } from '../progress.service';
 import { ThemeService } from '../theme.service';
 import { findProjectBootstrap } from '../project-bootstrap';
-import { findOfficialLearningPath } from '../official-learning-paths';
 
 let mermaidInitialized = false;
 
@@ -18,22 +17,6 @@ export interface TocItem {
   id: string;
   text: string;
   level: 2 | 3;
-}
-
-type LessonMode = 'learn' | 'practice' | 'review';
-
-interface LessonStats {
-  topics: number;
-  examples: number;
-  activities: number;
-}
-
-interface ImplementationProfile {
-  path: string;
-  command: string;
-  language: string;
-  failure: string;
-  projectConnection: string;
 }
 
 function slugify(text: string, seen: Set<string>): string {
@@ -91,6 +74,7 @@ export class LessonViewerComponent implements OnDestroy {
   readonly track = computed(() => findTrack(this.trackId()));
   readonly module = computed(() => this.track()?.modules.find(m => m.id === this.moduleId()));
   readonly projectBootstrap = computed(() => findProjectBootstrap(this.trackId()));
+  readonly showProjectBootstrap = computed(() => this.moduleId() === 0);
   readonly moduleIndex = computed(() => this.track()?.modules.findIndex(m => m.id === this.moduleId()) ?? -1);
   readonly isCloudIntroduction = computed(() => this.trackId() === 'cloud' && this.moduleId() === 0);
   readonly flociMetrics = [
@@ -132,10 +116,6 @@ export class LessonViewerComponent implements OnDestroy {
   readonly activeTocId = signal<string | null>(null);
   readonly readingProgress = signal(0);
   readonly copiedCode = signal<string | null>(null);
-  readonly lessonMode = signal<LessonMode>('learn');
-  readonly lessonStats = signal<LessonStats>({ topics: 0, examples: 0, activities: 0 });
-  readonly completedTopicCount = signal(0);
-  readonly completionMessage = signal('');
   private tocObserver: IntersectionObserver | null = null;
   private copyTimer: ReturnType<typeof setTimeout> | null = null;
   private readonly updateReadingProgress = (): void => {
@@ -283,12 +263,6 @@ export class LessonViewerComponent implements OnDestroy {
 
     this.groupTopics(container);
     this.collapseExerciseSolutions(container);
-    this.lessonStats.set({
-      topics: container.querySelectorAll('.topic-card').length,
-      examples: container.querySelectorAll('.code-example').length,
-      activities: container.querySelectorAll('.topic-practice, .exercise-card').length,
-    });
-    this.refreshEvidenceState(container);
   }
 
   private collapseSecondarySections(container: HTMLElement): void {
@@ -364,32 +338,13 @@ export class LessonViewerComponent implements OnDestroy {
         card.appendChild(node);
         node = next;
       }
-      const action = document.createElement('button');
-      action.type = 'button';
-      action.className = 'topic-check';
-      action.dataset['topicCheck'] = String(index);
-      const savedDone = localStorage.getItem(this.topicStorageKey(index, 'done')) === 'true';
-      action.classList.toggle('done', savedDone);
-      action.textContent = savedDone ? 'Tema demostrado ✓' : 'Demostrar aprendizaje';
       const practice = document.createElement('details');
       practice.className = 'topic-practice';
       const title = escapeHtml(heading.textContent?.replace(/^Tema\s+\d+:\s*/, '').trim() || 'este concepto');
       const hasCode = card.querySelector('.code-example') !== null;
       practice.innerHTML = hasCode
-        ? `<summary>Practica ahora · 5–10 min</summary><div><ol><li>Sin ejecutar el ejemplo, predice su resultado y explica por qué.</li><li>Cambia un dato, condición o parámetro relacionado con <strong>${title}</strong>; vuelve a predecir y ejecuta.</li><li>Provoca un error deliberado, lee el mensaje completo y corrígelo sin copiar la solución.</li></ol><textarea aria-label="Notas de práctica" placeholder="Escribe aquí tu predicción, cambio y explicación…"></textarea></div>`
-        : `<summary>Practica ahora · 5–10 min</summary><div><ol><li>Explica <strong>${title}</strong> con tus palabras, sin releer el texto.</li><li>Contrástalo con una alternativa: ¿cuándo no lo usarías?</li><li>Describe un caso real donde aplicarlo y una señal que te permita verificar que funcionó.</li></ol><textarea aria-label="Notas de práctica" placeholder="Escribe aquí tu explicación y caso real…"></textarea></div>`;
-      const note = practice.querySelector<HTMLTextAreaElement>('textarea');
-      if (note) {
-        note.dataset['practiceNote'] = String(index);
-        note.value = localStorage.getItem(this.topicStorageKey(index, 'note')) ?? '';
-        if (note.value) practice.open = true;
-        // Solo se migra el avance antiguo si también existe evidencia escrita.
-        // Un clic histórico sin explicación no se convierte automáticamente en XP.
-        if (savedDone && note.value.trim().length >= 40) {
-          this.progressService.recordLearningStep(this.trackId(), 'topic', this.learningStepKey(index));
-          this.progressService.recordLearningStep(this.trackId(), 'practice', this.learningStepKey(index));
-        }
-      }
+        ? `<summary>Práctica opcional · 5–10 min</summary><div><ol><li>Sin ejecutar el ejemplo, predice su resultado y explica por qué.</li><li>Cambia un dato, condición o parámetro relacionado con <strong>${title}</strong>; vuelve a predecir y ejecuta.</li><li>Provoca un error deliberado, lee el mensaje completo y corrígelo.</li></ol></div>`
+        : `<summary>Práctica opcional · 5–10 min</summary><div><ol><li>Explica <strong>${title}</strong> con tus palabras.</li><li>Contrástalo con una alternativa: ¿cuándo no lo usarías?</li><li>Describe un caso real y una señal para verificarlo.</li></ol></div>`;
       const toggle = document.createElement('button');
       toggle.type = 'button';
       toggle.className = 'topic-toggle';
@@ -397,9 +352,7 @@ export class LessonViewerComponent implements OnDestroy {
       toggle.setAttribute('aria-expanded', String(index === 0));
       toggle.innerHTML = `<span>${index === 0 ? 'Ocultar tema' : 'Abrir tema'}</span><span aria-hidden="true">⌄</span>`;
       heading.appendChild(toggle);
-      this.addImplementationGuide(card, heading, index, hasCode);
       card.appendChild(practice);
-      card.appendChild(action);
       const body = document.createElement('div');
       body.className = 'topic-body';
       let bodyNode = heading.nextSibling;
@@ -411,58 +364,6 @@ export class LessonViewerComponent implements OnDestroy {
       card.classList.toggle('expanded', index === 0);
       card.appendChild(body);
     });
-  }
-
-  private addImplementationGuide(card: HTMLElement, heading: HTMLHeadingElement, index: number, hasCode: boolean): void {
-    const topic = heading.textContent?.replace(/^Tema(?:\s+(?:complementario|suplementario))?(?:\s+\d+)?\s*:\s*/i, '').trim() || `tema-${index + 1}`;
-    const profile = this.implementationProfile(index, hasCode);
-    const deliverable = this.module()?.deliverable ?? 'Un incremento funcional, comprobable y documentado.';
-    const official = findOfficialLearningPath(this.trackId());
-    const guide = document.createElement('details');
-    guide.className = 'implementation-guide';
-    guide.innerHTML = `<summary><span>Guía completa desde cero</span><strong>Archivos, ejecución, fallos y fuente oficial</strong></summary><div class="implementation-guide-body"><div class="implementation-guide-heading"><small>Úsala cuando necesites acompañamiento paso a paso</small><strong>Dónde trabajar, cómo probar y qué hacer si falla</strong></div>
-      <ol>
-        <li><span>1</span><div><strong>Antes de escribir</strong><p>Explica con tus palabras qué problema resuelve <em>${escapeHtml(topic)}</em>, qué dato recibe y qué cambio observable debe producir. Si no puedes hacerlo, vuelve a la explicación anterior.</p></div></li>
-        <li><span>2</span><div><strong>${hasCode ? 'Crea el archivo de práctica' : 'Crea el registro de decisión'}</strong><code>${escapeHtml(profile.path)}</code><p>${hasCode ? `Ubícalo dentro del proyecto del track; no escribas el ejemplo en una carpeta temporal ni dentro de la academia.` : `Documenta contexto, alternativas, decisión, consecuencias y una forma de comprobarla. Un tema conceptual también debe dejar evidencia.`}</p></div></li>
-        <li><span>3</span><div><strong>${hasCode ? 'Construye un incremento pequeño' : 'Aplica la decisión a un caso concreto'}</strong><p>${hasCode ? `Reproduce primero el ejemplo editorial, explica cada entrada y salida, y después modifica una condición para aplicar ${escapeHtml(topic)} a un caso propio.` : `Compara al menos dos alternativas para ${escapeHtml(topic)} y elige una usando restricciones medibles del sistema.`}</p></div></li>
-        <li><span>4</span><div><strong>Ejecuta desde la raíz del proyecto</strong><code>${escapeHtml(profile.command)}</code><p>No continúes si el comando no reconoce el proyecto o ejecuta archivos de otra carpeta.</p></div></li>
-        <li><span>5</span><div><strong>Resultado que debes observar</strong><p>${escapeHtml(deliverable)} La evidencia debe mostrar entrada, resultado y criterio de aceptación; “no dio error” no es suficiente.</p></div></li>
-        <li><span>6</span><div><strong>Provoca y diagnostica un fallo</strong><p>${escapeHtml(profile.failure)} Lee el primer mensaje útil, formula una causa, compruébala y registra la corrección.</p></div></li>
-        <li><span>7</span><div><strong>Conecta con el proyecto integrador</strong><p>${escapeHtml(profile.projectConnection)} Explica qué contrato protege y qué otro componente consumirá el resultado.</p></div></li>
-        <li><span>8</span><div><strong>Demuestra que aprendiste</strong><p>Entrega el archivo, el comando exacto, la salida observada, el fallo corregido y una decisión que tomarías diferente en producción.</p></div></li>
-        ${official ? `<li><span>9</span><div><strong>Contrasta con la documentación oficial</strong><p>Confirma nombres, límites y versión en <a href="${escapeHtml(official.sourceUrl)}" target="_blank" rel="noopener noreferrer">${escapeHtml(official.source)}</a>. La academia explica y practica; la fuente primaria confirma el contrato vigente.</p></div></li>` : ''}
-      </ol></div>`;
-    const firstPractice = card.querySelector('.topic-practice');
-    card.insertBefore(guide, firstPractice);
-  }
-
-  private implementationProfile(topicIndex: number, hasCode: boolean): ImplementationProfile {
-    const moduleId = this.moduleId();
-    const topic = topicIndex + 1;
-    const profiles: Record<string, ImplementationProfile> = {
-      foundations: { path: `academia-labs/foundations/src/module_${moduleId}/topic_${topic}.py`, command: `python3 -m unittest discover -s tests -v`, language: 'python', failure: 'Usa una entrada inválida o elimina una precondición y observa cómo se manifiesta el error.', projectConnection: 'Convierte el concepto en una regla o prueba básica que RutaFlow pueda reutilizar.' },
-      cloud: { path: `academia-labs/cloud/infra/module-${moduleId}/topic-${topic}/main.tf`, command: `terraform -chdir=infra/module-${moduleId}/topic-${topic} validate`, language: 'hcl', failure: 'Cambia un nombre, permiso o endpoint por un valor inválido y confirma que la validación o la llamada falle de forma visible.', projectConnection: 'Modela esta capacidad como infraestructura reproducible del entorno RutaFlow.' },
-      devops: { path: `academia-labs/devops/infra/module-${moduleId}/topic-${topic}.yaml`, command: `docker compose config && ./scripts/validate.sh`, language: 'yaml', failure: 'Rompe una referencia, variable o healthcheck y usa la salida de configuración o los logs para localizarla.', projectConnection: 'Automatiza con esta técnica el despliegue o la operación segura de RutaFlow.' },
-      javascript: { path: `academia-labs/javascript/src/module-${moduleId}/topic-${topic}.ts`, command: `npm test && npm run dev`, language: 'typescript', failure: 'Prueba un valor de frontera, un tipo inesperado o una operación fuera de orden y observa la diferencia.', projectConnection: 'Aplica el comportamiento a una interacción web del panel operativo de RutaFlow.' },
-      node: { path: `academia-labs/node-api/src/module-${moduleId}/topic-${topic}.ts`, command: `npm test && npm run dev`, language: 'typescript', failure: 'Envía una entrada inválida o desconecta una dependencia y comprueba el código HTTP y el log con contexto.', projectConnection: 'Incorpora la regla a un endpoint o proceso backend de entregas de RutaFlow.' },
-      angular: { path: `academia-labs/angular-app/src/app/features/module-${moduleId}/topic-${topic}.ts`, command: `npm test -- --watch=false && npm start`, language: 'typescript', failure: 'Elimina una dependencia, usa un estado inválido o simula un error HTTP y verifica el estado visual correspondiente.', projectConnection: 'Construye con esta técnica una parte del panel web de operaciones de RutaFlow.' },
-      react: { path: `academia-labs/react-app/src/features/module-${moduleId}/Topic${topic}.tsx`, command: `npm test -- --run && npm run dev`, language: 'tsx', failure: 'Cambia una prop o respuesta a un caso vacío o erróneo y comprueba que la interfaz no quede ambigua.', projectConnection: 'Úsalo en una pantalla de seguimiento o gestión de entregas de RutaFlow.' },
-      java: { path: `academia-labs/java/src/main/java/academy/module${moduleId}/Topic${topic}.java`, command: `./gradlew test`, language: 'java', failure: 'Viola una precondición o usa un valor límite y verifica que la excepción o resultado exprese la regla incumplida.', projectConnection: 'Representa con este concepto una regla de dominio independiente del framework de RutaFlow.' },
-      'spring-boot': { path: `academia-labs/spring-api/src/main/java/io/academia/rutaflow/module${moduleId}/Topic${topic}Service.java`, command: `./mvnw test`, language: 'java', failure: 'Envía una petición inválida o sustituye una dependencia por un fallo controlado y verifica estado HTTP, cuerpo y causa.', projectConnection: 'Añade el incremento al servicio de entregas de RutaFlow sin mezclar dominio e infraestructura.' },
-      'kotlin-multiplatform': { path: `academia-labs/kmp-app/shared/src/commonMain/kotlin/module${moduleId}/Topic${topic}.kt`, command: `./gradlew :shared:allTests`, language: 'kotlin', failure: 'Introduce un caso de plataforma o dato nulo no contemplado y comprueba que commonTest lo haga visible.', projectConnection: 'Comparte esta regla entre las aplicaciones Android e iOS del conductor de RutaFlow.' },
-      android: { path: `academia-labs/android-app/app/src/main/java/academy/module${moduleId}/Topic${topic}.kt`, command: `./gradlew testDebugUnitTest`, language: 'kotlin', failure: 'Simula permiso denegado, proceso recreado o dato ausente y verifica que la pantalla conserve un estado comprensible.', projectConnection: 'Aplícalo al flujo Android del conductor, considerando GPS, red y batería.' },
-      ios: { path: `academia-labs/ios-app/Features/Module${moduleId}/Topic${topic}.swift`, command: `xcodebuild test -scheme RutaFlowLab -destination "platform=iOS Simulator,name=iPhone 16"`, language: 'swift', failure: 'Simula permiso denegado, respuesta vacía o tarea cancelada y verifica el estado y el mensaje mostrados.', projectConnection: 'Aplícalo al flujo iOS del conductor respetando ciclo de vida, permisos y accesibilidad.' },
-      flutter: { path: `academia-labs/flutter_app/lib/features/module_${moduleId}/topic_${topic}.dart`, command: `flutter analyze && flutter test`, language: 'dart', failure: 'Simula pérdida de red, permiso denegado o widget desmontado y comprueba que el estado se recupere sin errores ocultos.', projectConnection: 'Integra el concepto en la app multiplataforma del conductor de RutaFlow.' },
-      rutaflow: { path: `academia-labs/rutaflow/docs/iterations/module-${moduleId}-topic-${topic}.md`, command: `docker compose config && ./scripts/validate.sh`, language: 'text', failure: 'Rompe de forma controlada un contrato entre componentes y localiza la causa usando logs, métricas o pruebas.', projectConnection: 'Implementa esta capacidad como un incremento vertical del propio proyecto RutaFlow.' },
-    };
-    const profile = profiles[this.trackId()] ?? profiles['foundations'];
-    if (hasCode) return profile;
-    return {
-      ...profile,
-      path: `${profile.path.substring(0, profile.path.lastIndexOf('/'))}/decision-topic-${topic}.md`,
-      command: 'git diff --check && git status --short',
-      language: 'markdown',
-    };
   }
 
   private collapseExerciseSolutions(container: HTMLElement): void {
@@ -523,25 +424,6 @@ export class LessonViewerComponent implements OnDestroy {
       wrapButton.textContent = wrapped ? 'Sin ajuste' : 'Ajustar';
       return;
     }
-    const topicButton = (event.target as HTMLElement).closest<HTMLButtonElement>('[data-topic-check]');
-    if (topicButton) {
-      const index = Number(topicButton.dataset['topicCheck'] ?? 0);
-      const card = topicButton.closest<HTMLElement>('.topic-card');
-      const note = card?.querySelector<HTMLTextAreaElement>('[data-practice-note]')?.value.trim() ?? '';
-      topicButton.classList.toggle('done');
-      topicButton.textContent = topicButton.classList.contains('done') ? 'Tema demostrado ✓' : 'Demostrar aprendizaje';
-      localStorage.setItem(
-        this.topicStorageKey(index, 'done'),
-        String(topicButton.classList.contains('done')),
-      );
-      if (topicButton.classList.contains('done')) {
-        this.progressService.recordLearningStep(this.trackId(), 'topic', this.learningStepKey(index));
-        if (note.length >= 40) this.progressService.recordLearningStep(this.trackId(), 'practice', this.learningStepKey(index));
-        this.completionMessage.set(note.length >= 40 ? '¡Tema y práctica registrados!' : '¡Tema registrado! La nota de práctica es opcional.');
-      }
-      if (card) this.refreshEvidenceState(card.closest('.lesson-markdown') as HTMLElement);
-      return;
-    }
     const button = (event.target as HTMLElement).closest<HTMLButtonElement>('[data-copy-code]');
     if (!button) return;
     const code = button.closest('.code-example')?.querySelector('code')?.textContent ?? '';
@@ -556,33 +438,8 @@ export class LessonViewerComponent implements OnDestroy {
     }, 1800);
   }
 
-  savePracticeNote(event: Event): void {
-    const note = (event.target as HTMLElement).closest<HTMLTextAreaElement>('[data-practice-note]');
-    if (!note) return;
-    localStorage.setItem(this.topicStorageKey(Number(note.dataset['practiceNote'] ?? 0), 'note'), note.value);
-  }
-
-  private topicStorageKey(index: number, field: 'done' | 'note'): string {
-    return `academia-topic:${this.trackId()}:${this.moduleId()}:${index}:${field}`;
-  }
-
-  private learningStepKey(index: number): string {
-    return `${this.moduleId()}:${index}`;
-  }
-
-  private refreshEvidenceState(container: HTMLElement | null): void {
-    if (!container) return;
-    this.completedTopicCount.set(container.querySelectorAll('.topic-check.done').length);
-  }
-
-  setLessonMode(mode: LessonMode): void {
-    this.lessonMode.set(mode);
-    requestAnimationFrame(() => window.scrollTo({ top: 0, behavior: 'smooth' }));
-  }
-
   private buildTableOfContents(container: HTMLElement): void {
     this.tocObserver?.disconnect();
-
     const headings = Array.from(container.querySelectorAll<HTMLElement>('h2, h3'));
     const seen = new Set<string>();
     const items: TocItem[] = headings.map(el => {
@@ -594,7 +451,6 @@ export class LessonViewerComponent implements OnDestroy {
     });
     this.tocItems.set(items);
     this.activeTocId.set(items[0]?.id ?? null);
-
     if (!headings.length || typeof IntersectionObserver === 'undefined') return;
     this.tocObserver = new IntersectionObserver(
       entries => {
@@ -633,9 +489,9 @@ export class LessonViewerComponent implements OnDestroy {
     this.activeTocId.set(id);
   }
 
+
   toggleComplete(): void {
     this.progressService.toggleModuleComplete(this.trackId(), this.moduleId());
-    this.completionMessage.set(this.isComplete() ? 'Capítulo completado: 50 XP adicionales.' : 'El capítulo volvió a estado pendiente.');
   }
 
   goToModule(moduleId: number): void {
