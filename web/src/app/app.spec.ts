@@ -126,6 +126,9 @@ La evidencia demuestra el aprendizaje.`;
       expect(page.querySelector('.code-example .code-example-language')).toBeTruthy();
       expect(text).toContain('Practica ahora');
       expect(text).toContain('Ver solución razonada');
+      expect(text).toContain('Desde una carpeta vacía');
+      expect(text).toContain('Prepara el proyecto para este capítulo');
+      expect(page.querySelector('.project-bootstrap')).toBeTruthy();
     } finally {
       fetchSpy.mockRestore();
     }

@@ -63,6 +63,22 @@
         <li><span>5</span><div><strong>Repaso</strong><small>Verifica y registra</small></div></li>
       </ol>
 
+      <details class="project-bootstrap" *ngIf="projectBootstrap() as starter" [open]="moduleIndex() === 0">
+        <summary>
+          <span><lucide-icon [img]="icons.Code2" /></span>
+          <div><small>Desde una carpeta vacía</small><strong>Prepara el proyecto para este capítulo</strong><p>Abre esta guía si llegaste directamente o todavía no tienes un proyecto ejecutable.</p></div>
+        </summary>
+        <div class="project-bootstrap-body">
+          <section><h3>1. Comprueba requisitos</h3><ul><li *ngFor="let item of starter.prerequisites">{{ item }}</li></ul></section>
+          <section><h3>2. Crea el espacio de trabajo</h3><pre><code><ng-container *ngFor="let command of starter.createCommands">{{ command }}
+</ng-container></code></pre></section>
+          <section><h3>3. Reconoce la estructura</h3><p><code>{{ starter.workspace }}/</code></p><ul class="file-tree"><li *ngFor="let path of starter.structure"><code>{{ path }}</code></li></ul></section>
+          <section><h3>4. Ejecuta y comprueba</h3><pre><code>{{ starter.runCommand }}</code></pre><p><strong>Resultado esperado:</strong> {{ starter.expected }}</p></section>
+          <section class="bootstrap-recovery"><h3>Si algo falla</h3><ul><li *ngFor="let item of starter.recovery">{{ item }}</li></ul></section>
+          <p class="bootstrap-deliverable"><strong>Incremento de este capítulo:</strong> {{ m.deliverable }}</p>
+        </div>
+      </details>
+
       <section class="lesson-panel" [attr.data-mode]="lessonMode()">
         <div *ngIf="lessonLoading()" class="lesson-skeleton">Cargando lección…</div>
         <div *ngIf="!lessonLoading() && lessonHtml() as html" #lessonContent class="lesson-markdown" [innerHTML]="html" (click)="copyCode($event)" (input)="savePracticeNote($event)"></div>

@@ -1,9 +1,9 @@
 # Academia Floci Repo Graph
 
-Generated: 2026-07-18 04:28 UTC
+Generated: 2026-07-18 04:34 UTC
 Root: `Academia_Floci`
-Indexed files: 783
-Import edges: 32
+Indexed files: 785
+Import edges: 34
 
 Use this file as the first, compact context for AI assistants. Refresh it with:
 
@@ -15,7 +15,7 @@ For automated lookups, use `docs/repo-graph.json`.
 
 ## Project Shape
 
-- `angular-app`: 53 files
+- `angular-app`: 55 files
 - `automation-script`: 31 files
 - `course-content`: 347 files
 - `documentation`: 99 files
@@ -27,7 +27,7 @@ For automated lookups, use `docs/repo-graph.json`.
 
 - `.md`: 437
 - `.py`: 61
-- `.ts`: 46
+- `.ts`: 48
 - `.js`: 44
 - `.java`: 40
 - `.json`: 29
@@ -67,8 +67,8 @@ For automated lookups, use `docs/repo-graph.json`.
   - symbols: CourseCatalogComponent, cards, featuredTracks, foundationTracks, mobileTracks, totalModules
 - `web/src/app/course/course-shell.ts` (57 lines, angular-app)
   - symbols: CourseShellComponent, track, officialPath, sidebarOpen, trackLogo, percent, stats
-- `web/src/app/course/lesson-viewer.ts` (691 lines, angular-app)
-  - symbols: LessonViewerComponent, TocItem, track, module, moduleIndex, isCloudIntroduction, previousModule, nextModule, lessonHtml, lessonLoading
+- `web/src/app/course/lesson-viewer.ts` (693 lines, angular-app)
+  - symbols: LessonViewerComponent, TocItem, track, module, projectBootstrap, moduleIndex, isCloudIntroduction, previousModule, nextModule, lessonHtml
 - `web/public/content/manifest.json` (819 lines, course-content)
 - `web/public/content/es/pasos.md` (1122 lines, course-content)
   - headings: # 45 pasos de Academia Floci, ## Cursos, ## Paso 1: ¿Qué es Docker?, ## Paso 2: Instalar Docker, ## Paso 3: Verificar Docker
@@ -105,12 +105,14 @@ For automated lookups, use `docs/repo-graph.json`.
 - `web/src/app/course/lab-verification.spec.ts` -> `web/src/app/course/lab-verification.ts`
 - `web/src/app/course/lesson-viewer.ts` -> `web/src/app/course/lab-verification.ts`
 - `web/src/app/progress.service.spec.ts` -> `web/src/app/progress.service.ts`
+- `web/src/app/project-bootstrap.spec.ts` -> `web/src/app/course-data.ts`
+- `web/src/app/project-bootstrap.spec.ts` -> `web/src/app/project-bootstrap.ts`
 - `web/src/main.ts` -> `web/src/app/app.config.ts`
 - `web/src/main.ts` -> `web/src/app/app.ts`
 
 ## Most Connected Files
 
-- `web/src/app/course-data.ts`: in=2, out=14
+- `web/src/app/course-data.ts`: in=3, out=14
 - `web/src/app/app.routes.ts`: in=2, out=4
 - `web/src/app/app.spec.ts`: in=0, out=4
 - `web/src/app/app.ts`: in=2, out=1
@@ -121,6 +123,7 @@ For automated lookups, use `docs/repo-graph.json`.
 - `web/src/app/course/course-shell.ts`: in=1, out=1
 - `web/src/app/app.config.ts`: in=1, out=1
 - `web/src/main.ts`: in=0, out=2
+- `web/src/app/project-bootstrap.spec.ts`: in=0, out=2
 - `web/src/app/tracks/spring-boot.track.ts`: in=1, out=0
 - `web/src/app/tracks/rutaflow.track.ts`: in=1, out=0
 - `web/src/app/tracks/react.track.ts`: in=1, out=0
@@ -129,7 +132,6 @@ For automated lookups, use `docs/repo-graph.json`.
 - `web/src/app/tracks/javascript.track.ts`: in=1, out=0
 - `web/src/app/tracks/java.track.ts`: in=1, out=0
 - `web/src/app/tracks/ios.track.ts`: in=1, out=0
-- `web/src/app/tracks/foundations.track.ts`: in=1, out=0
 
 ## Files By Area
 
@@ -139,7 +141,7 @@ For automated lookups, use `docs/repo-graph.json`.
 - `web/src/app/app.config.ts` (12 lines) - imports: @angular/core, @angular/router, ./app.routes
 - `web/src/app/app.html` (3 lines)
 - `web/src/app/app.routes.ts` (28 lines) - imports: @angular/router, ./catalog/course-catalog, ./course/course-shell, ./course/final-quiz, ./course/lesson-viewer
-- `web/src/app/app.spec.ts` (134 lines) - imports: @angular/core/testing, @angular/router, @angular/router/testing, ./app, ./app.routes, ./catalog/course-catalog, ./course-data
+- `web/src/app/app.spec.ts` (137 lines) - imports: @angular/core/testing, @angular/router, @angular/router/testing, ./app, ./app.routes, ./catalog/course-catalog, ./course-data
 - `web/src/app/app.ts` (11 lines) - symbols: App; imports: @angular/core, @angular/router, ./command-palette
 - `web/src/app/catalog/course-catalog.html` (92 lines) - symbols: catalog-title, tracks-title, official-title
 - `web/src/app/catalog/course-catalog.scss` (198 lines)
@@ -154,7 +156,7 @@ For automated lookups, use `docs/repo-graph.json`.
 - `web/src/app/course/course-shell.html` (62 lines) - symbols: official-path-title
 - `web/src/app/course/course-shell.scss` (89 lines)
 - `web/src/app/course/course-shell.ts` (57 lines) - symbols: CourseShellComponent, track, officialPath, sidebarOpen, trackLogo, percent, stats; imports: @angular/common, @angular/core, @angular/core/rxjs-interop, @angular/router, lucide-angular, rxjs, ../course-data, ../command-palette.service
-- ... 35 more files
+- ... 37 more files
 
 ### automation-script
 

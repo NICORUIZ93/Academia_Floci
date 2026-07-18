@@ -9,6 +9,7 @@ import { findTrack } from '../course-data';
 import { ContentService } from '../content.service';
 import { ProgressService } from '../progress.service';
 import { ThemeService } from '../theme.service';
+import { findProjectBootstrap } from '../project-bootstrap';
 import { applyLabVerification } from './lab-verification';
 
 let mermaidInitialized = false;
@@ -94,6 +95,7 @@ export class LessonViewerComponent implements OnDestroy {
 
   readonly track = computed(() => findTrack(this.trackId()));
   readonly module = computed(() => this.track()?.modules.find(m => m.id === this.moduleId()));
+  readonly projectBootstrap = computed(() => findProjectBootstrap(this.trackId()));
   readonly moduleIndex = computed(() => this.track()?.modules.findIndex(m => m.id === this.moduleId()) ?? -1);
   readonly isCloudIntroduction = computed(() => this.trackId() === 'cloud' && this.moduleId() === 0);
   readonly flociMetrics = [

@@ -9792,23 +9792,23 @@
     },
     {
       "path": "web/public/content/spring-boot/modulo-9.md",
-      "lines": 217,
+      "lines": 422,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
       "headings": [
         "# M\u00f3dulo 9: Programaci\u00f3n reactiva con WebFlux",
         "## S\u00edlabo",
-        "## Contenido te\u00f3rico",
-        "### Tema 1: Mono y Flux",
-        "### Tema 2: WebClient y composici\u00f3n no bloqueante",
-        "### Tema 3: Cu\u00e1ndo WebFlux vale la complejidad, y R2DBC",
-        "## Criterio transversal de calidad del c\u00f3digo",
-        "## Laboratorio pr\u00e1ctico",
-        "## Ejercicios de evaluaci\u00f3n",
-        "### Ejercicio 1: Cu\u00e1ndo WebFlux justifica su complejidad",
-        "### Ejercicio 2: Riesgo de mezclar c\u00f3digo bloqueante en un flujo reactivo",
-        "### Ejercicio 3: Mono vs Flux"
+        "## Comienza desde cero: crea una API WebFlux ejecutable",
+        "### 1. Comprueba el entorno antes de generar archivos",
+        "### 2. Genera el proyecto con Spring Initializr",
+        "### 3. Crea una estructura peque\u00f1a y expl\u00edcita",
+        "### 4. Configura una base reactiva local",
+        "### 5. Implementa el modelo y el repositorio",
+        "### 6. Exp\u00f3n endpoints sin llamar subscribe()",
+        "### 7. Ejecuta y observa un resultado concreto",
+        "### 8. Provoca tres fallos antes de continuar",
+        "## Contenido te\u00f3rico"
       ]
     },
     {
@@ -11613,7 +11613,7 @@
     },
     {
       "path": "web/src/app/app.spec.ts",
-      "lines": 134,
+      "lines": 137,
       "kind": "angular-app",
       "symbols": [],
       "imports": [
@@ -11898,7 +11898,7 @@
     },
     {
       "path": "web/src/app/course/lesson-viewer.html",
-      "lines": 145,
+      "lines": 161,
       "kind": "angular-app",
       "symbols": [
         "floci-overview-title",
@@ -11910,7 +11910,7 @@
     },
     {
       "path": "web/src/app/course/lesson-viewer.scss",
-      "lines": 322,
+      "lines": 342,
       "kind": "angular-app",
       "symbols": [],
       "imports": [],
@@ -11918,13 +11918,14 @@
     },
     {
       "path": "web/src/app/course/lesson-viewer.ts",
-      "lines": 691,
+      "lines": 693,
       "kind": "angular-app",
       "symbols": [
         "LessonViewerComponent",
         "TocItem",
         "track",
         "module",
+        "projectBootstrap",
         "moduleIndex",
         "isCloudIntroduction",
         "previousModule",
@@ -11943,8 +11944,7 @@
         "examSeconds",
         "completedTopicCount",
         "labCount",
-        "verifiedLabCount",
-        "completionMessage"
+        "verifiedLabCount"
       ],
       "imports": [
         "@angular/common",
@@ -11958,6 +11958,7 @@
         "../content.service",
         "../progress.service",
         "../theme.service",
+        "../project-bootstrap",
         "./lab-verification"
       ],
       "headings": []
@@ -12056,6 +12057,28 @@
       "imports": [
         "@angular/core"
       ],
+      "headings": []
+    },
+    {
+      "path": "web/src/app/project-bootstrap.spec.ts",
+      "lines": 18,
+      "kind": "angular-app",
+      "symbols": [],
+      "imports": [
+        "./course-data",
+        "./project-bootstrap"
+      ],
+      "headings": []
+    },
+    {
+      "path": "web/src/app/project-bootstrap.ts",
+      "lines": 143,
+      "kind": "angular-app",
+      "symbols": [
+        "ProjectBootstrap",
+        "findProjectBootstrap"
+      ],
+      "imports": [],
       "headings": []
     },
     {
@@ -12399,6 +12422,14 @@
     {
       "source": "web/src/app/progress.service.spec.ts",
       "target": "web/src/app/progress.service.ts"
+    },
+    {
+      "source": "web/src/app/project-bootstrap.spec.ts",
+      "target": "web/src/app/course-data.ts"
+    },
+    {
+      "source": "web/src/app/project-bootstrap.spec.ts",
+      "target": "web/src/app/project-bootstrap.ts"
     },
     {
       "source": "web/src/main.ts",
