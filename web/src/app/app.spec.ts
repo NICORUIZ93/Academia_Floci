@@ -66,6 +66,10 @@ const answer = 42;
 
 Construye y verifica el ejemplo.
 
+## Criterio transversal de calidad del código
+
+Este texto editorial no debe repetirse dentro del lector.
+
 ## Rúbrica del proyecto
 
 | Criterio | Peso |
@@ -150,6 +154,7 @@ La evidencia demuestra el aprendizaje.`;
       expect(secondarySections).toHaveLength(0);
       expect(page.querySelector('.lesson-resources')).toBeTruthy();
       expect(page.textContent).not.toContain('Rúbrica del proyecto');
+      expect(page.textContent).not.toContain('Criterio transversal de calidad del código');
       expect(page.querySelector('.lesson-resources')?.textContent).toContain('Bibliografía y fundamento académico');
       expect(page.querySelector('.lesson-resources')?.textContent).toContain('Resumen del módulo');
       expect(page.querySelectorAll('.lesson-resources .secondary-section-toggle')).toHaveLength(0);

@@ -11365,7 +11365,7 @@
     },
     {
       "path": "web/src/app/app.spec.ts",
-      "lines": 161,
+      "lines": 166,
       "kind": "angular-app",
       "symbols": [],
       "imports": [
@@ -11604,7 +11604,7 @@
     },
     {
       "path": "web/src/app/course/lesson-viewer.scss",
-      "lines": 315,
+      "lines": 314,
       "kind": "angular-app",
       "symbols": [],
       "imports": [],

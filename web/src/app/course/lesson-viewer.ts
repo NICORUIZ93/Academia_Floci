@@ -288,7 +288,6 @@ export class LessonViewerComponent implements OnDestroy {
   private collapseSecondarySections(container: HTMLElement): void {
     const secondarySelectors = [
       '.section-silabo',
-      '.section-criterio-transversal-de-calidad-del-codigo',
     ].join(',');
 
     container.querySelectorAll<HTMLElement>(secondarySelectors).forEach((section, index) => {
@@ -316,6 +315,7 @@ export class LessonViewerComponent implements OnDestroy {
 
   private consolidateReferenceSections(container: HTMLElement): void {
     container.querySelector<HTMLElement>(':scope > .section-rubrica-del-proyecto')?.remove();
+    container.querySelector<HTMLElement>(':scope > .section-criterio-transversal-de-calidad-del-codigo')?.remove();
     const sections = [
       container.querySelector<HTMLElement>(':scope > .section-bibliografia-y-fundamento-academico'),
       container.querySelector<HTMLElement>(':scope > .section-resumen-del-modulo'),
