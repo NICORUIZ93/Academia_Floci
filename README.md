@@ -24,6 +24,13 @@ solo porque su nombre aparezca en el índice.
 
 El progreso se guarda localmente en tu navegador con `localStorage`.
 
+Cada capítulo incluye tres decisiones prácticas con verificación inmediata y un
+quiz de cinco preguntas. Los aciertos otorgan 10 XP una sola vez y completar el
+capítulo otorga 50 XP. Las insignias Explorador, Constructor, Arquitecto y
+Maestro dependen de módulos terminados. Las 12 rutas de especialización tienen
+un proyecto integrador propio; Fundamentos prepara las bases y RutaFlow conecta
+los proyectos en una plataforma logística transversal.
+
 ```bash
 cd web
 npm ci
@@ -214,7 +221,8 @@ Antes de subir cambios, ejecuta:
 ```
 
 La validación comprueba la aplicación Angular, la relación entre tracks y
-Markdown, las auditorías educativas y el mapa actualizado del repositorio.
+Markdown, las auditorías educativas, los 224 conjuntos de ejercicios y quizzes,
+los 12 proyectos, la gamificación y el mapa actualizado del repositorio.
 
 El CI tambien ejecuta build y tests de Angular:
 

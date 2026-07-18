@@ -34,7 +34,7 @@
     },
     {
       "path": "README.md",
-      "lines": 246,
+      "lines": 254,
       "kind": "documentation",
       "symbols": [],
       "imports": [],
@@ -2502,7 +2502,7 @@
     },
     {
       "path": "scripts/validate.sh",
-      "lines": 123,
+      "lines": 124,
       "kind": "automation-script",
       "symbols": [],
       "imports": [],
@@ -2538,6 +2538,17 @@
       "imports": [
         "json",
         "pathlib"
+      ],
+      "headings": []
+    },
+    {
+      "path": "scripts/validate_learning_priorities.py",
+      "lines": 65,
+      "kind": "automation-script",
+      "symbols": [],
+      "imports": [
+        "pathlib",
+        "re"
       ],
       "headings": []
     },
@@ -2667,7 +2678,7 @@
     },
     {
       "path": "web/e2e/academy.spec.ts",
-      "lines": 47,
+      "lines": 56,
       "kind": "project-file",
       "symbols": [],
       "imports": [
@@ -3931,7 +3942,7 @@
     },
     {
       "path": "web/public/content/cloud/modulo-34.md",
-      "lines": 214,
+      "lines": 234,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -4880,7 +4891,7 @@
     },
     {
       "path": "web/public/content/foundations/modulo-0.md",
-      "lines": 250,
+      "lines": 252,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -4943,7 +4954,7 @@
     },
     {
       "path": "web/public/content/foundations/modulo-11.md",
-      "lines": 187,
+      "lines": 199,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5068,7 +5079,7 @@
     },
     {
       "path": "web/public/content/foundations/modulo-7.md",
-      "lines": 237,
+      "lines": 239,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -11354,7 +11365,7 @@
     },
     {
       "path": "web/src/app/app.spec.ts",
-      "lines": 158,
+      "lines": 162,
       "kind": "angular-app",
       "symbols": [],
       "imports": [
@@ -11497,7 +11508,7 @@
     },
     {
       "path": "web/src/app/course/course-shell.html",
-      "lines": 53,
+      "lines": 57,
       "kind": "angular-app",
       "symbols": [
         "official-path-title",
@@ -11508,7 +11519,7 @@
     },
     {
       "path": "web/src/app/course/course-shell.scss",
-      "lines": 79,
+      "lines": 83,
       "kind": "angular-app",
       "symbols": [],
       "imports": [],
@@ -11583,17 +11594,19 @@
     },
     {
       "path": "web/src/app/course/lesson-viewer.html",
-      "lines": 105,
+      "lines": 176,
       "kind": "angular-app",
       "symbols": [
-        "floci-overview-title"
+        "floci-overview-title",
+        "practice-title",
+        "quiz-title"
       ],
       "imports": [],
       "headings": []
     },
     {
       "path": "web/src/app/course/lesson-viewer.scss",
-      "lines": 290,
+      "lines": 347,
       "kind": "angular-app",
       "symbols": [],
       "imports": [],
@@ -11601,7 +11614,7 @@
     },
     {
       "path": "web/src/app/course/lesson-viewer.ts",
-      "lines": 510,
+      "lines": 608,
       "kind": "angular-app",
       "symbols": [
         "LessonViewerComponent",
@@ -11609,6 +11622,9 @@
         "track",
         "module",
         "projectBootstrap",
+        "trackProject",
+        "exercises",
+        "quiz",
         "showProjectBootstrap",
         "moduleIndex",
         "isCloudIntroduction",
@@ -11621,7 +11637,10 @@
         "activeTocId",
         "readingProgress",
         "copiedCode",
-        "isComplete"
+        "exerciseAnswers",
+        "exerciseFeedback",
+        "quizAnswers",
+        "quizSubmitted"
       ],
       "imports": [
         "@angular/common",
@@ -11635,7 +11654,8 @@
         "../content.service",
         "../progress.service",
         "../theme.service",
-        "../project-bootstrap"
+        "../project-bootstrap",
+        "../learning-activities"
       ],
       "headings": []
     },
@@ -11688,6 +11708,34 @@
       "headings": []
     },
     {
+      "path": "web/src/app/learning-activities.spec.ts",
+      "lines": 37,
+      "kind": "angular-app",
+      "symbols": [],
+      "imports": [
+        "./course-data",
+        "./learning-activities"
+      ],
+      "headings": []
+    },
+    {
+      "path": "web/src/app/learning-activities.ts",
+      "lines": 119,
+      "kind": "angular-app",
+      "symbols": [
+        "ChoiceQuestion",
+        "ModuleExercise",
+        "TrackProject",
+        "exercisesFor",
+        "quizFor",
+        "projectFor"
+      ],
+      "imports": [
+        "./course-module.model"
+      ],
+      "headings": []
+    },
+    {
       "path": "web/src/app/official-learning-paths.ts",
       "lines": 121,
       "kind": "angular-app",
@@ -11710,7 +11758,7 @@
     },
     {
       "path": "web/src/app/progress.service.spec.ts",
-      "lines": 18,
+      "lines": 28,
       "kind": "angular-app",
       "symbols": [],
       "imports": [
@@ -11721,12 +11769,15 @@
     },
     {
       "path": "web/src/app/progress.service.ts",
-      "lines": 77,
+      "lines": 124,
       "kind": "angular-app",
       "symbols": [
         "ProgressService",
         "TrackProgress",
-        "state"
+        "state",
+        "totalXp",
+        "completedModuleCount",
+        "badge"
       ],
       "imports": [
         "@angular/core"
@@ -12085,6 +12136,18 @@
     {
       "source": "web/src/app/course-data.ts",
       "target": "web/src/app/tracks/rutaflow.track.ts"
+    },
+    {
+      "source": "web/src/app/learning-activities.spec.ts",
+      "target": "web/src/app/course-data.ts"
+    },
+    {
+      "source": "web/src/app/learning-activities.spec.ts",
+      "target": "web/src/app/learning-activities.ts"
+    },
+    {
+      "source": "web/src/app/learning-activities.ts",
+      "target": "web/src/app/course-module.model.ts"
     },
     {
       "source": "web/src/app/progress.service.spec.ts",

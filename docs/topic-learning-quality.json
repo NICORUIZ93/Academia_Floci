@@ -50,10 +50,10 @@
       "filePath": 21,
       "runCommand": 102,
       "expectedResult": 29,
-      "practice": 66,
+      "practice": 67,
       "project": 6,
-      "modelMental": 144,
-      "limitsDecision": 74,
+      "modelMental": 153,
+      "limitsDecision": 75,
       "practicable": 0,
       "genericScaffold": 0
     },
@@ -97,7 +97,7 @@
       "expectedResult": 19,
       "practice": 16,
       "project": 6,
-      "modelMental": 48,
+      "modelMental": 50,
       "limitsDecision": 16,
       "practicable": 6,
       "genericScaffold": 0
@@ -4701,8 +4701,8 @@
           "expectedResult": true,
           "practice": false,
           "project": false,
-          "modelMental": false,
-          "limitsDecision": false
+          "modelMental": true,
+          "limitsDecision": true
         },
         "classification": {
           "practicable": false,
@@ -4741,7 +4741,7 @@
           "expectedResult": false,
           "practice": false,
           "project": false,
-          "modelMental": false,
+          "modelMental": true,
           "limitsDecision": false
         },
         "classification": {
@@ -4759,9 +4759,9 @@
           "filePath": true,
           "runCommand": true,
           "expectedResult": false,
-          "practice": false,
+          "practice": true,
           "project": false,
-          "modelMental": false,
+          "modelMental": true,
           "limitsDecision": false
         },
         "classification": {
@@ -4781,7 +4781,7 @@
           "expectedResult": true,
           "practice": false,
           "project": false,
-          "modelMental": false,
+          "modelMental": true,
           "limitsDecision": false
         },
         "classification": {
@@ -4801,7 +4801,7 @@
           "expectedResult": true,
           "practice": false,
           "project": false,
-          "modelMental": false,
+          "modelMental": true,
           "limitsDecision": true
         },
         "classification": {
@@ -4821,7 +4821,7 @@
           "expectedResult": false,
           "practice": false,
           "project": false,
-          "modelMental": false,
+          "modelMental": true,
           "limitsDecision": true
         },
         "classification": {
@@ -4841,7 +4841,7 @@
           "expectedResult": false,
           "practice": false,
           "project": false,
-          "modelMental": false,
+          "modelMental": true,
           "limitsDecision": true
         },
         "classification": {
@@ -4861,7 +4861,7 @@
           "expectedResult": true,
           "practice": true,
           "project": false,
-          "modelMental": false,
+          "modelMental": true,
           "limitsDecision": true
         },
         "classification": {
@@ -4881,7 +4881,7 @@
           "expectedResult": false,
           "practice": false,
           "project": false,
-          "modelMental": false,
+          "modelMental": true,
           "limitsDecision": true
         },
         "classification": {
@@ -8527,7 +8527,7 @@
           "expectedResult": false,
           "practice": false,
           "project": false,
-          "modelMental": false,
+          "modelMental": true,
           "limitsDecision": false
         },
         "classification": {
@@ -9287,7 +9287,7 @@
           "expectedResult": false,
           "practice": false,
           "project": false,
-          "modelMental": false,
+          "modelMental": true,
           "limitsDecision": false
         },
         "classification": {
