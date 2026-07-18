@@ -10,7 +10,7 @@ import { ContentService } from '../content.service';
 import { ProgressService } from '../progress.service';
 import { ThemeService } from '../theme.service';
 import { findProjectBootstrap } from '../project-bootstrap';
-import { projectFor, quizFor } from '../learning-activities';
+import { projectFor } from '../learning-activities';
 
 let mermaidInitialized = false;
 
@@ -76,11 +76,6 @@ export class LessonViewerComponent implements OnDestroy {
   readonly module = computed(() => this.track()?.modules.find(m => m.id === this.moduleId()));
   readonly projectBootstrap = computed(() => findProjectBootstrap(this.trackId()));
   readonly trackProject = computed(() => projectFor(this.trackId()));
-  readonly quiz = computed(() => {
-    const track = this.track();
-    const module = this.module();
-    return track && module ? quizFor(track, module) : [];
-  });
   readonly showProjectBootstrap = computed(() => Boolean(this.projectBootstrap()));
   readonly moduleIndex = computed(() => this.track()?.modules.findIndex(m => m.id === this.moduleId()) ?? -1);
   readonly isCloudIntroduction = computed(() => this.trackId() === 'cloud' && this.moduleId() === 0);
@@ -124,17 +119,6 @@ export class LessonViewerComponent implements OnDestroy {
   readonly activeTocId = signal<string | null>(null);
   readonly readingProgress = signal(0);
   readonly copiedCode = signal<string | null>(null);
-  readonly quizAnswers = signal<Record<string, number>>({});
-  readonly quizSubmitted = signal(false);
-  readonly quizScore = computed(() => this.quiz().reduce(
-    (score, question) => score + (this.quizAnswers()[question.id] === question.correctIndex ? 1 : 0),
-    0,
-  ));
-  readonly quizAnsweredCount = computed(() => Object.keys(this.quizAnswers()).length);
-  readonly canCompleteModule = computed(() =>
-    this.isComplete()
-      || this.progressService.hasPassedQuiz(this.trackId(), this.moduleId()),
-  );
   private tocObserver: IntersectionObserver | null = null;
   private copyTimer: ReturnType<typeof setTimeout> | null = null;
   private readonly updateReadingProgress = (): void => {
@@ -151,8 +135,6 @@ export class LessonViewerComponent implements OnDestroy {
       const trackId = this.trackId();
       const module = this.module();
       if (!module) return;
-      this.quizAnswers.set({});
-      this.quizSubmitted.set(false);
       this.lessonLoading.set(true);
       this.lessonError.set(null);
       this.lessonHtml.set(null);
@@ -181,22 +163,6 @@ export class LessonViewerComponent implements OnDestroy {
         if (container) this.scrollToRequestedFragment(container, fragment);
       }, { injector: this.injector });
     });
-  }
-
-  selectQuizAnswer(questionId: string, optionIndex: number): void {
-    if (this.quizSubmitted()) return;
-    this.quizAnswers.update(answers => ({ ...answers, [questionId]: optionIndex }));
-  }
-
-  submitQuiz(): void {
-    if (Object.keys(this.quizAnswers()).length !== this.quiz().length) return;
-    this.quizSubmitted.set(true);
-    if (this.quizScore() >= 4) this.progressService.passQuiz(this.trackId(), this.moduleId());
-  }
-
-  retryQuiz(): void {
-    this.quizAnswers.set({});
-    this.quizSubmitted.set(false);
   }
 
   retryLesson(): void {
@@ -580,7 +546,6 @@ export class LessonViewerComponent implements OnDestroy {
 
 
   toggleComplete(): void {
-    if (!this.canCompleteModule()) return;
     this.progressService.toggleModuleComplete(this.trackId(), this.moduleId());
   }
 

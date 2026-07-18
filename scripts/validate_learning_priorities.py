@@ -37,16 +37,10 @@ for track in TRACKS:
             if "¿Por qué es importante?" not in block:
                 errors.append(f"{path.relative_to(ROOT)} · {heading.group(0)}: falta importancia explícita")
 
-activities = (ROOT / "web/src/app/learning-activities.ts").read_text(encoding="utf-8")
 viewer = (ROOT / "web/src/app/course/lesson-viewer.ts").read_text(encoding="utf-8")
-progress = (ROOT / "web/src/app/progress.service.ts").read_text(encoding="utf-8")
-if "Array.from({ length: 5 }" not in activities:
-    errors.append("learning-activities.ts: cada quiz debe contener cinco preguntas")
+activities = (ROOT / "web/src/app/learning-activities.ts").read_text(encoding="utf-8")
 if activities.count("trackId: '") != 12:
     errors.append("learning-activities.ts: deben existir exactamente 12 proyectos integradores")
-for requirement in ("passQuiz",):
-    if requirement not in progress:
-        errors.append(f"progress.service.ts: falta {requirement}")
 for requirement in ("addTopicLearningSupport", "Errores comunes y cómo diagnosticarlos"):
     if requirement not in viewer:
         errors.append(f"lesson-viewer.ts: falta soporte global {requirement}")
@@ -61,4 +55,4 @@ if errors:
         print(f"- {error}")
     raise SystemExit(1)
 
-print(f"Prioridades educativas OK: {modules} módulos, {topics} temas, 5 preguntas por módulo, 12 proyectos y progreso persistente sin gamificación.")
+print(f"Prioridades educativas OK: {modules} módulos, {topics} temas, 12 proyectos y progreso persistente sin evaluaciones generadas ni gamificación.")

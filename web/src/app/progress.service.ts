@@ -2,12 +2,11 @@ import { Injectable, signal } from '@angular/core';
 
 export interface TrackProgress {
   completedModules: number[];
-  passedQuizzes?: number[];
 }
 
 type ProgressState = Record<string, TrackProgress>;
 
-const EMPTY_TRACK_PROGRESS: TrackProgress = { completedModules: [], passedQuizzes: [] };
+const EMPTY_TRACK_PROGRESS: TrackProgress = { completedModules: [] };
 const STORAGE_KEY = 'academia-progress-v2';
 const LEGACY_CLOUD_KEY = 'cloud-local-academy-progress';
 
@@ -65,21 +64,6 @@ export class ProgressService {
       : [...current.completedModules, moduleId];
     this.state.update(s => ({ ...s, [trackId]: { ...current, completedModules } }));
     this.persist();
-  }
-
-  passQuiz(trackId: string, moduleId: number): void {
-    const current = this.trackProgress(trackId);
-    const passedQuizzes = current.passedQuizzes ?? [];
-    if (passedQuizzes.includes(moduleId)) return;
-    this.state.update(state => ({
-      ...state,
-      [trackId]: { ...current, passedQuizzes: [...passedQuizzes, moduleId] },
-    }));
-    this.persist();
-  }
-
-  hasPassedQuiz(trackId: string, moduleId: number): boolean {
-    return (this.trackProgress(trackId).passedQuizzes ?? []).includes(moduleId);
   }
 
   nextPendingModuleId(trackId: string, totalModules: number): number {

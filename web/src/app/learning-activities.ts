@@ -1,13 +1,3 @@
-import { CourseModule, Track } from './course-module.model';
-
-export interface ChoiceQuestion {
-  id: string;
-  prompt: string;
-  options: string[];
-  correctIndex: number;
-  explanation: string;
-}
-
 export interface TrackProject {
   trackId: string;
   title: string;
@@ -15,42 +5,6 @@ export interface TrackProject {
   deliverable: string;
   milestones: string[];
   verification: string[];
-}
-
-function rotate<T>(items: T[], offset: number): T[] {
-  if (!items.length) return items;
-  const normalized = offset % items.length;
-  return [...items.slice(normalized), ...items.slice(0, normalized)];
-}
-
-function choice(correct: string, distractors: string[], seed: number): { options: string[]; correctIndex: number } {
-  const unique = [correct, ...distractors.filter(item => item !== correct)].slice(0, 4);
-  const options = rotate(unique, seed % unique.length);
-  return { options, correctIndex: options.indexOf(correct) };
-}
-
-export function quizFor(track: Track, module: CourseModule): ChoiceQuestion[] {
-  const moduleConcepts = module.concepts.length ? module.concepts : [module.shortTitle];
-  const foreignConcepts = track.modules.flatMap(item => item.concepts).filter(item => !moduleConcepts.includes(item));
-  return Array.from({ length: 5 }, (_, index) => {
-    const concept = moduleConcepts[index % moduleConcepts.length];
-    const sourceQuestion = module.questions[index % Math.max(1, module.questions.length)]
-      ?? `¿Qué papel cumple ${concept} en este módulo?`;
-    const correct = index % 2 === 0
-      ? `${concept}: se aplica para avanzar hacia “${module.deliverable}”.`
-      : `Primero se comprueba ${concept} con una evidencia reproducible y después se integra.`;
-    const distractors = [
-      `${concept} reemplaza todas las demás decisiones del sistema.`,
-      `${concept} solo importa en producción y no puede probarse durante el aprendizaje.`,
-      `La opción correcta es memorizar ${concept} sin relacionarlo con un resultado.`,
-    ];
-    return {
-      id: `${track.id}-${module.id}-quiz-${index}`,
-      prompt: sourceQuestion,
-      ...choice(correct, distractors, module.id + index),
-      explanation: `La respuesta conecta ${concept} con el entregable y exige evidencia; las otras opciones presentan absolutos o aprendizaje pasivo.`,
-    };
-  });
 }
 
 export const TRACK_PROJECTS: TrackProject[] = [
