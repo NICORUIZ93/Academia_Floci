@@ -1014,7 +1014,48 @@
         "fragment": "tema-6-microservicios-big-data-ai-ml-y-multi-cloud"
       }
     ],
-    "34": [],
+    "34": [
+      {
+        "title": "Instalación en macOS, Linux y Windows",
+        "fragment": "tema-1-instalacion-en-macos-linux-y-windows"
+      },
+      {
+        "title": "Modelo mental de la plataforma",
+        "fragment": "tema-2-modelo-mental-de-la-plataforma"
+      },
+      {
+        "title": "AWS CLI y SDK, Azure CLI y SDK, GCP CLI y SDK",
+        "fragment": "tema-3-aws-cli-y-sdk-azure-cli-y-sdk-gcp-cli-y-sdk"
+      },
+      {
+        "title": "Configuración avanzada y ciclo de vida",
+        "fragment": "tema-4-configuracion-avanzada-y-ciclo-de-vida"
+      },
+      {
+        "title": "Automatización, UI y agentes",
+        "fragment": "tema-5-automatizacion-ui-y-agentes"
+      },
+      {
+        "title": "Servicios AWS incorporados en la documentación actual",
+        "fragment": "tema-6-servicios-aws-incorporados-en-la-documentacion-actual"
+      },
+      {
+        "title": "Servicios Azure que completan el recorrido",
+        "fragment": "tema-7-servicios-azure-que-completan-el-recorrido"
+      },
+      {
+        "title": "Servicios GCP que completan el recorrido",
+        "fragment": "tema-8-servicios-gcp-que-completan-el-recorrido"
+      },
+      {
+        "title": "Laboratorios oficiales reconstruidos en español",
+        "fragment": "tema-9-laboratorios-oficiales-reconstruidos-en-espanol"
+      },
+      {
+        "title": "Límites y transferencia a producción",
+        "fragment": "tema-10-limites-y-transferencia-a-produccion"
+      }
+    ],
     "4": [
       {
         "title": "Qué es NoSQL y cuándo usarlo",
@@ -1863,7 +1904,32 @@
         "fragment": "tema-4-resiliencia-y-observabilidad-orientadas-a-objetivos"
       }
     ],
-    "11": [],
+    "11": [
+      {
+        "title": "Sistemas, arquitectura y sistemas operativos",
+        "fragment": "tema-1-sistemas-arquitectura-y-sistemas-operativos"
+      },
+      {
+        "title": "Algoritmos, autómatas, lenguajes y compiladores",
+        "fragment": "tema-2-algoritmos-automatas-lenguajes-y-compiladores"
+      },
+      {
+        "title": "Bases de datos, almacenes analíticos y minería de datos",
+        "fragment": "tema-3-bases-de-datos-almacenes-analiticos-y-mineria-de-datos"
+      },
+      {
+        "title": "Inteligencia artificial, aprendizaje automático y visión",
+        "fragment": "tema-4-inteligencia-artificial-aprendizaje-automatico-y-vision"
+      },
+      {
+        "title": "Gráficos y cómputo científico",
+        "fragment": "tema-5-graficos-y-computo-cientifico"
+      },
+      {
+        "title": "Redes, seguridad, web e ingeniería profesional",
+        "fragment": "tema-6-redes-seguridad-web-e-ingenieria-profesional"
+      }
+    ],
     "2": [
       {
         "title": "Elegir estructuras según las operaciones",

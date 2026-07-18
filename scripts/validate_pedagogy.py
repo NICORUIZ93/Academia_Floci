@@ -43,23 +43,20 @@ for track in TRACKS:
         totals["cases"] += text.count("**Casos de uso reales:**")
         totals["diagrams"] += text.count("**Diagrama:**")
 
-        for required in (
-            "## Sílabo", "## Aprende construyendo",
-            "## Rúbrica del proyecto",
-            "## Bibliografía y fundamento académico", "## Resumen del módulo",
-        ):
+        for required in ("## Aprende construyendo",):
             if required not in text:
                 errors.append(f"{path.relative_to(ROOT)}: falta {required}")
 
         topics = list(re.finditer(r"^### Tema .+$", text, re.MULTILINE))
+        if not topics:
+            errors.append(f"{path.relative_to(ROOT)}: no contiene temas prácticos")
         totals["topics"] += len(topics)
         for index, match in enumerate(topics):
             end = topics[index + 1].start() if index + 1 < len(topics) else text.find("\n---", match.end())
             section = text[match.start(): end if end >= 0 else len(text)]
             title = match.group(0)
-            for marker in ("**Conceptos clave:**", "**Analogía:**", "**¿Por qué es importante?**"):
-                if marker not in section:
-                    errors.append(f"{path.relative_to(ROOT)} · {title}: falta {marker}")
+            if len(re.findall(r"\b\w+\b", section)) < 45:
+                errors.append(f"{path.relative_to(ROOT)} · {title}: explicación demasiado breve")
 
         # No se exige una cantidad artificial de palabras: la profundidad se mide
         # tema por tema en audit_topic_learning_quality.py. Un mínimo global

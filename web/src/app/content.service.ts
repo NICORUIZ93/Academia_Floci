@@ -7,19 +7,15 @@ import { marked } from 'marked';
 const MERMAID_BLOCK = /<pre><code class="language-mermaid">([\s\S]*?)<\/code><\/pre>/g;
 @Injectable({ providedIn: 'root' })
 export class ContentService {
-  /** Carga la lección en markdown de un módulo. Devuelve null si todavía no existe
-   *  (tracks nuevos cuyo contenido se redacta por etapas) en vez de lanzar un error. */
-  async loadLessonHtml(trackId: string, moduleId: number): Promise<string | null> {
-    try {
-      const contentUrl = new URL(`content/${trackId}/modulo-${moduleId}.md`, document.baseURI);
-      const response = await fetch(contentUrl);
-      if (!response.ok) return null;
-      const raw = await response.text();
-      const withoutRepeatedTitle = raw.replace(/^#{1,2}\s+[^\n]*\n+/, '');
-      const html = marked.parse(withoutRepeatedTitle, { async: false }) as string;
-      return html.replace(MERMAID_BLOCK, '<pre class="mermaid">$1</pre>');
-    } catch {
-      return null;
-    }
+  /** Una lección registrada debe existir. Propagar el error evita presentar como
+   * contenido válido una descarga fallida o un Markdown ausente. */
+  async loadLessonHtml(trackId: string, moduleId: number): Promise<string> {
+    const contentUrl = new URL(`content/${trackId}/modulo-${moduleId}.md`, document.baseURI);
+    const response = await fetch(contentUrl);
+    if (!response.ok) throw new Error(`No se pudo cargar la lección (${response.status}).`);
+    const raw = await response.text();
+    const withoutRepeatedTitle = raw.replace(/^#{1,2}\s+[^\n]*\n+/, '');
+    const html = marked.parse(withoutRepeatedTitle, { async: false }) as string;
+    return html.replace(MERMAID_BLOCK, '<pre class="mermaid">$1</pre>');
   }
 }

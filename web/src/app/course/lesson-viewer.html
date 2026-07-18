@@ -42,7 +42,7 @@
         </ol>
       </section>
 
-      <details class="project-bootstrap" *ngIf="showProjectBootstrap() && projectBootstrap() as starter">
+      <details class="project-bootstrap" *ngIf="showProjectBootstrap() && projectBootstrap() as starter" [open]="moduleId() === 0">
         <summary>
           <span><lucide-icon [img]="icons.Code2" /></span>
           <div><small>Desde una carpeta vacía</small><strong>Prepara el proyecto para {{ m.title }}</strong><p>Sigue los pasos en orden si llegaste directamente o todavía no tienes un proyecto ejecutable.</p></div>
@@ -59,19 +59,13 @@
       </details>
 
       <section class="lesson-panel">
-        <div *ngIf="lessonLoading()" class="lesson-skeleton">Cargando lección…</div>
+        <div *ngIf="lessonLoading()" class="lesson-skeleton" role="status" aria-live="polite">Cargando lección…</div>
         <div *ngIf="!lessonLoading() && lessonHtml() as html" #lessonContent class="lesson-markdown" [innerHTML]="html" (click)="copyCode($event)"></div>
-        <ng-container *ngIf="!lessonLoading() && !lessonHtml()">
-          <div class="structured-lesson">
-            <section>
-              <h2>Qué vas a dominar</h2>
-              <div class="concept-chips">
-                <span *ngFor="let concept of m.concepts">{{ concept }}</span>
-              </div>
-            </section>
-            <p class="lesson-deliverable"><strong>Entregable previsto:</strong> {{ m.deliverable }}</p>
-          </div>
-        </ng-container>
+        <div *ngIf="!lessonLoading() && lessonError() as error" class="lesson-error" role="alert">
+          <strong>No pudimos abrir esta lección</strong>
+          <p>{{ error }} Comprueba la conexión y vuelve a intentarlo. Tu progreso está seguro.</p>
+          <button type="button" (click)="retryLesson()">Volver a intentar</button>
+        </div>
       </section>
 
       <footer class="lesson-footer">

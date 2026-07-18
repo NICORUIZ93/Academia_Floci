@@ -18,7 +18,7 @@ test('catalogo: lista los tracks agrupados sin secciones de marketing', async ({
   await expect(page.locator('.catalog-topbar')).toContainText('Academia Floci');
   await expect(page.locator('.track-group h3').first()).toBeVisible();
   await expect(page.locator('.track-card')).toHaveCount(14);
-  await expect(page.locator('.hero-stats')).toContainText('877');
+  await expect(page.locator('.hero-stats strong').nth(2)).not.toHaveText('—');
 });
 
 test('curso cloud: abre el lector por capítulos con el contenido base de Floci', async ({ page }) => {

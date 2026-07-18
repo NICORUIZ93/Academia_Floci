@@ -43,17 +43,17 @@
       "genericScaffold": 0
     },
     "cloud": {
-      "topics": 143,
-      "explanation": 143,
-      "code": 99,
-      "visual": 56,
-      "filePath": 19,
-      "runCommand": 94,
-      "expectedResult": 25,
-      "practice": 65,
+      "topics": 153,
+      "explanation": 152,
+      "code": 100,
+      "visual": 57,
+      "filePath": 21,
+      "runCommand": 102,
+      "expectedResult": 29,
+      "practice": 66,
       "project": 6,
-      "modelMental": 143,
-      "limitsDecision": 69,
+      "modelMental": 144,
+      "limitsDecision": 74,
       "practicable": 0,
       "genericScaffold": 0
     },
@@ -88,17 +88,17 @@
       "genericScaffold": 0
     },
     "foundations": {
-      "topics": 44,
-      "explanation": 43,
-      "code": 44,
+      "topics": 50,
+      "explanation": 49,
+      "code": 50,
       "visual": 11,
-      "filePath": 6,
-      "runCommand": 29,
-      "expectedResult": 13,
-      "practice": 10,
-      "project": 0,
+      "filePath": 12,
+      "runCommand": 35,
+      "expectedResult": 15,
+      "practice": 16,
+      "project": 5,
       "modelMental": 42,
-      "limitsDecision": 10,
+      "limitsDecision": 12,
       "practicable": 0,
       "genericScaffold": 0
     },
@@ -4690,6 +4690,206 @@
         }
       },
       {
+        "module": 34,
+        "topic": "Tema 1: Instalación en macOS, Linux y Windows",
+        "criteria": {
+          "explanation": true,
+          "code": false,
+          "visual": false,
+          "filePath": false,
+          "runCommand": true,
+          "expectedResult": true,
+          "practice": false,
+          "project": false,
+          "modelMental": false,
+          "limitsDecision": false
+        },
+        "classification": {
+          "practicable": false,
+          "genericScaffold": false
+        }
+      },
+      {
+        "module": 34,
+        "topic": "Tema 2: Modelo mental de la plataforma",
+        "criteria": {
+          "explanation": true,
+          "code": true,
+          "visual": true,
+          "filePath": false,
+          "runCommand": true,
+          "expectedResult": false,
+          "practice": false,
+          "project": false,
+          "modelMental": true,
+          "limitsDecision": false
+        },
+        "classification": {
+          "practicable": false,
+          "genericScaffold": false
+        }
+      },
+      {
+        "module": 34,
+        "topic": "Tema 3: AWS CLI y SDK, Azure CLI y SDK, GCP CLI y SDK",
+        "criteria": {
+          "explanation": true,
+          "code": false,
+          "visual": false,
+          "filePath": false,
+          "runCommand": true,
+          "expectedResult": false,
+          "practice": false,
+          "project": false,
+          "modelMental": false,
+          "limitsDecision": false
+        },
+        "classification": {
+          "practicable": false,
+          "genericScaffold": false
+        }
+      },
+      {
+        "module": 34,
+        "topic": "Tema 4: Configuración avanzada y ciclo de vida",
+        "criteria": {
+          "explanation": true,
+          "code": false,
+          "visual": false,
+          "filePath": true,
+          "runCommand": true,
+          "expectedResult": false,
+          "practice": false,
+          "project": false,
+          "modelMental": false,
+          "limitsDecision": false
+        },
+        "classification": {
+          "practicable": false,
+          "genericScaffold": false
+        }
+      },
+      {
+        "module": 34,
+        "topic": "Tema 5: Automatización, UI y agentes",
+        "criteria": {
+          "explanation": true,
+          "code": false,
+          "visual": false,
+          "filePath": true,
+          "runCommand": true,
+          "expectedResult": true,
+          "practice": false,
+          "project": false,
+          "modelMental": false,
+          "limitsDecision": false
+        },
+        "classification": {
+          "practicable": false,
+          "genericScaffold": false
+        }
+      },
+      {
+        "module": 34,
+        "topic": "Tema 6: Servicios AWS incorporados en la documentación actual",
+        "criteria": {
+          "explanation": true,
+          "code": false,
+          "visual": false,
+          "filePath": false,
+          "runCommand": true,
+          "expectedResult": true,
+          "practice": false,
+          "project": false,
+          "modelMental": false,
+          "limitsDecision": true
+        },
+        "classification": {
+          "practicable": false,
+          "genericScaffold": false
+        }
+      },
+      {
+        "module": 34,
+        "topic": "Tema 7: Servicios Azure que completan el recorrido",
+        "criteria": {
+          "explanation": true,
+          "code": false,
+          "visual": false,
+          "filePath": false,
+          "runCommand": true,
+          "expectedResult": false,
+          "practice": false,
+          "project": false,
+          "modelMental": false,
+          "limitsDecision": true
+        },
+        "classification": {
+          "practicable": false,
+          "genericScaffold": false
+        }
+      },
+      {
+        "module": 34,
+        "topic": "Tema 8: Servicios GCP que completan el recorrido",
+        "criteria": {
+          "explanation": true,
+          "code": false,
+          "visual": false,
+          "filePath": false,
+          "runCommand": false,
+          "expectedResult": false,
+          "practice": false,
+          "project": false,
+          "modelMental": false,
+          "limitsDecision": true
+        },
+        "classification": {
+          "practicable": false,
+          "genericScaffold": false
+        }
+      },
+      {
+        "module": 34,
+        "topic": "Tema 9: Laboratorios oficiales reconstruidos en español",
+        "criteria": {
+          "explanation": true,
+          "code": false,
+          "visual": false,
+          "filePath": false,
+          "runCommand": true,
+          "expectedResult": true,
+          "practice": true,
+          "project": false,
+          "modelMental": false,
+          "limitsDecision": true
+        },
+        "classification": {
+          "practicable": false,
+          "genericScaffold": false
+        }
+      },
+      {
+        "module": 34,
+        "topic": "Tema 10: Límites y transferencia a producción",
+        "criteria": {
+          "explanation": false,
+          "code": false,
+          "visual": false,
+          "filePath": false,
+          "runCommand": false,
+          "expectedResult": false,
+          "practice": false,
+          "project": false,
+          "modelMental": false,
+          "limitsDecision": true
+        },
+        "classification": {
+          "practicable": false,
+          "genericScaffold": false
+        }
+      },
+      {
         "module": 4,
         "topic": "Tema 1: Qué es NoSQL y cuándo usarlo",
         "criteria": {
@@ -8489,6 +8689,126 @@
           "project": false,
           "modelMental": true,
           "limitsDecision": false
+        },
+        "classification": {
+          "practicable": false,
+          "genericScaffold": false
+        }
+      },
+      {
+        "module": 11,
+        "topic": "Tema 1: Sistemas, arquitectura y sistemas operativos",
+        "criteria": {
+          "explanation": true,
+          "code": true,
+          "visual": false,
+          "filePath": true,
+          "runCommand": true,
+          "expectedResult": false,
+          "practice": true,
+          "project": true,
+          "modelMental": false,
+          "limitsDecision": false
+        },
+        "classification": {
+          "practicable": false,
+          "genericScaffold": false
+        }
+      },
+      {
+        "module": 11,
+        "topic": "Tema 2: Algoritmos, autómatas, lenguajes y compiladores",
+        "criteria": {
+          "explanation": true,
+          "code": true,
+          "visual": false,
+          "filePath": true,
+          "runCommand": true,
+          "expectedResult": true,
+          "practice": true,
+          "project": false,
+          "modelMental": false,
+          "limitsDecision": true
+        },
+        "classification": {
+          "practicable": false,
+          "genericScaffold": false
+        }
+      },
+      {
+        "module": 11,
+        "topic": "Tema 3: Bases de datos, almacenes analíticos y minería de datos",
+        "criteria": {
+          "explanation": true,
+          "code": true,
+          "visual": false,
+          "filePath": true,
+          "runCommand": true,
+          "expectedResult": false,
+          "practice": true,
+          "project": true,
+          "modelMental": false,
+          "limitsDecision": false
+        },
+        "classification": {
+          "practicable": false,
+          "genericScaffold": false
+        }
+      },
+      {
+        "module": 11,
+        "topic": "Tema 4: Inteligencia artificial, aprendizaje automático y visión",
+        "criteria": {
+          "explanation": true,
+          "code": true,
+          "visual": false,
+          "filePath": true,
+          "runCommand": true,
+          "expectedResult": false,
+          "practice": true,
+          "project": true,
+          "modelMental": false,
+          "limitsDecision": false
+        },
+        "classification": {
+          "practicable": false,
+          "genericScaffold": false
+        }
+      },
+      {
+        "module": 11,
+        "topic": "Tema 5: Gráficos y cómputo científico",
+        "criteria": {
+          "explanation": true,
+          "code": true,
+          "visual": false,
+          "filePath": true,
+          "runCommand": true,
+          "expectedResult": true,
+          "practice": true,
+          "project": true,
+          "modelMental": false,
+          "limitsDecision": false
+        },
+        "classification": {
+          "practicable": false,
+          "genericScaffold": false
+        }
+      },
+      {
+        "module": 11,
+        "topic": "Tema 6: Redes, seguridad, web e ingeniería profesional",
+        "criteria": {
+          "explanation": true,
+          "code": true,
+          "visual": false,
+          "filePath": true,
+          "runCommand": true,
+          "expectedResult": false,
+          "practice": true,
+          "project": true,
+          "modelMental": false,
+          "limitsDecision": true
         },
         "classification": {
           "practicable": false,

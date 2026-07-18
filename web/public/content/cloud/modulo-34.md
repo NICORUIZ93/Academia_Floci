@@ -24,21 +24,21 @@ La fuente principal es [floci.io](https://floci.io/) y las documentaciones mante
 
 ## Aprende construyendo
 
-### 1. Instalación en macOS, Linux y Windows
+### Tema 1: Instalación en macOS, Linux y Windows
 
-### macOS
+#### macOS
 
 Con Homebrew, ejecuta `brew install floci-io/floci/floci`. Si prefieres el instalador oficial, usa `curl -fsSL https://floci.io/install.sh | sh`. Comprueba el resultado con `floci --version` y `floci doctor`; instalar no basta: el diagnóstico demuestra que Docker, la CLI y la conectividad local funcionan juntos.
 
-### Instalación en Linux
+#### Instalación en Linux
 
 Usa el mismo instalador oficial con `curl -fsSL https://floci.io/install.sh | sh`. Si el comando no aparece después, revisa la carpeta indicada por el instalador y tu variable `PATH`. Ejecuta `docker ps` antes de culpar a Floci: un daemon de Docker detenido es el fallo inicial más común.
 
-### Instalación en Windows
+#### Instalación en Windows
 
 En PowerShell puedes ejecutar `iwr https://floci.io/install.ps1 | iex`. La alternativa administrada es Scoop: `scoop bucket add floci https://github.com/floci-io/scoop-floci` y luego `scoop install floci`. Comprueba con `floci doctor`; si Docker Desktop usa WSL 2, verifica que la integración esté activa para tu distribución.
 
-## 2. Modelo mental de la plataforma
+### Tema 2: Modelo mental de la plataforma
 
 `floci-cli` administra procesos; `floci`, `floci-az` y `floci-gcp` implementan APIs locales; `floci-ui` permite observar recursos; los SDK y CLI oficiales siguen siendo los clientes. Esa separación evita aprender comandos inventados: cambia el endpoint, no la forma de programar.
 
@@ -58,31 +58,31 @@ flowchart LR
 
 Inicia AWS con `floci start`, Azure con `floci az start` y GCP con `floci gcp start`. Usa `eval $(floci env)`, `eval $(floci az env)` o `eval $(floci gcp env)` en shells compatibles. En PowerShell, canaliza la salida hacia `Invoke-Expression` según la guía oficial.
 
-## 3. AWS CLI y SDK, Azure CLI y SDK, GCP CLI y SDK
+### Tema 3: AWS CLI y SDK, Azure CLI y SDK, GCP CLI y SDK
 
 AWS usa `AWS_ENDPOINT_URL=http://localhost:4566` y credenciales desechables. Azure exporta una cadena compatible con Azurite y endpoints específicos para Blob, App Configuration y Key Vault. GCP exporta hosts de emulador como `STORAGE_EMULATOR_HOST`, `PUBSUB_EMULATOR_HOST` y `FIRESTORE_EMULATOR_HOST` con un proyecto local.
 
 Una variable mal aplicada suele producir dos errores opuestos: conexión rechazada si apunta al puerto equivocado, o una petición accidental a la nube real si el override no existe. Antes de ejecutar una operación destructiva, imprime el endpoint y confirma que contiene `localhost`.
 
-## 4. Configuración avanzada y ciclo de vida
+### Tema 4: Configuración avanzada y ciclo de vida
 
-### Puertos, Docker Compose y application.yml
+#### Puertos, Docker Compose y application.yml
 
 Los puertos principales son 4566, 4577 y 4588. Azure también puede exponer AMQP para Event Hubs y Service Bus. Docker Compose permite fijar imagen, puertos, socket Docker, volúmenes y variables. `application.yml` ofrece configuración detallada del runtime; conserva en Git una plantilla sin secretos y documenta cada cambio respecto al valor predeterminado.
 
-### Persistencia y snapshots
+#### Persistencia y snapshots
 
 `floci start --persist ./data` conserva estado entre reinicios. `floci snapshot save <nombre>` y `floci snapshot restore <nombre>` permiten guardar y recuperar un punto conocido. Persistencia sirve para desarrollo diario; una instancia limpia por suite es mejor para pruebas porque evita que un bucket o una cola anterior produzcan falsos positivos.
 
-### Aislamiento multi-account y aislamiento multi-project
+#### Aislamiento multi-account y aislamiento multi-project
 
 AWS separa almacenamiento por identificador de cuenta; GCP hace lo propio por proyecto. Esto permite simular entornos o tenants sobre una instancia, pero no reemplaza controles reales de organización, cuotas o facturación. Una prueba correcta debe usar identificadores explícitos y demostrar que un contexto no puede ver el estado del otro.
 
-### TLS y HTTPS, Initialization hooks
+#### TLS y HTTPS, Initialization hooks
 
 TLS local permite recorrer código sensible al esquema HTTPS mediante un certificado autofirmado. El cliente debe confiar deliberadamente en ese certificado solo en desarrollo. Los Initialization hooks crean recursos al arrancar y convierten el entorno en reproducible; deben ser idempotentes para que un segundo inicio no falle ni duplique datos.
 
-## 5. Automatización, UI y agentes
+### Tema 5: Automatización, UI y agentes
 
 Testcontainers inicia un Floci aislado alrededor de la suite. Hay integraciones oficiales para Testcontainers Java, Testcontainers Node.js, Testcontainers Python y Testcontainers Go. El test obtiene endpoint y credenciales del contenedor, crea sus propios recursos, verifica comportamiento y deja que el framework destruya el entorno.
 
@@ -90,7 +90,7 @@ Testcontainers inicia un Floci aislado alrededor de la suite. Hay integraciones 
 
 Para CI efímero, inicia Floci dentro del job, ejecuta migraciones y pruebas, captura logs cuando algo falle y destruye todo al finalizar. Los agentes de IA sin credenciales reales pueden usar este mismo entorno: el radio de impacto queda limitado al contenedor local y no existe una factura cloud accidental. Aun así, revisa el código generado y restringe el acceso al socket Docker.
 
-## 6. Servicios AWS incorporados en la documentación actual
+### Tema 6: Servicios AWS incorporados en la documentación actual
 
 Los módulos anteriores explican los servicios principales. Esta tabla completa los que estaban solo implícitos o ausentes y explica para qué practicar cada uno.
 
@@ -114,7 +114,7 @@ Los módulos anteriores explican los servicios principales. Esta tabla completa 
 
 El inventario completo también incluye S3, AWS Backup, Transfer Family, DynamoDB y Streams, ElastiCache, RDS, Neptune, DocumentDB, Lambda, EC2, Auto Scaling, ECS, ECR, EKS, ELB v2, Route 53, CloudFront, AppSync, SQS, SNS, Kinesis, EventBridge, Scheduler, Pipes, MSK, SES, IAM, STS, Cognito, KMS, Secrets Manager, ACM, CloudWatch Logs, AWS Config, CloudTrail, OpenSearch, Athena, Glue, Data Firehose, Bedrock Runtime, Textract, Transcribe, SSM Parameter Store, CloudFormation, Step Functions, AppConfig, CodeBuild, CodeDeploy, Resource Groups Tagging API, Cost Explorer, Pricing, CUR y BCM Data Exports.
 
-## 7. Servicios Azure que completan el recorrido
+### Tema 7: Servicios Azure que completan el recorrido
 
 | Servicio | Qué debes comprender y probar localmente |
 |---|---|
@@ -131,7 +131,7 @@ El inventario completo también incluye S3, AWS Backup, Transfer Family, DynamoD
 
 Estos se suman a Blob Storage, Queue Storage, Table Storage, Azure Functions, App Configuration, Key Vault, Event Hubs, Service Bus, Cosmos DB, API Management, Azure Cache for Redis, Event Grid y Azure Monitor.
 
-## 8. Servicios GCP que completan el recorrido
+### Tema 8: Servicios GCP que completan el recorrido
 
 | Servicio | Qué debes comprender y probar localmente |
 |---|---|
@@ -146,25 +146,25 @@ Estos se suman a Blob Storage, Queue Storage, Table Storage, Azure Functions, Ap
 
 También forman parte del catálogo Cloud Storage, Pub/Sub, Firestore, Datastore, Secret Manager, IAM, Managed Kafka, GKE, Cloud Run, Cloud Functions, Cloud Tasks, Cloud Monitoring, Firebase Auth y BigQuery.
 
-## 9. Laboratorios oficiales reconstruidos en español
+### Tema 9: Laboratorios oficiales reconstruidos en español
 
-### AWS S3 Buckets 101
+#### AWS S3 Buckets 101
 
 Crea un bucket, sube y descarga un objeto, configura una política y genera una URL prefirmada. Predice qué operación debe fallar antes de aplicar la política. Evidencia: comandos, respuesta, objeto recuperado y explicación de por qué una URL expirada deja de funcionar.
 
-### Athena y S3 101
+#### Athena y S3 101
 
 Guarda datos en S3, registra catálogo y tabla en Glue y consulta con Athena. La ejecución local usa un motor real basado en DuckDB. Evidencia: archivo fuente, definición de tabla, consulta agregada y resultado verificable; provoca además un error de esquema y diagnostícalo.
 
-### Azure Blob Storage 101
+#### Azure Blob Storage 101
 
 Crea un contenedor, carga y descarga un blob y genera un SAS con permisos y vencimiento mínimos. Evidencia: hash del archivo original y recuperado, intento sin autorización y explicación de alcance temporal del SAS.
 
-### EC2 Ports In-Flight 101
+#### EC2 Ports In-Flight 101
 
 Inicia una instancia local, abre y cierra puertos mientras corre y observa los sidecars `socat` que aparecen y desaparecen. Evidencia: `docker ps`, petición exitosa con el puerto abierto, fallo esperado al cerrarlo y explicación de la diferencia frente a publicar puertos solo al crear un contenedor.
 
-## 10. Límites y transferencia a producción
+### Tema 10: Límites y transferencia a producción
 
 Compatibilidad de API significa que clientes y formatos se comportan como espera el SDK; no significa que latencia regional, cuotas, IAM organizacional, facturación, hardware administrado, disponibilidad multi-zona y fallos del proveedor estén reproducidos completamente. Antes de producción ejecuta un conjunto pequeño de pruebas contractuales en la nube real, revisa seguridad y costes, y documenta cualquier diferencia.
 

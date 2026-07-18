@@ -3,8 +3,9 @@
 Academia en español para estudiar desarrollo profesional y cloud local. La
 experiencia oficial es una aplicación Angular con lecciones Markdown.
 
-La academia reúne 13 rutas, 200 capítulos y más de 750 temas en formato de
-libro, con proyectos acumulativos, práctica, evaluación y fuentes académicas.
+La academia reúne 14 rutas, 224 capítulos y 877 temas editoriales en formato de
+libro. La calidad práctica se mide por separado: un tema no se considera terminado
+solo porque su nombre aparezca en el índice.
 
 - [Guia web](web/README.md)
 - [Mapa compacto del repo](docs/repo-graph.md)
@@ -109,29 +110,29 @@ Tambien hay ejemplos base en Java, Go y Rust dentro de `examples/`.
 
 ## Metodologia
 
-Cada tema sigue una estructura simple:
+El contrato editorial que debe alcanzar cada tema es:
 
-- Objetivo claro.
-- Teoria breve con analogias.
-- Practica ejecutable o mini ejercicio.
-- Profundizacion.
-- Errores comunes.
-- Reto.
-- Recursos para seguir.
+- Resultado concreto y motivo para construirlo.
+- Prerrequisitos, carpeta y archivo exactos.
+- Código específico comentado y explicación por bloques.
+- Comando de ejecución y salida comprobable.
+- Un fallo intencional con su diagnóstico.
+- Una modificación breve que el estudiante resuelve.
+- Incremento correspondiente del proyecto RutaFlow.
 
 ## Tracks de la academia
 
 La version Angular tiene su propio contenido, mas amplio, en formato Markdown
 (`web/public/content/<track>/modulo-N.md`), organizado en 14 tracks, 224
-módulos y 877 temas editoriales visibles. Cada módulo sigue la misma plantilla: Sílabo, Contenido
-teorico, Laboratorio practico, Ejercicios de evaluacion y Resumen. Los temas
-permanecen abiertos y el laboratorio vive dentro de la misma ruta del modulo;
-no existe una ruta de cuestionario o examen separada.
+módulos y 877 temas editoriales visibles. Cada módulo prioriza una secuencia de
+temas prácticos. Sílabo, bibliografía o resumen solo aparecen cuando aportan
+contexto que no esté explicado en el recorrido principal. No existen rutas
+separadas de cuestionarios, rúbricas o laboratorios repetidos.
 
-La preparación completa se presenta una vez, en el módulo inicial de cada track.
-Los capítulos posteriores priorizan explicación, código, ejecución y práctica
-específicos, sin repetir una guía genérica. WebFlux conserva su tutorial manual
-como referencia editorial porque explica un proyecto concreto de principio a fin.
+La preparación completa se abre por defecto en el módulo inicial y permanece
+disponible, de forma plegable, en todos los capítulos para quien llegue desde un
+enlace directo. WebFlux es uno de los temas que ya alcanza el recorrido manual
+esperado; no se usa para ocultar la deuda editorial de los demás.
 La auditoría editorial de `docs/topic-learning-quality.md` sigue midiendo el
 Markdown real por separado: una ayuda generada en la interfaz no convierte una
 explicación superficial en contenido editorial completo.
@@ -163,7 +164,8 @@ que puedan redibujarse sin alterar su significado.
 
 `scripts/validate.sh` valida automaticamente que el numero de archivos
 Markdown de cada track coincida con los modulos declarados en su fuente
-TypeScript, y que temas y laboratorios permanezcan dentro del mismo capitulo.
+TypeScript, que el índice web corresponda a esos 14 tracks y que los reportes de
+calidad permanezcan sincronizados con el Markdown real.
 
 ## Actualización tecnológica
 

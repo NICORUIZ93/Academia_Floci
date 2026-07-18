@@ -18,7 +18,7 @@
     },
     {
       "path": ".github/workflows/ci.yml",
-      "lines": 47,
+      "lines": 55,
       "kind": "project-file",
       "symbols": [],
       "imports": [],
@@ -34,7 +34,7 @@
     },
     {
       "path": "README.md",
-      "lines": 244,
+      "lines": 246,
       "kind": "documentation",
       "symbols": [],
       "imports": [],
@@ -131,7 +131,7 @@
     },
     {
       "path": "docs/code-visual-quality.json",
-      "lines": 5432,
+      "lines": 5544,
       "kind": "project-file",
       "symbols": [],
       "imports": [],
@@ -235,7 +235,7 @@
     },
     {
       "path": "docs/topic-learning-quality.json",
-      "lines": 17797,
+      "lines": 18117,
       "kind": "project-file",
       "symbols": [],
       "imports": [],
@@ -2336,7 +2336,7 @@
     },
     {
       "path": "scripts/build_web_topic_index.py",
-      "lines": 72,
+      "lines": 75,
       "kind": "automation-script",
       "symbols": [
         "slugify",
@@ -2502,7 +2502,7 @@
     },
     {
       "path": "scripts/validate.sh",
-      "lines": 119,
+      "lines": 123,
       "kind": "automation-script",
       "symbols": [],
       "imports": [],
@@ -2520,7 +2520,7 @@
     },
     {
       "path": "scripts/validate_curriculum.py",
-      "lines": 163,
+      "lines": 164,
       "kind": "automation-script",
       "symbols": [],
       "imports": [
@@ -2569,7 +2569,7 @@
     },
     {
       "path": "scripts/validate_pedagogy.py",
-      "lines": 81,
+      "lines": 78,
       "kind": "automation-script",
       "symbols": [],
       "imports": [
@@ -2667,7 +2667,7 @@
     },
     {
       "path": "web/e2e/academy.spec.ts",
-      "lines": 39,
+      "lines": 47,
       "kind": "project-file",
       "symbols": [],
       "imports": [
@@ -3941,13 +3941,13 @@
         "## S\u00edlabo",
         "## Antes de empezar",
         "## Aprende construyendo",
-        "### 1. Instalaci\u00f3n en macOS, Linux y Windows",
-        "### macOS",
-        "### Instalaci\u00f3n en Linux",
-        "### Instalaci\u00f3n en Windows",
-        "## 2. Modelo mental de la plataforma",
-        "## 3. AWS CLI y SDK, Azure CLI y SDK, GCP CLI y SDK",
-        "## 4. Configuraci\u00f3n avanzada y ciclo de vida"
+        "### Tema 1: Instalaci\u00f3n en macOS, Linux y Windows",
+        "#### macOS",
+        "#### Instalaci\u00f3n en Linux",
+        "#### Instalaci\u00f3n en Windows",
+        "### Tema 2: Modelo mental de la plataforma",
+        "### Tema 3: AWS CLI y SDK, Azure CLI y SDK, GCP CLI y SDK",
+        "### Tema 4: Configuraci\u00f3n avanzada y ciclo de vida"
       ]
     },
     {
@@ -4943,20 +4943,22 @@
     },
     {
       "path": "web/public/content/foundations/modulo-11.md",
-      "lines": 55,
+      "lines": 175,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
       "headings": [
         "# M\u00f3dulo 11: Ciencias de la Computaci\u00f3n: mapa de especializaciones",
-        "## S\u00edlabo",
+        "## Antes de comenzar: entorno de experimentos",
         "## Aprende construyendo",
         "## Criterio transversal de calidad del c\u00f3digo",
-        "## Laboratorio pr\u00e1ctico",
-        "## R\u00fabrica del proyecto",
-        "## Bibliograf\u00eda y fundamento acad\u00e9mico",
-        "## Resumen del m\u00f3dulo",
-        "### Ejemplo reproducible: comparar dos estrategias"
+        "### Tema 1: Sistemas, arquitectura y sistemas operativos",
+        "### Tema 2: Algoritmos, aut\u00f3matas, lenguajes y compiladores",
+        "### Tema 3: Bases de datos, almacenes anal\u00edticos y miner\u00eda de datos",
+        "### Tema 4: Inteligencia artificial, aprendizaje autom\u00e1tico y visi\u00f3n",
+        "### Tema 5: Gr\u00e1ficos y c\u00f3mputo cient\u00edfico",
+        "### Tema 6: Redes, seguridad, web e ingenier\u00eda profesional",
+        "## Fuentes para continuar"
       ]
     },
     {
@@ -9561,7 +9563,7 @@
     },
     {
       "path": "web/public/content/topic-index.json",
-      "lines": 4005,
+      "lines": 4051,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -11331,7 +11333,7 @@
     },
     {
       "path": "web/src/app/app.html",
-      "lines": 3,
+      "lines": 4,
       "kind": "angular-app",
       "symbols": [],
       "imports": [],
@@ -11382,9 +11384,10 @@
     },
     {
       "path": "web/src/app/catalog/course-catalog.html",
-      "lines": 92,
+      "lines": 91,
       "kind": "angular-app",
       "symbols": [
+        "main-content",
         "catalog-title",
         "tracks-title",
         "official-title"
@@ -11402,7 +11405,7 @@
     },
     {
       "path": "web/src/app/catalog/course-catalog.ts",
-      "lines": 88,
+      "lines": 90,
       "kind": "angular-app",
       "symbols": [
         "CourseCatalogComponent",
@@ -11421,15 +11424,18 @@
         "../icon-registry",
         "../official-updates",
         "../progress.service",
-        "../theme.service"
+        "../theme.service",
+        "../topic-index.service"
       ],
       "headings": []
     },
     {
       "path": "web/src/app/command-palette.html",
-      "lines": 23,
+      "lines": 25,
       "kind": "angular-app",
-      "symbols": [],
+      "symbols": [
+        "palette-title"
+      ],
       "imports": [],
       "headings": []
     },
@@ -11456,11 +11462,12 @@
     },
     {
       "path": "web/src/app/command-palette.ts",
-      "lines": 78,
+      "lines": 90,
       "kind": "angular-app",
       "symbols": [
         "CommandPaletteComponent",
         "query",
+        "index",
         "results"
       ],
       "imports": [
@@ -11470,13 +11477,14 @@
         "@angular/router",
         "lucide-angular",
         "./course-data",
-        "./command-palette.service"
+        "./command-palette.service",
+        "./topic-index.service"
       ],
       "headings": []
     },
     {
       "path": "web/src/app/content.service.ts",
-      "lines": 26,
+      "lines": 22,
       "kind": "angular-app",
       "symbols": [
         "ContentService"
@@ -11492,7 +11500,8 @@
       "lines": 53,
       "kind": "angular-app",
       "symbols": [
-        "official-path-title"
+        "official-path-title",
+        "main-content"
       ],
       "imports": [],
       "headings": []
@@ -11574,7 +11583,7 @@
     },
     {
       "path": "web/src/app/course/lesson-viewer.html",
-      "lines": 111,
+      "lines": 105,
       "kind": "angular-app",
       "symbols": [
         "floci-overview-title"
@@ -11584,7 +11593,7 @@
     },
     {
       "path": "web/src/app/course/lesson-viewer.scss",
-      "lines": 286,
+      "lines": 290,
       "kind": "angular-app",
       "symbols": [],
       "imports": [],
@@ -11592,7 +11601,7 @@
     },
     {
       "path": "web/src/app/course/lesson-viewer.ts",
-      "lines": 492,
+      "lines": 510,
       "kind": "angular-app",
       "symbols": [
         "LessonViewerComponent",
@@ -11607,6 +11616,7 @@
         "nextModule",
         "lessonHtml",
         "lessonLoading",
+        "lessonError",
         "tocItems",
         "activeTocId",
         "readingProgress",
@@ -11761,12 +11771,13 @@
     },
     {
       "path": "web/src/app/topic-index.service.ts",
-      "lines": 32,
+      "lines": 47,
       "kind": "angular-app",
       "symbols": [
         "TopicIndexService",
         "IndexedTopic",
-        "index"
+        "index",
+        "totalTopics"
       ],
       "imports": [
         "@angular/core"
@@ -11935,7 +11946,7 @@
     },
     {
       "path": "web/src/styles.scss",
-      "lines": 90,
+      "lines": 101,
       "kind": "angular-app",
       "symbols": [],
       "imports": [],
@@ -12010,6 +12021,10 @@
     {
       "source": "web/src/app/command-palette.ts",
       "target": "web/src/app/command-palette.service.ts"
+    },
+    {
+      "source": "web/src/app/command-palette.ts",
+      "target": "web/src/app/topic-index.service.ts"
     },
     {
       "source": "web/src/app/course/course-shell.ts",

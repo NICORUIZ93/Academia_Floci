@@ -143,7 +143,7 @@ La evidencia demuestra el aprendizaje.`;
       expect(text).toContain('Desde una carpeta vacía');
       expect(text).toContain('Prepara el proyecto para Cómo funciona tu entorno de desarrollo');
       expect(page.querySelector('.project-bootstrap')).toBeTruthy();
-      expect(page.querySelector<HTMLDetailsElement>('.project-bootstrap')?.open).toBe(false);
+      expect(page.querySelector<HTMLDetailsElement>('.project-bootstrap')?.open).toBe(true);
       const secondarySections = page.querySelectorAll('.secondary-section-body');
       expect(secondarySections.length).toBeGreaterThanOrEqual(3);
       const bibliographyToggle = page.querySelector<HTMLButtonElement>('.section-bibliografia-y-fundamento-academico .secondary-section-toggle');

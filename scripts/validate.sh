@@ -68,11 +68,7 @@ for (const [trackId, sourceFile] of Object.entries(TRACK_SOURCES)) {
   if (moduleFiles !== definedModules) {
     throw new Error(`El track '${trackId}' define ${definedModules} modulos en ${sourceFile} pero tiene ${moduleFiles} archivos en ${contentDir}/`);
   }
-  for (const [heading, required] of [
-    ['## Sílabo', true],
-    ['## Aprende construyendo', true],
-    ['## Resumen del módulo', true],
-  ]) {
+  for (const heading of ['## Aprende construyendo']) {
     const missing = [];
     for (let i = 0; i < moduleFiles; i += 1) {
       const file = `${contentDir}/modulo-${i}.md`;
@@ -83,6 +79,14 @@ for (const [trackId, sourceFile] of Object.entries(TRACK_SOURCES)) {
     if (missing.length) {
       throw new Error(`Track '${trackId}': faltan modulos sin '${heading}': ${missing.join(', ')}`);
     }
+  }
+  const modulesWithoutTopics = [];
+  for (let i = 0; i < moduleFiles; i += 1) {
+    const content = fs.readFileSync(`${contentDir}/modulo-${i}.md`, 'utf8');
+    if (!/^### Tema(?:\s|:)/m.test(content)) modulesWithoutTopics.push(i);
+  }
+  if (modulesWithoutTopics.length) {
+    throw new Error(`Track '${trackId}': módulos sin temas prácticos: ${modulesWithoutTopics.join(', ')}`);
   }
 }
 

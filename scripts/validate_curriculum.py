@@ -60,9 +60,10 @@ for entry in entries:
         values = entry.get(field, [])
         if not isinstance(values, list) or len(values) < 3 or any(not str(v).strip() for v in values):
             errors.append(f"módulo {module_id}: {field} requiere al menos tres elementos")
-    for heading in ("## Rúbrica del proyecto", "## Bibliografía y fundamento académico"):
-        if heading not in content:
-            errors.append(f"módulo {module_id}: falta evidencia curricular {heading}")
+    if "## Aprende construyendo" not in content or not re.search(r"^### Tema(?:\s|:)", content, re.MULTILINE):
+        errors.append(f"módulo {module_id}: falta un recorrido práctico observable")
+    if not any(heading in content for heading in ("## Bibliografía y fundamento académico", "## Fuentes para continuar")):
+        errors.append(f"módulo {module_id}: faltan fuentes académicas u oficiales")
 
 if len(covered_cs) < 14:
     errors.append(f"cobertura CS2023 insuficiente: {len(covered_cs)} áreas")

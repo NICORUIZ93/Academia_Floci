@@ -63,7 +63,7 @@ export class LessonViewerComponent implements OnDestroy {
     this.route.parent!.paramMap.pipe(map(params => params.get('trackId') ?? '')),
     { initialValue: this.route.parent?.snapshot.paramMap.get('trackId') ?? '' },
   );
-  private readonly moduleId = toSignal(
+  readonly moduleId = toSignal(
     this.route.paramMap.pipe(map(params => Number(params.get('moduleId') ?? 0))),
     { initialValue: Number(this.route.snapshot.paramMap.get('moduleId') ?? 0) },
   );
@@ -74,7 +74,7 @@ export class LessonViewerComponent implements OnDestroy {
   readonly track = computed(() => findTrack(this.trackId()));
   readonly module = computed(() => this.track()?.modules.find(m => m.id === this.moduleId()));
   readonly projectBootstrap = computed(() => findProjectBootstrap(this.trackId()));
-  readonly showProjectBootstrap = computed(() => this.moduleId() === 0);
+  readonly showProjectBootstrap = computed(() => Boolean(this.projectBootstrap()));
   readonly moduleIndex = computed(() => this.track()?.modules.findIndex(m => m.id === this.moduleId()) ?? -1);
   readonly isCloudIntroduction = computed(() => this.trackId() === 'cloud' && this.moduleId() === 0);
   readonly flociMetrics = [
@@ -108,6 +108,7 @@ export class LessonViewerComponent implements OnDestroy {
 
   readonly lessonHtml = signal<string | null>(null);
   readonly lessonLoading = signal(true);
+  readonly lessonError = signal<string | null>(null);
   private readonly lessonContent = viewChild<ElementRef<HTMLElement>>('lessonContent');
   private readonly injector = inject(Injector);
   private readonly themeService = inject(ThemeService);
@@ -133,8 +134,13 @@ export class LessonViewerComponent implements OnDestroy {
       const module = this.module();
       if (!module) return;
       this.lessonLoading.set(true);
+      this.lessonError.set(null);
+      this.lessonHtml.set(null);
       this.contentService.loadLessonHtml(trackId, module.id).then(html => {
         this.lessonHtml.set(html);
+        this.lessonLoading.set(false);
+      }).catch(error => {
+        this.lessonError.set(error instanceof Error ? error.message : 'No pudimos cargar la lección.');
         this.lessonLoading.set(false);
       });
     });
@@ -155,6 +161,18 @@ export class LessonViewerComponent implements OnDestroy {
         if (container) this.scrollToRequestedFragment(container, fragment);
       }, { injector: this.injector });
     });
+  }
+
+  retryLesson(): void {
+    const trackId = this.trackId();
+    const module = this.module();
+    if (!module) return;
+    this.lessonLoading.set(true);
+    this.lessonError.set(null);
+    this.contentService.loadLessonHtml(trackId, module.id)
+      .then(html => this.lessonHtml.set(html))
+      .catch(error => this.lessonError.set(error instanceof Error ? error.message : 'No pudimos cargar la lección.'))
+      .finally(() => this.lessonLoading.set(false));
   }
 
   private enhanceRenderedLesson(): void {

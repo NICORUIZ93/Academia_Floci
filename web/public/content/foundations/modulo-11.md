@@ -1,54 +1,174 @@
 # Módulo 11: Ciencias de la Computación: mapa de especializaciones
 
-## Sílabo
+## Antes de comenzar: entorno de experimentos
 
-**Objetivo general:** comprender el mapa de Ciencias de la Computación, sus relaciones y prerrequisitos mediante experimentos reproducibles antes de elegir una especialización.
+Necesitas Python 3 y una terminal. Crea `academia-labs/foundations/specializations/{src,evidence}`; en Windows PowerShell crea las dos carpetas por separado si tu terminal no expande llaves. Comprueba `python3 --version` o `py --version`. No instales dependencias: todos los ejemplos usan la biblioteca estándar.
 
 ## Aprende construyendo
 
+Este capítulo no intenta resumir toda la disciplina. Construirás seis experimentos pequeños para distinguir sus áreas, reconocer los fundamentos que comparten y elegir qué estudiar después con evidencia. Trabaja dentro de `academia-labs/foundations/specializations/` y guarda cada resultado en `evidence/`.
+
 ## Criterio transversal de calidad del código
 
-Usa nombres claros, errores explícitos y pruebas reproducibles. Aplica SOLID solo cuando reduzca el coste de cambiar; no abstraer sin presión real. Distingue evidencia, inferencia y opinión.
+Usa nombres que expresen intención, conserva errores con contexto y prueba tanto éxito como fallo. Aplica SOLID cuando separes una responsabilidad o una dependencia que realmente cambia; decide no abstraer cuando una función directa siga siendo más clara y verificable.
 
-## Laboratorio práctico
-
-Crea un portafolio con un experimento de sistemas, teoría, datos, inteligencia artificial, cómputo visual y práctica profesional. Registra hipótesis, implementación, medición, límites y siguiente prerrequisito.
-
-**Verificación:** cada uno de los seis experimentos declara una pregunta distinta, incluye un artefacto reproducible, registra al menos una medición y explica una limitación sin exagerar conclusiones. Otra persona puede ejecutar uno de ellos usando exclusivamente su README. La comparación final debe justificar qué especialización continuarías, qué prerrequisito te falta y qué evidencia cambiaría tu decisión.
-
-
-## Rúbrica del proyecto
-
-| Criterio | Inicial | Competente | Experto |
-|---|---|---|---|
-| Fundamento | Enumera áreas | Explica relaciones | Justifica prerrequisitos y límites |
-| Evidencia | Captura | Experimento | Reproducción, medición y crítica |
-| Práctica | Código aislado | Dos áreas | Portafolio interdisciplinario |
-
-## Bibliografía y fundamento académico
-
-- ACM/IEEE-CS/AAAI CS2023 y SWEBOK V4.
-- Planes académicos citados en la lista suplementaria.
-- NIST SSDF, OWASP y W3C cuando corresponda.
-
-
-## Resumen del módulo
-
-### Ejemplo reproducible: comparar dos estrategias
-
-```python
-from time import perf_counter
-
-def measure(label, operation):
-    started = perf_counter()
-    result = operation()
-    return {"strategy": label, "result": result, "seconds": perf_counter() - started}
-
-data = list(range(10_000))
-print(measure("linear-search", lambda: 9_999 in data))
-print(measure("set-lookup", lambda: 9_999 in set(data)))
+```mermaid
+flowchart LR
+  A["Problema"] --> B["Modelo"]
+  B --> C["Programa"]
+  C --> D["Medición"]
+  D --> E["Conclusión con límites"]
+  E --> F["Siguiente prerrequisito"]
 ```
 
-El experimento no demuestra que una estructura sea siempre mejor: registra tamaño de entrada, coste de construcción y número de consultas antes de concluir.
+### Tema 1: Sistemas, arquitectura y sistemas operativos
 
-El mapa evita confundir una ruta de herramientas con toda la disciplina y permite elegir una especialización con fundamento.
+**Qué construirás:** un simulador mínimo de planificación de procesos. Un sistema operativo decide qué trabajo usa el procesador; la cola no es la CPU, sino el modelo que permite decidir el siguiente turno. Esto importa en servidores, móviles y sistemas de entregas porque una mala política aumenta latencia o deja tareas sin atender.
+
+**Conceptos clave:** un *proceso* es un programa en ejecución; una *ráfaga* es el tiempo de CPU que necesita; *Round Robin* asigna turnos de duración fija. No concluyas que una política es universalmente mejor: el resultado depende de carga, prioridad y coste del cambio de contexto.
+
+Crea `src/round_robin.py`:
+
+```python
+from collections import deque
+
+processes = deque([{"id": "gps", "remaining": 5}, {"id": "sync", "remaining": 3}])
+quantum = 2
+
+while processes:
+    process = processes.popleft()
+    consumed = min(quantum, process["remaining"])
+    process["remaining"] -= consumed
+    print(f"{process['id']}: usa {consumed}, resta {process['remaining']}")
+    if process["remaining"] > 0:  # Solo vuelve a la cola si falta trabajo.
+        processes.append(process)
+```
+
+Ejecuta `python3 src/round_robin.py`. Debes observar turnos alternados hasta que ambos procesos lleguen a cero. Provoca `quantum = 0`: el programa no avanza porque ningún proceso consume CPU. Valida `quantum > 0` y explica el error en `evidence/systems.md`.
+
+**Modifica y comprueba:** añade un proceso `photo` con ráfaga 7 y registra cuántos turnos necesita. En RutaFlow, relaciona cada proceso con GPS, sincronización y procesamiento de evidencia fotográfica.
+
+### Tema 2: Algoritmos, autómatas, lenguajes y compiladores
+
+**Qué construirás:** un analizador de códigos de seguimiento. Un autómata conserva un estado pequeño mientras lee símbolos; un parser decide si una secuencia pertenece a un lenguaje. Esta idea sostiene validadores, protocolos, compiladores y formularios.
+
+El código válido tendrá `RF-` seguido de cuatro dígitos. Esta gramática es deliberadamente limitada: reconocer una forma no verifica que el envío exista ni que el usuario tenga autorización.
+
+Crea `src/tracking_parser.py`:
+
+```python
+def is_tracking_code(text: str) -> bool:
+    state = "R"
+    digits = 0
+    for char in text:
+        if state == "R" and char == "R": state = "F"
+        elif state == "F" and char == "F": state = "DASH"
+        elif state == "DASH" and char == "-": state = "DIGITS"
+        elif state == "DIGITS" and char.isdigit(): digits += 1
+        else: return False  # Símbolo inválido para el estado actual.
+    return state == "DIGITS" and digits == 4
+
+for value in ["RF-2048", "RF-20A8", "RF-12345"]:
+    print(value, is_tracking_code(value))
+```
+
+Ejecuta `python3 src/tracking_parser.py`. La salida esperada es `True`, `False`, `False`. El fallo más común es aceptar cualquier cantidad de dígitos; prueba límites antes de conectar el parser con datos reales.
+
+**Modifica y comprueba:** permite un prefijo de país `CO-RF-2048` sin usar expresiones regulares. Dibuja los nuevos estados y guarda tres casos en `evidence/languages.md`.
+
+### Tema 3: Bases de datos, almacenes analíticos y minería de datos
+
+**Qué construirás:** una consulta transaccional y una agregación analítica sobre entregas. Una base operacional optimiza escrituras y consultas concretas; un almacén analítico organiza historia para comparar periodos. Minería de datos busca patrones, pero una correlación no demuestra una causa.
+
+Crea `src/delivery_data.py`:
+
+```python
+import sqlite3
+
+db = sqlite3.connect(":memory:")
+db.execute("CREATE TABLE delivery (zone TEXT NOT NULL, minutes INTEGER NOT NULL CHECK(minutes > 0))")
+db.executemany("INSERT INTO delivery VALUES (?, ?)", [("norte", 31), ("norte", 25), ("sur", 48)])
+
+query = "SELECT zone, COUNT(*), ROUND(AVG(minutes), 1) FROM delivery GROUP BY zone"
+for zone, total, average in db.execute(query):
+    print(zone, total, average)
+```
+
+Ejecuta `python3 src/delivery_data.py`. Debes obtener `norte 2 28.0` y `sur 1 48.0`. Intenta insertar cero minutos: la restricción `CHECK` debe rechazar el dato. Si eliminas esa restricción, el promedio seguirá ejecutándose, pero representará información inválida.
+
+**Modifica y comprueba:** añade fecha y estado, calcula entregas completadas por día y explica qué índice usarías. Este experimento alimenta el tablero operativo de RutaFlow, no un modelo predictivo todavía.
+
+### Tema 4: Inteligencia artificial, aprendizaje automático y visión
+
+**Qué construirás:** una línea base que estima retraso usando el promedio histórico. Una *característica* es una entrada medible; una *etiqueta* es el resultado que se quiere predecir; una línea base sencilla permite demostrar si un modelo complejo realmente mejora.
+
+Crea `src/delay_baseline.py`:
+
+```python
+training_minutes = [22, 24, 27, 31, 36]
+test_minutes = [25, 33]
+prediction = sum(training_minutes) / len(training_minutes)
+
+errors = [abs(real - prediction) for real in test_minutes]
+mae = sum(errors) / len(errors)  # Error absoluto medio: menor es mejor.
+print(f"predicción={prediction:.1f}, mae={mae:.1f}")
+```
+
+Ejecuta `python3 src/delay_baseline.py`; debes ver `predicción=28.0, mae=4.0`. Deja `training_minutes` vacío para provocar una división por cero. La corrección profesional no es inventar un valor: valida datos, registra el incidente y evita publicar una predicción.
+
+**Modifica y comprueba:** compara la media con la mediana y justifica cuál resiste mejor un valor extremo de 300 minutos. En RutaFlow, nunca uses ubicación, imagen o comportamiento personal sin propósito, consentimiento, retención definida y análisis de sesgo.
+
+### Tema 5: Gráficos y cómputo científico
+
+**Qué construirás:** una transformación de coordenadas 2D. Los gráficos representan puntos mediante vectores y los transforman con matrices; el cómputo científico exige además medir error numérico y documentar unidades.
+
+Crea `src/transform.py`:
+
+```python
+from math import cos, sin, pi
+
+def rotate(point: tuple[float, float], degrees: float) -> tuple[float, float]:
+    radians = degrees * pi / 180
+    x, y = point
+    return (x * cos(radians) - y * sin(radians), x * sin(radians) + y * cos(radians))
+
+x, y = rotate((1.0, 0.0), 90)
+print(round(x, 6), round(y, 6))
+```
+
+Ejecuta `python3 src/transform.py`. El resultado esperado es `0.0 1.0`. Sin `round` probablemente verás un número diminuto distinto de cero: no es necesariamente un error lógico, sino precisión finita de punto flotante.
+
+**Modifica y comprueba:** rota tres puntos que formen una ruta y verifica que la distancia entre ellos se conserve. En RutaFlow esta base ayuda a entender mapas y animación, pero latitud y longitud reales requieren una proyección geográfica apropiada.
+
+### Tema 6: Redes, seguridad, web e ingeniería profesional
+
+**Qué construirás:** un informe reproducible que separa evidencia, inferencia y decisión. La ingeniería profesional no termina al producir código: declara amenazas, privacidad, accesibilidad, operación y límites éticos.
+
+Crea `src/evidence.py`:
+
+```python
+from dataclasses import dataclass
+
+@dataclass(frozen=True)
+class Finding:
+    evidence: str
+    inference: str
+    decision: str
+
+finding = Finding(
+    evidence="2 de 20 solicitudes superaron 500 ms",
+    inference="la latencia podría concentrarse en una dependencia",
+    decision="añadir trazas antes de escalar infraestructura",
+)
+print(finding)
+```
+
+Ejecuta `python3 src/evidence.py` y guarda la salida en `evidence/professional-practice.txt`. Cambia `frozen=True` por `False` y modifica la evidencia después de decidir: técnicamente funciona, pero destruye la trazabilidad. La inmutabilidad no garantiza verdad; evita que el registro cambie accidentalmente.
+
+**Modifica y comprueba:** añade `risk` y `owner`, después redacta un README para que otra persona reproduzca uno de los seis experimentos. El entregable de RutaFlow es una decisión de especialización respaldada por resultados, límites y el prerrequisito que estudiarás después.
+
+## Fuentes para continuar
+
+- ACM/IEEE-CS/AAAI, *Computer Science Curricula 2023*.
+- Python, SQLite y documentación de cada biblioteca estándar utilizada.
+- NIST Secure Software Development Framework y W3C Web Accessibility Initiative para práctica profesional.
