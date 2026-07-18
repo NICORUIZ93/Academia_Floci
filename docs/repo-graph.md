@@ -1,9 +1,9 @@
 # Academia Floci Repo Graph
 
-Generated: 2026-07-18 05:20 UTC
+Generated: 2026-07-18 05:24 UTC
 Root: `Academia_Floci`
 Indexed files: 787
-Import edges: 33
+Import edges: 34
 
 Use this file as the first, compact context for AI assistants. Refresh it with:
 
@@ -82,6 +82,7 @@ For automated lookups, use `docs/repo-graph.json`.
 - `web/src/app/app.spec.ts` -> `web/src/app/app.routes.ts`
 - `web/src/app/app.spec.ts` -> `web/src/app/app.ts`
 - `web/src/app/app.spec.ts` -> `web/src/app/catalog/course-catalog.ts`
+- `web/src/app/app.spec.ts` -> `web/src/app/content.service.ts`
 - `web/src/app/app.spec.ts` -> `web/src/app/course-data.ts`
 - `web/src/app/app.ts` -> `web/src/app/command-palette.ts`
 - `web/src/app/command-palette.ts` -> `web/src/app/command-palette.service.ts`
@@ -113,7 +114,7 @@ For automated lookups, use `docs/repo-graph.json`.
 
 - `web/src/app/course-data.ts`: in=3, out=14
 - `web/src/app/app.routes.ts`: in=2, out=3
-- `web/src/app/app.spec.ts`: in=0, out=4
+- `web/src/app/app.spec.ts`: in=0, out=5
 - `web/src/app/app.ts`: in=2, out=1
 - `web/src/app/command-palette.ts`: in=1, out=2
 - `web/src/app/course/lab-verification.ts`: in=2, out=0
@@ -140,7 +141,7 @@ For automated lookups, use `docs/repo-graph.json`.
 - `web/src/app/app.config.ts` (12 lines) - imports: @angular/core, @angular/router, ./app.routes
 - `web/src/app/app.html` (3 lines)
 - `web/src/app/app.routes.ts` (27 lines) - imports: @angular/router, ./catalog/course-catalog, ./course/course-shell, ./course/lesson-viewer
-- `web/src/app/app.spec.ts` (163 lines) - imports: @angular/core/testing, @angular/router, @angular/router/testing, ./app, ./app.routes, ./catalog/course-catalog, ./course-data
+- `web/src/app/app.spec.ts` (173 lines) - imports: @angular/core/testing, @angular/router, @angular/router/testing, ./app, ./app.routes, ./catalog/course-catalog, ./course-data, ./content.service
 - `web/src/app/app.ts` (11 lines) - symbols: App; imports: @angular/core, @angular/router, ./command-palette
 - `web/src/app/catalog/course-catalog.html` (92 lines) - symbols: catalog-title, tracks-title, official-title
 - `web/src/app/catalog/course-catalog.scss` (198 lines)
@@ -149,7 +150,7 @@ For automated lookups, use `docs/repo-graph.json`.
 - `web/src/app/command-palette.scss` (30 lines)
 - `web/src/app/command-palette.service.ts` (11 lines) - symbols: CommandPaletteService, isOpen; imports: @angular/core
 - `web/src/app/command-palette.ts` (78 lines) - symbols: CommandPaletteComponent, query, results; imports: @angular/common, @angular/core, @angular/forms, @angular/router, lucide-angular, ./course-data, ./command-palette.service
-- `web/src/app/content.service.ts` (27 lines) - symbols: ContentService; imports: @angular/core, marked
+- `web/src/app/content.service.ts` (46 lines) - symbols: ContentService, stripEditorialScaffolds; imports: @angular/core, marked
 - `web/src/app/course-data.ts` (883 lines) - symbols: ServiceGroup, CloudComparison, AltCloudGroup; imports: ./course-module.model, ./tracks/devops.track, ./tracks/javascript.track, ./tracks/node.track, ./tracks/angular.track, ./tracks/react.track, ./tracks/java.track, ./tracks/spring-boot.track
 - `web/src/app/course-module.model.ts` (34 lines) - symbols: CourseModule, Track
 - `web/src/app/course/course-shell.html` (62 lines) - symbols: official-path-title
@@ -159,9 +160,9 @@ For automated lookups, use `docs/repo-graph.json`.
 
 ### automation-script
 
-- `scripts/audit_code_visual_quality.py` (105 lines) - symbols: blocks, evaluate, build, render, main; imports: __future__, argparse, json, re, collections, pathlib
+- `scripts/audit_code_visual_quality.py` (117 lines) - symbols: student_visible_content, blocks, evaluate, build, render, main; imports: __future__, argparse, json, re, collections, pathlib
 - `scripts/audit_student_journey.py` (146 lines) - symbols: topic_blocks, has, build_report, render, main; imports: __future__, json, re, collections, pathlib
-- `scripts/audit_topic_learning_quality.py` (123 lines) - symbols: topic_blocks, evaluate, classify, build, render_markdown, main; imports: __future__, argparse, json, re, collections, pathlib
+- `scripts/audit_topic_learning_quality.py` (135 lines) - symbols: student_visible_content, topic_blocks, evaluate, classify, build, render_markdown, main; imports: __future__, argparse, json, re, collections, pathlib
 - `scripts/build_curriculum.py` (273 lines) - symbols: source_text, normalize_ascii, clean_module_name, parse_curriculum, js_string, render_app_data, main; imports: __future__, json, re, pathlib
 - `scripts/build_definitive_topic_registry.py` (95 lines) - symbols: clean, fold, module_number; imports: pathlib, argparse, json, re, unicodedata
 - `scripts/build_repo_graph.py` (446 lines) - symbols: FileNode, repo_files, read_text, classify, parse_ts_symbols, parse_ts_imports, parse_python_symbols, parse_python_imports; imports: __future__, argparse, ast, json, re, collections, dataclasses, datetime
@@ -255,7 +256,7 @@ For automated lookups, use `docs/repo-graph.json`.
 - `.env.example` (8 lines)
 - `.github/workflows/ci.yml` (47 lines)
 - `.gitignore` (24 lines)
-- `docs/code-visual-quality.json` (7812 lines)
+- `docs/code-visual-quality.json` (5432 lines)
 - `docs/curriculum-matrix.json` (155 lines)
 - `docs/definitive-track-topics.json` (3168 lines)
 - `docs/floci-official-curriculum.json` (14 lines)
@@ -267,6 +268,6 @@ For automated lookups, use `docs/repo-graph.json`.
 - `docs/specialization-outcomes.json` (116 lines)
 - `docs/student-journey-audit.json` (4390 lines)
 - `docs/supplemental-track-topics.json` (2127 lines)
-- `docs/topic-learning-quality.json` (24597 lines)
+- `docs/topic-learning-quality.json` (17797 lines)
 - `install.sh` (99 lines)
 - ... 20 more files

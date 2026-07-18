@@ -148,7 +148,7 @@
     },
     {
       "path": "docs/code-visual-quality.json",
-      "lines": 7812,
+      "lines": 5432,
       "kind": "project-file",
       "symbols": [],
       "imports": [],
@@ -276,7 +276,7 @@
     },
     {
       "path": "docs/topic-learning-quality.json",
-      "lines": 24597,
+      "lines": 17797,
       "kind": "project-file",
       "symbols": [],
       "imports": [],
@@ -2276,9 +2276,10 @@
     },
     {
       "path": "scripts/audit_code_visual_quality.py",
-      "lines": 105,
+      "lines": 117,
       "kind": "automation-script",
       "symbols": [
+        "student_visible_content",
         "blocks",
         "evaluate",
         "build",
@@ -2317,9 +2318,10 @@
     },
     {
       "path": "scripts/audit_topic_learning_quality.py",
-      "lines": 123,
+      "lines": 135,
       "kind": "automation-script",
       "symbols": [
+        "student_visible_content",
         "topic_blocks",
         "evaluate",
         "classify",
@@ -11688,7 +11690,7 @@
     },
     {
       "path": "web/src/app/app.spec.ts",
-      "lines": 163,
+      "lines": 173,
       "kind": "angular-app",
       "symbols": [],
       "imports": [
@@ -11698,7 +11700,8 @@
         "./app",
         "./app.routes",
         "./catalog/course-catalog",
-        "./course-data"
+        "./course-data",
+        "./content.service"
       ],
       "headings": []
     },
@@ -11812,10 +11815,11 @@
     },
     {
       "path": "web/src/app/content.service.ts",
-      "lines": 27,
+      "lines": 46,
       "kind": "angular-app",
       "symbols": [
-        "ContentService"
+        "ContentService",
+        "stripEditorialScaffolds"
       ],
       "imports": [
         "@angular/core",
@@ -12365,6 +12369,10 @@
     {
       "source": "web/src/app/app.spec.ts",
       "target": "web/src/app/course-data.ts"
+    },
+    {
+      "source": "web/src/app/app.spec.ts",
+      "target": "web/src/app/content.service.ts"
     },
     {
       "source": "web/src/app/app.ts",

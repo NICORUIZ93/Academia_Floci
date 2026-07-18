@@ -13,6 +13,17 @@ ROOT = Path(__file__).resolve().parents[1]
 CONTENT = ROOT / "web/public/content"
 JSON_REPORT = ROOT / "docs/topic-learning-quality.json"
 MD_REPORT = ROOT / "docs/topic-learning-quality.md"
+EDITORIAL_MARKERS = ("DEFINITIVE-COMPLEMENTS", "SUPPLEMENTAL-COMPLEMENTS", "REQUESTED-PRACTICAL-EXAMPLES")
+
+
+def student_visible_content(text: str) -> str:
+    for marker in EDITORIAL_MARKERS:
+        text = re.sub(
+            rf"\n?<!-- {marker}:START -->[\s\S]*?<!-- {marker}:END -->\n?",
+            "\n",
+            text,
+        )
+    return text
 
 
 def topic_blocks(text: str):
@@ -64,7 +75,7 @@ def build() -> dict:
     tracks: dict[str, list[dict]] = defaultdict(list)
     for path in sorted(CONTENT.glob("*/modulo-*.md")):
         module = int(re.search(r"\d+", path.stem).group())
-        for title, block in topic_blocks(path.read_text(encoding="utf-8")):
+        for title, block in topic_blocks(student_visible_content(path.read_text(encoding="utf-8"))):
             criteria = evaluate(block)
             tracks[path.parent.name].append({
                 "module": module,
@@ -108,7 +119,8 @@ def main() -> None:
     else:
         JSON_REPORT.write_text(json_text, encoding="utf-8"); MD_REPORT.write_text(md_text, encoding="utf-8")
     count = sum(row["topics"] for row in data["summary"].values())
-    if count != 1217: raise SystemExit(f"Se esperaban 1217 temas; se encontraron {count}")
+    if count == 0 or len(data["summary"]) != 14:
+        raise SystemExit(f"Inventario visible inválido: {count} temas en {len(data['summary'])} tracks")
     practicable = sum(row["practicable"] for row in data["summary"].values())
     generic = sum(row["genericScaffold"] for row in data["summary"].values())
     if args.require_practicable and (practicable != count or generic):

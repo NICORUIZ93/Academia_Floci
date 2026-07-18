@@ -17,6 +17,17 @@ TRACKS = (
     "foundations", "cloud", "devops", "javascript", "node", "angular", "react",
     "java", "spring-boot", "kotlin-multiplatform", "android", "ios", "flutter", "rutaflow",
 )
+EDITORIAL_MARKERS = ("DEFINITIVE-COMPLEMENTS", "SUPPLEMENTAL-COMPLEMENTS", "REQUESTED-PRACTICAL-EXAMPLES")
+
+
+def student_visible_content(text: str) -> str:
+    for marker in EDITORIAL_MARKERS:
+        text = re.sub(
+            rf"\n?<!-- {marker}:START -->[\s\S]*?<!-- {marker}:END -->\n?",
+            "\n",
+            text,
+        )
+    return text
 
 
 def blocks(text: str):
@@ -55,7 +66,7 @@ def build() -> dict:
         total = 0
         for path in sorted((CONTENT / track).glob("modulo-*.md")):
             module = int(re.search(r"\d+", path.stem).group())
-            for title, block in blocks(path.read_text(encoding="utf-8")):
+            for title, block in blocks(student_visible_content(path.read_text(encoding="utf-8"))):
                 total += 1
                 checks = evaluate(block)
                 counts.update(name for name, value in checks.items() if value)
@@ -97,7 +108,8 @@ def main() -> None:
     else:
         JSON_REPORT.write_text(json_text, encoding="utf-8")
         MD_REPORT.write_text(md_text, encoding="utf-8")
-    print("Auditoría de código y visuales OK: 1.217 temas medidos sin contar guías generadas")
+    count = sum(row["topics"] for row in data["tracks"].values())
+    print(f"Auditoría de código y visuales OK: {count} temas editoriales visibles; inventarios generados excluidos")
 
 
 if __name__ == "__main__":

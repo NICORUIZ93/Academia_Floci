@@ -5,8 +5,18 @@ import { App } from './app';
 import { routes } from './app.routes';
 import { CourseCatalogComponent } from './catalog/course-catalog';
 import { TRACKS } from './course-data';
+import { stripEditorialScaffolds } from './content.service';
 
 describe('App', () => {
+  it('keeps generated editorial inventories out of the student lesson', () => {
+    const markdown = `# Lección\n\nContenido revisado.\n\n<!-- SUPPLEMENTAL-COMPLEMENTS:START -->\n### Tema suplementario: plantilla\nEvidence(true)\n<!-- SUPPLEMENTAL-COMPLEMENTS:END -->\n\n## Laboratorio\nCódigo real.`;
+    const result = stripEditorialScaffolds(markdown);
+    expect(result).toContain('Contenido revisado');
+    expect(result).toContain('## Laboratorio');
+    expect(result).not.toContain('Tema suplementario');
+    expect(result).not.toContain('Evidence(true)');
+  });
+
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [App],
