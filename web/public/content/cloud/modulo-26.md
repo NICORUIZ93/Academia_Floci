@@ -190,4 +190,14 @@ Estas fuentes sustentan los conceptos y deben consultarse para verificar detalle
 
 ## Resumen del módulo
 
+```json
+{
+  "source": "rutaflow.tracking",
+  "detail-type": "LocationUpdated",
+  "detail": {"deliveryId": "pkg-42", "lat": 4.711, "lng": -74.0721}
+}
+```
+
+Usa este evento para probar filtrado, reintentos e idempotencia antes de conectar Firehose o EventBridge Pipes.
+
 En este módulo completaste el panorama de mensajería y streaming del curso con dos servicios de integración de bajo código: Amazon Data Firehose, que entrega streams de datos automáticamente a S3 sin que operes un consumidor propio, y EventBridge Pipes, que conecta un origen y un destino directamente sin código de pegamento intermedio. Más allá de los comandos específicos, el valor de este módulo es afinar tu criterio de diseño: reconocer cuándo un problema de integración es lo suficientemente simple para resolverse declarativamente con Firehose o Pipes, y cuándo realmente necesitas el poder de Kinesis Data Streams, una regla EventBridge con enrutamiento por patrones, o una Step Function con orquestación de estado.

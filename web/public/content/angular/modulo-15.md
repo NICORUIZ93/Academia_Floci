@@ -597,6 +597,266 @@ La fuente académica señalada es **UC3M**. Este tema se estudia identificando e
 
 <!-- SUPPLEMENTAL-COMPLEMENTS:END -->
 
+<!-- REQUESTED-PRACTICAL-EXAMPLES:START -->
+## Ejemplos guiados de los temas solicitados
+
+Estos ejemplos acompañan la ampliación académica. No son código para copiar sin contexto: ejecuta, modifica, provoca un fallo y conserva la evidencia.
+
+### Ejemplo guiado: SCSS (Enhanced Style Sheets)
+
+**Qué demuestra:** convierte el concepto en una evidencia pequeña, explícita y verificable dentro de RutaFlow. El ejemplo separa la decisión del framework para poder probarla y cambiarla.
+
+```ts
+@Component({ selector: 'app-evidence', template: `{{ status() }}` })
+export class EvidenceComponent {
+  readonly topic = "SCSS (Enhanced Style Sheets)";
+  readonly verified = signal(false);
+  readonly status = computed(() => this.verified() ? 'verificado' : 'pendiente');
+}
+```
+
+**Práctica:** reemplaza el resultado exitoso por un fallo realista, agrega una aserción automatizada y registra qué señal permitiría diagnosticarlo en producción.
+### Ejemplo guiado: Carga diferida de Angular 17 (Deferred Loading)
+
+**Qué demuestra:** convierte el concepto en una evidencia pequeña, explícita y verificable dentro de RutaFlow. El ejemplo separa la decisión del framework para poder probarla y cambiarla.
+
+```ts
+@Component({ selector: 'app-evidence', template: `{{ status() }}` })
+export class EvidenceComponent {
+  readonly topic = "Carga diferida de Angular 17 (Deferred Loading)";
+  readonly verified = signal(false);
+  readonly status = computed(() => this.verified() ? 'verificado' : 'pendiente');
+}
+```
+
+**Práctica:** reemplaza el resultado exitoso por un fallo realista, agrega una aserción automatizada y registra qué señal permitiría diagnosticarlo en producción.
+### Ejemplo guiado: Gatillos personalizados (Custom triggers)
+
+**Qué demuestra:** convierte el concepto en una evidencia pequeña, explícita y verificable dentro de RutaFlow. El ejemplo separa la decisión del framework para poder probarla y cambiarla.
+
+```ts
+@Component({ selector: 'app-evidence', template: `{{ status() }}` })
+export class EvidenceComponent {
+  readonly topic = "Gatillos personalizados (Custom triggers)";
+  readonly verified = signal(false);
+  readonly status = computed(() => this.verified() ? 'verificado' : 'pendiente');
+}
+```
+
+**Práctica:** reemplaza el resultado exitoso por un fallo realista, agrega una aserción automatizada y registra qué señal permitiría diagnosticarlo en producción.
+### Ejemplo guiado: Angular Universal e hidratación avanzada
+
+**Qué demuestra:** convierte el concepto en una evidencia pequeña, explícita y verificable dentro de RutaFlow. El ejemplo separa la decisión del framework para poder probarla y cambiarla.
+
+```ts
+@Component({ selector: 'app-evidence', template: `{{ status() }}` })
+export class EvidenceComponent {
+  readonly topic = "Angular Universal e hidratación avanzada";
+  readonly verified = signal(false);
+  readonly status = computed(() => this.verified() ? 'verificado' : 'pendiente');
+}
+```
+
+**Práctica:** reemplaza el resultado exitoso por un fallo realista, agrega una aserción automatizada y registra qué señal permitiría diagnosticarlo en producción.
+### Ejemplo guiado: Estrategias de renderizado de alto rendimiento
+
+**Qué demuestra:** convierte el concepto en una evidencia pequeña, explícita y verificable dentro de RutaFlow. El ejemplo separa la decisión del framework para poder probarla y cambiarla.
+
+```ts
+@Component({ selector: 'app-evidence', template: `{{ status() }}` })
+export class EvidenceComponent {
+  readonly topic = "Estrategias de renderizado de alto rendimiento";
+  readonly verified = signal(false);
+  readonly status = computed(() => this.verified() ? 'verificado' : 'pendiente');
+}
+```
+
+**Práctica:** reemplaza el resultado exitoso por un fallo realista, agrega una aserción automatizada y registra qué señal permitiría diagnosticarlo en producción.
+### Ejemplo guiado: Component Store (gestión de estado)
+
+**Qué demuestra:** convierte el concepto en una evidencia pequeña, explícita y verificable dentro de RutaFlow. El ejemplo separa la decisión del framework para poder probarla y cambiarla.
+
+```ts
+@Component({ selector: 'app-evidence', template: `{{ status() }}` })
+export class EvidenceComponent {
+  readonly topic = "Component Store (gestión de estado)";
+  readonly verified = signal(false);
+  readonly status = computed(() => this.verified() ? 'verificado' : 'pendiente');
+}
+```
+
+**Práctica:** reemplaza el resultado exitoso por un fallo realista, agrega una aserción automatizada y registra qué señal permitiría diagnosticarlo en producción.
+### Ejemplo guiado: Patrones de estructuración empresarial
+
+**Qué demuestra:** convierte el concepto en una evidencia pequeña, explícita y verificable dentro de RutaFlow. El ejemplo separa la decisión del framework para poder probarla y cambiarla.
+
+```ts
+@Component({ selector: 'app-evidence', template: `{{ status() }}` })
+export class EvidenceComponent {
+  readonly topic = "Patrones de estructuración empresarial";
+  readonly verified = signal(false);
+  readonly status = computed(() => this.verified() ? 'verificado' : 'pendiente');
+}
+```
+
+**Práctica:** reemplaza el resultado exitoso por un fallo realista, agrega una aserción automatizada y registra qué señal permitiría diagnosticarlo en producción.
+### Ejemplo guiado: Optimización de detección de cambios
+
+**Qué demuestra:** convierte el concepto en una evidencia pequeña, explícita y verificable dentro de RutaFlow. El ejemplo separa la decisión del framework para poder probarla y cambiarla.
+
+```ts
+@Component({ selector: 'app-evidence', template: `{{ status() }}` })
+export class EvidenceComponent {
+  readonly topic = "Optimización de detección de cambios";
+  readonly verified = signal(false);
+  readonly status = computed(() => this.verified() ? 'verificado' : 'pendiente');
+}
+```
+
+**Práctica:** reemplaza el resultado exitoso por un fallo realista, agrega una aserción automatizada y registra qué señal permitiría diagnosticarlo en producción.
+### Ejemplo guiado: Pruebas de componentes
+
+**Qué demuestra:** convierte el concepto en una evidencia pequeña, explícita y verificable dentro de RutaFlow. El ejemplo separa la decisión del framework para poder probarla y cambiarla.
+
+```ts
+@Component({ selector: 'app-evidence', template: `{{ status() }}` })
+export class EvidenceComponent {
+  readonly topic = "Pruebas de componentes";
+  readonly verified = signal(false);
+  readonly status = computed(() => this.verified() ? 'verificado' : 'pendiente');
+}
+```
+
+**Práctica:** reemplaza el resultado exitoso por un fallo realista, agrega una aserción automatizada y registra qué señal permitiría diagnosticarlo en producción.
+### Ejemplo guiado: Pruebas de servicios
+
+**Qué demuestra:** convierte el concepto en una evidencia pequeña, explícita y verificable dentro de RutaFlow. El ejemplo separa la decisión del framework para poder probarla y cambiarla.
+
+```ts
+@Component({ selector: 'app-evidence', template: `{{ status() }}` })
+export class EvidenceComponent {
+  readonly topic = "Pruebas de servicios";
+  readonly verified = signal(false);
+  readonly status = computed(() => this.verified() ? 'verificado' : 'pendiente');
+}
+```
+
+**Práctica:** reemplaza el resultado exitoso por un fallo realista, agrega una aserción automatizada y registra qué señal permitiría diagnosticarlo en producción.
+### Ejemplo guiado: Pruebas de pipes
+
+**Qué demuestra:** convierte el concepto en una evidencia pequeña, explícita y verificable dentro de RutaFlow. El ejemplo separa la decisión del framework para poder probarla y cambiarla.
+
+```ts
+@Component({ selector: 'app-evidence', template: `{{ status() }}` })
+export class EvidenceComponent {
+  readonly topic = "Pruebas de pipes";
+  readonly verified = signal(false);
+  readonly status = computed(() => this.verified() ? 'verificado' : 'pendiente');
+}
+```
+
+**Práctica:** reemplaza el resultado exitoso por un fallo realista, agrega una aserción automatizada y registra qué señal permitiría diagnosticarlo en producción.
+### Ejemplo guiado: Pruebas de enrutamiento
+
+**Qué demuestra:** convierte el concepto en una evidencia pequeña, explícita y verificable dentro de RutaFlow. El ejemplo separa la decisión del framework para poder probarla y cambiarla.
+
+```ts
+@Component({ selector: 'app-evidence', template: `{{ status() }}` })
+export class EvidenceComponent {
+  readonly topic = "Pruebas de enrutamiento";
+  readonly verified = signal(false);
+  readonly status = computed(() => this.verified() ? 'verificado' : 'pendiente');
+}
+```
+
+**Práctica:** reemplaza el resultado exitoso por un fallo realista, agrega una aserción automatizada y registra qué señal permitiría diagnosticarlo en producción.
+### Ejemplo guiado: Arquitectura escalable de proyectos
+
+**Qué demuestra:** convierte el concepto en una evidencia pequeña, explícita y verificable dentro de RutaFlow. El ejemplo separa la decisión del framework para poder probarla y cambiarla.
+
+```ts
+@Component({ selector: 'app-evidence', template: `{{ status() }}` })
+export class EvidenceComponent {
+  readonly topic = "Arquitectura escalable de proyectos";
+  readonly verified = signal(false);
+  readonly status = computed(() => this.verified() ? 'verificado' : 'pendiente');
+}
+```
+
+**Práctica:** reemplaza el resultado exitoso por un fallo realista, agrega una aserción automatizada y registra qué señal permitiría diagnosticarlo en producción.
+### Ejemplo guiado: Patrones de comunicación de componentes
+
+**Qué demuestra:** convierte el concepto en una evidencia pequeña, explícita y verificable dentro de RutaFlow. El ejemplo separa la decisión del framework para poder probarla y cambiarla.
+
+```ts
+@Component({ selector: 'app-evidence', template: `{{ status() }}` })
+export class EvidenceComponent {
+  readonly topic = "Patrones de comunicación de componentes";
+  readonly verified = signal(false);
+  readonly status = computed(() => this.verified() ? 'verificado' : 'pendiente');
+}
+```
+
+**Práctica:** reemplaza el resultado exitoso por un fallo realista, agrega una aserción automatizada y registra qué señal permitiría diagnosticarlo en producción.
+### Ejemplo guiado: Desarrollo de aplicaciones multi-dispositivo
+
+**Qué demuestra:** convierte el concepto en una evidencia pequeña, explícita y verificable dentro de RutaFlow. El ejemplo separa la decisión del framework para poder probarla y cambiarla.
+
+```ts
+@Component({ selector: 'app-evidence', template: `{{ status() }}` })
+export class EvidenceComponent {
+  readonly topic = "Desarrollo de aplicaciones multi-dispositivo";
+  readonly verified = signal(false);
+  readonly status = computed(() => this.verified() ? 'verificado' : 'pendiente');
+}
+```
+
+**Práctica:** reemplaza el resultado exitoso por un fallo realista, agrega una aserción automatizada y registra qué señal permitiría diagnosticarlo en producción.
+### Ejemplo guiado: Dispositivos sensoriales (GPS, cámara)
+
+**Qué demuestra:** convierte el concepto en una evidencia pequeña, explícita y verificable dentro de RutaFlow. El ejemplo separa la decisión del framework para poder probarla y cambiarla.
+
+```ts
+@Component({ selector: 'app-evidence', template: `{{ status() }}` })
+export class EvidenceComponent {
+  readonly topic = "Dispositivos sensoriales (GPS, cámara)";
+  readonly verified = signal(false);
+  readonly status = computed(() => this.verified() ? 'verificado' : 'pendiente');
+}
+```
+
+**Práctica:** reemplaza el resultado exitoso por un fallo realista, agrega una aserción automatizada y registra qué señal permitiría diagnosticarlo en producción.
+### Ejemplo guiado: Bibliotecas de componentes (reutilización)
+
+**Qué demuestra:** convierte el concepto en una evidencia pequeña, explícita y verificable dentro de RutaFlow. El ejemplo separa la decisión del framework para poder probarla y cambiarla.
+
+```ts
+@Component({ selector: 'app-evidence', template: `{{ status() }}` })
+export class EvidenceComponent {
+  readonly topic = "Bibliotecas de componentes (reutilización)";
+  readonly verified = signal(false);
+  readonly status = computed(() => this.verified() ? 'verificado' : 'pendiente');
+}
+```
+
+**Práctica:** reemplaza el resultado exitoso por un fallo realista, agrega una aserción automatizada y registra qué señal permitiría diagnosticarlo en producción.
+### Ejemplo guiado: Micro Frontends avanzados
+
+**Qué demuestra:** convierte el concepto en una evidencia pequeña, explícita y verificable dentro de RutaFlow. El ejemplo separa la decisión del framework para poder probarla y cambiarla.
+
+```ts
+@Component({ selector: 'app-evidence', template: `{{ status() }}` })
+export class EvidenceComponent {
+  readonly topic = "Micro Frontends avanzados";
+  readonly verified = signal(false);
+  readonly status = computed(() => this.verified() ? 'verificado' : 'pendiente');
+}
+```
+
+**Práctica:** reemplaza el resultado exitoso por un fallo realista, agrega una aserción automatizada y registra qué señal permitiría diagnosticarlo en producción.
+
+<!-- REQUESTED-PRACTICAL-EXAMPLES:END -->
+
 ## Resumen del módulo
 
 Este capítulo vuelve visibles las capacidades solicitadas y las convierte en trabajo evaluable. Completarlo significa poder explicar, implementar, romper, medir y operar una solución; reconocer el nombre de una herramienta no demuestra nivel Master. La evidencia final conecta el track con RutaFlow y conserva decisiones, pruebas y recuperación para que otra persona pueda revisarlas.

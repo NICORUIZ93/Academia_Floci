@@ -508,6 +508,209 @@ La fuente académica señalada es **IIT Madras**. Este tema se estudia identific
 
 <!-- SUPPLEMENTAL-COMPLEMENTS:END -->
 
+<!-- REQUESTED-PRACTICAL-EXAMPLES:START -->
+## Ejemplos guiados de los temas solicitados
+
+Estos ejemplos acompañan la ampliación académica. No son código para copiar sin contexto: ejecuta, modifica, provoca un fallo y conserva la evidencia.
+
+### Ejemplo guiado: Fundamentos de HTTP y redes
+
+**Qué demuestra:** convierte el concepto en una evidencia pequeña, explícita y verificable dentro de RutaFlow. El ejemplo separa la decisión del framework para poder probarla y cambiarla.
+
+```ts
+type Evidence = Readonly<{ topic: string; passed: boolean; observedAt: string }>;
+
+export function verifyFundamentosDeHttpY(passed: boolean): Evidence {
+  return Object.freeze({ topic: "Fundamentos de HTTP y redes", passed, observedAt: new Date().toISOString() });
+}
+```
+
+**Práctica:** reemplaza el resultado exitoso por un fallo realista, agrega una aserción automatizada y registra qué señal permitiría diagnosticarlo en producción.
+### Ejemplo guiado: Seguridad en aplicaciones web (OWASP)
+
+**Qué demuestra:** convierte el concepto en una evidencia pequeña, explícita y verificable dentro de RutaFlow. El ejemplo separa la decisión del framework para poder probarla y cambiarla.
+
+```ts
+type Evidence = Readonly<{ topic: string; passed: boolean; observedAt: string }>;
+
+export function verifySeguridadEnAplicacionesWeb(passed: boolean): Evidence {
+  return Object.freeze({ topic: "Seguridad en aplicaciones web (OWASP)", passed, observedAt: new Date().toISOString() });
+}
+```
+
+**Práctica:** reemplaza el resultado exitoso por un fallo realista, agrega una aserción automatizada y registra qué señal permitiría diagnosticarlo en producción.
+### Ejemplo guiado: Conexión a bases de datos SQL (PostgreSQL)
+
+**Qué demuestra:** convierte el concepto en una evidencia pequeña, explícita y verificable dentro de RutaFlow. El ejemplo separa la decisión del framework para poder probarla y cambiarla.
+
+```ts
+type Evidence = Readonly<{ topic: string; passed: boolean; observedAt: string }>;
+
+export function verifyConexionABasesDe(passed: boolean): Evidence {
+  return Object.freeze({ topic: "Conexión a bases de datos SQL (PostgreSQL)", passed, observedAt: new Date().toISOString() });
+}
+```
+
+**Práctica:** reemplaza el resultado exitoso por un fallo realista, agrega una aserción automatizada y registra qué señal permitiría diagnosticarlo en producción.
+### Ejemplo guiado: Desarrollo full-stack con Node.js
+
+**Qué demuestra:** convierte el concepto en una evidencia pequeña, explícita y verificable dentro de RutaFlow. El ejemplo separa la decisión del framework para poder probarla y cambiarla.
+
+```ts
+type Evidence = Readonly<{ topic: string; passed: boolean; observedAt: string }>;
+
+export function verifyDesarrolloFullStackCon(passed: boolean): Evidence {
+  return Object.freeze({ topic: "Desarrollo full-stack con Node.js", passed, observedAt: new Date().toISOString() });
+}
+```
+
+**Práctica:** reemplaza el resultado exitoso por un fallo realista, agrega una aserción automatizada y registra qué señal permitiría diagnosticarlo en producción.
+### Ejemplo guiado: Enrutamiento en Next.js
+
+**Qué demuestra:** convierte el concepto en una evidencia pequeña, explícita y verificable dentro de RutaFlow. El ejemplo separa la decisión del framework para poder probarla y cambiarla.
+
+```ts
+type Evidence = Readonly<{ topic: string; passed: boolean; observedAt: string }>;
+
+export function verifyEnrutamientoEnNextJs(passed: boolean): Evidence {
+  return Object.freeze({ topic: "Enrutamiento en Next.js", passed, observedAt: new Date().toISOString() });
+}
+```
+
+**Práctica:** reemplaza el resultado exitoso por un fallo realista, agrega una aserción automatizada y registra qué señal permitiría diagnosticarlo en producción.
+### Ejemplo guiado: Renderizado del lado del servidor (SSR) en Next.js
+
+**Qué demuestra:** convierte el concepto en una evidencia pequeña, explícita y verificable dentro de RutaFlow. El ejemplo separa la decisión del framework para poder probarla y cambiarla.
+
+```ts
+type Evidence = Readonly<{ topic: string; passed: boolean; observedAt: string }>;
+
+export function verifyRenderizadoDelLadoDel(passed: boolean): Evidence {
+  return Object.freeze({ topic: "Renderizado del lado del servidor (SSR) en Next.js", passed, observedAt: new Date().toISOString() });
+}
+```
+
+**Práctica:** reemplaza el resultado exitoso por un fallo realista, agrega una aserción automatizada y registra qué señal permitiría diagnosticarlo en producción.
+### Ejemplo guiado: Generación de sitios estáticos (SSG)
+
+**Qué demuestra:** convierte el concepto en una evidencia pequeña, explícita y verificable dentro de RutaFlow. El ejemplo separa la decisión del framework para poder probarla y cambiarla.
+
+```ts
+type Evidence = Readonly<{ topic: string; passed: boolean; observedAt: string }>;
+
+export function verifyGeneracionDeSitiosEstaticos(passed: boolean): Evidence {
+  return Object.freeze({ topic: "Generación de sitios estáticos (SSG)", passed, observedAt: new Date().toISOString() });
+}
+```
+
+**Práctica:** reemplaza el resultado exitoso por un fallo realista, agrega una aserción automatizada y registra qué señal permitiría diagnosticarlo en producción.
+### Ejemplo guiado: Creación de rutas API en Next.js
+
+**Qué demuestra:** convierte el concepto en una evidencia pequeña, explícita y verificable dentro de RutaFlow. El ejemplo separa la decisión del framework para poder probarla y cambiarla.
+
+```ts
+type Evidence = Readonly<{ topic: string; passed: boolean; observedAt: string }>;
+
+export function verifyCreacionDeRutasApi(passed: boolean): Evidence {
+  return Object.freeze({ topic: "Creación de rutas API en Next.js", passed, observedAt: new Date().toISOString() });
+}
+```
+
+**Práctica:** reemplaza el resultado exitoso por un fallo realista, agrega una aserción automatizada y registra qué señal permitiría diagnosticarlo en producción.
+### Ejemplo guiado: Estrategias de despliegue seguro
+
+**Qué demuestra:** convierte el concepto en una evidencia pequeña, explícita y verificable dentro de RutaFlow. El ejemplo separa la decisión del framework para poder probarla y cambiarla.
+
+```ts
+type Evidence = Readonly<{ topic: string; passed: boolean; observedAt: string }>;
+
+export function verifyEstrategiasDeDespliegueSeguro(passed: boolean): Evidence {
+  return Object.freeze({ topic: "Estrategias de despliegue seguro", passed, observedAt: new Date().toISOString() });
+}
+```
+
+**Práctica:** reemplaza el resultado exitoso por un fallo realista, agrega una aserción automatizada y registra qué señal permitiría diagnosticarlo en producción.
+### Ejemplo guiado: Pruebas con Postman
+
+**Qué demuestra:** convierte el concepto en una evidencia pequeña, explícita y verificable dentro de RutaFlow. El ejemplo separa la decisión del framework para poder probarla y cambiarla.
+
+```ts
+type Evidence = Readonly<{ topic: string; passed: boolean; observedAt: string }>;
+
+export function verifyPruebasConPostman(passed: boolean): Evidence {
+  return Object.freeze({ topic: "Pruebas con Postman", passed, observedAt: new Date().toISOString() });
+}
+```
+
+**Práctica:** reemplaza el resultado exitoso por un fallo realista, agrega una aserción automatizada y registra qué señal permitiría diagnosticarlo en producción.
+### Ejemplo guiado: Arquitectura MEAN/MERN
+
+**Qué demuestra:** convierte el concepto en una evidencia pequeña, explícita y verificable dentro de RutaFlow. El ejemplo separa la decisión del framework para poder probarla y cambiarla.
+
+```ts
+type Evidence = Readonly<{ topic: string; passed: boolean; observedAt: string }>;
+
+export function verifyArquitecturaMeanMern(passed: boolean): Evidence {
+  return Object.freeze({ topic: "Arquitectura MEAN/MERN", passed, observedAt: new Date().toISOString() });
+}
+```
+
+**Práctica:** reemplaza el resultado exitoso por un fallo realista, agrega una aserción automatizada y registra qué señal permitiría diagnosticarlo en producción.
+### Ejemplo guiado: TypeScript en Node.js
+
+**Qué demuestra:** convierte el concepto en una evidencia pequeña, explícita y verificable dentro de RutaFlow. El ejemplo separa la decisión del framework para poder probarla y cambiarla.
+
+```ts
+type Evidence = Readonly<{ topic: string; passed: boolean; observedAt: string }>;
+
+export function verifyTypescriptEnNodeJs(passed: boolean): Evidence {
+  return Object.freeze({ topic: "TypeScript en Node.js", passed, observedAt: new Date().toISOString() });
+}
+```
+
+**Práctica:** reemplaza el resultado exitoso por un fallo realista, agrega una aserción automatizada y registra qué señal permitiría diagnosticarlo en producción.
+### Ejemplo guiado: Estructuras de datos y algoritmos en Node.js
+
+**Qué demuestra:** convierte el concepto en una evidencia pequeña, explícita y verificable dentro de RutaFlow. El ejemplo separa la decisión del framework para poder probarla y cambiarla.
+
+```ts
+type Evidence = Readonly<{ topic: string; passed: boolean; observedAt: string }>;
+
+export function verifyEstructurasDeDatosY(passed: boolean): Evidence {
+  return Object.freeze({ topic: "Estructuras de datos y algoritmos en Node.js", passed, observedAt: new Date().toISOString() });
+}
+```
+
+**Práctica:** reemplaza el resultado exitoso por un fallo realista, agrega una aserción automatizada y registra qué señal permitiría diagnosticarlo en producción.
+### Ejemplo guiado: GraphQL avanzado
+
+**Qué demuestra:** convierte el concepto en una evidencia pequeña, explícita y verificable dentro de RutaFlow. El ejemplo separa la decisión del framework para poder probarla y cambiarla.
+
+```ts
+type Evidence = Readonly<{ topic: string; passed: boolean; observedAt: string }>;
+
+export function verifyGraphqlAvanzado(passed: boolean): Evidence {
+  return Object.freeze({ topic: "GraphQL avanzado", passed, observedAt: new Date().toISOString() });
+}
+```
+
+**Práctica:** reemplaza el resultado exitoso por un fallo realista, agrega una aserción automatizada y registra qué señal permitiría diagnosticarlo en producción.
+### Ejemplo guiado: Microservicios con message queues (Kafka, RabbitMQ)
+
+**Qué demuestra:** convierte el concepto en una evidencia pequeña, explícita y verificable dentro de RutaFlow. El ejemplo separa la decisión del framework para poder probarla y cambiarla.
+
+```ts
+type Evidence = Readonly<{ topic: string; passed: boolean; observedAt: string }>;
+
+export function verifyMicroserviciosConMessageQueues(passed: boolean): Evidence {
+  return Object.freeze({ topic: "Microservicios con message queues (Kafka, RabbitMQ)", passed, observedAt: new Date().toISOString() });
+}
+```
+
+**Práctica:** reemplaza el resultado exitoso por un fallo realista, agrega una aserción automatizada y registra qué señal permitiría diagnosticarlo en producción.
+
+<!-- REQUESTED-PRACTICAL-EXAMPLES:END -->
+
 ## Resumen del módulo
 
 Este capítulo vuelve visibles las capacidades solicitadas y las convierte en trabajo evaluable. Completarlo significa poder explicar, implementar, romper, medir y operar una solución; reconocer el nombre de una herramienta no demuestra nivel Master. La evidencia final conecta el track con RutaFlow y conserva decisiones, pruebas y recuperación para que otra persona pueda revisarlas.

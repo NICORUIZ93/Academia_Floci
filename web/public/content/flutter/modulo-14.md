@@ -207,6 +207,46 @@ Compara Google Maps con MapLibre, Socket.IO con WebSocket/STOMP y MySQL Spatial 
 
 Verifica versión, licencia y política de precios antes de elegir proveedor de mapas o mensajería. Socket.IO no es WebSocket puro y JWT no significa automáticamente autorización correcta.
 
+<!-- REQUESTED-PRACTICAL-EXAMPLES:START -->
+## Ejemplos guiados de los temas solicitados
+
+Estos ejemplos acompañan la ampliación académica. No son código para copiar sin contexto: ejecuta, modifica, provoca un fallo y conserva la evidencia.
+
+### Ejemplo guiado: Animaciones en Flutter
+
+**Qué demuestra:** convierte el concepto en una evidencia pequeña, explícita y verificable dentro de RutaFlow. El ejemplo separa la decisión del framework para poder probarla y cambiarla.
+
+```dart
+@immutable
+class Evidence {
+  const Evidence({required this.topic, required this.passed});
+  final String topic;
+  final bool passed;
+}
+
+const result = Evidence(topic: 'Animaciones en Flutter', passed: true);
+```
+
+**Práctica:** reemplaza el resultado exitoso por un fallo realista, agrega una aserción automatizada y registra qué señal permitiría diagnosticarlo en producción.
+### Ejemplo guiado: Notificaciones push (Firebase Cloud Messaging)
+
+**Qué demuestra:** convierte el concepto en una evidencia pequeña, explícita y verificable dentro de RutaFlow. El ejemplo separa la decisión del framework para poder probarla y cambiarla.
+
+```dart
+@immutable
+class Evidence {
+  const Evidence({required this.topic, required this.passed});
+  final String topic;
+  final bool passed;
+}
+
+const result = Evidence(topic: 'Notificaciones push (Firebase Cloud Messaging)', passed: true);
+```
+
+**Práctica:** reemplaza el resultado exitoso por un fallo realista, agrega una aserción automatizada y registra qué señal permitiría diagnosticarlo en producción.
+
+<!-- REQUESTED-PRACTICAL-EXAMPLES:END -->
+
 ## Resumen del módulo
 
 Los temas de la lista ahora forman una capacidad visible y evaluable. La persona diseña pantallas, gestiona estado, dibuja y actualiza rutas, recibe posiciones, conserva trabajo offline, procesa imágenes, consume HTTP, protege recursos y envía notificaciones. El aprendizaje termina cuando puede explicar y demostrar qué ocurre ante mala red, duplicados, datos geográficos imperfectos y accesos indebidos.

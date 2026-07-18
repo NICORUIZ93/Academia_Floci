@@ -182,4 +182,12 @@ Estas fuentes sustentan los conceptos y deben consultarse para verificar detalle
 
 ## Resumen del módulo
 
+```bash
+aws transfer create-server --endpoint-url http://localhost:4566 \
+  --protocols SFTP --identity-provider-type SERVICE_MANAGED
+aws transfer list-servers --endpoint-url http://localhost:4566
+```
+
+La prueba verifica el plano de gestión. Documenta explícitamente que crear el servidor no demuestra una transferencia SFTP real.
+
 En este módulo entendiste el problema que resuelve AWS Transfer Family —transferencia de archivos SFTP/FTP gestionada, conectada a almacenamiento moderno como S3, sin operar servidores propios— y practicaste su plano de gestión completo en Floci: ciclo de vida del servidor, usuarios con directorios de inicio aislados, y autenticación por clave pública SSH. Reconociste también, con claridad, la frontera de la Fase 1 actual: gestión completamente emulada, transferencia real de archivos todavía pendiente — el mismo ejercicio de "saber qué esperar de cada servicio" que aplicaste con ELB, CloudFront y Route53 en el Módulo 22.

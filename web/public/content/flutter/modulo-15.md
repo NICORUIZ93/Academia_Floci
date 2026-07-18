@@ -585,6 +585,222 @@ La fuente académica señalada es **CU BPP264**. Este tema se estudia identifica
 
 <!-- SUPPLEMENTAL-COMPLEMENTS:END -->
 
+<!-- REQUESTED-PRACTICAL-EXAMPLES:START -->
+## Ejemplos guiados de los temas solicitados
+
+Estos ejemplos acompañan la ampliación académica. No son código para copiar sin contexto: ejecuta, modifica, provoca un fallo y conserva la evidencia.
+
+### Ejemplo guiado: Arquitecturas de aplicaciones móviles
+
+**Qué demuestra:** convierte el concepto en una evidencia pequeña, explícita y verificable dentro de RutaFlow. El ejemplo separa la decisión del framework para poder probarla y cambiarla.
+
+```dart
+@immutable
+class Evidence {
+  const Evidence({required this.topic, required this.passed});
+  final String topic;
+  final bool passed;
+}
+
+const result = Evidence(topic: 'Arquitecturas de aplicaciones móviles', passed: true);
+```
+
+**Práctica:** reemplaza el resultado exitoso por un fallo realista, agrega una aserción automatizada y registra qué señal permitiría diagnosticarlo en producción.
+### Ejemplo guiado: Características de arquitecturas híbridas
+
+**Qué demuestra:** convierte el concepto en una evidencia pequeña, explícita y verificable dentro de RutaFlow. El ejemplo separa la decisión del framework para poder probarla y cambiarla.
+
+```dart
+@immutable
+class Evidence {
+  const Evidence({required this.topic, required this.passed});
+  final String topic;
+  final bool passed;
+}
+
+const result = Evidence(topic: 'Características de arquitecturas híbridas', passed: true);
+```
+
+**Práctica:** reemplaza el resultado exitoso por un fallo realista, agrega una aserción automatizada y registra qué señal permitiría diagnosticarlo en producción.
+### Ejemplo guiado: Escenarios de aplicación (casos de uso)
+
+**Qué demuestra:** convierte el concepto en una evidencia pequeña, explícita y verificable dentro de RutaFlow. El ejemplo separa la decisión del framework para poder probarla y cambiarla.
+
+```dart
+@immutable
+class Evidence {
+  const Evidence({required this.topic, required this.passed});
+  final String topic;
+  final bool passed;
+}
+
+const result = Evidence(topic: 'Escenarios de aplicación (casos de uso)', passed: true);
+```
+
+**Práctica:** reemplaza el resultado exitoso por un fallo realista, agrega una aserción automatizada y registra qué señal permitiría diagnosticarlo en producción.
+### Ejemplo guiado: Navegación por pestañas (TabBar)
+
+**Qué demuestra:** convierte el concepto en una evidencia pequeña, explícita y verificable dentro de RutaFlow. El ejemplo separa la decisión del framework para poder probarla y cambiarla.
+
+```dart
+@immutable
+class Evidence {
+  const Evidence({required this.topic, required this.passed});
+  final String topic;
+  final bool passed;
+}
+
+const result = Evidence(topic: 'Navegación por pestañas (TabBar)', passed: true);
+```
+
+**Práctica:** reemplaza el resultado exitoso por un fallo realista, agrega una aserción automatizada y registra qué señal permitiría diagnosticarlo en producción.
+### Ejemplo guiado: Cajones laterales (Drawer)
+
+**Qué demuestra:** convierte el concepto en una evidencia pequeña, explícita y verificable dentro de RutaFlow. El ejemplo separa la decisión del framework para poder probarla y cambiarla.
+
+```dart
+@immutable
+class Evidence {
+  const Evidence({required this.topic, required this.passed});
+  final String topic;
+  final bool passed;
+}
+
+const result = Evidence(topic: 'Cajones laterales (Drawer)', passed: true);
+```
+
+**Práctica:** reemplaza el resultado exitoso por un fallo realista, agrega una aserción automatizada y registra qué señal permitiría diagnosticarlo en producción.
+### Ejemplo guiado: Diseño de UI (Material Design / Cupertino)
+
+**Qué demuestra:** convierte el concepto en una evidencia pequeña, explícita y verificable dentro de RutaFlow. El ejemplo separa la decisión del framework para poder probarla y cambiarla.
+
+```dart
+@immutable
+class Evidence {
+  const Evidence({required this.topic, required this.passed});
+  final String topic;
+  final bool passed;
+}
+
+const result = Evidence(topic: 'Diseño de UI (Material Design / Cupertino)', passed: true);
+```
+
+**Práctica:** reemplaza el resultado exitoso por un fallo realista, agrega una aserción automatizada y registra qué señal permitiría diagnosticarlo en producción.
+### Ejemplo guiado: Procesamiento y validación de entrada (Forms)
+
+**Qué demuestra:** convierte el concepto en una evidencia pequeña, explícita y verificable dentro de RutaFlow. El ejemplo separa la decisión del framework para poder probarla y cambiarla.
+
+```dart
+@immutable
+class Evidence {
+  const Evidence({required this.topic, required this.passed});
+  final String topic;
+  final bool passed;
+}
+
+const result = Evidence(topic: 'Procesamiento y validación de entrada (Forms)', passed: true);
+```
+
+**Práctica:** reemplaza el resultado exitoso por un fallo realista, agrega una aserción automatizada y registra qué señal permitiría diagnosticarlo en producción.
+### Ejemplo guiado: Transiciones de páginas
+
+**Qué demuestra:** convierte el concepto en una evidencia pequeña, explícita y verificable dentro de RutaFlow. El ejemplo separa la decisión del framework para poder probarla y cambiarla.
+
+```dart
+@immutable
+class Evidence {
+  const Evidence({required this.topic, required this.passed});
+  final String topic;
+  final bool passed;
+}
+
+const result = Evidence(topic: 'Transiciones de páginas', passed: true);
+```
+
+**Práctica:** reemplaza el resultado exitoso por un fallo realista, agrega una aserción automatizada y registra qué señal permitiría diagnosticarlo en producción.
+### Ejemplo guiado: Directrices de Material Design
+
+**Qué demuestra:** convierte el concepto en una evidencia pequeña, explícita y verificable dentro de RutaFlow. El ejemplo separa la decisión del framework para poder probarla y cambiarla.
+
+```dart
+@immutable
+class Evidence {
+  const Evidence({required this.topic, required this.passed});
+  final String topic;
+  final bool passed;
+}
+
+const result = Evidence(topic: 'Directrices de Material Design', passed: true);
+```
+
+**Práctica:** reemplaza el resultado exitoso por un fallo realista, agrega una aserción automatizada y registra qué señal permitiría diagnosticarlo en producción.
+### Ejemplo guiado: Creación de formularios complejos
+
+**Qué demuestra:** convierte el concepto en una evidencia pequeña, explícita y verificable dentro de RutaFlow. El ejemplo separa la decisión del framework para poder probarla y cambiarla.
+
+```dart
+@immutable
+class Evidence {
+  const Evidence({required this.topic, required this.passed});
+  final String topic;
+  final bool passed;
+}
+
+const result = Evidence(topic: 'Creación de formularios complejos', passed: true);
+```
+
+**Práctica:** reemplaza el resultado exitoso por un fallo realista, agrega una aserción automatizada y registra qué señal permitiría diagnosticarlo en producción.
+### Ejemplo guiado: Pruebas avanzadas (flutter test, WidgetTester)
+
+**Qué demuestra:** convierte el concepto en una evidencia pequeña, explícita y verificable dentro de RutaFlow. El ejemplo separa la decisión del framework para poder probarla y cambiarla.
+
+```dart
+@immutable
+class Evidence {
+  const Evidence({required this.topic, required this.passed});
+  final String topic;
+  final bool passed;
+}
+
+const result = Evidence(topic: 'Pruebas avanzadas (flutter test, WidgetTester)', passed: true);
+```
+
+**Práctica:** reemplaza el resultado exitoso por un fallo realista, agrega una aserción automatizada y registra qué señal permitiría diagnosticarlo en producción.
+### Ejemplo guiado: Clean Architecture en Flutter
+
+**Qué demuestra:** convierte el concepto en una evidencia pequeña, explícita y verificable dentro de RutaFlow. El ejemplo separa la decisión del framework para poder probarla y cambiarla.
+
+```dart
+@immutable
+class Evidence {
+  const Evidence({required this.topic, required this.passed});
+  final String topic;
+  final bool passed;
+}
+
+const result = Evidence(topic: 'Clean Architecture en Flutter', passed: true);
+```
+
+**Práctica:** reemplaza el resultado exitoso por un fallo realista, agrega una aserción automatizada y registra qué señal permitiría diagnosticarlo en producción.
+### Ejemplo guiado: Despliegue en Google Play y App Store
+
+**Qué demuestra:** convierte el concepto en una evidencia pequeña, explícita y verificable dentro de RutaFlow. El ejemplo separa la decisión del framework para poder probarla y cambiarla.
+
+```dart
+@immutable
+class Evidence {
+  const Evidence({required this.topic, required this.passed});
+  final String topic;
+  final bool passed;
+}
+
+const result = Evidence(topic: 'Despliegue en Google Play y App Store', passed: true);
+```
+
+**Práctica:** reemplaza el resultado exitoso por un fallo realista, agrega una aserción automatizada y registra qué señal permitiría diagnosticarlo en producción.
+
+<!-- REQUESTED-PRACTICAL-EXAMPLES:END -->
+
 ## Resumen del módulo
 
 Este capítulo vuelve visibles las capacidades solicitadas y las convierte en trabajo evaluable. Completarlo significa poder explicar, implementar, romper, medir y operar una solución; reconocer el nombre de una herramienta no demuestra nivel Master. La evidencia final conecta el track con RutaFlow y conserva decisiones, pruebas y recuperación para que otra persona pueda revisarlas.

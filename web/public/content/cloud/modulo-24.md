@@ -205,4 +205,17 @@ Estas fuentes sustentan los conceptos y deben consultarse para verificar detalle
 
 ## Resumen del módulo
 
+```yaml
+version: 0.2
+phases:
+  install:
+    commands: ["npm ci"]
+  build:
+    commands: ["npm test", "npm run build"]
+artifacts:
+  files: ["dist/**/*"]
+```
+
+El pipeline se detiene ante una prueba fallida y publica únicamente artefactos construidos de manera reproducible.
+
 En este módulo usaste CodeBuild para ejecutar compilaciones reales dentro de contenedores Docker —no simulaciones—, entendiendo el flujo completo de fases de un `buildspec.yml` y la recolección automática de artefactos hacia S3. Con CodeDeploy, configuraste un despliegue Blue/Green real de Lambda con cambio de tráfico canary por alias, y estudiaste cómo el mismo patrón se extiende a ECS mediante conjuntos de tareas azul/verde y reglas de listener ELB. El concepto central que atraviesa ambos servicios es la reducción de riesgo en el proceso de entrega: compilaciones reproducibles y despliegues graduales con reversión automática ante fallos son las piedras angulares de un pipeline de CI/CD confiable en producción.

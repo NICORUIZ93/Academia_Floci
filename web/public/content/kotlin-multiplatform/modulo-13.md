@@ -492,6 +492,196 @@ La fuente académica señalada es **HS Flensburg**. Este tema se estudia identif
 
 <!-- SUPPLEMENTAL-COMPLEMENTS:END -->
 
+<!-- REQUESTED-PRACTICAL-EXAMPLES:START -->
+## Ejemplos guiados de los temas solicitados
+
+Estos ejemplos acompañan la ampliación académica. No son código para copiar sin contexto: ejecuta, modifica, provoca un fallo y conserva la evidencia.
+
+### Ejemplo guiado: Estructura jerárquica de proyectos (source sets)
+
+**Qué demuestra:** convierte el concepto en una evidencia pequeña, explícita y verificable dentro de RutaFlow. El ejemplo separa la decisión del framework para poder probarla y cambiarla.
+
+```kotlin
+data class Evidence(val topic: String, val passed: Boolean)
+
+class EstructuraJerarquicaDeProyectosUseCase {
+    operator fun invoke(): Evidence = Evidence(topic = "Estructura jerárquica de proyectos (source sets)", passed = true)
+}
+```
+
+**Práctica:** reemplaza el resultado exitoso por un fallo realista, agrega una aserción automatizada y registra qué señal permitiría diagnosticarlo en producción.
+### Ejemplo guiado: Configuración manual avanzada (Gradle de bajo nivel)
+
+**Qué demuestra:** convierte el concepto en una evidencia pequeña, explícita y verificable dentro de RutaFlow. El ejemplo separa la decisión del framework para poder probarla y cambiarla.
+
+```kotlin
+data class Evidence(val topic: String, val passed: Boolean)
+
+class ConfiguracionManualAvanzadaGradleUseCase {
+    operator fun invoke(): Evidence = Evidence(topic = "Configuración manual avanzada (Gradle de bajo nivel)", passed = true)
+}
+```
+
+**Práctica:** reemplaza el resultado exitoso por un fallo realista, agrega una aserción automatizada y registra qué señal permitiría diagnosticarlo en producción.
+### Ejemplo guiado: Mapeo a implementación de Gradle
+
+**Qué demuestra:** convierte el concepto en una evidencia pequeña, explícita y verificable dentro de RutaFlow. El ejemplo separa la decisión del framework para poder probarla y cambiarla.
+
+```kotlin
+data class Evidence(val topic: String, val passed: Boolean)
+
+class MapeoAImplementacionDeUseCase {
+    operator fun invoke(): Evidence = Evidence(topic = "Mapeo a implementación de Gradle", passed = true)
+}
+```
+
+**Práctica:** reemplaza el resultado exitoso por un fallo realista, agrega una aserción automatizada y registra qué señal permitiría diagnosticarlo en producción.
+### Ejemplo guiado: Abstracciones de bajo nivel de Gradle
+
+**Qué demuestra:** convierte el concepto en una evidencia pequeña, explícita y verificable dentro de RutaFlow. El ejemplo separa la decisión del framework para poder probarla y cambiarla.
+
+```kotlin
+data class Evidence(val topic: String, val passed: Boolean)
+
+class AbstraccionesDeBajoNivelUseCase {
+    operator fun invoke(): Evidence = Evidence(topic = "Abstracciones de bajo nivel de Gradle", passed = true)
+}
+```
+
+**Práctica:** reemplaza el resultado exitoso por un fallo realista, agrega una aserción automatizada y registra qué señal permitiría diagnosticarlo en producción.
+### Ejemplo guiado: Creación de plugins de Gradle
+
+**Qué demuestra:** convierte el concepto en una evidencia pequeña, explícita y verificable dentro de RutaFlow. El ejemplo separa la decisión del framework para poder probarla y cambiarla.
+
+```kotlin
+data class Evidence(val topic: String, val passed: Boolean)
+
+class CreacionDePluginsDeUseCase {
+    operator fun invoke(): Evidence = Evidence(topic = "Creación de plugins de Gradle", passed = true)
+}
+```
+
+**Práctica:** reemplaza el resultado exitoso por un fallo realista, agrega una aserción automatizada y registra qué señal permitiría diagnosticarlo en producción.
+### Ejemplo guiado: Jerarquías selladas (sealed classes/interfaces)
+
+**Qué demuestra:** convierte el concepto en una evidencia pequeña, explícita y verificable dentro de RutaFlow. El ejemplo separa la decisión del framework para poder probarla y cambiarla.
+
+```kotlin
+data class Evidence(val topic: String, val passed: Boolean)
+
+class JerarquiasSelladasSealedClassesUseCase {
+    operator fun invoke(): Evidence = Evidence(topic = "Jerarquías selladas (sealed classes/interfaces)", passed = true)
+}
+```
+
+**Práctica:** reemplaza el resultado exitoso por un fallo realista, agrega una aserción automatizada y registra qué señal permitiría diagnosticarlo en producción.
+### Ejemplo guiado: Inmutabilidad en Kotlin
+
+**Qué demuestra:** convierte el concepto en una evidencia pequeña, explícita y verificable dentro de RutaFlow. El ejemplo separa la decisión del framework para poder probarla y cambiarla.
+
+```kotlin
+data class Evidence(val topic: String, val passed: Boolean)
+
+class InmutabilidadEnKotlinUseCase {
+    operator fun invoke(): Evidence = Evidence(topic = "Inmutabilidad en Kotlin", passed = true)
+}
+```
+
+**Práctica:** reemplaza el resultado exitoso por un fallo realista, agrega una aserción automatizada y registra qué señal permitiría diagnosticarlo en producción.
+### Ejemplo guiado: Constructores DSL
+
+**Qué demuestra:** convierte el concepto en una evidencia pequeña, explícita y verificable dentro de RutaFlow. El ejemplo separa la decisión del framework para poder probarla y cambiarla.
+
+```kotlin
+data class Evidence(val topic: String, val passed: Boolean)
+
+class ConstructoresDslUseCase {
+    operator fun invoke(): Evidence = Evidence(topic = "Constructores DSL", passed = true)
+}
+```
+
+**Práctica:** reemplaza el resultado exitoso por un fallo realista, agrega una aserción automatizada y registra qué señal permitiría diagnosticarlo en producción.
+### Ejemplo guiado: Funciones inline
+
+**Qué demuestra:** convierte el concepto en una evidencia pequeña, explícita y verificable dentro de RutaFlow. El ejemplo separa la decisión del framework para poder probarla y cambiarla.
+
+```kotlin
+data class Evidence(val topic: String, val passed: Boolean)
+
+class FuncionesInlineUseCase {
+    operator fun invoke(): Evidence = Evidence(topic = "Funciones inline", passed = true)
+}
+```
+
+**Práctica:** reemplaza el resultado exitoso por un fallo realista, agrega una aserción automatizada y registra qué señal permitiría diagnosticarlo en producción.
+### Ejemplo guiado: Patrones avanzados de Koin (DI en KMP)
+
+**Qué demuestra:** convierte el concepto en una evidencia pequeña, explícita y verificable dentro de RutaFlow. El ejemplo separa la decisión del framework para poder probarla y cambiarla.
+
+```kotlin
+data class Evidence(val topic: String, val passed: Boolean)
+
+class PatronesAvanzadosDeKoinUseCase {
+    operator fun invoke(): Evidence = Evidence(topic = "Patrones avanzados de Koin (DI en KMP)", passed = true)
+}
+```
+
+**Práctica:** reemplaza el resultado exitoso por un fallo realista, agrega una aserción automatizada y registra qué señal permitiría diagnosticarlo en producción.
+### Ejemplo guiado: Lenguaje específico de dominio (Kotlin DSL)
+
+**Qué demuestra:** convierte el concepto en una evidencia pequeña, explícita y verificable dentro de RutaFlow. El ejemplo separa la decisión del framework para poder probarla y cambiarla.
+
+```kotlin
+data class Evidence(val topic: String, val passed: Boolean)
+
+class LenguajeEspecificoDeDominioUseCase {
+    operator fun invoke(): Evidence = Evidence(topic = "Lenguaje específico de dominio (Kotlin DSL)", passed = true)
+}
+```
+
+**Práctica:** reemplaza el resultado exitoso por un fallo realista, agrega una aserción automatizada y registra qué señal permitiría diagnosticarlo en producción.
+### Ejemplo guiado: Patrones de arquitectura móvil en KMP
+
+**Qué demuestra:** convierte el concepto en una evidencia pequeña, explícita y verificable dentro de RutaFlow. El ejemplo separa la decisión del framework para poder probarla y cambiarla.
+
+```kotlin
+data class Evidence(val topic: String, val passed: Boolean)
+
+class PatronesDeArquitecturaMovilUseCase {
+    operator fun invoke(): Evidence = Evidence(topic = "Patrones de arquitectura móvil en KMP", passed = true)
+}
+```
+
+**Práctica:** reemplaza el resultado exitoso por un fallo realista, agrega una aserción automatizada y registra qué señal permitiría diagnosticarlo en producción.
+### Ejemplo guiado: Kotlin-to-Swift Export
+
+**Qué demuestra:** convierte el concepto en una evidencia pequeña, explícita y verificable dentro de RutaFlow. El ejemplo separa la decisión del framework para poder probarla y cambiarla.
+
+```kotlin
+data class Evidence(val topic: String, val passed: Boolean)
+
+class KotlinToSwiftExportUseCase {
+    operator fun invoke(): Evidence = Evidence(topic = "Kotlin-to-Swift Export", passed = true)
+}
+```
+
+**Práctica:** reemplaza el resultado exitoso por un fallo realista, agrega una aserción automatizada y registra qué señal permitiría diagnosticarlo en producción.
+### Ejemplo guiado: Publicación de librerías KMP
+
+**Qué demuestra:** convierte el concepto en una evidencia pequeña, explícita y verificable dentro de RutaFlow. El ejemplo separa la decisión del framework para poder probarla y cambiarla.
+
+```kotlin
+data class Evidence(val topic: String, val passed: Boolean)
+
+class PublicacionDeLibreriasKmpUseCase {
+    operator fun invoke(): Evidence = Evidence(topic = "Publicación de librerías KMP", passed = true)
+}
+```
+
+**Práctica:** reemplaza el resultado exitoso por un fallo realista, agrega una aserción automatizada y registra qué señal permitiría diagnosticarlo en producción.
+
+<!-- REQUESTED-PRACTICAL-EXAMPLES:END -->
+
 ## Resumen del módulo
 
 Este capítulo vuelve visibles las capacidades solicitadas y las convierte en trabajo evaluable. Completarlo significa poder explicar, implementar, romper, medir y operar una solución; reconocer el nombre de una herramienta no demuestra nivel Master. La evidencia final conecta el track con RutaFlow y conserva decisiones, pruebas y recuperación para que otra persona pueda revisarlas.

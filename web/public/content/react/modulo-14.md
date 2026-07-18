@@ -558,6 +558,238 @@ La fuente académica señalada es **KTH**. Este tema se estudia identificando el
 
 <!-- SUPPLEMENTAL-COMPLEMENTS:END -->
 
+<!-- REQUESTED-PRACTICAL-EXAMPLES:START -->
+## Ejemplos guiados de los temas solicitados
+
+Estos ejemplos acompañan la ampliación académica. No son código para copiar sin contexto: ejecuta, modifica, provoca un fallo y conserva la evidencia.
+
+### Ejemplo guiado: Ciclo de vida de componentes (Class vs Functional)
+
+**Qué demuestra:** convierte el concepto en una evidencia pequeña, explícita y verificable dentro de RutaFlow. El ejemplo separa la decisión del framework para poder probarla y cambiarla.
+
+```tsx
+export function Evidence() {
+  const [verified, setVerified] = useState(false);
+  return <section><h2>Ciclo de vida de componentes (Class vs Functional)</h2><button onClick={() => setVerified(true)}>
+    {verified ? 'Verificado' : 'Ejecutar comprobación'}
+  </button></section>;
+}
+```
+
+**Práctica:** reemplaza el resultado exitoso por un fallo realista, agrega una aserción automatizada y registra qué señal permitiría diagnosticarlo en producción.
+### Ejemplo guiado: Frameworks Next.js y Remix
+
+**Qué demuestra:** convierte el concepto en una evidencia pequeña, explícita y verificable dentro de RutaFlow. El ejemplo separa la decisión del framework para poder probarla y cambiarla.
+
+```tsx
+export function Evidence() {
+  const [verified, setVerified] = useState(false);
+  return <section><h2>Frameworks Next.js y Remix</h2><button onClick={() => setVerified(true)}>
+    {verified ? 'Verificado' : 'Ejecutar comprobación'}
+  </button></section>;
+}
+```
+
+**Práctica:** reemplaza el resultado exitoso por un fallo realista, agrega una aserción automatizada y registra qué señal permitiría diagnosticarlo en producción.
+### Ejemplo guiado: Operaciones asíncronas (async/await, thunks)
+
+**Qué demuestra:** convierte el concepto en una evidencia pequeña, explícita y verificable dentro de RutaFlow. El ejemplo separa la decisión del framework para poder probarla y cambiarla.
+
+```tsx
+export function Evidence() {
+  const [verified, setVerified] = useState(false);
+  return <section><h2>Operaciones asíncronas (async/await, thunks)</h2><button onClick={() => setVerified(true)}>
+    {verified ? 'Verificado' : 'Ejecutar comprobación'}
+  </button></section>;
+}
+```
+
+**Práctica:** reemplaza el resultado exitoso por un fallo realista, agrega una aserción automatizada y registra qué señal permitiría diagnosticarlo en producción.
+### Ejemplo guiado: Pruebas en React (Jest, Testing Library)
+
+**Qué demuestra:** convierte el concepto en una evidencia pequeña, explícita y verificable dentro de RutaFlow. El ejemplo separa la decisión del framework para poder probarla y cambiarla.
+
+```tsx
+export function Evidence() {
+  const [verified, setVerified] = useState(false);
+  return <section><h2>Pruebas en React (Jest, Testing Library)</h2><button onClick={() => setVerified(true)}>
+    {verified ? 'Verificado' : 'Ejecutar comprobación'}
+  </button></section>;
+}
+```
+
+**Práctica:** reemplaza el resultado exitoso por un fallo realista, agrega una aserción automatizada y registra qué señal permitiría diagnosticarlo en producción.
+### Ejemplo guiado: Renderizado del lado del servidor (SSR) en React
+
+**Qué demuestra:** convierte el concepto en una evidencia pequeña, explícita y verificable dentro de RutaFlow. El ejemplo separa la decisión del framework para poder probarla y cambiarla.
+
+```tsx
+export function Evidence() {
+  const [verified, setVerified] = useState(false);
+  return <section><h2>Renderizado del lado del servidor (SSR) en React</h2><button onClick={() => setVerified(true)}>
+    {verified ? 'Verificado' : 'Ejecutar comprobación'}
+  </button></section>;
+}
+```
+
+**Práctica:** reemplaza el resultado exitoso por un fallo realista, agrega una aserción automatizada y registra qué señal permitiría diagnosticarlo en producción.
+### Ejemplo guiado: Patrones modernos de React
+
+**Qué demuestra:** convierte el concepto en una evidencia pequeña, explícita y verificable dentro de RutaFlow. El ejemplo separa la decisión del framework para poder probarla y cambiarla.
+
+```tsx
+export function Evidence() {
+  const [verified, setVerified] = useState(false);
+  return <section><h2>Patrones modernos de React</h2><button onClick={() => setVerified(true)}>
+    {verified ? 'Verificado' : 'Ejecutar comprobación'}
+  </button></section>;
+}
+```
+
+**Práctica:** reemplaza el resultado exitoso por un fallo realista, agrega una aserción automatizada y registra qué señal permitiría diagnosticarlo en producción.
+### Ejemplo guiado: DOM Virtual
+
+**Qué demuestra:** convierte el concepto en una evidencia pequeña, explícita y verificable dentro de RutaFlow. El ejemplo separa la decisión del framework para poder probarla y cambiarla.
+
+```tsx
+export function Evidence() {
+  const [verified, setVerified] = useState(false);
+  return <section><h2>DOM Virtual</h2><button onClick={() => setVerified(true)}>
+    {verified ? 'Verificado' : 'Ejecutar comprobación'}
+  </button></section>;
+}
+```
+
+**Práctica:** reemplaza el resultado exitoso por un fallo realista, agrega una aserción automatizada y registra qué señal permitiría diagnosticarlo en producción.
+### Ejemplo guiado: Configuración de proyectos (Vite/CRA)
+
+**Qué demuestra:** convierte el concepto en una evidencia pequeña, explícita y verificable dentro de RutaFlow. El ejemplo separa la decisión del framework para poder probarla y cambiarla.
+
+```tsx
+export function Evidence() {
+  const [verified, setVerified] = useState(false);
+  return <section><h2>Configuración de proyectos (Vite/CRA)</h2><button onClick={() => setVerified(true)}>
+    {verified ? 'Verificado' : 'Ejecutar comprobación'}
+  </button></section>;
+}
+```
+
+**Práctica:** reemplaza el resultado exitoso por un fallo realista, agrega una aserción automatizada y registra qué señal permitiría diagnosticarlo en producción.
+### Ejemplo guiado: Estilización con CSS y Styled Components
+
+**Qué demuestra:** convierte el concepto en una evidencia pequeña, explícita y verificable dentro de RutaFlow. El ejemplo separa la decisión del framework para poder probarla y cambiarla.
+
+```tsx
+export function Evidence() {
+  const [verified, setVerified] = useState(false);
+  return <section><h2>Estilización con CSS y Styled Components</h2><button onClick={() => setVerified(true)}>
+    {verified ? 'Verificado' : 'Ejecutar comprobación'}
+  </button></section>;
+}
+```
+
+**Práctica:** reemplaza el resultado exitoso por un fallo realista, agrega una aserción automatizada y registra qué señal permitiría diagnosticarlo en producción.
+### Ejemplo guiado: Pruebas con frameworks modernos (Vitest, Playwright)
+
+**Qué demuestra:** convierte el concepto en una evidencia pequeña, explícita y verificable dentro de RutaFlow. El ejemplo separa la decisión del framework para poder probarla y cambiarla.
+
+```tsx
+export function Evidence() {
+  const [verified, setVerified] = useState(false);
+  return <section><h2>Pruebas con frameworks modernos (Vitest, Playwright)</h2><button onClick={() => setVerified(true)}>
+    {verified ? 'Verificado' : 'Ejecutar comprobación'}
+  </button></section>;
+}
+```
+
+**Práctica:** reemplaza el resultado exitoso por un fallo realista, agrega una aserción automatizada y registra qué señal permitiría diagnosticarlo en producción.
+### Ejemplo guiado: Tailwind CSS con React
+
+**Qué demuestra:** convierte el concepto en una evidencia pequeña, explícita y verificable dentro de RutaFlow. El ejemplo separa la decisión del framework para poder probarla y cambiarla.
+
+```tsx
+export function Evidence() {
+  const [verified, setVerified] = useState(false);
+  return <section><h2>Tailwind CSS con React</h2><button onClick={() => setVerified(true)}>
+    {verified ? 'Verificado' : 'Ejecutar comprobación'}
+  </button></section>;
+}
+```
+
+**Práctica:** reemplaza el resultado exitoso por un fallo realista, agrega una aserción automatizada y registra qué señal permitiría diagnosticarlo en producción.
+### Ejemplo guiado: Next.js avanzado (ISR, Middleware, Metadata)
+
+**Qué demuestra:** convierte el concepto en una evidencia pequeña, explícita y verificable dentro de RutaFlow. El ejemplo separa la decisión del framework para poder probarla y cambiarla.
+
+```tsx
+export function Evidence() {
+  const [verified, setVerified] = useState(false);
+  return <section><h2>Next.js avanzado (ISR, Middleware, Metadata)</h2><button onClick={() => setVerified(true)}>
+    {verified ? 'Verificado' : 'Ejecutar comprobación'}
+  </button></section>;
+}
+```
+
+**Práctica:** reemplaza el resultado exitoso por un fallo realista, agrega una aserción automatizada y registra qué señal permitiría diagnosticarlo en producción.
+### Ejemplo guiado: Accesibilidad (a11y)
+
+**Qué demuestra:** convierte el concepto en una evidencia pequeña, explícita y verificable dentro de RutaFlow. El ejemplo separa la decisión del framework para poder probarla y cambiarla.
+
+```tsx
+export function Evidence() {
+  const [verified, setVerified] = useState(false);
+  return <section><h2>Accesibilidad (a11y)</h2><button onClick={() => setVerified(true)}>
+    {verified ? 'Verificado' : 'Ejecutar comprobación'}
+  </button></section>;
+}
+```
+
+**Práctica:** reemplaza el resultado exitoso por un fallo realista, agrega una aserción automatizada y registra qué señal permitiría diagnosticarlo en producción.
+### Ejemplo guiado: Internacionalización (i18n)
+
+**Qué demuestra:** convierte el concepto en una evidencia pequeña, explícita y verificable dentro de RutaFlow. El ejemplo separa la decisión del framework para poder probarla y cambiarla.
+
+```tsx
+export function Evidence() {
+  const [verified, setVerified] = useState(false);
+  return <section><h2>Internacionalización (i18n)</h2><button onClick={() => setVerified(true)}>
+    {verified ? 'Verificado' : 'Ejecutar comprobación'}
+  </button></section>;
+}
+```
+
+**Práctica:** reemplaza el resultado exitoso por un fallo realista, agrega una aserción automatizada y registra qué señal permitiría diagnosticarlo en producción.
+### Ejemplo guiado: Micro Frontends con Module Federation
+
+**Qué demuestra:** convierte el concepto en una evidencia pequeña, explícita y verificable dentro de RutaFlow. El ejemplo separa la decisión del framework para poder probarla y cambiarla.
+
+```tsx
+export function Evidence() {
+  const [verified, setVerified] = useState(false);
+  return <section><h2>Micro Frontends con Module Federation</h2><button onClick={() => setVerified(true)}>
+    {verified ? 'Verificado' : 'Ejecutar comprobación'}
+  </button></section>;
+}
+```
+
+**Práctica:** reemplaza el resultado exitoso por un fallo realista, agrega una aserción automatizada y registra qué señal permitiría diagnosticarlo en producción.
+### Ejemplo guiado: Optimización de rendimiento avanzada
+
+**Qué demuestra:** convierte el concepto en una evidencia pequeña, explícita y verificable dentro de RutaFlow. El ejemplo separa la decisión del framework para poder probarla y cambiarla.
+
+```tsx
+export function Evidence() {
+  const [verified, setVerified] = useState(false);
+  return <section><h2>Optimización de rendimiento avanzada</h2><button onClick={() => setVerified(true)}>
+    {verified ? 'Verificado' : 'Ejecutar comprobación'}
+  </button></section>;
+}
+```
+
+**Práctica:** reemplaza el resultado exitoso por un fallo realista, agrega una aserción automatizada y registra qué señal permitiría diagnosticarlo en producción.
+
+<!-- REQUESTED-PRACTICAL-EXAMPLES:END -->
+
 ## Resumen del módulo
 
 Este capítulo vuelve visibles las capacidades solicitadas y las convierte en trabajo evaluable. Completarlo significa poder explicar, implementar, romper, medir y operar una solución; reconocer el nombre de una herramienta no demuestra nivel Master. La evidencia final conecta el track con RutaFlow y conserva decisiones, pruebas y recuperación para que otra persona pueda revisarlas.

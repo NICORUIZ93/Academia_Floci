@@ -205,4 +205,13 @@ Estas fuentes sustentan los conceptos y deben consultarse para verificar detalle
 
 ## Resumen del módulo
 
+```json
+{
+  "Rules": [{"RuleName": "encrypted-volumes", "Status": "ACTIVE"}],
+  "BackupPlan": {"schedule": "cron(0 3 * * ? *)", "retentionDays": 30}
+}
+```
+
+Valida por separado cumplimiento, ejecución de la copia y restauración; una política declarada no demuestra que los datos puedan recuperarse.
+
 En este módulo trabajaste con tres servicios de gobierno y continuidad operativa: AWS Config para gestionar reglas y grabadores de configuración (con la limitación explícita de que la evaluación real de cumplimiento no está implementada en Floci), AppConfig y AppConfigData para desplegar y consumir configuración dinámica sin redeployar código, y AWS Backup para centralizar la política de respaldo de múltiples tipos de recursos bajo planes y bóvedas unificadas. El hilo conductor de los tres servicios es la misma idea: separar decisiones operativas —qué reglas cumplir, qué configuración usar, cuándo respaldar— del ciclo de despliegue de código, permitiendo reaccionar más rápido y con menos riesgo.

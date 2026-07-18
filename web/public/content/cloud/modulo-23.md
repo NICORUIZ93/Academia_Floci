@@ -190,4 +190,15 @@ Estas fuentes sustentan los conceptos y deben consultarse para verificar detalle
 
 ## Resumen del módulo
 
+```python
+cached = redis_client.get(f"delivery:{delivery_id}")
+if cached is None:
+    delivery = repository.find(delivery_id)
+    redis_client.setex(f"delivery:{delivery_id}", 60, json.dumps(delivery))
+else:
+    delivery = json.loads(cached)
+```
+
+Prueba el cache miss, el cache hit y la expiración; no uses el caché como única fuente de verdad.
+
 En este módulo entendiste cuándo un caché en memoria mejora el rendimiento de una aplicación (lecturas frecuentes sobre datos que cambian poco) y cuándo no compensa la complejidad. Creaste un clúster ElastiCache respaldado por un contenedor Valkey real en Floci, te conectaste con `redis-cli` como lo harías contra cualquier Redis real, y practicaste el patrón cache-aside con `SET`, `GET` y `EXPIRE`. Finalmente, viste cómo migrar de contraseñas fijas a autenticación IAM, el mismo principio de seguridad —credenciales temporales derivadas de identidad, no secretos estáticos— que ya aplicaste con roles IAM en módulos anteriores.

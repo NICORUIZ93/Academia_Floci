@@ -1,6 +1,13 @@
 @use '../../styles/tokens' as *;
 
 :host { display:block; }
+.topic-search { display:block; padding:0 4px 14px; }
+.topic-search span { display:block; margin:0 4px 6px; color:$mu; font-size:10px; font-weight:800; letter-spacing:.45px; text-transform:uppercase; }
+.topic-search input {
+  width:100%; border:1px solid $bd; border-radius:$rs; padding:8px 9px; background:$bg2; color:$ink;
+  font:500 12px Inter, system-ui, sans-serif; outline:none;
+}
+.topic-search input:focus { border-color:$p; box-shadow:0 0 0 3px $pl; }
 .lesson-index-group { margin-bottom:14px; }
 .lesson-index-level {
   display:block; padding:0 12px 6px; font-size:10px; font-weight:800; letter-spacing:.6px;
@@ -14,6 +21,18 @@
 .lesson-index-item.active { background:$pl; color:$ph; font-weight:600; }
 .lesson-index-item.done .lesson-index-title { color:$i3; }
 .lesson-index-item.current .lesson-index-title { color:$ph; font-weight:600; }
+.lesson-index-title { min-width:0; flex:1; }
+.topic-count { min-width:22px; padding:2px 5px; border-radius:999px; background:$bg2; color:$mu; font-size:10px; text-align:center; }
+.module-entry { margin-bottom:2px; }
+.module-topics { margin:-2px 8px 6px 28px; }
+.module-topics summary { padding:4px 0; color:$mu; font-size:10.5px; cursor:pointer; list-style:none; }
+.module-topics summary::before { content:'›'; display:inline-block; margin-right:5px; transition:transform .15s ease; }
+.module-topics[open] summary::before { transform:rotate(90deg); }
+.module-topics a {
+  display:block; padding:5px 6px 5px 11px; border-left:1px solid $bd; color:$i3; font-size:11px;
+  line-height:1.35; text-decoration:none;
+}
+.module-topics a:hover { border-left-color:$p; color:$ph; background:$pl; }
 
 // Estado del módulo: 🟢 completado · 🔵 actual · ⚪ pendiente
 .status-dot {

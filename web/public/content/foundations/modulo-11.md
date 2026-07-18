@@ -351,4 +351,21 @@ La fuente académica señalada es **GSU**. Este tema se estudia identificando el
 
 ## Resumen del módulo
 
+### Ejemplo reproducible: comparar dos estrategias
+
+```python
+from time import perf_counter
+
+def measure(label, operation):
+    started = perf_counter()
+    result = operation()
+    return {"strategy": label, "result": result, "seconds": perf_counter() - started}
+
+data = list(range(10_000))
+print(measure("linear-search", lambda: 9_999 in data))
+print(measure("set-lookup", lambda: 9_999 in set(data)))
+```
+
+El experimento no demuestra que una estructura sea siempre mejor: registra tamaño de entrada, coste de construcción y número de consultas antes de concluir.
+
 El mapa evita confundir una ruta de herramientas con toda la disciplina y permite elegir una especialización con fundamento.

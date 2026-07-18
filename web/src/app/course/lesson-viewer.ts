@@ -75,6 +75,9 @@ export class LessonViewerComponent implements OnDestroy {
     this.route.paramMap.pipe(map(params => Number(params.get('moduleId') ?? 0))),
     { initialValue: Number(this.route.snapshot.paramMap.get('moduleId') ?? 0) },
   );
+  private readonly requestedFragment = toSignal(this.route.fragment, {
+    initialValue: this.route.snapshot.fragment,
+  });
 
   readonly track = computed(() => findTrack(this.trackId()));
   readonly module = computed(() => this.track()?.modules.find(m => m.id === this.moduleId()));
@@ -133,6 +136,15 @@ export class LessonViewerComponent implements OnDestroy {
       if (!this.lessonHtml()) return;
       afterNextRender(() => this.enhanceRenderedLesson(), { injector: this.injector });
     });
+
+    effect(() => {
+      const fragment = this.requestedFragment();
+      if (!fragment || !this.lessonHtml()) return;
+      afterNextRender(() => {
+        const container = this.lessonContent()?.nativeElement;
+        if (container) this.scrollToRequestedFragment(container, fragment);
+      }, { injector: this.injector });
+    });
   }
 
   private enhanceRenderedLesson(): void {
@@ -162,6 +174,8 @@ export class LessonViewerComponent implements OnDestroy {
     applyLabVerification(container);
     this.enhanceEducationalContent(container);
     this.buildTableOfContents(container);
+    const fragment = this.requestedFragment();
+    if (fragment) this.scrollToRequestedFragment(container, fragment);
     window.removeEventListener('scroll', this.updateReadingProgress);
     window.addEventListener('scroll', this.updateReadingProgress, { passive: true });
     this.updateReadingProgress();
@@ -424,6 +438,14 @@ export class LessonViewerComponent implements OnDestroy {
       { rootMargin: '-72px 0px -70% 0px', threshold: 0 },
     );
     headings.forEach(h => this.tocObserver!.observe(h));
+  }
+
+  private scrollToRequestedFragment(container: HTMLElement, fragment: string): void {
+    requestAnimationFrame(() => {
+      const target = container.querySelector<HTMLElement>(`#${CSS.escape(fragment)}`);
+      target?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      if (target) this.activeTocId.set(fragment);
+    });
   }
 
   scrollToHeading(event: Event, id: string): void {

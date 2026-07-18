@@ -193,4 +193,16 @@ Estas fuentes sustentan los conceptos y deben consultarse para verificar detalle
 
 ## Resumen del módulo
 
+```graphql
+query DeliveryStatus($id: ID!) {
+  delivery(id: $id) {
+    id
+    status
+    estimatedArrival
+  }
+}
+```
+
+Prueba una entrega existente, una inexistente y una consulta sin autorización; registra el error GraphQL completo.
+
 En este módulo sumaste dos superficies de comunicación al curso: AppSync para APIs GraphQL gestionadas, donde practicaste el desacoplamiento entre esquema y resolvers —incluyendo el tipo especial `NONE` para prototipar sin backend real— y el comportamiento de eliminación en cascada; y SES para correo transaccional, donde el punto más valioso fue el simulador de buzones de correo: direcciones deterministas que te permiten probar automáticamente cómo reacciona tu aplicación ante entregas, rebotes y quejas sin depender de infraestructura de correo real ni de comportamiento impredecible.

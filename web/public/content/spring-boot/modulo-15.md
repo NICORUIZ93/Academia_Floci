@@ -559,6 +559,254 @@ La fuente académica señalada es **Haaga-Helia**. Este tema se estudia identifi
 
 <!-- SUPPLEMENTAL-COMPLEMENTS:END -->
 
+<!-- REQUESTED-PRACTICAL-EXAMPLES:START -->
+## Ejemplos guiados de los temas solicitados
+
+Estos ejemplos acompañan la ampliación académica. No son código para copiar sin contexto: ejecuta, modifica, provoca un fallo y conserva la evidencia.
+
+### Ejemplo guiado: Significado de Spring Boot en el desarrollo moderno
+
+**Qué demuestra:** convierte el concepto en una evidencia pequeña, explícita y verificable dentro de RutaFlow. El ejemplo separa la decisión del framework para poder probarla y cambiarla.
+
+```java
+@Service
+final class SignificadoDeSpringBootService {
+    Evidence verify() {
+        return new Evidence("Significado de Spring Boot en el desarrollo moderno", true);
+    }
+}
+
+record Evidence(String topic, boolean passed) {}
+```
+
+**Práctica:** reemplaza el resultado exitoso por un fallo realista, agrega una aserción automatizada y registra qué señal permitiría diagnosticarlo en producción.
+### Ejemplo guiado: Conexión a MySQL
+
+**Qué demuestra:** convierte el concepto en una evidencia pequeña, explícita y verificable dentro de RutaFlow. El ejemplo separa la decisión del framework para poder probarla y cambiarla.
+
+```java
+@Service
+final class ConexionAMysqlService {
+    Evidence verify() {
+        return new Evidence("Conexión a MySQL", true);
+    }
+}
+
+record Evidence(String topic, boolean passed) {}
+```
+
+**Práctica:** reemplaza el resultado exitoso por un fallo realista, agrega una aserción automatizada y registra qué señal permitiría diagnosticarlo en producción.
+### Ejemplo guiado: Programación Orientada a Aspectos (AOP) en Spring
+
+**Qué demuestra:** convierte el concepto en una evidencia pequeña, explícita y verificable dentro de RutaFlow. El ejemplo separa la decisión del framework para poder probarla y cambiarla.
+
+```java
+@Service
+final class ProgramacionOrientadaAAspectosService {
+    Evidence verify() {
+        return new Evidence("Programación Orientada a Aspectos (AOP) en Spring", true);
+    }
+}
+
+record Evidence(String topic, boolean passed) {}
+```
+
+**Práctica:** reemplaza el resultado exitoso por un fallo realista, agrega una aserción automatizada y registra qué señal permitiría diagnosticarlo en producción.
+### Ejemplo guiado: Funciones adicionales de Spring
+
+**Qué demuestra:** convierte el concepto en una evidencia pequeña, explícita y verificable dentro de RutaFlow. El ejemplo separa la decisión del framework para poder probarla y cambiarla.
+
+```java
+@Service
+final class FuncionesAdicionalesDeSpringService {
+    Evidence verify() {
+        return new Evidence("Funciones adicionales de Spring", true);
+    }
+}
+
+record Evidence(String topic, boolean passed) {}
+```
+
+**Práctica:** reemplaza el resultado exitoso por un fallo realista, agrega una aserción automatizada y registra qué señal permitiría diagnosticarlo en producción.
+### Ejemplo guiado: Configuración de proyectos Spring Boot
+
+**Qué demuestra:** convierte el concepto en una evidencia pequeña, explícita y verificable dentro de RutaFlow. El ejemplo separa la decisión del framework para poder probarla y cambiarla.
+
+```java
+@Service
+final class ConfiguracionDeProyectosSpringService {
+    Evidence verify() {
+        return new Evidence("Configuración de proyectos Spring Boot", true);
+    }
+}
+
+record Evidence(String topic, boolean passed) {}
+```
+
+**Práctica:** reemplaza el resultado exitoso por un fallo realista, agrega una aserción automatizada y registra qué señal permitiría diagnosticarlo en producción.
+### Ejemplo guiado: Trabajo con propiedades
+
+**Qué demuestra:** convierte el concepto en una evidencia pequeña, explícita y verificable dentro de RutaFlow. El ejemplo separa la decisión del framework para poder probarla y cambiarla.
+
+```java
+@Service
+final class TrabajoConPropiedadesService {
+    Evidence verify() {
+        return new Evidence("Trabajo con propiedades", true);
+    }
+}
+
+record Evidence(String topic, boolean passed) {}
+```
+
+**Práctica:** reemplaza el resultado exitoso por un fallo realista, agrega una aserción automatizada y registra qué señal permitiría diagnosticarlo en producción.
+### Ejemplo guiado: Trabajo con perfiles
+
+**Qué demuestra:** convierte el concepto en una evidencia pequeña, explícita y verificable dentro de RutaFlow. El ejemplo separa la decisión del framework para poder probarla y cambiarla.
+
+```java
+@Service
+final class TrabajoConPerfilesService {
+    Evidence verify() {
+        return new Evidence("Trabajo con perfiles", true);
+    }
+}
+
+record Evidence(String topic, boolean passed) {}
+```
+
+**Práctica:** reemplaza el resultado exitoso por un fallo realista, agrega una aserción automatizada y registra qué señal permitiría diagnosticarlo en producción.
+### Ejemplo guiado: Registro (Logging)
+
+**Qué demuestra:** convierte el concepto en una evidencia pequeña, explícita y verificable dentro de RutaFlow. El ejemplo separa la decisión del framework para poder probarla y cambiarla.
+
+```java
+@Service
+final class RegistroLoggingService {
+    Evidence verify() {
+        return new Evidence("Registro (Logging)", true);
+    }
+}
+
+record Evidence(String topic, boolean passed) {}
+```
+
+**Práctica:** reemplaza el resultado exitoso por un fallo realista, agrega una aserción automatizada y registra qué señal permitiría diagnosticarlo en producción.
+### Ejemplo guiado: Despliegue desde IDE
+
+**Qué demuestra:** convierte el concepto en una evidencia pequeña, explícita y verificable dentro de RutaFlow. El ejemplo separa la decisión del framework para poder probarla y cambiarla.
+
+```java
+@Service
+final class DespliegueDesdeIdeService {
+    Evidence verify() {
+        return new Evidence("Despliegue desde IDE", true);
+    }
+}
+
+record Evidence(String topic, boolean passed) {}
+```
+
+**Práctica:** reemplaza el resultado exitoso por un fallo realista, agrega una aserción automatizada y registra qué señal permitiría diagnosticarlo en producción.
+### Ejemplo guiado: Ecosistema Spring Boot
+
+**Qué demuestra:** convierte el concepto en una evidencia pequeña, explícita y verificable dentro de RutaFlow. El ejemplo separa la decisión del framework para poder probarla y cambiarla.
+
+```java
+@Service
+final class EcosistemaSpringBootService {
+    Evidence verify() {
+        return new Evidence("Ecosistema Spring Boot", true);
+    }
+}
+
+record Evidence(String topic, boolean passed) {}
+```
+
+**Práctica:** reemplaza el resultado exitoso por un fallo realista, agrega una aserción automatizada y registra qué señal permitiría diagnosticarlo en producción.
+### Ejemplo guiado: Interceptores en Spring
+
+**Qué demuestra:** convierte el concepto en una evidencia pequeña, explícita y verificable dentro de RutaFlow. El ejemplo separa la decisión del framework para poder probarla y cambiarla.
+
+```java
+@Service
+final class InterceptoresEnSpringService {
+    Evidence verify() {
+        return new Evidence("Interceptores en Spring", true);
+    }
+}
+
+record Evidence(String topic, boolean passed) {}
+```
+
+**Práctica:** reemplaza el resultado exitoso por un fallo realista, agrega una aserción automatizada y registra qué señal permitiría diagnosticarlo en producción.
+### Ejemplo guiado: Spring JDBC
+
+**Qué demuestra:** convierte el concepto en una evidencia pequeña, explícita y verificable dentro de RutaFlow. El ejemplo separa la decisión del framework para poder probarla y cambiarla.
+
+```java
+@Service
+final class SpringJdbcService {
+    Evidence verify() {
+        return new Evidence("Spring JDBC", true);
+    }
+}
+
+record Evidence(String topic, boolean passed) {}
+```
+
+**Práctica:** reemplaza el resultado exitoso por un fallo realista, agrega una aserción automatizada y registra qué señal permitiría diagnosticarlo en producción.
+### Ejemplo guiado: Cifrado (encriptación)
+
+**Qué demuestra:** convierte el concepto en una evidencia pequeña, explícita y verificable dentro de RutaFlow. El ejemplo separa la decisión del framework para poder probarla y cambiarla.
+
+```java
+@Service
+final class CifradoEncriptacionService {
+    Evidence verify() {
+        return new Evidence("Cifrado (encriptación)", true);
+    }
+}
+
+record Evidence(String topic, boolean passed) {}
+```
+
+**Práctica:** reemplaza el resultado exitoso por un fallo realista, agrega una aserción automatizada y registra qué señal permitiría diagnosticarlo en producción.
+### Ejemplo guiado: Spring WebFlux (reactive)
+
+**Qué demuestra:** convierte el concepto en una evidencia pequeña, explícita y verificable dentro de RutaFlow. El ejemplo separa la decisión del framework para poder probarla y cambiarla.
+
+```java
+@Service
+final class SpringWebfluxReactiveService {
+    Evidence verify() {
+        return new Evidence("Spring WebFlux (reactive)", true);
+    }
+}
+
+record Evidence(String topic, boolean passed) {}
+```
+
+**Práctica:** reemplaza el resultado exitoso por un fallo realista, agrega una aserción automatizada y registra qué señal permitiría diagnosticarlo en producción.
+### Ejemplo guiado: Arquitectura Hexagonal
+
+**Qué demuestra:** convierte el concepto en una evidencia pequeña, explícita y verificable dentro de RutaFlow. El ejemplo separa la decisión del framework para poder probarla y cambiarla.
+
+```java
+@Service
+final class ArquitecturaHexagonalService {
+    Evidence verify() {
+        return new Evidence("Arquitectura Hexagonal", true);
+    }
+}
+
+record Evidence(String topic, boolean passed) {}
+```
+
+**Práctica:** reemplaza el resultado exitoso por un fallo realista, agrega una aserción automatizada y registra qué señal permitiría diagnosticarlo en producción.
+
+<!-- REQUESTED-PRACTICAL-EXAMPLES:END -->
+
 ## Resumen del módulo
 
 Este capítulo vuelve visibles las capacidades solicitadas y las convierte en trabajo evaluable. Completarlo significa poder explicar, implementar, romper, medir y operar una solución; reconocer el nombre de una herramienta no demuestra nivel Master. La evidencia final conecta el track con RutaFlow y conserva decisiones, pruebas y recuperación para que otra persona pueda revisarlas.

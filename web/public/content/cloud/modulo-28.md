@@ -191,4 +191,14 @@ Estas fuentes sustentan los conceptos y deben consultarse para verificar detalle
 
 ## Resumen del módulo
 
+```json
+POST deliveries/_search
+{
+  "query": {"match": {"address": "Bogotá centro"}},
+  "sort": [{"createdAt": "desc"}]
+}
+```
+
+Compara búsqueda textual con consulta por identificador y explica por qué OpenSearch no sustituye automáticamente la base transaccional.
+
 En este módulo ampliaste tu criterio de selección de bases de datos con dos motores especializados: Neptune, respaldado por un servidor Gremlin real en Floci, para datos donde las relaciones entre entidades son el patrón de consulta dominante; y OpenSearch, con sus modos simulado y real, para búsqueda de texto completo y agregaciones. Más que memorizar comandos, el valor central de este módulo es reconocer que "¿cuál es la mejor base de datos?" es la pregunta equivocada — la pregunta correcta es "¿cuál es el patrón de acceso dominante de esta parte de mi sistema?", y que sistemas reales con frecuencia combinan varias bases de datos especializadas sobre la misma fuente de verdad.

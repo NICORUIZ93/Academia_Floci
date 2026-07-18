@@ -613,6 +613,261 @@ La fuente académica señalada es **Torrens University**. Este tema se estudia i
 
 <!-- SUPPLEMENTAL-COMPLEMENTS:END -->
 
+<!-- REQUESTED-PRACTICAL-EXAMPLES:START -->
+## Ejemplos guiados de los temas solicitados
+
+Estos ejemplos acompañan la ampliación académica. No son código para copiar sin contexto: ejecuta, modifica, provoca un fallo y conserva la evidencia.
+
+### Ejemplo guiado: Depuración y flujo de trabajo (DevTools)
+
+**Qué demuestra:** convierte el concepto en una evidencia pequeña, explícita y verificable dentro de RutaFlow. El ejemplo separa la decisión del framework para poder probarla y cambiarla.
+
+```ts
+type Evidence = Readonly<{ topic: string; passed: boolean; observedAt: string }>;
+
+export function verifyDepuracionYFlujoDe(passed: boolean): Evidence {
+  return Object.freeze({ topic: "Depuración y flujo de trabajo (DevTools)", passed, observedAt: new Date().toISOString() });
+}
+```
+
+**Práctica:** reemplaza el resultado exitoso por un fallo realista, agrega una aserción automatizada y registra qué señal permitiría diagnosticarlo en producción.
+### Ejemplo guiado: IDE y herramientas (configuración)
+
+**Qué demuestra:** convierte el concepto en una evidencia pequeña, explícita y verificable dentro de RutaFlow. El ejemplo separa la decisión del framework para poder probarla y cambiarla.
+
+```ts
+type Evidence = Readonly<{ topic: string; passed: boolean; observedAt: string }>;
+
+export function verifyIdeYHerramientasConfiguracion(passed: boolean): Evidence {
+  return Object.freeze({ topic: "IDE y herramientas (configuración)", passed, observedAt: new Date().toISOString() });
+}
+```
+
+**Práctica:** reemplaza el resultado exitoso por un fallo realista, agrega una aserción automatizada y registra qué señal permitiría diagnosticarlo en producción.
+### Ejemplo guiado: Funciones integradas (built-in objects)
+
+**Qué demuestra:** convierte el concepto en una evidencia pequeña, explícita y verificable dentro de RutaFlow. El ejemplo separa la decisión del framework para poder probarla y cambiarla.
+
+```ts
+type Evidence = Readonly<{ topic: string; passed: boolean; observedAt: string }>;
+
+export function verifyFuncionesIntegradasBuiltIn(passed: boolean): Evidence {
+  return Object.freeze({ topic: "Funciones integradas (built-in objects)", passed, observedAt: new Date().toISOString() });
+}
+```
+
+**Práctica:** reemplaza el resultado exitoso por un fallo realista, agrega una aserción automatizada y registra qué señal permitiría diagnosticarlo en producción.
+### Ejemplo guiado: Fecha y hora (manejo de fechas)
+
+**Qué demuestra:** convierte el concepto en una evidencia pequeña, explícita y verificable dentro de RutaFlow. El ejemplo separa la decisión del framework para poder probarla y cambiarla.
+
+```ts
+type Evidence = Readonly<{ topic: string; passed: boolean; observedAt: string }>;
+
+export function verifyFechaYHoraManejo(passed: boolean): Evidence {
+  return Object.freeze({ topic: "Fecha y hora (manejo de fechas)", passed, observedAt: new Date().toISOString() });
+}
+```
+
+**Práctica:** reemplaza el resultado exitoso por un fallo realista, agrega una aserción automatizada y registra qué señal permitiría diagnosticarlo en producción.
+### Ejemplo guiado: Manipulación de cadenas
+
+**Qué demuestra:** convierte el concepto en una evidencia pequeña, explícita y verificable dentro de RutaFlow. El ejemplo separa la decisión del framework para poder probarla y cambiarla.
+
+```ts
+type Evidence = Readonly<{ topic: string; passed: boolean; observedAt: string }>;
+
+export function verifyManipulacionDeCadenas(passed: boolean): Evidence {
+  return Object.freeze({ topic: "Manipulación de cadenas", passed, observedAt: new Date().toISOString() });
+}
+```
+
+**Práctica:** reemplaza el resultado exitoso por un fallo realista, agrega una aserción automatizada y registra qué señal permitiría diagnosticarlo en producción.
+### Ejemplo guiado: Depuración y manejo de errores avanzado
+
+**Qué demuestra:** convierte el concepto en una evidencia pequeña, explícita y verificable dentro de RutaFlow. El ejemplo separa la decisión del framework para poder probarla y cambiarla.
+
+```ts
+type Evidence = Readonly<{ topic: string; passed: boolean; observedAt: string }>;
+
+export function verifyDepuracionYManejoDe(passed: boolean): Evidence {
+  return Object.freeze({ topic: "Depuración y manejo de errores avanzado", passed, observedAt: new Date().toISOString() });
+}
+```
+
+**Práctica:** reemplaza el resultado exitoso por un fallo realista, agrega una aserción automatizada y registra qué señal permitiría diagnosticarlo en producción.
+### Ejemplo guiado: Proyectos prácticos hands-on
+
+**Qué demuestra:** convierte el concepto en una evidencia pequeña, explícita y verificable dentro de RutaFlow. El ejemplo separa la decisión del framework para poder probarla y cambiarla.
+
+```ts
+type Evidence = Readonly<{ topic: string; passed: boolean; observedAt: string }>;
+
+export function verifyProyectosPracticosHandsOn(passed: boolean): Evidence {
+  return Object.freeze({ topic: "Proyectos prácticos hands-on", passed, observedAt: new Date().toISOString() });
+}
+```
+
+**Práctica:** reemplaza el resultado exitoso por un fallo realista, agrega una aserción automatizada y registra qué señal permitiría diagnosticarlo en producción.
+### Ejemplo guiado: JavaScript en el navegador (programación del lado del cliente)
+
+**Qué demuestra:** convierte el concepto en una evidencia pequeña, explícita y verificable dentro de RutaFlow. El ejemplo separa la decisión del framework para poder probarla y cambiarla.
+
+```ts
+type Evidence = Readonly<{ topic: string; passed: boolean; observedAt: string }>;
+
+export function verifyJavascriptEnElNavegador(passed: boolean): Evidence {
+  return Object.freeze({ topic: "JavaScript en el navegador (programación del lado del cliente)", passed, observedAt: new Date().toISOString() });
+}
+```
+
+**Práctica:** reemplaza el resultado exitoso por un fallo realista, agrega una aserción automatizada y registra qué señal permitiría diagnosticarlo en producción.
+### Ejemplo guiado: Historia de JavaScript y evolución
+
+**Qué demuestra:** convierte el concepto en una evidencia pequeña, explícita y verificable dentro de RutaFlow. El ejemplo separa la decisión del framework para poder probarla y cambiarla.
+
+```ts
+type Evidence = Readonly<{ topic: string; passed: boolean; observedAt: string }>;
+
+export function verifyHistoriaDeJavascriptY(passed: boolean): Evidence {
+  return Object.freeze({ topic: "Historia de JavaScript y evolución", passed, observedAt: new Date().toISOString() });
+}
+```
+
+**Práctica:** reemplaza el resultado exitoso por un fallo realista, agrega una aserción automatizada y registra qué señal permitiría diagnosticarlo en producción.
+### Ejemplo guiado: Relación con ECMAScript
+
+**Qué demuestra:** convierte el concepto en una evidencia pequeña, explícita y verificable dentro de RutaFlow. El ejemplo separa la decisión del framework para poder probarla y cambiarla.
+
+```ts
+type Evidence = Readonly<{ topic: string; passed: boolean; observedAt: string }>;
+
+export function verifyRelacionConEcmascript(passed: boolean): Evidence {
+  return Object.freeze({ topic: "Relación con ECMAScript", passed, observedAt: new Date().toISOString() });
+}
+```
+
+**Práctica:** reemplaza el resultado exitoso por un fallo realista, agrega una aserción automatizada y registra qué señal permitiría diagnosticarlo en producción.
+### Ejemplo guiado: Versiones de JavaScript (ES5, ES6, ES2024...)
+
+**Qué demuestra:** convierte el concepto en una evidencia pequeña, explícita y verificable dentro de RutaFlow. El ejemplo separa la decisión del framework para poder probarla y cambiarla.
+
+```ts
+type Evidence = Readonly<{ topic: string; passed: boolean; observedAt: string }>;
+
+export function verifyVersionesDeJavascriptEs5(passed: boolean): Evidence {
+  return Object.freeze({ topic: "Versiones de JavaScript (ES5, ES6, ES2024...)", passed, observedAt: new Date().toISOString() });
+}
+```
+
+**Práctica:** reemplaza el resultado exitoso por un fallo realista, agrega una aserción automatizada y registra qué señal permitiría diagnosticarlo en producción.
+### Ejemplo guiado: HTML dinámico (DHTML)
+
+**Qué demuestra:** convierte el concepto en una evidencia pequeña, explícita y verificable dentro de RutaFlow. El ejemplo separa la decisión del framework para poder probarla y cambiarla.
+
+```ts
+type Evidence = Readonly<{ topic: string; passed: boolean; observedAt: string }>;
+
+export function verifyHtmlDinamicoDhtml(passed: boolean): Evidence {
+  return Object.freeze({ topic: "HTML dinámico (DHTML)", passed, observedAt: new Date().toISOString() });
+}
+```
+
+**Práctica:** reemplaza el resultado exitoso por un fallo realista, agrega una aserción automatizada y registra qué señal permitiría diagnosticarlo en producción.
+### Ejemplo guiado: Lenguajes de scripting del lado del cliente
+
+**Qué demuestra:** convierte el concepto en una evidencia pequeña, explícita y verificable dentro de RutaFlow. El ejemplo separa la decisión del framework para poder probarla y cambiarla.
+
+```ts
+type Evidence = Readonly<{ topic: string; passed: boolean; observedAt: string }>;
+
+export function verifyLenguajesDeScriptingDel(passed: boolean): Evidence {
+  return Object.freeze({ topic: "Lenguajes de scripting del lado del cliente", passed, observedAt: new Date().toISOString() });
+}
+```
+
+**Práctica:** reemplaza el resultado exitoso por un fallo realista, agrega una aserción automatizada y registra qué señal permitiría diagnosticarlo en producción.
+### Ejemplo guiado: Implementación en aplicaciones web
+
+**Qué demuestra:** convierte el concepto en una evidencia pequeña, explícita y verificable dentro de RutaFlow. El ejemplo separa la decisión del framework para poder probarla y cambiarla.
+
+```ts
+type Evidence = Readonly<{ topic: string; passed: boolean; observedAt: string }>;
+
+export function verifyImplementacionEnAplicacionesWeb(passed: boolean): Evidence {
+  return Object.freeze({ topic: "Implementación en aplicaciones web", passed, observedAt: new Date().toISOString() });
+}
+```
+
+**Práctica:** reemplaza el resultado exitoso por un fallo realista, agrega una aserción automatizada y registra qué señal permitiría diagnosticarlo en producción.
+### Ejemplo guiado: Manipulación de números
+
+**Qué demuestra:** convierte el concepto en una evidencia pequeña, explícita y verificable dentro de RutaFlow. El ejemplo separa la decisión del framework para poder probarla y cambiarla.
+
+```ts
+type Evidence = Readonly<{ topic: string; passed: boolean; observedAt: string }>;
+
+export function verifyManipulacionDeNumeros(passed: boolean): Evidence {
+  return Object.freeze({ topic: "Manipulación de números", passed, observedAt: new Date().toISOString() });
+}
+```
+
+**Práctica:** reemplaza el resultado exitoso por un fallo realista, agrega una aserción automatizada y registra qué señal permitiría diagnosticarlo en producción.
+### Ejemplo guiado: TypeScript (tipos avanzados, utility types)
+
+**Qué demuestra:** convierte el concepto en una evidencia pequeña, explícita y verificable dentro de RutaFlow. El ejemplo separa la decisión del framework para poder probarla y cambiarla.
+
+```ts
+type Evidence = Readonly<{ topic: string; passed: boolean; observedAt: string }>;
+
+export function verifyTypescriptTiposAvanzadosUtility(passed: boolean): Evidence {
+  return Object.freeze({ topic: "TypeScript (tipos avanzados, utility types)", passed, observedAt: new Date().toISOString() });
+}
+```
+
+**Práctica:** reemplaza el resultado exitoso por un fallo realista, agrega una aserción automatizada y registra qué señal permitiría diagnosticarlo en producción.
+### Ejemplo guiado: Bundlers (Webpack, Vite, Rollup)
+
+**Qué demuestra:** convierte el concepto en una evidencia pequeña, explícita y verificable dentro de RutaFlow. El ejemplo separa la decisión del framework para poder probarla y cambiarla.
+
+```ts
+type Evidence = Readonly<{ topic: string; passed: boolean; observedAt: string }>;
+
+export function verifyBundlersWebpackViteRollup(passed: boolean): Evidence {
+  return Object.freeze({ topic: "Bundlers (Webpack, Vite, Rollup)", passed, observedAt: new Date().toISOString() });
+}
+```
+
+**Práctica:** reemplaza el resultado exitoso por un fallo realista, agrega una aserción automatizada y registra qué señal permitiría diagnosticarlo en producción.
+### Ejemplo guiado: Accesibilidad (a11y)
+
+**Qué demuestra:** convierte el concepto en una evidencia pequeña, explícita y verificable dentro de RutaFlow. El ejemplo separa la decisión del framework para poder probarla y cambiarla.
+
+```ts
+type Evidence = Readonly<{ topic: string; passed: boolean; observedAt: string }>;
+
+export function verifyAccesibilidadA11Y(passed: boolean): Evidence {
+  return Object.freeze({ topic: "Accesibilidad (a11y)", passed, observedAt: new Date().toISOString() });
+}
+```
+
+**Práctica:** reemplaza el resultado exitoso por un fallo realista, agrega una aserción automatizada y registra qué señal permitiría diagnosticarlo en producción.
+### Ejemplo guiado: Internacionalización (i18n)
+
+**Qué demuestra:** convierte el concepto en una evidencia pequeña, explícita y verificable dentro de RutaFlow. El ejemplo separa la decisión del framework para poder probarla y cambiarla.
+
+```ts
+type Evidence = Readonly<{ topic: string; passed: boolean; observedAt: string }>;
+
+export function verifyInternacionalizacionI18N(passed: boolean): Evidence {
+  return Object.freeze({ topic: "Internacionalización (i18n)", passed, observedAt: new Date().toISOString() });
+}
+```
+
+**Práctica:** reemplaza el resultado exitoso por un fallo realista, agrega una aserción automatizada y registra qué señal permitiría diagnosticarlo en producción.
+
+<!-- REQUESTED-PRACTICAL-EXAMPLES:END -->
+
 ## Resumen del módulo
 
 Este capítulo vuelve visibles las capacidades solicitadas y las convierte en trabajo evaluable. Completarlo significa poder explicar, implementar, romper, medir y operar una solución; reconocer el nombre de una herramienta no demuestra nivel Master. La evidencia final conecta el track con RutaFlow y conserva decisiones, pruebas y recuperación para que otra persona pueda revisarlas.

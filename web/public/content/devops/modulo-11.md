@@ -317,6 +317,28 @@ Estas fuentes sustentan los conceptos y deben consultarse para verificar detalle
 - ACM/IEEE-CS/AAAI, *Computer Science Curricula 2023*.
 - IEEE Computer Society, *SWEBOK Guide V4.0*.
 
+<!-- REQUESTED-PRACTICAL-EXAMPLES:START -->
+## Ejemplos guiados de los temas solicitados
+
+Estos ejemplos acompañan la ampliación académica. No son código para copiar sin contexto: ejecuta, modifica, provoca un fallo y conserva la evidencia.
+
+### Ejemplo guiado: Integración continua avanzada
+
+**Qué demuestra:** convierte el concepto en una evidencia pequeña, explícita y verificable dentro de RutaFlow. El ejemplo separa la decisión del framework para poder probarla y cambiarla.
+
+```yaml
+capability: "Integración continua avanzada"
+service: rutaflow-delivery
+verification:
+  success: "deployment_health == 1"
+  failure: "rollback_completed == 1"
+  evidence: [logs, metrics, trace_id]
+```
+
+**Práctica:** reemplaza el resultado exitoso por un fallo realista, agrega una aserción automatizada y registra qué señal permitiría diagnosticarlo en producción.
+
+<!-- REQUESTED-PRACTICAL-EXAMPLES:END -->
+
 ## Resumen del módulo
 
 **Puntos clave**

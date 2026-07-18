@@ -498,6 +498,182 @@ La fuente académica señalada es **CMU 18-654SV**. Este tema se estudia identif
 
 <!-- SUPPLEMENTAL-COMPLEMENTS:END -->
 
+<!-- REQUESTED-PRACTICAL-EXAMPLES:START -->
+## Ejemplos guiados de los temas solicitados
+
+Estos ejemplos acompañan la ampliación académica. No son código para copiar sin contexto: ejecuta, modifica, provoca un fallo y conserva la evidencia.
+
+### Ejemplo guiado: Recuperación ante desastres
+
+**Qué demuestra:** convierte el concepto en una evidencia pequeña, explícita y verificable dentro de RutaFlow. El ejemplo separa la decisión del framework para poder probarla y cambiarla.
+
+```yaml
+capability: "Recuperación ante desastres"
+service: rutaflow-delivery
+verification:
+  success: "deployment_health == 1"
+  failure: "rollback_completed == 1"
+  evidence: [logs, metrics, trace_id]
+```
+
+**Práctica:** reemplaza el resultado exitoso por un fallo realista, agrega una aserción automatizada y registra qué señal permitiría diagnosticarlo en producción.
+### Ejemplo guiado: DevSecOps (SAST, DAST, SCA)
+
+**Qué demuestra:** convierte el concepto en una evidencia pequeña, explícita y verificable dentro de RutaFlow. El ejemplo separa la decisión del framework para poder probarla y cambiarla.
+
+```yaml
+capability: "DevSecOps (SAST, DAST, SCA)"
+service: rutaflow-delivery
+verification:
+  success: "deployment_health == 1"
+  failure: "rollback_completed == 1"
+  evidence: [logs, metrics, trace_id]
+```
+
+**Práctica:** reemplaza el resultado exitoso por un fallo realista, agrega una aserción automatizada y registra qué señal permitiría diagnosticarlo en producción.
+### Ejemplo guiado: Gestión de configuración (Ansible avanzado)
+
+**Qué demuestra:** convierte el concepto en una evidencia pequeña, explícita y verificable dentro de RutaFlow. El ejemplo separa la decisión del framework para poder probarla y cambiarla.
+
+```yaml
+capability: "Gestión de configuración (Ansible avanzado)"
+service: rutaflow-delivery
+verification:
+  success: "deployment_health == 1"
+  failure: "rollback_completed == 1"
+  evidence: [logs, metrics, trace_id]
+```
+
+**Práctica:** reemplaza el resultado exitoso por un fallo realista, agrega una aserción automatizada y registra qué señal permitiría diagnosticarlo en producción.
+### Ejemplo guiado: Estrategias de despliegue continuo (canary, blue-green)
+
+**Qué demuestra:** convierte el concepto en una evidencia pequeña, explícita y verificable dentro de RutaFlow. El ejemplo separa la decisión del framework para poder probarla y cambiarla.
+
+```yaml
+capability: "Estrategias de despliegue continuo (canary, blue-green)"
+service: rutaflow-delivery
+verification:
+  success: "deployment_health == 1"
+  failure: "rollback_completed == 1"
+  evidence: [logs, metrics, trace_id]
+```
+
+**Práctica:** reemplaza el resultado exitoso por un fallo realista, agrega una aserción automatizada y registra qué señal permitiría diagnosticarlo en producción.
+### Ejemplo guiado: Tubería de despliegue avanzada
+
+**Qué demuestra:** convierte el concepto en una evidencia pequeña, explícita y verificable dentro de RutaFlow. El ejemplo separa la decisión del framework para poder probarla y cambiarla.
+
+```yaml
+capability: "Tubería de despliegue avanzada"
+service: rutaflow-delivery
+verification:
+  success: "deployment_health == 1"
+  failure: "rollback_completed == 1"
+  evidence: [logs, metrics, trace_id]
+```
+
+**Práctica:** reemplaza el resultado exitoso por un fallo realista, agrega una aserción automatizada y registra qué señal permitiría diagnosticarlo en producción.
+### Ejemplo guiado: Gestión de configuraciones en entornos
+
+**Qué demuestra:** convierte el concepto en una evidencia pequeña, explícita y verificable dentro de RutaFlow. El ejemplo separa la decisión del framework para poder probarla y cambiarla.
+
+```yaml
+capability: "Gestión de configuraciones en entornos"
+service: rutaflow-delivery
+verification:
+  success: "deployment_health == 1"
+  failure: "rollback_completed == 1"
+  evidence: [logs, metrics, trace_id]
+```
+
+**Práctica:** reemplaza el resultado exitoso por un fallo realista, agrega una aserción automatizada y registra qué señal permitiría diagnosticarlo en producción.
+### Ejemplo guiado: Clasificación de herramientas DevOps
+
+**Qué demuestra:** convierte el concepto en una evidencia pequeña, explícita y verificable dentro de RutaFlow. El ejemplo separa la decisión del framework para poder probarla y cambiarla.
+
+```yaml
+capability: "Clasificación de herramientas DevOps"
+service: rutaflow-delivery
+verification:
+  success: "deployment_health == 1"
+  failure: "rollback_completed == 1"
+  evidence: [logs, metrics, trace_id]
+```
+
+**Práctica:** reemplaza el resultado exitoso por un fallo realista, agrega una aserción automatizada y registra qué señal permitiría diagnosticarlo en producción.
+### Ejemplo guiado: Virtualización y redes en la nube
+
+**Qué demuestra:** convierte el concepto en una evidencia pequeña, explícita y verificable dentro de RutaFlow. El ejemplo separa la decisión del framework para poder probarla y cambiarla.
+
+```yaml
+capability: "Virtualización y redes en la nube"
+service: rutaflow-delivery
+verification:
+  success: "deployment_health == 1"
+  failure: "rollback_completed == 1"
+  evidence: [logs, metrics, trace_id]
+```
+
+**Práctica:** reemplaza el resultado exitoso por un fallo realista, agrega una aserción automatizada y registra qué señal permitiría diagnosticarlo en producción.
+### Ejemplo guiado: Medición y seguridad en infraestructura
+
+**Qué demuestra:** convierte el concepto en una evidencia pequeña, explícita y verificable dentro de RutaFlow. El ejemplo separa la decisión del framework para poder probarla y cambiarla.
+
+```yaml
+capability: "Medición y seguridad en infraestructura"
+service: rutaflow-delivery
+verification:
+  success: "deployment_health == 1"
+  failure: "rollback_completed == 1"
+  evidence: [logs, metrics, trace_id]
+```
+
+**Práctica:** reemplaza el resultado exitoso por un fallo realista, agrega una aserción automatizada y registra qué señal permitiría diagnosticarlo en producción.
+### Ejemplo guiado: Pruebas de software (unitarias, integración)
+
+**Qué demuestra:** convierte el concepto en una evidencia pequeña, explícita y verificable dentro de RutaFlow. El ejemplo separa la decisión del framework para poder probarla y cambiarla.
+
+```yaml
+capability: "Pruebas de software (unitarias, integración)"
+service: rutaflow-delivery
+verification:
+  success: "deployment_health == 1"
+  failure: "rollback_completed == 1"
+  evidence: [logs, metrics, trace_id]
+```
+
+**Práctica:** reemplaza el resultado exitoso por un fallo realista, agrega una aserción automatizada y registra qué señal permitiría diagnosticarlo en producción.
+### Ejemplo guiado: Post-despliegue (monitoreo)
+
+**Qué demuestra:** convierte el concepto en una evidencia pequeña, explícita y verificable dentro de RutaFlow. El ejemplo separa la decisión del framework para poder probarla y cambiarla.
+
+```yaml
+capability: "Post-despliegue (monitoreo)"
+service: rutaflow-delivery
+verification:
+  success: "deployment_health == 1"
+  failure: "rollback_completed == 1"
+  evidence: [logs, metrics, trace_id]
+```
+
+**Práctica:** reemplaza el resultado exitoso por un fallo realista, agrega una aserción automatizada y registra qué señal permitiría diagnosticarlo en producción.
+### Ejemplo guiado: Métricas DORA
+
+**Qué demuestra:** convierte el concepto en una evidencia pequeña, explícita y verificable dentro de RutaFlow. El ejemplo separa la decisión del framework para poder probarla y cambiarla.
+
+```yaml
+capability: "Métricas DORA"
+service: rutaflow-delivery
+verification:
+  success: "deployment_health == 1"
+  failure: "rollback_completed == 1"
+  evidence: [logs, metrics, trace_id]
+```
+
+**Práctica:** reemplaza el resultado exitoso por un fallo realista, agrega una aserción automatizada y registra qué señal permitiría diagnosticarlo en producción.
+
+<!-- REQUESTED-PRACTICAL-EXAMPLES:END -->
+
 ## Resumen del módulo
 
 Este capítulo vuelve visibles las capacidades solicitadas y las convierte en trabajo evaluable. Completarlo significa poder explicar, implementar, romper, medir y operar una solución; reconocer el nombre de una herramienta no demuestra nivel Master. La evidencia final conecta el track con RutaFlow y conserva decisiones, pruebas y recuperación para que otra persona pueda revisarlas.

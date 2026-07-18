@@ -212,6 +212,28 @@ Estas fuentes sustentan los conceptos y deben consultarse para verificar detalle
 - ACM/IEEE-CS/AAAI, *Computer Science Curricula 2023*.
 - IEEE Computer Society, *SWEBOK Guide V4.0*.
 
+<!-- REQUESTED-PRACTICAL-EXAMPLES:START -->
+## Ejemplos guiados de los temas solicitados
+
+Estos ejemplos acompañan la ampliación académica. No son código para copiar sin contexto: ejecuta, modifica, provoca un fallo y conserva la evidencia.
+
+### Ejemplo guiado: Server Actions
+
+**Qué demuestra:** convierte el concepto en una evidencia pequeña, explícita y verificable dentro de RutaFlow. El ejemplo separa la decisión del framework para poder probarla y cambiarla.
+
+```tsx
+export function Evidence() {
+  const [verified, setVerified] = useState(false);
+  return <section><h2>Server Actions</h2><button onClick={() => setVerified(true)}>
+    {verified ? 'Verificado' : 'Ejecutar comprobación'}
+  </button></section>;
+}
+```
+
+**Práctica:** reemplaza el resultado exitoso por un fallo realista, agrega una aserción automatizada y registra qué señal permitiría diagnosticarlo en producción.
+
+<!-- REQUESTED-PRACTICAL-EXAMPLES:END -->
+
 ## Resumen del módulo
 
 **Puntos clave**

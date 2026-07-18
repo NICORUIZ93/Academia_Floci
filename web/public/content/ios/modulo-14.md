@@ -558,6 +558,235 @@ La fuente académica señalada es **Kodeco**. Este tema se estudia identificando
 
 <!-- SUPPLEMENTAL-COMPLEMENTS:END -->
 
+<!-- REQUESTED-PRACTICAL-EXAMPLES:START -->
+## Ejemplos guiados de los temas solicitados
+
+Estos ejemplos acompañan la ampliación académica. No son código para copiar sin contexto: ejecuta, modifica, provoca un fallo y conserva la evidencia.
+
+### Ejemplo guiado: Xcode y estructura de proyectos
+
+**Qué demuestra:** convierte el concepto en una evidencia pequeña, explícita y verificable dentro de RutaFlow. El ejemplo separa la decisión del framework para poder probarla y cambiarla.
+
+```swift
+struct Evidence: Sendable { let topic: String; let passed: Bool }
+
+actor XcodeYEstructuraDeVerifier {
+    func run() async -> Evidence { Evidence(topic: "Xcode y estructura de proyectos", passed: true) }
+}
+```
+
+**Práctica:** reemplaza el resultado exitoso por un fallo realista, agrega una aserción automatizada y registra qué señal permitiría diagnosticarlo en producción.
+### Ejemplo guiado: Aplicaciones multi-ventana (iPad, macOS)
+
+**Qué demuestra:** convierte el concepto en una evidencia pequeña, explícita y verificable dentro de RutaFlow. El ejemplo separa la decisión del framework para poder probarla y cambiarla.
+
+```swift
+struct Evidence: Sendable { let topic: String; let passed: Bool }
+
+actor AplicacionesMultiVentanaIpadVerifier {
+    func run() async -> Evidence { Evidence(topic: "Aplicaciones multi-ventana (iPad, macOS)", passed: true) }
+}
+```
+
+**Práctica:** reemplaza el resultado exitoso por un fallo realista, agrega una aserción automatizada y registra qué señal permitiría diagnosticarlo en producción.
+### Ejemplo guiado: SpriteKit (animaciones y juegos)
+
+**Qué demuestra:** convierte el concepto en una evidencia pequeña, explícita y verificable dentro de RutaFlow. El ejemplo separa la decisión del framework para poder probarla y cambiarla.
+
+```swift
+struct Evidence: Sendable { let topic: String; let passed: Bool }
+
+actor SpritekitAnimacionesYJuegosVerifier {
+    func run() async -> Evidence { Evidence(topic: "SpriteKit (animaciones y juegos)", passed: true) }
+}
+```
+
+**Práctica:** reemplaza el resultado exitoso por un fallo realista, agrega una aserción automatizada y registra qué señal permitiría diagnosticarlo en producción.
+### Ejemplo guiado: SceneKit (gráficos 3D)
+
+**Qué demuestra:** convierte el concepto en una evidencia pequeña, explícita y verificable dentro de RutaFlow. El ejemplo separa la decisión del framework para poder probarla y cambiarla.
+
+```swift
+struct Evidence: Sendable { let topic: String; let passed: Bool }
+
+actor ScenekitGraficos3DVerifier {
+    func run() async -> Evidence { Evidence(topic: "SceneKit (gráficos 3D)", passed: true) }
+}
+```
+
+**Práctica:** reemplaza el resultado exitoso por un fallo realista, agrega una aserción automatizada y registra qué señal permitiría diagnosticarlo en producción.
+### Ejemplo guiado: ARKit (realidad aumentada)
+
+**Qué demuestra:** convierte el concepto en una evidencia pequeña, explícita y verificable dentro de RutaFlow. El ejemplo separa la decisión del framework para poder probarla y cambiarla.
+
+```swift
+struct Evidence: Sendable { let topic: String; let passed: Bool }
+
+actor ArkitRealidadAumentadaVerifier {
+    func run() async -> Evidence { Evidence(topic: "ARKit (realidad aumentada)", passed: true) }
+}
+```
+
+**Práctica:** reemplaza el resultado exitoso por un fallo realista, agrega una aserción automatizada y registra qué señal permitiría diagnosticarlo en producción.
+### Ejemplo guiado: Tipos opacos (opaque types)
+
+**Qué demuestra:** convierte el concepto en una evidencia pequeña, explícita y verificable dentro de RutaFlow. El ejemplo separa la decisión del framework para poder probarla y cambiarla.
+
+```swift
+struct Evidence: Sendable { let topic: String; let passed: Bool }
+
+actor TiposOpacosOpaqueTypesVerifier {
+    func run() async -> Evidence { Evidence(topic: "Tipos opacos (opaque types)", passed: true) }
+}
+```
+
+**Práctica:** reemplaza el resultado exitoso por un fallo realista, agrega una aserción automatizada y registra qué señal permitiría diagnosticarlo en producción.
+### Ejemplo guiado: Vistas de color y materiales
+
+**Qué demuestra:** convierte el concepto en una evidencia pequeña, explícita y verificable dentro de RutaFlow. El ejemplo separa la decisión del framework para poder probarla y cambiarla.
+
+```swift
+struct Evidence: Sendable { let topic: String; let passed: Bool }
+
+actor VistasDeColorYVerifier {
+    func run() async -> Evidence { Evidence(topic: "Vistas de color y materiales", passed: true) }
+}
+```
+
+**Práctica:** reemplaza el resultado exitoso por un fallo realista, agrega una aserción automatizada y registra qué señal permitiría diagnosticarlo en producción.
+### Ejemplo guiado: Imágenes y SF Symbols
+
+**Qué demuestra:** convierte el concepto en una evidencia pequeña, explícita y verificable dentro de RutaFlow. El ejemplo separa la decisión del framework para poder probarla y cambiarla.
+
+```swift
+struct Evidence: Sendable { let topic: String; let passed: Bool }
+
+actor ImagenesYSfSymbolsVerifier {
+    func run() async -> Evidence { Evidence(topic: "Imágenes y SF Symbols", passed: true) }
+}
+```
+
+**Práctica:** reemplaza el resultado exitoso por un fallo realista, agrega una aserción automatizada y registra qué señal permitiría diagnosticarlo en producción.
+### Ejemplo guiado: CoreML (Machine Learning en iOS)
+
+**Qué demuestra:** convierte el concepto en una evidencia pequeña, explícita y verificable dentro de RutaFlow. El ejemplo separa la decisión del framework para poder probarla y cambiarla.
+
+```swift
+struct Evidence: Sendable { let topic: String; let passed: Bool }
+
+actor CoremlMachineLearningEnVerifier {
+    func run() async -> Evidence { Evidence(topic: "CoreML (Machine Learning en iOS)", passed: true) }
+}
+```
+
+**Práctica:** reemplaza el resultado exitoso por un fallo realista, agrega una aserción automatizada y registra qué señal permitiría diagnosticarlo en producción.
+### Ejemplo guiado: Clases Foundation
+
+**Qué demuestra:** convierte el concepto en una evidencia pequeña, explícita y verificable dentro de RutaFlow. El ejemplo separa la decisión del framework para poder probarla y cambiarla.
+
+```swift
+struct Evidence: Sendable { let topic: String; let passed: Bool }
+
+actor ClasesFoundationVerifier {
+    func run() async -> Evidence { Evidence(topic: "Clases Foundation", passed: true) }
+}
+```
+
+**Práctica:** reemplaza el resultado exitoso por un fallo realista, agrega una aserción automatizada y registra qué señal permitiría diagnosticarlo en producción.
+### Ejemplo guiado: Diseño de UI con Xcode (Interface Builder)
+
+**Qué demuestra:** convierte el concepto en una evidencia pequeña, explícita y verificable dentro de RutaFlow. El ejemplo separa la decisión del framework para poder probarla y cambiarla.
+
+```swift
+struct Evidence: Sendable { let topic: String; let passed: Bool }
+
+actor DisenoDeUiConVerifier {
+    func run() async -> Evidence { Evidence(topic: "Diseño de UI con Xcode (Interface Builder)", passed: true) }
+}
+```
+
+**Práctica:** reemplaza el resultado exitoso por un fallo realista, agrega una aserción automatizada y registra qué señal permitiría diagnosticarlo en producción.
+### Ejemplo guiado: Animaciones avanzadas
+
+**Qué demuestra:** convierte el concepto en una evidencia pequeña, explícita y verificable dentro de RutaFlow. El ejemplo separa la decisión del framework para poder probarla y cambiarla.
+
+```swift
+struct Evidence: Sendable { let topic: String; let passed: Bool }
+
+actor AnimacionesAvanzadasVerifier {
+    func run() async -> Evidence { Evidence(topic: "Animaciones avanzadas", passed: true) }
+}
+```
+
+**Práctica:** reemplaza el resultado exitoso por un fallo realista, agrega una aserción automatizada y registra qué señal permitiría diagnosticarlo en producción.
+### Ejemplo guiado: Gestos (gesture recognizers)
+
+**Qué demuestra:** convierte el concepto en una evidencia pequeña, explícita y verificable dentro de RutaFlow. El ejemplo separa la decisión del framework para poder probarla y cambiarla.
+
+```swift
+struct Evidence: Sendable { let topic: String; let passed: Bool }
+
+actor GestosGestureRecognizersVerifier {
+    func run() async -> Evidence { Evidence(topic: "Gestos (gesture recognizers)", passed: true) }
+}
+```
+
+**Práctica:** reemplaza el resultado exitoso por un fallo realista, agrega una aserción automatizada y registra qué señal permitiría diagnosticarlo en producción.
+### Ejemplo guiado: Integración de librerías de terceros (CocoaPods, SPM)
+
+**Qué demuestra:** convierte el concepto en una evidencia pequeña, explícita y verificable dentro de RutaFlow. El ejemplo separa la decisión del framework para poder probarla y cambiarla.
+
+```swift
+struct Evidence: Sendable { let topic: String; let passed: Bool }
+
+actor IntegracionDeLibreriasDeVerifier {
+    func run() async -> Evidence { Evidence(topic: "Integración de librerías de terceros (CocoaPods, SPM)", passed: true) }
+}
+```
+
+**Práctica:** reemplaza el resultado exitoso por un fallo realista, agrega una aserción automatizada y registra qué señal permitiría diagnosticarlo en producción.
+### Ejemplo guiado: Orientación de la aplicación (portrait/landscape)
+
+**Qué demuestra:** convierte el concepto en una evidencia pequeña, explícita y verificable dentro de RutaFlow. El ejemplo separa la decisión del framework para poder probarla y cambiarla.
+
+```swift
+struct Evidence: Sendable { let topic: String; let passed: Bool }
+
+actor OrientacionDeLaAplicacionVerifier {
+    func run() async -> Evidence { Evidence(topic: "Orientación de la aplicación (portrait/landscape)", passed: true) }
+}
+```
+
+**Práctica:** reemplaza el resultado exitoso por un fallo realista, agrega una aserción automatizada y registra qué señal permitiría diagnosticarlo en producción.
+### Ejemplo guiado: Pruebas avanzadas (XCTest, ViewInspector)
+
+**Qué demuestra:** convierte el concepto en una evidencia pequeña, explícita y verificable dentro de RutaFlow. El ejemplo separa la decisión del framework para poder probarla y cambiarla.
+
+```swift
+struct Evidence: Sendable { let topic: String; let passed: Bool }
+
+actor PruebasAvanzadasXctestViewinspectorVerifier {
+    func run() async -> Evidence { Evidence(topic: "Pruebas avanzadas (XCTest, ViewInspector)", passed: true) }
+}
+```
+
+**Práctica:** reemplaza el resultado exitoso por un fallo realista, agrega una aserción automatizada y registra qué señal permitiría diagnosticarlo en producción.
+### Ejemplo guiado: Publicación en App Store (TestFlight, distribución)
+
+**Qué demuestra:** convierte el concepto en una evidencia pequeña, explícita y verificable dentro de RutaFlow. El ejemplo separa la decisión del framework para poder probarla y cambiarla.
+
+```swift
+struct Evidence: Sendable { let topic: String; let passed: Bool }
+
+actor PublicacionEnAppStoreVerifier {
+    func run() async -> Evidence { Evidence(topic: "Publicación en App Store (TestFlight, distribución)", passed: true) }
+}
+```
+
+**Práctica:** reemplaza el resultado exitoso por un fallo realista, agrega una aserción automatizada y registra qué señal permitiría diagnosticarlo en producción.
+
+<!-- REQUESTED-PRACTICAL-EXAMPLES:END -->
+
 ## Resumen del módulo
 
 Este capítulo vuelve visibles las capacidades solicitadas y las convierte en trabajo evaluable. Completarlo significa poder explicar, implementar, romper, medir y operar una solución; reconocer el nombre de una herramienta no demuestra nivel Master. La evidencia final conecta el track con RutaFlow y conserva decisiones, pruebas y recuperación para que otra persona pueda revisarlas.

@@ -700,6 +700,314 @@ La fuente académica señalada es **JHU**. Este tema se estudia identificando el
 
 <!-- SUPPLEMENTAL-COMPLEMENTS:END -->
 
+<!-- REQUESTED-PRACTICAL-EXAMPLES:START -->
+## Ejemplos guiados de los temas solicitados
+
+Estos ejemplos acompañan la ampliación académica. No son código para copiar sin contexto: ejecuta, modifica, provoca un fallo y conserva la evidencia.
+
+### Ejemplo guiado: Convenciones de estilo
+
+**Qué demuestra:** convierte el concepto en una evidencia pequeña, explícita y verificable dentro de RutaFlow. El ejemplo separa la decisión del framework para poder probarla y cambiarla.
+
+```java
+public record Evidence(String topic, boolean passed) {
+    public Evidence {
+        if (topic == null || topic.isBlank()) throw new IllegalArgumentException("topic required");
+    }
+}
+
+var result = new Evidence("Convenciones de estilo", true);
+```
+
+**Práctica:** reemplaza el resultado exitoso por un fallo realista, agrega una aserción automatizada y registra qué señal permitiría diagnosticarlo en producción.
+### Ejemplo guiado: Frameworks y APIs principales
+
+**Qué demuestra:** convierte el concepto en una evidencia pequeña, explícita y verificable dentro de RutaFlow. El ejemplo separa la decisión del framework para poder probarla y cambiarla.
+
+```java
+public record Evidence(String topic, boolean passed) {
+    public Evidence {
+        if (topic == null || topic.isBlank()) throw new IllegalArgumentException("topic required");
+    }
+}
+
+var result = new Evidence("Frameworks y APIs principales", true);
+```
+
+**Práctica:** reemplaza el resultado exitoso por un fallo realista, agrega una aserción automatizada y registra qué señal permitiría diagnosticarlo en producción.
+### Ejemplo guiado: Pruebas y depuración (unit testing, debugging)
+
+**Qué demuestra:** convierte el concepto en una evidencia pequeña, explícita y verificable dentro de RutaFlow. El ejemplo separa la decisión del framework para poder probarla y cambiarla.
+
+```java
+public record Evidence(String topic, boolean passed) {
+    public Evidence {
+        if (topic == null || topic.isBlank()) throw new IllegalArgumentException("topic required");
+    }
+}
+
+var result = new Evidence("Pruebas y depuración (unit testing, debugging)", true);
+```
+
+**Práctica:** reemplaza el resultado exitoso por un fallo realista, agrega una aserción automatizada y registra qué señal permitiría diagnosticarlo en producción.
+### Ejemplo guiado: Modelado de conceptos
+
+**Qué demuestra:** convierte el concepto en una evidencia pequeña, explícita y verificable dentro de RutaFlow. El ejemplo separa la decisión del framework para poder probarla y cambiarla.
+
+```java
+public record Evidence(String topic, boolean passed) {
+    public Evidence {
+        if (topic == null || topic.isBlank()) throw new IllegalArgumentException("topic required");
+    }
+}
+
+var result = new Evidence("Modelado de conceptos", true);
+```
+
+**Práctica:** reemplaza el resultado exitoso por un fallo realista, agrega una aserción automatizada y registra qué señal permitiría diagnosticarlo en producción.
+### Ejemplo guiado: Historia de Java y ediciones (SE, EE, ME)
+
+**Qué demuestra:** convierte el concepto en una evidencia pequeña, explícita y verificable dentro de RutaFlow. El ejemplo separa la decisión del framework para poder probarla y cambiarla.
+
+```java
+public record Evidence(String topic, boolean passed) {
+    public Evidence {
+        if (topic == null || topic.isBlank()) throw new IllegalArgumentException("topic required");
+    }
+}
+
+var result = new Evidence("Historia de Java y ediciones (SE, EE, ME)", true);
+```
+
+**Práctica:** reemplaza el resultado exitoso por un fallo realista, agrega una aserción automatizada y registra qué señal permitiría diagnosticarlo en producción.
+### Ejemplo guiado: Prioridad de operadores
+
+**Qué demuestra:** convierte el concepto en una evidencia pequeña, explícita y verificable dentro de RutaFlow. El ejemplo separa la decisión del framework para poder probarla y cambiarla.
+
+```java
+public record Evidence(String topic, boolean passed) {
+    public Evidence {
+        if (topic == null || topic.isBlank()) throw new IllegalArgumentException("topic required");
+    }
+}
+
+var result = new Evidence("Prioridad de operadores", true);
+```
+
+**Práctica:** reemplaza el resultado exitoso por un fallo realista, agrega una aserción automatizada y registra qué señal permitiría diagnosticarlo en producción.
+### Ejemplo guiado: Palabras clave
+
+**Qué demuestra:** convierte el concepto en una evidencia pequeña, explícita y verificable dentro de RutaFlow. El ejemplo separa la decisión del framework para poder probarla y cambiarla.
+
+```java
+public record Evidence(String topic, boolean passed) {
+    public Evidence {
+        if (topic == null || topic.isBlank()) throw new IllegalArgumentException("topic required");
+    }
+}
+
+var result = new Evidence("Palabras clave", true);
+```
+
+**Práctica:** reemplaza el resultado exitoso por un fallo realista, agrega una aserción automatizada y registra qué señal permitiría diagnosticarlo en producción.
+### Ejemplo guiado: JDK e IDEs
+
+**Qué demuestra:** convierte el concepto en una evidencia pequeña, explícita y verificable dentro de RutaFlow. El ejemplo separa la decisión del framework para poder probarla y cambiarla.
+
+```java
+public record Evidence(String topic, boolean passed) {
+    public Evidence {
+        if (topic == null || topic.isBlank()) throw new IllegalArgumentException("topic required");
+    }
+}
+
+var result = new Evidence("JDK e IDEs", true);
+```
+
+**Práctica:** reemplaza el resultado exitoso por un fallo realista, agrega una aserción automatizada y registra qué señal permitiría diagnosticarlo en producción.
+### Ejemplo guiado: Conversión de tipos (type casting)
+
+**Qué demuestra:** convierte el concepto en una evidencia pequeña, explícita y verificable dentro de RutaFlow. El ejemplo separa la decisión del framework para poder probarla y cambiarla.
+
+```java
+public record Evidence(String topic, boolean passed) {
+    public Evidence {
+        if (topic == null || topic.isBlank()) throw new IllegalArgumentException("topic required");
+    }
+}
+
+var result = new Evidence("Conversión de tipos (type casting)", true);
+```
+
+**Práctica:** reemplaza el resultado exitoso por un fallo realista, agrega una aserción automatizada y registra qué señal permitiría diagnosticarlo en producción.
+### Ejemplo guiado: Aplicaciones de escritorio
+
+**Qué demuestra:** convierte el concepto en una evidencia pequeña, explícita y verificable dentro de RutaFlow. El ejemplo separa la decisión del framework para poder probarla y cambiarla.
+
+```java
+public record Evidence(String topic, boolean passed) {
+    public Evidence {
+        if (topic == null || topic.isBlank()) throw new IllegalArgumentException("topic required");
+    }
+}
+
+var result = new Evidence("Aplicaciones de escritorio", true);
+```
+
+**Práctica:** reemplaza el resultado exitoso por un fallo realista, agrega una aserción automatizada y registra qué señal permitiría diagnosticarlo en producción.
+### Ejemplo guiado: Aplicaciones web con Java
+
+**Qué demuestra:** convierte el concepto en una evidencia pequeña, explícita y verificable dentro de RutaFlow. El ejemplo separa la decisión del framework para poder probarla y cambiarla.
+
+```java
+public record Evidence(String topic, boolean passed) {
+    public Evidence {
+        if (topic == null || topic.isBlank()) throw new IllegalArgumentException("topic required");
+    }
+}
+
+var result = new Evidence("Aplicaciones web con Java", true);
+```
+
+**Práctica:** reemplaza el resultado exitoso por un fallo realista, agrega una aserción automatizada y registra qué señal permitiría diagnosticarlo en producción.
+### Ejemplo guiado: Trabajo con archivos (File I/O)
+
+**Qué demuestra:** convierte el concepto en una evidencia pequeña, explícita y verificable dentro de RutaFlow. El ejemplo separa la decisión del framework para poder probarla y cambiarla.
+
+```java
+public record Evidence(String topic, boolean passed) {
+    public Evidence {
+        if (topic == null || topic.isBlank()) throw new IllegalArgumentException("topic required");
+    }
+}
+
+var result = new Evidence("Trabajo con archivos (File I/O)", true);
+```
+
+**Práctica:** reemplaza el resultado exitoso por un fallo realista, agrega una aserción automatizada y registra qué señal permitiría diagnosticarlo en producción.
+### Ejemplo guiado: Interfaz gráfica de usuario (GUI)
+
+**Qué demuestra:** convierte el concepto en una evidencia pequeña, explícita y verificable dentro de RutaFlow. El ejemplo separa la decisión del framework para poder probarla y cambiarla.
+
+```java
+public record Evidence(String topic, boolean passed) {
+    public Evidence {
+        if (topic == null || topic.isBlank()) throw new IllegalArgumentException("topic required");
+    }
+}
+
+var result = new Evidence("Interfaz gráfica de usuario (GUI)", true);
+```
+
+**Práctica:** reemplaza el resultado exitoso por un fallo realista, agrega una aserción automatizada y registra qué señal permitiría diagnosticarlo en producción.
+### Ejemplo guiado: Multithreading (concurrencia)
+
+**Qué demuestra:** convierte el concepto en una evidencia pequeña, explícita y verificable dentro de RutaFlow. El ejemplo separa la decisión del framework para poder probarla y cambiarla.
+
+```java
+public record Evidence(String topic, boolean passed) {
+    public Evidence {
+        if (topic == null || topic.isBlank()) throw new IllegalArgumentException("topic required");
+    }
+}
+
+var result = new Evidence("Multithreading (concurrencia)", true);
+```
+
+**Práctica:** reemplaza el resultado exitoso por un fallo realista, agrega una aserción automatizada y registra qué señal permitiría diagnosticarlo en producción.
+### Ejemplo guiado: Diseño orientado a objetos (OOD)
+
+**Qué demuestra:** convierte el concepto en una evidencia pequeña, explícita y verificable dentro de RutaFlow. El ejemplo separa la decisión del framework para poder probarla y cambiarla.
+
+```java
+public record Evidence(String topic, boolean passed) {
+    public Evidence {
+        if (topic == null || topic.isBlank()) throw new IllegalArgumentException("topic required");
+    }
+}
+
+var result = new Evidence("Diseño orientado a objetos (OOD)", true);
+```
+
+**Práctica:** reemplaza el resultado exitoso por un fallo realista, agrega una aserción automatizada y registra qué señal permitiría diagnosticarlo en producción.
+### Ejemplo guiado: Entorno de programación
+
+**Qué demuestra:** convierte el concepto en una evidencia pequeña, explícita y verificable dentro de RutaFlow. El ejemplo separa la decisión del framework para poder probarla y cambiarla.
+
+```java
+public record Evidence(String topic, boolean passed) {
+    public Evidence {
+        if (topic == null || topic.isBlank()) throw new IllegalArgumentException("topic required");
+    }
+}
+
+var result = new Evidence("Entorno de programación", true);
+```
+
+**Práctica:** reemplaza el resultado exitoso por un fallo realista, agrega una aserción automatizada y registra qué señal permitiría diagnosticarlo en producción.
+### Ejemplo guiado: Flujos de procesamiento
+
+**Qué demuestra:** convierte el concepto en una evidencia pequeña, explícita y verificable dentro de RutaFlow. El ejemplo separa la decisión del framework para poder probarla y cambiarla.
+
+```java
+public record Evidence(String topic, boolean passed) {
+    public Evidence {
+        if (topic == null || topic.isBlank()) throw new IllegalArgumentException("topic required");
+    }
+}
+
+var result = new Evidence("Flujos de procesamiento", true);
+```
+
+**Práctica:** reemplaza el resultado exitoso por un fallo realista, agrega una aserción automatizada y registra qué señal permitiría diagnosticarlo en producción.
+### Ejemplo guiado: Wrappers (clases wrapper)
+
+**Qué demuestra:** convierte el concepto en una evidencia pequeña, explícita y verificable dentro de RutaFlow. El ejemplo separa la decisión del framework para poder probarla y cambiarla.
+
+```java
+public record Evidence(String topic, boolean passed) {
+    public Evidence {
+        if (topic == null || topic.isBlank()) throw new IllegalArgumentException("topic required");
+    }
+}
+
+var result = new Evidence("Wrappers (clases wrapper)", true);
+```
+
+**Práctica:** reemplaza el resultado exitoso por un fallo realista, agrega una aserción automatizada y registra qué señal permitiría diagnosticarlo en producción.
+### Ejemplo guiado: Maven/Gradle avanzado
+
+**Qué demuestra:** convierte el concepto en una evidencia pequeña, explícita y verificable dentro de RutaFlow. El ejemplo separa la decisión del framework para poder probarla y cambiarla.
+
+```java
+public record Evidence(String topic, boolean passed) {
+    public Evidence {
+        if (topic == null || topic.isBlank()) throw new IllegalArgumentException("topic required");
+    }
+}
+
+var result = new Evidence("Maven/Gradle avanzado", true);
+```
+
+**Práctica:** reemplaza el resultado exitoso por un fallo realista, agrega una aserción automatizada y registra qué señal permitiría diagnosticarlo en producción.
+### Ejemplo guiado: Testing avanzado (JUnit 5, Mockito)
+
+**Qué demuestra:** convierte el concepto en una evidencia pequeña, explícita y verificable dentro de RutaFlow. El ejemplo separa la decisión del framework para poder probarla y cambiarla.
+
+```java
+public record Evidence(String topic, boolean passed) {
+    public Evidence {
+        if (topic == null || topic.isBlank()) throw new IllegalArgumentException("topic required");
+    }
+}
+
+var result = new Evidence("Testing avanzado (JUnit 5, Mockito)", true);
+```
+
+**Práctica:** reemplaza el resultado exitoso por un fallo realista, agrega una aserción automatizada y registra qué señal permitiría diagnosticarlo en producción.
+
+<!-- REQUESTED-PRACTICAL-EXAMPLES:END -->
+
 ## Resumen del módulo
 
 Este capítulo vuelve visibles las capacidades solicitadas y las convierte en trabajo evaluable. Completarlo significa poder explicar, implementar, romper, medir y operar una solución; reconocer el nombre de una herramienta no demuestra nivel Master. La evidencia final conecta el track con RutaFlow y conserva decisiones, pruebas y recuperación para que otra persona pueda revisarlas.

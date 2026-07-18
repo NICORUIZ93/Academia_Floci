@@ -74,7 +74,12 @@ Construye y verifica el ejemplo.
 ## Resumen del módulo
 
 La evidencia demuestra el aprendizaje.`;
-    const fetchSpy = vi.spyOn(globalThis, 'fetch').mockResolvedValue(new Response(markdown, { status: 200 }));
+    const fetchSpy = vi.spyOn(globalThis, 'fetch').mockImplementation(input => {
+      const url = String(input);
+      return Promise.resolve(url.includes('topic-index.json')
+        ? new Response('{}', { status: 200, headers: { 'Content-Type': 'application/json' } })
+        : new Response(markdown, { status: 200 }));
+    });
 
     try {
       const harness = await RouterTestingHarness.create();

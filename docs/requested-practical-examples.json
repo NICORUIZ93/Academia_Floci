@@ -1,0 +1,1289 @@
+{
+  "listedRows": 214,
+  "items": [
+    {
+      "track": "cloud",
+      "position": 1,
+      "topic": "Infraestructura de centros de datos",
+      "module": 33
+    },
+    {
+      "track": "cloud",
+      "position": 2,
+      "topic": "Modelos de facturación y economía de la nube",
+      "module": 33
+    },
+    {
+      "track": "cloud",
+      "position": 3,
+      "topic": "Replicación y persistencia de datos",
+      "module": 33
+    },
+    {
+      "track": "cloud",
+      "position": 4,
+      "topic": "Almacenamiento distribuido",
+      "module": 33
+    },
+    {
+      "track": "cloud",
+      "position": 5,
+      "topic": "Bases de datos en memoria (NewSQL)",
+      "module": 33
+    },
+    {
+      "track": "cloud",
+      "position": 6,
+      "topic": "Migración a la nube (6R's)",
+      "module": 33
+    },
+    {
+      "track": "cloud",
+      "position": 7,
+      "topic": "Conectividad y resolución de problemas",
+      "module": 33
+    },
+    {
+      "track": "cloud",
+      "position": 8,
+      "topic": "Algoritmos y paradigmas cloud-native",
+      "module": 33
+    },
+    {
+      "track": "cloud",
+      "position": 9,
+      "topic": "Factores económicos de la nube",
+      "module": 33
+    },
+    {
+      "track": "cloud",
+      "position": 10,
+      "topic": "Seguridad en la nube (amenazas, cifrado, compliance)",
+      "module": 33
+    },
+    {
+      "track": "cloud",
+      "position": 11,
+      "topic": "Gestión de secretos (Vault)",
+      "module": 33
+    },
+    {
+      "track": "cloud",
+      "position": 12,
+      "topic": "Recuperación ante desastres (DR)",
+      "module": 1
+    },
+    {
+      "track": "cloud",
+      "position": 13,
+      "topic": "Serverless avanzado (cold start, layers)",
+      "module": 33
+    },
+    {
+      "track": "cloud",
+      "position": 14,
+      "topic": "Edge Computing",
+      "module": 33
+    },
+    {
+      "track": "cloud",
+      "position": 15,
+      "topic": "Computación cuántica en la nube",
+      "module": 33
+    },
+    {
+      "track": "cloud",
+      "position": 16,
+      "topic": "Multi-cloud y nubes híbridas",
+      "module": 33
+    },
+    {
+      "track": "cloud",
+      "position": 17,
+      "topic": "Terraform avanzado (módulos, state, workspaces)",
+      "module": 33
+    },
+    {
+      "track": "cloud",
+      "position": 18,
+      "topic": "Kubernetes avanzado (Operators, CRDs, Service Mesh)",
+      "module": 33
+    },
+    {
+      "track": "cloud",
+      "position": 19,
+      "topic": "CI/CD avanzado (ArgoCD, FluxCD)",
+      "module": 33
+    },
+    {
+      "track": "cloud",
+      "position": 20,
+      "topic": "Observabilidad avanzada (OpenTelemetry, tracing)",
+      "module": 33
+    },
+    {
+      "track": "devops",
+      "position": 1,
+      "topic": "Infraestructura como código (Pulumi)",
+      "module": 10
+    },
+    {
+      "track": "devops",
+      "position": 2,
+      "topic": "Gestión de secretos (Vault)",
+      "module": 12
+    },
+    {
+      "track": "devops",
+      "position": 3,
+      "topic": "Recuperación ante desastres",
+      "module": 15
+    },
+    {
+      "track": "devops",
+      "position": 4,
+      "topic": "Arquitectura de microservicios (patrones)",
+      "module": 10
+    },
+    {
+      "track": "devops",
+      "position": 5,
+      "topic": "DevSecOps (SAST, DAST, SCA)",
+      "module": 15
+    },
+    {
+      "track": "devops",
+      "position": 6,
+      "topic": "Gestión de configuración (Ansible avanzado)",
+      "module": 15
+    },
+    {
+      "track": "devops",
+      "position": 7,
+      "topic": "Estrategias de despliegue continuo (canary, blue-green)",
+      "module": 15
+    },
+    {
+      "track": "devops",
+      "position": 8,
+      "topic": "Tubería de despliegue avanzada",
+      "module": 15
+    },
+    {
+      "track": "devops",
+      "position": 9,
+      "topic": "Gestión de configuraciones en entornos",
+      "module": 15
+    },
+    {
+      "track": "devops",
+      "position": 10,
+      "topic": "Clasificación de herramientas DevOps",
+      "module": 15
+    },
+    {
+      "track": "devops",
+      "position": 11,
+      "topic": "Virtualización y redes en la nube",
+      "module": 15
+    },
+    {
+      "track": "devops",
+      "position": 12,
+      "topic": "Medición y seguridad en infraestructura",
+      "module": 15
+    },
+    {
+      "track": "devops",
+      "position": 13,
+      "topic": "Pruebas de software (unitarias, integración)",
+      "module": 15
+    },
+    {
+      "track": "devops",
+      "position": 14,
+      "topic": "Post-despliegue (monitoreo)",
+      "module": 15
+    },
+    {
+      "track": "devops",
+      "position": 15,
+      "topic": "GitOps (ArgoCD, FluxCD)",
+      "module": 12
+    },
+    {
+      "track": "devops",
+      "position": 16,
+      "topic": "Service Mesh (Istio, Linkerd)",
+      "module": 7
+    },
+    {
+      "track": "devops",
+      "position": 17,
+      "topic": "SRE (SLI/SLO/SLA)",
+      "module": 9
+    },
+    {
+      "track": "devops",
+      "position": 18,
+      "topic": "Métricas DORA",
+      "module": 15
+    },
+    {
+      "track": "devops",
+      "position": 19,
+      "topic": "Integración continua avanzada",
+      "module": 11
+    },
+    {
+      "track": "devops",
+      "position": 20,
+      "topic": "Despliegue continuo en múltiples entornos",
+      "module": 8
+    },
+    {
+      "track": "javascript",
+      "position": 1,
+      "topic": "Depuración y flujo de trabajo (DevTools)",
+      "module": 14
+    },
+    {
+      "track": "javascript",
+      "position": 2,
+      "topic": "IDE y herramientas (configuración)",
+      "module": 14
+    },
+    {
+      "track": "javascript",
+      "position": 3,
+      "topic": "Funciones integradas (built-in objects)",
+      "module": 14
+    },
+    {
+      "track": "javascript",
+      "position": 4,
+      "topic": "Fecha y hora (manejo de fechas)",
+      "module": 14
+    },
+    {
+      "track": "javascript",
+      "position": 5,
+      "topic": "Manipulación de cadenas",
+      "module": 14
+    },
+    {
+      "track": "javascript",
+      "position": 6,
+      "topic": "Depuración y manejo de errores avanzado",
+      "module": 14
+    },
+    {
+      "track": "javascript",
+      "position": 7,
+      "topic": "Proyectos prácticos hands-on",
+      "module": 14
+    },
+    {
+      "track": "javascript",
+      "position": 8,
+      "topic": "JavaScript en el navegador (programación del lado del cliente)",
+      "module": 14
+    },
+    {
+      "track": "javascript",
+      "position": 9,
+      "topic": "Historia de JavaScript y evolución",
+      "module": 14
+    },
+    {
+      "track": "javascript",
+      "position": 10,
+      "topic": "Relación con ECMAScript",
+      "module": 14
+    },
+    {
+      "track": "javascript",
+      "position": 11,
+      "topic": "Versiones de JavaScript (ES5, ES6, ES2024...)",
+      "module": 14
+    },
+    {
+      "track": "javascript",
+      "position": 12,
+      "topic": "HTML dinámico (DHTML)",
+      "module": 14
+    },
+    {
+      "track": "javascript",
+      "position": 13,
+      "topic": "Lenguajes de scripting del lado del cliente",
+      "module": 14
+    },
+    {
+      "track": "javascript",
+      "position": 14,
+      "topic": "Implementación en aplicaciones web",
+      "module": 14
+    },
+    {
+      "track": "javascript",
+      "position": 15,
+      "topic": "Manipulación de números",
+      "module": 14
+    },
+    {
+      "track": "javascript",
+      "position": 16,
+      "topic": "TypeScript (tipos avanzados, utility types)",
+      "module": 14
+    },
+    {
+      "track": "javascript",
+      "position": 17,
+      "topic": "Web Workers y Service Workers",
+      "module": 10
+    },
+    {
+      "track": "javascript",
+      "position": 18,
+      "topic": "Bundlers (Webpack, Vite, Rollup)",
+      "module": 14
+    },
+    {
+      "track": "javascript",
+      "position": 19,
+      "topic": "Accesibilidad (a11y)",
+      "module": 14
+    },
+    {
+      "track": "javascript",
+      "position": 20,
+      "topic": "Internacionalización (i18n)",
+      "module": 14
+    },
+    {
+      "track": "node",
+      "position": 1,
+      "topic": "Fundamentos de HTTP y redes",
+      "module": 14
+    },
+    {
+      "track": "node",
+      "position": 2,
+      "topic": "Seguridad en aplicaciones web (OWASP)",
+      "module": 14
+    },
+    {
+      "track": "node",
+      "position": 3,
+      "topic": "Conexión a bases de datos SQL (PostgreSQL)",
+      "module": 14
+    },
+    {
+      "track": "node",
+      "position": 4,
+      "topic": "Desarrollo full-stack con Node.js",
+      "module": 14
+    },
+    {
+      "track": "node",
+      "position": 5,
+      "topic": "Enrutamiento en Next.js",
+      "module": 14
+    },
+    {
+      "track": "node",
+      "position": 6,
+      "topic": "Renderizado del lado del servidor (SSR) en Next.js",
+      "module": 14
+    },
+    {
+      "track": "node",
+      "position": 7,
+      "topic": "Generación de sitios estáticos (SSG)",
+      "module": 14
+    },
+    {
+      "track": "node",
+      "position": 8,
+      "topic": "Creación de rutas API en Next.js",
+      "module": 14
+    },
+    {
+      "track": "node",
+      "position": 9,
+      "topic": "Estrategias de despliegue seguro",
+      "module": 14
+    },
+    {
+      "track": "node",
+      "position": 10,
+      "topic": "Pruebas con Postman",
+      "module": 14
+    },
+    {
+      "track": "node",
+      "position": 11,
+      "topic": "Arquitectura MEAN/MERN",
+      "module": 14
+    },
+    {
+      "track": "node",
+      "position": 12,
+      "topic": "TypeScript en Node.js",
+      "module": 14
+    },
+    {
+      "track": "node",
+      "position": 13,
+      "topic": "Estructuras de datos y algoritmos en Node.js",
+      "module": 14
+    },
+    {
+      "track": "node",
+      "position": 14,
+      "topic": "GraphQL avanzado",
+      "module": 14
+    },
+    {
+      "track": "node",
+      "position": 15,
+      "topic": "Microservicios con message queues (Kafka, RabbitMQ)",
+      "module": 14
+    },
+    {
+      "track": "java",
+      "position": 1,
+      "topic": "Convenciones de estilo",
+      "module": 15
+    },
+    {
+      "track": "java",
+      "position": 2,
+      "topic": "Frameworks y APIs principales",
+      "module": 15
+    },
+    {
+      "track": "java",
+      "position": 3,
+      "topic": "Pruebas y depuración (unit testing, debugging)",
+      "module": 15
+    },
+    {
+      "track": "java",
+      "position": 4,
+      "topic": "Modelado de conceptos",
+      "module": 15
+    },
+    {
+      "track": "java",
+      "position": 5,
+      "topic": "Historia de Java y ediciones (SE, EE, ME)",
+      "module": 15
+    },
+    {
+      "track": "java",
+      "position": 6,
+      "topic": "Prioridad de operadores",
+      "module": 15
+    },
+    {
+      "track": "java",
+      "position": 7,
+      "topic": "Palabras clave",
+      "module": 15
+    },
+    {
+      "track": "java",
+      "position": 8,
+      "topic": "JDK e IDEs",
+      "module": 15
+    },
+    {
+      "track": "java",
+      "position": 9,
+      "topic": "Conversión de tipos (type casting)",
+      "module": 15
+    },
+    {
+      "track": "java",
+      "position": 10,
+      "topic": "Aplicaciones de escritorio",
+      "module": 15
+    },
+    {
+      "track": "java",
+      "position": 11,
+      "topic": "Aplicaciones web con Java",
+      "module": 15
+    },
+    {
+      "track": "java",
+      "position": 12,
+      "topic": "Trabajo con archivos (File I/O)",
+      "module": 15
+    },
+    {
+      "track": "java",
+      "position": 13,
+      "topic": "Interfaz gráfica de usuario (GUI)",
+      "module": 15
+    },
+    {
+      "track": "java",
+      "position": 14,
+      "topic": "Multithreading (concurrencia)",
+      "module": 15
+    },
+    {
+      "track": "java",
+      "position": 15,
+      "topic": "Diseño orientado a objetos (OOD)",
+      "module": 15
+    },
+    {
+      "track": "java",
+      "position": 16,
+      "topic": "Entorno de programación",
+      "module": 15
+    },
+    {
+      "track": "java",
+      "position": 17,
+      "topic": "Flujos de procesamiento",
+      "module": 15
+    },
+    {
+      "track": "java",
+      "position": 18,
+      "topic": "Wrappers (clases wrapper)",
+      "module": 15
+    },
+    {
+      "track": "java",
+      "position": 19,
+      "topic": "Maven/Gradle avanzado",
+      "module": 15
+    },
+    {
+      "track": "java",
+      "position": 20,
+      "topic": "Testing avanzado (JUnit 5, Mockito)",
+      "module": 15
+    },
+    {
+      "track": "spring-boot",
+      "position": 1,
+      "topic": "Significado de Spring Boot en el desarrollo moderno",
+      "module": 15
+    },
+    {
+      "track": "spring-boot",
+      "position": 2,
+      "topic": "Conexión a MySQL",
+      "module": 15
+    },
+    {
+      "track": "spring-boot",
+      "position": 3,
+      "topic": "Programación Orientada a Aspectos (AOP) en Spring",
+      "module": 15
+    },
+    {
+      "track": "spring-boot",
+      "position": 4,
+      "topic": "Funciones adicionales de Spring",
+      "module": 15
+    },
+    {
+      "track": "spring-boot",
+      "position": 5,
+      "topic": "Configuración de proyectos Spring Boot",
+      "module": 15
+    },
+    {
+      "track": "spring-boot",
+      "position": 6,
+      "topic": "Trabajo con propiedades",
+      "module": 15
+    },
+    {
+      "track": "spring-boot",
+      "position": 7,
+      "topic": "Trabajo con perfiles",
+      "module": 15
+    },
+    {
+      "track": "spring-boot",
+      "position": 8,
+      "topic": "Registro (Logging)",
+      "module": 15
+    },
+    {
+      "track": "spring-boot",
+      "position": 9,
+      "topic": "Despliegue desde IDE",
+      "module": 15
+    },
+    {
+      "track": "spring-boot",
+      "position": 10,
+      "topic": "Ecosistema Spring Boot",
+      "module": 15
+    },
+    {
+      "track": "spring-boot",
+      "position": 11,
+      "topic": "Interceptores en Spring",
+      "module": 15
+    },
+    {
+      "track": "spring-boot",
+      "position": 12,
+      "topic": "Spring JDBC",
+      "module": 15
+    },
+    {
+      "track": "spring-boot",
+      "position": 13,
+      "topic": "Cifrado (encriptación)",
+      "module": 15
+    },
+    {
+      "track": "spring-boot",
+      "position": 14,
+      "topic": "Spring WebFlux (reactive)",
+      "module": 15
+    },
+    {
+      "track": "spring-boot",
+      "position": 15,
+      "topic": "Arquitectura Hexagonal",
+      "module": 15
+    },
+    {
+      "track": "angular",
+      "position": 1,
+      "topic": "SCSS (Enhanced Style Sheets)",
+      "module": 15
+    },
+    {
+      "track": "angular",
+      "position": 2,
+      "topic": "Carga diferida de Angular 17 (Deferred Loading)",
+      "module": 15
+    },
+    {
+      "track": "angular",
+      "position": 3,
+      "topic": "Gatillos personalizados (Custom triggers)",
+      "module": 15
+    },
+    {
+      "track": "angular",
+      "position": 4,
+      "topic": "Angular Universal e hidratación avanzada",
+      "module": 15
+    },
+    {
+      "track": "angular",
+      "position": 5,
+      "topic": "Estrategias de renderizado de alto rendimiento",
+      "module": 15
+    },
+    {
+      "track": "angular",
+      "position": 6,
+      "topic": "Component Store (gestión de estado)",
+      "module": 15
+    },
+    {
+      "track": "angular",
+      "position": 7,
+      "topic": "Patrones de estructuración empresarial",
+      "module": 15
+    },
+    {
+      "track": "angular",
+      "position": 8,
+      "topic": "Optimización de detección de cambios",
+      "module": 15
+    },
+    {
+      "track": "angular",
+      "position": 9,
+      "topic": "Pruebas de componentes",
+      "module": 15
+    },
+    {
+      "track": "angular",
+      "position": 10,
+      "topic": "Pruebas de servicios",
+      "module": 15
+    },
+    {
+      "track": "angular",
+      "position": 11,
+      "topic": "Pruebas de pipes",
+      "module": 15
+    },
+    {
+      "track": "angular",
+      "position": 12,
+      "topic": "Pruebas de enrutamiento",
+      "module": 15
+    },
+    {
+      "track": "angular",
+      "position": 13,
+      "topic": "Arquitectura escalable de proyectos",
+      "module": 15
+    },
+    {
+      "track": "angular",
+      "position": 14,
+      "topic": "Patrones de comunicación de componentes",
+      "module": 15
+    },
+    {
+      "track": "angular",
+      "position": 15,
+      "topic": "Desarrollo de aplicaciones multi-dispositivo",
+      "module": 15
+    },
+    {
+      "track": "angular",
+      "position": 16,
+      "topic": "Dispositivos sensoriales (GPS, cámara)",
+      "module": 15
+    },
+    {
+      "track": "angular",
+      "position": 17,
+      "topic": "Bibliotecas de componentes (reutilización)",
+      "module": 15
+    },
+    {
+      "track": "angular",
+      "position": 18,
+      "topic": "Micro Frontends avanzados",
+      "module": 15
+    },
+    {
+      "track": "react",
+      "position": 1,
+      "topic": "Ciclo de vida de componentes (Class vs Functional)",
+      "module": 14
+    },
+    {
+      "track": "react",
+      "position": 2,
+      "topic": "Frameworks Next.js y Remix",
+      "module": 14
+    },
+    {
+      "track": "react",
+      "position": 3,
+      "topic": "Operaciones asíncronas (async/await, thunks)",
+      "module": 14
+    },
+    {
+      "track": "react",
+      "position": 4,
+      "topic": "Pruebas en React (Jest, Testing Library)",
+      "module": 14
+    },
+    {
+      "track": "react",
+      "position": 5,
+      "topic": "Renderizado del lado del servidor (SSR) en React",
+      "module": 14
+    },
+    {
+      "track": "react",
+      "position": 6,
+      "topic": "Patrones modernos de React",
+      "module": 14
+    },
+    {
+      "track": "react",
+      "position": 7,
+      "topic": "DOM Virtual",
+      "module": 14
+    },
+    {
+      "track": "react",
+      "position": 8,
+      "topic": "Configuración de proyectos (Vite/CRA)",
+      "module": 14
+    },
+    {
+      "track": "react",
+      "position": 9,
+      "topic": "Estilización con CSS y Styled Components",
+      "module": 14
+    },
+    {
+      "track": "react",
+      "position": 10,
+      "topic": "Pruebas con frameworks modernos (Vitest, Playwright)",
+      "module": 14
+    },
+    {
+      "track": "react",
+      "position": 11,
+      "topic": "Tailwind CSS con React",
+      "module": 14
+    },
+    {
+      "track": "react",
+      "position": 12,
+      "topic": "Next.js avanzado (ISR, Middleware, Metadata)",
+      "module": 14
+    },
+    {
+      "track": "react",
+      "position": 13,
+      "topic": "Server Actions",
+      "module": 10
+    },
+    {
+      "track": "react",
+      "position": 14,
+      "topic": "Accesibilidad (a11y)",
+      "module": 14
+    },
+    {
+      "track": "react",
+      "position": 15,
+      "topic": "Internacionalización (i18n)",
+      "module": 14
+    },
+    {
+      "track": "react",
+      "position": 16,
+      "topic": "Micro Frontends con Module Federation",
+      "module": 14
+    },
+    {
+      "track": "react",
+      "position": 17,
+      "topic": "Optimización de rendimiento avanzada",
+      "module": 14
+    },
+    {
+      "track": "kotlin-multiplatform",
+      "position": 1,
+      "topic": "Estructura jerárquica de proyectos (source sets)",
+      "module": 13
+    },
+    {
+      "track": "kotlin-multiplatform",
+      "position": 2,
+      "topic": "Configuración manual avanzada (Gradle de bajo nivel)",
+      "module": 13
+    },
+    {
+      "track": "kotlin-multiplatform",
+      "position": 3,
+      "topic": "Mapeo a implementación de Gradle",
+      "module": 13
+    },
+    {
+      "track": "kotlin-multiplatform",
+      "position": 4,
+      "topic": "Abstracciones de bajo nivel de Gradle",
+      "module": 13
+    },
+    {
+      "track": "kotlin-multiplatform",
+      "position": 5,
+      "topic": "Creación de plugins de Gradle",
+      "module": 13
+    },
+    {
+      "track": "kotlin-multiplatform",
+      "position": 6,
+      "topic": "StateFlow/SharedFlow (gestión de estado reactivo)",
+      "module": 2
+    },
+    {
+      "track": "kotlin-multiplatform",
+      "position": 7,
+      "topic": "Jerarquías selladas (sealed classes/interfaces)",
+      "module": 13
+    },
+    {
+      "track": "kotlin-multiplatform",
+      "position": 8,
+      "topic": "Inmutabilidad en Kotlin",
+      "module": 13
+    },
+    {
+      "track": "kotlin-multiplatform",
+      "position": 9,
+      "topic": "Constructores DSL",
+      "module": 13
+    },
+    {
+      "track": "kotlin-multiplatform",
+      "position": 10,
+      "topic": "Funciones inline",
+      "module": 13
+    },
+    {
+      "track": "kotlin-multiplatform",
+      "position": 11,
+      "topic": "Patrones avanzados de Koin (DI en KMP)",
+      "module": 13
+    },
+    {
+      "track": "kotlin-multiplatform",
+      "position": 12,
+      "topic": "Lenguaje específico de dominio (Kotlin DSL)",
+      "module": 13
+    },
+    {
+      "track": "kotlin-multiplatform",
+      "position": 13,
+      "topic": "Patrones de arquitectura móvil en KMP",
+      "module": 13
+    },
+    {
+      "track": "kotlin-multiplatform",
+      "position": 14,
+      "topic": "Kotlin-to-Swift Export",
+      "module": 13
+    },
+    {
+      "track": "kotlin-multiplatform",
+      "position": 15,
+      "topic": "Publicación de librerías KMP",
+      "module": 13
+    },
+    {
+      "track": "android",
+      "position": 1,
+      "topic": "Arquitectura de Android (sistema operativo)",
+      "module": 14
+    },
+    {
+      "track": "android",
+      "position": 2,
+      "topic": "Lenguajes de programación actuales (Kotlin vs Java)",
+      "module": 14
+    },
+    {
+      "track": "android",
+      "position": 3,
+      "topic": "Configuraciones de tiempo de ejecución",
+      "module": 14
+    },
+    {
+      "track": "android",
+      "position": 4,
+      "topic": "Servicios de dispositivos (sensores, cámara, ubicación)",
+      "module": 14
+    },
+    {
+      "track": "android",
+      "position": 5,
+      "topic": "Notificaciones (push notifications)",
+      "module": 8
+    },
+    {
+      "track": "android",
+      "position": 6,
+      "topic": "Monetización (Google Play monetization)",
+      "module": 14
+    },
+    {
+      "track": "android",
+      "position": 7,
+      "topic": "Integración de servicios en la nube",
+      "module": 14
+    },
+    {
+      "track": "android",
+      "position": 8,
+      "topic": "Integración de IA/ML en Android",
+      "module": 14
+    },
+    {
+      "track": "android",
+      "position": 9,
+      "topic": "Interoperabilidad de lenguajes (Kotlin/Java)",
+      "module": 14
+    },
+    {
+      "track": "android",
+      "position": 10,
+      "topic": "Servicios en segundo plano",
+      "module": 14
+    },
+    {
+      "track": "android",
+      "position": 11,
+      "topic": "Proveedores de contenido (Content Providers)",
+      "module": 14
+    },
+    {
+      "track": "android",
+      "position": 12,
+      "topic": "Depuración avanzada (ADB, profiling)",
+      "module": 14
+    },
+    {
+      "track": "android",
+      "position": 13,
+      "topic": "Internals de Android (APK, Package Manager, Activity Manager)",
+      "module": 14
+    },
+    {
+      "track": "android",
+      "position": 14,
+      "topic": "Proceso Zygote",
+      "module": 14
+    },
+    {
+      "track": "android",
+      "position": 15,
+      "topic": "Servicios de Android (Android Services)",
+      "module": 14
+    },
+    {
+      "track": "android",
+      "position": 16,
+      "topic": "RILD y HAL (Radio Interface Layer, Hardware Abstraction)",
+      "module": 14
+    },
+    {
+      "track": "android",
+      "position": 17,
+      "topic": "Proceso de arranque de Android",
+      "module": 14
+    },
+    {
+      "track": "android",
+      "position": 18,
+      "topic": "Modelo de seguridad de Android",
+      "module": 14
+    },
+    {
+      "track": "android",
+      "position": 19,
+      "topic": "App widgets",
+      "module": 14
+    },
+    {
+      "track": "android",
+      "position": 20,
+      "topic": "Funciones geo (Geolocation, Maps)",
+      "module": 14
+    },
+    {
+      "track": "ios",
+      "position": 1,
+      "topic": "Xcode y estructura de proyectos",
+      "module": 14
+    },
+    {
+      "track": "ios",
+      "position": 2,
+      "topic": "Aplicaciones multi-ventana (iPad, macOS)",
+      "module": 14
+    },
+    {
+      "track": "ios",
+      "position": 3,
+      "topic": "SpriteKit (animaciones y juegos)",
+      "module": 14
+    },
+    {
+      "track": "ios",
+      "position": 4,
+      "topic": "SceneKit (gráficos 3D)",
+      "module": 14
+    },
+    {
+      "track": "ios",
+      "position": 5,
+      "topic": "ARKit (realidad aumentada)",
+      "module": 14
+    },
+    {
+      "track": "ios",
+      "position": 6,
+      "topic": "Tipos opacos (opaque types)",
+      "module": 14
+    },
+    {
+      "track": "ios",
+      "position": 7,
+      "topic": "Vistas de color y materiales",
+      "module": 14
+    },
+    {
+      "track": "ios",
+      "position": 8,
+      "topic": "Imágenes y SF Symbols",
+      "module": 14
+    },
+    {
+      "track": "ios",
+      "position": 9,
+      "topic": "CoreML (Machine Learning en iOS)",
+      "module": 14
+    },
+    {
+      "track": "ios",
+      "position": 10,
+      "topic": "Clases Foundation",
+      "module": 14
+    },
+    {
+      "track": "ios",
+      "position": 11,
+      "topic": "Diseño de UI con Xcode (Interface Builder)",
+      "module": 14
+    },
+    {
+      "track": "ios",
+      "position": 12,
+      "topic": "Animaciones avanzadas",
+      "module": 14
+    },
+    {
+      "track": "ios",
+      "position": 13,
+      "topic": "Gestos (gesture recognizers)",
+      "module": 14
+    },
+    {
+      "track": "ios",
+      "position": 14,
+      "topic": "Integración de librerías de terceros (CocoaPods, SPM)",
+      "module": 14
+    },
+    {
+      "track": "ios",
+      "position": 15,
+      "topic": "Orientación de la aplicación (portrait/landscape)",
+      "module": 14
+    },
+    {
+      "track": "ios",
+      "position": 16,
+      "topic": "Pruebas avanzadas (XCTest, ViewInspector)",
+      "module": 14
+    },
+    {
+      "track": "ios",
+      "position": 17,
+      "topic": "Interoperabilidad con UIKit",
+      "module": 10
+    },
+    {
+      "track": "ios",
+      "position": 18,
+      "topic": "Publicación en App Store (TestFlight, distribución)",
+      "module": 14
+    },
+    {
+      "track": "flutter",
+      "position": 1,
+      "topic": "Arquitecturas de aplicaciones móviles",
+      "module": 15
+    },
+    {
+      "track": "flutter",
+      "position": 2,
+      "topic": "Características de arquitecturas híbridas",
+      "module": 15
+    },
+    {
+      "track": "flutter",
+      "position": 3,
+      "topic": "Escenarios de aplicación (casos de uso)",
+      "module": 15
+    },
+    {
+      "track": "flutter",
+      "position": 4,
+      "topic": "Navegación por pestañas (TabBar)",
+      "module": 15
+    },
+    {
+      "track": "flutter",
+      "position": 5,
+      "topic": "Cajones laterales (Drawer)",
+      "module": 15
+    },
+    {
+      "track": "flutter",
+      "position": 6,
+      "topic": "Diseño de UI (Material Design / Cupertino)",
+      "module": 15
+    },
+    {
+      "track": "flutter",
+      "position": 7,
+      "topic": "Procesamiento y validación de entrada (Forms)",
+      "module": 15
+    },
+    {
+      "track": "flutter",
+      "position": 8,
+      "topic": "Animaciones en Flutter",
+      "module": 14
+    },
+    {
+      "track": "flutter",
+      "position": 9,
+      "topic": "Transiciones de páginas",
+      "module": 15
+    },
+    {
+      "track": "flutter",
+      "position": 10,
+      "topic": "Notificaciones push (Firebase Cloud Messaging)",
+      "module": 14
+    },
+    {
+      "track": "flutter",
+      "position": 11,
+      "topic": "Directrices de Material Design",
+      "module": 15
+    },
+    {
+      "track": "flutter",
+      "position": 12,
+      "topic": "Creación de formularios complejos",
+      "module": 15
+    },
+    {
+      "track": "flutter",
+      "position": 13,
+      "topic": "Pruebas avanzadas (flutter test, WidgetTester)",
+      "module": 15
+    },
+    {
+      "track": "flutter",
+      "position": 14,
+      "topic": "Rendimiento (RepaintBoundary, const widgets)",
+      "module": 8
+    },
+    {
+      "track": "flutter",
+      "position": 15,
+      "topic": "Clean Architecture en Flutter",
+      "module": 15
+    },
+    {
+      "track": "flutter",
+      "position": 16,
+      "topic": "Despliegue en Google Play y App Store",
+      "module": 15
+    }
+  ]
+}

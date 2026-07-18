@@ -206,4 +206,12 @@ Estas fuentes sustentan los conceptos y deben consultarse para verificar detalle
 
 ## Resumen del módulo
 
+```bash
+aws ce get-cost-and-usage --endpoint-url http://localhost:4566 \
+  --time-period Start=2026-07-01,End=2026-08-01 \
+  --granularity MONTHLY --metrics UnblendedCost
+```
+
+Conserva periodo, moneda, filtros y etiquetas junto al resultado para que otra persona pueda reproducir el análisis FinOps.
+
 En este módulo cerraste el círculo de la operación responsable de una cuenta AWS con cinco servicios de FinOps y gobierno transversal: Cost Explorer, que sintetiza costos reales a partir del estado actual de tus recursos; Pricing, el catálogo de tarifas de referencia que alimenta esos cálculos; BCM Data Exports, que estandariza tus reportes de costo en el formato FOCUS de la industria; Resource Groups Tagging API, que te permite descubrir recursos de cualquier servicio con una sola consulta por etiqueta; y STS, que profundizaste como el mecanismo central de identidad temporal y aislamiento multi-cuenta que sostiene la seguridad de todo lo demás que construiste en este curso.

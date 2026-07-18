@@ -206,4 +206,11 @@ Estas fuentes sustentan los conceptos y deben consultarse para verificar detalle
 
 ## Resumen del módulo
 
+```bash
+aws elbv2 describe-load-balancers --endpoint-url http://localhost:4566 \
+  --query 'LoadBalancers[].{name:LoadBalancerName,state:State.Code,dns:DNSName}'
+```
+
+La consulta proyecta únicamente la evidencia necesaria para verificar nombre, estado y DNS del balanceador local.
+
 En este módulo trabajaste con la capa de borde de una arquitectura AWS: ELB v2 para balanceo de carga (plano de gestión completo, plano de datos pendiente), ACM para certificados TLS con criptografía real y emisión instantánea, CloudFront para distribución de contenido con políticas de caché configurables, y Route53 para gestión de DNS. Más importante que cada servicio por separado, viste cómo se encadenan en una arquitectura real: un certificado ACM protege la conexión, un ALB o CloudFront recibe el tráfico, y Route53 resuelve el nombre de dominio hacia ese punto de entrada — el mismo patrón que sostiene prácticamente cualquier aplicación web moderna en la nube.

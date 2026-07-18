@@ -602,6 +602,280 @@ La fuente académica señalada es **UC Portugal**. Este tema se estudia identifi
 
 <!-- SUPPLEMENTAL-COMPLEMENTS:END -->
 
+<!-- REQUESTED-PRACTICAL-EXAMPLES:START -->
+## Ejemplos guiados de los temas solicitados
+
+Estos ejemplos acompañan la ampliación académica. No son código para copiar sin contexto: ejecuta, modifica, provoca un fallo y conserva la evidencia.
+
+### Ejemplo guiado: Infraestructura de centros de datos
+
+**Qué demuestra:** convierte el concepto en una evidencia pequeña, explícita y verificable dentro de RutaFlow. El ejemplo separa la decisión del framework para poder probarla y cambiarla.
+
+```hcl
+locals {
+  capability = "Infraestructura de centros de datos"
+  tags = { system = "rutaflow", owner = "platform", managed_by = "terraform" }
+}
+
+output "infraestructura_de_centros_de_evidence" { value = local.tags }
+```
+
+**Práctica:** reemplaza el resultado exitoso por un fallo realista, agrega una aserción automatizada y registra qué señal permitiría diagnosticarlo en producción.
+### Ejemplo guiado: Modelos de facturación y economía de la nube
+
+**Qué demuestra:** convierte el concepto en una evidencia pequeña, explícita y verificable dentro de RutaFlow. El ejemplo separa la decisión del framework para poder probarla y cambiarla.
+
+```hcl
+locals {
+  capability = "Modelos de facturación y economía de la nube"
+  tags = { system = "rutaflow", owner = "platform", managed_by = "terraform" }
+}
+
+output "modelos_de_facturacion_y_evidence" { value = local.tags }
+```
+
+**Práctica:** reemplaza el resultado exitoso por un fallo realista, agrega una aserción automatizada y registra qué señal permitiría diagnosticarlo en producción.
+### Ejemplo guiado: Replicación y persistencia de datos
+
+**Qué demuestra:** convierte el concepto en una evidencia pequeña, explícita y verificable dentro de RutaFlow. El ejemplo separa la decisión del framework para poder probarla y cambiarla.
+
+```hcl
+locals {
+  capability = "Replicación y persistencia de datos"
+  tags = { system = "rutaflow", owner = "platform", managed_by = "terraform" }
+}
+
+output "replicacion_y_persistencia_de_evidence" { value = local.tags }
+```
+
+**Práctica:** reemplaza el resultado exitoso por un fallo realista, agrega una aserción automatizada y registra qué señal permitiría diagnosticarlo en producción.
+### Ejemplo guiado: Almacenamiento distribuido
+
+**Qué demuestra:** convierte el concepto en una evidencia pequeña, explícita y verificable dentro de RutaFlow. El ejemplo separa la decisión del framework para poder probarla y cambiarla.
+
+```hcl
+locals {
+  capability = "Almacenamiento distribuido"
+  tags = { system = "rutaflow", owner = "platform", managed_by = "terraform" }
+}
+
+output "almacenamiento_distribuido_evidence" { value = local.tags }
+```
+
+**Práctica:** reemplaza el resultado exitoso por un fallo realista, agrega una aserción automatizada y registra qué señal permitiría diagnosticarlo en producción.
+### Ejemplo guiado: Bases de datos en memoria (NewSQL)
+
+**Qué demuestra:** convierte el concepto en una evidencia pequeña, explícita y verificable dentro de RutaFlow. El ejemplo separa la decisión del framework para poder probarla y cambiarla.
+
+```hcl
+locals {
+  capability = "Bases de datos en memoria (NewSQL)"
+  tags = { system = "rutaflow", owner = "platform", managed_by = "terraform" }
+}
+
+output "bases_de_datos_en_evidence" { value = local.tags }
+```
+
+**Práctica:** reemplaza el resultado exitoso por un fallo realista, agrega una aserción automatizada y registra qué señal permitiría diagnosticarlo en producción.
+### Ejemplo guiado: Migración a la nube (6R's)
+
+**Qué demuestra:** convierte el concepto en una evidencia pequeña, explícita y verificable dentro de RutaFlow. El ejemplo separa la decisión del framework para poder probarla y cambiarla.
+
+```hcl
+locals {
+  capability = "Migración a la nube (6R's)"
+  tags = { system = "rutaflow", owner = "platform", managed_by = "terraform" }
+}
+
+output "migracion_a_la_nube_evidence" { value = local.tags }
+```
+
+**Práctica:** reemplaza el resultado exitoso por un fallo realista, agrega una aserción automatizada y registra qué señal permitiría diagnosticarlo en producción.
+### Ejemplo guiado: Conectividad y resolución de problemas
+
+**Qué demuestra:** convierte el concepto en una evidencia pequeña, explícita y verificable dentro de RutaFlow. El ejemplo separa la decisión del framework para poder probarla y cambiarla.
+
+```hcl
+locals {
+  capability = "Conectividad y resolución de problemas"
+  tags = { system = "rutaflow", owner = "platform", managed_by = "terraform" }
+}
+
+output "conectividad_y_resolucion_de_evidence" { value = local.tags }
+```
+
+**Práctica:** reemplaza el resultado exitoso por un fallo realista, agrega una aserción automatizada y registra qué señal permitiría diagnosticarlo en producción.
+### Ejemplo guiado: Algoritmos y paradigmas cloud-native
+
+**Qué demuestra:** convierte el concepto en una evidencia pequeña, explícita y verificable dentro de RutaFlow. El ejemplo separa la decisión del framework para poder probarla y cambiarla.
+
+```hcl
+locals {
+  capability = "Algoritmos y paradigmas cloud-native"
+  tags = { system = "rutaflow", owner = "platform", managed_by = "terraform" }
+}
+
+output "algoritmos_y_paradigmas_cloud_evidence" { value = local.tags }
+```
+
+**Práctica:** reemplaza el resultado exitoso por un fallo realista, agrega una aserción automatizada y registra qué señal permitiría diagnosticarlo en producción.
+### Ejemplo guiado: Factores económicos de la nube
+
+**Qué demuestra:** convierte el concepto en una evidencia pequeña, explícita y verificable dentro de RutaFlow. El ejemplo separa la decisión del framework para poder probarla y cambiarla.
+
+```hcl
+locals {
+  capability = "Factores económicos de la nube"
+  tags = { system = "rutaflow", owner = "platform", managed_by = "terraform" }
+}
+
+output "factores_economicos_de_la_evidence" { value = local.tags }
+```
+
+**Práctica:** reemplaza el resultado exitoso por un fallo realista, agrega una aserción automatizada y registra qué señal permitiría diagnosticarlo en producción.
+### Ejemplo guiado: Seguridad en la nube (amenazas, cifrado, compliance)
+
+**Qué demuestra:** convierte el concepto en una evidencia pequeña, explícita y verificable dentro de RutaFlow. El ejemplo separa la decisión del framework para poder probarla y cambiarla.
+
+```hcl
+locals {
+  capability = "Seguridad en la nube (amenazas, cifrado, compliance)"
+  tags = { system = "rutaflow", owner = "platform", managed_by = "terraform" }
+}
+
+output "seguridad_en_la_nube_evidence" { value = local.tags }
+```
+
+**Práctica:** reemplaza el resultado exitoso por un fallo realista, agrega una aserción automatizada y registra qué señal permitiría diagnosticarlo en producción.
+### Ejemplo guiado: Gestión de secretos (Vault)
+
+**Qué demuestra:** convierte el concepto en una evidencia pequeña, explícita y verificable dentro de RutaFlow. El ejemplo separa la decisión del framework para poder probarla y cambiarla.
+
+```hcl
+locals {
+  capability = "Gestión de secretos (Vault)"
+  tags = { system = "rutaflow", owner = "platform", managed_by = "terraform" }
+}
+
+output "gestion_de_secretos_vault_evidence" { value = local.tags }
+```
+
+**Práctica:** reemplaza el resultado exitoso por un fallo realista, agrega una aserción automatizada y registra qué señal permitiría diagnosticarlo en producción.
+### Ejemplo guiado: Serverless avanzado (cold start, layers)
+
+**Qué demuestra:** convierte el concepto en una evidencia pequeña, explícita y verificable dentro de RutaFlow. El ejemplo separa la decisión del framework para poder probarla y cambiarla.
+
+```hcl
+locals {
+  capability = "Serverless avanzado (cold start, layers)"
+  tags = { system = "rutaflow", owner = "platform", managed_by = "terraform" }
+}
+
+output "serverless_avanzado_cold_start_evidence" { value = local.tags }
+```
+
+**Práctica:** reemplaza el resultado exitoso por un fallo realista, agrega una aserción automatizada y registra qué señal permitiría diagnosticarlo en producción.
+### Ejemplo guiado: Edge Computing
+
+**Qué demuestra:** convierte el concepto en una evidencia pequeña, explícita y verificable dentro de RutaFlow. El ejemplo separa la decisión del framework para poder probarla y cambiarla.
+
+```hcl
+locals {
+  capability = "Edge Computing"
+  tags = { system = "rutaflow", owner = "platform", managed_by = "terraform" }
+}
+
+output "edge_computing_evidence" { value = local.tags }
+```
+
+**Práctica:** reemplaza el resultado exitoso por un fallo realista, agrega una aserción automatizada y registra qué señal permitiría diagnosticarlo en producción.
+### Ejemplo guiado: Computación cuántica en la nube
+
+**Qué demuestra:** convierte el concepto en una evidencia pequeña, explícita y verificable dentro de RutaFlow. El ejemplo separa la decisión del framework para poder probarla y cambiarla.
+
+```hcl
+locals {
+  capability = "Computación cuántica en la nube"
+  tags = { system = "rutaflow", owner = "platform", managed_by = "terraform" }
+}
+
+output "computacion_cuantica_en_la_evidence" { value = local.tags }
+```
+
+**Práctica:** reemplaza el resultado exitoso por un fallo realista, agrega una aserción automatizada y registra qué señal permitiría diagnosticarlo en producción.
+### Ejemplo guiado: Multi-cloud y nubes híbridas
+
+**Qué demuestra:** convierte el concepto en una evidencia pequeña, explícita y verificable dentro de RutaFlow. El ejemplo separa la decisión del framework para poder probarla y cambiarla.
+
+```hcl
+locals {
+  capability = "Multi-cloud y nubes híbridas"
+  tags = { system = "rutaflow", owner = "platform", managed_by = "terraform" }
+}
+
+output "multi_cloud_y_nubes_evidence" { value = local.tags }
+```
+
+**Práctica:** reemplaza el resultado exitoso por un fallo realista, agrega una aserción automatizada y registra qué señal permitiría diagnosticarlo en producción.
+### Ejemplo guiado: Terraform avanzado (módulos, state, workspaces)
+
+**Qué demuestra:** convierte el concepto en una evidencia pequeña, explícita y verificable dentro de RutaFlow. El ejemplo separa la decisión del framework para poder probarla y cambiarla.
+
+```hcl
+locals {
+  capability = "Terraform avanzado (módulos, state, workspaces)"
+  tags = { system = "rutaflow", owner = "platform", managed_by = "terraform" }
+}
+
+output "terraform_avanzado_modulos_state_evidence" { value = local.tags }
+```
+
+**Práctica:** reemplaza el resultado exitoso por un fallo realista, agrega una aserción automatizada y registra qué señal permitiría diagnosticarlo en producción.
+### Ejemplo guiado: Kubernetes avanzado (Operators, CRDs, Service Mesh)
+
+**Qué demuestra:** convierte el concepto en una evidencia pequeña, explícita y verificable dentro de RutaFlow. El ejemplo separa la decisión del framework para poder probarla y cambiarla.
+
+```hcl
+locals {
+  capability = "Kubernetes avanzado (Operators, CRDs, Service Mesh)"
+  tags = { system = "rutaflow", owner = "platform", managed_by = "terraform" }
+}
+
+output "kubernetes_avanzado_operators_crds_evidence" { value = local.tags }
+```
+
+**Práctica:** reemplaza el resultado exitoso por un fallo realista, agrega una aserción automatizada y registra qué señal permitiría diagnosticarlo en producción.
+### Ejemplo guiado: CI/CD avanzado (ArgoCD, FluxCD)
+
+**Qué demuestra:** convierte el concepto en una evidencia pequeña, explícita y verificable dentro de RutaFlow. El ejemplo separa la decisión del framework para poder probarla y cambiarla.
+
+```hcl
+locals {
+  capability = "CI/CD avanzado (ArgoCD, FluxCD)"
+  tags = { system = "rutaflow", owner = "platform", managed_by = "terraform" }
+}
+
+output "ci_cd_avanzado_argocd_evidence" { value = local.tags }
+```
+
+**Práctica:** reemplaza el resultado exitoso por un fallo realista, agrega una aserción automatizada y registra qué señal permitiría diagnosticarlo en producción.
+### Ejemplo guiado: Observabilidad avanzada (OpenTelemetry, tracing)
+
+**Qué demuestra:** convierte el concepto en una evidencia pequeña, explícita y verificable dentro de RutaFlow. El ejemplo separa la decisión del framework para poder probarla y cambiarla.
+
+```hcl
+locals {
+  capability = "Observabilidad avanzada (OpenTelemetry, tracing)"
+  tags = { system = "rutaflow", owner = "platform", managed_by = "terraform" }
+}
+
+output "observabilidad_avanzada_opentelemetry_tracing_evidence" { value = local.tags }
+```
+
+**Práctica:** reemplaza el resultado exitoso por un fallo realista, agrega una aserción automatizada y registra qué señal permitiría diagnosticarlo en producción.
+
+<!-- REQUESTED-PRACTICAL-EXAMPLES:END -->
+
 ## Resumen del módulo
 
 Este capítulo vuelve visibles las capacidades solicitadas y las convierte en trabajo evaluable. Completarlo significa poder explicar, implementar, romper, medir y operar una solución; reconocer el nombre de una herramienta no demuestra nivel Master. La evidencia final conecta el track con RutaFlow y conserva decisiones, pruebas y recuperación para que otra persona pueda revisarlas.
