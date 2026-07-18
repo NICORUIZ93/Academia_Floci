@@ -87,7 +87,7 @@
             </div>
             <div class="activity-actions">
               <button type="button" class="verify-button" [disabled]="exerciseAnswers()[exercise.id] === undefined" (click)="verifyExercise(exercise.id, exercise.correctIndex)">Verificar</button>
-              <span *ngIf="progressService.isExerciseComplete(trackId(), exercise.id)">✓ 10 XP obtenidos</span>
+              <span *ngIf="progressService.isExerciseComplete(trackId(), exercise.id)">✓ Ejercicio completado</span>
             </div>
             <div class="activity-feedback correct" role="status" aria-live="polite" *ngIf="exerciseFeedback()[exercise.id] === 'correct'">
               <strong>¡Correcto!</strong><p>{{ exercise.explanation }}</p><small><b>Evidencia:</b> {{ exercise.evidence }}</small>
@@ -122,7 +122,7 @@
           <button type="button" class="verify-button" *ngIf="!quizSubmitted()" [disabled]="quizAnsweredCount() !== quiz().length" (click)="submitQuiz()">Calificar respuestas</button>
           <ng-container *ngIf="quizSubmitted()">
             <strong>{{ quizScore() >= 4 ? '¡Quiz aprobado!' : 'Necesitas repasar y volver a intentarlo.' }}</strong>
-            <p>{{ quizScore() >= 4 ? 'Has demostrado comprensión suficiente y obtuviste 10 XP.' : 'Revisa las explicaciones: necesitas al menos cuatro respuestas correctas.' }}</p>
+            <p>{{ quizScore() >= 4 ? 'Has demostrado comprensión suficiente para cerrar el capítulo.' : 'Revisa las explicaciones: necesitas al menos cuatro respuestas correctas.' }}</p>
             <button type="button" *ngIf="quizScore() < 4" (click)="retryQuiz()">Intentar de nuevo</button>
           </ng-container>
         </div>
@@ -143,7 +143,7 @@
           <lucide-icon [img]="icons.CircleCheck" />
           <span>{{ isComplete() ? 'Capítulo completado' : 'Marcar capítulo como completado' }}</span>
         </button>
-        <p class="completion-hint" *ngIf="!canCompleteModule()">Completa los 3 ejercicios y aprueba el quiz para obtener 50 XP por el capítulo.</p>
+        <p class="completion-hint" *ngIf="!canCompleteModule()">Completa los 3 ejercicios y aprueba el quiz para cerrar el capítulo.</p>
         <div class="lesson-nav">
           <button *ngIf="previousModule() as prev" (click)="goToModule(prev.id)"><lucide-icon [img]="icons.ChevronLeft" /><span>{{ prev.shortTitle }}</span></button>
           <button *ngIf="nextModule() as next" class="next" (click)="goToModule(next.id)"><span>{{ next.shortTitle }}</span><lucide-icon [img]="icons.ChevronRight" /></button>

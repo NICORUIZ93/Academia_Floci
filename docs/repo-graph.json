@@ -34,7 +34,7 @@
     },
     {
       "path": "README.md",
-      "lines": 254,
+      "lines": 253,
       "kind": "documentation",
       "symbols": [],
       "imports": [],
@@ -11365,7 +11365,7 @@
     },
     {
       "path": "web/src/app/app.spec.ts",
-      "lines": 162,
+      "lines": 161,
       "kind": "angular-app",
       "symbols": [],
       "imports": [
@@ -11508,7 +11508,7 @@
     },
     {
       "path": "web/src/app/course/course-shell.html",
-      "lines": 57,
+      "lines": 53,
       "kind": "angular-app",
       "symbols": [
         "official-path-title",
@@ -11519,7 +11519,7 @@
     },
     {
       "path": "web/src/app/course/course-shell.scss",
-      "lines": 83,
+      "lines": 79,
       "kind": "angular-app",
       "symbols": [],
       "imports": [],
@@ -11758,7 +11758,7 @@
     },
     {
       "path": "web/src/app/progress.service.spec.ts",
-      "lines": 28,
+      "lines": 24,
       "kind": "angular-app",
       "symbols": [],
       "imports": [
@@ -11769,15 +11769,12 @@
     },
     {
       "path": "web/src/app/progress.service.ts",
-      "lines": 124,
+      "lines": 109,
       "kind": "angular-app",
       "symbols": [
         "ProgressService",
         "TrackProgress",
-        "state",
-        "totalXp",
-        "completedModuleCount",
-        "badge"
+        "state"
       ],
       "imports": [
         "@angular/core"

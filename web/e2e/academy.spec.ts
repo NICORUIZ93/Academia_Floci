@@ -45,11 +45,11 @@ test('búsqueda: encuentra un tema real y navega a su fragmento', async ({ page 
   await expect(page).toHaveURL(/\/curso\/.+\/\d+/);
 });
 
-test('aprendizaje: presenta ejercicios, quiz, XP y proyecto integrador', async ({ page }) => {
+test('aprendizaje: presenta ejercicios, quiz y proyecto integrador sin gamificación', async ({ page }) => {
   await page.goto('/curso/angular/0');
   await expect(page.locator('.exercise-card')).toHaveCount(3);
   await expect(page.locator('.quiz-question')).toHaveCount(5);
-  await expect(page.locator('.learning-score')).toContainText('XP');
+  await expect(page.locator('body')).not.toContainText('XP');
   await expect(page.locator('.track-project')).toContainText('Centro de control logístico');
   await expect(page.locator('.topic-troubleshooting').first()).toBeAttached();
 });

@@ -22,9 +22,6 @@
 .shell-title strong { display:block; font:700 14px Inter, sans-serif; color:$ink; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
 .shell-progress { height:3px; border-radius:3px; background:$bg2; margin-top:4px; max-width:240px; overflow:hidden; }
 .shell-progress span { display:block; height:100%; background:var(--track-color); }
-.learning-score { display:flex; align-items:center; gap:7px; flex:0 0 auto; }
-.learning-score strong { padding:5px 8px; border-radius:999px; color:$ph; background:$pl; font:800 10px Inter,sans-serif; }
-.learning-score span { color:$mu; font:700 10px Inter,sans-serif; }
 .search-trigger {
   display:flex; align-items:center; gap:8px; border:1px solid $bd; background:$bg2; color:$mu;
   border-radius:$rs; padding:7px 10px; font-size:12.5px; cursor:pointer; flex-shrink:0;
@@ -78,5 +75,4 @@
   .shell-scrim.open, .shell-scrim { display:none; }
   .shell-body .shell-scrim { display:block; position:fixed; inset:0; background:rgba(15,23,22,.4); z-index:35; }
   .search-trigger span { display:none; }
-  .learning-score span { display:none; }
 }

@@ -7,10 +7,6 @@
       <strong>{{ t.shortName }}</strong>
       <div class="shell-progress" role="progressbar" aria-label="Progreso del track" aria-valuemin="0" aria-valuemax="100" [attr.aria-valuenow]="percent()"><span [style.width.%]="percent()"></span></div>
     </div>
-    <div class="learning-score" aria-label="Progreso de aprendizaje">
-      <strong>{{ progressService.totalXp() }} XP</strong>
-      <span>{{ progressService.badge() }}</span>
-    </div>
     <button class="search-trigger" aria-label="Buscar cursos, módulos y temas" (click)="paletteService.open()">
       <lucide-icon [img]="icons.Search" /><span>Buscar</span><kbd>⌘K</kbd>
     </button>

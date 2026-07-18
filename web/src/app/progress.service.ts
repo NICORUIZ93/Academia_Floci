@@ -1,4 +1,4 @@
-import { Injectable, computed, signal } from '@angular/core';
+import { Injectable, signal } from '@angular/core';
 
 export interface TrackProgress {
   completedModules: number[];
@@ -15,21 +15,6 @@ const LEGACY_CLOUD_KEY = 'cloud-local-academy-progress';
 @Injectable({ providedIn: 'root' })
 export class ProgressService {
   private state = signal<ProgressState>(this.loadInitialState());
-  readonly totalXp = computed(() => Object.values(this.state()).reduce((total, track) =>
-    total
-      + track.completedModules.length * 50
-      + (track.completedExercises?.length ?? 0) * 10
-      + (track.passedQuizzes?.length ?? 0) * 10,
-  0));
-  readonly completedModuleCount = computed(() => Object.values(this.state()).reduce((total, track) => total + track.completedModules.length, 0));
-  readonly badge = computed(() => {
-    const modules = this.completedModuleCount();
-    if (modules >= 224) return 'Maestro';
-    if (modules >= 6) return 'Arquitecto';
-    if (modules >= 3) return 'Constructor';
-    if (modules >= 1) return 'Explorador';
-    return 'Aprendiz';
-  });
 
   private loadInitialState(): ProgressState {
     try {
