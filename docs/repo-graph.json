@@ -34,7 +34,7 @@
     },
     {
       "path": "README.md",
-      "lines": 253,
+      "lines": 252,
       "kind": "documentation",
       "symbols": [],
       "imports": [],
@@ -11594,11 +11594,10 @@
     },
     {
       "path": "web/src/app/course/lesson-viewer.html",
-      "lines": 176,
+      "lines": 145,
       "kind": "angular-app",
       "symbols": [
         "floci-overview-title",
-        "practice-title",
         "quiz-title"
       ],
       "imports": [],
@@ -11606,7 +11605,7 @@
     },
     {
       "path": "web/src/app/course/lesson-viewer.scss",
-      "lines": 355,
+      "lines": 343,
       "kind": "angular-app",
       "symbols": [],
       "imports": [],
@@ -11614,7 +11613,7 @@
     },
     {
       "path": "web/src/app/course/lesson-viewer.ts",
-      "lines": 625,
+      "lines": 597,
       "kind": "angular-app",
       "symbols": [
         "LessonViewerComponent",
@@ -11623,7 +11622,6 @@
         "module",
         "projectBootstrap",
         "trackProject",
-        "exercises",
         "quiz",
         "showProjectBootstrap",
         "moduleIndex",
@@ -11637,10 +11635,11 @@
         "activeTocId",
         "readingProgress",
         "copiedCode",
-        "exerciseAnswers",
-        "exerciseFeedback",
         "quizAnswers",
-        "quizSubmitted"
+        "quizSubmitted",
+        "quizScore",
+        "quizAnsweredCount",
+        "canCompleteModule"
       ],
       "imports": [
         "@angular/common",
@@ -11709,7 +11708,7 @@
     },
     {
       "path": "web/src/app/learning-activities.spec.ts",
-      "lines": 37,
+      "lines": 34,
       "kind": "angular-app",
       "symbols": [],
       "imports": [
@@ -11720,13 +11719,11 @@
     },
     {
       "path": "web/src/app/learning-activities.ts",
-      "lines": 119,
+      "lines": 74,
       "kind": "angular-app",
       "symbols": [
         "ChoiceQuestion",
-        "ModuleExercise",
         "TrackProject",
-        "exercisesFor",
         "quizFor",
         "projectFor"
       ],
@@ -11758,7 +11755,7 @@
     },
     {
       "path": "web/src/app/progress.service.spec.ts",
-      "lines": 24,
+      "lines": 21,
       "kind": "angular-app",
       "symbols": [],
       "imports": [
@@ -11769,7 +11766,7 @@
     },
     {
       "path": "web/src/app/progress.service.ts",
-      "lines": 109,
+      "lines": 93,
       "kind": "angular-app",
       "symbols": [
         "ProgressService",

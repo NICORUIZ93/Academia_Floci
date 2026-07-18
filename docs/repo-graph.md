@@ -1,6 +1,6 @@
 # Academia Floci Repo Graph
 
-Generated: 2026-07-18 07:03 UTC
+Generated: 2026-07-18 07:06 UTC
 Root: `Academia_Floci`
 Indexed files: 771
 Import edges: 35
@@ -52,7 +52,7 @@ For automated lookups, use `docs/repo-graph.json`.
 
 ## High Signal Files
 
-- `README.md` (253 lines, documentation)
+- `README.md` (252 lines, documentation)
   - headings: # Academia_Floci, ## Como empezar, ## Levantar Floci, # 1. Levantar todos los servicios, # 2. Verificar Floci AWS
 - `scripts/validate.sh` (124 lines, automation-script)
 - `scripts/build_repo_graph.py` (445 lines, automation-script)
@@ -65,8 +65,8 @@ For automated lookups, use `docs/repo-graph.json`.
   - symbols: CourseCatalogComponent, cards, featuredTracks, foundationTracks, mobileTracks, totalModules
 - `web/src/app/course/course-shell.ts` (46 lines, angular-app)
   - symbols: CourseShellComponent, track, officialPath, sidebarOpen, trackLogo, percent
-- `web/src/app/course/lesson-viewer.ts` (625 lines, angular-app)
-  - symbols: LessonViewerComponent, TocItem, track, module, projectBootstrap, trackProject, exercises, quiz, showProjectBootstrap, moduleIndex
+- `web/src/app/course/lesson-viewer.ts` (597 lines, angular-app)
+  - symbols: LessonViewerComponent, TocItem, track, module, projectBootstrap, trackProject, quiz, showProjectBootstrap, moduleIndex, isCloudIntroduction
 - `web/public/content/manifest.json` (819 lines, course-content)
 - `web/public/content/es/pasos.md` (1122 lines, course-content)
   - headings: # 45 pasos de Academia Floci, ## Cursos, ## Paso 1: ¿Qué es Docker?, ## Paso 2: Instalar Docker, ## Paso 3: Verificar Docker
@@ -203,7 +203,7 @@ For automated lookups, use `docs/repo-graph.json`.
 
 ### documentation
 
-- `README.md` (253 lines) - headings: # Academia_Floci, ## Como empezar, ## Levantar Floci, # 1. Levantar todos los servicios
+- `README.md` (252 lines) - headings: # Academia_Floci, ## Como empezar, ## Levantar Floci, # 1. Levantar todos los servicios
 - `docs/ESTANDAR-DE-CODIGO.md` (56 lines) - headings: # Estándar transversal de código y diseño, ## Prioridades, ## Clean Code con criterio, ## SOLID cuando aporta valor
 - `docs/MATRIZ-CURRICULAR.md` (71 lines) - headings: # Matriz curricular auditable, ## Progresión de competencia, ## Cobertura por módulo, ## Método de evaluación
 - `docs/METODOLOGIA-DE-APRENDIZAJE.md` (57 lines) - headings: # Metodología Aprende construyendo, ## Ciclo de cada capítulo, ## Tamaño de las experiencias, ## Regla para mostrar soluciones

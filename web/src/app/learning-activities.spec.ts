@@ -1,19 +1,16 @@
 import { TRACKS } from './course-data';
-import { TRACK_PROJECTS, exercisesFor, quizFor } from './learning-activities';
+import { TRACK_PROJECTS, quizFor } from './learning-activities';
 
 describe('Learning activities', () => {
-  it('creates three exercises and five valid quiz questions for every module', () => {
+  it('creates five valid quiz questions for every module', () => {
     let modules = 0;
     for (const track of TRACKS) {
       for (const module of track.modules) {
         modules += 1;
-        const exercises = exercisesFor(track, module);
         const quiz = quizFor(track, module);
-        expect(exercises).toHaveLength(3);
         expect(quiz).toHaveLength(5);
-        expect(new Set(exercises.map(item => item.id)).size).toBe(3);
         expect(new Set(quiz.map(item => item.id)).size).toBe(5);
-        for (const item of [...exercises, ...quiz]) {
+        for (const item of quiz) {
           expect(item.options).toHaveLength(4);
           expect(item.correctIndex).toBeGreaterThanOrEqual(0);
           expect(item.correctIndex).toBeLessThan(item.options.length);

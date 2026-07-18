@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, ElementRef, Injector, OnDestroy, afterNextRender, computed, effect, inject, signal, viewChild } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
-import { BookOpen, Boxes, Check, CircleCheck, ChevronLeft, ChevronRight, Clock3, Code2, Copy, Database, Gauge, ListTree, LockKeyhole, LucideAngularModule, ShieldCheck, Sparkles, Trophy, Zap } from 'lucide-angular';
+import { BookOpen, Boxes, Check, CircleCheck, ChevronLeft, ChevronRight, Clock3, Code2, Copy, Database, Gauge, ListTree, LockKeyhole, LucideAngularModule, ShieldCheck, Trophy, Zap } from 'lucide-angular';
 import mermaid from 'mermaid';
 import { map } from 'rxjs';
 import { findTrack } from '../course-data';
@@ -10,7 +10,7 @@ import { ContentService } from '../content.service';
 import { ProgressService } from '../progress.service';
 import { ThemeService } from '../theme.service';
 import { findProjectBootstrap } from '../project-bootstrap';
-import { exercisesFor, projectFor, quizFor } from '../learning-activities';
+import { projectFor, quizFor } from '../learning-activities';
 
 let mermaidInitialized = false;
 
@@ -53,7 +53,7 @@ function escapeHtml(text: string): string {
   styleUrl: './lesson-viewer.scss',
 })
 export class LessonViewerComponent implements OnDestroy {
-  readonly icons = { BookOpen, Boxes, Check, ChevronLeft, ChevronRight, CircleCheck, Clock3, Code2, Copy, Database, Gauge, ListTree, LockKeyhole, ShieldCheck, Sparkles, Trophy, Zap };
+  readonly icons = { BookOpen, Boxes, Check, ChevronLeft, ChevronRight, CircleCheck, Clock3, Code2, Copy, Database, Gauge, ListTree, LockKeyhole, ShieldCheck, Trophy, Zap };
 
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
@@ -76,11 +76,6 @@ export class LessonViewerComponent implements OnDestroy {
   readonly module = computed(() => this.track()?.modules.find(m => m.id === this.moduleId()));
   readonly projectBootstrap = computed(() => findProjectBootstrap(this.trackId()));
   readonly trackProject = computed(() => projectFor(this.trackId()));
-  readonly exercises = computed(() => {
-    const track = this.track();
-    const module = this.module();
-    return track && module ? exercisesFor(track, module) : [];
-  });
   readonly quiz = computed(() => {
     const track = this.track();
     const module = this.module();
@@ -129,8 +124,6 @@ export class LessonViewerComponent implements OnDestroy {
   readonly activeTocId = signal<string | null>(null);
   readonly readingProgress = signal(0);
   readonly copiedCode = signal<string | null>(null);
-  readonly exerciseAnswers = signal<Record<string, number>>({});
-  readonly exerciseFeedback = signal<Record<string, 'correct' | 'incorrect'>>({});
   readonly quizAnswers = signal<Record<string, number>>({});
   readonly quizSubmitted = signal(false);
   readonly quizScore = computed(() => this.quiz().reduce(
@@ -138,13 +131,9 @@ export class LessonViewerComponent implements OnDestroy {
     0,
   ));
   readonly quizAnsweredCount = computed(() => Object.keys(this.quizAnswers()).length);
-  readonly completedExerciseCount = computed(() => this.exercises().filter(exercise =>
-    this.progressService.isExerciseComplete(this.trackId(), exercise.id),
-  ).length);
   readonly canCompleteModule = computed(() =>
     this.isComplete()
-      || (this.completedExerciseCount() === this.exercises().length
-        && this.progressService.hasPassedQuiz(this.trackId(), this.moduleId())),
+      || this.progressService.hasPassedQuiz(this.trackId(), this.moduleId()),
   );
   private tocObserver: IntersectionObserver | null = null;
   private copyTimer: ReturnType<typeof setTimeout> | null = null;
@@ -162,8 +151,6 @@ export class LessonViewerComponent implements OnDestroy {
       const trackId = this.trackId();
       const module = this.module();
       if (!module) return;
-      this.exerciseAnswers.set({});
-      this.exerciseFeedback.set({});
       this.quizAnswers.set({});
       this.quizSubmitted.set(false);
       this.lessonLoading.set(true);
@@ -194,21 +181,6 @@ export class LessonViewerComponent implements OnDestroy {
         if (container) this.scrollToRequestedFragment(container, fragment);
       }, { injector: this.injector });
     });
-  }
-
-  selectExercise(exerciseId: string, optionIndex: number): void {
-    this.exerciseAnswers.update(answers => ({ ...answers, [exerciseId]: optionIndex }));
-    this.exerciseFeedback.update(feedback => {
-      const next = { ...feedback };
-      delete next[exerciseId];
-      return next;
-    });
-  }
-
-  verifyExercise(exerciseId: string, correctIndex: number): void {
-    const correct = this.exerciseAnswers()[exerciseId] === correctIndex;
-    this.exerciseFeedback.update(feedback => ({ ...feedback, [exerciseId]: correct ? 'correct' : 'incorrect' }));
-    if (correct) this.progressService.completeExercise(this.trackId(), exerciseId);
   }
 
   selectQuizAnswer(questionId: string, optionIndex: number): void {

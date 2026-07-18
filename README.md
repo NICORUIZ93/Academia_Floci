@@ -24,8 +24,7 @@ solo porque su nombre aparezca en el índice.
 
 El progreso se guarda localmente en tu navegador con `localStorage`.
 
-Cada capítulo incluye tres decisiones prácticas con verificación inmediata y un
-quiz de cinco preguntas. No hay XP, insignias, rachas ni recompensas artificiales:
+Cada capítulo incluye un quiz de cinco preguntas. No hay XP, insignias, rachas ni recompensas artificiales:
 el progreso representa exclusivamente actividades y capítulos terminados. Las
 12 rutas de especialización tienen un proyecto integrador propio; Fundamentos
 prepara las bases y RutaFlow conecta los proyectos en una plataforma logística transversal.
@@ -220,7 +219,7 @@ Antes de subir cambios, ejecuta:
 ```
 
 La validación comprueba la aplicación Angular, la relación entre tracks y
-Markdown, las auditorías educativas, los 224 conjuntos de ejercicios y quizzes,
+Markdown, las auditorías educativas, los 224 quizzes,
 los 12 proyectos, el progreso académico y el mapa actualizado del repositorio.
 
 El CI tambien ejecuta build y tests de Angular:

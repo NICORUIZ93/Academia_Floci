@@ -68,37 +68,6 @@
         </div>
       </section>
 
-      <section class="module-practice" aria-labelledby="practice-title">
-        <header class="activity-heading">
-          <span><lucide-icon [img]="icons.Sparkles" /></span>
-          <div><h2 id="practice-title">Ejercicios del capítulo</h2><p>Resuelve cada decisión y conserva la evidencia indicada.</p></div>
-          <strong>{{ completedExerciseCount() }}/{{ exercises().length }}</strong>
-        </header>
-
-        <article class="exercise-card" *ngFor="let exercise of exercises(); let exerciseIndex = index" [class.completed]="progressService.isExerciseComplete(trackId(), exercise.id)">
-          <div class="activity-number">{{ exerciseIndex + 1 }}</div>
-          <div class="activity-content">
-            <h3>{{ exercise.prompt }}</h3>
-            <div class="choice-list" role="radiogroup" [attr.aria-label]="exercise.prompt">
-              <button type="button" *ngFor="let option of exercise.options; let optionIndex = index"
-                [class.selected]="exerciseAnswers()[exercise.id] === optionIndex"
-                [attr.aria-pressed]="exerciseAnswers()[exercise.id] === optionIndex"
-                (click)="selectExercise(exercise.id, optionIndex)">{{ option }}</button>
-            </div>
-            <div class="activity-actions">
-              <button type="button" class="verify-button" [disabled]="exerciseAnswers()[exercise.id] === undefined" (click)="verifyExercise(exercise.id, exercise.correctIndex)">Verificar</button>
-              <span *ngIf="progressService.isExerciseComplete(trackId(), exercise.id)">✓ Ejercicio completado</span>
-            </div>
-            <div class="activity-feedback correct" role="status" aria-live="polite" *ngIf="exerciseFeedback()[exercise.id] === 'correct'">
-              <strong>¡Correcto!</strong><p>{{ exercise.explanation }}</p><small><b>Evidencia:</b> {{ exercise.evidence }}</small>
-            </div>
-            <div class="activity-feedback incorrect" role="alert" *ngIf="exerciseFeedback()[exercise.id] === 'incorrect'">
-              <strong>Aún no.</strong><p>Revisa qué opción produce un resultado observable y vuelve a intentarlo.</p>
-            </div>
-          </div>
-        </article>
-      </section>
-
       <section class="module-quiz" aria-labelledby="quiz-title">
         <header class="activity-heading">
           <span><lucide-icon [img]="icons.Trophy" /></span>
@@ -143,7 +112,7 @@
           <lucide-icon [img]="icons.CircleCheck" />
           <span>{{ isComplete() ? 'Capítulo completado' : 'Marcar capítulo como completado' }}</span>
         </button>
-        <p class="completion-hint" *ngIf="!canCompleteModule()">Completa los 3 ejercicios y aprueba el quiz para cerrar el capítulo.</p>
+        <p class="completion-hint" *ngIf="!canCompleteModule()">Aprueba el quiz para cerrar el capítulo.</p>
         <div class="lesson-nav">
           <button *ngIf="previousModule() as prev" (click)="goToModule(prev.id)"><lucide-icon [img]="icons.ChevronLeft" /><span>{{ prev.shortTitle }}</span></button>
           <button *ngIf="nextModule() as next" class="next" (click)="goToModule(next.id)"><span>{{ next.shortTitle }}</span><lucide-icon [img]="icons.ChevronRight" /></button>

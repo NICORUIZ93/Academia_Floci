@@ -44,7 +44,7 @@ if "Array.from({ length: 5 }" not in activities:
     errors.append("learning-activities.ts: cada quiz debe contener cinco preguntas")
 if activities.count("trackId: '") != 12:
     errors.append("learning-activities.ts: deben existir exactamente 12 proyectos integradores")
-for requirement in ("completeExercise", "passQuiz"):
+for requirement in ("passQuiz",):
     if requirement not in progress:
         errors.append(f"progress.service.ts: falta {requirement}")
 for requirement in ("addTopicLearningSupport", "Errores comunes y cómo diagnosticarlos"):
@@ -61,4 +61,4 @@ if errors:
         print(f"- {error}")
     raise SystemExit(1)
 
-print(f"Prioridades educativas OK: {modules} módulos, {topics} temas, 3 ejercicios y 5 preguntas por módulo, 12 proyectos y progreso persistente sin gamificación.")
+print(f"Prioridades educativas OK: {modules} módulos, {topics} temas, 5 preguntas por módulo, 12 proyectos y progreso persistente sin gamificación.")

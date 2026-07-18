@@ -8,10 +8,6 @@ export interface ChoiceQuestion {
   explanation: string;
 }
 
-export interface ModuleExercise extends ChoiceQuestion {
-  evidence: string;
-}
-
 export interface TrackProject {
   trackId: string;
   title: string;
@@ -31,47 +27,6 @@ function choice(correct: string, distractors: string[], seed: number): { options
   const unique = [correct, ...distractors.filter(item => item !== correct)].slice(0, 4);
   const options = rotate(unique, seed % unique.length);
   return { options, correctIndex: options.indexOf(correct) };
-}
-
-export function exercisesFor(track: Track, module: CourseModule): ModuleExercise[] {
-  const otherConcepts = track.modules.flatMap(item => item.concepts).filter(item => !module.concepts.includes(item));
-  const concept = module.concepts[0] ?? module.shortTitle;
-  const challenge = module.challenges[0] ?? `Construye una demostración de ${concept}`;
-  const secondChallenge = module.challenges[1] ?? module.deliverable;
-  const conceptChoice = choice(concept, otherConcepts.slice(0, 3), module.id);
-  const evidenceChoice = choice(
-    challenge,
-    [`Memorizar la definición de ${concept} sin ejecutarla`, `Cambiar varias piezas a la vez sin conservar evidencia`, `Marcar el módulo completo antes de observar el resultado`],
-    module.id + 1,
-  );
-  const validationChoice = choice(
-    module.deliverable,
-    [`Una captura sin comando ni contexto`, `Un resultado distinto en cada ejecución sin explicación`, `Una lista de herramientas sin comportamiento comprobado`],
-    module.id + 2,
-  );
-  return [
-    {
-      id: `${track.id}-${module.id}-concept`,
-      prompt: `Antes de programar: ¿qué concepto pertenece directamente a “${module.shortTitle}”?`,
-      ...conceptChoice,
-      explanation: `${concept} forma parte del alcance explícito de este capítulo. Identificarlo evita practicar una herramienta fuera de contexto.`,
-      evidence: `Explica en una frase cómo ${concept} participa en ${module.deliverable}.`,
-    },
-    {
-      id: `${track.id}-${module.id}-build`,
-      prompt: '¿Qué acción produce evidencia práctica alineada con el módulo?',
-      ...evidenceChoice,
-      explanation: `La práctica seleccionada es parte del recorrido del capítulo: ${challenge}`,
-      evidence: `Ejecuta la acción y conserva comando, salida y una observación propia.`,
-    },
-    {
-      id: `${track.id}-${module.id}-verify`,
-      prompt: '¿Qué resultado demuestra mejor que el capítulo fue comprendido?',
-      ...validationChoice,
-      explanation: `El entregable verificable del módulo es: ${module.deliverable}`,
-      evidence: secondChallenge,
-    },
-  ];
 }
 
 export function quizFor(track: Track, module: CourseModule): ChoiceQuestion[] {

@@ -138,7 +138,7 @@ La evidencia demuestra el aprendizaje.`;
       expect(wrapCode?.getAttribute('aria-pressed')).toBe('true');
       expect(text).not.toContain('Práctica opcional');
       expect(text).not.toContain('Ejercicios de evaluación');
-      expect(page.querySelectorAll('.exercise-card')).toHaveLength(3);
+      expect(page.querySelector('.module-practice')).toBeFalsy();
       expect(page.querySelectorAll('.quiz-question')).toHaveLength(5);
       expect(text).toContain('Quiz de cinco preguntas');
       expect(page.querySelectorAll('.topic-troubleshooting')).toHaveLength(2);
