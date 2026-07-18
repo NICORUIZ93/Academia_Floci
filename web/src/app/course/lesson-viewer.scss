@@ -1,11 +1,11 @@
 @use '../../styles/tokens' as *;
 
-:host { display:block; padding:42px 32px 96px; }
+:host { display:block; padding:38px 32px 96px; }
 
 .reading-progress { position:fixed; top:$th; left:$sw; right:0; z-index:19; height:3px; background:transparent; }
 .reading-progress span { display:block; height:100%; background:linear-gradient(90deg,var(--track-color),$p); transition:width .12s linear; }
 
-.lesson-layout { display:grid; grid-template-columns:minmax(0,790px) 220px; gap:54px; align-items:start; max-width:1080px; margin:0 auto; }
+.lesson-layout { display:grid; grid-template-columns:minmax(0,820px) 210px; gap:36px; align-items:start; max-width:1066px; margin:0 auto; }
 .lesson { min-width:0; }
 
 .lesson-hero { position:relative; margin-bottom:46px; padding:34px 38px 32px; border:1px solid $bd; border-radius:20px; background:$wh; box-shadow:$sh; overflow:hidden; }
@@ -63,7 +63,7 @@
 .build-method strong { color:$ink; font:750 11px Inter,sans-serif; }
 .build-method small { overflow:hidden; color:$mu; font:500 9.5px Inter,sans-serif; text-overflow:ellipsis; white-space:nowrap; }
 
-.lesson-toc { position:sticky; top:84px; width:220px; max-height:calc(100vh - 110px); overflow:auto; padding:18px 16px; border:1px solid $bd; border-radius:14px; background:$wh; box-shadow:$sh; }
+.lesson-toc { position:sticky; top:84px; width:210px; max-height:calc(100vh - 110px); overflow:auto; padding:18px 16px; border:1px solid $bd; border-radius:14px; background:$wh; box-shadow:$sh; }
 .lesson-toc-heading { display:flex; align-items:center; gap:10px; margin-bottom:15px; color:$ink; }
 .lesson-toc-heading lucide-icon { width:18px; color:$p; }
 .lesson-toc-heading span { display:block; font:800 12px/1.2 Inter,sans-serif; text-transform:uppercase; letter-spacing:.06em; }
@@ -78,7 +78,7 @@
 .lesson-markdown ::ng-deep .lesson-section { animation:section-in .28s ease both; }
 @keyframes section-in { from { opacity:0; transform:translateY(7px); } to { opacity:1; transform:none; } }
 .lesson-skeleton { min-height:320px; display:grid; place-items:center; color:$mu; }
-.lesson-markdown { color:$i3; font:400 17px/1.85 'Source Serif 4',Georgia,serif; }
+.lesson-markdown { color:$i3; font:400 16.5px/1.78 'Source Serif 4',Georgia,serif; }
 .lesson-markdown ::ng-deep :first-child { margin-top:0; }
 .lesson-markdown ::ng-deep h2 { margin:64px 0 22px; padding-bottom:12px; border-bottom:1px solid $bd; color:$ink; font:700 27px/1.25 'Source Serif 4',Georgia,serif; letter-spacing:-.015em; scroll-margin-top:90px; }
 .lesson-markdown ::ng-deep h2:first-child { margin-top:0; }
@@ -98,7 +98,7 @@
 .lesson-markdown ::ng-deep h3.topic-heading { position:relative; display:flex; align-items:center; justify-content:space-between; gap:18px; padding:18px 18px 18px 26px; border:1px solid $bd; border-radius:14px; background:linear-gradient(135deg,$wh,$bg2); overflow:hidden; }
 .lesson-markdown ::ng-deep h3.topic-heading::before { content:''; position:absolute; inset:0 auto 0 0; width:4px; background:var(--track-color); }
 .lesson-markdown ::ng-deep h4 { margin:28px 0 10px; color:$ink; font:700 16px/1.35 Inter,sans-serif; }
-.lesson-markdown ::ng-deep p { margin:0 0 19px; }
+.lesson-markdown ::ng-deep p { margin:0 0 17px; }
 .lesson-markdown ::ng-deep ul,
 .lesson-markdown ::ng-deep ol { margin:0 0 23px; padding-left:26px; }
 .lesson-markdown ::ng-deep li { margin:8px 0; padding-left:4px; }
@@ -118,7 +118,7 @@
 .lesson-markdown ::ng-deep .cases-callout { background:$gl; border-color:color-mix(in srgb,var(--success) 28%,transparent); }
 .lesson-markdown ::ng-deep .cases-callout::before { content:'✓'; color:$g; background:color-mix(in srgb,var(--success) 15%,transparent); }
 
-.lesson-markdown ::ng-deep .topic-card { position:relative; margin:20px 0; padding:0 24px; border:1px solid $bd; border-radius:18px; background:$wh; box-shadow:$sh; scroll-margin-top:92px; }
+.lesson-markdown ::ng-deep .topic-card { position:relative; margin:18px 0; padding:0 24px; border:1px solid $bd; border-radius:18px; background:$wh; box-shadow:$sh; scroll-margin-top:92px; }
 .lesson-markdown ::ng-deep .topic-card > .topic-heading { margin:0 -24px 24px; border-width:0 0 1px; border-radius:18px 18px 0 0; }
 .lesson-markdown ::ng-deep .topic-card:not(.expanded) > .topic-heading { margin-bottom:0; border-bottom:0; background:$wh; }
 .lesson-markdown ::ng-deep .topic-body { display:none; padding-bottom:24px; }
@@ -238,8 +238,8 @@
 .lesson-missing { padding:70px 24px; text-align:center; color:$mu; }
 .lesson-missing a { color:$p; font-weight:700; }
 
-@media (max-width:1080px) {
-  .lesson-layout { grid-template-columns:minmax(0,790px); justify-content:center; }
+@media (max-width:1440px) {
+  .lesson-layout { grid-template-columns:minmax(0,820px); justify-content:center; }
   .lesson-toc { display:none; }
 }
 @media (max-width:860px) { .reading-progress { left:0; } }

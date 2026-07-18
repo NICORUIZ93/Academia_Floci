@@ -352,7 +352,6 @@ export class LessonViewerComponent implements OnDestroy {
       toggle.setAttribute('aria-expanded', String(index === 0));
       toggle.innerHTML = `<span>${index === 0 ? 'Ocultar tema' : 'Abrir tema'}</span><span aria-hidden="true">⌄</span>`;
       heading.appendChild(toggle);
-      card.appendChild(practice);
       const body = document.createElement('div');
       body.className = 'topic-body';
       let bodyNode = heading.nextSibling;
@@ -363,6 +362,9 @@ export class LessonViewerComponent implements OnDestroy {
       }
       card.classList.toggle('expanded', index === 0);
       card.appendChild(body);
+      // La práctica cierra el tema. Antes se insertaba antes de mover los nodos
+      // al cuerpo y terminaba como primer contenido visible de la lección.
+      body.appendChild(practice);
     });
   }
 
@@ -440,11 +442,16 @@ export class LessonViewerComponent implements OnDestroy {
 
   private buildTableOfContents(container: HTMLElement): void {
     this.tocObserver?.disconnect();
-    const headings = Array.from(container.querySelectorAll<HTMLElement>('h2, h3'));
+    // El índice muestra la estructura pedagógica principal. Los subtítulos
+    // internos (Windows, macOS, pasos, etc.) permanecen en la lectura, pero no
+    // compiten con capítulos y temas en una navegación ya extensa.
+    const headings = Array.from(container.querySelectorAll<HTMLElement>('h2, h3.topic-heading'));
     const seen = new Set<string>();
     const items: TocItem[] = headings.map(el => {
       const level = el.tagName === 'H2' ? 2 : 3;
-      const text = el.textContent?.trim() ?? '';
+      const label = el.cloneNode(true) as HTMLElement;
+      label.querySelectorAll('button').forEach(button => button.remove());
+      const text = label.textContent?.trim() ?? '';
       const id = el.id || slugify(text, seen);
       el.id = id;
       return { id, text, level };

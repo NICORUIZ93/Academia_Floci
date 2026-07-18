@@ -11439,7 +11439,7 @@
     },
     {
       "path": "web/src/app/app.spec.ts",
-      "lines": 150,
+      "lines": 153,
       "kind": "angular-app",
       "symbols": [],
       "imports": [
@@ -11622,7 +11622,7 @@
     },
     {
       "path": "web/src/app/course/lesson-index.html",
-      "lines": 38,
+      "lines": 37,
       "kind": "angular-app",
       "symbols": [],
       "imports": [],
@@ -11630,7 +11630,7 @@
     },
     {
       "path": "web/src/app/course/lesson-index.scss",
-      "lines": 53,
+      "lines": 50,
       "kind": "angular-app",
       "symbols": [],
       "imports": [],
@@ -11680,7 +11680,7 @@
     },
     {
       "path": "web/src/app/course/lesson-viewer.ts",
-      "lines": 507,
+      "lines": 514,
       "kind": "angular-app",
       "symbols": [
         "LessonViewerComponent",

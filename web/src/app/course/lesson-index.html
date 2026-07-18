@@ -18,8 +18,7 @@
         <span class="lesson-index-title">{{ module.shortTitle }}</span>
         <span class="topic-count">{{ topicIndex.topics(trackId, module.id).length }}</span>
       </a>
-      <details class="module-topics" [open]="topicQuery().length > 0 || status(module.id) === 'current'">
-        <summary>Ver temas</summary>
+      <div class="module-topics" *ngIf="topicQuery().length > 0 || status(module.id) === 'current'">
         <a
           *ngFor="let topic of topics(module.id)"
           [routerLink]="['/curso', trackId, module.id]"
@@ -31,7 +30,7 @@
           [routerLink]="['/curso', trackId, module.id]"
           fragment="laboratorio-practico"
         ><lucide-icon [img]="icons.FlaskConical" /> Laboratorio del módulo</a>
-      </details>
+      </div>
     </div>
   </div>
 </nav>

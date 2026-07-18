@@ -24,12 +24,9 @@
 .lesson-index-title { min-width:0; flex:1; }
 .topic-count { min-width:22px; padding:2px 5px; border-radius:999px; background:$bg2; color:$mu; font-size:10px; text-align:center; }
 .module-entry { margin-bottom:2px; }
-.module-topics { margin:-2px 8px 6px 28px; }
-.module-topics summary { padding:4px 0; color:$mu; font-size:10.5px; cursor:pointer; list-style:none; }
-.module-topics summary::before { content:'›'; display:inline-block; margin-right:5px; transition:transform .15s ease; }
-.module-topics[open] summary::before { transform:rotate(90deg); }
+.module-topics { margin:2px 8px 10px 28px; }
 .module-topics a {
-  display:block; padding:5px 6px 5px 11px; border-left:1px solid $bd; color:$i3; font-size:11px;
+  display:block; padding:6px 7px 6px 11px; border-left:1px solid $bd; color:$i3; font-size:11px;
   line-height:1.35; text-decoration:none;
 }
 .module-topics a:hover { border-left-color:$p; color:$ph; background:$pl; }
