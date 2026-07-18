@@ -377,8 +377,8 @@ export class LessonViewerComponent implements OnDestroy {
   }
 
   private consolidateReferenceSections(container: HTMLElement): void {
+    container.querySelector<HTMLElement>(':scope > .section-rubrica-del-proyecto')?.remove();
     const sections = [
-      container.querySelector<HTMLElement>(':scope > .section-rubrica-del-proyecto'),
       container.querySelector<HTMLElement>(':scope > .section-bibliografia-y-fundamento-academico'),
       container.querySelector<HTMLElement>(':scope > .section-resumen-del-modulo'),
     ].filter((section): section is HTMLElement => Boolean(section));
@@ -387,7 +387,7 @@ export class LessonViewerComponent implements OnDestroy {
     const details = document.createElement('details');
     details.className = 'lesson-resources';
     const summary = document.createElement('summary');
-    summary.innerHTML = '<span>Material complementario</span><small>Rúbrica, fuentes y resumen del capítulo</small>';
+    summary.innerHTML = '<span>Material complementario</span><small>Fuentes y resumen del capítulo</small>';
     const body = document.createElement('div');
     body.className = 'lesson-resources-body';
     sections.forEach(section => body.appendChild(section));
