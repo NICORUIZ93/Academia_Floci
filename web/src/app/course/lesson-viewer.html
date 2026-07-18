@@ -68,11 +68,82 @@
         </div>
       </section>
 
+      <section class="module-practice" aria-labelledby="practice-title">
+        <header class="activity-heading">
+          <span><lucide-icon [img]="icons.Sparkles" /></span>
+          <div><small>Práctica con feedback · 10 XP por paso</small><h2 id="practice-title">Comprueba lo que sabes construyendo</h2><p>Resuelve cada decisión y conserva la evidencia indicada. Una respuesta correcta se guarda una sola vez.</p></div>
+          <strong>{{ completedExerciseCount() }}/{{ exercises().length }}</strong>
+        </header>
+
+        <article class="exercise-card" *ngFor="let exercise of exercises(); let exerciseIndex = index" [class.completed]="progressService.isExerciseComplete(trackId(), exercise.id)">
+          <div class="activity-number">{{ exerciseIndex + 1 }}</div>
+          <div class="activity-content">
+            <h3>{{ exercise.prompt }}</h3>
+            <div class="choice-list" role="radiogroup" [attr.aria-label]="exercise.prompt">
+              <button type="button" *ngFor="let option of exercise.options; let optionIndex = index"
+                [class.selected]="exerciseAnswers()[exercise.id] === optionIndex"
+                [attr.aria-pressed]="exerciseAnswers()[exercise.id] === optionIndex"
+                (click)="selectExercise(exercise.id, optionIndex)">{{ option }}</button>
+            </div>
+            <div class="activity-actions">
+              <button type="button" class="verify-button" [disabled]="exerciseAnswers()[exercise.id] === undefined" (click)="verifyExercise(exercise.id, exercise.correctIndex)">Verificar</button>
+              <span *ngIf="progressService.isExerciseComplete(trackId(), exercise.id)">✓ 10 XP obtenidos</span>
+            </div>
+            <div class="activity-feedback correct" role="status" aria-live="polite" *ngIf="exerciseFeedback()[exercise.id] === 'correct'">
+              <strong>¡Correcto!</strong><p>{{ exercise.explanation }}</p><small><b>Evidencia:</b> {{ exercise.evidence }}</small>
+            </div>
+            <div class="activity-feedback incorrect" role="alert" *ngIf="exerciseFeedback()[exercise.id] === 'incorrect'">
+              <strong>Aún no.</strong><p>Revisa qué opción produce un resultado observable y vuelve a intentarlo.</p>
+            </div>
+          </div>
+        </article>
+      </section>
+
+      <section class="module-quiz" aria-labelledby="quiz-title">
+        <header class="activity-heading">
+          <span><lucide-icon [img]="icons.Trophy" /></span>
+          <div><small>Evaluación del capítulo · aprueba con 4/5</small><h2 id="quiz-title">Quiz de cinco preguntas</h2><p>Responde todo antes de calificar. Después recibirás explicación pregunta por pregunta.</p></div>
+          <strong *ngIf="quizSubmitted()">{{ quizScore() }}/5</strong>
+        </header>
+        <article class="quiz-question" *ngFor="let question of quiz(); let questionIndex = index">
+          <h3><span>{{ questionIndex + 1 }}</span>{{ question.prompt }}</h3>
+          <div class="choice-list" role="radiogroup" [attr.aria-label]="question.prompt">
+            <button type="button" *ngFor="let option of question.options; let optionIndex = index"
+              [disabled]="quizSubmitted()"
+              [class.selected]="quizAnswers()[question.id] === optionIndex"
+              [class.correct]="quizSubmitted() && question.correctIndex === optionIndex"
+              [class.incorrect]="quizSubmitted() && quizAnswers()[question.id] === optionIndex && question.correctIndex !== optionIndex"
+              [attr.aria-pressed]="quizAnswers()[question.id] === optionIndex"
+              (click)="selectQuizAnswer(question.id, optionIndex)">{{ option }}</button>
+          </div>
+          <p class="quiz-explanation" *ngIf="quizSubmitted()">{{ question.explanation }}</p>
+        </article>
+        <div class="quiz-result" role="status" aria-live="polite">
+          <button type="button" class="verify-button" *ngIf="!quizSubmitted()" [disabled]="quizAnsweredCount() !== quiz().length" (click)="submitQuiz()">Calificar respuestas</button>
+          <ng-container *ngIf="quizSubmitted()">
+            <strong>{{ quizScore() >= 4 ? '¡Quiz aprobado!' : 'Necesitas repasar y volver a intentarlo.' }}</strong>
+            <p>{{ quizScore() >= 4 ? 'Has demostrado comprensión suficiente y obtuviste 10 XP.' : 'Revisa las explicaciones: necesitas al menos cuatro respuestas correctas.' }}</p>
+            <button type="button" *ngIf="quizScore() < 4" (click)="retryQuiz()">Intentar de nuevo</button>
+          </ng-container>
+        </div>
+      </section>
+
+      <details class="track-project" *ngIf="trackProject() as project">
+        <summary><lucide-icon [img]="icons.Trophy" /><span><small>Proyecto integrador del track</small><strong>{{ project.title }}</strong></span></summary>
+        <div class="track-project-body">
+          <p><strong>Problema:</strong> {{ project.problem }}</p>
+          <p><strong>Entrega final:</strong> {{ project.deliverable }}</p>
+          <div><h3>Hitos</h3><ol><li *ngFor="let milestone of project.milestones">{{ milestone }}</li></ol></div>
+          <div><h3>Definición de terminado</h3><ul><li *ngFor="let item of project.verification">{{ item }}</li></ul></div>
+        </div>
+      </details>
+
       <footer class="lesson-footer">
-        <button class="complete-toggle" [class.done]="isComplete()" (click)="toggleComplete()">
+        <button class="complete-toggle" [class.done]="isComplete()" [class.locked]="!canCompleteModule()" [disabled]="!canCompleteModule()" (click)="toggleComplete()">
           <lucide-icon [img]="icons.CircleCheck" />
           <span>{{ isComplete() ? 'Capítulo completado' : 'Marcar capítulo como completado' }}</span>
         </button>
+        <p class="completion-hint" *ngIf="!canCompleteModule()">Completa los 3 ejercicios y aprueba el quiz para obtener 50 XP por el capítulo.</p>
         <div class="lesson-nav">
           <button *ngIf="previousModule() as prev" (click)="goToModule(prev.id)"><lucide-icon [img]="icons.ChevronLeft" /><span>{{ prev.shortTitle }}</span></button>
           <button *ngIf="nextModule() as next" class="next" (click)="goToModule(next.id)"><span>{{ next.shortTitle }}</span><lucide-icon [img]="icons.ChevronRight" /></button>

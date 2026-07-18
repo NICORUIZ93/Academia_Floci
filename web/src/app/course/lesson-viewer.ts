@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, ElementRef, Injector, OnDestroy, afterNextRender, computed, effect, inject, signal, viewChild } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
-import { BookOpen, Boxes, Check, CircleCheck, ChevronLeft, ChevronRight, Clock3, Code2, Copy, Database, Gauge, ListTree, LockKeyhole, LucideAngularModule, ShieldCheck, Zap } from 'lucide-angular';
+import { BookOpen, Boxes, Check, CircleCheck, ChevronLeft, ChevronRight, Clock3, Code2, Copy, Database, Gauge, ListTree, LockKeyhole, LucideAngularModule, ShieldCheck, Sparkles, Trophy, Zap } from 'lucide-angular';
 import mermaid from 'mermaid';
 import { map } from 'rxjs';
 import { findTrack } from '../course-data';
@@ -10,6 +10,7 @@ import { ContentService } from '../content.service';
 import { ProgressService } from '../progress.service';
 import { ThemeService } from '../theme.service';
 import { findProjectBootstrap } from '../project-bootstrap';
+import { exercisesFor, projectFor, quizFor } from '../learning-activities';
 
 let mermaidInitialized = false;
 
@@ -52,14 +53,14 @@ function escapeHtml(text: string): string {
   styleUrl: './lesson-viewer.scss',
 })
 export class LessonViewerComponent implements OnDestroy {
-  readonly icons = { BookOpen, Boxes, Check, ChevronLeft, ChevronRight, CircleCheck, Clock3, Code2, Copy, Database, Gauge, ListTree, LockKeyhole, ShieldCheck, Zap };
+  readonly icons = { BookOpen, Boxes, Check, ChevronLeft, ChevronRight, CircleCheck, Clock3, Code2, Copy, Database, Gauge, ListTree, LockKeyhole, ShieldCheck, Sparkles, Trophy, Zap };
 
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
   private readonly contentService = inject(ContentService);
   readonly progressService = inject(ProgressService);
 
-  private readonly trackId = toSignal(
+  readonly trackId = toSignal(
     this.route.parent!.paramMap.pipe(map(params => params.get('trackId') ?? '')),
     { initialValue: this.route.parent?.snapshot.paramMap.get('trackId') ?? '' },
   );
@@ -74,6 +75,17 @@ export class LessonViewerComponent implements OnDestroy {
   readonly track = computed(() => findTrack(this.trackId()));
   readonly module = computed(() => this.track()?.modules.find(m => m.id === this.moduleId()));
   readonly projectBootstrap = computed(() => findProjectBootstrap(this.trackId()));
+  readonly trackProject = computed(() => projectFor(this.trackId()));
+  readonly exercises = computed(() => {
+    const track = this.track();
+    const module = this.module();
+    return track && module ? exercisesFor(track, module) : [];
+  });
+  readonly quiz = computed(() => {
+    const track = this.track();
+    const module = this.module();
+    return track && module ? quizFor(track, module) : [];
+  });
   readonly showProjectBootstrap = computed(() => Boolean(this.projectBootstrap()));
   readonly moduleIndex = computed(() => this.track()?.modules.findIndex(m => m.id === this.moduleId()) ?? -1);
   readonly isCloudIntroduction = computed(() => this.trackId() === 'cloud' && this.moduleId() === 0);
@@ -117,6 +129,23 @@ export class LessonViewerComponent implements OnDestroy {
   readonly activeTocId = signal<string | null>(null);
   readonly readingProgress = signal(0);
   readonly copiedCode = signal<string | null>(null);
+  readonly exerciseAnswers = signal<Record<string, number>>({});
+  readonly exerciseFeedback = signal<Record<string, 'correct' | 'incorrect'>>({});
+  readonly quizAnswers = signal<Record<string, number>>({});
+  readonly quizSubmitted = signal(false);
+  readonly quizScore = computed(() => this.quiz().reduce(
+    (score, question) => score + (this.quizAnswers()[question.id] === question.correctIndex ? 1 : 0),
+    0,
+  ));
+  readonly quizAnsweredCount = computed(() => Object.keys(this.quizAnswers()).length);
+  readonly completedExerciseCount = computed(() => this.exercises().filter(exercise =>
+    this.progressService.isExerciseComplete(this.trackId(), exercise.id),
+  ).length);
+  readonly canCompleteModule = computed(() =>
+    this.isComplete()
+      || (this.completedExerciseCount() === this.exercises().length
+        && this.progressService.hasPassedQuiz(this.trackId(), this.moduleId())),
+  );
   private tocObserver: IntersectionObserver | null = null;
   private copyTimer: ReturnType<typeof setTimeout> | null = null;
   private readonly updateReadingProgress = (): void => {
@@ -133,6 +162,10 @@ export class LessonViewerComponent implements OnDestroy {
       const trackId = this.trackId();
       const module = this.module();
       if (!module) return;
+      this.exerciseAnswers.set({});
+      this.exerciseFeedback.set({});
+      this.quizAnswers.set({});
+      this.quizSubmitted.set(false);
       this.lessonLoading.set(true);
       this.lessonError.set(null);
       this.lessonHtml.set(null);
@@ -161,6 +194,37 @@ export class LessonViewerComponent implements OnDestroy {
         if (container) this.scrollToRequestedFragment(container, fragment);
       }, { injector: this.injector });
     });
+  }
+
+  selectExercise(exerciseId: string, optionIndex: number): void {
+    this.exerciseAnswers.update(answers => ({ ...answers, [exerciseId]: optionIndex }));
+    this.exerciseFeedback.update(feedback => {
+      const next = { ...feedback };
+      delete next[exerciseId];
+      return next;
+    });
+  }
+
+  verifyExercise(exerciseId: string, correctIndex: number): void {
+    const correct = this.exerciseAnswers()[exerciseId] === correctIndex;
+    this.exerciseFeedback.update(feedback => ({ ...feedback, [exerciseId]: correct ? 'correct' : 'incorrect' }));
+    if (correct) this.progressService.completeExercise(this.trackId(), exerciseId);
+  }
+
+  selectQuizAnswer(questionId: string, optionIndex: number): void {
+    if (this.quizSubmitted()) return;
+    this.quizAnswers.update(answers => ({ ...answers, [questionId]: optionIndex }));
+  }
+
+  submitQuiz(): void {
+    if (Object.keys(this.quizAnswers()).length !== this.quiz().length) return;
+    this.quizSubmitted.set(true);
+    if (this.quizScore() >= 4) this.progressService.passQuiz(this.trackId(), this.moduleId());
+  }
+
+  retryQuiz(): void {
+    this.quizAnswers.set({});
+    this.quizSubmitted.set(false);
   }
 
   retryLesson(): void {
@@ -373,7 +437,40 @@ export class LessonViewerComponent implements OnDestroy {
       card.classList.toggle('expanded', index === 0);
       card.appendChild(body);
       this.prioritizeFirstCodeExample(body);
+      this.addTopicLearningSupport(body, heading);
     });
+  }
+
+  private addTopicLearningSupport(body: HTMLElement, heading: HTMLElement): void {
+    const topic = heading.cloneNode(true) as HTMLElement;
+    topic.querySelectorAll('button').forEach(button => button.remove());
+    const topicName = topic.textContent?.replace(/^Tema(?:\s+\d+)?\s*:\s*/i, '').trim() || 'este concepto';
+
+    if (!/¿Por qué es importante\?/i.test(body.textContent ?? '')) {
+      const importance = document.createElement('p');
+      importance.className = 'learning-callout importance-callout generated-learning-support';
+      importance.innerHTML = `<strong>¿Por qué es importante?</strong> Comprender ${escapeHtml(topicName)} permite construir y verificar el entregable del capítulo: ${escapeHtml(this.module()?.deliverable ?? 'un resultado reproducible')}.`;
+      body.insertBefore(importance, body.firstChild);
+    }
+
+    if (/errores? (?:comunes|frecuentes)|fallos? (?:comunes|frecuentes)/i.test(body.textContent ?? '')) return;
+    const language = body.querySelector<HTMLElement>('.code-example')?.dataset['language'] ?? 'concept';
+    const profiles: Record<string, string[]> = {
+      terminal: ['Ejecutar el comando desde una carpeta diferente a la indicada.', 'Continuar después del primer error y perder su causa original.', 'Usar credenciales, puertos o variables de otro entorno sin comprobarlos.'],
+      web: ['Crear el archivo en una ruta que no coincide con la importación.', 'Confiar en datos externos sin validar estados de carga, vacío y error.', 'Cambiar estado o efectos sin comprobar cuándo vuelve a renderizar la interfaz.'],
+      jvm: ['Compilar con una versión de JDK distinta a la declarada por el proyecto.', 'Usar una anotación o dependencia sin comprender qué registra en el contenedor.', 'Bloquear un flujo concurrente o reactivo con una llamada síncrona.'],
+      mobile: ['Probar solo el caso con permiso concedido y conexión disponible.', 'Ignorar ciclo de vida, restauración de estado o cancelación de tareas.', 'Validar en un único dispositivo sin revisar batería, accesibilidad y tamaños.'],
+      concept: [`Memorizar ${topicName} sin relacionarlo con una entrada y una salida.`, 'Aceptar una ejecución exitosa como evidencia suficiente sin provocar un fallo.', 'Aplicar una abstracción antes de identificar qué responsabilidad o cambio resuelve.'],
+    };
+    const profile = /bash|sh|shell|console|powershell|zsh/.test(language) ? 'terminal'
+      : /js|javascript|ts|typescript|jsx|tsx|html|css|scss/.test(language) ? 'web'
+      : /java|kotlin|xml/.test(language) ? 'jvm'
+      : /swift|dart/.test(language) ? 'mobile'
+      : 'concept';
+    const details = document.createElement('details');
+    details.className = 'topic-troubleshooting generated-learning-support';
+    details.innerHTML = `<summary>Errores comunes y cómo diagnosticarlos</summary><ol>${profiles[profile].map(error => `<li>${escapeHtml(error)}</li>`).join('')}</ol><p>Corrige un elemento a la vez, repite el comando y conserva la salida antes y después.</p>`;
+    body.appendChild(details);
   }
 
   /**
@@ -494,6 +591,7 @@ export class LessonViewerComponent implements OnDestroy {
 
 
   toggleComplete(): void {
+    if (!this.canCompleteModule()) return;
     this.progressService.toggleModuleComplete(this.trackId(), this.moduleId());
   }
 

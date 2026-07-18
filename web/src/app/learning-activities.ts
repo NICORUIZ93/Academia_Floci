@@ -1,0 +1,118 @@
+import { CourseModule, Track } from './course-module.model';
+
+export interface ChoiceQuestion {
+  id: string;
+  prompt: string;
+  options: string[];
+  correctIndex: number;
+  explanation: string;
+}
+
+export interface ModuleExercise extends ChoiceQuestion {
+  evidence: string;
+}
+
+export interface TrackProject {
+  trackId: string;
+  title: string;
+  problem: string;
+  deliverable: string;
+  milestones: string[];
+  verification: string[];
+}
+
+function rotate<T>(items: T[], offset: number): T[] {
+  if (!items.length) return items;
+  const normalized = offset % items.length;
+  return [...items.slice(normalized), ...items.slice(0, normalized)];
+}
+
+function choice(correct: string, distractors: string[], seed: number): { options: string[]; correctIndex: number } {
+  const unique = [correct, ...distractors.filter(item => item !== correct)].slice(0, 4);
+  const options = rotate(unique, seed % unique.length);
+  return { options, correctIndex: options.indexOf(correct) };
+}
+
+export function exercisesFor(track: Track, module: CourseModule): ModuleExercise[] {
+  const otherConcepts = track.modules.flatMap(item => item.concepts).filter(item => !module.concepts.includes(item));
+  const concept = module.concepts[0] ?? module.shortTitle;
+  const challenge = module.challenges[0] ?? `Construye una demostración de ${concept}`;
+  const secondChallenge = module.challenges[1] ?? module.deliverable;
+  const conceptChoice = choice(concept, otherConcepts.slice(0, 3), module.id);
+  const evidenceChoice = choice(
+    challenge,
+    [`Memorizar la definición de ${concept} sin ejecutarla`, `Cambiar varias piezas a la vez sin conservar evidencia`, `Marcar el módulo completo antes de observar el resultado`],
+    module.id + 1,
+  );
+  const validationChoice = choice(
+    module.deliverable,
+    [`Una captura sin comando ni contexto`, `Un resultado distinto en cada ejecución sin explicación`, `Una lista de herramientas sin comportamiento comprobado`],
+    module.id + 2,
+  );
+  return [
+    {
+      id: `${track.id}-${module.id}-concept`,
+      prompt: `Antes de programar: ¿qué concepto pertenece directamente a “${module.shortTitle}”?`,
+      ...conceptChoice,
+      explanation: `${concept} forma parte del alcance explícito de este capítulo. Identificarlo evita practicar una herramienta fuera de contexto.`,
+      evidence: `Explica en una frase cómo ${concept} participa en ${module.deliverable}.`,
+    },
+    {
+      id: `${track.id}-${module.id}-build`,
+      prompt: '¿Qué acción produce evidencia práctica alineada con el módulo?',
+      ...evidenceChoice,
+      explanation: `La práctica seleccionada es parte del recorrido del capítulo: ${challenge}`,
+      evidence: `Ejecuta la acción y conserva comando, salida y una observación propia.`,
+    },
+    {
+      id: `${track.id}-${module.id}-verify`,
+      prompt: '¿Qué resultado demuestra mejor que el capítulo fue comprendido?',
+      ...validationChoice,
+      explanation: `El entregable verificable del módulo es: ${module.deliverable}`,
+      evidence: secondChallenge,
+    },
+  ];
+}
+
+export function quizFor(track: Track, module: CourseModule): ChoiceQuestion[] {
+  const moduleConcepts = module.concepts.length ? module.concepts : [module.shortTitle];
+  const foreignConcepts = track.modules.flatMap(item => item.concepts).filter(item => !moduleConcepts.includes(item));
+  return Array.from({ length: 5 }, (_, index) => {
+    const concept = moduleConcepts[index % moduleConcepts.length];
+    const sourceQuestion = module.questions[index % Math.max(1, module.questions.length)]
+      ?? `¿Qué papel cumple ${concept} en este módulo?`;
+    const correct = index % 2 === 0
+      ? `${concept}: se aplica para avanzar hacia “${module.deliverable}”.`
+      : `Primero se comprueba ${concept} con una evidencia reproducible y después se integra.`;
+    const distractors = [
+      `${concept} reemplaza todas las demás decisiones del sistema.`,
+      `${concept} solo importa en producción y no puede probarse durante el aprendizaje.`,
+      `La opción correcta es memorizar ${concept} sin relacionarlo con un resultado.`,
+    ];
+    return {
+      id: `${track.id}-${module.id}-quiz-${index}`,
+      prompt: sourceQuestion,
+      ...choice(correct, distractors, module.id + index),
+      explanation: `La respuesta conecta ${concept} con el entregable y exige evidencia; las otras opciones presentan absolutos o aprendizaje pasivo.`,
+    };
+  });
+}
+
+export const TRACK_PROJECTS: TrackProject[] = [
+  { trackId: 'cloud', title: 'RutaFlow Cloud local multi-nube', problem: 'Probar almacenamiento, eventos, identidad y despliegue sin depender de cuentas reales.', deliverable: 'Entorno AWS, Azure y GCP reproducible con Floci, infraestructura como código y pruebas contractuales.', milestones: ['Levantar y diagnosticar Floci', 'Crear recursos mediante CLI y SDK', 'Automatizar infraestructura y pruebas', 'Documentar límites antes de producción'], verification: ['Arranque desde cero', 'Pruebas de éxito y fallo', 'Estado observable en Floci UI', 'Matriz local frente a nube real'] },
+  { trackId: 'devops', title: 'Plataforma de entrega continua RutaFlow', problem: 'Entregar servicios con seguridad, observabilidad y recuperación.', deliverable: 'Pipeline versionado que construye, prueba, escanea, despliega y revierte RutaFlow.', milestones: ['Contenerizar servicios', 'Crear CI reproducible', 'Desplegar con IaC', 'Operar con SLO y runbook'], verification: ['Artefacto inmutable', 'Pruebas automáticas', 'Rollback demostrado', 'Métricas y alertas útiles'] },
+  { trackId: 'javascript', title: 'Seguimiento público accesible', problem: 'Mostrar el estado de un envío sin filtrar datos privados.', deliverable: 'Widget web en JavaScript con estados, eventos, consumo HTTP y pruebas.', milestones: ['Modelar estado', 'Renderizar DOM seguro', 'Consumir API y manejar errores', 'Optimizar y probar'], verification: ['Sin innerHTML inseguro', 'Teclado y lector de pantalla', 'Estados de carga y error', 'Pruebas automatizadas'] },
+  { trackId: 'node', title: 'API operativa de entregas', problem: 'Coordinar envíos, posiciones y evidencias sin duplicar efectos.', deliverable: 'API Node.js con autenticación, base de datos, tiempo real, archivos y observabilidad.', milestones: ['Contratos y validación', 'Persistencia transaccional', 'Eventos idempotentes', 'Seguridad y operación'], verification: ['Pruebas HTTP', 'Reintentos sin duplicados', 'Autorización por recurso', 'Trazas correlacionadas'] },
+  { trackId: 'angular', title: 'Centro de control logístico', problem: 'Permitir que operadores asignen, sigan y resuelvan entregas.', deliverable: 'Aplicación Angular con Signals, formularios, mapas, permisos, SSR y pruebas.', milestones: ['Diseñar shell y rutas', 'Integrar API y estado', 'Añadir mapa operativo', 'Validar accesibilidad y rendimiento'], verification: ['Estados completos', 'Navegación por teclado', 'Pruebas de componentes', 'Build de producción'] },
+  { trackId: 'react', title: 'Portal de clientes RutaFlow', problem: 'Consultar envíos y gestionar novedades con una interfaz resiliente.', deliverable: 'Portal React con enrutamiento, estado de servidor, formularios y renderizado híbrido.', milestones: ['Componentes accesibles', 'Datos y caché', 'Mutaciones recuperables', 'SSR, streaming y pruebas'], verification: ['Sincronización de caché', 'Errores recuperables', 'Pruebas centradas en usuario', 'Métricas de rendimiento'] },
+  { trackId: 'java', title: 'Motor de asignación de entregas', problem: 'Asignar paquetes respetando capacidad, prioridad y distancia.', deliverable: 'Aplicación Java con dominio tipado, colecciones, concurrencia y pruebas.', milestones: ['Modelar invariantes', 'Implementar algoritmo', 'Procesar concurrentemente', 'Perfilar y documentar decisiones'], verification: ['Pruebas de dominio', 'Resultado determinista', 'Concurrencia segura', 'Medición antes de optimizar'] },
+  { trackId: 'spring-boot', title: 'Backend profesional RutaFlow', problem: 'Exponer operaciones logísticas seguras, consistentes y observables.', deliverable: 'Servicio Spring Boot con REST, persistencia espacial, JWT, eventos y WebFlux.', milestones: ['Crear dominio y API', 'Persistir con migraciones', 'Añadir seguridad', 'Integrar eventos y observabilidad'], verification: ['Testcontainers', 'Contratos HTTP', 'Fallos y recuperación', 'Health, métricas y trazas'] },
+  { trackId: 'kotlin-multiplatform', title: 'Núcleo móvil compartido', problem: 'Compartir reglas de entregas sin ocultar diferencias de Android e iOS.', deliverable: 'Biblioteca KMP con dominio, red, persistencia y pruebas compartidas.', milestones: ['Diseñar commonMain', 'Implementar repositorios', 'Resolver capacidades por plataforma', 'Distribuir y probar'], verification: ['commonTest aprobado', 'Offline-first', 'Errores tipados', 'Integración Android/iOS'] },
+  { trackId: 'android', title: 'Aplicación del repartidor Android', problem: 'Operar rutas, GPS y evidencia con conectividad y batería limitadas.', deliverable: 'App Android Compose con mapas, ubicación, Room, cámara y sincronización.', milestones: ['Flujo de entregas', 'GPS y permisos', 'Persistencia offline', 'Trabajo en segundo plano'], verification: ['Pruebas Compose', 'Rotación y restauración', 'Sincronización recuperable', 'Consumo de batería medido'] },
+  { trackId: 'ios', title: 'Aplicación del repartidor iOS', problem: 'Completar entregas de forma segura respetando ciclo de vida y privacidad.', deliverable: 'App SwiftUI con mapas, localización, SwiftData, cámara y notificaciones.', milestones: ['Navegación y estado', 'Concurrencia y API', 'Persistencia offline', 'Capacidades del dispositivo'], verification: ['Pruebas Swift', 'Permisos explicados', 'Cancelación correcta', 'Accesibilidad validada'] },
+  { trackId: 'flutter', title: 'Aplicación móvil RutaFlow', problem: 'Construir una experiencia multiplataforma de entregas en tiempo real.', deliverable: 'App Flutter con Riverpod, Dio, mapas, GPS, almacenamiento y push.', milestones: ['Arquitectura por capacidades', 'Estado y navegación', 'Mapa y ubicación', 'Offline, archivos y notificaciones'], verification: ['flutter analyze', 'Pruebas de widgets', 'Errores HTTP tipados', 'Android e iOS comprobados'] },
+];
+
+export function projectFor(trackId: string): TrackProject | null {
+  return TRACK_PROJECTS.find(project => project.trackId === trackId) ?? null;
+}

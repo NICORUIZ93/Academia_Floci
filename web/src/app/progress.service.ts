@@ -1,18 +1,35 @@
-import { Injectable, signal } from '@angular/core';
+import { Injectable, computed, signal } from '@angular/core';
 
 export interface TrackProgress {
   completedModules: number[];
+  completedExercises?: string[];
+  passedQuizzes?: number[];
 }
 
 type ProgressState = Record<string, TrackProgress>;
 
-const EMPTY_TRACK_PROGRESS: TrackProgress = { completedModules: [] };
+const EMPTY_TRACK_PROGRESS: TrackProgress = { completedModules: [], completedExercises: [], passedQuizzes: [] };
 const STORAGE_KEY = 'academia-progress-v2';
 const LEGACY_CLOUD_KEY = 'cloud-local-academy-progress';
 
 @Injectable({ providedIn: 'root' })
 export class ProgressService {
   private state = signal<ProgressState>(this.loadInitialState());
+  readonly totalXp = computed(() => Object.values(this.state()).reduce((total, track) =>
+    total
+      + track.completedModules.length * 50
+      + (track.completedExercises?.length ?? 0) * 10
+      + (track.passedQuizzes?.length ?? 0) * 10,
+  0));
+  readonly completedModuleCount = computed(() => Object.values(this.state()).reduce((total, track) => total + track.completedModules.length, 0));
+  readonly badge = computed(() => {
+    const modules = this.completedModuleCount();
+    if (modules >= 224) return 'Maestro';
+    if (modules >= 6) return 'Arquitecto';
+    if (modules >= 3) return 'Constructor';
+    if (modules >= 1) return 'Explorador';
+    return 'Aprendiz';
+  });
 
   private loadInitialState(): ProgressState {
     try {
@@ -64,6 +81,36 @@ export class ProgressService {
       : [...current.completedModules, moduleId];
     this.state.update(s => ({ ...s, [trackId]: { ...current, completedModules } }));
     this.persist();
+  }
+
+  completeExercise(trackId: string, exerciseId: string): void {
+    const current = this.trackProgress(trackId);
+    const completedExercises = current.completedExercises ?? [];
+    if (completedExercises.includes(exerciseId)) return;
+    this.state.update(state => ({
+      ...state,
+      [trackId]: { ...current, completedExercises: [...completedExercises, exerciseId] },
+    }));
+    this.persist();
+  }
+
+  isExerciseComplete(trackId: string, exerciseId: string): boolean {
+    return (this.trackProgress(trackId).completedExercises ?? []).includes(exerciseId);
+  }
+
+  passQuiz(trackId: string, moduleId: number): void {
+    const current = this.trackProgress(trackId);
+    const passedQuizzes = current.passedQuizzes ?? [];
+    if (passedQuizzes.includes(moduleId)) return;
+    this.state.update(state => ({
+      ...state,
+      [trackId]: { ...current, passedQuizzes: [...passedQuizzes, moduleId] },
+    }));
+    this.persist();
+  }
+
+  hasPassedQuiz(trackId: string, moduleId: number): boolean {
+    return (this.trackProgress(trackId).passedQuizzes ?? []).includes(moduleId);
   }
 
   nextPendingModuleId(trackId: string, totalModules: number): number {
