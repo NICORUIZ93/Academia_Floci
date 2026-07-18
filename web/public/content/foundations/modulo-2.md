@@ -227,15 +227,6 @@ No uses una librería de benchmarking para ocultar el proceso. Aísla la operaci
 - Recursión sin progreso: identifica caso base y reducción.
 
 
-## Rúbrica del proyecto
-
-| Criterio | Inicial | Competente | Excelente |
-|---|---|---|---|
-| Modelado | Estructuras arbitrarias | Estructuras coherentes | Justifica operaciones y trade-offs |
-| Corrección | Solo caso feliz | Límites y errores cubiertos | Contratos e invariantes documentados |
-| Algoritmos | Biblioteca sin explicación | Implementa y traza | Compara precondiciones y costes |
-| Rendimiento | Afirmaciones sin datos | Medición repetible | Relaciona teoría, medición y límites |
-| Proyecto | Pierde datos | Persistencia segura | Recuperación de corrupción y commits claros |
 
 ## Bibliografía y fundamento académico
 

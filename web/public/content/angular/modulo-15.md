@@ -166,15 +166,6 @@ flowchart LR
 ## Criterio transversal de calidad del código
 
 Usa nombres del dominio, errores tipados y límites claros. Escribe una prueba que exprese el comportamiento antes de corregir el defecto. SOLID se aplica cuando reduce el coste real de sustituir infraestructura o política; no abstraer antes de observar repetición con el mismo significado. Revisa nombres, cohesión, dependencias, errores, prueba, mínimo privilegio y capacidad de diagnóstico.
-## Rúbrica del proyecto
-
-| Criterio | Inicial | Competente | Master verificable |
-|---|---|---|---|
-| Fundamento | Enumera APIs | Explica propósito | Compara límites y alternativas |
-| Implementación | Demo manual | Flujo reproducible | Integración cohesionada y recuperable |
-| Calidad | Camino feliz | Pruebas y errores | Fallos, compatibilidad y regresión |
-| Seguridad | Secretos locales | Mínimo privilegio | Threat model y evidencia negativa |
-| Operación | Sin métricas | Telemetría básica | SLO, coste y runbook ensayado |
 
 ## Bibliografía y fundamento académico
 

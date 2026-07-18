@@ -226,15 +226,6 @@ Trabaja sobre el proyecto del módulo 13 y conserva una versión desplegable ant
 - Activar SW sin plan: prueba datos privados, versiones, actualización y rollback.
 
 
-## Rúbrica del proyecto
-
-| Criterio | Inicial | Competente | Experto |
-|---|---|---|---|
-| Accesibilidad | Puntuación automática | Flujo de teclado/lector corregido | Componentes, routing, formularios y regresión automatizados |
-| Seguridad | Confía en framework | Contextos y CSP correctos | Trusted Types, SSR y excepciones auditadas con amenaza |
-| i18n | Strings traducidos | Catálogos, ICU y formatos | RTL, tiempo, pseudo-locale y accesibilidad verificados |
-| Rendimiento | Lighthouse aislado | Budgets y comparación | RUM por versión y cuello demostrado |
-| Release | Reemplaza archivos | Actualización y rollback documentados | Cache/SW, compatibilidad y pérdida de estado probadas |
 
 ## Bibliografía y fundamento académico
 

@@ -236,15 +236,6 @@ Copia el Proyecto 2 a una rama nueva. Conserva el JSON como fuente de migración
 - Elegir NoSQL por evitar modelado: empieza por patrones y garantías.
 
 
-## Rúbrica del proyecto
-
-| Criterio | Inicial | Competente | Excelente |
-|---|---|---|---|
-| Modelo | Tablas por intuición | Claves/relaciones correctas | Reglas, cardinalidades y trade-offs |
-| Consultas | Concatenación/SELECT * | Parámetros y JOIN | Reportes claros y planes analizados |
-| Integridad | Solo aplicación | Constraints activos | Fallos y concurrencia probados |
-| Transacciones | Commits parciales | Commit/rollback correcto | Importación idempotente y recuperable |
-| Decisión | Tecnología por moda | Requisitos documentados | ADR compara alternativas y operación |
 
 ## Bibliografía y fundamento académico
 

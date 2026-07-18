@@ -231,15 +231,6 @@ No dividas el sistema en muchos microservicios. Conserva el núcleo modular y a�
 - Postmortem “el operador falló”: investiga por qué una acción humana podía causar impacto sin barreras.
 
 
-## Rúbrica del proyecto
-
-| Criterio | Inicial | Competente | Experto |
-|---|---|---|---|
-| Modelo de fallos | Solo camino feliz | Simula timeout y duplicación | Razona sobre ambigüedad, orden y deadlines |
-| Consistencia | Etiquetas genéricas | Modelo por operación | Compromiso justificado por invariantes |
-| Mensajería | Efectos duplicados | Outbox y deduplicación | Recuperación probada bajo intercalados críticos |
-| Observabilidad | Texto sin correlación | Logs, métricas y trazas | Señales útiles, cardinalidad y privacidad controladas |
-| Confiabilidad | Uptime informal | SLI, SLO y runbook | Error budget, game day y postmortem accionable |
 
 ## Bibliografía y fundamento académico
 

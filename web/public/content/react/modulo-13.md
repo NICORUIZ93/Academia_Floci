@@ -249,15 +249,6 @@ Parte del proyecto 12. Si migraste una vista a Next.js, ejecuta las pruebas de s
 - Formatear según navegador tras SSR: conserva la misma decisión de locale/zona en ambos lados.
 
 
-## Rúbrica del proyecto
-
-| Criterio | Inicial | Competente | Experto |
-|---|---|---|---|
-| Resiliencia | Spinner/error global | Boundaries y retry funcional | Matriz de fallos, estado conservado y telemetría privada |
-| Accesibilidad | Axe sin errores | Flujo teclado/lector completo | Routing, portals, formularios y regresión automatizados |
-| Seguridad | Confía en JSX | Sanitización y auth servidor | CSP, fronteras RSC/cache y ataques verificados |
-| Hidratación/i18n | Silencia warnings | Render determinista y dos locales | RTL, tiempo y streaming consistentes entre servidor/cliente |
-| Release | Build manual | Budgets, versión y rollback | Canary, RUM y coexistencia de assets/contratos probada |
 
 ## Bibliografía y fundamento académico
 

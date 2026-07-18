@@ -1,6 +1,6 @@
 # Academia Floci Repo Graph
 
-Generated: 2026-07-18 07:09 UTC
+Generated: 2026-07-18 07:10 UTC
 Root: `Academia_Floci`
 Indexed files: 771
 Import edges: 33
@@ -166,7 +166,7 @@ For automated lookups, use `docs/repo-graph.json`.
 - `scripts/create_master_gap_modules.py` (120 lines) - symbols: render; imports: pathlib, json
 - `scripts/create_rutaflow_content.py` (145 lines) - symbols: render; imports: pathlib
 - `scripts/enrich_code_quality.py` (44 lines) - imports: pathlib
-- `scripts/enrich_curriculum_sections.py` (172 lines) - symbols: bibliography, project_path; imports: pathlib
+- `scripts/enrich_curriculum_sections.py` (154 lines) - symbols: bibliography, project_path; imports: pathlib
 - `scripts/enrich_official_topic_atlas.py` (127 lines) - symbols: block; imports: pathlib, json
 - `scripts/enrich_official_updates.py` (97 lines) - imports: pathlib
 - `scripts/enrich_rutaflow_projects.py` (61 lines) - imports: pathlib
@@ -181,22 +181,22 @@ For automated lookups, use `docs/repo-graph.json`.
 
 - `web/public/content/ATRIBUCION.md` (20 lines) - headings: # Atribucion y licencia
 - `web/public/content/LICENSE-FLOCI.txt` (21 lines)
-- `web/public/content/android/modulo-0.md` (260 lines) - headings: # Módulo 0: Kotlin aplicado a Android, ## Sílabo, ## Antes de comenzar: instala Android Studio y un dispositivo de prueba, ## Aprende construyendo
-- `web/public/content/android/modulo-1.md` (216 lines) - headings: # Módulo 1: Ciclo de vida: Activities y ViewModel, ## Sílabo, ## Aprende construyendo, ### Tema 1: Ciclo de vida de una Activity
-- `web/public/content/android/modulo-10.md` (212 lines) - headings: # Módulo 10: Performance, Material 3 y accesibilidad, ## Sílabo, ## Aprende construyendo, ### Tema 1: Detectar y corregir recomposición innecesaria
-- `web/public/content/android/modulo-11.md` (231 lines) - headings: # Módulo 11: Publicación en Google Play, ## Sílabo, ## Aprende construyendo, ### Tema 1: Firma de la app
-- `web/public/content/android/modulo-12.md` (249 lines) - headings: # Módulo 12: Proyecto integrador: app Android completa, ## Sílabo, ## Aprende construyendo, ### Tema 1: Arquitectura MVVM completa con UDF
-- `web/public/content/android/modulo-13.md` (299 lines) - headings: # Módulo 13: Android en producción — seguridad, sincronización y calidad, ## Sílabo, ## Aprende construyendo, ### Tema 1: El sistema operativo conecta tu app con entradas externas
-- `web/public/content/android/modulo-14.md` (193 lines) - headings: # Módulo 14: Compose Master: pruebas, accesibilidad y animación, ## Sílabo, ## Aprende construyendo, ### Tema 1: ComposeTestRule
-- `web/public/content/android/modulo-2.md` (233 lines) - headings: # Módulo 2: Jetpack Compose: UI declarativa, ## Sílabo, ## Aprende construyendo, ### Tema 1: Composables y recomposición
-- `web/public/content/android/modulo-3.md` (235 lines) - headings: # Módulo 3: Navegación con Navigation Compose, ## Sílabo, ## Aprende construyendo, ### Tema 1: NavHost y NavController
-- `web/public/content/android/modulo-4.md` (233 lines) - headings: # Módulo 4: Estado con StateFlow y Compose, ## Sílabo, ## Aprende construyendo, ### Tema 1: StateFlow en el ViewModel
-- `web/public/content/android/modulo-5.md` (233 lines) - headings: # Módulo 5: Networking con Retrofit/Ktor, ## Sílabo, ## Aprende construyendo, ### Tema 1: Retrofit con coroutines
-- `web/public/content/android/modulo-6.md` (238 lines) - headings: # Módulo 6: Persistencia local con Room, ## Sílabo, ## Aprende construyendo, ### Tema 1: Entities, DAOs y Database
-- `web/public/content/android/modulo-7.md` (234 lines) - headings: # Módulo 7: Inyección de dependencias con Hilt, ## Sílabo, ## Aprende construyendo, ### Tema 1: Configuración básica de Hilt
-- `web/public/content/android/modulo-8.md` (231 lines) - headings: # Módulo 8: Trabajo en segundo plano, ## Sílabo, ## Aprende construyendo, ### Tema 1: CoroutineWorker y garantía de ejecución
-- `web/public/content/android/modulo-9.md` (237 lines) - headings: # Módulo 9: Testing en Android, ## Sílabo, ## Aprende construyendo, ### Tema 1: Testing de ViewModels con fakes y runTest
-- `web/public/content/angular/modulo-0.md` (268 lines) - headings: # Módulo 0: Fundamentos y Angular CLI, ## Sílabo, ## Antes de comenzar: prepara tu equipo desde cero, ### Windows
+- `web/public/content/android/modulo-0.md` (247 lines) - headings: # Módulo 0: Kotlin aplicado a Android, ## Sílabo, ## Antes de comenzar: instala Android Studio y un dispositivo de prueba, ## Aprende construyendo
+- `web/public/content/android/modulo-1.md` (203 lines) - headings: # Módulo 1: Ciclo de vida: Activities y ViewModel, ## Sílabo, ## Aprende construyendo, ### Tema 1: Ciclo de vida de una Activity
+- `web/public/content/android/modulo-10.md` (199 lines) - headings: # Módulo 10: Performance, Material 3 y accesibilidad, ## Sílabo, ## Aprende construyendo, ### Tema 1: Detectar y corregir recomposición innecesaria
+- `web/public/content/android/modulo-11.md` (218 lines) - headings: # Módulo 11: Publicación en Google Play, ## Sílabo, ## Aprende construyendo, ### Tema 1: Firma de la app
+- `web/public/content/android/modulo-12.md` (236 lines) - headings: # Módulo 12: Proyecto integrador: app Android completa, ## Sílabo, ## Aprende construyendo, ### Tema 1: Arquitectura MVVM completa con UDF
+- `web/public/content/android/modulo-13.md` (290 lines) - headings: # Módulo 13: Android en producción — seguridad, sincronización y calidad, ## Sílabo, ## Aprende construyendo, ### Tema 1: El sistema operativo conecta tu app con entradas externas
+- `web/public/content/android/modulo-14.md` (184 lines) - headings: # Módulo 14: Compose Master: pruebas, accesibilidad y animación, ## Sílabo, ## Aprende construyendo, ### Tema 1: ComposeTestRule
+- `web/public/content/android/modulo-2.md` (220 lines) - headings: # Módulo 2: Jetpack Compose: UI declarativa, ## Sílabo, ## Aprende construyendo, ### Tema 1: Composables y recomposición
+- `web/public/content/android/modulo-3.md` (222 lines) - headings: # Módulo 3: Navegación con Navigation Compose, ## Sílabo, ## Aprende construyendo, ### Tema 1: NavHost y NavController
+- `web/public/content/android/modulo-4.md` (220 lines) - headings: # Módulo 4: Estado con StateFlow y Compose, ## Sílabo, ## Aprende construyendo, ### Tema 1: StateFlow en el ViewModel
+- `web/public/content/android/modulo-5.md` (220 lines) - headings: # Módulo 5: Networking con Retrofit/Ktor, ## Sílabo, ## Aprende construyendo, ### Tema 1: Retrofit con coroutines
+- `web/public/content/android/modulo-6.md` (225 lines) - headings: # Módulo 6: Persistencia local con Room, ## Sílabo, ## Aprende construyendo, ### Tema 1: Entities, DAOs y Database
+- `web/public/content/android/modulo-7.md` (221 lines) - headings: # Módulo 7: Inyección de dependencias con Hilt, ## Sílabo, ## Aprende construyendo, ### Tema 1: Configuración básica de Hilt
+- `web/public/content/android/modulo-8.md` (218 lines) - headings: # Módulo 8: Trabajo en segundo plano, ## Sílabo, ## Aprende construyendo, ### Tema 1: CoroutineWorker y garantía de ejecución
+- `web/public/content/android/modulo-9.md` (224 lines) - headings: # Módulo 9: Testing en Android, ## Sílabo, ## Aprende construyendo, ### Tema 1: Testing de ViewModels con fakes y runTest
+- `web/public/content/angular/modulo-0.md` (255 lines) - headings: # Módulo 0: Fundamentos y Angular CLI, ## Sílabo, ## Antes de comenzar: prepara tu equipo desde cero, ### Windows
 - ... 329 more files
 
 ### documentation

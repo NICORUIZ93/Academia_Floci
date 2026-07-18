@@ -218,15 +218,6 @@ Implementa por incrementos y crea un commit después de cada etapa:
 - Crear una función enorme: separa entrada, regla y presentación.
 
 
-## Rúbrica del proyecto
-
-| Criterio | Inicial | Competente | Excelente |
-|---|---|---|---|
-| Requisitos | Implícitos | Entradas y salidas documentadas | Incluye fronteras y supuestos |
-| Algoritmo | No puede explicarlo | Pseudocódigo coherente | Justifica decisiones y alternativas |
-| Código | Monolítico | Funciones claras | Contratos, nombres y errores precisos |
-| Pruebas | Solo caso feliz | Casos normales, límite e inválidos | Pruebas capaces de detectar mutaciones |
-| Reproducibilidad | Pasos incompletos | README ejecutable | Historial Git incremental y evidencia |
 
 ## Bibliografía y fundamento académico
 

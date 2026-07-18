@@ -255,15 +255,6 @@ Evoluciona el módulo `shared` del proyecto 11 como si dos equipos distintos lo 
 - Crash sin dSYM/mapping: archiva símbolos por build ID antes de distribuir.
 
 
-## Rúbrica del proyecto
-
-| Criterio | Inicial | Competente | Experto |
-|---|---|---|---|
-| Frontera | Exporta todo | Facade y adapters idiomáticos | Sharing justificado por semántica/coste y consumers reales |
-| Concurrencia | Callback sin lifecycle | Cancelación y dispatch documentados | Carreras, respuesta tardía y ownership cross-runtime probados |
-| Memoria | Confía en GC | Scopes/recursos cerrados | Retención cruzada medida y eliminada |
-| Compatibilidad | SemVer manual | API check y migraciones | ABI, conducta, schemas y N-2 demostrados |
-| Operación | Logs genéricos | Símbolos y versión correlacionada | Matriz, rollout asíncrono y forward fix ensayados |
 
 ## Bibliografía y fundamento académico
 

@@ -93,22 +93,6 @@ PROJECT_START = {
     "cloud": ("`mkdir academia-cloud && cd academia-cloud && git init`; crea allí `compose.yaml`, `infra/`, `src/` y `tests/`", "almacenamiento, eventos y serverless", "datos, IaC y servicios integrados", "gobierno, multi-cloud y recuperación"),
 }
 
-RUBRIC = """## Rúbrica del proyecto
-
-Esta rúbrica evalúa el laboratorio y los ejercicios como evidencia de dominio, no la mera finalización de pasos.
-
-| Criterio | Peso | Evidencia esperada |
-|---|---:|---|
-| Comprensión conceptual | 20% | Explica el mecanismo, sus límites y por qué la solución funciona. |
-| Implementación funcional | 30% | El artefacto satisface requisitos normales, límite y de error. |
-| Verificación | 20% | Incluye pruebas, mediciones o inspecciones reproducibles. |
-| Diseño y calidad | 15% | Nombres, estructura, seguridad y mantenibilidad son deliberados. |
-| Comunicación profesional | 15% | README, decisiones, comandos y resultados permiten repetir el trabajo. |
-
-Se alcanza competencia con 70/100 y sin cero en implementación o verificación. El nivel experto exige comparar alternativas, justificar trade-offs y reconocer condiciones donde la solución dejaría de ser válida.
-"""
-
-
 def bibliography(track: str) -> str:
     lines = [
         "## Bibliografía y fundamento académico",
@@ -152,8 +136,6 @@ for track, _ in REFERENCES.items():
                 raise RuntimeError(f"{path}: falta {marker}")
             text = text.replace(marker, project_path(track).rstrip() + "\n\n" + marker, 1)
         additions: list[str] = []
-        if "## Rúbrica del proyecto" not in text:
-            additions.append(RUBRIC.rstrip())
         if "## Bibliografía y fundamento académico" not in text:
             additions.append(bibliography(track).rstrip())
         original = path.read_text(encoding="utf-8")

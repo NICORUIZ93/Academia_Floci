@@ -173,15 +173,6 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 La entrega incluye repositorio reproducible, consultas, alertas, timeline, evidencias criptográficas, pruebas de política y decisión arquitectónica.
 
 
-## Rúbrica del proyecto
-
-| Criterio | Peso | Evidencia |
-|---|---:|---|
-| Confiabilidad | 25% | SLIs válidos, SLO defendible y alertas de burn rate probadas. |
-| Incidentes | 20% | Game day, roles, runbook, timeline y acciones con dueño. |
-| Supply chain | 25% | Digest, SBOM, procedencia, firma y verificación de política. |
-| Plataforma | 20% | Reconciliación, políticas probadas y golden path usable. |
-| Fundamento | 10% | Trade-offs, límites y métricas comunicados con claridad. |
 
 ## Bibliografía y fundamento académico
 

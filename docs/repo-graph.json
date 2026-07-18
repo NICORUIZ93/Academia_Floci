@@ -2403,7 +2403,7 @@
     },
     {
       "path": "scripts/enrich_curriculum_sections.py",
-      "lines": 172,
+      "lines": 154,
       "kind": "automation-script",
       "symbols": [
         "bibliography",
@@ -2724,7 +2724,7 @@
     },
     {
       "path": "web/public/content/android/modulo-0.md",
-      "lines": 260,
+      "lines": 247,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -2739,13 +2739,13 @@
         "## Ruta de proyecto progresivo desde carpeta vac\u00eda",
         "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
-        "## R\u00fabrica del proyecto",
-        "## Bibliograf\u00eda y fundamento acad\u00e9mico"
+        "## Bibliograf\u00eda y fundamento acad\u00e9mico",
+        "## Resumen del m\u00f3dulo"
       ]
     },
     {
       "path": "web/public/content/android/modulo-1.md",
-      "lines": 216,
+      "lines": 203,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -2758,14 +2758,13 @@
         "### Tema 3: SavedStateHandle",
         "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
-        "## R\u00fabrica del proyecto",
         "## Bibliograf\u00eda y fundamento acad\u00e9mico",
         "## Resumen del m\u00f3dulo"
       ]
     },
     {
       "path": "web/public/content/android/modulo-10.md",
-      "lines": 212,
+      "lines": 199,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -2778,14 +2777,13 @@
         "### Tema 3: Accesibilidad e interop con Views",
         "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
-        "## R\u00fabrica del proyecto",
         "## Bibliograf\u00eda y fundamento acad\u00e9mico",
         "## Resumen del m\u00f3dulo"
       ]
     },
     {
       "path": "web/public/content/android/modulo-11.md",
-      "lines": 231,
+      "lines": 218,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -2798,14 +2796,13 @@
         "### Tema 3: Versionado, tracks y pol\u00edticas",
         "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
-        "## R\u00fabrica del proyecto",
         "## Bibliograf\u00eda y fundamento acad\u00e9mico",
         "## Resumen del m\u00f3dulo"
       ]
     },
     {
       "path": "web/public/content/android/modulo-12.md",
-      "lines": 249,
+      "lines": 236,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -2826,7 +2823,7 @@
     },
     {
       "path": "web/public/content/android/modulo-13.md",
-      "lines": 299,
+      "lines": 290,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -2847,7 +2844,7 @@
     },
     {
       "path": "web/public/content/android/modulo-14.md",
-      "lines": 193,
+      "lines": 184,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -2863,12 +2860,12 @@
         "### Tema 6: AnimatedContent y AnimationSpec",
         "## Trazabilidad de la auditor\u00eda original",
         "## Criterio transversal de calidad del c\u00f3digo",
-        "## R\u00fabrica del proyecto"
+        "## Bibliograf\u00eda y fundamento acad\u00e9mico"
       ]
     },
     {
       "path": "web/public/content/android/modulo-2.md",
-      "lines": 233,
+      "lines": 220,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -2882,14 +2879,13 @@
         "### Tema 3: remember, rememberSaveable y layout b\u00e1sico",
         "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
-        "## R\u00fabrica del proyecto",
         "## Bibliograf\u00eda y fundamento acad\u00e9mico",
         "## Resumen del m\u00f3dulo"
       ]
     },
     {
       "path": "web/public/content/android/modulo-3.md",
-      "lines": 235,
+      "lines": 222,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -2902,14 +2898,13 @@
         "### Tema 3: Navegaci\u00f3n anidada con stacks independientes",
         "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
-        "## R\u00fabrica del proyecto",
         "## Bibliograf\u00eda y fundamento acad\u00e9mico",
         "## Resumen del m\u00f3dulo"
       ]
     },
     {
       "path": "web/public/content/android/modulo-4.md",
-      "lines": 233,
+      "lines": 220,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -2922,14 +2917,13 @@
         "### Tema 3: SharedFlow para eventos de un solo uso",
         "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
-        "## R\u00fabrica del proyecto",
         "## Bibliograf\u00eda y fundamento acad\u00e9mico",
         "## Resumen del m\u00f3dulo"
       ]
     },
     {
       "path": "web/public/content/android/modulo-5.md",
-      "lines": 233,
+      "lines": 220,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -2942,14 +2936,13 @@
         "### Tema 3: Interceptores de OkHttp",
         "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
-        "## R\u00fabrica del proyecto",
         "## Bibliograf\u00eda y fundamento acad\u00e9mico",
         "## Resumen del m\u00f3dulo"
       ]
     },
     {
       "path": "web/public/content/android/modulo-6.md",
-      "lines": 238,
+      "lines": 225,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -2962,14 +2955,13 @@
         "### Tema 3: Estrategia offline-first",
         "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
-        "## R\u00fabrica del proyecto",
         "## Bibliograf\u00eda y fundamento acad\u00e9mico",
         "## Resumen del m\u00f3dulo"
       ]
     },
     {
       "path": "web/public/content/android/modulo-7.md",
-      "lines": 234,
+      "lines": 221,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -2982,14 +2974,13 @@
         "### Tema 3: Scopes y testing con Hilt",
         "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
-        "## R\u00fabrica del proyecto",
         "## Bibliograf\u00eda y fundamento acad\u00e9mico",
         "## Resumen del m\u00f3dulo"
       ]
     },
     {
       "path": "web/public/content/android/modulo-8.md",
-      "lines": 231,
+      "lines": 218,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -3002,14 +2993,13 @@
         "### Tema 3: Notificaciones desde background work",
         "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
-        "## R\u00fabrica del proyecto",
         "## Bibliograf\u00eda y fundamento acad\u00e9mico",
         "## Resumen del m\u00f3dulo"
       ]
     },
     {
       "path": "web/public/content/android/modulo-9.md",
-      "lines": 237,
+      "lines": 224,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -3022,14 +3012,13 @@
         "### Tema 3: Espresso y fakes vs mocks",
         "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
-        "## R\u00fabrica del proyecto",
         "## Bibliograf\u00eda y fundamento acad\u00e9mico",
         "## Resumen del m\u00f3dulo"
       ]
     },
     {
       "path": "web/public/content/angular/modulo-0.md",
-      "lines": 268,
+      "lines": 255,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -3050,7 +3039,7 @@
     },
     {
       "path": "web/public/content/angular/modulo-1.md",
-      "lines": 327,
+      "lines": 314,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -3065,13 +3054,13 @@
         "### Tema 5: Consultas signal y trabajo posterior al render",
         "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
-        "## R\u00fabrica del proyecto",
-        "## Bibliograf\u00eda y fundamento acad\u00e9mico"
+        "## Bibliograf\u00eda y fundamento acad\u00e9mico",
+        "## Resumen del m\u00f3dulo"
       ]
     },
     {
       "path": "web/public/content/angular/modulo-10.md",
-      "lines": 199,
+      "lines": 186,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -3084,14 +3073,13 @@
         "### Tema 3: Mockear HttpClient y el nuevo builder basado en Vitest",
         "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
-        "## R\u00fabrica del proyecto",
         "## Bibliograf\u00eda y fundamento acad\u00e9mico",
         "## Resumen del m\u00f3dulo"
       ]
     },
     {
       "path": "web/public/content/angular/modulo-11.md",
-      "lines": 212,
+      "lines": 199,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -3105,14 +3093,13 @@
         "### Tema 4: Zoneless",
         "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
-        "## R\u00fabrica del proyecto",
         "## Bibliograf\u00eda y fundamento acad\u00e9mico",
         "## Resumen del m\u00f3dulo"
       ]
     },
     {
       "path": "web/public/content/angular/modulo-12.md",
-      "lines": 186,
+      "lines": 173,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -3125,14 +3112,13 @@
         "### Tema 3: Por qu\u00e9 migrar una versi\u00f3n mayor a la vez",
         "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
-        "## R\u00fabrica del proyecto",
         "## Bibliograf\u00eda y fundamento acad\u00e9mico",
         "## Resumen del m\u00f3dulo"
       ]
     },
     {
       "path": "web/public/content/angular/modulo-13.md",
-      "lines": 226,
+      "lines": 213,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -3153,7 +3139,7 @@
     },
     {
       "path": "web/public/content/angular/modulo-14.md",
-      "lines": 277,
+      "lines": 268,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -3174,7 +3160,7 @@
     },
     {
       "path": "web/public/content/angular/modulo-15.md",
-      "lines": 194,
+      "lines": 185,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -3190,12 +3176,12 @@
         "### Tema 6: Hidrataci\u00f3n y provideServerRendering",
         "## Trazabilidad de la auditor\u00eda original",
         "## Criterio transversal de calidad del c\u00f3digo",
-        "## R\u00fabrica del proyecto"
+        "## Bibliograf\u00eda y fundamento acad\u00e9mico"
       ]
     },
     {
       "path": "web/public/content/angular/modulo-2.md",
-      "lines": 222,
+      "lines": 209,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -3209,14 +3195,13 @@
         "### Tema 4: Hacia zoneless change detection",
         "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
-        "## R\u00fabrica del proyecto",
         "## Bibliograf\u00eda y fundamento acad\u00e9mico",
         "## Resumen del m\u00f3dulo"
       ]
     },
     {
       "path": "web/public/content/angular/modulo-3.md",
-      "lines": 230,
+      "lines": 217,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -3231,13 +3216,13 @@
         "### Tema 4: Tokens de inyecci\u00f3n y decoradores de resoluci\u00f3n",
         "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
-        "## R\u00fabrica del proyecto",
-        "## Bibliograf\u00eda y fundamento acad\u00e9mico"
+        "## Bibliograf\u00eda y fundamento acad\u00e9mico",
+        "## Resumen del m\u00f3dulo"
       ]
     },
     {
       "path": "web/public/content/angular/modulo-4.md",
-      "lines": 218,
+      "lines": 205,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -3251,14 +3236,13 @@
         "### Tema 4: Par\u00e1metros de ruta, query params y capacidades avanzadas de routing",
         "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
-        "## R\u00fabrica del proyecto",
         "## Bibliograf\u00eda y fundamento acad\u00e9mico",
         "## Resumen del m\u00f3dulo"
       ]
     },
     {
       "path": "web/public/content/angular/modulo-5.md",
-      "lines": 224,
+      "lines": 211,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -3272,14 +3256,13 @@
         "### Tema 4: Template-driven forms \u2014 cu\u00e1ndo siguen siendo v\u00e1lidos",
         "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
-        "## R\u00fabrica del proyecto",
         "## Bibliograf\u00eda y fundamento acad\u00e9mico",
         "## Resumen del m\u00f3dulo"
       ]
     },
     {
       "path": "web/public/content/angular/modulo-6.md",
-      "lines": 221,
+      "lines": 208,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -3293,14 +3276,13 @@
         "### Tema 4: Subjects y operadores de aplanamiento avanzados",
         "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
-        "## R\u00fabrica del proyecto",
         "## Bibliograf\u00eda y fundamento acad\u00e9mico",
         "## Resumen del m\u00f3dulo"
       ]
     },
     {
       "path": "web/public/content/angular/modulo-7.md",
-      "lines": 202,
+      "lines": 189,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -3313,14 +3295,13 @@
         "### Tema 3: Registro de interceptores y centralizaci\u00f3n del manejo de errores",
         "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
-        "## R\u00fabrica del proyecto",
         "## Bibliograf\u00eda y fundamento acad\u00e9mico",
         "## Resumen del m\u00f3dulo"
       ]
     },
     {
       "path": "web/public/content/angular/modulo-8.md",
-      "lines": 196,
+      "lines": 183,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -3333,14 +3314,13 @@
         "### Tema 3: Migraci\u00f3n desde NgModules",
         "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
-        "## R\u00fabrica del proyecto",
         "## Bibliograf\u00eda y fundamento acad\u00e9mico",
         "## Resumen del m\u00f3dulo"
       ]
     },
     {
       "path": "web/public/content/angular/modulo-9.md",
-      "lines": 197,
+      "lines": 184,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -3353,14 +3333,13 @@
         "### Tema 3: Cu\u00e1ndo NgRx justifica su complejidad",
         "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
-        "## R\u00fabrica del proyecto",
         "## Bibliograf\u00eda y fundamento acad\u00e9mico",
         "## Resumen del m\u00f3dulo"
       ]
     },
     {
       "path": "web/public/content/cloud/modulo-0.md",
-      "lines": 385,
+      "lines": 372,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -3381,7 +3360,7 @@
     },
     {
       "path": "web/public/content/cloud/modulo-1.md",
-      "lines": 359,
+      "lines": 346,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -3402,7 +3381,7 @@
     },
     {
       "path": "web/public/content/cloud/modulo-10.md",
-      "lines": 200,
+      "lines": 187,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -3415,14 +3394,13 @@
         "### Tema 3: SSM Parameter Store vs Secrets Manager",
         "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
-        "## R\u00fabrica del proyecto",
         "## Bibliograf\u00eda y fundamento acad\u00e9mico",
         "## Resumen del m\u00f3dulo"
       ]
     },
     {
       "path": "web/public/content/cloud/modulo-11.md",
-      "lines": 199,
+      "lines": 186,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -3436,14 +3414,13 @@
         "### Tema 3: SNS + SQS juntos, y Azure Event Hubs",
         "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
-        "## R\u00fabrica del proyecto",
         "## Bibliograf\u00eda y fundamento acad\u00e9mico",
         "## Resumen del m\u00f3dulo"
       ]
     },
     {
       "path": "web/public/content/cloud/modulo-12.md",
-      "lines": 206,
+      "lines": 193,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -3457,14 +3434,13 @@
         "### Tema 3: Diagn\u00f3stico sistem\u00e1tico y X-Ray",
         "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
-        "## R\u00fabrica del proyecto",
         "## Bibliograf\u00eda y fundamento acad\u00e9mico",
         "## Resumen del m\u00f3dulo"
       ]
     },
     {
       "path": "web/public/content/cloud/modulo-13.md",
-      "lines": 200,
+      "lines": 187,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -3478,14 +3454,13 @@
         "### Tema 3: Migrations",
         "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
-        "## R\u00fabrica del proyecto",
         "## Bibliograf\u00eda y fundamento acad\u00e9mico",
         "## Resumen del m\u00f3dulo"
       ]
     },
     {
       "path": "web/public/content/cloud/modulo-14.md",
-      "lines": 208,
+      "lines": 195,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -3498,14 +3473,13 @@
         "### Tema 3: Contenedores vs Lambda, y EKS",
         "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
-        "## R\u00fabrica del proyecto",
         "## Bibliograf\u00eda y fundamento acad\u00e9mico",
         "## Resumen del m\u00f3dulo"
       ]
     },
     {
       "path": "web/public/content/cloud/modulo-15.md",
-      "lines": 212,
+      "lines": 199,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -3518,14 +3492,13 @@
         "### Tema 3: Drift detection, Terraform/CDK, y compatibilidad multi-herramienta",
         "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
-        "## R\u00fabrica del proyecto",
         "## Bibliograf\u00eda y fundamento acad\u00e9mico",
         "## Resumen del m\u00f3dulo"
       ]
     },
     {
       "path": "web/public/content/cloud/modulo-16.md",
-      "lines": 201,
+      "lines": 188,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -3538,14 +3511,13 @@
         "### Tema 3: Express vs Standard, y cu\u00e1ndo EventBridge Pipes es suficiente",
         "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
-        "## R\u00fabrica del proyecto",
         "## Bibliograf\u00eda y fundamento acad\u00e9mico",
         "## Resumen del m\u00f3dulo"
       ]
     },
     {
       "path": "web/public/content/cloud/modulo-17.md",
-      "lines": 196,
+      "lines": 183,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -3558,14 +3530,13 @@
         "### Tema 3: Kinesis Data Streams vs Firehose, y GCP Managed Kafka",
         "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
-        "## R\u00fabrica del proyecto",
         "## Bibliograf\u00eda y fundamento acad\u00e9mico",
         "## Resumen del m\u00f3dulo"
       ]
     },
     {
       "path": "web/public/content/cloud/modulo-18.md",
-      "lines": 195,
+      "lines": 182,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -3578,14 +3549,13 @@
         "### Tema 3: OAuth 2.0 y PKCE",
         "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
-        "## R\u00fabrica del proyecto",
         "## Bibliograf\u00eda y fundamento acad\u00e9mico",
         "## Resumen del m\u00f3dulo"
       ]
     },
     {
       "path": "web/public/content/cloud/modulo-19.md",
-      "lines": 206,
+      "lines": 193,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -3600,13 +3570,13 @@
         "### Tema 3: Parquet vs CSV, y partition pruning",
         "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
-        "## R\u00fabrica del proyecto",
-        "## Bibliograf\u00eda y fundamento acad\u00e9mico"
+        "## Bibliograf\u00eda y fundamento acad\u00e9mico",
+        "## Resumen del m\u00f3dulo"
       ]
     },
     {
       "path": "web/public/content/cloud/modulo-2.md",
-      "lines": 294,
+      "lines": 281,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -3627,7 +3597,7 @@
     },
     {
       "path": "web/public/content/cloud/modulo-20.md",
-      "lines": 199,
+      "lines": 186,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -3642,13 +3612,13 @@
         "### Tema 3: Stub vs mock, y qu\u00e9 probar localmente",
         "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
-        "## R\u00fabrica del proyecto",
-        "## Bibliograf\u00eda y fundamento acad\u00e9mico"
+        "## Bibliograf\u00eda y fundamento acad\u00e9mico",
+        "## Resumen del m\u00f3dulo"
       ]
     },
     {
       "path": "web/public/content/cloud/modulo-21.md",
-      "lines": 192,
+      "lines": 179,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -3669,7 +3639,7 @@
     },
     {
       "path": "web/public/content/cloud/modulo-22.md",
-      "lines": 184,
+      "lines": 171,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -3690,7 +3660,7 @@
     },
     {
       "path": "web/public/content/cloud/modulo-23.md",
-      "lines": 172,
+      "lines": 159,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -3706,12 +3676,12 @@
         "## Laboratorio pr\u00e1ctico",
         "### Laboratorio 23.1 \u2014 Cl\u00faster ElastiCache con cache-aside",
         "### Laboratorio 23.2 \u2014 Usuario con autenticaci\u00f3n IAM",
-        "## R\u00fabrica del proyecto"
+        "## Bibliograf\u00eda y fundamento acad\u00e9mico"
       ]
     },
     {
       "path": "web/public/content/cloud/modulo-24.md",
-      "lines": 189,
+      "lines": 176,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -3732,7 +3702,7 @@
     },
     {
       "path": "web/public/content/cloud/modulo-25.md",
-      "lines": 185,
+      "lines": 172,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -3753,7 +3723,7 @@
     },
     {
       "path": "web/public/content/cloud/modulo-26.md",
-      "lines": 171,
+      "lines": 158,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -3769,12 +3739,12 @@
         "## Laboratorio pr\u00e1ctico",
         "### Laboratorio 26.1 \u2014 Entrega autom\u00e1tica con Firehose",
         "### Laboratorio 26.2 \u2014 Pipe de SQS a Lambda sin c\u00f3digo intermedio",
-        "## R\u00fabrica del proyecto"
+        "## Bibliograf\u00eda y fundamento acad\u00e9mico"
       ]
     },
     {
       "path": "web/public/content/cloud/modulo-27.md",
-      "lines": 176,
+      "lines": 163,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -3790,12 +3760,12 @@
         "## Laboratorio pr\u00e1ctico",
         "### Laboratorio 27.1 \u2014 API GraphQL con resolver local",
         "### Laboratorio 27.2 \u2014 Simulador de entrega, rebote y queja con SES",
-        "## R\u00fabrica del proyecto"
+        "## Bibliograf\u00eda y fundamento acad\u00e9mico"
       ]
     },
     {
       "path": "web/public/content/cloud/modulo-28.md",
-      "lines": 172,
+      "lines": 159,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -3811,12 +3781,12 @@
         "## Laboratorio pr\u00e1ctico",
         "### Laboratorio 28.1 \u2014 Grafo de relaciones con Neptune",
         "### Laboratorio 28.2 \u2014 B\u00fasqueda de texto completo con OpenSearch",
-        "## R\u00fabrica del proyecto"
+        "## Bibliograf\u00eda y fundamento acad\u00e9mico"
       ]
     },
     {
       "path": "web/public/content/cloud/modulo-29.md",
-      "lines": 185,
+      "lines": 172,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -3837,7 +3807,7 @@
     },
     {
       "path": "web/public/content/cloud/modulo-3.md",
-      "lines": 270,
+      "lines": 257,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -3853,12 +3823,12 @@
         "## Laboratorio pr\u00e1ctico",
         "### Laboratorio 3.1 \u2014 Ciclo completo con cola Standard y DLQ",
         "### Laboratorio 3.2 \u2014 Cola FIFO con MessageGroupId",
-        "## R\u00fabrica del proyecto"
+        "## Bibliograf\u00eda y fundamento acad\u00e9mico"
       ]
     },
     {
       "path": "web/public/content/cloud/modulo-30.md",
-      "lines": 161,
+      "lines": 148,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -3873,13 +3843,13 @@
         "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
         "### Laboratorio 30.1 \u2014 Servidor, usuario y clave SSH",
-        "## R\u00fabrica del proyecto",
-        "## Bibliograf\u00eda y fundamento acad\u00e9mico"
+        "## Bibliograf\u00eda y fundamento acad\u00e9mico",
+        "## Resumen del m\u00f3dulo"
       ]
     },
     {
       "path": "web/public/content/cloud/modulo-31.md",
-      "lines": 355,
+      "lines": 342,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -3900,7 +3870,7 @@
     },
     {
       "path": "web/public/content/cloud/modulo-32.md",
-      "lines": 230,
+      "lines": 221,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -3916,12 +3886,12 @@
         "### Nube de evoluci\u00f3n continua y vigilancia de retiros",
         "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
-        "## R\u00fabrica del proyecto"
+        "## Bibliograf\u00eda y fundamento acad\u00e9mico"
       ]
     },
     {
       "path": "web/public/content/cloud/modulo-33.md",
-      "lines": 212,
+      "lines": 203,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -3937,12 +3907,12 @@
         "### Tema 6: Microservicios, Big Data, AI/ML y multi-cloud",
         "## Trazabilidad de la auditor\u00eda original",
         "## Criterio transversal de calidad del c\u00f3digo",
-        "## R\u00fabrica del proyecto"
+        "## Bibliograf\u00eda y fundamento acad\u00e9mico"
       ]
     },
     {
       "path": "web/public/content/cloud/modulo-34.md",
-      "lines": 234,
+      "lines": 225,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -3963,7 +3933,7 @@
     },
     {
       "path": "web/public/content/cloud/modulo-4.md",
-      "lines": 326,
+      "lines": 313,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -3984,7 +3954,7 @@
     },
     {
       "path": "web/public/content/cloud/modulo-5.md",
-      "lines": 330,
+      "lines": 317,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -4005,7 +3975,7 @@
     },
     {
       "path": "web/public/content/cloud/modulo-6.md",
-      "lines": 309,
+      "lines": 296,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -4021,12 +3991,12 @@
         "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
         "### Laboratorio 6.1 \u2014 Construir y desplegar el endpoint",
-        "## R\u00fabrica del proyecto"
+        "## Bibliograf\u00eda y fundamento acad\u00e9mico"
       ]
     },
     {
       "path": "web/public/content/cloud/modulo-7.md",
-      "lines": 295,
+      "lines": 282,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -4041,13 +4011,13 @@
         "### Tema 5: Buenas pr\u00e1cticas \u2014 roles sobre usuarios, pol\u00edticas restrictivas, rotaci\u00f3n de credenciales",
         "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
-        "## R\u00fabrica del proyecto",
-        "## Bibliograf\u00eda y fundamento acad\u00e9mico"
+        "## Bibliograf\u00eda y fundamento acad\u00e9mico",
+        "## Resumen del m\u00f3dulo"
       ]
     },
     {
       "path": "web/public/content/cloud/modulo-8.md",
-      "lines": 262,
+      "lines": 249,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -4062,13 +4032,13 @@
         "## Laboratorio pr\u00e1ctico",
         "### Laboratorio 8.1 \u2014 Azure: Blob Storage y Queue Storage",
         "### Laboratorio 8.2 \u2014 GCP: Cloud Storage y Pub/Sub",
-        "## R\u00fabrica del proyecto",
-        "## Bibliograf\u00eda y fundamento acad\u00e9mico"
+        "## Bibliograf\u00eda y fundamento acad\u00e9mico",
+        "## Resumen del m\u00f3dulo"
       ]
     },
     {
       "path": "web/public/content/cloud/modulo-9.md",
-      "lines": 421,
+      "lines": 408,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -4089,7 +4059,7 @@
     },
     {
       "path": "web/public/content/devops/modulo-0.md",
-      "lines": 519,
+      "lines": 506,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -4110,7 +4080,7 @@
     },
     {
       "path": "web/public/content/devops/modulo-1.md",
-      "lines": 337,
+      "lines": 324,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -4131,7 +4101,7 @@
     },
     {
       "path": "web/public/content/devops/modulo-10.md",
-      "lines": 248,
+      "lines": 235,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -4145,14 +4115,13 @@
         "### Tema 4: Correlation ID a trav\u00e9s de servicios",
         "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
-        "## R\u00fabrica del proyecto",
         "## Bibliograf\u00eda y fundamento acad\u00e9mico",
         "## Resumen del m\u00f3dulo"
       ]
     },
     {
       "path": "web/public/content/devops/modulo-11.md",
-      "lines": 318,
+      "lines": 305,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -4168,12 +4137,12 @@
         "### Tema 6: SAST, DAST y SCA \u2014 diferencias y herramientas",
         "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
-        "## R\u00fabrica del proyecto"
+        "## Bibliograf\u00eda y fundamento acad\u00e9mico"
       ]
     },
     {
       "path": "web/public/content/devops/modulo-12.md",
-      "lines": 309,
+      "lines": 296,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -4189,12 +4158,12 @@
         "### Tema 6: Platform Engineering \u2014 Internal Developer Platforms (IDPs)",
         "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
-        "## R\u00fabrica del proyecto"
+        "## Bibliograf\u00eda y fundamento acad\u00e9mico"
       ]
     },
     {
       "path": "web/public/content/devops/modulo-13.md",
-      "lines": 245,
+      "lines": 232,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -4215,7 +4184,7 @@
     },
     {
       "path": "web/public/content/devops/modulo-14.md",
-      "lines": 217,
+      "lines": 208,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -4231,12 +4200,12 @@
         "### Kubernetes 1.36, OpenTelemetry 1.59 y herramientas con ciclo propio",
         "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
-        "## R\u00fabrica del proyecto"
+        "## Bibliograf\u00eda y fundamento acad\u00e9mico"
       ]
     },
     {
       "path": "web/public/content/devops/modulo-15.md",
-      "lines": 199,
+      "lines": 190,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -4252,12 +4221,12 @@
         "### Tema 6: DevSecOps y m\u00e9tricas DORA",
         "## Trazabilidad de la auditor\u00eda original",
         "## Criterio transversal de calidad del c\u00f3digo",
-        "## R\u00fabrica del proyecto"
+        "## Bibliograf\u00eda y fundamento acad\u00e9mico"
       ]
     },
     {
       "path": "web/public/content/devops/modulo-2.md",
-      "lines": 308,
+      "lines": 295,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -4273,12 +4242,12 @@
         "### Tema 6: Registries \u2014 Docker Hub, AWS ECR, Azure Container Registry, Harbor",
         "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
-        "## R\u00fabrica del proyecto"
+        "## Bibliograf\u00eda y fundamento acad\u00e9mico"
       ]
     },
     {
       "path": "web/public/content/devops/modulo-3.md",
-      "lines": 240,
+      "lines": 227,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -4292,14 +4261,13 @@
         "### Tema 4: Perfiles para distintos entornos",
         "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
-        "## R\u00fabrica del proyecto",
         "## Bibliograf\u00eda y fundamento acad\u00e9mico",
         "## Resumen del m\u00f3dulo"
       ]
     },
     {
       "path": "web/public/content/devops/modulo-4.md",
-      "lines": 247,
+      "lines": 234,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -4313,14 +4281,13 @@
         "### Tema 4: Pipelines como c\u00f3digo (GitHub Actions/GitLab CI)",
         "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
-        "## R\u00fabrica del proyecto",
         "## Bibliograf\u00eda y fundamento acad\u00e9mico",
         "## Resumen del m\u00f3dulo"
       ]
     },
     {
       "path": "web/public/content/devops/modulo-5.md",
-      "lines": 265,
+      "lines": 252,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -4335,13 +4302,13 @@
         "### Tema 5: Rollback autom\u00e1tico por m\u00e9tricas",
         "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
-        "## R\u00fabrica del proyecto",
-        "## Bibliograf\u00eda y fundamento acad\u00e9mico"
+        "## Bibliograf\u00eda y fundamento acad\u00e9mico",
+        "## Resumen del m\u00f3dulo"
       ]
     },
     {
       "path": "web/public/content/devops/modulo-6.md",
-      "lines": 331,
+      "lines": 318,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -4362,7 +4329,7 @@
     },
     {
       "path": "web/public/content/devops/modulo-7.md",
-      "lines": 308,
+      "lines": 295,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -4378,12 +4345,12 @@
         "### Tema 6: Service Mesh \u2014 Istio, Linkerd, Envoy y mTLS",
         "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
-        "## R\u00fabrica del proyecto"
+        "## Bibliograf\u00eda y fundamento acad\u00e9mico"
       ]
     },
     {
       "path": "web/public/content/devops/modulo-8.md",
-      "lines": 338,
+      "lines": 325,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -4404,7 +4371,7 @@
     },
     {
       "path": "web/public/content/devops/modulo-9.md",
-      "lines": 339,
+      "lines": 326,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -4563,7 +4530,7 @@
     },
     {
       "path": "web/public/content/flutter/modulo-0.md",
-      "lines": 268,
+      "lines": 255,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -4579,12 +4546,12 @@
         "## Ruta de proyecto progresivo desde carpeta vac\u00eda",
         "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
-        "## R\u00fabrica del proyecto"
+        "## Bibliograf\u00eda y fundamento acad\u00e9mico"
       ]
     },
     {
       "path": "web/public/content/flutter/modulo-1.md",
-      "lines": 221,
+      "lines": 208,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -4597,14 +4564,13 @@
         "### Tema 3: Keys",
         "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
-        "## R\u00fabrica del proyecto",
         "## Bibliograf\u00eda y fundamento acad\u00e9mico",
         "## Resumen del m\u00f3dulo"
       ]
     },
     {
       "path": "web/public/content/flutter/modulo-10.md",
-      "lines": 209,
+      "lines": 196,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -4617,14 +4583,13 @@
         "### Tema 3: Accesibilidad con Semantics y dark mode",
         "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
-        "## R\u00fabrica del proyecto",
         "## Bibliograf\u00eda y fundamento acad\u00e9mico",
         "## Resumen del m\u00f3dulo"
       ]
     },
     {
       "path": "web/public/content/flutter/modulo-11.md",
-      "lines": 213,
+      "lines": 200,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -4639,13 +4604,13 @@
         "# codemagic.yaml",
         "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
-        "## R\u00fabrica del proyecto",
-        "## Bibliograf\u00eda y fundamento acad\u00e9mico"
+        "## Bibliograf\u00eda y fundamento acad\u00e9mico",
+        "## Resumen del m\u00f3dulo"
       ]
     },
     {
       "path": "web/public/content/flutter/modulo-12.md",
-      "lines": 243,
+      "lines": 230,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -4666,7 +4631,7 @@
     },
     {
       "path": "web/public/content/flutter/modulo-13.md",
-      "lines": 226,
+      "lines": 217,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -4682,12 +4647,12 @@
         "### Flutter 3.44, Dart 3.11 y migraciones controladas",
         "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
-        "## R\u00fabrica del proyecto"
+        "## Bibliograf\u00eda y fundamento acad\u00e9mico"
       ]
     },
     {
       "path": "web/public/content/flutter/modulo-14.md",
-      "lines": 283,
+      "lines": 274,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -4703,12 +4668,12 @@
         "### Tema 5: Almacenamiento local, im\u00e1genes y offline",
         "### Tema 6: Dio y notificaciones push",
         "## Criterio transversal de calidad del c\u00f3digo",
-        "## R\u00fabrica del proyecto"
+        "## Bibliograf\u00eda y fundamento acad\u00e9mico"
       ]
     },
     {
       "path": "web/public/content/flutter/modulo-15.md",
-      "lines": 195,
+      "lines": 186,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -4724,12 +4689,12 @@
         "### Tema 6: Builds, firma y despliegue",
         "## Trazabilidad de la auditor\u00eda original",
         "## Criterio transversal de calidad del c\u00f3digo",
-        "## R\u00fabrica del proyecto"
+        "## Bibliograf\u00eda y fundamento acad\u00e9mico"
       ]
     },
     {
       "path": "web/public/content/flutter/modulo-2.md",
-      "lines": 205,
+      "lines": 192,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -4742,14 +4707,13 @@
         "### Tema 3: Breakpoints propios y SafeArea",
         "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
-        "## R\u00fabrica del proyecto",
         "## Bibliograf\u00eda y fundamento acad\u00e9mico",
         "## Resumen del m\u00f3dulo"
       ]
     },
     {
       "path": "web/public/content/flutter/modulo-3.md",
-      "lines": 219,
+      "lines": 206,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -4762,14 +4726,13 @@
         "### Tema 3: Transiciones personalizadas",
         "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
-        "## R\u00fabrica del proyecto",
         "## Bibliograf\u00eda y fundamento acad\u00e9mico",
         "## Resumen del m\u00f3dulo"
       ]
     },
     {
       "path": "web/public/content/flutter/modulo-4.md",
-      "lines": 366,
+      "lines": 353,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -4783,14 +4746,13 @@
         "### Tema 4: Formularios profesionales con Formz y Riverpod",
         "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
-        "## R\u00fabrica del proyecto",
         "## Bibliograf\u00eda y fundamento acad\u00e9mico",
         "## Resumen del m\u00f3dulo"
       ]
     },
     {
       "path": "web/public/content/flutter/modulo-5.md",
-      "lines": 222,
+      "lines": 209,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -4803,14 +4765,13 @@
         "### Tema 3: Interceptores y estados expl\u00edcitos",
         "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
-        "## R\u00fabrica del proyecto",
         "## Bibliograf\u00eda y fundamento acad\u00e9mico",
         "## Resumen del m\u00f3dulo"
       ]
     },
     {
       "path": "web/public/content/flutter/modulo-6.md",
-      "lines": 217,
+      "lines": 204,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -4823,14 +4784,13 @@
         "### Tema 3: Offline-first y Firebase",
         "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
-        "## R\u00fabrica del proyecto",
         "## Bibliograf\u00eda y fundamento acad\u00e9mico",
         "## Resumen del m\u00f3dulo"
       ]
     },
     {
       "path": "web/public/content/flutter/modulo-7.md",
-      "lines": 356,
+      "lines": 343,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -4844,14 +4804,13 @@
         "### Tema 4: C\u00e1mara, galer\u00eda y carga multipart de una evidencia",
         "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
-        "## R\u00fabrica del proyecto",
         "## Bibliograf\u00eda y fundamento acad\u00e9mico",
         "## Resumen del m\u00f3dulo"
       ]
     },
     {
       "path": "web/public/content/flutter/modulo-8.md",
-      "lines": 204,
+      "lines": 191,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -4864,14 +4823,13 @@
         "### Tema 3: const widgets, RepaintBoundary y shouldRepaint",
         "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
-        "## R\u00fabrica del proyecto",
         "## Bibliograf\u00eda y fundamento acad\u00e9mico",
         "## Resumen del m\u00f3dulo"
       ]
     },
     {
       "path": "web/public/content/flutter/modulo-9.md",
-      "lines": 225,
+      "lines": 212,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -4884,14 +4842,13 @@
         "### Tema 3: Integration tests",
         "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
-        "## R\u00fabrica del proyecto",
         "## Bibliograf\u00eda y fundamento acad\u00e9mico",
         "## Resumen del m\u00f3dulo"
       ]
     },
     {
       "path": "web/public/content/foundations/modulo-0.md",
-      "lines": 252,
+      "lines": 241,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -4912,7 +4869,7 @@
     },
     {
       "path": "web/public/content/foundations/modulo-1.md",
-      "lines": 240,
+      "lines": 231,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -4927,13 +4884,13 @@
         "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
         "### Proyecto 1: calculadora de presupuesto desde carpeta vac\u00eda",
-        "## R\u00fabrica del proyecto",
-        "## Bibliograf\u00eda y fundamento acad\u00e9mico"
+        "## Bibliograf\u00eda y fundamento acad\u00e9mico",
+        "## Resumen del m\u00f3dulo"
       ]
     },
     {
       "path": "web/public/content/foundations/modulo-10.md",
-      "lines": 263,
+      "lines": 254,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -4974,7 +4931,7 @@
     },
     {
       "path": "web/public/content/foundations/modulo-2.md",
-      "lines": 249,
+      "lines": 240,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -4989,13 +4946,13 @@
         "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
         "### Proyecto 2: gestor de inventario con an\u00e1lisis de rendimiento",
-        "## R\u00fabrica del proyecto",
-        "## Bibliograf\u00eda y fundamento acad\u00e9mico"
+        "## Bibliograf\u00eda y fundamento acad\u00e9mico",
+        "## Resumen del m\u00f3dulo"
       ]
     },
     {
       "path": "web/public/content/foundations/modulo-3.md",
-      "lines": 247,
+      "lines": 238,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5010,13 +4967,13 @@
         "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
         "### Proyecto 3: sitio profesional accesible desde carpeta vac\u00eda",
-        "## R\u00fabrica del proyecto",
-        "## Bibliograf\u00eda y fundamento acad\u00e9mico"
+        "## Bibliograf\u00eda y fundamento acad\u00e9mico",
+        "## Resumen del m\u00f3dulo"
       ]
     },
     {
       "path": "web/public/content/foundations/modulo-4.md",
-      "lines": 259,
+      "lines": 250,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5037,7 +4994,7 @@
     },
     {
       "path": "web/public/content/foundations/modulo-5.md",
-      "lines": 243,
+      "lines": 234,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5053,12 +5010,12 @@
         "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
         "### Proyecto 5: convertir el inventario en un repositorio confiable",
-        "## R\u00fabrica del proyecto"
+        "## Bibliograf\u00eda y fundamento acad\u00e9mico"
       ]
     },
     {
       "path": "web/public/content/foundations/modulo-6.md",
-      "lines": 227,
+      "lines": 218,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5073,13 +5030,13 @@
         "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
         "### Proyecto 6: endurecimiento del inventario",
-        "## R\u00fabrica del proyecto",
-        "## Bibliograf\u00eda y fundamento acad\u00e9mico"
+        "## Bibliograf\u00eda y fundamento acad\u00e9mico",
+        "## Resumen del m\u00f3dulo"
       ]
     },
     {
       "path": "web/public/content/foundations/modulo-7.md",
-      "lines": 239,
+      "lines": 230,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5100,7 +5057,7 @@
     },
     {
       "path": "web/public/content/foundations/modulo-8.md",
-      "lines": 249,
+      "lines": 240,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5115,13 +5072,13 @@
         "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
         "### Proyecto 8 \u2014 Inventario operable en un contenedor",
-        "## R\u00fabrica del proyecto",
-        "## Bibliograf\u00eda y fundamento acad\u00e9mico"
+        "## Bibliograf\u00eda y fundamento acad\u00e9mico",
+        "## Resumen del m\u00f3dulo"
       ]
     },
     {
       "path": "web/public/content/foundations/modulo-9.md",
-      "lines": 251,
+      "lines": 242,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5136,13 +5093,13 @@
         "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
         "### Proyecto 9: cuaderno de propiedades, grafos y evidencia",
-        "## R\u00fabrica del proyecto",
-        "## Bibliograf\u00eda y fundamento acad\u00e9mico"
+        "## Bibliograf\u00eda y fundamento acad\u00e9mico",
+        "## Resumen del m\u00f3dulo"
       ]
     },
     {
       "path": "web/public/content/ios/modulo-0.md",
-      "lines": 370,
+      "lines": 357,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5163,7 +5120,7 @@
     },
     {
       "path": "web/public/content/ios/modulo-1.md",
-      "lines": 211,
+      "lines": 198,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5176,14 +5133,13 @@
         "### Tema 3: Previews, LazyVGrid/ScrollView y property wrappers",
         "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
-        "## R\u00fabrica del proyecto",
         "## Bibliograf\u00eda y fundamento acad\u00e9mico",
         "## Resumen del m\u00f3dulo"
       ]
     },
     {
       "path": "web/public/content/ios/modulo-10.md",
-      "lines": 334,
+      "lines": 321,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5197,14 +5153,13 @@
         "### Tema 4: UIKit desde cero para mantener aplicaciones reales",
         "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
-        "## R\u00fabrica del proyecto",
         "## Bibliograf\u00eda y fundamento acad\u00e9mico",
         "## Resumen del m\u00f3dulo"
       ]
     },
     {
       "path": "web/public/content/ios/modulo-11.md",
-      "lines": 188,
+      "lines": 175,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5217,14 +5172,13 @@
         "### Tema 3: Metadata y versionado",
         "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
-        "## R\u00fabrica del proyecto",
         "## Bibliograf\u00eda y fundamento acad\u00e9mico",
         "## Resumen del m\u00f3dulo"
       ]
     },
     {
       "path": "web/public/content/ios/modulo-12.md",
-      "lines": 237,
+      "lines": 224,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5245,7 +5199,7 @@
     },
     {
       "path": "web/public/content/ios/modulo-13.md",
-      "lines": 262,
+      "lines": 251,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5261,12 +5215,12 @@
         "### Swift 6.2 y actualizaciones SwiftUI de 2026",
         "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
-        "## R\u00fabrica del proyecto"
+        "## Bibliograf\u00eda y fundamento acad\u00e9mico"
       ]
     },
     {
       "path": "web/public/content/ios/modulo-14.md",
-      "lines": 194,
+      "lines": 185,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5282,12 +5236,12 @@
         "### Tema 6: UIViewControllerRepresentable y Coordinator",
         "## Trazabilidad de la auditor\u00eda original",
         "## Criterio transversal de calidad del c\u00f3digo",
-        "## R\u00fabrica del proyecto"
+        "## Bibliograf\u00eda y fundamento acad\u00e9mico"
       ]
     },
     {
       "path": "web/public/content/ios/modulo-2.md",
-      "lines": 232,
+      "lines": 219,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5301,14 +5255,13 @@
         "### Tema 3: @Environment y identidad vs valor",
         "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
-        "## R\u00fabrica del proyecto",
         "## Bibliograf\u00eda y fundamento acad\u00e9mico",
         "## Resumen del m\u00f3dulo"
       ]
     },
     {
       "path": "web/public/content/ios/modulo-3.md",
-      "lines": 215,
+      "lines": 202,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5321,14 +5274,13 @@
         "### Tema 3: Deep linking y controles de formulario",
         "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
-        "## R\u00fabrica del proyecto",
         "## Bibliograf\u00eda y fundamento acad\u00e9mico",
         "## Resumen del m\u00f3dulo"
       ]
     },
     {
       "path": "web/public/content/ios/modulo-4.md",
-      "lines": 223,
+      "lines": 210,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5341,14 +5293,13 @@
         "### Tema 3: TaskGroup y MainActor",
         "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
-        "## R\u00fabrica del proyecto",
         "## Bibliograf\u00eda y fundamento acad\u00e9mico",
         "## Resumen del m\u00f3dulo"
       ]
     },
     {
       "path": "web/public/content/ios/modulo-5.md",
-      "lines": 223,
+      "lines": 210,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5361,14 +5312,13 @@
         "### Tema 3: Reintentos y cancelaci\u00f3n",
         "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
-        "## R\u00fabrica del proyecto",
         "## Bibliograf\u00eda y fundamento acad\u00e9mico",
         "## Resumen del m\u00f3dulo"
       ]
     },
     {
       "path": "web/public/content/ios/modulo-6.md",
-      "lines": 212,
+      "lines": 199,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5381,14 +5331,13 @@
         "### Tema 3: Migraciones y SwiftData vs Core Data",
         "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
-        "## R\u00fabrica del proyecto",
         "## Bibliograf\u00eda y fundamento acad\u00e9mico",
         "## Resumen del m\u00f3dulo"
       ]
     },
     {
       "path": "web/public/content/ios/modulo-7.md",
-      "lines": 200,
+      "lines": 187,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5401,14 +5350,13 @@
         "### Tema 3: Combine vs async/await",
         "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
-        "## R\u00fabrica del proyecto",
         "## Bibliograf\u00eda y fundamento acad\u00e9mico",
         "## Resumen del m\u00f3dulo"
       ]
     },
     {
       "path": "web/public/content/ios/modulo-8.md",
-      "lines": 217,
+      "lines": 204,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5421,14 +5369,13 @@
         "### Tema 3: Cu\u00e1ndo MVVM no alcanza",
         "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
-        "## R\u00fabrica del proyecto",
         "## Bibliograf\u00eda y fundamento acad\u00e9mico",
         "## Resumen del m\u00f3dulo"
       ]
     },
     {
       "path": "web/public/content/ios/modulo-9.md",
-      "lines": 220,
+      "lines": 207,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5441,14 +5388,13 @@
         "### Tema 3: UI Tests con XCUITest",
         "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
-        "## R\u00fabrica del proyecto",
         "## Bibliograf\u00eda y fundamento acad\u00e9mico",
         "## Resumen del m\u00f3dulo"
       ]
     },
     {
       "path": "web/public/content/java/modulo-0.md",
-      "lines": 389,
+      "lines": 376,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5469,7 +5415,7 @@
     },
     {
       "path": "web/public/content/java/modulo-1.md",
-      "lines": 271,
+      "lines": 258,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5484,13 +5430,13 @@
         "### Tema 4: Sobrecarga vs sobreescritura, y modificadores de acceso",
         "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
-        "## R\u00fabrica del proyecto",
-        "## Bibliograf\u00eda y fundamento acad\u00e9mico"
+        "## Bibliograf\u00eda y fundamento acad\u00e9mico",
+        "## Resumen del m\u00f3dulo"
       ]
     },
     {
       "path": "web/public/content/java/modulo-10.md",
-      "lines": 191,
+      "lines": 178,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5503,14 +5449,13 @@
         "### Tema 3: `opens` para acceso reflexivo controlado de frameworks",
         "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
-        "## R\u00fabrica del proyecto",
         "## Bibliograf\u00eda y fundamento acad\u00e9mico",
         "## Resumen del m\u00f3dulo"
       ]
     },
     {
       "path": "web/public/content/java/modulo-11.md",
-      "lines": 188,
+      "lines": 175,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5523,14 +5468,13 @@
         "### Tema 3: Referencias especiales y heap dumps",
         "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
-        "## R\u00fabrica del proyecto",
         "## Bibliograf\u00eda y fundamento acad\u00e9mico",
         "## Resumen del m\u00f3dulo"
       ]
     },
     {
       "path": "web/public/content/java/modulo-12.md",
-      "lines": 197,
+      "lines": 184,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5543,14 +5487,13 @@
         "### Tema 3: SOLID y cu\u00e1ndo NO aplicar un patr\u00f3n",
         "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
-        "## R\u00fabrica del proyecto",
         "## Bibliograf\u00eda y fundamento acad\u00e9mico",
         "## Resumen del m\u00f3dulo"
       ]
     },
     {
       "path": "web/public/content/java/modulo-13.md",
-      "lines": 214,
+      "lines": 201,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5571,7 +5514,7 @@
     },
     {
       "path": "web/public/content/java/modulo-14.md",
-      "lines": 307,
+      "lines": 298,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5592,7 +5535,7 @@
     },
     {
       "path": "web/public/content/java/modulo-15.md",
-      "lines": 193,
+      "lines": 184,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5608,12 +5551,12 @@
         "### Tema 6: SLF4J, Logback, MDC y logging estructurado",
         "## Trazabilidad de la auditor\u00eda original",
         "## Criterio transversal de calidad del c\u00f3digo",
-        "## R\u00fabrica del proyecto"
+        "## Bibliograf\u00eda y fundamento acad\u00e9mico"
       ]
     },
     {
       "path": "web/public/content/java/modulo-2.md",
-      "lines": 200,
+      "lines": 187,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5626,14 +5569,13 @@
         "### Tema 3: Comparable vs Comparator, e iteraci\u00f3n",
         "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
-        "## R\u00fabrica del proyecto",
         "## Bibliograf\u00eda y fundamento acad\u00e9mico",
         "## Resumen del m\u00f3dulo"
       ]
     },
     {
       "path": "web/public/content/java/modulo-3.md",
-      "lines": 192,
+      "lines": 179,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5646,14 +5588,13 @@
         "### Tema 3: Excepciones personalizadas y no tragar excepciones",
         "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
-        "## R\u00fabrica del proyecto",
         "## Bibliograf\u00eda y fundamento acad\u00e9mico",
         "## Resumen del m\u00f3dulo"
       ]
     },
     {
       "path": "web/public/content/java/modulo-4.md",
-      "lines": 194,
+      "lines": 181,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5666,14 +5607,13 @@
         "### Tema 3: Streams paralelos y referencias a m\u00e9todos",
         "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
-        "## R\u00fabrica del proyecto",
         "## Bibliograf\u00eda y fundamento acad\u00e9mico",
         "## Resumen del m\u00f3dulo"
       ]
     },
     {
       "path": "web/public/content/java/modulo-5.md",
-      "lines": 205,
+      "lines": 192,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5687,14 +5627,13 @@
         "### Tema 4: Condiciones de carrera y sincronizaci\u00f3n",
         "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
-        "## R\u00fabrica del proyecto",
         "## Bibliograf\u00eda y fundamento acad\u00e9mico",
         "## Resumen del m\u00f3dulo"
       ]
     },
     {
       "path": "web/public/content/java/modulo-6.md",
-      "lines": 191,
+      "lines": 178,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5707,14 +5646,13 @@
         "### Tema 3: Archivos grandes y recursos del classpath",
         "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
-        "## R\u00fabrica del proyecto",
         "## Bibliograf\u00eda y fundamento acad\u00e9mico",
         "## Resumen del m\u00f3dulo"
       ]
     },
     {
       "path": "web/public/content/java/modulo-7.md",
-      "lines": 192,
+      "lines": 179,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5727,14 +5665,13 @@
         "### Tema 3: Pattern matching exhaustivo y para instanceof",
         "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
-        "## R\u00fabrica del proyecto",
         "## Bibliograf\u00eda y fundamento acad\u00e9mico",
         "## Resumen del m\u00f3dulo"
       ]
     },
     {
       "path": "web/public/content/java/modulo-8.md",
-      "lines": 191,
+      "lines": 178,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5747,14 +5684,13 @@
         "### Tema 3: Proyectos multi-m\u00f3dulo",
         "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
-        "## R\u00fabrica del proyecto",
         "## Bibliograf\u00eda y fundamento acad\u00e9mico",
         "## Resumen del m\u00f3dulo"
       ]
     },
     {
       "path": "web/public/content/java/modulo-9.md",
-      "lines": 204,
+      "lines": 191,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5767,14 +5703,13 @@
         "### Tema 3: Tests parametrizados y cobertura",
         "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
-        "## R\u00fabrica del proyecto",
         "## Bibliograf\u00eda y fundamento acad\u00e9mico",
         "## Resumen del m\u00f3dulo"
       ]
     },
     {
       "path": "web/public/content/javascript/modulo-0.md",
-      "lines": 307,
+      "lines": 294,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5795,7 +5730,7 @@
     },
     {
       "path": "web/public/content/javascript/modulo-1.md",
-      "lines": 261,
+      "lines": 248,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5810,13 +5745,13 @@
         "### Tema 5: IIFE y el objeto arguments",
         "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
-        "## R\u00fabrica del proyecto",
-        "## Bibliograf\u00eda y fundamento acad\u00e9mico"
+        "## Bibliograf\u00eda y fundamento acad\u00e9mico",
+        "## Resumen del m\u00f3dulo"
       ]
     },
     {
       "path": "web/public/content/javascript/modulo-10.md",
-      "lines": 267,
+      "lines": 254,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5831,13 +5766,13 @@
         "### Tema 5: Core Web Vitals",
         "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
-        "## R\u00fabrica del proyecto",
-        "## Bibliograf\u00eda y fundamento acad\u00e9mico"
+        "## Bibliograf\u00eda y fundamento acad\u00e9mico",
+        "## Resumen del m\u00f3dulo"
       ]
     },
     {
       "path": "web/public/content/javascript/modulo-11.md",
-      "lines": 242,
+      "lines": 229,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5851,14 +5786,13 @@
         "### Tema 4: tsconfig esencial y modo strict",
         "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
-        "## R\u00fabrica del proyecto",
         "## Bibliograf\u00eda y fundamento acad\u00e9mico",
         "## Resumen del m\u00f3dulo"
       ]
     },
     {
       "path": "web/public/content/javascript/modulo-12.md",
-      "lines": 277,
+      "lines": 264,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5879,7 +5813,7 @@
     },
     {
       "path": "web/public/content/javascript/modulo-13.md",
-      "lines": 275,
+      "lines": 266,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5900,7 +5834,7 @@
     },
     {
       "path": "web/public/content/javascript/modulo-14.md",
-      "lines": 326,
+      "lines": 317,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5916,12 +5850,12 @@
         "### Tema 6: Web3 y machine learning en navegador",
         "## Trazabilidad de la auditor\u00eda original",
         "## Criterio transversal de calidad del c\u00f3digo",
-        "## R\u00fabrica del proyecto"
+        "## Bibliograf\u00eda y fundamento acad\u00e9mico"
       ]
     },
     {
       "path": "web/public/content/javascript/modulo-2.md",
-      "lines": 306,
+      "lines": 293,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5937,12 +5871,12 @@
         "### Tema 6: Execution Context, Scope Chain y Lexical Environment",
         "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
-        "## R\u00fabrica del proyecto"
+        "## Bibliograf\u00eda y fundamento acad\u00e9mico"
       ]
     },
     {
       "path": "web/public/content/javascript/modulo-3.md",
-      "lines": 245,
+      "lines": 232,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5956,14 +5890,13 @@
         "### Tema 4: Encapsulaci\u00f3n con campos privados (#campo)",
         "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
-        "## R\u00fabrica del proyecto",
         "## Bibliograf\u00eda y fundamento acad\u00e9mico",
         "## Resumen del m\u00f3dulo"
       ]
     },
     {
       "path": "web/public/content/javascript/modulo-4.md",
-      "lines": 254,
+      "lines": 241,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5978,13 +5911,13 @@
         "### Tema 5: M\u00e9todos inmutables modernos",
         "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
-        "## R\u00fabrica del proyecto",
-        "## Bibliograf\u00eda y fundamento acad\u00e9mico"
+        "## Bibliograf\u00eda y fundamento acad\u00e9mico",
+        "## Resumen del m\u00f3dulo"
       ]
     },
     {
       "path": "web/public/content/javascript/modulo-5.md",
-      "lines": 265,
+      "lines": 252,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5999,13 +5932,13 @@
         "### Tema 5: Stack, Heap y Garbage Collection",
         "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
-        "## R\u00fabrica del proyecto",
-        "## Bibliograf\u00eda y fundamento acad\u00e9mico"
+        "## Bibliograf\u00eda y fundamento acad\u00e9mico",
+        "## Resumen del m\u00f3dulo"
       ]
     },
     {
       "path": "web/public/content/javascript/modulo-6.md",
-      "lines": 314,
+      "lines": 301,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -6021,12 +5954,12 @@
         "### Tema 6: Proxies y Reflect",
         "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
-        "## R\u00fabrica del proyecto"
+        "## Bibliograf\u00eda y fundamento acad\u00e9mico"
       ]
     },
     {
       "path": "web/public/content/javascript/modulo-7.md",
-      "lines": 291,
+      "lines": 278,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -6042,12 +5975,12 @@
         "### Tema 6: Webpack, Rollup y Babel/SWC",
         "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
-        "## R\u00fabrica del proyecto"
+        "## Bibliograf\u00eda y fundamento acad\u00e9mico"
       ]
     },
     {
       "path": "web/public/content/javascript/modulo-8.md",
-      "lines": 298,
+      "lines": 285,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -6063,12 +5996,12 @@
         "### Tema 6: requestAnimationFrame y requestIdleCallback",
         "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
-        "## R\u00fabrica del proyecto"
+        "## Bibliograf\u00eda y fundamento acad\u00e9mico"
       ]
     },
     {
       "path": "web/public/content/javascript/modulo-9.md",
-      "lines": 235,
+      "lines": 222,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -6083,13 +6016,13 @@
         "# 100% cobertura \u2260 ausencia de bugs; solo significa \"se ejecut\u00f3\", no \"se verific\u00f3 bien\"",
         "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
-        "## R\u00fabrica del proyecto",
-        "## Bibliograf\u00eda y fundamento acad\u00e9mico"
+        "## Bibliograf\u00eda y fundamento acad\u00e9mico",
+        "## Resumen del m\u00f3dulo"
       ]
     },
     {
       "path": "web/public/content/kotlin-multiplatform/modulo-0.md",
-      "lines": 238,
+      "lines": 225,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -6104,13 +6037,13 @@
         "## Ruta de proyecto progresivo desde carpeta vac\u00eda",
         "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
-        "## R\u00fabrica del proyecto",
-        "## Bibliograf\u00eda y fundamento acad\u00e9mico"
+        "## Bibliograf\u00eda y fundamento acad\u00e9mico",
+        "## Resumen del m\u00f3dulo"
       ]
     },
     {
       "path": "web/public/content/kotlin-multiplatform/modulo-1.md",
-      "lines": 208,
+      "lines": 195,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -6123,14 +6056,13 @@
         "### Tema 3: Sealed classes y colecciones funcionales",
         "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
-        "## R\u00fabrica del proyecto",
         "## Bibliograf\u00eda y fundamento acad\u00e9mico",
         "## Resumen del m\u00f3dulo"
       ]
     },
     {
       "path": "web/public/content/kotlin-multiplatform/modulo-10.md",
-      "lines": 223,
+      "lines": 210,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -6144,14 +6076,13 @@
         "### Tema 3: Versionado compartido",
         "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
-        "## R\u00fabrica del proyecto",
         "## Bibliograf\u00eda y fundamento acad\u00e9mico",
         "## Resumen del m\u00f3dulo"
       ]
     },
     {
       "path": "web/public/content/kotlin-multiplatform/modulo-11.md",
-      "lines": 237,
+      "lines": 224,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -6172,7 +6103,7 @@
     },
     {
       "path": "web/public/content/kotlin-multiplatform/modulo-12.md",
-      "lines": 307,
+      "lines": 298,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -6193,7 +6124,7 @@
     },
     {
       "path": "web/public/content/kotlin-multiplatform/modulo-13.md",
-      "lines": 193,
+      "lines": 184,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -6209,12 +6140,12 @@
         "### Tema 6: Compatibilidad binaria y CI multi-target",
         "## Trazabilidad de la auditor\u00eda original",
         "## Criterio transversal de calidad del c\u00f3digo",
-        "## R\u00fabrica del proyecto"
+        "## Bibliograf\u00eda y fundamento acad\u00e9mico"
       ]
     },
     {
       "path": "web/public/content/kotlin-multiplatform/modulo-2.md",
-      "lines": 206,
+      "lines": 193,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -6227,14 +6158,13 @@
         "### Tema 3: Manejo de errores y exclusi\u00f3n mutua",
         "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
-        "## R\u00fabrica del proyecto",
         "## Bibliograf\u00eda y fundamento acad\u00e9mico",
         "## Resumen del m\u00f3dulo"
       ]
     },
     {
       "path": "web/public/content/kotlin-multiplatform/modulo-3.md",
-      "lines": 208,
+      "lines": 195,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -6247,14 +6177,13 @@
         "### Tema 3: Gradle multiplataforma y targets disponibles",
         "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
-        "## R\u00fabrica del proyecto",
         "## Bibliograf\u00eda y fundamento acad\u00e9mico",
         "## Resumen del m\u00f3dulo"
       ]
     },
     {
       "path": "web/public/content/kotlin-multiplatform/modulo-4.md",
-      "lines": 204,
+      "lines": 191,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -6267,14 +6196,13 @@
         "### Tema 3: Inyecci\u00f3n de dependencias multiplataforma con Koin",
         "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
-        "## R\u00fabrica del proyecto",
         "## Bibliograf\u00eda y fundamento acad\u00e9mico",
         "## Resumen del m\u00f3dulo"
       ]
     },
     {
       "path": "web/public/content/kotlin-multiplatform/modulo-5.md",
-      "lines": 204,
+      "lines": 191,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -6287,14 +6215,13 @@
         "### Tema 3: Interceptores y autenticaci\u00f3n",
         "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
-        "## R\u00fabrica del proyecto",
         "## Bibliograf\u00eda y fundamento acad\u00e9mico",
         "## Resumen del m\u00f3dulo"
       ]
     },
     {
       "path": "web/public/content/kotlin-multiplatform/modulo-6.md",
-      "lines": 214,
+      "lines": 201,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -6307,14 +6234,13 @@
         "### Tema 3: Migraciones de esquema",
         "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
-        "## R\u00fabrica del proyecto",
         "## Bibliograf\u00eda y fundamento acad\u00e9mico",
         "## Resumen del m\u00f3dulo"
       ]
     },
     {
       "path": "web/public/content/kotlin-multiplatform/modulo-7.md",
-      "lines": 206,
+      "lines": 193,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -6328,14 +6254,13 @@
         "### Tema 3: Limitaciones en iOS y otros targets",
         "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
-        "## R\u00fabrica del proyecto",
         "## Bibliograf\u00eda y fundamento acad\u00e9mico",
         "## Resumen del m\u00f3dulo"
       ]
     },
     {
       "path": "web/public/content/kotlin-multiplatform/modulo-8.md",
-      "lines": 202,
+      "lines": 189,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -6348,14 +6273,13 @@
         "### Tema 3: Coroutines desde Swift, y distribuci\u00f3n del framework",
         "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
-        "## R\u00fabrica del proyecto",
         "## Bibliograf\u00eda y fundamento acad\u00e9mico",
         "## Resumen del m\u00f3dulo"
       ]
     },
     {
       "path": "web/public/content/kotlin-multiplatform/modulo-9.md",
-      "lines": 217,
+      "lines": 204,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -6368,7 +6292,6 @@
         "### Tema 3: runTest para coroutines",
         "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
-        "## R\u00fabrica del proyecto",
         "## Bibliograf\u00eda y fundamento acad\u00e9mico",
         "## Resumen del m\u00f3dulo"
       ]
@@ -6761,7 +6684,7 @@
     },
     {
       "path": "web/public/content/node/modulo-0.md",
-      "lines": 266,
+      "lines": 253,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -6777,12 +6700,12 @@
         "## Ruta de proyecto progresivo desde carpeta vac\u00eda",
         "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
-        "## R\u00fabrica del proyecto"
+        "## Bibliograf\u00eda y fundamento acad\u00e9mico"
       ]
     },
     {
       "path": "web/public/content/node/modulo-1.md",
-      "lines": 229,
+      "lines": 216,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -6796,14 +6719,13 @@
         "### Tema 4: Scripts de ciclo de vida",
         "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
-        "## R\u00fabrica del proyecto",
         "## Bibliograf\u00eda y fundamento acad\u00e9mico",
         "## Resumen del m\u00f3dulo"
       ]
     },
     {
       "path": "web/public/content/node/modulo-10.md",
-      "lines": 214,
+      "lines": 201,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -6817,14 +6739,13 @@
         "### Tema 4: OWASP API Security Top 10 y auditor\u00eda de dependencias",
         "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
-        "## R\u00fabrica del proyecto",
         "## Bibliograf\u00eda y fundamento acad\u00e9mico",
         "## Resumen del m\u00f3dulo"
       ]
     },
     {
       "path": "web/public/content/node/modulo-11.md",
-      "lines": 236,
+      "lines": 223,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -6839,13 +6760,13 @@
         "### Tema 4: Nginx como reverse proxy y serverless",
         "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
-        "## R\u00fabrica del proyecto",
-        "## Bibliograf\u00eda y fundamento acad\u00e9mico"
+        "## Bibliograf\u00eda y fundamento acad\u00e9mico",
+        "## Resumen del m\u00f3dulo"
       ]
     },
     {
       "path": "web/public/content/node/modulo-12.md",
-      "lines": 357,
+      "lines": 344,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -6866,7 +6787,7 @@
     },
     {
       "path": "web/public/content/node/modulo-13.md",
-      "lines": 308,
+      "lines": 299,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -6887,7 +6808,7 @@
     },
     {
       "path": "web/public/content/node/modulo-14.md",
-      "lines": 196,
+      "lines": 187,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -6903,12 +6824,12 @@
         "### Tema 6: CI/CD y promoci\u00f3n de artefactos",
         "## Trazabilidad de la auditor\u00eda original",
         "## Criterio transversal de calidad del c\u00f3digo",
-        "## R\u00fabrica del proyecto"
+        "## Bibliograf\u00eda y fundamento acad\u00e9mico"
       ]
     },
     {
       "path": "web/public/content/node/modulo-2.md",
-      "lines": 244,
+      "lines": 231,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -6922,14 +6843,13 @@
         "### Tema 4: pipeline() para componer streams de forma segura",
         "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
-        "## R\u00fabrica del proyecto",
         "## Bibliograf\u00eda y fundamento acad\u00e9mico",
         "## Resumen del m\u00f3dulo"
       ]
     },
     {
       "path": "web/public/content/node/modulo-3.md",
-      "lines": 236,
+      "lines": 223,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -6943,14 +6863,13 @@
         "### Tema 4: C\u00f3digos de estado y content negotiation",
         "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
-        "## R\u00fabrica del proyecto",
         "## Bibliograf\u00eda y fundamento acad\u00e9mico",
         "## Resumen del m\u00f3dulo"
       ]
     },
     {
       "path": "web/public/content/node/modulo-4.md",
-      "lines": 231,
+      "lines": 218,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -6964,14 +6883,13 @@
         "### Tema 4: Express frente a Fastify",
         "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
-        "## R\u00fabrica del proyecto",
         "## Bibliograf\u00eda y fundamento acad\u00e9mico",
         "## Resumen del m\u00f3dulo"
       ]
     },
     {
       "path": "web/public/content/node/modulo-5.md",
-      "lines": 242,
+      "lines": 229,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -6986,13 +6904,13 @@
         "### Tema 4: MongoDB con Mongoose y otras alternativas de ORM",
         "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
-        "## R\u00fabrica del proyecto",
-        "## Bibliograf\u00eda y fundamento acad\u00e9mico"
+        "## Bibliograf\u00eda y fundamento acad\u00e9mico",
+        "## Resumen del m\u00f3dulo"
       ]
     },
     {
       "path": "web/public/content/node/modulo-6.md",
-      "lines": 223,
+      "lines": 210,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -7006,14 +6924,13 @@
         "### Tema 4: OAuth 2.0 y Passport.js",
         "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
-        "## R\u00fabrica del proyecto",
         "## Bibliograf\u00eda y fundamento acad\u00e9mico",
         "## Resumen del m\u00f3dulo"
       ]
     },
     {
       "path": "web/public/content/node/modulo-7.md",
-      "lines": 224,
+      "lines": 211,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -7034,7 +6951,7 @@
     },
     {
       "path": "web/public/content/node/modulo-8.md",
-      "lines": 221,
+      "lines": 208,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -7050,12 +6967,12 @@
         "# comparar A vs B: \u00bfqu\u00e9 tipo de objeto creci\u00f3 sospechosamente entre ambos?",
         "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
-        "## R\u00fabrica del proyecto"
+        "## Bibliograf\u00eda y fundamento acad\u00e9mico"
       ]
     },
     {
       "path": "web/public/content/node/modulo-9.md",
-      "lines": 224,
+      "lines": 211,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -7069,7 +6986,6 @@
         "### Tema 4: REST, GraphQL y gRPC",
         "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
-        "## R\u00fabrica del proyecto",
         "## Bibliograf\u00eda y fundamento acad\u00e9mico",
         "## Resumen del m\u00f3dulo"
       ]
@@ -8775,7 +8691,7 @@
     },
     {
       "path": "web/public/content/react/modulo-0.md",
-      "lines": 247,
+      "lines": 234,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -8796,7 +8712,7 @@
     },
     {
       "path": "web/public/content/react/modulo-1.md",
-      "lines": 230,
+      "lines": 217,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -8811,13 +8727,13 @@
         "### Tema 4: Componentes controlados",
         "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
-        "## R\u00fabrica del proyecto",
-        "## Bibliograf\u00eda y fundamento acad\u00e9mico"
+        "## Bibliograf\u00eda y fundamento acad\u00e9mico",
+        "## Resumen del m\u00f3dulo"
       ]
     },
     {
       "path": "web/public/content/react/modulo-10.md",
-      "lines": 209,
+      "lines": 196,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -8831,14 +8747,13 @@
         "### Tema 4: Server Actions",
         "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
-        "## R\u00fabrica del proyecto",
         "## Bibliograf\u00eda y fundamento acad\u00e9mico",
         "## Resumen del m\u00f3dulo"
       ]
     },
     {
       "path": "web/public/content/react/modulo-11.md",
-      "lines": 200,
+      "lines": 187,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -8851,14 +8766,13 @@
         "### Tema 3: Eventos tipados y componentes polim\u00f3rficos",
         "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
-        "## R\u00fabrica del proyecto",
         "## Bibliograf\u00eda y fundamento acad\u00e9mico",
         "## Resumen del m\u00f3dulo"
       ]
     },
     {
       "path": "web/public/content/react/modulo-12.md",
-      "lines": 216,
+      "lines": 203,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -8879,7 +8793,7 @@
     },
     {
       "path": "web/public/content/react/modulo-13.md",
-      "lines": 301,
+      "lines": 292,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -8900,7 +8814,7 @@
     },
     {
       "path": "web/public/content/react/modulo-14.md",
-      "lines": 194,
+      "lines": 185,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -8916,12 +8830,12 @@
         "### Tema 6: i18n, pluralizaci\u00f3n y RTL",
         "## Trazabilidad de la auditor\u00eda original",
         "## Criterio transversal de calidad del c\u00f3digo",
-        "## R\u00fabrica del proyecto"
+        "## Bibliograf\u00eda y fundamento acad\u00e9mico"
       ]
     },
     {
       "path": "web/public/content/react/modulo-2.md",
-      "lines": 210,
+      "lines": 197,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -8935,14 +8849,13 @@
         "### Tema 4: Reglas de los hooks, useReducer y useImperativeHandle",
         "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
-        "## R\u00fabrica del proyecto",
         "## Bibliograf\u00eda y fundamento acad\u00e9mico",
         "## Resumen del m\u00f3dulo"
       ]
     },
     {
       "path": "web/public/content/react/modulo-3.md",
-      "lines": 193,
+      "lines": 180,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -8955,14 +8868,13 @@
         "### Tema 3: Eventos sint\u00e9ticos",
         "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
-        "## R\u00fabrica del proyecto",
         "## Bibliograf\u00eda y fundamento acad\u00e9mico",
         "## Resumen del m\u00f3dulo"
       ]
     },
     {
       "path": "web/public/content/react/modulo-4.md",
-      "lines": 194,
+      "lines": 181,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -8975,14 +8887,13 @@
         "### Tema 3: Componentes compuestos, render props y hooks personalizados",
         "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
-        "## R\u00fabrica del proyecto",
         "## Bibliograf\u00eda y fundamento acad\u00e9mico",
         "## Resumen del m\u00f3dulo"
       ]
     },
     {
       "path": "web/public/content/react/modulo-5.md",
-      "lines": 198,
+      "lines": 185,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -8995,14 +8906,13 @@
         "### Tema 3: Rutas protegidas y code-splitting por ruta",
         "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
-        "## R\u00fabrica del proyecto",
         "## Bibliograf\u00eda y fundamento acad\u00e9mico",
         "## Resumen del m\u00f3dulo"
       ]
     },
     {
       "path": "web/public/content/react/modulo-6.md",
-      "lines": 191,
+      "lines": 178,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -9015,14 +8925,13 @@
         "### Tema 3: Optimistic updates",
         "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
-        "## R\u00fabrica del proyecto",
         "## Bibliograf\u00eda y fundamento acad\u00e9mico",
         "## Resumen del m\u00f3dulo"
       ]
     },
     {
       "path": "web/public/content/react/modulo-7.md",
-      "lines": 215,
+      "lines": 202,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -9036,14 +8945,13 @@
         "### Tema 4: Jotai, Recoil y XState como alternativas",
         "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
-        "## R\u00fabrica del proyecto",
         "## Bibliograf\u00eda y fundamento acad\u00e9mico",
         "## Resumen del m\u00f3dulo"
       ]
     },
     {
       "path": "web/public/content/react/modulo-8.md",
-      "lines": 185,
+      "lines": 172,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -9056,14 +8964,13 @@
         "### Tema 3: Testing de hooks personalizados",
         "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
-        "## R\u00fabrica del proyecto",
         "## Bibliograf\u00eda y fundamento acad\u00e9mico",
         "## Resumen del m\u00f3dulo"
       ]
     },
     {
       "path": "web/public/content/react/modulo-9.md",
-      "lines": 206,
+      "lines": 193,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -9077,14 +8984,13 @@
         "### Tema 4: useTransition, useDeferredValue y Fiber",
         "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
-        "## R\u00fabrica del proyecto",
         "## Bibliograf\u00eda y fundamento acad\u00e9mico",
         "## Resumen del m\u00f3dulo"
       ]
     },
     {
       "path": "web/public/content/rutaflow/modulo-0.md",
-      "lines": 125,
+      "lines": 116,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -9099,13 +9005,13 @@
         "### Tema 2: Entorno reproducible en Windows, macOS y Linux",
         "### Tema 3: Arquitectura, privacidad y amenazas",
         "## Criterio transversal de calidad del c\u00f3digo",
-        "## R\u00fabrica del proyecto",
-        "## Bibliograf\u00eda y fundamento acad\u00e9mico"
+        "## Bibliograf\u00eda y fundamento acad\u00e9mico",
+        "## Resumen del m\u00f3dulo"
       ]
     },
     {
       "path": "web/public/content/rutaflow/modulo-1.md",
-      "lines": 106,
+      "lines": 97,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -9117,14 +9023,13 @@
         "### Tema 2: Geograf\u00eda con precisi\u00f3n \u00fatil",
         "### Tema 3: Ledger de doble partida",
         "## Criterio transversal de calidad del c\u00f3digo",
-        "## R\u00fabrica del proyecto",
         "## Bibliograf\u00eda y fundamento acad\u00e9mico",
         "## Resumen del m\u00f3dulo"
       ]
     },
     {
       "path": "web/public/content/rutaflow/modulo-2.md",
-      "lines": 106,
+      "lines": 97,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -9136,14 +9041,13 @@
         "### Tema 2: Casos de uso y transacciones",
         "### Tema 3: Outbox, colas y observabilidad",
         "## Criterio transversal de calidad del c\u00f3digo",
-        "## R\u00fabrica del proyecto",
         "## Bibliograf\u00eda y fundamento acad\u00e9mico",
         "## Resumen del m\u00f3dulo"
       ]
     },
     {
       "path": "web/public/content/rutaflow/modulo-3.md",
-      "lines": 106,
+      "lines": 97,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -9155,14 +9059,13 @@
         "### Tema 2: Mapas operativos",
         "### Tema 3: Accesibilidad, seguridad y rendimiento",
         "## Criterio transversal de calidad del c\u00f3digo",
-        "## R\u00fabrica del proyecto",
         "## Bibliograf\u00eda y fundamento acad\u00e9mico",
         "## Resumen del m\u00f3dulo"
       ]
     },
     {
       "path": "web/public/content/rutaflow/modulo-4.md",
-      "lines": 106,
+      "lines": 97,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -9174,14 +9077,13 @@
         "### Tema 2: GPS, permisos y bater\u00eda",
         "### Tema 3: Offline-first y prueba de entrega",
         "## Criterio transversal de calidad del c\u00f3digo",
-        "## R\u00fabrica del proyecto",
         "## Bibliograf\u00eda y fundamento acad\u00e9mico",
         "## Resumen del m\u00f3dulo"
       ]
     },
     {
       "path": "web/public/content/rutaflow/modulo-5.md",
-      "lines": 106,
+      "lines": 97,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -9193,14 +9095,13 @@
         "### Tema 2: Geocoding y map matching",
         "### Tema 3: Streaming y ETA con incertidumbre",
         "## Criterio transversal de calidad del c\u00f3digo",
-        "## R\u00fabrica del proyecto",
         "## Bibliograf\u00eda y fundamento acad\u00e9mico",
         "## Resumen del m\u00f3dulo"
       ]
     },
     {
       "path": "web/public/content/rutaflow/modulo-6.md",
-      "lines": 106,
+      "lines": 97,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -9212,14 +9113,13 @@
         "### Tema 2: Recaudo, liquidaci\u00f3n y conciliaci\u00f3n",
         "### Tema 3: Fraude responsable",
         "## Criterio transversal de calidad del c\u00f3digo",
-        "## R\u00fabrica del proyecto",
         "## Bibliograf\u00eda y fundamento acad\u00e9mico",
         "## Resumen del m\u00f3dulo"
       ]
     },
     {
       "path": "web/public/content/rutaflow/modulo-7.md",
-      "lines": 106,
+      "lines": 97,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -9231,7 +9131,6 @@
         "### Tema 2: SLO y respuesta a incidentes",
         "### Tema 3: Continuidad, costes y proyecto final",
         "## Criterio transversal de calidad del c\u00f3digo",
-        "## R\u00fabrica del proyecto",
         "## Bibliograf\u00eda y fundamento acad\u00e9mico",
         "## Resumen del m\u00f3dulo"
       ]
@@ -9246,7 +9145,7 @@
     },
     {
       "path": "web/public/content/spring-boot/modulo-0.md",
-      "lines": 222,
+      "lines": 209,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -9267,7 +9166,7 @@
     },
     {
       "path": "web/public/content/spring-boot/modulo-1.md",
-      "lines": 194,
+      "lines": 181,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -9281,14 +9180,13 @@
         "# application-dev.yml",
         "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
-        "## R\u00fabrica del proyecto",
         "## Bibliograf\u00eda y fundamento acad\u00e9mico",
         "## Resumen del m\u00f3dulo"
       ]
     },
     {
       "path": "web/public/content/spring-boot/modulo-10.md",
-      "lines": 342,
+      "lines": 329,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -9304,12 +9202,12 @@
         "### Tema 6: DDD para decidir l\u00edmites y propiedad de datos",
         "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
-        "## R\u00fabrica del proyecto"
+        "## Bibliograf\u00eda y fundamento acad\u00e9mico"
       ]
     },
     {
       "path": "web/public/content/spring-boot/modulo-11.md",
-      "lines": 176,
+      "lines": 163,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -9322,14 +9220,13 @@
         "### Tema 3: Health checks para Kubernetes",
         "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
-        "## R\u00fabrica del proyecto",
         "## Bibliograf\u00eda y fundamento acad\u00e9mico",
         "## Resumen del m\u00f3dulo"
       ]
     },
     {
       "path": "web/public/content/spring-boot/modulo-12.md",
-      "lines": 215,
+      "lines": 202,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -9350,7 +9247,7 @@
     },
     {
       "path": "web/public/content/spring-boot/modulo-13.md",
-      "lines": 289,
+      "lines": 280,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -9371,7 +9268,7 @@
     },
     {
       "path": "web/public/content/spring-boot/modulo-14.md",
-      "lines": 182,
+      "lines": 173,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -9386,13 +9283,13 @@
         "### Tema 5: Socket.IO y tiempo real",
         "### Tema 6: Archivos y notificaciones push",
         "## Criterio transversal de calidad del c\u00f3digo",
-        "## R\u00fabrica del proyecto",
-        "## Bibliograf\u00eda y fundamento acad\u00e9mico"
+        "## Bibliograf\u00eda y fundamento acad\u00e9mico",
+        "## Resumen del m\u00f3dulo"
       ]
     },
     {
       "path": "web/public/content/spring-boot/modulo-15.md",
-      "lines": 195,
+      "lines": 186,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -9408,12 +9305,12 @@
         "### Tema 6: Event Sourcing y Outbox",
         "## Trazabilidad de la auditor\u00eda original",
         "## Criterio transversal de calidad del c\u00f3digo",
-        "## R\u00fabrica del proyecto"
+        "## Bibliograf\u00eda y fundamento acad\u00e9mico"
       ]
     },
     {
       "path": "web/public/content/spring-boot/modulo-2.md",
-      "lines": 196,
+      "lines": 183,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -9426,14 +9323,13 @@
         "### Tema 3: Manejo centralizado de errores con @ControllerAdvice",
         "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
-        "## R\u00fabrica del proyecto",
         "## Bibliograf\u00eda y fundamento acad\u00e9mico",
         "## Resumen del m\u00f3dulo"
       ]
     },
     {
       "path": "web/public/content/spring-boot/modulo-3.md",
-      "lines": 193,
+      "lines": 180,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -9446,14 +9342,13 @@
         "### Tema 3: Migraciones con Flyway",
         "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
-        "## R\u00fabrica del proyecto",
         "## Bibliograf\u00eda y fundamento acad\u00e9mico",
         "## Resumen del m\u00f3dulo"
       ]
     },
     {
       "path": "web/public/content/spring-boot/modulo-4.md",
-      "lines": 202,
+      "lines": 189,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -9466,14 +9361,13 @@
         "### Tema 3: CORS y CSRF",
         "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
-        "## R\u00fabrica del proyecto",
         "## Bibliograf\u00eda y fundamento acad\u00e9mico",
         "## Resumen del m\u00f3dulo"
       ]
     },
     {
       "path": "web/public/content/spring-boot/modulo-5.md",
-      "lines": 185,
+      "lines": 172,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -9486,14 +9380,13 @@
         "### Tema 3: Manejo global de excepciones consistente entre entornos",
         "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
-        "## R\u00fabrica del proyecto",
         "## Bibliograf\u00eda y fundamento acad\u00e9mico",
         "## Resumen del m\u00f3dulo"
       ]
     },
     {
       "path": "web/public/content/spring-boot/modulo-6.md",
-      "lines": 199,
+      "lines": 186,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -9506,14 +9399,13 @@
         "### Tema 3: @SpringBootTest completo y estrategia de pir\u00e1mide de tests",
         "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
-        "## R\u00fabrica del proyecto",
         "## Bibliograf\u00eda y fundamento acad\u00e9mico",
         "## Resumen del m\u00f3dulo"
       ]
     },
     {
       "path": "web/public/content/spring-boot/modulo-7.md",
-      "lines": 199,
+      "lines": 186,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -9526,14 +9418,13 @@
         "### Tema 3: Liveness vs readiness",
         "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
-        "## R\u00fabrica del proyecto",
         "## Bibliograf\u00eda y fundamento acad\u00e9mico",
         "## Resumen del m\u00f3dulo"
       ]
     },
     {
       "path": "web/public/content/spring-boot/modulo-8.md",
-      "lines": 193,
+      "lines": 180,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -9546,14 +9437,13 @@
         "### Tema 3: Kafka frente a RabbitMQ",
         "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
-        "## R\u00fabrica del proyecto",
         "## Bibliograf\u00eda y fundamento acad\u00e9mico",
         "## Resumen del m\u00f3dulo"
       ]
     },
     {
       "path": "web/public/content/spring-boot/modulo-9.md",
-      "lines": 393,
+      "lines": 380,
       "kind": "course-content",
       "symbols": [],
       "imports": [],

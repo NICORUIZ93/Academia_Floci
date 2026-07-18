@@ -224,15 +224,6 @@ Trabaja sobre el proyecto del módulo 12 y conserva una rama o tag previo para c
 - Guardar fechas sin semántica: decide si es instante ocurrido o fecha civil futura y conserva zona cuando corresponda.
 
 
-## Rúbrica del proyecto
-
-| Criterio | Inicial | Competente | Experto |
-|---|---|---|---|
-| Seguridad | Filtra caracteres aislados | Render contextual y CSP aplicada | Threat model, regresión y cadena de suministro auditada |
-| Memoria | Afirma que “GC lo resuelve” | Desmontaje simétrico y snapshots | Escenario automatizado y ruta de retención demostrada |
-| Errores | `console.log` genérico | Fronteras y contexto correlacionado | Source maps, sampling, privacidad y fallo de telemetría probados |
-| Compatibilidad | Solo navegador propio | Feature detection y fallback | Mejora progresiva con matriz automatizada |
-| Internacionalización | Concatena strings | Usa Intl con locale/zona | Modela semántica temporal, Unicode y accesibilidad |
 
 ## Bibliografía y fundamento académico
 

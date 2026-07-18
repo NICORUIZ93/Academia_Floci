@@ -182,15 +182,6 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 Entrega código, tests, captura de DevTools, tabla antes/después, threat model y runbook reproducible.
 
 
-## Rúbrica del proyecto
-
-| Criterio | Peso | Evidencia |
-|---|---:|---|
-| Seguridad multiplataforma | 25% | Fronteras, permisos, plugins y secretos auditados con pruebas. |
-| Rendimiento | 20% | Perfil reproducible y mejora medida, sin optimización por intuición. |
-| Integridad offline | 25% | Outbox, idempotencia y conflictos demostrados. |
-| Operabilidad | 20% | Métricas, símbolos, migración y contención. |
-| Comunicación | 10% | Runbook y decisiones con límites explícitos. |
 
 ## Bibliografía y fundamento académico
 

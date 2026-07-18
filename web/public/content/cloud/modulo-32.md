@@ -186,15 +186,6 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 **Verificación:** las diez comunicaciones producen exactamente cinco permisos y cinco denegaciones justificadas; la restauración recupera los tres recorridos dentro de sus RTO/RPO declarados; el experimento se detiene al alcanzar la condición de aborto; y el runbook permite que otra persona repita la pérdida y recuperación. Conserva tiempos medidos, logs, comprobaciones funcionales y diferencias frente al diseño como evidencia.
 
 
-## Rúbrica del proyecto
-
-| Criterio | Peso | Evidencia |
-|---|---:|---|
-| Red y fronteras | 20% | Flujos mínimos y pruebas positivas/negativas. |
-| Gobierno | 20% | Separación, identidad temporal, logs protegidos y políticas probadas. |
-| Objetivos y diseño DR | 20% | RTO/RPO vinculados a negocio y estrategia justificable. |
-| Recuperación | 25% | Restore funcional medido y experimento controlado. |
-| Operación | 15% | Runbook ejecutable, comunicación y acciones trazables. |
 
 ## Bibliografía y fundamento académico
 

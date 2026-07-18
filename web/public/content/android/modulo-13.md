@@ -247,15 +247,6 @@ Trabaja sobre el proyecto 12 con backend de prueba que soporte operation ID y ve
 - Detener rollout como rollback: planifica hotfix para instalaciones ya afectadas.
 
 
-## Rúbrica del proyecto
-
-| Criterio | Inicial | Competente | Experto |
-|---|---|---|---|
-| Superficie | Permisos/componentes amplios | Manifest y links validados | Ataques adb/app y autorización demostrados |
-| Datos | Cifra un campo | Keystore, backups y logout coherentes | Copias, rotación, restore y privacidad auditadas |
-| Sync | Último write ciego | Outbox/versiones/idempotencia | Conflictos multi-dispositivo y reconciliación probados |
-| Calidad | Crash reporter | StrictMode, ANR y benchmark | Cohortes/vitals y causa raíz reproducible |
-| Release | Publicación total | Staged rollout y gates | Hotfix, kill switch y migraciones ensayados |
 
 ## Bibliografía y fundamento académico
 

@@ -256,15 +256,6 @@ Evoluciona una vertical del proyecto final —crear tarea y notificarla— sin r
 - DLQ sin procedimiento: alerta, inspecciona, corrige y reproduce con auditoría.
 
 
-## Rúbrica del proyecto
-
-| Criterio | Inicial | Competente | Experto |
-|---|---|---|---|
-| Tipos y fronteras | Casts y any | strict y schemas runtime | Dominio exhaustivo sin acoplamiento a transporte/ORM |
-| Contrato | Documento manual | OpenAPI verificado | Compatibilidad y consumidores comprobados en CI |
-| Idempotencia | Check-then-act | Clave y unicidad transaccional | Concurrencia, respuesta y expiración justificadas |
-| Publicación | Doble escritura | Outbox y dedupe | Caídas críticas e invariantes demostrados |
-| Webhooks | POST sin autenticidad | Firma, retries y registros | Rotación, reconciliación, replay y runbook auditados |
 
 ## Bibliografía y fundamento académico
 

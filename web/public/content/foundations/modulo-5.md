@@ -220,15 +220,6 @@ Trabaja en una rama `quality/test-suite`:
 - CI distinto al entorno local: documenta versiones y comandos idénticos.
 
 
-## Rúbrica del proyecto
-
-| Criterio | Inicial | Competente | Excelente |
-|---|---|---|---|
-| Diagnóstico | Cambios aleatorios | Hipótesis y reproducción | Caso mínimo y regresión |
-| Suite | Solo happy path | Unidades e integración | Riesgos, aislamiento y mutaciones |
-| Git | Commits genéricos | Intenciones pequeñas | Historia revisable y conflictos razonados |
-| CI | Solo local | Pipeline bloquea fallos | Reproducible, rápido y con evidencia |
-| Revisión | Preferencias | Corrección y pruebas | Riesgo, diseño y comunicación respetuosa |
 
 ## Bibliografía y fundamento académico
 

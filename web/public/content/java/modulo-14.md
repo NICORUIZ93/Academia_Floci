@@ -255,15 +255,6 @@ Parte del proyecto 13 y conserva un tag funcional anterior.
 - Crear jlink una vez: versiona y reconstruye runtime ante cada actualización relevante.
 
 
-## Rúbrica del proyecto
-
-| Criterio | Inicial | Competente | Experto |
-|---|---|---|---|
-| Memoria | Usa volatile por intuición | Relación happens-before explícita | Invariante, publicación y outcomes jcstress demostrados |
-| Medición | nanoTime aislado | JMH reproducible | JMH, JFR y efecto de servicio reconciliados |
-| Fronteras | Deserializa cualquier objeto | DTO/schema o filtro limitado | Complejidad, tipos, secretos y supply chain auditados |
-| Runtime | JDK completo implícito | jlink y contenedor no root | Memoria total, señales, JFR y compatibilidad probadas |
-| Actualización | Reemplazo manual | Runtime versionado y rollback | Parches, canary y migraciones ensayados |
 
 ## Bibliografía y fundamento académico
 

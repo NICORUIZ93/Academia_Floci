@@ -98,15 +98,6 @@ flowchart LR
 
 Usa nombres del dominio (`confirmDelivery`, no `processData`), funciones pequeñas con una responsabilidad observable y errores tipados que conserven causa y contexto sin revelar secretos. Primero escribe una prueba del comportamiento o del fallo que quieres controlar; luego implementa la solución más simple. Aplica SOLID cuando existe presión real de cambio: separa políticas de infraestructura, invierte dependencias en límites externos y evita interfaces enormes. No abstraer antes de encontrar repetición con el mismo significado. Revisa corrección, claridad, cohesión, seguridad, complejidad y capacidad de operación; Clean Code no justifica ocultar costes ni crear capas ceremoniales.
 
-## Rúbrica del proyecto
-
-| Criterio | Inicial | Competente | Profesional |
-|---|---|---|---|
-| Fundamento | Repite términos | Explica la decisión | Compara alternativas y límites |
-| Funcionamiento | Solo camino feliz | Maneja fallos previstos | Demuestra recuperación e idempotencia |
-| Código | Acoplado y ambiguo | Claro y probado | Límites cohesionados y deuda explícita |
-| Datos y seguridad | Usa datos reales | Minimiza y autoriza | Audita, retiene y modela amenazas |
-| Operación | Requiere pasos ocultos | README reproducible | Métricas, runbook y evidencia |
 
 ## Bibliografía y fundamento académico
 

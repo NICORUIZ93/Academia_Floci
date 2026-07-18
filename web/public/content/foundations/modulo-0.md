@@ -224,17 +224,6 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 - **Pegar comandos administrativos.** Detente y comprende cada parte antes de aceptar privilegios.
 
 
-## Rúbrica del proyecto
-
-| Criterio | Inicial | Competente | Experto |
-|---|---|---|---|
-| Entorno | Ejecuta pasos sin explicarlos | Identifica sistema, herramientas y versiones | Justifica compatibilidad y documenta diferencias por plataforma |
-| Terminal y rutas | Depende del explorador | Crea, navega y ejecuta desde terminal | Explica resolución de rutas, procesos y códigos de salida |
-| Diagnóstico | Borra o reinicia sin evidencia | Registra error, hipótesis y cambio controlado | Diseña una reproducción mínima que otra persona confirma |
-| Reproducibilidad | Omite pasos | README funciona desde carpeta vacía | Incluye precondiciones, resultados, fallos y recuperación |
-| Control de versiones | Guarda copias manuales | Commit coherente y árbol limpio | Explica intención y permite auditar la evolución |
-
-La aprobación requiere ejecución reproducible y explicación propia. Una captura aislada o una lista de comandos copiados no demuestra comprensión del entorno.
 
 ## Bibliografía y fundamento académico
 

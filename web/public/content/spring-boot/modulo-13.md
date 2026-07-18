@@ -236,15 +236,6 @@ Evoluciona el proyecto 12 mediante una vertical de “crear pedido y proyectar r
 - Liveness consulta todas las dependencias: separa vida de preparación para tráfico.
 
 
-## Rúbrica del proyecto
-
-| Criterio | Inicial | Competente | Experto |
-|---|---|---|---|
-| Transacciones | Anotaciones sin prueba | Rollback/propagación probados | Proxy, aislamiento, locks y recursos justificados |
-| Mensajería | Publicación directa | Outbox y dedupe | Caídas, DLT, replay y reconciliación demostrados |
-| Contratos | Swagger visual | OpenAPI y contrato en CI | Compatibilidad, consumidor y deprecación verificadas |
-| Observabilidad | Logs sueltos | Traza y métricas correlacionadas | Cardinalidad, privacidad y SLO operados |
-| Resiliencia | Retry global | Timeouts/breaker/bulkhead | Presupuesto, game day y postmortem accionable |
 
 ## Bibliografía y fundamento académico
 

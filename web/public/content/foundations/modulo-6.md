@@ -204,15 +204,6 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 - Tratar CORS como autenticación: exige credenciales/permisos reales.
 
 
-## Rúbrica del proyecto
-
-| Criterio | Inicial | Competente | Excelente |
-|---|---|---|---|
-| Amenazas | Lista genérica | Activos/flujos/riesgos | Prioridad, propietario y residual |
-| Identidad | Texto plano/roles UI | Hash y autorización central | Rotación, denegación y pruebas negativas |
-| Secretos | En código | Variables e ignore | Escaneo, gestor y runbook de filtración |
-| Privacidad | Recopila todo | Minimiza y redacta logs | Retención y derechos documentados |
-| Respuesta | Improvisada | Runbook reproducible | Evidencia, recuperación y aprendizaje |
 
 ## Bibliografía y fundamento académico
 

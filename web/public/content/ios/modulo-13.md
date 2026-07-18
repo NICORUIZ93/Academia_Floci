@@ -215,17 +215,6 @@ Convierte el proyecto del módulo 12 en una entrega preparada para producción.
 La entrega contiene código, pruebas, capturas del perfil, tabla de amenazas, política de datos y runbook. Una afirmación sin evidencia reproducible cuenta como hipótesis, no como resultado.
 
 
-## Rúbrica del proyecto
-
-| Criterio | Peso | Evidencia de dominio |
-|---|---:|---|
-| Fronteras y seguridad | 20% | Amenazas priorizadas, entitlements mínimos y enlaces autorizados con pruebas negativas. |
-| Datos y privacidad | 20% | Keychain, clasificación, redacción, logout y copias secundarias verificadas. |
-| Sincronización | 25% | Outbox persistente, idempotencia, backoff y conflictos reproducibles. |
-| Operabilidad | 20% | Indicadores, signposts, perfil de Instruments y diagnóstico accionable. |
-| Release y comunicación | 15% | Migración ensayada, despliegue gradual, contención y decisiones justificadas. |
-
-Se exige al menos 70/100 y ningún criterio crítico de seguridad o integridad en cero. El nivel experto se demuestra explicando límites y trade-offs, no acumulando APIs.
 
 ## Bibliografía y fundamento académico
 

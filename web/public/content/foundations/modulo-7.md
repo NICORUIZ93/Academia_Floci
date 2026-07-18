@@ -216,15 +216,6 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 - Documentar solo éxito: registra consecuencias y límites.
 
 
-## Rúbrica del proyecto
-
-| Criterio | Inicial | Competente | Excelente |
-|---|---|---|---|
-| Requisitos | Lista de features | Criterios verificables | Trazabilidad y prioridades por riesgo |
-| Arquitectura | Diagrama decorativo | Límites/dependencias coherentes | Escenarios y fitness functions |
-| Diseño | Patrones por moda | Cohesión y pruebas | Trade-offs y refactor incremental |
-| Documentación | Desactualizada | README/C4/ADRs | Validada y con disparadores de revisión |
-| Evolución | Breaking sin plan | Migración/deprecación | Telemetría, rollback y deuda gestionada |
 
 ## Bibliografía y fundamento académico
 

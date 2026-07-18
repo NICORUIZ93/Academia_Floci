@@ -256,15 +256,6 @@ sequenceDiagram
 ## Criterio transversal de calidad del código
 
 Usa nombres del dominio, dependencias dirigidas hacia políticas estables y errores tipados. Escribe una prueba antes de corregir cada fallo. SOLID se aplica para separar mapas, transporte, persistencia y notificaciones, no para crear capas vacías. No abstraer hasta encontrar repetición con el mismo significado. Revisa nombres, errores, prueba, privacidad, permisos y operación.
-## Rúbrica del proyecto
-
-| Criterio | Inicial | Competente | Profesional |
-|---|---|---|---|
-| Funcionalidad | Demo aislada | Flujo integrado | Offline, reintentos y recuperación |
-| Geografía | Dibuja puntos | Valida precisión/tiempo | Índices, secuencia y medición |
-| Seguridad | Solo login | Bearer y roles | Propiedad, amenazas y mínimo dato |
-| Código | Plugins acoplados | Límites probados | Adaptadores sustituibles con criterio |
-| Operación | Logs manuales | Métricas básicas | Correlación, runbook y prueba de fallo |
 
 ## Bibliografía y fundamento académico
 

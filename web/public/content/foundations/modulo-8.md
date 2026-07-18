@@ -219,15 +219,6 @@ volumes:
 - Carrera pese al lock: un lock local no coordina varios procesos; protege en la base.
 
 
-## Rúbrica del proyecto
-
-| Criterio | Inicial | Competente | Experto |
-|---|---|---|---|
-| Modelo de SO | Repite comandos | Explica procesos y señales | Relaciona recursos y fallos con evidencia |
-| Concurrencia | Solo prueba secuencial | Reproduce y protege carrera | Demuestra invariantes entre procesos |
-| Imagen | Ejecuta como root | Build fijado y no root | Evalúa capas y superficie de ataque |
-| Persistencia | Datos efímeros | Volumen y migración | Backup, restore y reversión probados |
-| Operación | Reinicio manual | Salud, logs y límites | Runbook probado con fallos deliberados |
 
 ## Bibliografía y fundamento académico
 

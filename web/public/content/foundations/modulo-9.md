@@ -220,15 +220,6 @@ Crea `analysis/fundamentos-matematicos.ipynb` o un documento ejecutable equivale
 - Ejecutar celdas fuera de orden: reinicia y ejecuta todo automáticamente antes de entregar.
 
 
-## Rúbrica del proyecto
-
-| Criterio | Inicial | Competente | Experto |
-|---|---|---|---|
-| Especificación | Reglas vagas | Predicados e invariantes claros | Supuestos, contraejemplos y límites explícitos |
-| Corrección | Casos felices | Propiedades generativas | Propiedad, prueba y argumento formal conectados |
-| Grafos | Dibujo manual | DFS y detección de ciclo | Testigo, complejidad y restricción automatizada |
-| Experimento | Un promedio | Diseño reproducible y percentiles | Incertidumbre, sesgos y efecto interpretados |
-| Comunicación | Afirma sin evidencia | Resultado trazable | Separa observación, inferencia y causalidad |
 
 ## Bibliografía y fundamento académico
 

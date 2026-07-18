@@ -213,19 +213,6 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 ---
 
 
-## Rúbrica del proyecto
-
-Esta rúbrica evalúa el laboratorio y los ejercicios como evidencia de dominio, no la mera finalización de pasos.
-
-| Criterio | Peso | Evidencia esperada |
-|---|---:|---|
-| Comprensión conceptual | 20% | Explica el mecanismo, sus límites y por qué la solución funciona. |
-| Implementación funcional | 30% | El artefacto satisface requisitos normales, límite y de error. |
-| Verificación | 20% | Incluye pruebas, mediciones o inspecciones reproducibles. |
-| Diseño y calidad | 15% | Nombres, estructura, seguridad y mantenibilidad son deliberados. |
-| Comunicación profesional | 15% | README, decisiones, comandos y resultados permiten repetir el trabajo. |
-
-Se alcanza competencia con 70/100 y sin cero en implementación o verificación. El nivel experto exige comparar alternativas, justificar trade-offs y reconocer condiciones donde la solución dejaría de ser válida.
 
 ## Bibliografía y fundamento académico
 

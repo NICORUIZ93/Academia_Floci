@@ -225,15 +225,6 @@ Fases:
 - Diseñar con tamaños fijos: usa restricciones y prueba extremos.
 
 
-## Rúbrica del proyecto
-
-| Criterio | Inicial | Competente | Excelente |
-|---|---|---|---|
-| Red/HTTP | Solo abre la página | Distingue conexión y estados | Explica headers, caché y evidencia |
-| Semántica | Divs genéricos | Regiones y formularios correctos | DOM claro y validado |
-| Responsive | Un ancho | Funciona en móvil/escritorio | Tolera zoom, texto largo y extremos |
-| Accesibilidad | Solo mouse | Teclado, labels y foco | Auditoría manual documentada |
-| Reproducibilidad | Pasos implícitos | README y servidor | Informe de red y commits por fase |
 
 ## Bibliografía y fundamento académico
 
