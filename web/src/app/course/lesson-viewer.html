@@ -55,15 +55,7 @@
         </div>
       </section>
 
-      <ol class="build-method" aria-label="Metodología Aprende construyendo">
-        <li><span>1</span><div><strong>Objetivo</strong><small>Mira qué construirás</small></div></li>
-        <li><span>2</span><div><strong>Explicación</strong><small>Comprende una idea</small></div></li>
-        <li><span>3</span><div><strong>Demostración</strong><small>Sigue el ejemplo</small></div></li>
-        <li><span>4</span><div><strong>Tarea</strong><small>Inténtala sin ayuda</small></div></li>
-        <li><span>5</span><div><strong>Repaso</strong><small>Verifica y registra</small></div></li>
-      </ol>
-
-      <details class="project-bootstrap" *ngIf="projectBootstrap() as starter" open>
+      <details class="project-bootstrap" *ngIf="projectBootstrap() as starter">
         <summary>
           <span><lucide-icon [img]="icons.Code2" /></span>
           <div><small>Desde una carpeta vacía</small><strong>Prepara el proyecto para {{ m.title }}</strong><p>Sigue los pasos en orden si llegaste directamente o todavía no tienes un proyecto ejecutable.</p></div>

@@ -299,64 +299,12 @@ export class LessonViewerComponent implements OnDestroy {
   }
 
   private addSectionGuides(container: HTMLElement): void {
-    const guides: Record<string, { label: string; text: string }> = {
-      'section-silabo': {
-        label: 'Temas de esta sección',
-        text: 'Revisa el mapa antes de comenzar. Al terminar deberías poder explicar cada punto sin repetirlo de memoria.',
-      },
-      'section-contenido-teorico': {
-        label: 'Explicación y demostración',
-        text: 'Avanza una idea a la vez: comprende el motivo, predice el ejemplo y después comprueba el resultado.',
-      },
-      'section-laboratorio-practico': {
-        label: 'Construcción paso a paso',
-        text: 'Primero observa el resultado esperado; luego construye el incremento en tu propia rama y verifica cada paso.',
-      },
-      'section-criterio-transversal-de-calidad-del-codigo': {
-        label: 'Buenas prácticas aplicadas',
-        text: 'Revisa nombres, responsabilidades, dependencias, errores y pruebas. Usa SOLID solo cuando reduzca el coste real de cambiar.',
-      },
-      'section-ejercicios-de-evaluacion': {
-        label: 'Tareas de la sección',
-        text: 'Resuelve antes de abrir la solución. Si te bloqueas, vuelve únicamente al concepto necesario y prueba otra vez.',
-      },
-      'section-rubrica-del-proyecto': {
-        label: 'Punto de control',
-        text: 'Compara tu evidencia con los criterios. Corrige lo débil antes de marcar el capítulo como completado.',
-      },
-      'section-bibliografia-y-fundamento-academico': {
-        label: 'Recursos para profundizar',
-        text: 'Usa las fuentes primarias para confirmar versiones, ampliar conceptos y continuar aprendiendo por tu cuenta.',
-      },
-      'section-resumen-del-modulo': {
-        label: 'Repaso de cierre',
-        text: 'Explica lo aprendido con tus palabras, registra el código alcanzado y anota la siguiente mejora del proyecto.',
-      },
-    };
-
-    container.querySelectorAll<HTMLElement>('.lesson-section').forEach(section => {
-      if (section.querySelector(':scope > .section-guide')) return;
-      const guide = section.className.includes('section-proyecto-transversal-rutaflow')
-        ? {
-            label: 'Proyecto profesional conectado',
-            text: 'Implementa esta capacidad dentro de RutaFlow y verifica su contrato con las demás rutas, sin acoplar frameworks ni compartir estado interno.',
-          }
-        : Object.entries(guides).find(([className]) => section.classList.contains(className))?.[1];
-      if (!guide) return;
-      const heading = section.querySelector(':scope > h2');
-      if (!heading) return;
-      const element = document.createElement('aside');
-      element.className = 'section-guide';
-      element.innerHTML = `<strong>${escapeHtml(guide.label)}</strong><span>${escapeHtml(guide.text)}</span>`;
-      heading.insertAdjacentElement('afterend', element);
-    });
-
     const lab = container.querySelector<HTMLElement>('.section-laboratorio-practico');
     if (lab && !lab.querySelector('.target-demo')) {
       const target = document.createElement('aside');
       target.className = 'target-demo';
       target.innerHTML = `<small>Resultado que debes poder demostrar</small><strong>${escapeHtml(this.module()?.deliverable ?? 'Un incremento funcional, probado y reproducible.')}</strong>`;
-      lab.querySelector(':scope > .section-guide')?.insertAdjacentElement('afterend', target);
+      lab.querySelector(':scope > h2')?.insertAdjacentElement('afterend', target);
     }
   }
 
@@ -417,10 +365,13 @@ export class LessonViewerComponent implements OnDestroy {
           this.progressService.recordLearningStep(this.trackId(), 'practice', this.learningStepKey(index));
         }
       }
-      const contract = document.createElement('aside');
-      contract.className = 'learning-contract';
-      contract.innerHTML = `<div><small>Orientación opcional</small><strong>Puedes estudiar este tema directamente y volver a los fundamentos cuando lo necesites</strong></div><div><small>Meta de este tema</small><strong>Explicar y aplicar ${title} sin copiar el ejemplo</strong></div><div><small>Laboratorio</small><strong>La práctica está en esta misma lección; no bloquea la exploración de otros temas</strong></div>`;
-      heading.insertAdjacentElement('afterend', contract);
+      const toggle = document.createElement('button');
+      toggle.type = 'button';
+      toggle.className = 'topic-toggle';
+      toggle.dataset['topicToggle'] = String(index);
+      toggle.setAttribute('aria-expanded', String(index === 0));
+      toggle.innerHTML = `<span>${index === 0 ? 'Ocultar tema' : 'Abrir tema'}</span><span aria-hidden="true">⌄</span>`;
+      heading.appendChild(toggle);
       this.addImplementationGuide(card, heading, index, hasCode);
       card.appendChild(practice);
       card.appendChild(action);
@@ -432,7 +383,7 @@ export class LessonViewerComponent implements OnDestroy {
         body.appendChild(bodyNode);
         bodyNode = next;
       }
-      card.classList.add('expanded');
+      card.classList.toggle('expanded', index === 0);
       card.appendChild(body);
     });
   }
@@ -442,9 +393,9 @@ export class LessonViewerComponent implements OnDestroy {
     const profile = this.implementationProfile(index, hasCode);
     const deliverable = this.module()?.deliverable ?? 'Un incremento funcional, comprobable y documentado.';
     const official = findOfficialLearningPath(this.trackId());
-    const guide = document.createElement('section');
+    const guide = document.createElement('details');
     guide.className = 'implementation-guide';
-    guide.innerHTML = `<div class="implementation-guide-heading"><small>Ruta guiada desde cero</small><strong>Dónde trabajar, cómo probar y qué hacer si falla</strong></div>
+    guide.innerHTML = `<summary><span>Guía completa desde cero</span><strong>Archivos, ejecución, fallos y fuente oficial</strong></summary><div class="implementation-guide-body"><div class="implementation-guide-heading"><small>Úsala cuando necesites acompañamiento paso a paso</small><strong>Dónde trabajar, cómo probar y qué hacer si falla</strong></div>
       <ol>
         <li><span>1</span><div><strong>Antes de escribir</strong><p>Explica con tus palabras qué problema resuelve <em>${escapeHtml(topic)}</em>, qué dato recibe y qué cambio observable debe producir. Si no puedes hacerlo, vuelve a la explicación anterior.</p></div></li>
         <li><span>2</span><div><strong>${hasCode ? 'Crea el archivo de práctica' : 'Crea el registro de decisión'}</strong><code>${escapeHtml(profile.path)}</code><p>${hasCode ? `Ubícalo dentro del proyecto del track; no escribas el ejemplo en una carpeta temporal ni dentro de la academia.` : `Documenta contexto, alternativas, decisión, consecuencias y una forma de comprobarla. Un tema conceptual también debe dejar evidencia.`}</p></div></li>
@@ -455,7 +406,7 @@ export class LessonViewerComponent implements OnDestroy {
         <li><span>7</span><div><strong>Conecta con el proyecto integrador</strong><p>${escapeHtml(profile.projectConnection)} Explica qué contrato protege y qué otro componente consumirá el resultado.</p></div></li>
         <li><span>8</span><div><strong>Demuestra que aprendiste</strong><p>Entrega el archivo, el comando exacto, la salida observada, el fallo corregido y una decisión que tomarías diferente en producción.</p></div></li>
         ${official ? `<li><span>9</span><div><strong>Contrasta con la documentación oficial</strong><p>Confirma nombres, límites y versión en <a href="${escapeHtml(official.sourceUrl)}" target="_blank" rel="noopener noreferrer">${escapeHtml(official.source)}</a>. La academia explica y practica; la fuente primaria confirma el contrato vigente.</p></div></li>` : ''}
-      </ol>`;
+      </ol></div>`;
     const firstPractice = card.querySelector('.topic-practice');
     card.insertBefore(guide, firstPractice);
   }
@@ -521,6 +472,15 @@ export class LessonViewerComponent implements OnDestroy {
   }
 
   async copyCode(event: Event): Promise<void> {
+    const topicToggle = (event.target as HTMLElement).closest<HTMLButtonElement>('[data-topic-toggle]');
+    if (topicToggle) {
+      const card = topicToggle.closest<HTMLElement>('.topic-card');
+      const expanded = card?.classList.toggle('expanded') ?? false;
+      topicToggle.setAttribute('aria-expanded', String(expanded));
+      const label = topicToggle.querySelector('span');
+      if (label) label.textContent = expanded ? 'Ocultar tema' : 'Abrir tema';
+      return;
+    }
     const wrapButton = (event.target as HTMLElement).closest<HTMLButtonElement>('[data-wrap-code]');
     if (wrapButton) {
       const wrapper = wrapButton.closest<HTMLElement>('.code-example');
@@ -632,6 +592,13 @@ export class LessonViewerComponent implements OnDestroy {
     const target = this.lessonContent()?.nativeElement.querySelector(`#${CSS.escape(id)}`);
     if (!target) return;
     const topicCard = target.closest<HTMLElement>('.topic-card');
+    if (topicCard && !topicCard.classList.contains('expanded')) {
+      topicCard.classList.add('expanded');
+      const toggle = topicCard.querySelector<HTMLButtonElement>('[data-topic-toggle]');
+      toggle?.setAttribute('aria-expanded', 'true');
+      const label = toggle?.querySelector('span');
+      if (label) label.textContent = 'Ocultar tema';
+    }
     target.scrollIntoView({ behavior: 'smooth', block: 'start' });
     history.replaceState(null, '', `#${id}`);
     this.activeTocId.set(id);

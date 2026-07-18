@@ -11688,7 +11688,7 @@
     },
     {
       "path": "web/src/app/app.spec.ts",
-      "lines": 155,
+      "lines": 157,
       "kind": "angular-app",
       "symbols": [],
       "imports": [
@@ -11932,7 +11932,7 @@
     },
     {
       "path": "web/src/app/course/lesson-viewer.html",
-      "lines": 140,
+      "lines": 132,
       "kind": "angular-app",
       "symbols": [
         "floci-overview-title",
@@ -11943,7 +11943,7 @@
     },
     {
       "path": "web/src/app/course/lesson-viewer.scss",
-      "lines": 338,
+      "lines": 346,
       "kind": "angular-app",
       "symbols": [],
       "imports": [],
@@ -11951,7 +11951,7 @@
     },
     {
       "path": "web/src/app/course/lesson-viewer.ts",
-      "lines": 655,
+      "lines": 622,
       "kind": "angular-app",
       "symbols": [
         "LessonViewerComponent",

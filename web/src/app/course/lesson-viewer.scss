@@ -97,7 +97,7 @@
 .lesson-markdown ::ng-deep h2 { margin:64px 0 22px; padding-bottom:12px; border-bottom:1px solid $bd; color:$ink; font:700 27px/1.25 'Source Serif 4',Georgia,serif; letter-spacing:-.015em; scroll-margin-top:90px; }
 .lesson-markdown ::ng-deep h2:first-child { margin-top:0; }
 .lesson-markdown ::ng-deep h3 { margin:48px 0 18px; color:$ink; font:700 22px/1.3 'Source Serif 4',Georgia,serif; scroll-margin-top:90px; }
-.lesson-markdown ::ng-deep h3.topic-heading { position:relative; padding:18px 22px 18px 26px; border:1px solid $bd; border-radius:14px; background:linear-gradient(135deg,$wh,$bg2); overflow:hidden; }
+.lesson-markdown ::ng-deep h3.topic-heading { position:relative; display:flex; align-items:center; justify-content:space-between; gap:18px; padding:18px 18px 18px 26px; border:1px solid $bd; border-radius:14px; background:linear-gradient(135deg,$wh,$bg2); overflow:hidden; }
 .lesson-markdown ::ng-deep h3.topic-heading::before { content:''; position:absolute; inset:0 auto 0 0; width:4px; background:var(--track-color); }
 .lesson-markdown ::ng-deep h4 { margin:28px 0 10px; color:$ink; font:700 16px/1.35 Inter,sans-serif; }
 .lesson-markdown ::ng-deep p { margin:0 0 19px; }
@@ -125,6 +125,10 @@
 .lesson-markdown ::ng-deep .topic-card:not(.expanded) > .topic-heading { margin-bottom:0; border-bottom:0; background:$wh; }
 .lesson-markdown ::ng-deep .topic-body { display:none; padding-bottom:24px; }
 .lesson-markdown ::ng-deep .topic-card.expanded > .topic-body { display:block; animation:section-in .2s ease both; }
+.lesson-markdown ::ng-deep .topic-toggle { min-width:112px; min-height:38px; display:inline-flex; align-items:center; justify-content:center; gap:8px; flex:0 0 auto; padding:8px 10px; border:1px solid $bd; border-radius:9px; color:$p; background:$wh; font:750 11px/1 Inter,sans-serif; }
+.lesson-markdown ::ng-deep .topic-toggle:hover { border-color:$p; background:$pl; }
+.lesson-markdown ::ng-deep .topic-toggle span:last-child { font-size:17px; transition:transform .18s ease; }
+.lesson-markdown ::ng-deep .topic-toggle[aria-expanded='true'] span:last-child { transform:rotate(180deg); }
 .lesson-markdown ::ng-deep .learning-contract { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:1px; margin:0 0 26px; overflow:hidden; border:1px solid $bd; border-radius:12px; background:$bd; }
 .lesson-markdown ::ng-deep .learning-contract div { display:grid; align-content:start; gap:5px; padding:13px; background:$bg2; }
 .lesson-markdown ::ng-deep .learning-contract small { color:$p; font:800 9px Inter,sans-serif; letter-spacing:.06em; text-transform:uppercase; }
@@ -144,7 +148,11 @@
 .lesson-markdown ::ng-deep .topic-practice > div { padding:15px 17px 17px; }
 .lesson-markdown ::ng-deep .topic-practice ol { margin:0 0 14px; font-size:15px; line-height:1.65; }
 .lesson-markdown ::ng-deep .topic-practice textarea { width:100%; min-height:90px; resize:vertical; padding:11px 12px; border:1px solid $bd2; border-radius:8px; background:$wh; color:$ink; font:14px/1.55 'Source Serif 4',serif; }
-.lesson-markdown ::ng-deep .implementation-guide { margin:28px 0; padding:18px; border:1px solid $bd; border-radius:14px; background:$bg2; }
+.lesson-markdown ::ng-deep .implementation-guide { margin:28px 0; border:1px solid $bd; border-radius:14px; background:$bg2; overflow:hidden; }
+.lesson-markdown ::ng-deep .implementation-guide > summary { display:grid; gap:3px; padding:15px 17px; cursor:pointer; list-style-position:inside; color:$p; font:750 12px/1.4 Inter,sans-serif; }
+.lesson-markdown ::ng-deep .implementation-guide > summary strong { color:$ink; font-size:14px; }
+.lesson-markdown ::ng-deep .implementation-guide[open] > summary { border-bottom:1px solid $bd; background:$wh; }
+.lesson-markdown ::ng-deep .implementation-guide-body { padding:18px; }
 .lesson-markdown ::ng-deep .implementation-guide-heading { display:grid; gap:3px; margin-bottom:14px; }
 .lesson-markdown ::ng-deep .implementation-guide-heading small { color:$p; font:800 10px Inter,sans-serif; letter-spacing:.08em; text-transform:uppercase; }
 .lesson-markdown ::ng-deep .implementation-guide-heading strong { font:750 15px Inter,sans-serif; }
