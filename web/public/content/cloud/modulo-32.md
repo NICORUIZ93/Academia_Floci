@@ -183,6 +183,8 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 5. Ejecuta un experimento de pérdida de instancia/dependencia con hipótesis y abort condition.
 6. Entrega runbook, timeline, resultados, brechas y acciones con dueño.
 
+**Verificación:** las diez comunicaciones producen exactamente cinco permisos y cinco denegaciones justificadas; la restauración recupera los tres recorridos dentro de sus RTO/RPO declarados; el experimento se detiene al alcanzar la condición de aborto; y el runbook permite que otra persona repita la pérdida y recuperación. Conserva tiempos medidos, logs, comprobaciones funcionales y diferencias frente al diseño como evidencia.
+
 ## Ejercicios de evaluación
 
 1. Una base replica sincrónicamente entre zonas. ¿Por qué todavía necesita backups?

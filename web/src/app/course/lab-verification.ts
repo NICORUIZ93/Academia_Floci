@@ -12,6 +12,11 @@
 const MIN_KEYWORDS = 2;
 const MIN_EVIDENCE_LENGTH = 15;
 const MATCH_THRESHOLD = 0.5;
+const FALLBACK_STOP_WORDS = new Set([
+  'verificacion', 'laboratorio', 'considera', 'exitoso', 'resultado', 'esperado',
+  'debe', 'deben', 'puede', 'para', 'como', 'cuando', 'donde', 'desde', 'entre',
+  'mediante', 'ninguna', 'ningun', 'correcto', 'salida', 'terminal', 'muestra',
+]);
 
 function normalize(text: string): string {
   return text
@@ -27,8 +32,14 @@ function extractKeywords(verificationParagraph: HTMLElement): string[] {
 
   const plainText = verificationParagraph.textContent ?? '';
   const numbers = plainText.match(/\b\d{2,5}\b/g) ?? [];
+  const fallbackTerms = normalize(plainText)
+    .match(/\b[a-z][a-z0-9_-]{4,}\b/g)
+    ?.filter(term => !FALLBACK_STOP_WORDS.has(term)) ?? [];
 
-  const keywords = [...new Set([...fromCode, ...numbers])];
+  // Muchos resultados de UI no contienen números ni fragmentos de terminal.
+  // En ese caso se usan términos observables del criterio editorial, evitando
+  // que un laboratorio real desaparezca del progreso como si no existiera.
+  const keywords = [...new Set([...fromCode, ...numbers, ...fallbackTerms])];
   return keywords.slice(0, 8);
 }
 
@@ -57,13 +68,13 @@ function buildWidget(keywords: string[], hint: string | null, onVerified?: () =>
   const label = document.createElement('label');
   const textareaId = `lab-verify-${Math.random().toString(36).slice(2, 9)}`;
   label.setAttribute('for', textareaId);
-  label.textContent = 'Pega aquí lo que viste en tu terminal al ejecutar el laboratorio';
+  label.textContent = 'Pega o describe la evidencia observable de tu ejecución';
   wrapper.appendChild(label);
 
   const textarea = document.createElement('textarea');
   textarea.id = textareaId;
   textarea.rows = 4;
-  textarea.placeholder = 'Salida real de tu comando, tal como apareció en tu terminal…';
+  textarea.placeholder = 'Salida de terminal o prueba, comportamiento visible en la interfaz y condición que verificaste…';
   wrapper.appendChild(textarea);
 
   const button = document.createElement('button');
@@ -82,7 +93,7 @@ function buildWidget(keywords: string[], hint: string | null, onVerified?: () =>
 
     if (evidence.length < MIN_EVIDENCE_LENGTH) {
       feedback.classList.add('fail');
-      feedback.textContent = '❌ Incorrecto: pega la salida real que obtuviste, con al menos unas palabras de contexto.';
+      feedback.textContent = '❌ Evidencia insuficiente: incluye la salida o comportamiento real y explica qué condición verificaste.';
       return;
     }
 
@@ -121,9 +132,11 @@ export function applyLabVerification(container: HTMLElement, onVerified?: (labIn
       node = node.nextElementSibling;
     }
 
-    const verificationParagraph = sectionElements.find(
-      el => el.tagName === 'P' && el.querySelector('strong')?.textContent?.trim().startsWith('Verificación'),
-    );
+    const verificationParagraph = sectionElements.find(el => {
+      if (el.tagName !== 'P') return false;
+      const label = el.querySelector('strong')?.textContent?.trim() || el.textContent?.trim() || '';
+      return /^(?:(?:La\s+)?(?:Verificación|Definición de terminado|Criterio de aceptación|Resultado esperado)|La entrega (?:incluye|contiene)|Entrega código)/i.test(label);
+    });
     if (!verificationParagraph) continue;
 
     const keywords = extractKeywords(verificationParagraph);

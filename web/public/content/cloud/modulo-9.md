@@ -233,6 +233,8 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 4. La guía de despliegue paso a paso, reproducible desde cero contra una instancia limpia de Floci.
 5. Evidencia de que el sistema funciona de extremo a extremo: por ejemplo, una secuencia de comandos `curl` que crea una tarea, le adjunta un archivo, consulta su estado tras el procesamiento en segundo plano, y finalmente la elimina.
 
+**Verificación:** desde una instancia limpia de Floci, el script de despliegue termina sin errores; la secuencia `curl` crea, consulta, actualiza y elimina una tarea; el adjunto aparece bajo `adjuntos/<tarea_id>/`; el mensaje asíncrono se procesa una sola vez o termina en la DLQ tras agotar los reintentos; y cada función opera con un rol IAM distinto. Guarda comandos, respuestas HTTP, logs del consumidor y el resultado de consultar la DLQ como evidencia reproducible.
+
 ## Ejercicios de evaluación
 
 1. Dibuja el recorrido completo de una creación de tarea e identifica qué componente garantiza persistencia, autorización y desacoplamiento.

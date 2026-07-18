@@ -219,6 +219,35 @@
       "headings": []
     },
     {
+      "path": "docs/student-journey-audit.json",
+      "lines": 4390,
+      "kind": "project-file",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "docs/student-journey-audit.md",
+      "lines": 155,
+      "kind": "documentation",
+      "symbols": [],
+      "imports": [],
+      "headings": [
+        "# Auditor\u00eda del recorrido del estudiante",
+        "## Instalaci\u00f3n y primera ejecuci\u00f3n",
+        "## Bloqueos prioritarios por track",
+        "### foundations",
+        "### cloud",
+        "### devops",
+        "### javascript",
+        "### node",
+        "### angular",
+        "### react",
+        "### java",
+        "### spring-boot"
+      ]
+    },
+    {
       "path": "docs/supplemental-track-topics.json",
       "lines": 2127,
       "kind": "project-file",
@@ -2227,6 +2256,26 @@
       "headings": []
     },
     {
+      "path": "scripts/audit_student_journey.py",
+      "lines": 146,
+      "kind": "automation-script",
+      "symbols": [
+        "topic_blocks",
+        "has",
+        "build_report",
+        "render",
+        "main"
+      ],
+      "imports": [
+        "__future__",
+        "json",
+        "re",
+        "collections",
+        "pathlib"
+      ],
+      "headings": []
+    },
+    {
       "path": "scripts/audit_topic_learning_quality.py",
       "lines": 123,
       "kind": "automation-script",
@@ -4026,7 +4075,7 @@
     },
     {
       "path": "web/public/content/cloud/modulo-32.md",
-      "lines": 239,
+      "lines": 241,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -4068,7 +4117,7 @@
     },
     {
       "path": "web/public/content/cloud/modulo-34.md",
-      "lines": 218,
+      "lines": 220,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -4194,7 +4243,7 @@
     },
     {
       "path": "web/public/content/cloud/modulo-9.md",
-      "lines": 436,
+      "lines": 438,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5088,7 +5137,7 @@
     },
     {
       "path": "web/public/content/foundations/modulo-11.md",
-      "lines": 372,
+      "lines": 374,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -9252,7 +9301,7 @@
     },
     {
       "path": "web/public/content/rutaflow/modulo-0.md",
-      "lines": 153,
+      "lines": 161,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -9260,6 +9309,7 @@
         "# M\u00f3dulo 0: RutaFlow desde cero: producto, entorno y dominio",
         "## S\u00edlabo",
         "## Antes de comenzar: instala y comprueba el entorno",
+        "### Si la instalaci\u00f3n falla, no contin\u00faes a ciegas",
         "## Ruta de proyecto progresivo desde carpeta vac\u00eda",
         "## Contenido te\u00f3rico",
         "### Tema 1: El proceso log\u00edstico como sistema",
@@ -9267,8 +9317,7 @@
         "### Tema 3: Arquitectura, privacidad y amenazas",
         "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
-        "## Ejercicios de evaluaci\u00f3n",
-        "### Ejercicio 1: explica antes de programar"
+        "## Ejercicios de evaluaci\u00f3n"
       ]
     },
     {
@@ -11788,8 +11837,18 @@
       "headings": []
     },
     {
+      "path": "web/src/app/course/lab-verification.spec.ts",
+      "lines": 35,
+      "kind": "angular-app",
+      "symbols": [],
+      "imports": [
+        "./lab-verification"
+      ],
+      "headings": []
+    },
+    {
       "path": "web/src/app/course/lab-verification.ts",
-      "lines": 140,
+      "lines": 153,
       "kind": "angular-app",
       "symbols": [
         "applyLabVerification"
@@ -12272,6 +12331,10 @@
     {
       "source": "web/src/app/course/course-shell.ts",
       "target": "web/src/app/course/lesson-index.ts"
+    },
+    {
+      "source": "web/src/app/course/lab-verification.spec.ts",
+      "target": "web/src/app/course/lab-verification.ts"
     },
     {
       "source": "web/src/app/course/lesson-viewer.ts",

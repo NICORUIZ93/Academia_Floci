@@ -182,6 +182,8 @@ Usa nombres que expresen proveedor, recurso y propósito; valida entradas y conv
 6. Inspecciona el resultado en floci-ui.
 7. Escribe una matriz: “validado localmente”, “requiere nube real”, “riesgo si se omite”.
 
+**Verificación:** los health checks de AWS, Azure y GCP responden; un recurso sobrevive al reinicio y se recupera desde snapshot; dos cuentas o proyectos no pueden leer recursos ajenos; el laboratorio automatizado pasa desde un entorno limpio; y floci-ui refleja el estado creado por CLI o SDK. Adjunta comandos, identificadores ficticios, salida de pruebas y la matriz de límites locales frente a nube real.
+
 ## Ejercicios de evaluación
 
 1. Explica por qué un SDK puede superar pruebas de compatibilidad y aun así requerir una prueba contractual en la nube real.

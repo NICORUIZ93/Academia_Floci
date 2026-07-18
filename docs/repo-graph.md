@@ -1,9 +1,9 @@
 # Academia Floci Repo Graph
 
-Generated: 2026-07-18 04:16 UTC
+Generated: 2026-07-18 04:28 UTC
 Root: `Academia_Floci`
-Indexed files: 779
-Import edges: 31
+Indexed files: 783
+Import edges: 32
 
 Use this file as the first, compact context for AI assistants. Refresh it with:
 
@@ -15,22 +15,22 @@ For automated lookups, use `docs/repo-graph.json`.
 
 ## Project Shape
 
-- `angular-app`: 52 files
-- `automation-script`: 30 files
+- `angular-app`: 53 files
+- `automation-script`: 31 files
 - `course-content`: 347 files
-- `documentation`: 98 files
+- `documentation`: 99 files
 - `example`: 215 files
 - `local-infra`: 1 files
-- `project-file`: 36 files
+- `project-file`: 37 files
 
 ## File Types
 
-- `.md`: 436
-- `.py`: 60
-- `.ts`: 45
+- `.md`: 437
+- `.py`: 61
+- `.ts`: 46
 - `.js`: 44
 - `.java`: 40
-- `.json`: 28
+- `.json`: 29
 - `.go`: 24
 - `.rs`: 24
 - `.kt`: 11
@@ -102,6 +102,7 @@ For automated lookups, use `docs/repo-graph.json`.
 - `web/src/app/course-data.ts` -> `web/src/app/tracks/rutaflow.track.ts`
 - `web/src/app/course-data.ts` -> `web/src/app/tracks/spring-boot.track.ts`
 - `web/src/app/course/course-shell.ts` -> `web/src/app/course/lesson-index.ts`
+- `web/src/app/course/lab-verification.spec.ts` -> `web/src/app/course/lab-verification.ts`
 - `web/src/app/course/lesson-viewer.ts` -> `web/src/app/course/lab-verification.ts`
 - `web/src/app/progress.service.spec.ts` -> `web/src/app/progress.service.ts`
 - `web/src/main.ts` -> `web/src/app/app.config.ts`
@@ -114,6 +115,7 @@ For automated lookups, use `docs/repo-graph.json`.
 - `web/src/app/app.spec.ts`: in=0, out=4
 - `web/src/app/app.ts`: in=2, out=1
 - `web/src/app/command-palette.ts`: in=1, out=2
+- `web/src/app/course/lab-verification.ts`: in=2, out=0
 - `web/src/app/catalog/course-catalog.ts`: in=2, out=0
 - `web/src/app/course/lesson-viewer.ts`: in=1, out=1
 - `web/src/app/course/course-shell.ts`: in=1, out=1
@@ -128,7 +130,6 @@ For automated lookups, use `docs/repo-graph.json`.
 - `web/src/app/tracks/java.track.ts`: in=1, out=0
 - `web/src/app/tracks/ios.track.ts`: in=1, out=0
 - `web/src/app/tracks/foundations.track.ts`: in=1, out=0
-- `web/src/app/tracks/flutter.track.ts`: in=1, out=0
 
 ## Files By Area
 
@@ -153,10 +154,11 @@ For automated lookups, use `docs/repo-graph.json`.
 - `web/src/app/course/course-shell.html` (62 lines) - symbols: official-path-title
 - `web/src/app/course/course-shell.scss` (89 lines)
 - `web/src/app/course/course-shell.ts` (57 lines) - symbols: CourseShellComponent, track, officialPath, sidebarOpen, trackLogo, percent, stats; imports: @angular/common, @angular/core, @angular/core/rxjs-interop, @angular/router, lucide-angular, rxjs, ../course-data, ../command-palette.service
-- ... 34 more files
+- ... 35 more files
 
 ### automation-script
 
+- `scripts/audit_student_journey.py` (146 lines) - symbols: topic_blocks, has, build_report, render, main; imports: __future__, json, re, collections, pathlib
 - `scripts/audit_topic_learning_quality.py` (123 lines) - symbols: topic_blocks, evaluate, classify, build, render_markdown, main; imports: __future__, argparse, json, re, collections, pathlib
 - `scripts/build_curriculum.py` (273 lines) - symbols: source_text, normalize_ascii, clean_module_name, parse_curriculum, js_string, render_app_data, main; imports: __future__, json, re, pathlib
 - `scripts/build_definitive_topic_registry.py` (95 lines) - symbols: clean, fold, module_number; imports: pathlib, argparse, json, re, unicodedata
@@ -174,8 +176,7 @@ For automated lookups, use `docs/repo-graph.json`.
 - `scripts/enrich_rutaflow_projects.py` (61 lines) - imports: pathlib
 - `scripts/fix_lessons.py` (205 lines) - symbols: safe_print, iter_text_check_files, find_text_quality_issues, normalized_content, fix_content, check_http, main; imports: argparse, glob, os, re, urllib.request
 - `scripts/start.sh` (10 lines)
-- `scripts/validate-floci.sh` (43 lines)
-- ... 12 more files
+- ... 13 more files
 
 ### course-content
 
@@ -207,6 +208,7 @@ For automated lookups, use `docs/repo-graph.json`.
 - `docs/METODOLOGIA-DE-APRENDIZAJE.md` (57 lines) - headings: # Metodología Aprende construyendo, ## Ciclo de cada capítulo, ## Tamaño de las experiencias, ## Regla para mostrar soluciones
 - `docs/METODOLOGIA.md` (67 lines) - headings: # Metodología de Aprendizaje — Academia Floci, ## 1. Principios (basados en evidencia), ## 2. El ciclo de cada lección (regla 20/60/20), ## 3. Ruta por perfil
 - `docs/PLANTILLA-LECCION.md` (118 lines) - headings: # Plantilla de Lección — Prompt Maestro para Claude / Codex, ## PROMPT MAESTRO (copiar desde aquí), ## DATOS DE LA LECCIÓN, ## REGLAS DE ESTILO
+- `docs/student-journey-audit.md` (155 lines) - headings: # Auditoría del recorrido del estudiante, ## Instalación y primera ejecución, ## Bloqueos prioritarios por track, ### foundations
 - `docs/topic-learning-quality.md` (26 lines) - headings: # Auditoría pedagógica tema por tema, ## Regla editorial
 - `web/README.md` (72 lines) - headings: # Web, ## Abrir la academia, ## Que contiene, ## Archivos principales
 - `web/scripts/source-docs-en/configuration/advanced/application-yml.md` (356 lines) - headings: # application.yml Reference, ## URL configuration, ## Full Reference, ### Initialization hooks
@@ -218,8 +220,7 @@ For automated lookups, use `docs/repo-graph.json`.
 - `web/scripts/source-docs-en/configuration/initialization-hooks.md` (186 lines) - headings: # Initialization Hooks, ## Lifecycle Phases, ## Hook Directories, ## Script Types
 - `web/scripts/source-docs-en/configuration/multi-account.md` (176 lines) - headings: # Multi-Account Isolation, ## How It Works, ## Temporary Credentials (AssumeRole), ## Default Behavior (Single Account)
 - `web/scripts/source-docs-en/configuration/ports.md` (165 lines) - headings: # Ports Reference, ## Port Overview, ## Why some ports don't need docker-compose mapping, ### Proxy-in-Floci (ElastiCache, RDS)
-- `web/scripts/source-docs-en/configuration/storage.md` (177 lines) - headings: # Storage Modes, ## Modes, ## Global Configuration, ## Per-Service Override
-- ... 80 more files
+- ... 81 more files
 
 ### example
 
@@ -262,9 +263,9 @@ For automated lookups, use `docs/repo-graph.json`.
 - `docs/requested-master-topics.json` (189 lines)
 - `docs/requested-practical-examples.json` (1290 lines)
 - `docs/specialization-outcomes.json` (116 lines)
+- `docs/student-journey-audit.json` (4390 lines)
 - `docs/supplemental-track-topics.json` (2127 lines)
 - `docs/topic-learning-quality.json` (24597 lines)
 - `install.sh` (99 lines)
 - `web/.gitignore` (48 lines)
-- `web/.vscode/extensions.json` (5 lines)
-- ... 18 more files
+- ... 19 more files

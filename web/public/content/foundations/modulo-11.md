@@ -14,6 +14,8 @@ Usa nombres claros, errores explícitos y pruebas reproducibles. Aplica SOLID so
 
 Crea un portafolio con un experimento de sistemas, teoría, datos, inteligencia artificial, cómputo visual y práctica profesional. Registra hipótesis, implementación, medición, límites y siguiente prerrequisito.
 
+**Verificación:** cada uno de los seis experimentos declara una pregunta distinta, incluye un artefacto reproducible, registra al menos una medición y explica una limitación sin exagerar conclusiones. Otra persona puede ejecutar uno de ellos usando exclusivamente su README. La comparación final debe justificar qué especialización continuarías, qué prerrequisito te falta y qué evidencia cambiaría tu decisión.
+
 ## Ejercicios de evaluación
 
 ### Ejercicio 1: mapa de prerrequisitos
