@@ -137,6 +137,18 @@
         "Operar un SLO mediante telemetría correlacionada, game day y postmortem accionable."
       ],
       "evidence": ["outbox y consumidor idempotente", "inyección de fallos", "SLO y postmortem"]
+    },
+    {
+      "id": 11,
+      "title": "Ciencias de la Computación: mapa de especializaciones",
+      "cs2023": ["AI", "AL", "AR", "DM", "FPL", "GIT", "NC", "OS", "SEC", "SE", "SF"],
+      "swebok": ["Computing Foundations", "Mathematical Foundations", "Engineering Foundations", "Software Professional Practice"],
+      "outcomes": [
+        "Relacionar teoría, sistemas, datos, inteligencia artificial, gráficos y cómputo científico mediante prerrequisitos explícitos.",
+        "Construir experimentos pequeños que distingan uso instrumental de comprensión del fundamento.",
+        "Elegir una especialización y justificar el siguiente itinerario mediante evidencia, límites y responsabilidad profesional."
+      ],
+      "evidence": ["mapa de prerrequisitos", "seis experimentos reproducibles", "informe de orientación profesional"]
     }
   ]
 }

@@ -178,4 +178,9 @@ export const FLUTTER_MODULES: CourseModule[] = [
     ['¿Por qué una posición recibida no debe dibujarse directamente sin validar tiempo y precisión?', '¿Cómo se evita duplicar una entrega al sincronizar después de estar offline?'],
     ['Riverpod', 'google_maps_flutter', 'geolocator', 'socket_io_client', 'Dio', 'Firebase Cloud Messaging'],
     'Aplicación Flutter de entregas con mapa, tracking, ruta, evidencia, caché offline y push probada en dispositivo.'),
+  m(15, 'Flutter Master: calidad, arquitectura y despliegue', 'Flutter Master', 'Experto', '9 h', '#02569b',
+    'Consolida testing, rendimiento, Clean Architecture, internacionalización y releases firmados en todas las plataformas.',
+    ['flutter test, WidgetTester y pumpWidget', 'pumpAndSettle, golden e integration tests', 'RepaintBoundary, const, Keys y GlobalKey', 'Domain/Data/Presentation, repositories y use cases', 'intl, flutter_localizations y LocalizationsDelegate', 'APK, App Bundle, iOS, web, firma y stores'],
+    ['Prueba widget', 'Detecta animación infinita', 'Mide repaints', 'Sustituye adapter', 'Prueba plurales', 'Firma artefactos'],
+    ['¿Cuándo GlobalKey es deuda?', '¿Por qué pumpAndSettle puede ocultar un fallo?'], ['flutter_test','DevTools','intl','Fastlane'], 'Aplicación Flutter arquitecturada, localizada, perfilada, probada y desplegable.'),
 ];

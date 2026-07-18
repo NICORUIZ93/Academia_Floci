@@ -470,4 +470,7 @@ python3 scripts/validate_curriculum.py
 python3 scripts/validate_official_sources.py
 python3 scripts/validate_code_quality.py
 python3 scripts/validate_rutaflow.py
+python3 scripts/validate_requested_master_topics.py
+python3 scripts/validate_definitive_topics.py
+python3 scripts/validate_supplemental_topics.py
 python3 scripts/build_repo_graph.py --check

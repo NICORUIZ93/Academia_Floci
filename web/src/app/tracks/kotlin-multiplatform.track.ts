@@ -172,4 +172,9 @@ export const KOTLIN_MULTIPLATFORM_MODULES: CourseModule[] = [
     ],
     ['Kotlin Multiplatform', 'Kotlin/Native', 'Swift', 'Gradle', 'XCFramework'],
     'SDK compartido con superficie estable, cancelación/recursos probados, gates de API y schemas, artefactos versionados, telemetría simbolizada y estrategia de release compatible para Android/iOS.'),
+  m(13, 'KMP Master: Native, Swift Export y publicación', 'KMP Master', 'Experto', '8 h', '#7f52ff',
+    'Compila binarios Kotlin/Native, diseña interop C/Swift estable y publica una librería multiplataforma verificable.',
+    ['Kotlin/Native y toolchains', 'C interop y memoria', 'Swift Export', 'XCFramework y API pública', 'Publicación Maven Central', 'Compatibilidad binaria y CI'],
+    ['Llama librería C', 'Prueba ownership', 'Consume API Swift', 'Genera XCFramework', 'Firma publicación', 'Rompe API en CI'],
+    ['¿Qué no puede exportarse limpiamente a Swift?', '¿Cómo se protege compatibilidad de consumidores?'], ['Kotlin/Native','Swift Export','XCFramework','Maven Central'], 'SDK publicado para Android/iOS con interop, compatibilidad y pipeline multi-target.'),
 ];

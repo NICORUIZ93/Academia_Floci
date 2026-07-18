@@ -188,4 +188,9 @@ export const DEVOPS_MODULES: CourseModule[] = [
     ['¿Por qué disponibilidad máxima no siempre es el objetivo correcto?', '¿Qué prueba una firma de artefacto y qué no prueba?'],
     ['Prometheus', 'OpenTelemetry', 'Argo CD', 'Sigstore'],
     'Paquete operativo con SLO, alertas, incidente ensayado y cadena de suministro verificable.'),
+  m(15, 'DevOps Master: GitOps, Service Mesh y DevSecOps', 'DevOps Master', 'Experto', '12 h', '#475569',
+    'Opera una plataforma con Docker/Compose avanzado, Kubernetes extensible, Helm, Ansible, GitOps, Service Mesh, seguridad continua y métricas DORA.',
+    ['Docker y Compose avanzados', 'CRD, operators y admission controllers', 'Helm avanzado', 'Istio/Linkerd y mTLS', 'Argo CD/Flux y Ansible', 'SAST, DAST, SCA, Vault y métricas DORA'],
+    ['Optimiza una imagen multi-stage', 'Crea CRD y política', 'Prueba un chart', 'Canary con mesh', 'Reconcilia con GitOps', 'Mide las cuatro métricas DORA'],
+    ['¿Por qué GitOps no elimina CI?', '¿Cuándo un service mesh cuesta más de lo que aporta?'], ['Kubernetes','Helm','Argo CD','Istio','Ansible','Trivy'], 'Plataforma GitOps segura con mesh, automatización, policy gates y métricas de entrega.'),
 ];

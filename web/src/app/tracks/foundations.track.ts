@@ -232,4 +232,11 @@ export const FOUNDATIONS_MODULES: CourseModule[] = [
     ],
     ['Python', 'Docker Compose', 'OpenTelemetry', 'Prometheus', 'SQLite'],
     'Inventario distribuido mínimo con outbox, consumidor idempotente, fallos inyectados, telemetría correlacionada, SLO medible, runbook y postmortem sin culpables.'),
+  m(11, 'Ciencias de la Computación: mapa de especializaciones', 'Mapa de especializaciones', 'Experto', '18 h', '#6d5dfc',
+    'Conecta los fundamentos con teoría, sistemas, datos, inteligencia artificial, gráficos, cómputo científico y práctica profesional sin confundir introducción con dominio especializado.',
+    ['Sistemas, arquitectura, hardware y sistemas operativos', 'Algoritmos, autómatas, lenguajes formales y compiladores', 'Bases de datos, data warehousing, Big Data y minería', 'IA, ML, redes neuronales y procesamiento de imágenes', 'Gráficos, cómputo científico y bioinformática', 'Redes, seguridad, web, ingeniería y práctica profesional'],
+    ['Simula una máquina y un autómata', 'Implementa parser pequeño', 'Diseña experimento de datos', 'Evalúa modelo sencillo', 'Renderiza una transformación', 'Presenta informe ético reproducible'],
+    ['¿Qué diferencia existe entre usar una herramienta y comprender su fundamento?', '¿Qué especializaciones requieren matemáticas adicionales antes de profundizar?'],
+    ['Python', 'C', 'SQL', 'Jupyter', 'Graphviz'],
+    'Portafolio de orientación con seis experimentos, mapa de prerrequisitos y una especialización elegida mediante evidencia.'),
 ];

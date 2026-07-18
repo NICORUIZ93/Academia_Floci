@@ -193,4 +193,9 @@ export const SPRING_BOOT_MODULES: CourseModule[] = [
     ['¿Por qué hasRole no reemplaza comprobar que el envío pertenece al usuario?', '¿Cuándo conviene WebSocket STOMP y cuándo compatibilidad Socket.IO?'],
     ['Spring Boot', 'MySQL 8 Spatial', 'Hibernate Spatial', 'Spring Security', 'JWT', 'Socket.IO', 'Firebase Admin SDK'],
     'Backend de paquetería con CRUD, consultas espaciales, auth Bearer, roles, tiempo real, archivos, push y pruebas de integración.'),
+  m(15, 'Spring Master: hexagonal, reactivo y microservicios', 'Spring Master', 'Experto', '12 h', '#6db33f',
+    'Integra WebFlux, testing avanzado, arquitectura hexagonal, Spring Cloud y patrones distribuidos sin mezclar modelos incompatibles.',
+    ['Mono, Flux, WebClient, Netty y R2DBC', '@SpringBootTest, slices, MockMvc y Testcontainers', 'Dominio, aplicación, puertos y adaptadores', 'Config Server, Bus y Resilience4j', 'Saga, CQRS, Event Sourcing y Outbox'],
+    ['Detecta bloqueo reactivo', 'Prueba adapters reales', 'Invierte una dependencia', 'Simula config y circuit breaker', 'Deduplica evento outbox'],
+    ['¿Cuándo WebFlux empeora el sistema?', '¿Por qué Event Sourcing no es auditoría gratuita?'], ['Spring WebFlux','Testcontainers','Spring Cloud','Resilience4j','Kafka'], 'Servicio hexagonal con flujo reactivo justificado, contratos, eventos y resiliencia probada.'),
 ];

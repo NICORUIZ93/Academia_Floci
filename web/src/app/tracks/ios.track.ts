@@ -176,4 +176,9 @@ export const IOS_MODULES: CourseModule[] = [
     ['¿Por qué el sandbox no vuelve confiable un Universal Link?', '¿Qué diferencia hay entre reintentar una petición y garantizar idempotencia?'],
     ['Keychain', 'BackgroundTasks', 'MetricKit', 'Instruments'],
     'Dossier de preparación para producción con amenaza, sincronización, telemetría y plan de release.'),
+  m(14, 'SwiftUI Master: pruebas, animación e interoperabilidad', 'SwiftUI Master', 'Experto', '9 h', '#0a84ff',
+    'Prueba flujos SwiftUI, domina Combine e integra UIKit con animaciones accesibles y rendimiento medido.',
+    ['XCTest, expectations y Swift Testing', 'ViewInspector con criterio', 'Combine publishers, operators y schedulers', 'withAnimation, transition y matchedGeometryEffect', 'UIViewRepresentable', 'UIViewControllerRepresentable y coordinators'],
+    ['Prueba async', 'Inspecciona estado', 'Controla scheduler', 'Anima transición', 'Integra vista UIKit', 'Evita ciclo de retención'],
+    ['¿Qué prueba es frágil con ViewInspector?', '¿Quién posee el coordinator?'], ['XCTest','Combine','ViewInspector','UIKit','SwiftUI'], 'Feature SwiftUI probada con Combine controlado, transición e interoperabilidad UIKit.'),
 ];

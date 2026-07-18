@@ -182,4 +182,9 @@ export const REACT_MODULES: CourseModule[] = [
     ],
     ['React', 'Next.js', 'Testing Library', 'Playwright', 'axe'],
     'Aplicación React resiliente con boundaries, flujo accesible, CSP, acciones autorizadas, hidratación estable, dos locales, medición por release y rollback probado.'),
+  m(14, 'React Master: servidor, Next.js, a11y e i18n', 'React Master', 'Experto', '10 h', '#149eca',
+    'Construye una experiencia full-stack con RSC, streaming, Actions, Next.js avanzado, accesibilidad e internacionalización.',
+    ['Server Components, streaming y Suspense', 'Server Actions y autorización', 'ISR, Metadata y Middleware', 'Image/Font Optimization', 'ARIA, teclado y React Aria', 'react-i18next, pluralización y RTL'],
+    ['Traza frontera server/client', 'Protege Action', 'Valida ISR', 'Mide LCP', 'Completa flujo con teclado', 'Prueba plural y RTL'],
+    ['¿Por qué use server no autoriza?', '¿Cuándo ISR sirve datos obsoletos?'], ['React','Next.js','React Aria','react-i18next','Playwright'], 'Aplicación Next.js accesible, localizada, transmitida por streaming y autorizada en servidor.'),
 ];

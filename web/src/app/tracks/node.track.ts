@@ -203,4 +203,9 @@ export const NODE_MODULES: CourseModule[] = [
     ],
     ['TypeScript', 'OpenAPI', 'Zod', 'PostgreSQL', 'Vitest'],
     'API tipada y contract-first con idempotencia transaccional, outbox, webhooks firmados, pruebas de duplicación y procedimiento de reconciliación.'),
+  m(14, 'Node.js Master: GraphQL, eventos y entrega', 'Node Master', 'Experto', '10 h', '#3c873a',
+    'Entrega servicios Node tipados en serverless y contenedores, con GraphQL federado, eventos, sagas y CI/CD verificable.',
+    ['TypeScript nativo, tsx y configuración', 'GraphQL, DataLoader, directives y Federation', 'Kafka/RabbitMQ, SAGA y event-driven', 'AWS Lambda/Azure Functions/GCP Functions', 'Docker multi-stage, Alpine y PM2', 'GitHub Actions/Jenkins y despliegue'],
+    ['Valida tipos en runtime', 'Evita N+1', 'Orquesta una saga', 'Mide cold start', 'Endurece imagen', 'Promueve artefacto inmutable'],
+    ['¿Por qué Federation no resuelve límites de dominio?', '¿Cuándo PM2 sobra dentro de Kubernetes?'], ['TypeScript','Apollo Federation','Kafka','AWS Lambda','Docker','GitHub Actions'], 'Servicio Node federado y event-driven desplegado mediante pipeline con fallos probados.'),
 ];

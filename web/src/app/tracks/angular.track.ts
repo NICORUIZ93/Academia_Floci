@@ -202,4 +202,9 @@ export const ANGULAR_MODULES: CourseModule[] = [
     ],
     ['Angular', 'Angular CDK', 'Angular Aria', 'Playwright', 'Lighthouse'],
     'Aplicación Angular auditada con flujo accesible, CSP y Trusted Types, dos locales, RTL, budgets de build, estrategia de actualización y evidencia de rendimiento real.'),
+  m(15, 'Angular Master: pruebas, animación y SSR', 'Angular Master', 'Experto', '9 h', '#dd0031',
+    'Prueba Signals y componentes, automatiza E2E, diseña movimiento accesible y opera SSR con hidratación.',
+    ['Jasmine/Vitest, TestBed y ComponentFixture', 'Pruebas de Signals', 'Cypress y Playwright E2E', 'CSS/Angular animations y reduced motion', 'SSR, TransferState e hidratación', 'provideServerRendering y diagnóstico'],
+    ['Prueba signal derivada', 'Aísla componente', 'Automatiza flujo', 'Respeta reduced motion', 'Evita doble fetch', 'Diagnostica hydration mismatch'],
+    ['¿Qué debe probarse sin TestBed?', '¿Por qué SSR no garantiza rendimiento?'], ['Angular','TestBed','Playwright','Cypress','SSR'], 'Aplicación Angular probada, animada de forma accesible e hidratada sin divergencias.'),
 ];

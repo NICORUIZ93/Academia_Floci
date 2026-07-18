@@ -188,4 +188,9 @@ export const ANDROID_MODULES: CourseModule[] = [
     ],
     ['Android Keystore', 'Room', 'WorkManager', 'Macrobenchmark', 'Play Console'],
     'App con threat model, almacenamiento y enlaces endurecidos, sincronización idempotente con conflictos probados, diagnóstico ANR/crash y release gradual recuperable.'),
+  m(14, 'Compose Master: pruebas, accesibilidad y animación', 'Compose Master', 'Experto', '8 h', '#3ddc84',
+    'Verifica UI Compose con semántica accesible y movimiento medido, adaptable y respetuoso de preferencias.',
+    ['ComposeTestRule', 'finders, assertions y actions', 'semantics y clearAndSetSemantics', 'AccessibilityService y TalkBack', 'animateXxxAsState y AnimatedVisibility', 'AnimatedContent, transitions y AnimationSpec'],
+    ['Prueba texto y click', 'Crea matcher semántico', 'Audita TalkBack', 'Anima estado', 'Prueba reloj', 'Respeta escala de animación'],
+    ['¿Qué prueba encuentra un nodo fusionado?', '¿Cuándo una animación perjudica accesibilidad?'], ['ComposeTestRule','Semantics','TalkBack','AnimationSpec'], 'Feature Compose probada con árbol semántico y animaciones accesibles.'),
 ];

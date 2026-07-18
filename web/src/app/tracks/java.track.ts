@@ -203,4 +203,9 @@ export const JAVA_MODULES: CourseModule[] = [
     ],
     ['Java', 'JMH', 'jcstress', 'JFR', 'jlink'],
     'Servicio Java con publicación segura, pruebas de estrés concurrente, benchmark válido, entrada deserializada defensivamente, runtime modular mínimo y runbook de actualización/diagnóstico.'),
+  m(15, 'Java Master: builds, testing y logging operacional', 'Java Master', 'Experto', '8 h', '#5382a1',
+    'Domina Maven/Gradle multi-módulo, una estrategia de pruebas completa y observabilidad mediante SLF4J, Logback, MDC y logs estructurados.',
+    ['Lifecycle Maven y plugins', 'Gradle tasks y dependency management', 'Proyectos multi-módulo', 'JUnit 5, Mockito, AssertJ y Hamcrest', 'Integration tests y Testcontainers', 'SLF4J, Logback, Log4j2, MDC y JSON'],
+    ['Construye módulos reproducibles', 'Bloquea versiones', 'Prueba dominio', 'Integra base real', 'Propaga correlation ID', 'Consulta logs estructurados'],
+    ['¿Por qué MDC debe limpiarse?', '¿Qué prueba pertenece a unit y cuál a integration?'], ['Maven','Gradle','JUnit 5','Mockito','SLF4J'], 'Aplicación multi-módulo con build reproducible, pirámide de pruebas y logs correlacionados.'),
 ];

@@ -148,7 +148,15 @@
     },
     {
       "path": "docs/curriculum-matrix.json",
-      "lines": 143,
+      "lines": 155,
+      "kind": "project-file",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "docs/definitive-track-topics.json",
+      "lines": 3168,
       "kind": "project-file",
       "symbols": [],
       "imports": [],
@@ -171,8 +179,24 @@
       "headings": []
     },
     {
+      "path": "docs/requested-master-topics.json",
+      "lines": 189,
+      "kind": "project-file",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
       "path": "docs/specialization-outcomes.json",
       "lines": 116,
+      "kind": "project-file",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "docs/supplemental-track-topics.json",
+      "lines": 2127,
       "kind": "project-file",
       "symbols": [],
       "imports": [],
@@ -2181,6 +2205,24 @@
       "headings": []
     },
     {
+      "path": "scripts/build_definitive_topic_registry.py",
+      "lines": 95,
+      "kind": "automation-script",
+      "symbols": [
+        "clean",
+        "fold",
+        "module_number"
+      ],
+      "imports": [
+        "pathlib",
+        "argparse",
+        "json",
+        "re",
+        "unicodedata"
+      ],
+      "headings": []
+    },
+    {
       "path": "scripts/build_repo_graph.py",
       "lines": 446,
       "kind": "automation-script",
@@ -2217,6 +2259,23 @@
       "headings": []
     },
     {
+      "path": "scripts/build_supplemental_topic_registry.py",
+      "lines": 116,
+      "kind": "automation-script",
+      "symbols": [
+        "fold",
+        "module_id"
+      ],
+      "imports": [
+        "pathlib",
+        "argparse",
+        "json",
+        "re",
+        "unicodedata"
+      ],
+      "headings": []
+    },
+    {
       "path": "scripts/create_delivery_modules.py",
       "lines": 126,
       "kind": "automation-script",
@@ -2225,6 +2284,19 @@
       ],
       "imports": [
         "pathlib"
+      ],
+      "headings": []
+    },
+    {
+      "path": "scripts/create_master_gap_modules.py",
+      "lines": 150,
+      "kind": "automation-script",
+      "symbols": [
+        "render"
+      ],
+      "imports": [
+        "pathlib",
+        "json"
       ],
       "headings": []
     },
@@ -2336,7 +2408,7 @@
     },
     {
       "path": "scripts/validate.sh",
-      "lines": 474,
+      "lines": 477,
       "kind": "automation-script",
       "symbols": [],
       "imports": [],
@@ -2361,6 +2433,20 @@
         "json",
         "pathlib",
         "re"
+      ],
+      "headings": []
+    },
+    {
+      "path": "scripts/validate_definitive_topics.py",
+      "lines": 18,
+      "kind": "automation-script",
+      "symbols": [
+        "fold"
+      ],
+      "imports": [
+        "pathlib",
+        "json",
+        "unicodedata"
       ],
       "headings": []
     },
@@ -2390,6 +2476,17 @@
       "headings": []
     },
     {
+      "path": "scripts/validate_requested_master_topics.py",
+      "lines": 29,
+      "kind": "automation-script",
+      "symbols": [],
+      "imports": [
+        "pathlib",
+        "json"
+      ],
+      "headings": []
+    },
+    {
       "path": "scripts/validate_rutaflow.py",
       "lines": 94,
       "kind": "automation-script",
@@ -2399,6 +2496,20 @@
         "importlib.util",
         "subprocess",
         "sys"
+      ],
+      "headings": []
+    },
+    {
+      "path": "scripts/validate_supplemental_topics.py",
+      "lines": 14,
+      "kind": "automation-script",
+      "symbols": [
+        "fold"
+      ],
+      "imports": [
+        "pathlib",
+        "json",
+        "unicodedata"
       ],
       "headings": []
     },
@@ -2696,6 +2807,27 @@
         "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
         "### Proyecto: app resistente a dispositivo, red y release"
+      ]
+    },
+    {
+      "path": "web/public/content/android/modulo-14.md",
+      "lines": 680,
+      "kind": "course-content",
+      "symbols": [],
+      "imports": [],
+      "headings": [
+        "# M\u00f3dulo 14: Compose Master: pruebas, accesibilidad y animaci\u00f3n",
+        "## S\u00edlabo",
+        "## Contenido te\u00f3rico",
+        "### Tema 1: ComposeTestRule",
+        "### Tema 2: Finders, assertions y actions",
+        "### Tema 3: Semantics y clearAndSetSemantics",
+        "### Tema 4: AccessibilityService y TalkBack",
+        "### Tema 5: Animaciones de estado y visibilidad",
+        "### Tema 6: AnimatedContent y AnimationSpec",
+        "## Trazabilidad de la auditor\u00eda original",
+        "## Criterio transversal de calidad del c\u00f3digo",
+        "## Laboratorio pr\u00e1ctico"
       ]
     },
     {
@@ -3011,6 +3143,27 @@
         "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
         "### Proyecto: auditor\u00eda integral de la aplicaci\u00f3n standalone"
+      ]
+    },
+    {
+      "path": "web/public/content/angular/modulo-15.md",
+      "lines": 603,
+      "kind": "course-content",
+      "symbols": [],
+      "imports": [],
+      "headings": [
+        "# M\u00f3dulo 15: Angular Master: pruebas, animaci\u00f3n y SSR",
+        "## S\u00edlabo",
+        "## Contenido te\u00f3rico",
+        "### Tema 1: TestBed y ComponentFixture",
+        "### Tema 2: Pruebas de Signals",
+        "### Tema 3: Cypress y Playwright",
+        "### Tema 4: Animaciones accesibles",
+        "### Tema 5: SSR y TransferState",
+        "### Tema 6: Hidrataci\u00f3n y provideServerRendering",
+        "## Trazabilidad de la auditor\u00eda original",
+        "## Criterio transversal de calidad del c\u00f3digo",
+        "## Laboratorio pr\u00e1ctico"
       ]
     },
     {
@@ -3749,6 +3902,27 @@
       ]
     },
     {
+      "path": "web/public/content/cloud/modulo-33.md",
+      "lines": 608,
+      "kind": "course-content",
+      "symbols": [],
+      "imports": [],
+      "headings": [
+        "# M\u00f3dulo 33: Cloud Master: plataforma, seguridad, datos y FinOps",
+        "## S\u00edlabo",
+        "## Contenido te\u00f3rico",
+        "### Tema 1: Terraform avanzado y CI/CD cloud",
+        "### Tema 2: Kubernetes administrado, ECS y Service Mesh",
+        "### Tema 3: EC2, VPC, RDS, S3 y DynamoDB avanzados",
+        "### Tema 4: Lambda, API Gateway y observabilidad avanzada",
+        "### Tema 5: Seguridad, auditor\u00eda y FinOps",
+        "### Tema 6: Microservicios, Big Data, AI/ML y multi-cloud",
+        "## Trazabilidad de la auditor\u00eda original",
+        "## Criterio transversal de calidad del c\u00f3digo",
+        "## Laboratorio pr\u00e1ctico"
+      ]
+    },
+    {
       "path": "web/public/content/cloud/modulo-4.md",
       "lines": 359,
       "kind": "course-content",
@@ -4019,6 +4193,27 @@
         "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
         "## Ejercicios de evaluaci\u00f3n"
+      ]
+    },
+    {
+      "path": "web/public/content/devops/modulo-15.md",
+      "lines": 504,
+      "kind": "course-content",
+      "symbols": [],
+      "imports": [],
+      "headings": [
+        "# M\u00f3dulo 15: DevOps Master: GitOps, Service Mesh y DevSecOps",
+        "## S\u00edlabo",
+        "## Contenido te\u00f3rico",
+        "### Tema 1: Docker y Compose avanzados",
+        "### Tema 2: Kubernetes extensible y Helm avanzado",
+        "### Tema 3: Service Mesh con Istio o Linkerd",
+        "### Tema 4: GitOps con Argo CD y Flux",
+        "### Tema 5: Ansible, inventarios, roles y Vault",
+        "### Tema 6: DevSecOps y m\u00e9tricas DORA",
+        "## Trazabilidad de la auditor\u00eda original",
+        "## Criterio transversal de calidad del c\u00f3digo",
+        "## Laboratorio pr\u00e1ctico"
       ]
     },
     {
@@ -4475,6 +4670,27 @@
       ]
     },
     {
+      "path": "web/public/content/flutter/modulo-15.md",
+      "lines": 591,
+      "kind": "course-content",
+      "symbols": [],
+      "imports": [],
+      "headings": [
+        "# M\u00f3dulo 15: Flutter Master: calidad, arquitectura y despliegue",
+        "## S\u00edlabo",
+        "## Contenido te\u00f3rico",
+        "### Tema 1: flutter test y WidgetTester",
+        "### Tema 2: pumpAndSettle, golden e integration tests",
+        "### Tema 3: Rendimiento, RepaintBoundary y Keys",
+        "### Tema 4: Clean Architecture",
+        "### Tema 5: Internacionalizaci\u00f3n completa",
+        "### Tema 6: Builds, firma y despliegue",
+        "## Trazabilidad de la auditor\u00eda original",
+        "## Criterio transversal de calidad del c\u00f3digo",
+        "## Laboratorio pr\u00e1ctico"
+      ]
+    },
+    {
       "path": "web/public/content/flutter/modulo-2.md",
       "lines": 235,
       "kind": "course-content",
@@ -4703,6 +4919,27 @@
         "### Implementaci\u00f3n guiada",
         "### Verificaci\u00f3n profesional",
         "## Criterio transversal de calidad del c\u00f3digo"
+      ]
+    },
+    {
+      "path": "web/public/content/foundations/modulo-11.md",
+      "lines": 355,
+      "kind": "course-content",
+      "symbols": [],
+      "imports": [],
+      "headings": [
+        "# M\u00f3dulo 11: Ciencias de la Computaci\u00f3n: mapa de especializaciones",
+        "## S\u00edlabo",
+        "## Contenido te\u00f3rico",
+        "## Criterio transversal de calidad del c\u00f3digo",
+        "## Laboratorio pr\u00e1ctico",
+        "## Ejercicios de evaluaci\u00f3n",
+        "### Ejercicio 1: mapa de prerrequisitos",
+        "### Ejercicio 2: experimento reproducible",
+        "### Ejercicio 3: responsabilidad profesional",
+        "## R\u00fabrica del proyecto",
+        "## Bibliograf\u00eda y fundamento acad\u00e9mico",
+        "## Ampliaci\u00f3n acad\u00e9mica suplementaria"
       ]
     },
     {
@@ -4997,6 +5234,27 @@
         "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
         "## Ejercicios de evaluaci\u00f3n"
+      ]
+    },
+    {
+      "path": "web/public/content/ios/modulo-14.md",
+      "lines": 564,
+      "kind": "course-content",
+      "symbols": [],
+      "imports": [],
+      "headings": [
+        "# M\u00f3dulo 14: SwiftUI Master: pruebas, animaci\u00f3n e interoperabilidad",
+        "## S\u00edlabo",
+        "## Contenido te\u00f3rico",
+        "### Tema 1: XCTest y pruebas as\u00edncronas",
+        "### Tema 2: ViewInspector con criterio",
+        "### Tema 3: Combine avanzado",
+        "### Tema 4: Animaciones y matchedGeometryEffect",
+        "### Tema 5: UIViewRepresentable",
+        "### Tema 6: UIViewControllerRepresentable y Coordinator",
+        "## Trazabilidad de la auditor\u00eda original",
+        "## Criterio transversal de calidad del c\u00f3digo",
+        "## Laboratorio pr\u00e1ctico"
       ]
     },
     {
@@ -5315,6 +5573,27 @@
       ]
     },
     {
+      "path": "web/public/content/java/modulo-15.md",
+      "lines": 706,
+      "kind": "course-content",
+      "symbols": [],
+      "imports": [],
+      "headings": [
+        "# M\u00f3dulo 15: Java Master: builds, testing y logging operacional",
+        "## S\u00edlabo",
+        "## Contenido te\u00f3rico",
+        "### Tema 1: Maven avanzado",
+        "### Tema 2: Gradle y builds reproducibles",
+        "### Tema 3: Proyectos multi-m\u00f3dulo",
+        "### Tema 4: JUnit 5, Mockito y assertions",
+        "### Tema 5: Pruebas de integraci\u00f3n",
+        "### Tema 6: SLF4J, Logback, MDC y logging estructurado",
+        "## Trazabilidad de la auditor\u00eda original",
+        "## Criterio transversal de calidad del c\u00f3digo",
+        "## Laboratorio pr\u00e1ctico"
+      ]
+    },
+    {
       "path": "web/public/content/java/modulo-2.md",
       "lines": 230,
       "kind": "course-content",
@@ -5609,6 +5888,27 @@
       ]
     },
     {
+      "path": "web/public/content/javascript/modulo-14.md",
+      "lines": 619,
+      "kind": "course-content",
+      "symbols": [],
+      "imports": [],
+      "headings": [
+        "# M\u00f3dulo 14: JavaScript Master: TypeScript, WASM y c\u00f3mputo emergente",
+        "## S\u00edlabo",
+        "## Contenido te\u00f3rico",
+        "### Tema 1: TypeScript avanzado",
+        "### Tema 2: Workers y ejecuci\u00f3n fuera del hilo principal",
+        "### Tema 3: Bundlers y optimizaci\u00f3n",
+        "### Tema 4: Accesibilidad web",
+        "### Tema 5: WebAssembly con Rust o C",
+        "### Tema 6: Web3 y machine learning en navegador",
+        "## Trazabilidad de la auditor\u00eda original",
+        "## Criterio transversal de calidad del c\u00f3digo",
+        "## Laboratorio pr\u00e1ctico"
+      ]
+    },
+    {
       "path": "web/public/content/javascript/modulo-2.md",
       "lines": 349,
       "kind": "course-content",
@@ -5879,6 +6179,27 @@
         "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
         "### Proyecto: SDK compartido estable y operable"
+      ]
+    },
+    {
+      "path": "web/public/content/kotlin-multiplatform/modulo-13.md",
+      "lines": 498,
+      "kind": "course-content",
+      "symbols": [],
+      "imports": [],
+      "headings": [
+        "# M\u00f3dulo 13: KMP Master: Native, Swift Export y publicaci\u00f3n",
+        "## S\u00edlabo",
+        "## Contenido te\u00f3rico",
+        "### Tema 1: Kotlin/Native",
+        "### Tema 2: Interop con C",
+        "### Tema 3: Swift Export",
+        "### Tema 4: XCFramework y API p\u00fablica",
+        "### Tema 5: Publicaci\u00f3n en Maven Central",
+        "### Tema 6: Compatibilidad binaria y CI multi-target",
+        "## Trazabilidad de la auditor\u00eda original",
+        "## Criterio transversal de calidad del c\u00f3digo",
+        "## Laboratorio pr\u00e1ctico"
       ]
     },
     {
@@ -6559,6 +6880,27 @@
         "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
         "### Proyecto: API contractual con efectos recuperables"
+      ]
+    },
+    {
+      "path": "web/public/content/node/modulo-14.md",
+      "lines": 514,
+      "kind": "course-content",
+      "symbols": [],
+      "imports": [],
+      "headings": [
+        "# M\u00f3dulo 14: Node.js Master: GraphQL, eventos y entrega",
+        "## S\u00edlabo",
+        "## Contenido te\u00f3rico",
+        "### Tema 1: TypeScript en Node.js",
+        "### Tema 2: GraphQL avanzado y Federation",
+        "### Tema 3: Microservicios, Kafka, RabbitMQ y sagas",
+        "### Tema 4: Serverless multi-cloud",
+        "### Tema 5: Docker productivo con Node",
+        "### Tema 6: CI/CD y promoci\u00f3n de artefactos",
+        "## Trazabilidad de la auditor\u00eda original",
+        "## Criterio transversal de calidad del c\u00f3digo",
+        "## Laboratorio pr\u00e1ctico"
       ]
     },
     {
@@ -8555,6 +8897,27 @@
       ]
     },
     {
+      "path": "web/public/content/react/modulo-14.md",
+      "lines": 564,
+      "kind": "course-content",
+      "symbols": [],
+      "imports": [],
+      "headings": [
+        "# M\u00f3dulo 14: React Master: servidor, Next.js, a11y e i18n",
+        "## S\u00edlabo",
+        "## Contenido te\u00f3rico",
+        "### Tema 1: Server Components y streaming",
+        "### Tema 2: Server Actions y seguridad",
+        "### Tema 3: Next.js ISR, Metadata y Middleware",
+        "### Tema 4: Optimizaci\u00f3n de im\u00e1genes y fuentes",
+        "### Tema 5: Accesibilidad y React Aria",
+        "### Tema 6: i18n, pluralizaci\u00f3n y RTL",
+        "## Trazabilidad de la auditor\u00eda original",
+        "## Criterio transversal de calidad del c\u00f3digo",
+        "## Laboratorio pr\u00e1ctico"
+      ]
+    },
+    {
       "path": "web/public/content/react/modulo-2.md",
       "lines": 240,
       "kind": "course-content",
@@ -9043,6 +9406,27 @@
         "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
         "## Ejercicios de evaluaci\u00f3n"
+      ]
+    },
+    {
+      "path": "web/public/content/spring-boot/modulo-15.md",
+      "lines": 565,
+      "kind": "course-content",
+      "symbols": [],
+      "imports": [],
+      "headings": [
+        "# M\u00f3dulo 15: Spring Master: hexagonal, reactivo y microservicios",
+        "## S\u00edlabo",
+        "## Contenido te\u00f3rico",
+        "### Tema 1: WebFlux, Mono, Flux y Netty",
+        "### Tema 2: Testing avanzado con slices y Testcontainers",
+        "### Tema 3: Arquitectura hexagonal",
+        "### Tema 4: Spring Cloud y Resilience4j",
+        "### Tema 5: Sagas y CQRS",
+        "### Tema 6: Event Sourcing y Outbox",
+        "## Trazabilidad de la auditor\u00eda original",
+        "## Criterio transversal de calidad del c\u00f3digo",
+        "## Laboratorio pr\u00e1ctico"
       ]
     },
     {
@@ -11324,7 +11708,7 @@
     },
     {
       "path": "web/src/app/course-data.ts",
-      "lines": 1051,
+      "lines": 1057,
       "kind": "angular-app",
       "symbols": [
         "ServiceGroup",
@@ -11411,7 +11795,7 @@
     },
     {
       "path": "web/src/app/tracks/android.track.ts",
-      "lines": 192,
+      "lines": 197,
       "kind": "angular-app",
       "symbols": [],
       "imports": [
@@ -11421,7 +11805,7 @@
     },
     {
       "path": "web/src/app/tracks/angular.track.ts",
-      "lines": 206,
+      "lines": 211,
       "kind": "angular-app",
       "symbols": [
         "contador"
@@ -11433,7 +11817,7 @@
     },
     {
       "path": "web/src/app/tracks/devops.track.ts",
-      "lines": 192,
+      "lines": 197,
       "kind": "angular-app",
       "symbols": [],
       "imports": [
@@ -11443,7 +11827,7 @@
     },
     {
       "path": "web/src/app/tracks/flutter.track.ts",
-      "lines": 182,
+      "lines": 187,
       "kind": "angular-app",
       "symbols": [],
       "imports": [
@@ -11453,7 +11837,7 @@
     },
     {
       "path": "web/src/app/tracks/foundations.track.ts",
-      "lines": 236,
+      "lines": 243,
       "kind": "angular-app",
       "symbols": [],
       "imports": [
@@ -11463,7 +11847,7 @@
     },
     {
       "path": "web/src/app/tracks/ios.track.ts",
-      "lines": 180,
+      "lines": 185,
       "kind": "angular-app",
       "symbols": [],
       "imports": [
@@ -11473,7 +11857,7 @@
     },
     {
       "path": "web/src/app/tracks/java.track.ts",
-      "lines": 207,
+      "lines": 212,
       "kind": "angular-app",
       "symbols": [],
       "imports": [
@@ -11483,7 +11867,7 @@
     },
     {
       "path": "web/src/app/tracks/javascript.track.ts",
-      "lines": 208,
+      "lines": 213,
       "kind": "angular-app",
       "symbols": [],
       "imports": [
@@ -11493,7 +11877,7 @@
     },
     {
       "path": "web/src/app/tracks/kotlin-multiplatform.track.ts",
-      "lines": 176,
+      "lines": 181,
       "kind": "angular-app",
       "symbols": [],
       "imports": [
@@ -11503,7 +11887,7 @@
     },
     {
       "path": "web/src/app/tracks/node.track.ts",
-      "lines": 207,
+      "lines": 212,
       "kind": "angular-app",
       "symbols": [],
       "imports": [
@@ -11513,7 +11897,7 @@
     },
     {
       "path": "web/src/app/tracks/react.track.ts",
-      "lines": 186,
+      "lines": 191,
       "kind": "angular-app",
       "symbols": [],
       "imports": [
@@ -11533,7 +11917,7 @@
     },
     {
       "path": "web/src/app/tracks/spring-boot.track.ts",
-      "lines": 197,
+      "lines": 202,
       "kind": "angular-app",
       "symbols": [],
       "imports": [
