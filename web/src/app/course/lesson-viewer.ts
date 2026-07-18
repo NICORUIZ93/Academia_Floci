@@ -246,6 +246,7 @@ export class LessonViewerComponent implements OnDestroy {
 
   private enhanceEducationalContent(container: HTMLElement): void {
     this.groupLessonSections(container);
+    this.collapseSecondarySections(container);
     this.addSectionGuides(container);
 
     container.querySelectorAll('h3').forEach(heading => {
@@ -296,6 +297,38 @@ export class LessonViewerComponent implements OnDestroy {
       activities: container.querySelectorAll('.topic-practice, .exercise-card').length,
     });
     this.refreshEvidenceState(container);
+  }
+
+  private collapseSecondarySections(container: HTMLElement): void {
+    const secondarySelectors = [
+      '.section-silabo',
+      '.section-criterio-transversal-de-calidad-del-codigo',
+      '.section-rubrica-del-proyecto',
+      '.section-bibliografia-y-fundamento-academico',
+      '.section-resumen-del-modulo',
+    ].join(',');
+
+    container.querySelectorAll<HTMLElement>(secondarySelectors).forEach((section, index) => {
+      if (section.querySelector(':scope > .secondary-section-body')) return;
+      const heading = section.querySelector<HTMLHeadingElement>(':scope > h2');
+      if (!heading) return;
+      const body = document.createElement('div');
+      body.className = 'secondary-section-body';
+      let node = heading.nextSibling;
+      while (node) {
+        const next = node.nextSibling;
+        body.appendChild(node);
+        node = next;
+      }
+      const toggle = document.createElement('button');
+      toggle.type = 'button';
+      toggle.className = 'secondary-section-toggle';
+      toggle.dataset['secondaryToggle'] = String(index);
+      toggle.setAttribute('aria-expanded', 'false');
+      toggle.innerHTML = '<span>Mostrar</span><span aria-hidden="true">⌄</span>';
+      heading.appendChild(toggle);
+      section.appendChild(body);
+    });
   }
 
   private addSectionGuides(container: HTMLElement): void {
@@ -472,6 +505,15 @@ export class LessonViewerComponent implements OnDestroy {
   }
 
   async copyCode(event: Event): Promise<void> {
+    const secondaryToggle = (event.target as HTMLElement).closest<HTMLButtonElement>('[data-secondary-toggle]');
+    if (secondaryToggle) {
+      const section = secondaryToggle.closest<HTMLElement>('.lesson-section');
+      const expanded = section?.classList.toggle('secondary-expanded') ?? false;
+      secondaryToggle.setAttribute('aria-expanded', String(expanded));
+      const label = secondaryToggle.querySelector('span');
+      if (label) label.textContent = expanded ? 'Ocultar' : 'Mostrar';
+      return;
+    }
     const topicToggle = (event.target as HTMLElement).closest<HTMLButtonElement>('[data-topic-toggle]');
     if (topicToggle) {
       const card = topicToggle.closest<HTMLElement>('.topic-card');

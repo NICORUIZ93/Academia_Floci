@@ -149,6 +149,12 @@ La evidencia demuestra el aprendizaje.`;
       expect(page.querySelector('.project-bootstrap')).toBeTruthy();
       expect(page.querySelector<HTMLDetailsElement>('.project-bootstrap')?.open).toBe(false);
       expect(page.querySelector<HTMLDetailsElement>('.implementation-guide')?.open).toBe(false);
+      const secondarySections = page.querySelectorAll('.secondary-section-body');
+      expect(secondarySections.length).toBeGreaterThanOrEqual(3);
+      const bibliographyToggle = page.querySelector<HTMLButtonElement>('.section-bibliografia-y-fundamento-academico .secondary-section-toggle');
+      expect(bibliographyToggle?.getAttribute('aria-expanded')).toBe('false');
+      bibliographyToggle?.click();
+      expect(bibliographyToggle?.getAttribute('aria-expanded')).toBe('true');
     } finally {
       fetchSpy.mockRestore();
     }
