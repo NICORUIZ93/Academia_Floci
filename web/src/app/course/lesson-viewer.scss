@@ -234,15 +234,6 @@
 .lesson-markdown ::ng-deep td { padding:11px 13px; border-right:1px solid $bd; border-bottom:1px solid $bd; text-align:left; vertical-align:top; }
 .lesson-markdown ::ng-deep tr:last-child td { border-bottom:0; }
 
-.lesson-markdown ::ng-deep .lab-verify { margin:28px 0; padding:22px; border:1px solid color-mix(in srgb,var(--accent) 28%,transparent); border-radius:14px; background:$pl; }
-.lesson-markdown ::ng-deep .lab-verify h4 { margin:0 0 11px; font:700 15px Inter,sans-serif; }
-.lesson-markdown ::ng-deep .lab-verify label { display:block; margin-bottom:7px; color:$i3; font:600 12px Inter,sans-serif; }
-.lesson-markdown ::ng-deep .lab-verify textarea { width:100%; resize:vertical; padding:11px 12px; border:1px solid $bd2; border-radius:8px; color:$ink; background:$wh; font:13px/1.55 monospace; }
-.lesson-markdown ::ng-deep .lab-verify button { margin-top:10px; padding:9px 16px; border:0; border-radius:8px; background:$p; color:white; font:700 12px Inter,sans-serif; }
-.lesson-markdown ::ng-deep .lab-verify-feedback { margin:12px 0 0; font:600 13px/1.5 Inter,sans-serif; }
-.lesson-markdown ::ng-deep .lab-verify-feedback.ok { color:$g; }
-.lesson-markdown ::ng-deep .lab-verify-feedback.fail { color:$r; }
-
 .structured-lesson { display:grid; gap:16px; }
 .project-bootstrap { margin:0 0 34px; overflow:hidden; border:1px solid $bd; border-radius:18px; background:$wh; box-shadow:$sh; }
 .project-bootstrap > summary { min-height:78px; display:grid; grid-template-columns:42px minmax(0,1fr); gap:14px; align-items:center; padding:17px 20px; cursor:pointer; list-style:none; }

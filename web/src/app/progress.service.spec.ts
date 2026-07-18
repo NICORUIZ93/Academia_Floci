@@ -12,10 +12,9 @@ describe('ProgressService', () => {
 
     service.recordLearningStep('javascript', 'topic', '0:0');
     service.recordLearningStep('javascript', 'practice', '0:0');
-    service.recordLearningStep('javascript', 'lab', '0:0');
     service.recordLearningStep('javascript', 'topic', '0:0');
 
-    expect(service.learningStats('javascript', 15).xp).toBe(60);
+    expect(service.learningStats('javascript', 15).xp).toBe(30);
     expect(service.hasLearningStep('javascript', 'topic', '0:0')).toBe(true);
   });
 

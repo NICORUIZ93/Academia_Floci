@@ -11669,26 +11669,6 @@
       "headings": []
     },
     {
-      "path": "web/src/app/course/lab-verification.spec.ts",
-      "lines": 35,
-      "kind": "angular-app",
-      "symbols": [],
-      "imports": [
-        "./lab-verification"
-      ],
-      "headings": []
-    },
-    {
-      "path": "web/src/app/course/lab-verification.ts",
-      "lines": 153,
-      "kind": "angular-app",
-      "symbols": [
-        "applyLabVerification"
-      ],
-      "imports": [],
-      "headings": []
-    },
-    {
       "path": "web/src/app/course/lesson-index.html",
       "lines": 38,
       "kind": "angular-app",
@@ -11730,7 +11710,7 @@
     },
     {
       "path": "web/src/app/course/lesson-viewer.html",
-      "lines": 132,
+      "lines": 131,
       "kind": "angular-app",
       "symbols": [
         "floci-overview-title",
@@ -11741,7 +11721,7 @@
     },
     {
       "path": "web/src/app/course/lesson-viewer.scss",
-      "lines": 358,
+      "lines": 349,
       "kind": "angular-app",
       "symbols": [],
       "imports": [],
@@ -11749,7 +11729,7 @@
     },
     {
       "path": "web/src/app/course/lesson-viewer.ts",
-      "lines": 664,
+      "lines": 651,
       "kind": "angular-app",
       "symbols": [
         "LessonViewerComponent",
@@ -11770,8 +11750,6 @@
         "lessonMode",
         "lessonStats",
         "completedTopicCount",
-        "labCount",
-        "verifiedLabCount",
         "completionMessage",
         "isComplete"
       ],
@@ -11788,8 +11766,7 @@
         "../progress.service",
         "../theme.service",
         "../project-bootstrap",
-        "../official-learning-paths",
-        "./lab-verification"
+        "../official-learning-paths"
       ],
       "headings": []
     },
@@ -11864,7 +11841,7 @@
     },
     {
       "path": "web/src/app/progress.service.spec.ts",
-      "lines": 34,
+      "lines": 33,
       "kind": "angular-app",
       "symbols": [],
       "imports": [
@@ -11875,7 +11852,7 @@
     },
     {
       "path": "web/src/app/progress.service.ts",
-      "lines": 137,
+      "lines": 135,
       "kind": "angular-app",
       "symbols": [
         "ProgressService",
@@ -12183,14 +12160,6 @@
     {
       "source": "web/src/app/course/course-shell.ts",
       "target": "web/src/app/course/lesson-index.ts"
-    },
-    {
-      "source": "web/src/app/course/lab-verification.spec.ts",
-      "target": "web/src/app/course/lab-verification.ts"
-    },
-    {
-      "source": "web/src/app/course/lesson-viewer.ts",
-      "target": "web/src/app/course/lab-verification.ts"
     },
     {
       "source": "web/src/app/course-data.ts",

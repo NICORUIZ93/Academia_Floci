@@ -11,7 +11,6 @@ import { ProgressService } from '../progress.service';
 import { ThemeService } from '../theme.service';
 import { findProjectBootstrap } from '../project-bootstrap';
 import { findOfficialLearningPath } from '../official-learning-paths';
-import { applyLabVerification } from './lab-verification';
 
 let mermaidInitialized = false;
 
@@ -136,8 +135,6 @@ export class LessonViewerComponent implements OnDestroy {
   readonly lessonMode = signal<LessonMode>('learn');
   readonly lessonStats = signal<LessonStats>({ topics: 0, examples: 0, activities: 0 });
   readonly completedTopicCount = signal(0);
-  readonly labCount = signal(0);
-  readonly verifiedLabCount = signal(0);
   readonly completionMessage = signal('');
   private tocObserver: IntersectionObserver | null = null;
   private copyTimer: ReturnType<typeof setTimeout> | null = null;
@@ -209,11 +206,6 @@ export class LessonViewerComponent implements OnDestroy {
       mermaid.run({ nodes: Array.from(diagrams) });
     }
 
-    const labs = applyLabVerification(container, index => {
-      this.progressService.recordLearningStep(this.trackId(), 'lab', this.learningStepKey(index));
-      this.refreshEvidenceState(container);
-    });
-    this.labCount.set(labs);
     this.enhanceEducationalContent(container);
     this.buildTableOfContents(container);
     const fragment = this.requestedFragment();
@@ -581,11 +573,6 @@ export class LessonViewerComponent implements OnDestroy {
   private refreshEvidenceState(container: HTMLElement | null): void {
     if (!container) return;
     this.completedTopicCount.set(container.querySelectorAll('.topic-check.done').length);
-    let verified = 0;
-    for (let index = 0; index < this.labCount(); index += 1) {
-      if (this.progressService.hasLearningStep(this.trackId(), 'lab', this.learningStepKey(index))) verified += 1;
-    }
-    this.verifiedLabCount.set(verified);
   }
 
   setLessonMode(mode: LessonMode): void {

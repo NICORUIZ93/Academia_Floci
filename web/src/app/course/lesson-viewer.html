@@ -92,7 +92,6 @@
           <div><small>Evidencia para avanzar</small><h2 id="evidence-title">Demuestra, no solo marques</h2></div>
           <ul>
             <li [class.ready]="completedTopicCount() === lessonStats().topics"><strong>{{ completedTopicCount() }}/{{ lessonStats().topics }}</strong><span>temas explicados y practicados</span></li>
-            <li [class.ready]="labCount() === 0 || verifiedLabCount() === labCount()"><strong>{{ verifiedLabCount() }}/{{ labCount() }}</strong><span>laboratorios verificados</span></li>
           </ul>
         </section>
         <p class="completion-feedback" aria-live="polite" *ngIf="completionMessage()">{{ completionMessage() }}</p>
