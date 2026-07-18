@@ -63,10 +63,10 @@
         <li><span>5</span><div><strong>Repaso</strong><small>Verifica y registra</small></div></li>
       </ol>
 
-      <details class="project-bootstrap" *ngIf="projectBootstrap() as starter" [open]="moduleIndex() === 0">
+      <details class="project-bootstrap" *ngIf="projectBootstrap() as starter" open>
         <summary>
           <span><lucide-icon [img]="icons.Code2" /></span>
-          <div><small>Desde una carpeta vacía</small><strong>Prepara el proyecto para este capítulo</strong><p>Abre esta guía si llegaste directamente o todavía no tienes un proyecto ejecutable.</p></div>
+          <div><small>Desde una carpeta vacía</small><strong>Prepara el proyecto para {{ m.title }}</strong><p>Sigue los pasos en orden si llegaste directamente o todavía no tienes un proyecto ejecutable.</p></div>
         </summary>
         <div class="project-bootstrap-body">
           <section><h3>1. Comprueba requisitos</h3><ul><li *ngFor="let item of starter.prerequisites">{{ item }}</li></ul></section>

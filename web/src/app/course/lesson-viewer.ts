@@ -32,6 +32,8 @@ interface ImplementationProfile {
   path: string;
   command: string;
   language: string;
+  failure: string;
+  projectConnection: string;
 }
 
 function slugify(text: string, seen: Set<string>): string {
@@ -382,7 +384,7 @@ export class LessonViewerComponent implements OnDestroy {
       contract.className = 'learning-contract';
       contract.innerHTML = `<div><small>Orientación opcional</small><strong>Puedes estudiar este tema directamente y volver a los fundamentos cuando lo necesites</strong></div><div><small>Meta de este tema</small><strong>Explicar y aplicar ${title} sin copiar el ejemplo</strong></div><div><small>Laboratorio</small><strong>La práctica está en esta misma lección; no bloquea la exploración de otros temas</strong></div>`;
       heading.insertAdjacentElement('afterend', contract);
-      this.addImplementationGuide(card, heading, index);
+      this.addImplementationGuide(card, heading, index, hasCode);
       card.appendChild(practice);
       card.appendChild(action);
       const body = document.createElement('div');
@@ -398,46 +400,54 @@ export class LessonViewerComponent implements OnDestroy {
     });
   }
 
-  private addImplementationGuide(card: HTMLElement, heading: HTMLHeadingElement, index: number): void {
-    // Una ruta o un comando inventados por el lector pueden parecer una guía
-    // completa aunque el ejemplo editorial no exista. Solo enriquecemos temas
-    // que ya contienen código específico escrito y revisado para el capítulo.
-    if (!card.querySelector('.code-example')) return;
+  private addImplementationGuide(card: HTMLElement, heading: HTMLHeadingElement, index: number, hasCode: boolean): void {
     const topic = heading.textContent?.replace(/^Tema(?:\s+(?:complementario|suplementario))?(?:\s+\d+)?\s*:\s*/i, '').trim() || `tema-${index + 1}`;
-    const profile = this.implementationProfile(index);
+    const profile = this.implementationProfile(index, hasCode);
+    const deliverable = this.module()?.deliverable ?? 'Un incremento funcional, comprobable y documentado.';
     const guide = document.createElement('section');
     guide.className = 'implementation-guide';
-    guide.innerHTML = `<div class="implementation-guide-heading"><small>Implementación guiada</small><strong>Dónde escribir y cómo comprobarlo</strong></div>
+    guide.innerHTML = `<div class="implementation-guide-heading"><small>Ruta guiada desde cero</small><strong>Dónde trabajar, cómo probar y qué hacer si falla</strong></div>
       <ol>
-        <li><span>1</span><div><strong>Crea el archivo</strong><code>${escapeHtml(profile.path)}</code></div></li>
-        <li><span>2</span><div><strong>Implementa el incremento</strong><p>Escribe y explica el ejemplo editorial de este tema; después modifícalo para aplicar <em>${escapeHtml(topic)}</em> a un caso propio.</p></div></li>
-        <li><span>3</span><div><strong>Ejecuta desde la raíz del repositorio</strong><code>${escapeHtml(profile.command)}</code></div></li>
-        <li><span>4</span><div><strong>Resultado esperado</strong><p>La ejecución termina sin errores, produce una evidencia observable y la prueba de fallo explica qué condición se incumplió.</p></div></li>
+        <li><span>1</span><div><strong>Antes de escribir</strong><p>Explica con tus palabras qué problema resuelve <em>${escapeHtml(topic)}</em>, qué dato recibe y qué cambio observable debe producir. Si no puedes hacerlo, vuelve a la explicación anterior.</p></div></li>
+        <li><span>2</span><div><strong>${hasCode ? 'Crea el archivo de práctica' : 'Crea el registro de decisión'}</strong><code>${escapeHtml(profile.path)}</code><p>${hasCode ? `Ubícalo dentro del proyecto del track; no escribas el ejemplo en una carpeta temporal ni dentro de la academia.` : `Documenta contexto, alternativas, decisión, consecuencias y una forma de comprobarla. Un tema conceptual también debe dejar evidencia.`}</p></div></li>
+        <li><span>3</span><div><strong>${hasCode ? 'Construye un incremento pequeño' : 'Aplica la decisión a un caso concreto'}</strong><p>${hasCode ? `Reproduce primero el ejemplo editorial, explica cada entrada y salida, y después modifica una condición para aplicar ${escapeHtml(topic)} a un caso propio.` : `Compara al menos dos alternativas para ${escapeHtml(topic)} y elige una usando restricciones medibles del sistema.`}</p></div></li>
+        <li><span>4</span><div><strong>Ejecuta desde la raíz del proyecto</strong><code>${escapeHtml(profile.command)}</code><p>No continúes si el comando no reconoce el proyecto o ejecuta archivos de otra carpeta.</p></div></li>
+        <li><span>5</span><div><strong>Resultado que debes observar</strong><p>${escapeHtml(deliverable)} La evidencia debe mostrar entrada, resultado y criterio de aceptación; “no dio error” no es suficiente.</p></div></li>
+        <li><span>6</span><div><strong>Provoca y diagnostica un fallo</strong><p>${escapeHtml(profile.failure)} Lee el primer mensaje útil, formula una causa, compruébala y registra la corrección.</p></div></li>
+        <li><span>7</span><div><strong>Conecta con el proyecto integrador</strong><p>${escapeHtml(profile.projectConnection)} Explica qué contrato protege y qué otro componente consumirá el resultado.</p></div></li>
+        <li><span>8</span><div><strong>Demuestra que aprendiste</strong><p>Entrega el archivo, el comando exacto, la salida observada, el fallo corregido y una decisión que tomarías diferente en producción.</p></div></li>
       </ol>`;
     const firstPractice = card.querySelector('.topic-practice');
     card.insertBefore(guide, firstPractice);
   }
 
-  private implementationProfile(topicIndex: number): ImplementationProfile {
+  private implementationProfile(topicIndex: number, hasCode: boolean): ImplementationProfile {
     const moduleId = this.moduleId();
     const topic = topicIndex + 1;
     const profiles: Record<string, ImplementationProfile> = {
-      foundations: { path: `examples/tracks/foundations/module-${moduleId}/topic-${topic}.py`, command: `python3 examples/tracks/foundations/module-${moduleId}/topic-${topic}.py`, language: 'python' },
-      cloud: { path: `examples/tracks/cloud/module-${moduleId}/topic-${topic}/main.tf`, command: `terraform -chdir=examples/tracks/cloud/module-${moduleId}/topic-${topic} init && terraform -chdir=examples/tracks/cloud/module-${moduleId}/topic-${topic} validate`, language: 'hcl' },
-      devops: { path: `examples/tracks/devops/module-${moduleId}/topic-${topic}.yaml`, command: `docker compose config && ./scripts/validate.sh`, language: 'yaml' },
-      javascript: { path: `examples/tracks/javascript/module-${moduleId}/topic-${topic}.ts`, command: `npx tsx examples/tracks/javascript/module-${moduleId}/topic-${topic}.ts`, language: 'typescript' },
-      node: { path: `examples/tracks/node/src/module-${moduleId}/topic-${topic}.ts`, command: `npx tsx examples/tracks/node/src/module-${moduleId}/topic-${topic}.ts`, language: 'typescript' },
-      angular: { path: `examples/tracks/angular/src/app/module-${moduleId}/topic-${topic}.ts`, command: `npm --prefix examples/tracks/angular test`, language: 'typescript' },
-      react: { path: `examples/tracks/react/src/module-${moduleId}/Topic${topic}.tsx`, command: `npm --prefix examples/tracks/react test`, language: 'tsx' },
-      java: { path: `examples/tracks/java/src/main/java/academy/module${moduleId}/Topic${topic}.java`, command: `./gradlew test`, language: 'java' },
-      'spring-boot': { path: `examples/tracks/spring-boot/src/main/java/academy/module${moduleId}/Topic${topic}Service.java`, command: `./mvnw test`, language: 'java' },
-      'kotlin-multiplatform': { path: `examples/tracks/kotlin-multiplatform/shared/src/commonMain/kotlin/module${moduleId}/Topic${topic}.kt`, command: `./gradlew :shared:allTests`, language: 'kotlin' },
-      android: { path: `examples/tracks/android/app/src/main/java/academy/module${moduleId}/Topic${topic}.kt`, command: `./gradlew testDebugUnitTest`, language: 'kotlin' },
-      ios: { path: `examples/tracks/ios/Sources/RutaFlow/Module${moduleId}/Topic${topic}.swift`, command: `swift test --package-path examples/tracks/ios`, language: 'swift' },
-      flutter: { path: `examples/tracks/flutter/lib/features/module_${moduleId}/topic_${topic}.dart`, command: `flutter test examples/tracks/flutter`, language: 'dart' },
-      rutaflow: { path: `examples/project-final/module-${moduleId}/topic-${topic}.md`, command: `./scripts/validate.sh`, language: 'text' },
+      foundations: { path: `academia-labs/foundations/src/module_${moduleId}/topic_${topic}.py`, command: `python3 -m unittest discover -s tests -v`, language: 'python', failure: 'Usa una entrada inválida o elimina una precondición y observa cómo se manifiesta el error.', projectConnection: 'Convierte el concepto en una regla o prueba básica que RutaFlow pueda reutilizar.' },
+      cloud: { path: `academia-labs/cloud/infra/module-${moduleId}/topic-${topic}/main.tf`, command: `terraform -chdir=infra/module-${moduleId}/topic-${topic} validate`, language: 'hcl', failure: 'Cambia un nombre, permiso o endpoint por un valor inválido y confirma que la validación o la llamada falle de forma visible.', projectConnection: 'Modela esta capacidad como infraestructura reproducible del entorno RutaFlow.' },
+      devops: { path: `academia-labs/devops/infra/module-${moduleId}/topic-${topic}.yaml`, command: `docker compose config && ./scripts/validate.sh`, language: 'yaml', failure: 'Rompe una referencia, variable o healthcheck y usa la salida de configuración o los logs para localizarla.', projectConnection: 'Automatiza con esta técnica el despliegue o la operación segura de RutaFlow.' },
+      javascript: { path: `academia-labs/javascript/src/module-${moduleId}/topic-${topic}.ts`, command: `npm test && npm run dev`, language: 'typescript', failure: 'Prueba un valor de frontera, un tipo inesperado o una operación fuera de orden y observa la diferencia.', projectConnection: 'Aplica el comportamiento a una interacción web del panel operativo de RutaFlow.' },
+      node: { path: `academia-labs/node-api/src/module-${moduleId}/topic-${topic}.ts`, command: `npm test && npm run dev`, language: 'typescript', failure: 'Envía una entrada inválida o desconecta una dependencia y comprueba el código HTTP y el log con contexto.', projectConnection: 'Incorpora la regla a un endpoint o proceso backend de entregas de RutaFlow.' },
+      angular: { path: `academia-labs/angular-app/src/app/features/module-${moduleId}/topic-${topic}.ts`, command: `npm test -- --watch=false && npm start`, language: 'typescript', failure: 'Elimina una dependencia, usa un estado inválido o simula un error HTTP y verifica el estado visual correspondiente.', projectConnection: 'Construye con esta técnica una parte del panel web de operaciones de RutaFlow.' },
+      react: { path: `academia-labs/react-app/src/features/module-${moduleId}/Topic${topic}.tsx`, command: `npm test -- --run && npm run dev`, language: 'tsx', failure: 'Cambia una prop o respuesta a un caso vacío o erróneo y comprueba que la interfaz no quede ambigua.', projectConnection: 'Úsalo en una pantalla de seguimiento o gestión de entregas de RutaFlow.' },
+      java: { path: `academia-labs/java/src/main/java/academy/module${moduleId}/Topic${topic}.java`, command: `./gradlew test`, language: 'java', failure: 'Viola una precondición o usa un valor límite y verifica que la excepción o resultado exprese la regla incumplida.', projectConnection: 'Representa con este concepto una regla de dominio independiente del framework de RutaFlow.' },
+      'spring-boot': { path: `academia-labs/spring-api/src/main/java/io/academia/rutaflow/module${moduleId}/Topic${topic}Service.java`, command: `./mvnw test`, language: 'java', failure: 'Envía una petición inválida o sustituye una dependencia por un fallo controlado y verifica estado HTTP, cuerpo y causa.', projectConnection: 'Añade el incremento al servicio de entregas de RutaFlow sin mezclar dominio e infraestructura.' },
+      'kotlin-multiplatform': { path: `academia-labs/kmp-app/shared/src/commonMain/kotlin/module${moduleId}/Topic${topic}.kt`, command: `./gradlew :shared:allTests`, language: 'kotlin', failure: 'Introduce un caso de plataforma o dato nulo no contemplado y comprueba que commonTest lo haga visible.', projectConnection: 'Comparte esta regla entre las aplicaciones Android e iOS del conductor de RutaFlow.' },
+      android: { path: `academia-labs/android-app/app/src/main/java/academy/module${moduleId}/Topic${topic}.kt`, command: `./gradlew testDebugUnitTest`, language: 'kotlin', failure: 'Simula permiso denegado, proceso recreado o dato ausente y verifica que la pantalla conserve un estado comprensible.', projectConnection: 'Aplícalo al flujo Android del conductor, considerando GPS, red y batería.' },
+      ios: { path: `academia-labs/ios-app/Features/Module${moduleId}/Topic${topic}.swift`, command: `xcodebuild test -scheme RutaFlowLab -destination "platform=iOS Simulator,name=iPhone 16"`, language: 'swift', failure: 'Simula permiso denegado, respuesta vacía o tarea cancelada y verifica el estado y el mensaje mostrados.', projectConnection: 'Aplícalo al flujo iOS del conductor respetando ciclo de vida, permisos y accesibilidad.' },
+      flutter: { path: `academia-labs/flutter_app/lib/features/module_${moduleId}/topic_${topic}.dart`, command: `flutter analyze && flutter test`, language: 'dart', failure: 'Simula pérdida de red, permiso denegado o widget desmontado y comprueba que el estado se recupere sin errores ocultos.', projectConnection: 'Integra el concepto en la app multiplataforma del conductor de RutaFlow.' },
+      rutaflow: { path: `academia-labs/rutaflow/docs/iterations/module-${moduleId}-topic-${topic}.md`, command: `docker compose config && ./scripts/validate.sh`, language: 'text', failure: 'Rompe de forma controlada un contrato entre componentes y localiza la causa usando logs, métricas o pruebas.', projectConnection: 'Implementa esta capacidad como un incremento vertical del propio proyecto RutaFlow.' },
     };
-    return profiles[this.trackId()] ?? profiles['foundations'];
+    const profile = profiles[this.trackId()] ?? profiles['foundations'];
+    if (hasCode) return profile;
+    return {
+      ...profile,
+      path: `${profile.path.substring(0, profile.path.lastIndexOf('/'))}/decision-topic-${topic}.md`,
+      command: 'git diff --check && git status --short',
+      language: 'markdown',
+    };
   }
 
   private collapseExerciseSolutions(container: HTMLElement): void {

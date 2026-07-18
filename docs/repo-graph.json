@@ -34,7 +34,7 @@
     },
     {
       "path": "README.md",
-      "lines": 277,
+      "lines": 287,
       "kind": "documentation",
       "symbols": [],
       "imports": [],
@@ -11612,7 +11612,7 @@
     },
     {
       "path": "web/src/app/app.spec.ts",
-      "lines": 134,
+      "lines": 146,
       "kind": "angular-app",
       "symbols": [],
       "imports": [
@@ -11875,7 +11875,7 @@
     },
     {
       "path": "web/src/app/course/lesson-viewer.ts",
-      "lines": 598,
+      "lines": 608,
       "kind": "angular-app",
       "symbols": [
         "LessonViewerComponent",

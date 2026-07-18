@@ -162,26 +162,36 @@ El archivo `web/app-data.js` se genera desde el esquema ampliado del libro con:
 ## Tracks de la app Angular (`web/src`)
 
 La version Angular tiene su propio contenido, mas amplio, en formato Markdown
-(`web/public/content/<track>/modulo-N.md`), organizado en 12 tracks y 167
-modulos en total. Cada modulo sigue la misma plantilla: Silabo, Contenido
+(`web/public/content/<track>/modulo-N.md`), organizado en 14 tracks, 224
+modulos y 1.217 temas. Cada modulo sigue la misma plantilla: Silabo, Contenido
 teorico, Laboratorio practico, Ejercicios de evaluacion y Resumen. Los temas
 permanecen abiertos y el laboratorio vive dentro de la misma ruta del modulo;
 no existe una ruta de cuestionario o examen separada.
 
+Cada tema muestra una ruta guiada de ocho pasos: conocimiento previo, archivo o
+registro de decisión, incremento, ejecución, resultado observable, fallo
+deliberado, conexión con RutaFlow y evidencia final. La guía distingue los
+temas con código de las decisiones conceptuales para no inventar implementaciones.
+La auditoría editorial de `docs/topic-learning-quality.md` sigue midiendo el
+Markdown real por separado: una ayuda generada en la interfaz no convierte una
+explicación superficial en contenido editorial completo.
+
 | Track | Modulos | Enfoque |
 |---|---|---|
-| Cloud Local | 22 | AWS, Azure y GCP en local con Floci (modulos 0-9 base + 10-21 avanzado) |
-| DevOps | 14 | Linux, Git, Docker, CI/CD, Kubernetes, IaC |
-| JavaScript | 13 | Lenguaje, DOM, asincronia, rendimiento |
-| Node.js | 13 | Backend, APIs, bases de datos, produccion |
-| Angular | 14 | Componentes, Signals, routing, SSR, zoneless |
-| React | 13 | Hooks, estado, data fetching, Next.js |
-| Java | 14 | POO, colecciones, concurrencia, JVM moderna |
-| Spring Boot | 13 | REST, JPA, seguridad, microservicios |
-| Kotlin Multiplatform | 12 | Logica compartida entre Android e iOS |
-| Android | 13 | Jetpack Compose, ciclo de vida, Room, Hilt |
-| iOS | 13 | SwiftUI, concurrencia moderna, SwiftData |
-| Flutter | 13 | Widgets, gestion de estado, plataformas nativas |
+| Fundamentos | 12 | Computador, programación, web, datos e ingeniería de software |
+| Cloud Local | 35 | AWS, Azure y GCP en local con Floci |
+| DevOps | 16 | Linux, Git, Docker, CI/CD, Kubernetes, IaC |
+| JavaScript | 15 | Lenguaje, DOM, asincronia, rendimiento |
+| Node.js | 15 | Backend, APIs, bases de datos, produccion |
+| Angular | 16 | Componentes, Signals, routing, SSR, zoneless |
+| React | 15 | Hooks, estado, data fetching, Next.js |
+| Java | 16 | POO, colecciones, concurrencia, JVM moderna |
+| Spring Boot | 16 | REST, JPA, seguridad, microservicios |
+| Kotlin Multiplatform | 14 | Logica compartida entre Android e iOS |
+| Android | 15 | Jetpack Compose, ciclo de vida, Room, Hilt |
+| iOS | 15 | SwiftUI, concurrencia moderna, SwiftData |
+| Flutter | 16 | Widgets, gestion de estado, plataformas nativas |
+| RutaFlow | 8 | Proyecto integrador de entregas, GPS, datos y operación |
 
 `scripts/validate.sh` valida automaticamente que el numero de archivos
 Markdown de cada track coincida con los modulos declarados en su fuente

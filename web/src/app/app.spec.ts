@@ -52,6 +52,14 @@ describe('App', () => {
 const answer = 42;
 \`\`\`
 
+### Tema 2: Una decisión verificable
+
+**Conceptos clave:** contexto, alternativas y consecuencias.
+
+**Analogía:** elegir una ruta con restricciones explícitas.
+
+**¿Por qué es importante?** permite justificar una elección sin inventar código.
+
 ## Laboratorio práctico
 
 Construye y verifica el ejemplo.
@@ -103,12 +111,16 @@ La evidencia demuestra el aprendizaje.`;
       expect(text).toContain('Bibliografía y fundamento académico');
       expect(page.querySelector('.lesson-markdown')).toBeTruthy();
       expect(page.querySelector('.build-method')).toBeTruthy();
-      expect(page.querySelector('.implementation-guide')).toBeTruthy();
+      expect(page.querySelectorAll('.implementation-guide')).toHaveLength(2);
+      expect(text).toContain('Crea el registro de decisión');
+      expect(text).toContain('Provoca y diagnostica un fallo');
+      expect(text).toContain('Conecta con el proyecto integrador');
+      expect(text).toContain('Demuestra que aprendiste');
       expect(page.querySelector('.learning-contract')).toBeTruthy();
       expect(page.querySelector('.topic-card.expanded')).toBeTruthy();
       expect(page.querySelector('.topic-toggle')).toBeFalsy();
       expect(text).toContain('Crea el archivo');
-      expect(text).toContain('Ejecuta desde la raíz del repositorio');
+      expect(text).toContain('Ejecuta desde la raíz del proyecto');
       expect(text).toContain('Resultado esperado');
       expect(text).toContain('Tu avance');
       expect(text).toContain('XP');
@@ -124,7 +136,7 @@ La evidencia demuestra el aprendizaje.`;
       expect(text).toContain('Practica ahora');
       expect(text).toContain('Ver solución razonada');
       expect(text).toContain('Desde una carpeta vacía');
-      expect(text).toContain('Prepara el proyecto para este capítulo');
+      expect(text).toContain('Prepara el proyecto para Cómo funciona tu entorno de desarrollo');
       expect(page.querySelector('.project-bootstrap')).toBeTruthy();
     } finally {
       fetchSpy.mockRestore();
