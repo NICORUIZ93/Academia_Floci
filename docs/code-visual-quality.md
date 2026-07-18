@@ -7,7 +7,7 @@ Mide únicamente contenido dentro de cada tema. Las guías transversales no cuen
 | foundations | 44 | 43 | 4 | 0 | 42 | 0 | 6 | 31 | 0 |
 | cloud | 143 | 90 | 5 | 11 | 78 | 0 | 20 | 95 | 0 |
 | devops | 91 | 85 | 1 | 7 | 84 | 0 | 19 | 44 | 0 |
-| javascript | 75 | 69 | 19 | 6 | 43 | 0 | 18 | 12 | 0 |
+| javascript | 75 | 75 | 19 | 6 | 43 | 0 | 24 | 18 | 0 |
 | node | 64 | 58 | 25 | 7 | 16 | 0 | 21 | 41 | 0 |
 | angular | 61 | 55 | 10 | 7 | 19 | 0 | 14 | 4 | 0 |
 | react | 55 | 49 | 9 | 6 | 13 | 0 | 11 | 1 | 0 |
@@ -18,7 +18,7 @@ Mide únicamente contenido dentro de cada tema. Las guías transversales no cuen
 | ios | 51 | 45 | 11 | 8 | 17 | 0 | 2 | 39 | 0 |
 | flutter | 57 | 48 | 11 | 14 | 15 | 0 | 8 | 29 | 0 |
 | rutaflow | 24 | 0 | 0 | 24 | 0 | 0 | 0 | 3 | 0 |
-| **Total** | **877** | **724** | **124** | **122** | **380** | **0** | **145** | **408** | **0** |
+| **Total** | **877** | **730** | **124** | **122** | **380** | **0** | **151** | **414** | **0** |
 
 ## Regla editorial
 

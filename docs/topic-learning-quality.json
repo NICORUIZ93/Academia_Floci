@@ -137,14 +137,14 @@
       "explanation": 75,
       "code": 75,
       "visual": 13,
-      "filePath": 18,
-      "runCommand": 12,
-      "expectedResult": 21,
+      "filePath": 24,
+      "runCommand": 18,
+      "expectedResult": 27,
       "practice": 48,
       "project": 6,
       "modelMental": 75,
       "limitsDecision": 50,
-      "practicable": 0,
+      "practicable": 6,
       "genericScaffold": 0
     },
     "kotlin-multiplatform": {
@@ -11888,16 +11888,16 @@
           "explanation": true,
           "code": true,
           "visual": true,
-          "filePath": false,
-          "runCommand": false,
-          "expectedResult": false,
+          "filePath": true,
+          "runCommand": true,
+          "expectedResult": true,
           "practice": true,
           "project": true,
           "modelMental": true,
           "limitsDecision": true
         },
         "classification": {
-          "practicable": false,
+          "practicable": true,
           "genericScaffold": false
         }
       },
@@ -11908,16 +11908,16 @@
           "explanation": true,
           "code": true,
           "visual": true,
-          "filePath": false,
-          "runCommand": false,
-          "expectedResult": false,
+          "filePath": true,
+          "runCommand": true,
+          "expectedResult": true,
           "practice": true,
           "project": true,
           "modelMental": true,
           "limitsDecision": true
         },
         "classification": {
-          "practicable": false,
+          "practicable": true,
           "genericScaffold": false
         }
       },
@@ -11928,16 +11928,16 @@
           "explanation": true,
           "code": true,
           "visual": true,
-          "filePath": false,
-          "runCommand": false,
-          "expectedResult": false,
+          "filePath": true,
+          "runCommand": true,
+          "expectedResult": true,
           "practice": true,
           "project": true,
           "modelMental": true,
           "limitsDecision": true
         },
         "classification": {
-          "practicable": false,
+          "practicable": true,
           "genericScaffold": false
         }
       },
@@ -11948,16 +11948,16 @@
           "explanation": true,
           "code": true,
           "visual": true,
-          "filePath": false,
-          "runCommand": false,
-          "expectedResult": false,
+          "filePath": true,
+          "runCommand": true,
+          "expectedResult": true,
           "practice": true,
           "project": true,
           "modelMental": true,
           "limitsDecision": true
         },
         "classification": {
-          "practicable": false,
+          "practicable": true,
           "genericScaffold": false
         }
       },
@@ -11968,16 +11968,16 @@
           "explanation": true,
           "code": true,
           "visual": true,
-          "filePath": false,
-          "runCommand": false,
-          "expectedResult": false,
+          "filePath": true,
+          "runCommand": true,
+          "expectedResult": true,
           "practice": true,
           "project": true,
           "modelMental": true,
           "limitsDecision": true
         },
         "classification": {
-          "practicable": false,
+          "practicable": true,
           "genericScaffold": false
         }
       },
@@ -11988,16 +11988,16 @@
           "explanation": true,
           "code": true,
           "visual": true,
-          "filePath": false,
-          "runCommand": false,
-          "expectedResult": false,
+          "filePath": true,
+          "runCommand": true,
+          "expectedResult": true,
           "practice": true,
           "project": true,
           "modelMental": true,
           "limitsDecision": true
         },
         "classification": {
-          "practicable": false,
+          "practicable": true,
           "genericScaffold": false
         }
       },

@@ -135,6 +135,31 @@ flowchart LR
   D --> E[Operación y recuperación]
   E -->|evidencia| B
 ```
+**Archivo:** `src/domain/delivery-status.ts`
+
+```ts
+// La unión discriminada obliga a tratar cada estado de la entrega.
+type DeliveryStatus =
+  | { kind: 'assigned'; courierId: string }
+  | { kind: 'in-transit'; latitude: number; longitude: number }
+  | { kind: 'delivered'; receivedBy: string };
+
+export function statusLabel(status: DeliveryStatus): string {
+  switch (status.kind) {
+    case 'assigned': return `Asignada a ${status.courierId}`;
+    case 'in-transit': return `En ruta: ${status.latitude}, ${status.longitude}`;
+    case 'delivered': return `Recibida por ${status.receivedBy}`;
+    default: return assertNever(status); // Falla al compilar si aparece un estado nuevo.
+  }
+}
+
+function assertNever(value: never): never {
+  throw new Error(`Estado no soportado: ${JSON.stringify(value)}`);
+}
+```
+
+Ejecuta `npx tsc --noEmit`. **Resultado esperado:** termina sin errores. Añade un estado `cancelled` sin incorporarlo al `switch`: TypeScript debe señalar la rama faltante antes de ejecutar la aplicación.
+
 ### Tema 2: Workers y ejecución fuera del hilo principal
 
 **Conceptos clave:** propósito, modelo de ejecución, configuración, seguridad, coste, pruebas y operación.
@@ -159,6 +184,27 @@ flowchart LR
   D --> E[Operación y recuperación]
   E -->|evidencia| B
 ```
+**Archivos:** `src/workers/route.worker.ts` y `src/route-client.ts`
+
+```ts
+// route.worker.ts: el cálculo pesado ocurre fuera del hilo de la interfaz.
+self.onmessage = (event: MessageEvent<number[]>) => {
+  const total = event.data.reduce((distance, segment) => distance + segment, 0);
+  self.postMessage({ total });
+};
+```
+
+```ts
+// route-client.ts: la UI conserva el control y recibe una respuesta tipada.
+const worker = new Worker(new URL('./workers/route.worker.ts', import.meta.url), { type: 'module' });
+worker.onmessage = ({ data }: MessageEvent<{ total: number }>) => {
+  console.log(`Distancia planificada: ${data.total} km`);
+};
+worker.postMessage([2.4, 3.1, 1.5]);
+```
+
+Ejecuta `npm run dev` y observa la consola. **Resultado esperado:** `Distancia planificada: 7 km`. Envía texto en lugar de números para comprobar por qué el contrato del mensaje también debe validarse en tiempo de ejecución.
+
 ### Tema 3: Bundlers y optimización
 
 **Conceptos clave:** propósito, modelo de ejecución, configuración, seguridad, coste, pruebas y operación.
@@ -183,6 +229,27 @@ flowchart LR
   D --> E[Operación y recuperación]
   E -->|evidencia| B
 ```
+**Archivo:** `vite.config.ts`
+
+```ts
+import { defineConfig } from 'vite';
+
+export default defineConfig({
+  build: {
+    // Crea un artefacto inspeccionable y evita mapas de producción accidentales.
+    sourcemap: false,
+    rollupOptions: {
+      output: {
+        // Separa el mapa: solo se descarga cuando la pantalla lo necesita.
+        manualChunks: { maps: ['maplibre-gl'] },
+      },
+    },
+  },
+});
+```
+
+Ejecuta `npm run build` y revisa `dist/assets/`. **Resultado esperado:** existe un archivo independiente para `maps`. Compara tamaños antes y después; dividir paquetes no sirve si la pantalla inicial sigue importando el módulo de manera ansiosa.
+
 ### Tema 4: Accesibilidad web
 
 **Conceptos clave:** propósito, modelo de ejecución, configuración, seguridad, coste, pruebas y operación.
@@ -207,6 +274,31 @@ flowchart LR
   D --> E[Operación y recuperación]
   E -->|evidencia| B
 ```
+**Archivo:** `src/ui/delivery-button.ts`
+
+```ts
+const button = document.querySelector<HTMLButtonElement>('#confirm-delivery');
+const feedback = document.querySelector<HTMLElement>('#delivery-feedback');
+
+button?.addEventListener('click', async () => {
+  button.disabled = true; // Evita dos confirmaciones mientras la petición está activa.
+  button.setAttribute('aria-busy', 'true');
+  if (feedback) feedback.textContent = 'Confirmando entrega…';
+
+  try {
+    await confirmDelivery();
+    if (feedback) feedback.textContent = 'Entrega confirmada'; // aria-live lo anuncia.
+  } catch {
+    if (feedback) feedback.textContent = 'No se pudo confirmar. Intenta nuevamente.';
+  } finally {
+    button.disabled = false;
+    button.removeAttribute('aria-busy');
+  }
+});
+```
+
+El HTML debe usar un `<button id="confirm-delivery">` real y un elemento con `id="delivery-feedback" role="status" aria-live="polite"`. Ejecuta `npx eslint src && npm test`. Verifica solo con teclado y lector de pantalla; el color por sí solo no comunica éxito ni error.
+
 ### Tema 5: WebAssembly con Rust o C
 
 **Conceptos clave:** propósito, modelo de ejecución, configuración, seguridad, coste, pruebas y operación.
@@ -231,6 +323,27 @@ flowchart LR
   D --> E[Operación y recuperación]
   E -->|evidencia| B
 ```
+**Archivos:** `wasm/src/lib.rs` y `src/wasm/route-score.ts`
+
+```rust
+use wasm_bindgen::prelude::*;
+
+#[wasm_bindgen]
+pub fn route_score(distance_km: f64, late_stops: u32) -> f64 {
+    // Función pura: fácil de comparar contra la implementación JavaScript.
+    distance_km + f64::from(late_stops) * 5.0
+}
+```
+
+```ts
+import init, { route_score } from '../../wasm/pkg/route_score.js';
+
+await init(); // Instancia el módulo antes de invocar sus exportaciones.
+console.log(route_score(12.5, 2));
+```
+
+Ejecuta `wasm-pack build wasm --target web && npm run dev`. **Resultado esperado:** `22.5`. Mide varias ejecuciones antes de afirmar que WASM es más rápido: el coste de compilación, transferencia de memoria y carga puede superar el beneficio de una función pequeña.
+
 ### Tema 6: Web3 y machine learning en navegador
 
 **Conceptos clave:** propósito, modelo de ejecución, configuración, seguridad, coste, pruebas y operación.
@@ -255,7 +368,23 @@ flowchart LR
   D --> E[Operación y recuperación]
   E -->|evidencia| B
 ```
+**Archivo:** `src/risk/delivery-risk.ts`
 
+```ts
+interface RiskInput { battery: number; accuracyMeters: number; minutesLate: number }
+
+export function deliveryRisk(input: RiskInput): number {
+  // Modelo local explicable; no envía ubicación ni batería a un tercero.
+  const batteryRisk = input.battery < 15 ? 0.35 : 0;
+  const gpsRisk = input.accuracyMeters > 80 ? 0.35 : 0;
+  const delayRisk = Math.min(input.minutesLate / 120, 0.3);
+  return Number((batteryRisk + gpsRisk + delayRisk).toFixed(2));
+}
+
+console.log(deliveryRisk({ battery: 10, accuracyMeters: 120, minutesLate: 30 }));
+```
+
+Ejecuta `npx tsx src/risk/delivery-risk.ts`. **Resultado esperado:** `0.78`. Este ejemplo enseña el contrato antes de introducir una librería de ML. Prueba valores de frontera y documenta sesgos; no uses una puntuación automática para sancionar a un conductor sin revisión humana. Web3 solo debe incorporarse si existe una necesidad verificable de confianza entre organizaciones que una base de datos normal no resuelva.
 
 ## Trazabilidad de la auditoría original
 

@@ -35,13 +35,13 @@
     },
     "javascript": {
       "topics": 75,
-      "code": 69,
+      "code": 75,
       "commentedCode": 19,
       "mermaid": 6,
       "asciiVisual": 43,
       "misleadingDiagramLabel": 0,
-      "filePath": 18,
-      "runCommand": 12,
+      "filePath": 24,
+      "runCommand": 18,
       "officialSource": 0
     },
     "node": {
@@ -2197,43 +2197,43 @@
       "track": "javascript",
       "module": 14,
       "topic": "Tema 1: TypeScript avanzado",
-      "missingCode": true,
-      "missingComments": false
+      "missingCode": false,
+      "missingComments": true
     },
     {
       "track": "javascript",
       "module": 14,
       "topic": "Tema 2: Workers y ejecución fuera del hilo principal",
-      "missingCode": true,
-      "missingComments": false
+      "missingCode": false,
+      "missingComments": true
     },
     {
       "track": "javascript",
       "module": 14,
       "topic": "Tema 3: Bundlers y optimización",
-      "missingCode": true,
-      "missingComments": false
+      "missingCode": false,
+      "missingComments": true
     },
     {
       "track": "javascript",
       "module": 14,
       "topic": "Tema 4: Accesibilidad web",
-      "missingCode": true,
-      "missingComments": false
+      "missingCode": false,
+      "missingComments": true
     },
     {
       "track": "javascript",
       "module": 14,
       "topic": "Tema 5: WebAssembly con Rust o C",
-      "missingCode": true,
-      "missingComments": false
+      "missingCode": false,
+      "missingComments": true
     },
     {
       "track": "javascript",
       "module": 14,
       "topic": "Tema 6: Web3 y machine learning en navegador",
-      "missingCode": true,
-      "missingComments": false
+      "missingCode": false,
+      "missingComments": true
     },
     {
       "track": "javascript",
