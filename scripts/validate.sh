@@ -30,8 +30,6 @@ const requiredFiles = [
   'web/src/app/course/lesson-viewer.scss',
   'web/src/app/course/lesson-index.html',
   'web/src/app/course/lab-verification.ts',
-  'web/src/app/course/final-quiz.ts',
-  'web/src/app/course/final-quiz.html',
   'web/src/app/content.service.ts',
   'web/src/app/theme.service.ts',
   'web/src/app/progress.service.ts',
@@ -54,7 +52,6 @@ const angularLessonViewerTs = fs.readFileSync('web/src/app/course/lesson-viewer.
 const angularLessonViewerHtml = fs.readFileSync('web/src/app/course/lesson-viewer.html', 'utf8');
 const angularLessonViewerScss = fs.readFileSync('web/src/app/course/lesson-viewer.scss', 'utf8');
 const angularLabVerification = fs.readFileSync('web/src/app/course/lab-verification.ts', 'utf8');
-const angularFinalQuizTs = fs.readFileSync('web/src/app/course/final-quiz.ts', 'utf8');
 const angularContentService = fs.readFileSync('web/src/app/content.service.ts', 'utf8');
 const angularThemeService = fs.readFileSync('web/src/app/theme.service.ts', 'utf8');
 const angularProgressService = fs.readFileSync('web/src/app/progress.service.ts', 'utf8');
@@ -337,13 +334,6 @@ if (!angularLessonViewerScss.includes('.lab-verify')) {
   throw new Error('web/src/app/course/lesson-viewer.scss debe estilizar el widget .lab-verify');
 }
 
-// Cuestionario final: 10 preguntas por track, ruta /curso/:trackId/quiz.
-for (const expected of ['readonly score', 'submit(): void', 'allAnswered']) {
-  if (!angularFinalQuizTs.includes(expected)) {
-    throw new Error(`web/src/app/course/final-quiz.ts no contiene ${expected}`);
-  }
-}
-
 if (fs.existsSync('index.html') || fs.existsSync('academia-floci-simple.html')) {
   throw new Error('No debe haber HTML duplicado en la raiz. Usa web/index.html.');
 }
@@ -411,41 +401,6 @@ for (const [trackId, sourceFile] of Object.entries(TRACK_SOURCES)) {
   }
 }
 
-// Cuestionario final: 10 preguntas por track.
-const TRACK_QUIZ_NAMES = {
-  foundations: 'FOUNDATIONS_QUIZ',
-  cloud: 'CLOUD_QUIZ',
-  devops: 'DEVOPS_QUIZ',
-  javascript: 'JAVASCRIPT_QUIZ',
-  node: 'NODE_QUIZ',
-  angular: 'ANGULAR_QUIZ',
-  react: 'REACT_QUIZ',
-  java: 'JAVA_QUIZ',
-  'spring-boot': 'SPRING_BOOT_QUIZ',
-  'kotlin-multiplatform': 'KOTLIN_MULTIPLATFORM_QUIZ',
-  android: 'ANDROID_QUIZ',
-  ios: 'IOS_QUIZ',
-  flutter: 'FLUTTER_QUIZ',
-  rutaflow: 'RUTAFLOW_QUIZ',
-};
-
-let totalQuizQuestions = 0;
-for (const [trackId, quizName] of Object.entries(TRACK_QUIZ_NAMES)) {
-  if (!angularCourseData.includes(`quiz: ${quizName}`)) {
-    throw new Error(`El track '${trackId}' no tiene 'quiz: ${quizName}' asignado en TRACKS`);
-  }
-  const re = new RegExp(`export const ${quizName}: QuizQuestion\\[\\] = \\[([\\s\\S]*?)\\n\\];`);
-  const match = angularCourseData.match(re);
-  if (!match) {
-    throw new Error(`No se encontro la declaracion de ${quizName} en web/src/app/course-data.ts`);
-  }
-  const questionCount = (match[1].match(/\{\s*question:/g) || []).length;
-  if (questionCount !== 10) {
-    throw new Error(`${quizName} debe tener 10 preguntas. Encontradas=${questionCount}`);
-  }
-  totalQuizQuestions += questionCount;
-}
-
 // Los 3 diagramas Mermaid pedidos (arquitectura, flujo de peticion, comparativa)
 // deben existir en el contenido real del track Cloud.
 const cloudModulo0 = fs.readFileSync('web/public/content/cloud/modulo-0.md', 'utf8');
@@ -462,7 +417,7 @@ if (!cloudModulo8.includes('| Categoría | AWS | Azure | GCP |')) {
 }
 
 console.log(`Validacion OK: app estatica, ${courses.length} modulos, ${fallbackSteps.length} lecciones, ${subtopicCount} subtemas aplicados.`);
-console.log(`Validacion OK: app Angular, ${trackIdsInData.length} tracks, ${totalQuizQuestions} preguntas de cuestionario final.`);
+console.log(`Validacion OK: app Angular, ${trackIdsInData.length} tracks con temas abiertos y laboratorio en la ruta del modulo.`);
 NODE
 
 python3 scripts/validate_pedagogy.py

@@ -34,7 +34,7 @@
     },
     {
       "path": "README.md",
-      "lines": 276,
+      "lines": 277,
       "kind": "documentation",
       "symbols": [],
       "imports": [],
@@ -2566,7 +2566,7 @@
     },
     {
       "path": "scripts/validate.sh",
-      "lines": 482,
+      "lines": 437,
       "kind": "automation-script",
       "symbols": [],
       "imports": [],
@@ -11599,21 +11599,20 @@
     },
     {
       "path": "web/src/app/app.routes.ts",
-      "lines": 28,
+      "lines": 27,
       "kind": "angular-app",
       "symbols": [],
       "imports": [
         "@angular/router",
         "./catalog/course-catalog",
         "./course/course-shell",
-        "./course/final-quiz",
         "./course/lesson-viewer"
       ],
       "headings": []
     },
     {
       "path": "web/src/app/app.spec.ts",
-      "lines": 137,
+      "lines": 134,
       "kind": "angular-app",
       "symbols": [],
       "imports": [
@@ -11796,47 +11795,6 @@
       "headings": []
     },
     {
-      "path": "web/src/app/course/final-quiz.html",
-      "lines": 66,
-      "kind": "angular-app",
-      "symbols": [],
-      "imports": [],
-      "headings": []
-    },
-    {
-      "path": "web/src/app/course/final-quiz.scss",
-      "lines": 65,
-      "kind": "angular-app",
-      "symbols": [],
-      "imports": [],
-      "headings": []
-    },
-    {
-      "path": "web/src/app/course/final-quiz.ts",
-      "lines": 80,
-      "kind": "angular-app",
-      "symbols": [
-        "FinalQuizComponent",
-        "track",
-        "questions",
-        "answers",
-        "submitted",
-        "allAnswered",
-        "score"
-      ],
-      "imports": [
-        "@angular/common",
-        "@angular/core",
-        "@angular/core/rxjs-interop",
-        "@angular/router",
-        "lucide-angular",
-        "rxjs",
-        "../course-data",
-        "../progress.service"
-      ],
-      "headings": []
-    },
-    {
       "path": "web/src/app/course/lab-verification.spec.ts",
       "lines": 35,
       "kind": "angular-app",
@@ -11898,11 +11856,10 @@
     },
     {
       "path": "web/src/app/course/lesson-viewer.html",
-      "lines": 161,
+      "lines": 140,
       "kind": "angular-app",
       "symbols": [
         "floci-overview-title",
-        "checkpoint-title",
         "evidence-title"
       ],
       "imports": [],
@@ -11910,7 +11867,7 @@
     },
     {
       "path": "web/src/app/course/lesson-viewer.scss",
-      "lines": 342,
+      "lines": 311,
       "kind": "angular-app",
       "symbols": [],
       "imports": [],
@@ -11918,7 +11875,7 @@
     },
     {
       "path": "web/src/app/course/lesson-viewer.ts",
-      "lines": 693,
+      "lines": 598,
       "kind": "angular-app",
       "symbols": [
         "LessonViewerComponent",
@@ -11938,13 +11895,11 @@
         "copiedCode",
         "lessonMode",
         "lessonStats",
-        "moduleQuizAnswers",
-        "moduleQuizChecked",
-        "examMode",
-        "examSeconds",
         "completedTopicCount",
         "labCount",
-        "verifiedLabCount"
+        "verifiedLabCount",
+        "completionMessage",
+        "isComplete"
       ],
       "imports": [
         "@angular/common",
@@ -11965,7 +11920,7 @@
     },
     {
       "path": "web/src/app/course-data.ts",
-      "lines": 1069,
+      "lines": 883,
       "kind": "angular-app",
       "symbols": [
         "ServiceGroup",
@@ -11992,11 +11947,10 @@
     },
     {
       "path": "web/src/app/course-module.model.ts",
-      "lines": 41,
+      "lines": 34,
       "kind": "angular-app",
       "symbols": [
         "CourseModule",
-        "QuizQuestion",
         "Track"
       ],
       "imports": [],
@@ -12035,7 +11989,7 @@
     },
     {
       "path": "web/src/app/progress.service.spec.ts",
-      "lines": 36,
+      "lines": 34,
       "kind": "angular-app",
       "symbols": [],
       "imports": [
@@ -12046,7 +12000,7 @@
     },
     {
       "path": "web/src/app/progress.service.ts",
-      "lines": 147,
+      "lines": 137,
       "kind": "angular-app",
       "symbols": [
         "ProgressService",
@@ -12314,10 +12268,6 @@
     {
       "source": "web/src/app/app.routes.ts",
       "target": "web/src/app/course/course-shell.ts"
-    },
-    {
-      "source": "web/src/app/app.routes.ts",
-      "target": "web/src/app/course/final-quiz.ts"
     },
     {
       "source": "web/src/app/app.routes.ts",

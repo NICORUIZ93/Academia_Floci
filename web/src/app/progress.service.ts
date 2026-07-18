@@ -3,7 +3,6 @@ import { Injectable, signal } from '@angular/core';
 export interface TrackProgress {
   completedModules: number[];
   studyDates?: string[];
-  bestQuizScore?: number;
   completedTopics?: string[];
   completedPractices?: string[];
   verifiedLabs?: string[];
@@ -15,7 +14,6 @@ export interface LearningStats {
   streak: number;
   level: 'Básico' | 'Intermedio' | 'Avanzado' | 'Master';
   badge: 'Inicio' | 'Explorador' | 'Constructor' | 'Arquitecto' | 'Maestro';
-  bestQuizScore: number;
 }
 
 type ProgressState = Record<string, TrackProgress>;
@@ -89,25 +87,17 @@ export class ProgressService {
     this.persist();
   }
 
-  recordQuizScore(trackId: string, score: number): void {
-    const current = this.trackProgress(trackId);
-    if ((current.bestQuizScore ?? 0) >= score) return;
-    this.state.update(state => ({ ...state, [trackId]: { ...current, bestQuizScore: score } }));
-    this.persist();
-  }
-
   learningStats(trackId: string, totalModules: number): LearningStats {
     const progress = this.trackProgress(trackId);
     const completed = progress.completedModules.length;
-    const bestQuizScore = progress.bestQuizScore ?? 0;
     const completedTopics = progress.completedTopics?.length ?? 0;
     const completedPractices = progress.completedPractices?.length ?? 0;
     const verifiedLabs = progress.verifiedLabs?.length ?? 0;
-    const xp = completedTopics * 10 + completedPractices * 20 + verifiedLabs * 30 + completed * 50 + bestQuizScore * 10;
+    const xp = completedTopics * 10 + completedPractices * 20 + verifiedLabs * 30 + completed * 50;
     const ratio = totalModules ? completed / totalModules : 0;
     const level = ratio >= 1 ? 'Master' : ratio >= .66 ? 'Avanzado' : ratio >= .33 ? 'Intermedio' : 'Básico';
     const badge = completed >= totalModules && totalModules > 0 ? 'Maestro' : completed >= 6 ? 'Arquitecto' : completed >= 3 ? 'Constructor' : completed >= 1 ? 'Explorador' : 'Inicio';
-    return { completedModules: completed, xp, streak: this.calculateStreak(progress.studyDates ?? []), level, badge, bestQuizScore };
+    return { completedModules: completed, xp, streak: this.calculateStreak(progress.studyDates ?? []), level, badge };
   }
 
   recordLearningStep(trackId: string, kind: 'topic' | 'practice' | 'lab', key: string): void {

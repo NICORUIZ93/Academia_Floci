@@ -164,8 +164,9 @@ El archivo `web/app-data.js` se genera desde el esquema ampliado del libro con:
 La version Angular tiene su propio contenido, mas amplio, en formato Markdown
 (`web/public/content/<track>/modulo-N.md`), organizado en 12 tracks y 167
 modulos en total. Cada modulo sigue la misma plantilla: Silabo, Contenido
-teorico, Laboratorio practico, Ejercicios de evaluacion y Resumen. Cada track
-tiene ademas un cuestionario final de 10 preguntas (`/curso/<track>/quiz`).
+teorico, Laboratorio practico, Ejercicios de evaluacion y Resumen. Los temas
+permanecen abiertos y el laboratorio vive dentro de la misma ruta del modulo;
+no existe una ruta de cuestionario o examen separada.
 
 | Track | Modulos | Enfoque |
 |---|---|---|
@@ -184,7 +185,7 @@ tiene ademas un cuestionario final de 10 preguntas (`/curso/<track>/quiz`).
 
 `scripts/validate.sh` valida automaticamente que el numero de archivos
 Markdown de cada track coincida con los modulos declarados en su fuente
-TypeScript, y que cada cuestionario tenga exactamente 10 preguntas.
+TypeScript, y que temas y laboratorios permanezcan dentro del mismo capitulo.
 
 ## Actualización tecnológica
 

@@ -1,4 +1,4 @@
-import { CourseModule, QuizQuestion, Track, createModule } from './course-module.model';
+import { CourseModule, Track, createModule } from './course-module.model';
 import { DEVOPS_MODULES } from './tracks/devops.track';
 import { JAVASCRIPT_MODULES } from './tracks/javascript.track';
 import { NODE_MODULES } from './tracks/node.track';
@@ -13,7 +13,7 @@ import { FLUTTER_MODULES } from './tracks/flutter.track';
 import { FOUNDATIONS_MODULES } from './tracks/foundations.track';
 import { RUTAFLOW_MODULES } from './tracks/rutaflow.track';
 
-export type { CourseModule, QuizQuestion, Track };
+export type { CourseModule, Track };
 export { createModule };
 
 export interface ServiceGroup {
@@ -797,192 +797,6 @@ export const SERVICE_GROUPS: ServiceGroup[] = [
   { name: 'Analítica, IA y observabilidad', color: '#e9a23b', description: 'Cataloga, consulta, procesa y observa a escala.', services: ['CloudWatch', 'CloudFormation', 'Athena', 'Glue', 'Bedrock Runtime', 'Textract', 'Transcribe', 'SES', 'Pricing', 'Cost Explorer', 'CUR'] },
 ];
 
-// ── Cuestionarios finales (10 preguntas por track) ──────────────────────────
-// Motor genérico y reusable en cualquier track: ver FinalQuizComponent
-// (course/final-quiz.ts), montado en la ruta /curso/:trackId/quiz.
-
-export const FOUNDATIONS_QUIZ: QuizQuestion[] = [
-  { question: '¿Qué diferencia hay entre un programa y un proceso?', options: ['Ninguna', 'El programa es código almacenado; el proceso es una instancia en ejecución', 'El proceso siempre está en Internet', 'El programa solo existe en memoria RAM'], answer: 1 },
-  { question: '¿Qué componente ejecuta instrucciones y realiza cálculos?', options: ['CPU', 'SSD', 'Teclado', 'Monitor'], answer: 0 },
-  { question: '¿Qué ocurre con el contenido ordinario de la RAM al apagar el equipo?', options: ['Se conserva para siempre', 'Se pierde', 'Se copia automáticamente a Git', 'Se convierte en un archivo'], answer: 1 },
-  { question: '¿Qué es una ruta absoluta?', options: ['Una ruta que parte desde la raíz del sistema', 'Un nombre de archivo sin carpeta', 'Una dirección web exclusivamente', 'Un comando de Git'], answer: 0 },
-  { question: '¿Qué indica normalmente pwd?', options: ['La contraseña', 'La carpeta de trabajo actual', 'Los procesos activos', 'La versión de Python'], answer: 1 },
-  { question: '¿Qué hace cd?', options: ['Elimina una carpeta', 'Cambia la carpeta de trabajo', 'Crea un programa', 'Compila todo el proyecto'], answer: 1 },
-  { question: '¿Qué es un argumento de un comando?', options: ['Un error', 'Información adicional que modifica o completa la operación', 'Otro nombre para la CPU', 'Una variable obligatoriamente secreta'], answer: 1 },
-  { question: '¿Qué suele significar un código de salida 0?', options: ['La operación terminó correctamente', 'El equipo se apagó', 'No se ejecutó nada', 'Falta memoria'], answer: 0 },
-  { question: '¿Por qué conviene leer un mensaje de error completo?', options: ['No conviene', 'Contiene tipo, ubicación y contexto útiles para diagnosticar', 'Porque siempre incluye la solución exacta', 'Solo para llenar documentación'], answer: 1 },
-  { question: '¿Qué evidencia demuestra mejor que el primer programa funciona?', options: ['Decir que funciona', 'Comando, salida observada y archivo fuente reproducible', 'Una captura sin código', 'Instalar muchas extensiones'], answer: 1 },
-];
-
-export const CLOUD_QUIZ: QuizQuestion[] = [
-  { question: '¿Qué variable de entorno evita repetir --endpoint-url en cada comando de la AWS CLI?', options: ['AWS_ENDPOINT_URL', 'FLOCI_HOSTNAME', 'AWS_ACCOUNT_ID', 'AWS_PROFILE_ENDPOINT'], answer: 0 },
-  { question: '¿Qué permite procesar un mensaje SQS dos veces sin duplicar efectos en tu sistema?', options: ['Una espera fija con sleep', 'Idempotencia en el consumidor', 'Usar siempre una cola FIFO', 'Aumentar el VisibilityTimeout'], answer: 1 },
-  { question: '¿Qué operación de DynamoDB evita recorrer TODOS los elementos de la tabla?', options: ['Scan con FilterExpression', 'Query con clave de partición', 'ListTables', 'BatchGetItem sobre toda la tabla'], answer: 1 },
-  { question: '¿En qué puerto escucha el emulador de Azure local (floci-az)?', options: ['4566', '4577', '4588', '8081'], answer: 1 },
-  { question: '¿Qué prueba sigue siendo necesaria después de validar todo con Floci?', options: ['Ninguna, Floci es idéntico a AWS', 'Una prueba final contra la nube real', 'Solo linting del código', 'Ninguna, basta con tests unitarios'], answer: 1 },
-  { question: '¿Qué diferencia hay entre una imagen Docker y un contenedor?', options: ['Son lo mismo', 'La imagen es la plantilla inmutable y el contenedor es una instancia en ejecución', 'El contenedor es la plantilla y la imagen la instancia', 'Una imagen solo puede generar un contenedor'], answer: 1 },
-  { question: '¿Qué aporta la integración proxy (AWS_PROXY) entre API Gateway y Lambda?', options: ['Reenvía la petición HTTP completa sin transformarla, dejando la lógica en el código Lambda', 'Transforma automáticamente el payload con plantillas VTL', 'Elimina la necesidad de permisos IAM', 'Convierte la API en un WebSocket'], answer: 0 },
-  { question: '¿Cuándo conviene usar EventBridge en vez de SNS?', options: ['Cuando necesitas enrutar eventos con filtros de contenido y múltiples fuentes/reglas declarativas', 'Cuando solo tienes un consumidor fijo', 'Cuando no necesitas persistencia', 'Nunca, SNS siempre es mejor'], answer: 0 },
-  { question: '¿Qué usa Athena en Floci como motor real para ejecutar SQL sobre datos en S3?', options: ['PostgreSQL', 'DuckDB', 'MySQL', 'SQLite'], answer: 1 },
-  { question: '¿Qué principio de IAM reduce el riesgo de una política demasiado permisiva?', options: ['Compartir un único usuario root para todo el equipo', 'Principio de mínimo privilegio', 'Desactivar el versionado de políticas', 'Usar siempre credenciales de larga duración'], answer: 1 },
-];
-
-export const DEVOPS_QUIZ: QuizQuestion[] = [
-  { question: '¿Qué comando de Git reescribe el historial combinando commits en una rama antes de fusionarla?', options: ['git merge --no-ff', 'git rebase -i', 'git cherry-pick --continue', 'git reflog expire'], answer: 1 },
-  { question: '¿Qué conviene copiar primero en un Dockerfile para aprovechar la caché de capas?', options: ['Instalar dependencias (COPY package.json + RUN install) antes que el resto del código', 'Copiar todo el proyecto de una vez', 'Ejecutar el build final', 'Exponer el puerto'], answer: 0 },
-  { question: 'En Kubernetes, ¿qué objeto garantiza que siempre haya N réplicas de un Pod corriendo?', options: ['Service', 'Deployment/ReplicaSet', 'ConfigMap', 'Ingress'], answer: 1 },
-  { question: '¿Qué diferencia a un Service tipo ClusterIP de uno tipo LoadBalancer en Kubernetes?', options: ['Son idénticos', 'ClusterIP solo es accesible dentro del clúster; LoadBalancer expone el servicio externamente', 'LoadBalancer es más rápido pero inseguro', 'ClusterIP requiere un Ingress obligatoriamente'], answer: 1 },
-  { question: '¿Qué resuelve principalmente Terraform en infraestructura como código?', options: ['Solo el despliegue de contenedores', 'Definir y versionar el estado deseado de la infraestructura de forma declarativa', 'Reemplazar Git', 'Monitoreo de métricas'], answer: 1 },
-  { question: '¿Qué es "GitOps" en el contexto de CD?', options: ['Desplegar manualmente desde tu laptop', 'Usar un repositorio Git como fuente de verdad que un controlador sincroniza automáticamente con el clúster', 'Un plugin de Git para hacer merge', 'Nombre alternativo de CI'], answer: 1 },
-  { question: 'En un pipeline de CI, ¿qué práctica reduce más el riesgo de romper main?', options: ['Hacer push directo a main sin revisión', 'Ejecutar pruebas automatizadas en cada pull request antes de fusionar', 'Desactivar los tests en CI para ir más rápido', 'Desplegar directo a producción sin pipeline'], answer: 1 },
-  { question: '¿Qué aporta Prometheus en una arquitectura de observabilidad?', options: ['Almacenamiento de logs estructurados', 'Recolección y consulta de métricas mediante scraping y PromQL', 'Trazas distribuidas end-to-end', 'Gestión de secretos'], answer: 1 },
-  { question: 'En DevSecOps, ¿en qué etapa del pipeline conviene escanear dependencias en busca de vulnerabilidades?', options: ['Solo en producción', 'Lo antes posible en el pipeline (shift-left)', 'Nunca, es responsabilidad de un equipo externo', 'Solo antes de una auditoría anual'], answer: 1 },
-  { question: '¿Qué estrategia de despliegue reduce el riesgo al enviar tráfico gradualmente a la nueva versión?', options: ['Big bang deployment', 'Canary release', 'Eliminar la versión anterior antes de desplegar', 'Despliegue manual por FTP'], answer: 1 },
-];
-
-export const JAVASCRIPT_QUIZ: QuizQuestion[] = [
-  { question: '¿Qué diferencia hay entre let y var respecto al scope?', options: ['Son idénticos', 'let tiene scope de bloque y var tiene scope de función', 'var tiene scope de bloque y let de función', 'let no se puede reasignar'], answer: 1 },
-  { question: '¿Qué es un closure?', options: ['Un error de sintaxis', 'Una función que recuerda el entorno léxico en el que fue creada, aunque se ejecute fuera de él', 'Un método de arrays', 'Un tipo de bucle'], answer: 1 },
-  { question: '¿Qué imprime typeof null en JavaScript?', options: ['"null"', '"undefined"', '"object"', '"boolean"'], answer: 2 },
-  { question: '¿Qué diferencia hay entre == y ===?', options: ['Ninguna', '=== compara valor y tipo sin coerción, == aplica coerción de tipos', '== es más estricto', '=== solo funciona con números'], answer: 1 },
-  { question: 'En el Event Loop, ¿qué se procesa primero: microtasks (promesas) o macrotasks (setTimeout)?', options: ['Macrotasks siempre primero', 'Las microtasks se vacían completamente antes de la siguiente macrotask', 'Es aleatorio', 'Depende del navegador siempre'], answer: 1 },
-  { question: '¿Qué hace Array.prototype.reduce?', options: ['Filtra elementos', 'Acumula los elementos de un array en un único valor aplicando una función', 'Ordena el array', 'Elimina duplicados automáticamente'], answer: 1 },
-  { question: '¿Qué problema resuelven los módulos ES (import/export) frente a scripts globales?', options: ['Ninguno', 'Encapsulan el scope de cada archivo evitando colisiones de nombres globales', 'Hacen el código más lento', 'Eliminan la necesidad de un bundler siempre'], answer: 1 },
-  { question: '¿Qué es "hoisting"?', options: ['Un patrón de diseño', 'El comportamiento por el que declaraciones de var y function se procesan antes de ejecutar el código', 'Una API del DOM', 'Un tipo de closure'], answer: 1 },
-  { question: '¿Qué ventaja da TypeScript sobre JavaScript puro?', options: ['Ejecuta más rápido en runtime', 'Añade tipado estático verificado en tiempo de compilación', 'Elimina la necesidad de testing', 'Sustituye al Event Loop'], answer: 1 },
-  { question: '¿Qué tipo de prueba verifica el comportamiento de una función aislada de sus dependencias?', options: ['Prueba end-to-end', 'Prueba unitaria', 'Prueba de carga', 'Prueba manual exploratoria'], answer: 1 },
-];
-
-export const NODE_QUIZ: QuizQuestion[] = [
-  { question: '¿Qué componente de Node.js gestiona las operaciones de I/O asíncronas no bloqueantes?', options: ['V8', 'libuv', 'npm', 'Express'], answer: 1 },
-  { question: '¿Qué diferencia hay entre require (CommonJS) e import (ES Modules) en Node?', options: ['Son idénticos en todo', 'CommonJS es síncrono; ESM soporta análisis estático y top-level await', 'ESM no funciona en Node', 'require es más moderno'], answer: 1 },
-  { question: '¿Por qué se usan streams para procesar archivos grandes en vez de leerlos completos en memoria?', options: ['Los streams son más lentos siempre', 'Procesan los datos por partes sin cargar todo el archivo en memoria', 'No hay diferencia real', 'Los streams solo sirven para red'], answer: 1 },
-  { question: '¿Qué rol cumple el middleware en Express?', options: ['Define el motor de plantillas', 'Intercepta la petición/respuesta para ejecutar lógica (auth, logging, validación) antes del handler', 'Sustituye a la base de datos', 'Solo sirve para archivos estáticos'], answer: 1 },
-  { question: '¿Qué ventaja aporta un ORM sobre escribir SQL a mano en cada consulta?', options: ['Siempre es más rápido en runtime', 'Abstrae el mapeo objeto-relacional y reduce código repetitivo', 'Elimina la necesidad de migraciones', 'Reemplaza la base de datos'], answer: 1 },
-  { question: 'Con JWT, ¿dónde vive típicamente el estado de la sesión?', options: ['En una tabla de sesiones obligatoria en el servidor', 'El propio token firmado contiene los claims, sin estado en el servidor', 'En una cookie sin firmar', 'En variables globales del proceso'], answer: 1 },
-  { question: '¿Qué mide un test de integración que un test unitario no cubre?', options: ['Nada distinto', 'La interacción real entre varios componentes (ej. API + base de datos)', 'Solo la sintaxis del código', 'El tiempo de compilación'], answer: 1 },
-  { question: '¿Por qué no conviene bloquear el Event Loop con operaciones síncronas pesadas?', options: ['No importa, Node es multihilo por defecto', 'Bloquear el Event Loop detiene el procesamiento de todas las peticiones concurrentes', 'Solo afecta al arranque del proceso', 'Node lo compensa automáticamente'], answer: 1 },
-  { question: '¿Qué práctica evita inyección SQL en Node?', options: ['Concatenar strings directamente en la query', 'Usar consultas parametrizadas o un ORM que las genere', 'Desactivar la validación de entrada', 'Confiar solo en la validación del frontend'], answer: 1 },
-  { question: '¿Qué aporta la observabilidad (logs estructurados + métricas) en producción?', options: ['Nada, solo aumenta el costo', 'Permite diagnosticar errores y cuellos de botella sin reproducir el problema localmente', 'Sustituye a los tests', 'Es obligatoria solo en desarrollo'], answer: 1 },
-];
-
-export const ANGULAR_QUIZ: QuizQuestion[] = [
-  { question: '¿Qué son los Signals en Angular moderno?', options: ['Un decorador para rutas', 'Un primitivo reactivo que notifica automáticamente a quien lo lee cuando su valor cambia', 'Un reemplazo de TypeScript', 'Un servicio HTTP'], answer: 1 },
-  { question: '¿Qué diferencia hay entre un componente standalone y uno declarado en un NgModule?', options: ['Ninguna', 'El standalone declara sus propias dependencias (imports) sin un NgModule contenedor', 'Los standalone no pueden tener plantillas', 'Los NgModules ya no existen en Angular'], answer: 1 },
-  { question: '¿Para qué sirve la inyección de dependencias en Angular?', options: ['Para estilos CSS', 'Para proveer instancias compartidas (servicios) sin que los componentes las instancien directamente', 'Para definir rutas', 'Para compilar plantillas'], answer: 1 },
-  { question: '¿Qué diferencia hay entre un formulario reactivo y uno template-driven?', options: ['Son idénticos', 'El reactivo define estructura y validaciones en TypeScript con FormGroup/FormControl; el template-driven usa ngModel en el HTML', 'El template-driven es siempre más testeable', 'Los reactivos no admiten validaciones'], answer: 1 },
-  { question: '¿Qué problema resuelven los interceptores de HttpClient?', options: ['Enrutar componentes', 'Interceptar peticiones/respuestas HTTP para añadir headers, manejar errores o loguear de forma centralizada', 'Compilar plantillas', 'Aplicar estilos globales'], answer: 1 },
-  { question: '¿Qué operador de RxJS cancela una petición anterior si llega una nueva antes de completarse?', options: ['mergeMap', 'switchMap', 'concatMap', 'tap'], answer: 1 },
-  { question: '¿Qué ventaja da Server-Side Rendering (SSR) en Angular?', options: ['Elimina la necesidad de tests', 'Mejora la primera pintura y el SEO al renderizar HTML en el servidor antes de hidratar', 'Hace innecesario el bundler', 'Solo sirve para apps offline'], answer: 1 },
-  { question: '¿Qué es "zoneless" en la detección de cambios de Angular?', options: ['Un error de configuración', 'Un modo que no depende de Zone.js y se basa en signals para saber qué actualizar', 'Una forma de desactivar el routing', 'Un tipo de módulo'], answer: 1 },
-  { question: '¿Qué usa TestBed en un test de Angular?', options: ['Pruebas end-to-end con Playwright/Cypress', 'Instanciar y testear un componente de forma aislada', 'Pruebas de carga', 'Solo linting'], answer: 1 },
-  { question: '¿Qué resuelve un router guard como CanActivate?', options: ['Estiliza rutas', 'Controla si se permite la navegación a una ruta según una condición (ej. autenticación)', 'Define el layout de la página', 'Cachea peticiones HTTP'], answer: 1 },
-];
-
-export const REACT_QUIZ: QuizQuestion[] = [
-  { question: '¿Qué es JSX?', options: ['Un lenguaje de programación nuevo', 'Una extensión de sintaxis HTML-like dentro de JavaScript, compilada a llamadas de función', 'Un framework de testing', 'Un motor de bases de datos'], answer: 1 },
-  { question: '¿Qué hook se usa para ejecutar efectos secundarios (fetch, subscripciones) tras el render?', options: ['useState', 'useEffect', 'useMemo', 'useRef'], answer: 1 },
-  { question: '¿Qué problema resuelve la Context API?', options: ['Enrutamiento', 'Compartir datos entre componentes sin pasar props manualmente por cada nivel (prop drilling)', 'Estilizar componentes', 'Optimizar el bundle'], answer: 1 },
-  { question: '¿Qué diferencia hay entre estado local (useState) y estado global (Redux/Zustand)?', options: ['Son lo mismo', 'El local vive y muere con el componente; el global se comparte entre componentes no relacionados', 'El global es siempre más rápido', 'useState no permite objetos'], answer: 1 },
-  { question: '¿Qué evita useMemo?', options: ['Los efectos secundarios', 'Recalcular un valor costoso en cada render si sus dependencias no cambiaron', 'Los re-renders del componente padre', 'Los errores de sintaxis'], answer: 1 },
-  { question: '¿Qué son los Server Components en React/Next.js moderno?', options: ['Componentes que solo renderizan en el cliente', 'Componentes que se renderizan en el servidor y no envían su JS al cliente', 'Un tipo de base de datos', 'Middleware de autenticación'], answer: 1 },
-  { question: '¿Qué mide React Testing Library al testear un componente?', options: ['El código fuente interno', 'El comportamiento desde la perspectiva del usuario', 'Solo el rendimiento', 'La cobertura de CSS'], answer: 1 },
-  { question: '¿Qué causa re-renders innecesarios en una lista de componentes hijos?', options: ['Usar TypeScript', 'No memoizar props/funciones que cambian de referencia en cada render del padre', 'Usar JSX', 'Definir el componente como función'], answer: 1 },
-  { question: '¿Qué resuelve React Router en una SPA?', options: ['El manejo de estado global', 'La navegación entre vistas sincronizando la URL sin recargar el documento', 'El fetching de datos', 'El bundling'], answer: 1 },
-  { question: '¿Qué ventaja tiene tipar los props de un componente con TypeScript?', options: ['Ninguna práctica', 'Detecta en compilación errores de props faltantes o de tipo incorrecto', 'Hace el componente más lento', 'Reemplaza a PropTypes en runtime'], answer: 1 },
-];
-
-export const JAVA_QUIZ: QuizQuestion[] = [
-  { question: '¿Qué papel cumple la JVM respecto al bytecode compilado por javac?', options: ['Lo convierte de vuelta a texto fuente', 'Lo interpreta y compila JIT a código nativo en tiempo de ejecución', 'Solo lo almacena', 'Lo ejecuta como binario nativo sin intérprete'], answer: 1 },
-  { question: '¿Qué diferencia hay entre una interfaz y una clase abstracta en Java moderno?', options: ['Son idénticas', 'Una clase puede implementar varias interfaces pero extender solo una clase, y las interfaces admiten default methods', 'Las interfaces no pueden tener métodos con cuerpo', 'Las clases abstractas no pueden tener constructores'], answer: 1 },
-  { question: '¿Qué garantiza try-with-resources con un recurso AutoCloseable?', options: ['Nada especial', 'Que el recurso se cierre automáticamente al salir del bloque, incluso con excepción', 'Que el código sea más rápido', 'Que no se lancen excepciones'], answer: 1 },
-  { question: '¿Qué ventaja aportan los Streams sobre iterar manualmente con bucles for?', options: ['Siempre son más rápidos', 'Permiten expresar transformaciones (map/filter/reduce) de forma declarativa', 'Eliminan la necesidad de colecciones', 'Solo funcionan con arrays primitivos'], answer: 1 },
-  { question: '¿Qué resuelven los virtual threads frente a los hilos de plataforma tradicionales?', options: ['Nada nuevo', 'Miles de hilos ligeros sin el costo de los hilos del SO, ideales para I/O bloqueante', 'Reemplazan a los streams', 'Solo sirven para UI'], answer: 1 },
-  { question: '¿Qué aportan los records en Java moderno?', options: ['Un nuevo tipo de colección', 'Una forma concisa de declarar clases inmutables de datos con equals/hashCode/toString generados', 'Reemplazan las interfaces', 'Sirven solo para testing'], answer: 1 },
-  { question: '¿Qué diferencia hay entre Maven y Gradle?', options: ['Son idénticos en sintaxis', 'Maven usa XML declarativo; Gradle usa un DSL más flexible con builds incrementales', 'Gradle no soporta dependencias transitivas', 'Maven es más nuevo que Gradle'], answer: 1 },
-  { question: '¿Qué diferencia hay entre un mock y un stub en un test con Mockito?', options: ['Son lo mismo', 'El mock permite verificar interacciones además de proveer respuestas predefinidas', 'Los stubs no se pueden usar en JUnit 5', 'Los mocks solo sirven para bases de datos'], answer: 1 },
-  { question: '¿Qué hace el Garbage Collector de la JVM?', options: ['Compila el código a bytecode', 'Libera automáticamente la memoria de objetos ya no alcanzables', 'Gestiona los hilos de ejecución', 'Optimiza las consultas SQL'], answer: 1 },
-  { question: '¿Qué ventaja da el pattern matching con switch sobre instanceof + cast manual?', options: ['Ninguna', 'Combina comprobación de tipo, cast y extracción en una expresión exhaustiva más segura', 'Solo funciona con enums', 'Elimina la necesidad de clases selladas'], answer: 1 },
-];
-
-export const SPRING_BOOT_QUIZ: QuizQuestion[] = [
-  { question: '¿Qué resuelve la Inversión de Control (IoC) en Spring?', options: ['Nada relevante', 'El framework gestiona el ciclo de vida de los beans en vez de instanciarlos manualmente el código', 'Reemplaza a Java', 'Solo aplica a controladores REST'], answer: 1 },
-  { question: '¿Qué anotación expone un método como endpoint HTTP GET en Spring Web?', options: ['@Service', '@GetMapping', '@Entity', '@Configuration'], answer: 1 },
-  { question: '¿Qué papel cumple Spring Data JPA sobre Hibernate?', options: ['Lo reemplaza completamente', 'Añade repositorios que generan consultas CRUD/JPQL automáticamente sobre un proveedor JPA', 'Es un motor de base de datos', 'Sustituye a SQL'], answer: 1 },
-  { question: '¿Qué hace un SecurityFilterChain en Spring Security?', options: ['Compila el proyecto', 'Define las reglas de autorización y los filtros que procesan cada petición HTTP', 'Genera el JSON de respuesta', 'Configura la base de datos'], answer: 1 },
-  { question: '¿Para qué sirven los perfiles (@Profile, application-{profile}.yml)?', options: ['Para versionar el código', 'Para tener configuración distinta según el entorno sin cambiar el código', 'Para definir roles de usuario', 'Solo para logging'], answer: 1 },
-  { question: '¿Qué expone Spring Boot Actuator?', options: ['Endpoints de negocio', 'Endpoints operacionales de salud, métricas e información del proceso', 'El código fuente compilado', 'Los tests unitarios'], answer: 1 },
-  { question: '¿Qué diferencia hay entre WebFlux (reactivo) y Spring MVC (imperativo)?', options: ['Son idénticos en el modelo de ejecución', 'WebFlux usa un modelo no bloqueante (Mono/Flux) sobre pocos hilos; MVC usa un hilo por petición', 'MVC es siempre más rápido', 'WebFlux no soporta bases de datos'], answer: 1 },
-  { question: '¿Qué resuelve Spring Cloud en microservicios?', options: ['Nada específico', 'La coordinación entre servicios: dónde están, cómo se configuran y cómo se enrutan', 'Reemplaza a Docker', 'Solo aplica a monolitos'], answer: 1 },
-  { question: '¿Qué aporta usar Kafka/RabbitMQ frente a llamadas REST síncronas entre servicios?', options: ['Nada, siempre es peor', 'Desacopla productores y consumidores en el tiempo, dando resiliencia', 'Elimina la necesidad de serializar datos', 'Sustituye a la base de datos'], answer: 1 },
-  { question: '¿Qué formato permite ejecutar una app Spring Boot con java -jar sin servidor externo?', options: ['WAR en un Tomcat externo obligatorio', 'Fat/executable JAR con servidor embebido incluido', 'Un script bash', 'Un archivo .properties'], answer: 1 },
-];
-
-export const KOTLIN_MULTIPLATFORM_QUIZ: QuizQuestion[] = [
-  { question: '¿Qué resuelve Kotlin Multiplatform (KMP)?', options: ['Compilar Kotlin a Python', 'Compartir lógica de negocio entre Android, iOS y otras plataformas desde un único código Kotlin', 'Reemplazar Swift en iOS obligatoriamente', 'Solo sirve para apps web'], answer: 1 },
-  { question: '¿Qué son las coroutines en Kotlin?', options: ['Hilos del sistema operativo', 'Un framework para código asíncrono ligero que se suspende sin bloquear el hilo', 'Un tipo de colección', 'Un patrón de diseño estructural'], answer: 1 },
-  { question: '¿Qué representa un Flow en Kotlin?', options: ['Un único valor calculado una vez', 'Un flujo asíncrono de múltiples valores emitidos en el tiempo', 'Una excepción controlada', 'Un tipo de test'], answer: 1 },
-  { question: 'En arquitectura KMP típica, ¿qué vive en commonMain frente a androidMain/iosMain?', options: ['Todo vive en commonMain sin excepción', 'La lógica compartida vive en commonMain; el código específico de plataforma vive en cada source set', 'La UI siempre vive en commonMain', 'No existe separación por plataforma'], answer: 1 },
-  { question: '¿Qué papel cumple expect/actual en KMP?', options: ['Declarar tests', 'Declarar en código común una API que cada plataforma implementa con su versión nativa', 'Definir rutas de navegación', 'Configurar CI/CD'], answer: 1 },
-  { question: '¿Qué ventaja da Ktor Client sobre escribir networking nativo por separado en cada plataforma?', options: ['Ninguna, hay que reescribirlo igual', 'Permite compartir la misma lógica HTTP entre plataformas desde commonMain', 'Solo funciona en el servidor', 'Reemplaza a JSON'], answer: 1 },
-  { question: '¿Qué resuelve SQLDelight en un proyecto KMP?', options: ['Genera UI automáticamente', 'Genera APIs de acceso a base de datos type-safe a partir de SQL compartido', 'Sustituye a las coroutines', 'Es un framework de testing'], answer: 1 },
-  { question: '¿Qué permite Compose Multiplatform que Jetpack Compose por sí solo no permite?', options: ['Nada distinto', 'Compartir el mismo código de UI entre Android, iOS, desktop y web', 'Solo funciona en Android', 'Elimina la necesidad de ViewModels'], answer: 1 },
-  { question: '¿Qué mecanismo permite consumir código Kotlin compartido desde Swift en iOS?', options: ['No es posible', 'Kotlin/Native genera un framework con binding Objective-C/Swift', 'Hay que reescribir todo en Swift', 'Solo mediante una API REST intermedia'], answer: 1 },
-  { question: '¿Qué debe verificar un test en commonTest?', options: ['Solo el comportamiento en Android', 'Que la lógica compartida se comporte igual sin depender de APIs de una sola plataforma', 'Solo el renderizado visual en iOS', 'Nada, los tests van siempre por plataforma'], answer: 1 },
-];
-
-export const ANDROID_QUIZ: QuizQuestion[] = [
-  { question: '¿Qué evita que un ViewModel pierda su estado al rotar la pantalla?', options: ['Nada, siempre se pierde', 'Su ciclo de vida está ligado al scope, no a la Activity recreada', 'Guardar el estado en SharedPreferences manualmente siempre', 'Usar solo variables estáticas'], answer: 1 },
-  { question: '¿Qué diferencia hay entre lo que sobrevive un ViewModel y SavedStateHandle?', options: ['Son idénticos', 'El ViewModel sobrevive rotación pero no la muerte del proceso; SavedStateHandle sí persiste ante la muerte del proceso', 'SavedStateHandle no persiste nada', 'No hay diferencia práctica'], answer: 1 },
-  { question: '¿Qué es Jetpack Compose?', options: ['Un motor de bases de datos', 'Un toolkit declarativo para construir UI describiendo el estado en vez de manipular vistas', 'Un reemplazo de Kotlin', 'Un framework de testing exclusivamente'], answer: 1 },
-  { question: '¿Qué resuelve StateFlow combinado con Compose?', options: ['Nada relacionado con UI', 'Expone un estado observable que Compose recolecta para recomponer la UI automáticamente', 'Sustituye a Room', 'Gestiona la navegación'], answer: 1 },
-  { question: '¿Qué ventaja da Room sobre usar SQLite directamente con queries en texto plano?', options: ['Ninguna', 'Verifica las queries en tiempo de compilación y genera código type-safe', 'Es más lento siempre', 'Elimina la necesidad de una base de datos'], answer: 1 },
-  { question: '¿Qué problema resuelve Hilt en una app Android grande?', options: ['El renderizado de UI', 'Evita instanciar y conectar manualmente las dependencias de cada clase', 'El manejo de permisos', 'La navegación entre pantallas'], answer: 1 },
-  { question: '¿Cuándo conviene usar WorkManager para trabajo en segundo plano?', options: ['Para actualizar la UI en tiempo real', 'Para tareas diferibles garantizadas incluso si la app se cierra o el dispositivo se reinicia', 'Para animaciones', 'Nunca, siempre es mejor un hilo manual'], answer: 1 },
-  { question: '¿Qué mide un test instrumentado (androidTest) que uno local no puede?', options: ['Nada distinto', 'El comportamiento real sobre un dispositivo/emulador, incluyendo componentes del framework', 'Solo la sintaxis de Kotlin', 'El tiempo de compilación'], answer: 1 },
-  { question: '¿Qué aporta Material 3 respecto a versiones anteriores?', options: ['Nada nuevo', 'Theming dinámico (Material You) y mejor soporte de accesibilidad', 'Reemplaza a Compose', 'Solo cambia los íconos'], answer: 1 },
-  { question: '¿Qué exige Google Play antes de publicar una app en producción?', options: ['Ninguno en particular', 'Cumplir políticas de la tienda, firmar el App Bundle y completar la ficha en Play Console', 'Solo tener más de 1000 descargas', 'Publicar el código fuente públicamente'], answer: 1 },
-];
-
-export const IOS_QUIZ: QuizQuestion[] = [
-  { question: '¿Qué modelo de concurrencia introduce async/await en Swift moderno?', options: ['Callbacks anidados manuales', 'Funciones que se suspenden sin bloquear el hilo, con manejo de errores integrado', 'Hilos POSIX manuales', 'Solo temporizadores'], answer: 1 },
-  { question: '¿Qué caracteriza a SwiftUI frente a UIKit?', options: ['Es imperativo igual que UIKit', 'Es declarativo: la UI se describe como función del estado y se actualiza automáticamente', 'No soporta animaciones', 'Reemplaza a Swift como lenguaje'], answer: 1 },
-  { question: '¿Qué hace el property wrapper @State en SwiftUI?', options: ['Define una constante', 'Declara una fuente de verdad de estado local que, al cambiar, recompone la UI', 'Conecta con una base de datos remota', 'Define el punto de entrada de la app'], answer: 1 },
-  { question: '¿Qué resuelve SwiftData sobre persistir datos manualmente?', options: ['Nada distinto', 'Ofrece un modelo de persistencia declarativo integrado con SwiftUI mediante macros', 'Es solo para imágenes', 'Sustituye a URLSession'], answer: 1 },
-  { question: '¿Qué papel cumple Combine en una app iOS?', options: ['Compilar el proyecto', 'Proveer programación reactiva para componer flujos asíncronos (publishers/subscribers)', 'Gestionar la navegación', 'Firmar la app para distribución'], answer: 1 },
-  { question: '¿Qué separa el patrón MVVM en una app SwiftUI?', options: ['Nada, todo va en un solo archivo', 'Separa lógica de presentación/estado (ViewModel) de la vista y el modelo, facilitando testing', 'MVVM elimina la necesidad de modelos', 'Solo aplica a UIKit'], answer: 1 },
-  { question: '¿Qué verifica un test de UI (XCUITest) que un test unitario no cubre?', options: ['Nada distinto', 'La interacción real del usuario con la interfaz gráfica en ejecución', 'Solo la sintaxis de Swift', 'El tamaño del binario'], answer: 1 },
-  { question: '¿Por qué es importante seguir las Human Interface Guidelines (HIG) de Apple?', options: ['No es relevante para la App Store', 'Asegura consistencia y accesibilidad, e influye en la revisión de Apple', 'Solo afecta el rendimiento', 'Es opcional y sin impacto real'], answer: 1 },
-  { question: '¿Qué requiere Apple antes de publicar una app en el App Store?', options: ['Nada en particular', 'Pasar la revisión de App Store Connect, firmar con certificado válido y completar la ficha de la app', 'Publicar el código fuente', 'Una suscripción de pago obligatoria en la app'], answer: 1 },
-  { question: '¿Qué ventaja da async let frente a múltiples await secuenciales?', options: ['Ninguna, ejecuta igual', 'Permite lanzar varias tareas en paralelo y esperarlas juntas', 'Solo funciona con closures', 'Bloquea el hilo principal'], answer: 1 },
-];
-
-export const FLUTTER_QUIZ: QuizQuestion[] = [
-  { question: '¿Qué diferencia hay entre StatelessWidget y StatefulWidget?', options: ['Son idénticos', 'StatelessWidget no mantiene estado mutable propio; StatefulWidget mantiene un State que puede disparar su propio rebuild', 'StatefulWidget no puede tener hijos', 'StatelessWidget es siempre más lento'], answer: 1 },
-  { question: '¿Qué modelo de layout usa Flutter?', options: ['CSS Flexbox directamente', 'Un árbol de widgets con constraints hacia abajo y tamaños reportados hacia arriba', 'XML de Android', 'Auto Layout de iOS'], answer: 1 },
-  { question: '¿Qué resuelve Navigator en Flutter?', options: ['El manejo de estado global', 'La navegación mediante una pila de rutas que se apilan y desapilan', 'El acceso a red', 'La persistencia local'], answer: 1 },
-  { question: '¿Qué papel cumple setState en la gestión de estado más básica de Flutter?', options: ['Define rutas', 'Notifica al framework que el estado interno cambió y debe reconstruirse ese subárbol', 'Realiza peticiones HTTP', 'Compila el proyecto'], answer: 1 },
-  { question: '¿Qué ventaja da Provider/Riverpod/Bloc sobre setState para apps grandes?', options: ['Ninguna, setState siempre es mejor', 'Permite compartir estado entre widgets no relacionados sin pasar callbacks por cada nivel', 'Elimina la necesidad de widgets', 'Solo sirve para animaciones'], answer: 1 },
-  { question: '¿Qué permiten los "platform channels" en Flutter?', options: ['Nada relevante', 'Comunicar código Dart con APIs nativas de Android/iOS no disponibles en Flutter', 'Sustituyen a los widgets', 'Son solo para testing'], answer: 1 },
-  { question: '¿Qué causa comúnmente jank (caídas de frames) en una app Flutter?', options: ['Usar widgets const', 'Reconstruir subárboles grandes o hacer trabajo costoso de forma síncrona en build', 'Usar Dart null-safety', 'Declarar StatelessWidgets'], answer: 1 },
-  { question: '¿Qué verifica un widget test frente a un test unitario puro de Dart?', options: ['Nada distinto', 'Que un widget se construye y responde a interacciones simuladas dentro de un árbol real', 'Solo la lógica de negocio sin UI', 'El rendimiento en un dispositivo físico'], answer: 1 },
-  { question: '¿Qué resuelve usar ThemeData y widgets Material/Cupertino adaptativos?', options: ['Nada, hay que estilizar cada widget individualmente', 'Centraliza estilos y adapta la apariencia a las convenciones de Android/iOS', 'Sustituye la necesidad de accesibilidad', 'Solo afecta a los íconos'], answer: 1 },
-  { question: '¿Qué requiere publicar la misma app Flutter en Google Play y App Store?', options: ['Un único paso combinado sin diferencias', 'Cumplir los requisitos de cada tienda por separado aunque el código compartido sea el mismo', 'Reescribir la app en Kotlin y Swift', 'Nada, se publica automáticamente al hacer build'], answer: 1 },
-];
-
-export const RUTAFLOW_QUIZ: QuizQuestion[] = [
-  { question: '¿Qué debe ocurrir si se repite el mismo comando de entrega?', options: ['Crear otra entrega', 'Devolver el resultado original sin duplicar efectos', 'Borrar el envío', 'Cambiar la clave'], answer: 1 },
-  { question: '¿Por qué una coordenada GPS no demuestra por sí sola una entrega?', options: ['Porque GPS no existe', 'Porque requiere tiempo, precisión, identidad, autorización y evidencia adicional', 'Porque siempre es falsa', 'Porque solo funciona en web'], answer: 1 },
-  { question: '¿Cómo se corrige un movimiento contable incorrecto?', options: ['Editándolo', 'Eliminándolo', 'Registrando un reverso y el movimiento correcto', 'Cambiando el saldo'], answer: 2 },
-  { question: '¿Qué garantiza una outbox transaccional?', options: ['Cero fallos', 'Que el cambio de dominio y la intención de publicar se confirman juntos', 'Orden global perfecto', 'Entrega exactamente una vez'], answer: 1 },
-  { question: '¿Qué estrategia protege mejor la batería del conductor?', options: ['GPS máximo siempre', 'Muestreo adaptado a actividad, precisión necesaria y batería', 'Desactivar permisos', 'Enviar cada milisegundo'], answer: 1 },
-  { question: '¿Dónde se debe autorizar una confirmación de entrega?', options: ['Solo en el botón', 'En el backend y el dominio con identidad autenticada', 'En CSS', 'En el mapa'], answer: 1 },
-  { question: '¿Qué debe hacer un consumidor ante un evento duplicado?', options: ['Aplicarlo de nuevo', 'Deduplicarlo mediante una identidad persistida', 'Cambiar su contenido', 'Ignorar todos los eventos'], answer: 1 },
-  { question: '¿Qué demuestra un restore test?', options: ['Que existe un archivo', 'Que datos y aplicación pueden recuperarse dentro de objetivos medidos', 'Que nunca habrá incidentes', 'Que multi-región es innecesario'], answer: 1 },
-  { question: '¿Qué mide un buen SLI de confirmación?', options: ['Solo CPU', 'La proporción de confirmaciones correctas observada por usuarios', 'Número de archivos', 'Cantidad de desarrolladores'], answer: 1 },
-  { question: '¿Por qué no se inicia con microservicios?', options: ['Porque son ilegales', 'Porque primero deben entenderse dominio, transacciones y límites reales', 'Porque no usan HTTP', 'Porque no tienen bases'], answer: 1 },
-];
-
 // ── Multi-cloud comparison ───────────────────────────────────────────────────
 
 export interface CloudComparison {
@@ -1049,20 +863,20 @@ export const GCP_GROUPS: AltCloudGroup[] = [
 // descripción, conceptos clave y entregable previstos.
 
 export const TRACKS: Track[] = [
-  { id: 'rutaflow', name: 'RutaFlow — Plataforma profesional de entregas', shortName: 'RutaFlow', tagline: 'Proyecto full-stack: paquetería, GPS, mapas, Flutter, backend, datos, contabilidad, cloud y DevOps.', color: '#f97316', icon: 'truck', modules: RUTAFLOW_MODULES, quiz: RUTAFLOW_QUIZ },
-  { id: 'foundations', name: 'Fundamentos de Ingeniería de Software', shortName: 'Fundamentos', tagline: 'De cero absoluto: computador, terminal, programación y bases profesionales.', color: '#6d5dfc', icon: 'book-open', modules: FOUNDATIONS_MODULES, quiz: FOUNDATIONS_QUIZ },
-  { id: 'cloud', name: 'Cloud Local — AWS, Azure y GCP', shortName: 'Cloud', tagline: 'Servicios cloud reales en local, sin pagar ni crear cuentas.', color: '#137c8b', icon: 'cloud-cog', modules: COURSE_MODULES, quiz: CLOUD_QUIZ },
-  { id: 'devops', name: 'DevOps', shortName: 'DevOps', tagline: 'Linux, Docker, CI/CD, Kubernetes e infraestructura como código.', color: '#475569', icon: 'git-branch', modules: DEVOPS_MODULES, quiz: DEVOPS_QUIZ },
-  { id: 'javascript', name: 'JavaScript de cero a master', shortName: 'JavaScript', tagline: 'El lenguaje base de la web: del primer script al rendimiento avanzado.', color: '#e9b400', icon: 'braces', modules: JAVASCRIPT_MODULES, quiz: JAVASCRIPT_QUIZ },
-  { id: 'node', name: 'Node.js de cero a master', shortName: 'Node.js', tagline: 'Backend en JavaScript: APIs, bases de datos y producción.', color: '#3c873a', icon: 'server', modules: NODE_MODULES, quiz: NODE_QUIZ },
-  { id: 'angular', name: 'Angular — última versión y migraciones', shortName: 'Angular', tagline: 'Componentes, signals y arquitectura moderna sin NgModules.', color: '#dd0031', icon: 'shield', modules: ANGULAR_MODULES, quiz: ANGULAR_QUIZ },
-  { id: 'react', name: 'React de cero a master', shortName: 'React', tagline: 'Hooks, estado, datos y frameworks full-stack con React.', color: '#149eca', icon: 'atom', modules: REACT_MODULES, quiz: REACT_QUIZ },
-  { id: 'java', name: 'Java de cero a avanzado', shortName: 'Java', tagline: 'POO, concurrencia y JVM moderna, de Java 8 a Java 21.', color: '#5382a1', icon: 'coffee', modules: JAVA_MODULES, quiz: JAVA_QUIZ },
-  { id: 'spring-boot', name: 'Spring Boot', shortName: 'Spring Boot', tagline: 'APIs, persistencia, seguridad y microservicios con Spring.', color: '#6db33f', icon: 'leaf', modules: SPRING_BOOT_MODULES, quiz: SPRING_BOOT_QUIZ },
-  { id: 'kotlin-multiplatform', name: 'Kotlin Multiplatform', shortName: 'Kotlin MP', tagline: 'Lógica compartida entre Android e iOS con Kotlin.', color: '#7f52ff', icon: 'layers', modules: KOTLIN_MULTIPLATFORM_MODULES, quiz: KOTLIN_MULTIPLATFORM_QUIZ },
-  { id: 'android', name: 'Android con Jetpack Compose', shortName: 'Android', tagline: 'Apps Android nativas modernas con Compose y Kotlin.', color: '#3ddc84', icon: 'smartphone', modules: ANDROID_MODULES, quiz: ANDROID_QUIZ },
-  { id: 'ios', name: 'iOS con SwiftUI', shortName: 'iOS', tagline: 'Apps iOS nativas con Swift, SwiftUI y concurrencia moderna.', color: '#0a84ff', icon: 'apple', modules: IOS_MODULES, quiz: IOS_QUIZ },
-  { id: 'flutter', name: 'Flutter', shortName: 'Flutter', tagline: 'Una base de código para Android, iOS y web con Dart.', color: '#02569b', icon: 'wind', modules: FLUTTER_MODULES, quiz: FLUTTER_QUIZ },
+  { id: 'rutaflow', name: 'RutaFlow — Plataforma profesional de entregas', shortName: 'RutaFlow', tagline: 'Proyecto full-stack: paquetería, GPS, mapas, Flutter, backend, datos, contabilidad, cloud y DevOps.', color: '#f97316', icon: 'truck', modules: RUTAFLOW_MODULES },
+  { id: 'foundations', name: 'Fundamentos de Ingeniería de Software', shortName: 'Fundamentos', tagline: 'De cero absoluto: computador, terminal, programación y bases profesionales.', color: '#6d5dfc', icon: 'book-open', modules: FOUNDATIONS_MODULES },
+  { id: 'cloud', name: 'Cloud Local — AWS, Azure y GCP', shortName: 'Cloud', tagline: 'Servicios cloud reales en local, sin pagar ni crear cuentas.', color: '#137c8b', icon: 'cloud-cog', modules: COURSE_MODULES },
+  { id: 'devops', name: 'DevOps', shortName: 'DevOps', tagline: 'Linux, Docker, CI/CD, Kubernetes e infraestructura como código.', color: '#475569', icon: 'git-branch', modules: DEVOPS_MODULES },
+  { id: 'javascript', name: 'JavaScript de cero a master', shortName: 'JavaScript', tagline: 'El lenguaje base de la web: del primer script al rendimiento avanzado.', color: '#e9b400', icon: 'braces', modules: JAVASCRIPT_MODULES },
+  { id: 'node', name: 'Node.js de cero a master', shortName: 'Node.js', tagline: 'Backend en JavaScript: APIs, bases de datos y producción.', color: '#3c873a', icon: 'server', modules: NODE_MODULES },
+  { id: 'angular', name: 'Angular — última versión y migraciones', shortName: 'Angular', tagline: 'Componentes, signals y arquitectura moderna sin NgModules.', color: '#dd0031', icon: 'shield', modules: ANGULAR_MODULES },
+  { id: 'react', name: 'React de cero a master', shortName: 'React', tagline: 'Hooks, estado, datos y frameworks full-stack con React.', color: '#149eca', icon: 'atom', modules: REACT_MODULES },
+  { id: 'java', name: 'Java de cero a avanzado', shortName: 'Java', tagline: 'POO, concurrencia y JVM moderna, de Java 8 a Java 21.', color: '#5382a1', icon: 'coffee', modules: JAVA_MODULES },
+  { id: 'spring-boot', name: 'Spring Boot', shortName: 'Spring Boot', tagline: 'APIs, persistencia, seguridad y microservicios con Spring.', color: '#6db33f', icon: 'leaf', modules: SPRING_BOOT_MODULES },
+  { id: 'kotlin-multiplatform', name: 'Kotlin Multiplatform', shortName: 'Kotlin MP', tagline: 'Lógica compartida entre Android e iOS con Kotlin.', color: '#7f52ff', icon: 'layers', modules: KOTLIN_MULTIPLATFORM_MODULES },
+  { id: 'android', name: 'Android con Jetpack Compose', shortName: 'Android', tagline: 'Apps Android nativas modernas con Compose y Kotlin.', color: '#3ddc84', icon: 'smartphone', modules: ANDROID_MODULES },
+  { id: 'ios', name: 'iOS con SwiftUI', shortName: 'iOS', tagline: 'Apps iOS nativas con Swift, SwiftUI y concurrencia moderna.', color: '#0a84ff', icon: 'apple', modules: IOS_MODULES },
+  { id: 'flutter', name: 'Flutter', shortName: 'Flutter', tagline: 'Una base de código para Android, iOS y web con Dart.', color: '#02569b', icon: 'wind', modules: FLUTTER_MODULES },
 ];
 
 export const findTrack = (trackId: string): Track | undefined => TRACKS.find(t => t.id === trackId);

@@ -34,13 +34,6 @@ interface ImplementationProfile {
   language: string;
 }
 
-interface ModuleQuizItem {
-  question: string;
-  options: string[];
-  answer: number;
-  explanation: string;
-}
-
 function slugify(text: string, seen: Set<string>): string {
   const base = text
     .normalize('NFD')
@@ -139,17 +132,12 @@ export class LessonViewerComponent implements OnDestroy {
   readonly copiedCode = signal<string | null>(null);
   readonly lessonMode = signal<LessonMode>('learn');
   readonly lessonStats = signal<LessonStats>({ topics: 0, examples: 0, activities: 0 });
-  readonly moduleQuizAnswers = signal<(number | null)[]>([]);
-  readonly moduleQuizChecked = signal(false);
-  readonly examMode = signal(false);
-  readonly examSeconds = signal(0);
   readonly completedTopicCount = signal(0);
   readonly labCount = signal(0);
   readonly verifiedLabCount = signal(0);
   readonly completionMessage = signal('');
   private tocObserver: IntersectionObserver | null = null;
   private copyTimer: ReturnType<typeof setTimeout> | null = null;
-  private examTimer: ReturnType<typeof setInterval> | null = null;
   private readonly updateReadingProgress = (): void => {
     const article = this.lessonContent()?.nativeElement;
     if (!article) return;
@@ -159,22 +147,11 @@ export class LessonViewerComponent implements OnDestroy {
   };
 
   readonly isComplete = computed(() => this.progressService.isModuleComplete(this.trackId(), this.moduleId()));
-  readonly moduleQuiz = computed<ModuleQuizItem[]>(() => {
-    // No se fabrica una evaluación a partir de títulos del sílabo. El checkpoint
-    // solo volverá a mostrarse cuando el capítulo tenga preguntas editoriales
-    // que midan comprensión, aplicación y diagnóstico.
-    return [];
-  });
-  readonly moduleQuizScore = computed(() => this.moduleQuiz().reduce((score, item, index) => score + (this.moduleQuizAnswers()[index] === item.answer ? 1 : 0), 0));
-  readonly moduleQuizReady = computed(() => this.moduleQuizAnswers().length === this.moduleQuiz().length && this.moduleQuizAnswers().every(answer => answer !== null));
-  readonly examTime = computed(() => `${String(Math.floor(this.examSeconds() / 60)).padStart(2, '0')}:${String(this.examSeconds() % 60).padStart(2, '0')}`);
-
   constructor() {
     effect(() => {
       const trackId = this.trackId();
       const module = this.module();
       if (!module) return;
-      this.resetModuleQuiz();
       this.lessonLoading.set(true);
       this.contentService.loadLessonHtml(trackId, module.id).then(html => {
         this.lessonHtml.set(html);
@@ -198,36 +175,6 @@ export class LessonViewerComponent implements OnDestroy {
         if (container) this.scrollToRequestedFragment(container, fragment);
       }, { injector: this.injector });
     });
-  }
-
-  selectModuleQuizAnswer(question: number, option: number): void {
-    if (this.moduleQuizChecked()) return;
-    this.moduleQuizAnswers.update(answers => answers.map((answer, index) => index === question ? option : answer));
-  }
-
-  checkModuleQuiz(): void {
-    if (!this.moduleQuizReady()) return;
-    this.moduleQuizChecked.set(true);
-    this.stopExamTimer();
-  }
-
-  toggleExamMode(): void {
-    this.examMode.update(value => !value);
-    this.resetModuleQuiz(false);
-    if (this.examMode()) this.examTimer = setInterval(() => this.examSeconds.update(value => value + 1), 1000);
-  }
-
-  resetModuleQuiz(resetMode = true): void {
-    this.stopExamTimer();
-    if (resetMode) this.examMode.set(false);
-    this.examSeconds.set(0);
-    this.moduleQuizChecked.set(false);
-    this.moduleQuizAnswers.set(new Array(this.moduleQuiz().length).fill(null));
-  }
-
-  private stopExamTimer(): void {
-    if (this.examTimer) clearInterval(this.examTimer);
-    this.examTimer = null;
   }
 
   private enhanceRenderedLesson(): void {
@@ -431,10 +378,9 @@ export class LessonViewerComponent implements OnDestroy {
           this.progressService.recordLearningStep(this.trackId(), 'practice', this.learningStepKey(index));
         }
       }
-      const previous = this.previousModule();
       const contract = document.createElement('aside');
       contract.className = 'learning-contract';
-      contract.innerHTML = `<div><small>Antes de empezar</small><strong>${escapeHtml(previous ? `Haber completado: ${previous.shortTitle}` : 'No necesitas experiencia previa')}</strong></div><div><small>Meta de este tema</small><strong>Explicar y aplicar ${title} sin copiar el ejemplo</strong></div><div><small>No avances hasta</small><strong>Poder ejecutarlo, modificarlo y diagnosticar un fallo</strong></div>`;
+      contract.innerHTML = `<div><small>Orientación opcional</small><strong>Puedes estudiar este tema directamente y volver a los fundamentos cuando lo necesites</strong></div><div><small>Meta de este tema</small><strong>Explicar y aplicar ${title} sin copiar el ejemplo</strong></div><div><small>Laboratorio</small><strong>La práctica está en esta misma lección; no bloquea la exploración de otros temas</strong></div>`;
       heading.insertAdjacentElement('afterend', contract);
       this.addImplementationGuide(card, heading, index);
       card.appendChild(practice);
@@ -447,14 +393,7 @@ export class LessonViewerComponent implements OnDestroy {
         body.appendChild(bodyNode);
         bodyNode = next;
       }
-      const toggle = document.createElement('button');
-      toggle.type = 'button';
-      toggle.className = 'topic-toggle';
-      toggle.dataset['topicToggle'] = String(index);
-      toggle.setAttribute('aria-expanded', String(index === 0));
-      toggle.innerHTML = `<span>Tema ${index + 1} de ${headings.length}</span><strong>${index === 0 ? 'Ocultar contenido' : 'Estudiar este tema'}</strong>`;
-      card.classList.toggle('expanded', index === 0);
-      card.appendChild(toggle);
+      card.classList.add('expanded');
       card.appendChild(body);
     });
   }
@@ -533,27 +472,11 @@ export class LessonViewerComponent implements OnDestroy {
   }
 
   async copyCode(event: Event): Promise<void> {
-    const topicToggle = (event.target as HTMLElement).closest<HTMLButtonElement>('[data-topic-toggle]');
-    if (topicToggle) {
-      const card = topicToggle.closest<HTMLElement>('.topic-card');
-      if (!card) return;
-      const expanded = card.classList.toggle('expanded');
-      topicToggle.setAttribute('aria-expanded', String(expanded));
-      const label = topicToggle.querySelector('strong');
-      if (label) label.textContent = expanded ? 'Ocultar contenido' : 'Estudiar este tema';
-      if (expanded) card.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      return;
-    }
     const topicButton = (event.target as HTMLElement).closest<HTMLButtonElement>('[data-topic-check]');
     if (topicButton) {
       const index = Number(topicButton.dataset['topicCheck'] ?? 0);
       const card = topicButton.closest<HTMLElement>('.topic-card');
       const note = card?.querySelector<HTMLTextAreaElement>('[data-practice-note]')?.value.trim() ?? '';
-      if (!topicButton.classList.contains('done') && note.length < 40) {
-        this.completionMessage.set('Antes de completar el tema, escribe una predicción o explicación de al menos 40 caracteres.');
-        card?.querySelector<HTMLTextAreaElement>('[data-practice-note]')?.focus();
-        return;
-      }
       topicButton.classList.toggle('done');
       topicButton.textContent = topicButton.classList.contains('done') ? 'Tema demostrado ✓' : 'Demostrar aprendizaje';
       localStorage.setItem(
@@ -562,8 +485,8 @@ export class LessonViewerComponent implements OnDestroy {
       );
       if (topicButton.classList.contains('done')) {
         this.progressService.recordLearningStep(this.trackId(), 'topic', this.learningStepKey(index));
-        this.progressService.recordLearningStep(this.trackId(), 'practice', this.learningStepKey(index));
-        this.completionMessage.set('¡Evidencia registrada! Sumaste XP por comprender y practicar.');
+        if (note.length >= 40) this.progressService.recordLearningStep(this.trackId(), 'practice', this.learningStepKey(index));
+        this.completionMessage.set(note.length >= 40 ? '¡Tema y práctica registrados!' : '¡Tema registrado! La nota de práctica es opcional.');
       }
       if (card) this.refreshEvidenceState(card.closest('.lesson-markdown') as HTMLElement);
       return;
@@ -576,7 +499,6 @@ export class LessonViewerComponent implements OnDestroy {
     this.copiedCode.set(id);
     button.textContent = 'Copiado';
     if (this.copyTimer) clearTimeout(this.copyTimer);
-    this.stopExamTimer();
     this.copyTimer = setTimeout(() => {
       button.textContent = 'Copiar';
       this.copiedCode.set(null);
@@ -606,12 +528,6 @@ export class LessonViewerComponent implements OnDestroy {
     }
     this.verifiedLabCount.set(verified);
   }
-
-  readonly canComplete = computed(() => {
-    const topicsReady = this.lessonStats().topics > 0 && this.completedTopicCount() === this.lessonStats().topics;
-    const labsReady = this.labCount() === 0 || this.verifiedLabCount() === this.labCount();
-    return topicsReady && labsReady;
-  });
 
   setLessonMode(mode: LessonMode): void {
     this.lessonMode.set(mode);
@@ -659,23 +575,12 @@ export class LessonViewerComponent implements OnDestroy {
     const target = this.lessonContent()?.nativeElement.querySelector(`#${CSS.escape(id)}`);
     if (!target) return;
     const topicCard = target.closest<HTMLElement>('.topic-card');
-    if (topicCard && !topicCard.classList.contains('expanded')) {
-      topicCard.classList.add('expanded');
-      const toggle = topicCard.querySelector<HTMLButtonElement>('[data-topic-toggle]');
-      toggle?.setAttribute('aria-expanded', 'true');
-      const label = toggle?.querySelector('strong');
-      if (label) label.textContent = 'Ocultar contenido';
-    }
     target.scrollIntoView({ behavior: 'smooth', block: 'start' });
     history.replaceState(null, '', `#${id}`);
     this.activeTocId.set(id);
   }
 
   toggleComplete(): void {
-    if (!this.isComplete() && !this.canComplete()) {
-      this.completionMessage.set('Aún falta evidencia: completa todos los temas y verifica los laboratorios disponibles.');
-      return;
-    }
     this.progressService.toggleModuleComplete(this.trackId(), this.moduleId());
     this.completionMessage.set(this.isComplete() ? 'Capítulo completado: 50 XP adicionales.' : 'El capítulo volvió a estado pendiente.');
   }

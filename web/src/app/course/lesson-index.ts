@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, Input, computed, inject, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { NavigationEnd, Router, RouterLink, RouterLinkActive } from '@angular/router';
-import { CircleQuestionMark, LucideAngularModule } from 'lucide-angular';
+import { FlaskConical, LucideAngularModule } from 'lucide-angular';
 import { filter, map, startWith } from 'rxjs';
 import { CourseModule, findTrack } from '../course-data';
 import { ProgressService } from '../progress.service';
@@ -25,7 +25,7 @@ const LEVEL_ORDER: CourseModule['level'][] = ['Fundamentos', 'Aplicación', 'Int
 })
 export class LessonIndexComponent {
   @Input({ required: true }) trackId!: string;
-  readonly icons = { CircleQuestionMark };
+  readonly icons = { FlaskConical };
 
   private readonly router = inject(Router);
   readonly topicIndex = inject(TopicIndexService);

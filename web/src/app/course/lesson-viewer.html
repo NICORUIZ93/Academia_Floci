@@ -95,27 +95,6 @@
         </ng-container>
       </section>
 
-      <section class="module-checkpoint" *ngIf="moduleQuiz().length" aria-labelledby="checkpoint-title">
-        <div class="checkpoint-heading">
-          <div><small>Evaluación del capítulo</small><h2 id="checkpoint-title">Comprueba antes de continuar</h2><p>Cinco preguntas construidas desde el sílabo de este módulo. Reconoce qué pertenece aquí y qué corresponde estudiar después.</p></div>
-          <button type="button" class="exam-toggle" [class.active]="examMode()" (click)="toggleExamMode()">{{ examMode() ? 'Salir del examen' : 'Modo examen' }}</button>
-        </div>
-        <div class="exam-banner" *ngIf="examMode()"><span>Soluciones ocultas hasta entregar</span><strong>{{ examTime() }}</strong></div>
-        <ol class="checkpoint-questions">
-          <li *ngFor="let question of moduleQuiz(); let qi = index" [class.correct]="moduleQuizChecked() && moduleQuizAnswers()[qi] === question.answer" [class.incorrect]="moduleQuizChecked() && moduleQuizAnswers()[qi] !== question.answer">
-            <p><strong>{{ qi + 1 }}.</strong> {{ question.question }}</p>
-            <div class="checkpoint-options">
-              <button *ngFor="let option of question.options; let oi = index" type="button" [class.selected]="moduleQuizAnswers()[qi] === oi" [class.correct-answer]="moduleQuizChecked() && oi === question.answer" [disabled]="moduleQuizChecked()" (click)="selectModuleQuizAnswer(qi, oi)">{{ option }}</button>
-            </div>
-            <p class="checkpoint-feedback" *ngIf="moduleQuizChecked()" aria-live="polite">{{ moduleQuizAnswers()[qi] === question.answer ? '✅ Correcto. ' : '❌ Revisa este límite. ' }}{{ question.explanation }}</p>
-          </li>
-        </ol>
-        <footer class="checkpoint-footer">
-          <button type="button" class="checkpoint-submit" [disabled]="!moduleQuizReady()" (click)="checkModuleQuiz()">{{ examMode() ? 'Entregar examen' : 'Verificar respuestas' }}</button>
-          <p *ngIf="moduleQuizChecked()"><strong>{{ moduleQuizScore() }}/{{ moduleQuiz().length }}</strong> · {{ moduleQuizScore() === moduleQuiz().length ? 'Dominio completo del mapa del capítulo.' : 'Vuelve únicamente a los conceptos que confundiste.' }}</p>
-        </footer>
-      </section>
-
       <footer class="lesson-footer">
         <section class="evidence-summary" aria-labelledby="evidence-title">
           <div><small>Evidencia para avanzar</small><h2 id="evidence-title">Demuestra, no solo marques</h2></div>
@@ -125,9 +104,9 @@
           </ul>
         </section>
         <p class="completion-feedback" aria-live="polite" *ngIf="completionMessage()">{{ completionMessage() }}</p>
-        <button class="complete-toggle" [class.done]="isComplete()" [class.locked]="!isComplete() && !canComplete()" (click)="toggleComplete()">
+        <button class="complete-toggle" [class.done]="isComplete()" (click)="toggleComplete()">
           <lucide-icon [img]="icons.CircleCheck" />
-          <span>{{ isComplete() ? 'Capítulo completado' : canComplete() ? 'Completar capítulo (+50 XP)' : 'Completa las evidencias para avanzar' }}</span>
+          <span>{{ isComplete() ? 'Capítulo completado' : 'Marcar capítulo completado (+50 XP)' }}</span>
         </button>
         <div class="lesson-nav">
           <button *ngIf="previousModule() as prev" (click)="goToModule(prev.id)"><lucide-icon [img]="icons.ChevronLeft" /><span>{{ prev.shortTitle }}</span></button>

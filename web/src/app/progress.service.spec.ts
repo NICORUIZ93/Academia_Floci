@@ -19,17 +19,15 @@ describe('ProgressService', () => {
     expect(service.hasLearningStep('javascript', 'topic', '0:0')).toBe(true);
   });
 
-  it('combines evidence, module and quiz XP without losing existing progress', () => {
+  it('combines evidence and module XP without requiring an exam', () => {
     const service = TestBed.inject(ProgressService);
 
     service.recordLearningStep('java', 'topic', '0:0');
     service.recordLearningStep('java', 'practice', '0:0');
     service.toggleModuleComplete('java', 0);
-    service.recordQuizScore('java', 8);
 
     const stats = service.learningStats('java', 15);
-    expect(stats.xp).toBe(160);
+    expect(stats.xp).toBe(80);
     expect(stats.badge).toBe('Explorador');
-    expect(stats.bestQuizScore).toBe(8);
   });
 });

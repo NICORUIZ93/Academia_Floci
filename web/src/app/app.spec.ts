@@ -106,8 +106,7 @@ La evidencia demuestra el aprendizaje.`;
       expect(page.querySelector('.implementation-guide')).toBeTruthy();
       expect(page.querySelector('.learning-contract')).toBeTruthy();
       expect(page.querySelector('.topic-card.expanded')).toBeTruthy();
-      expect(page.querySelector('.topic-toggle')?.getAttribute('aria-expanded')).toBe('true');
-      expect(text).toContain('Tema 1 de 1');
+      expect(page.querySelector('.topic-toggle')).toBeFalsy();
       expect(text).toContain('Crea el archivo');
       expect(text).toContain('Ejecuta desde la raíz del repositorio');
       expect(text).toContain('Resultado esperado');
@@ -119,8 +118,6 @@ La evidencia demuestra el aprendizaje.`;
       expect(text).toContain('Preparar');
       expect(text).toContain('Llevar a producción');
       expect(page.querySelectorAll('.official-path li')).toHaveLength(5);
-      // No mostrar cuestionarios fabricados a partir de nombres del sílabo:
-      // una evaluación debe medir comprensión y contar con autoría editorial.
       expect(page.querySelector('.module-checkpoint')).toBeFalsy();
       expect(page.querySelector('.code-example .window-controls')).toBeTruthy();
       expect(page.querySelector('.code-example .code-example-language')).toBeTruthy();
