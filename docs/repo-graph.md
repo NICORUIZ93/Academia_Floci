@@ -1,9 +1,9 @@
 # Academia Floci Repo Graph
 
-Generated: 2026-07-18 04:02 UTC
+Generated: 2026-07-18 04:16 UTC
 Root: `Academia_Floci`
-Indexed files: 778
-Import edges: 30
+Indexed files: 779
+Import edges: 31
 
 Use this file as the first, compact context for AI assistants. Refresh it with:
 
@@ -15,7 +15,7 @@ For automated lookups, use `docs/repo-graph.json`.
 
 ## Project Shape
 
-- `angular-app`: 51 files
+- `angular-app`: 52 files
 - `automation-script`: 30 files
 - `course-content`: 347 files
 - `documentation`: 98 files
@@ -27,8 +27,8 @@ For automated lookups, use `docs/repo-graph.json`.
 
 - `.md`: 436
 - `.py`: 60
+- `.ts`: 45
 - `.js`: 44
-- `.ts`: 44
 - `.java`: 40
 - `.json`: 28
 - `.go`: 24
@@ -67,7 +67,7 @@ For automated lookups, use `docs/repo-graph.json`.
   - symbols: CourseCatalogComponent, cards, featuredTracks, foundationTracks, mobileTracks, totalModules
 - `web/src/app/course/course-shell.ts` (57 lines, angular-app)
   - symbols: CourseShellComponent, track, officialPath, sidebarOpen, trackLogo, percent, stats
-- `web/src/app/course/lesson-viewer.ts` (637 lines, angular-app)
+- `web/src/app/course/lesson-viewer.ts` (691 lines, angular-app)
   - symbols: LessonViewerComponent, TocItem, track, module, moduleIndex, isCloudIntroduction, previousModule, nextModule, lessonHtml, lessonLoading
 - `web/public/content/manifest.json` (819 lines, course-content)
 - `web/public/content/es/pasos.md` (1122 lines, course-content)
@@ -103,6 +103,7 @@ For automated lookups, use `docs/repo-graph.json`.
 - `web/src/app/course-data.ts` -> `web/src/app/tracks/spring-boot.track.ts`
 - `web/src/app/course/course-shell.ts` -> `web/src/app/course/lesson-index.ts`
 - `web/src/app/course/lesson-viewer.ts` -> `web/src/app/course/lab-verification.ts`
+- `web/src/app/progress.service.spec.ts` -> `web/src/app/progress.service.ts`
 - `web/src/main.ts` -> `web/src/app/app.config.ts`
 - `web/src/main.ts` -> `web/src/app/app.ts`
 
@@ -152,11 +153,11 @@ For automated lookups, use `docs/repo-graph.json`.
 - `web/src/app/course/course-shell.html` (62 lines) - symbols: official-path-title
 - `web/src/app/course/course-shell.scss` (89 lines)
 - `web/src/app/course/course-shell.ts` (57 lines) - symbols: CourseShellComponent, track, officialPath, sidebarOpen, trackLogo, percent, stats; imports: @angular/common, @angular/core, @angular/core/rxjs-interop, @angular/router, lucide-angular, rxjs, ../course-data, ../command-palette.service
-- ... 33 more files
+- ... 34 more files
 
 ### automation-script
 
-- `scripts/audit_topic_learning_quality.py` (113 lines) - symbols: topic_blocks, evaluate, classify, build, render_markdown, main; imports: __future__, argparse, json, re, collections, pathlib
+- `scripts/audit_topic_learning_quality.py` (123 lines) - symbols: topic_blocks, evaluate, classify, build, render_markdown, main; imports: __future__, argparse, json, re, collections, pathlib
 - `scripts/build_curriculum.py` (273 lines) - symbols: source_text, normalize_ascii, clean_module_name, parse_curriculum, js_string, render_app_data, main; imports: __future__, json, re, pathlib
 - `scripts/build_definitive_topic_registry.py` (95 lines) - symbols: clean, fold, module_number; imports: pathlib, argparse, json, re, unicodedata
 - `scripts/build_repo_graph.py` (446 lines) - symbols: FileNode, repo_files, read_text, classify, parse_ts_symbols, parse_ts_imports, parse_python_symbols, parse_python_imports; imports: __future__, argparse, ast, json, re, collections, dataclasses, datetime

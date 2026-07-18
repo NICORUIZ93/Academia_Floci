@@ -2228,7 +2228,7 @@
     },
     {
       "path": "scripts/audit_topic_learning_quality.py",
-      "lines": 113,
+      "lines": 123,
       "kind": "automation-script",
       "symbols": [
         "topic_blocks",
@@ -11789,7 +11789,7 @@
     },
     {
       "path": "web/src/app/course/lab-verification.ts",
-      "lines": 135,
+      "lines": 140,
       "kind": "angular-app",
       "symbols": [
         "applyLabVerification"
@@ -11839,18 +11839,19 @@
     },
     {
       "path": "web/src/app/course/lesson-viewer.html",
-      "lines": 137,
+      "lines": 145,
       "kind": "angular-app",
       "symbols": [
         "floci-overview-title",
-        "checkpoint-title"
+        "checkpoint-title",
+        "evidence-title"
       ],
       "imports": [],
       "headings": []
     },
     {
       "path": "web/src/app/course/lesson-viewer.scss",
-      "lines": 308,
+      "lines": 322,
       "kind": "angular-app",
       "symbols": [],
       "imports": [],
@@ -11858,7 +11859,7 @@
     },
     {
       "path": "web/src/app/course/lesson-viewer.ts",
-      "lines": 637,
+      "lines": 691,
       "kind": "angular-app",
       "symbols": [
         "LessonViewerComponent",
@@ -11881,10 +11882,10 @@
         "moduleQuizChecked",
         "examMode",
         "examSeconds",
-        "isComplete",
-        "moduleQuiz",
-        "moduleQuizScore",
-        "moduleQuizReady"
+        "completedTopicCount",
+        "labCount",
+        "verifiedLabCount",
+        "completionMessage"
       ],
       "imports": [
         "@angular/common",
@@ -11973,8 +11974,19 @@
       "headings": []
     },
     {
+      "path": "web/src/app/progress.service.spec.ts",
+      "lines": 36,
+      "kind": "angular-app",
+      "symbols": [],
+      "imports": [
+        "@angular/core/testing",
+        "./progress.service"
+      ],
+      "headings": []
+    },
+    {
       "path": "web/src/app/progress.service.ts",
-      "lines": 126,
+      "lines": 147,
       "kind": "angular-app",
       "symbols": [
         "ProgressService",
@@ -12320,6 +12332,10 @@
     {
       "source": "web/src/app/course-data.ts",
       "target": "web/src/app/tracks/rutaflow.track.ts"
+    },
+    {
+      "source": "web/src/app/progress.service.spec.ts",
+      "target": "web/src/app/progress.service.ts"
     },
     {
       "source": "web/src/main.ts",

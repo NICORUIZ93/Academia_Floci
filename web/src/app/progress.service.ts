@@ -4,6 +4,9 @@ export interface TrackProgress {
   completedModules: number[];
   studyDates?: string[];
   bestQuizScore?: number;
+  completedTopics?: string[];
+  completedPractices?: string[];
+  verifiedLabs?: string[];
 }
 
 export interface LearningStats {
@@ -97,11 +100,29 @@ export class ProgressService {
     const progress = this.trackProgress(trackId);
     const completed = progress.completedModules.length;
     const bestQuizScore = progress.bestQuizScore ?? 0;
-    const xp = completed * 50 + bestQuizScore * 10;
+    const completedTopics = progress.completedTopics?.length ?? 0;
+    const completedPractices = progress.completedPractices?.length ?? 0;
+    const verifiedLabs = progress.verifiedLabs?.length ?? 0;
+    const xp = completedTopics * 10 + completedPractices * 20 + verifiedLabs * 30 + completed * 50 + bestQuizScore * 10;
     const ratio = totalModules ? completed / totalModules : 0;
     const level = ratio >= 1 ? 'Master' : ratio >= .66 ? 'Avanzado' : ratio >= .33 ? 'Intermedio' : 'Básico';
     const badge = completed >= totalModules && totalModules > 0 ? 'Maestro' : completed >= 6 ? 'Arquitecto' : completed >= 3 ? 'Constructor' : completed >= 1 ? 'Explorador' : 'Inicio';
     return { completedModules: completed, xp, streak: this.calculateStreak(progress.studyDates ?? []), level, badge, bestQuizScore };
+  }
+
+  recordLearningStep(trackId: string, kind: 'topic' | 'practice' | 'lab', key: string): void {
+    const current = this.trackProgress(trackId);
+    const field = kind === 'topic' ? 'completedTopics' : kind === 'practice' ? 'completedPractices' : 'verifiedLabs';
+    const values = current[field] ?? [];
+    if (values.includes(key)) return;
+    this.state.update(state => ({ ...state, [trackId]: { ...current, [field]: [...values, key] } }));
+    this.persist();
+  }
+
+  hasLearningStep(trackId: string, kind: 'topic' | 'practice' | 'lab', key: string): boolean {
+    const progress = this.trackProgress(trackId);
+    const field = kind === 'topic' ? 'completedTopics' : kind === 'practice' ? 'completedPractices' : 'verifiedLabs';
+    return (progress[field] ?? []).includes(key);
   }
 
   private calculateStreak(dates: string[]): number {

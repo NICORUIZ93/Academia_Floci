@@ -46,7 +46,7 @@ function findHint(labSection: HTMLElement[]): string | null {
   return null;
 }
 
-function buildWidget(keywords: string[], hint: string | null): HTMLElement {
+function buildWidget(keywords: string[], hint: string | null, onVerified?: () => void): HTMLElement {
   const wrapper = document.createElement('div');
   wrapper.className = 'lab-verify';
 
@@ -93,6 +93,7 @@ function buildWidget(keywords: string[], hint: string | null): HTMLElement {
     if (ratio >= MATCH_THRESHOLD) {
       feedback.classList.add('ok');
       feedback.textContent = '✅ Correcto: tu evidencia coincide con el resultado esperado del laboratorio.';
+      onVerified?.();
     } else {
       feedback.classList.add('fail');
       const missing = keywords.filter(k => !matched.includes(k));
@@ -106,11 +107,12 @@ function buildWidget(keywords: string[], hint: string | null): HTMLElement {
 
 /** Recorre el HTML ya renderizado de una lección e inserta un widget de verificación
  *  después del párrafo "Verificación:" de cada sección "## Laboratorio práctico". */
-export function applyLabVerification(container: HTMLElement): void {
+export function applyLabVerification(container: HTMLElement, onVerified?: (labIndex: number) => void): number {
   const headings = Array.from(container.querySelectorAll('h2')).filter(h2 =>
     /laboratorio/i.test(h2.textContent ?? ''),
   );
 
+  let widgets = 0;
   for (const heading of headings) {
     const sectionElements: HTMLElement[] = [];
     let node = heading.nextElementSibling;
@@ -128,7 +130,10 @@ export function applyLabVerification(container: HTMLElement): void {
     if (keywords.length < MIN_KEYWORDS) continue;
 
     const hint = findHint(sectionElements);
-    const widget = buildWidget(keywords, hint);
+    const labIndex = widgets;
+    const widget = buildWidget(keywords, hint, () => onVerified?.(labIndex));
     verificationParagraph.insertAdjacentElement('afterend', widget);
+    widgets += 1;
   }
+  return widgets;
 }

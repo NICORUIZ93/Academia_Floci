@@ -97,7 +97,10 @@ def render_markdown(data: dict) -> str:
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(); parser.add_argument("--check", action="store_true"); args = parser.parse_args()
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--check", action="store_true")
+    parser.add_argument("--require-practicable", action="store_true", help="falla si algún tema no cumple el contrato pedagógico")
+    args = parser.parse_args()
     data = build(); json_text = json.dumps(data, ensure_ascii=False, indent=2) + "\n"; md_text = render_markdown(data)
     if args.check:
         if not JSON_REPORT.exists() or JSON_REPORT.read_text(encoding="utf-8") != json_text or not MD_REPORT.exists() or MD_REPORT.read_text(encoding="utf-8") != md_text:
@@ -106,6 +109,13 @@ def main() -> None:
         JSON_REPORT.write_text(json_text, encoding="utf-8"); MD_REPORT.write_text(md_text, encoding="utf-8")
     count = sum(row["topics"] for row in data["summary"].values())
     if count != 1217: raise SystemExit(f"Se esperaban 1217 temas; se encontraron {count}")
+    practicable = sum(row["practicable"] for row in data["summary"].values())
+    generic = sum(row["genericScaffold"] for row in data["summary"].values())
+    if args.require_practicable and (practicable != count or generic):
+        raise SystemExit(
+            f"Cobertura pedagógica incompleta: {practicable}/{count} temas practicables; "
+            f"{generic} temas conservan texto genérico"
+        )
     print(f"Auditoría pedagógica detallada OK: {count} temas en {len(data['summary'])} tracks")
 
 

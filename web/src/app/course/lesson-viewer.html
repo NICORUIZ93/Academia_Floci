@@ -101,9 +101,17 @@
       </section>
 
       <footer class="lesson-footer">
-        <button class="complete-toggle" [class.done]="isComplete()" (click)="toggleComplete()">
+        <section class="evidence-summary" aria-labelledby="evidence-title">
+          <div><small>Evidencia para avanzar</small><h2 id="evidence-title">Demuestra, no solo marques</h2></div>
+          <ul>
+            <li [class.ready]="completedTopicCount() === lessonStats().topics"><strong>{{ completedTopicCount() }}/{{ lessonStats().topics }}</strong><span>temas explicados y practicados</span></li>
+            <li [class.ready]="labCount() === 0 || verifiedLabCount() === labCount()"><strong>{{ verifiedLabCount() }}/{{ labCount() }}</strong><span>laboratorios verificados</span></li>
+          </ul>
+        </section>
+        <p class="completion-feedback" aria-live="polite" *ngIf="completionMessage()">{{ completionMessage() }}</p>
+        <button class="complete-toggle" [class.done]="isComplete()" [class.locked]="!isComplete() && !canComplete()" (click)="toggleComplete()">
           <lucide-icon [img]="icons.CircleCheck" />
-          <span>{{ isComplete() ? 'Capítulo completado' : 'Marcar capítulo como completado' }}</span>
+          <span>{{ isComplete() ? 'Capítulo completado' : canComplete() ? 'Completar capítulo (+50 XP)' : 'Completa las evidencias para avanzar' }}</span>
         </button>
         <div class="lesson-nav">
           <button *ngIf="previousModule() as prev" (click)="goToModule(prev.id)"><lucide-icon [img]="icons.ChevronLeft" /><span>{{ prev.shortTitle }}</span></button>

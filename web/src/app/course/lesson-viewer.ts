@@ -141,6 +141,10 @@ export class LessonViewerComponent implements OnDestroy {
   readonly moduleQuizChecked = signal(false);
   readonly examMode = signal(false);
   readonly examSeconds = signal(0);
+  readonly completedTopicCount = signal(0);
+  readonly labCount = signal(0);
+  readonly verifiedLabCount = signal(0);
+  readonly completionMessage = signal('');
   private tocObserver: IntersectionObserver | null = null;
   private copyTimer: ReturnType<typeof setTimeout> | null = null;
   private examTimer: ReturnType<typeof setInterval> | null = null;
@@ -248,7 +252,11 @@ export class LessonViewerComponent implements OnDestroy {
       mermaid.run({ nodes: Array.from(diagrams) });
     }
 
-    applyLabVerification(container);
+    const labs = applyLabVerification(container, index => {
+      this.progressService.recordLearningStep(this.trackId(), 'lab', this.learningStepKey(index));
+      this.refreshEvidenceState(container);
+    });
+    this.labCount.set(labs);
     this.enhanceEducationalContent(container);
     this.buildTableOfContents(container);
     const fragment = this.requestedFragment();
@@ -299,6 +307,7 @@ export class LessonViewerComponent implements OnDestroy {
       examples: container.querySelectorAll('.code-example').length,
       activities: container.querySelectorAll('.topic-practice, .exercise-card').length,
     });
+    this.refreshEvidenceState(container);
   }
 
   private addSectionGuides(container: HTMLElement): void {
@@ -400,7 +409,7 @@ export class LessonViewerComponent implements OnDestroy {
       action.dataset['topicCheck'] = String(index);
       const savedDone = localStorage.getItem(this.topicStorageKey(index, 'done')) === 'true';
       action.classList.toggle('done', savedDone);
-      action.textContent = savedDone ? 'Tema entendido ✓' : 'Marcar tema entendido';
+      action.textContent = savedDone ? 'Tema demostrado ✓' : 'Demostrar aprendizaje';
       const practice = document.createElement('details');
       practice.className = 'topic-practice';
       const title = escapeHtml(heading.textContent?.replace(/^Tema\s+\d+:\s*/, '').trim() || 'este concepto');
@@ -413,6 +422,12 @@ export class LessonViewerComponent implements OnDestroy {
         note.dataset['practiceNote'] = String(index);
         note.value = localStorage.getItem(this.topicStorageKey(index, 'note')) ?? '';
         if (note.value) practice.open = true;
+        // Solo se migra el avance antiguo si también existe evidencia escrita.
+        // Un clic histórico sin explicación no se convierte automáticamente en XP.
+        if (savedDone && note.value.trim().length >= 40) {
+          this.progressService.recordLearningStep(this.trackId(), 'topic', this.learningStepKey(index));
+          this.progressService.recordLearningStep(this.trackId(), 'practice', this.learningStepKey(index));
+        }
       }
       const previous = this.previousModule();
       const contract = document.createElement('aside');
@@ -529,12 +544,26 @@ export class LessonViewerComponent implements OnDestroy {
     }
     const topicButton = (event.target as HTMLElement).closest<HTMLButtonElement>('[data-topic-check]');
     if (topicButton) {
+      const index = Number(topicButton.dataset['topicCheck'] ?? 0);
+      const card = topicButton.closest<HTMLElement>('.topic-card');
+      const note = card?.querySelector<HTMLTextAreaElement>('[data-practice-note]')?.value.trim() ?? '';
+      if (!topicButton.classList.contains('done') && note.length < 40) {
+        this.completionMessage.set('Antes de completar el tema, escribe una predicción o explicación de al menos 40 caracteres.');
+        card?.querySelector<HTMLTextAreaElement>('[data-practice-note]')?.focus();
+        return;
+      }
       topicButton.classList.toggle('done');
-      topicButton.textContent = topicButton.classList.contains('done') ? 'Tema entendido ✓' : 'Marcar tema entendido';
+      topicButton.textContent = topicButton.classList.contains('done') ? 'Tema demostrado ✓' : 'Demostrar aprendizaje';
       localStorage.setItem(
-        this.topicStorageKey(Number(topicButton.dataset['topicCheck'] ?? 0), 'done'),
+        this.topicStorageKey(index, 'done'),
         String(topicButton.classList.contains('done')),
       );
+      if (topicButton.classList.contains('done')) {
+        this.progressService.recordLearningStep(this.trackId(), 'topic', this.learningStepKey(index));
+        this.progressService.recordLearningStep(this.trackId(), 'practice', this.learningStepKey(index));
+        this.completionMessage.set('¡Evidencia registrada! Sumaste XP por comprender y practicar.');
+      }
+      if (card) this.refreshEvidenceState(card.closest('.lesson-markdown') as HTMLElement);
       return;
     }
     const button = (event.target as HTMLElement).closest<HTMLButtonElement>('[data-copy-code]');
@@ -561,6 +590,26 @@ export class LessonViewerComponent implements OnDestroy {
   private topicStorageKey(index: number, field: 'done' | 'note'): string {
     return `academia-topic:${this.trackId()}:${this.moduleId()}:${index}:${field}`;
   }
+
+  private learningStepKey(index: number): string {
+    return `${this.moduleId()}:${index}`;
+  }
+
+  private refreshEvidenceState(container: HTMLElement | null): void {
+    if (!container) return;
+    this.completedTopicCount.set(container.querySelectorAll('.topic-check.done').length);
+    let verified = 0;
+    for (let index = 0; index < this.labCount(); index += 1) {
+      if (this.progressService.hasLearningStep(this.trackId(), 'lab', this.learningStepKey(index))) verified += 1;
+    }
+    this.verifiedLabCount.set(verified);
+  }
+
+  readonly canComplete = computed(() => {
+    const topicsReady = this.lessonStats().topics > 0 && this.completedTopicCount() === this.lessonStats().topics;
+    const labsReady = this.labCount() === 0 || this.verifiedLabCount() === this.labCount();
+    return topicsReady && labsReady;
+  });
 
   setLessonMode(mode: LessonMode): void {
     this.lessonMode.set(mode);
@@ -621,7 +670,12 @@ export class LessonViewerComponent implements OnDestroy {
   }
 
   toggleComplete(): void {
+    if (!this.isComplete() && !this.canComplete()) {
+      this.completionMessage.set('Aún falta evidencia: completa todos los temas y verifica los laboratorios disponibles.');
+      return;
+    }
     this.progressService.toggleModuleComplete(this.trackId(), this.moduleId());
+    this.completionMessage.set(this.isComplete() ? 'Capítulo completado: 50 XP adicionales.' : 'El capítulo volvió a estado pendiente.');
   }
 
   goToModule(moduleId: number): void {
