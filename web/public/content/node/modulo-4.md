@@ -179,38 +179,6 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 
 ---
 
-## Ejercicios de evaluación
-
-### Ejercicio 1: Por qué importa el orden de middleware
-
-**Enunciado:** explica por qué registrar un middleware de autenticación después de las rutas que debería proteger no las protege realmente.
-
-**Solución esperada:** el orden de registro determina el orden de ejecución; si el middleware de autenticación se registra después de las rutas, esas rutas ya se ejecutaron (y ya respondieron) antes de que el middleware de autenticación tuviera oportunidad de verificar nada, haciendo la protección completamente inefectiva.
-
-**Criterios de éxito:**
-- Explica correctamente que el orden de registro determina el orden de ejecución.
-- Identifica que las rutas ya se habrían ejecutado antes del middleware mal ubicado.
-
-### Ejercicio 2: Diagnosticar una petición colgada
-
-**Enunciado:** una ruta de una API Express nunca responde, aunque el código dentro del middleware previo se ejecuta sin lanzar ningún error visible en los logs. ¿Cuál es la causa más probable?
-
-**Solución esperada:** la causa más probable es que ese middleware previo olvidó invocar `next()` (y tampoco envió una respuesta directamente con `res.end()` o similar), dejando la cadena de ejecución detenida indefinidamente sin avanzar hacia el manejador de ruta final.
-
-**Criterios de éxito:**
-- Identifica correctamente la ausencia de `next()` como la causa más probable.
-
-### Ejercicio 3: Elegir entre Express y Fastify
-
-**Enunciado:** un equipo está construyendo una API con tráfico muy alto donde el rendimiento por petición es crítico, y ya tiene experiencia previa con JSON Schema. ¿Recomendarías Express o Fastify? Justifica.
-
-**Solución esperada:** Fastify, porque su integración nativa de JSON Schema (aprovechada por el equipo que ya tiene experiencia con ese formato) genera serialización optimizada de respuestas, contribuyendo a un mejor rendimiento bruto consistentemente demostrado frente a Express, precisamente la prioridad declarada en este escenario.
-
-**Criterios de éxito:**
-- Recomienda Fastify.
-- Justifica correctamente en términos de rendimiento y aprovechamiento de la experiencia previa con JSON Schema del equipo.
-
----
 
 ## Rúbrica del proyecto
 

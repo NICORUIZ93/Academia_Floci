@@ -163,36 +163,6 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 
 ---
 
-## Ejercicios de evaluación
-
-### Ejercicio 1: Ventaja de NavigationPath
-
-**Enunciado:** ¿qué ventaja da `NavigationPath` sobre el manejo de navegación basado en `NavigationLink` anidados del SwiftUI antiguo?
-
-**Solución esperada:** permite manipular el stack de navegación completo desde código imperativo (agregar, quitar, resetear), habilitando casos de uso como deep linking a varios niveles de profundidad o resetear el stack completo, que serían difíciles de expresar dependiendo únicamente de `NavigationLink` anidados en cada vista.
-
-**Criterios de éxito:**
-- Explica correctamente la manipulación programática del stack como la ventaja de `NavigationPath`.
-
-### Ejercicio 2: Cuándo usar sheet vs full screen cover
-
-**Enunciado:** ¿cuándo usarías un sheet en vez de un full screen cover?
-
-**Solución esperada:** para acciones complementarias o formularios que el usuario puede abandonar fácilmente sin perder su contexto de navegación previo, reservando el full screen cover para flujos deliberadamente obligatorios que requieren la atención completa del usuario.
-
-**Criterios de éxito:**
-- Distingue correctamente el nivel de intensidad de interrupción apropiado para cada uno.
-
-### Ejercicio 3: Qué logra el deep linking
-
-**Enunciado:** ¿qué logra configurar deep linking con `.onOpenURL` en una app SwiftUI?
-
-**Solución esperada:** permite que una entrada externa (notificación, link compartido) lleve al usuario directamente al contenido relevante navegando programáticamente al punto correspondiente, en vez de aterrizar en la pantalla principal requiriendo navegación manual adicional.
-
-**Criterios de éxito:**
-- Explica correctamente la llegada directa al contenido relevante como el logro del deep linking.
-
----
 
 ## Rúbrica del proyecto
 

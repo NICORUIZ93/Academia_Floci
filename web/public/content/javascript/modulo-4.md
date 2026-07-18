@@ -200,47 +200,6 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 
 ---
 
-## Ejercicios de evaluación
-
-### Ejercicio 1: reduce frente a exceso de ingeniería
-
-**Enunciado:** explica cuándo usar `reduce` es la herramienta correcta y cuándo es "exceso de ingeniería" frente a encadenar `filter` + `map` por separado, usando un ejemplo concreto de cada caso.
-
-**Solución esperada:** `reduce` es apropiado cuando se necesita producir un único valor acumulado que combina información de todos los elementos (una suma, un objeto de agrupación); es exceso de ingeniería cuando se usa para simplemente filtrar y transformar (lo que `filter().map()` expresa de forma más legible y directa), forzando esa lógica dentro de una función acumuladora innecesariamente compleja de leer.
-
-**Criterios de éxito:**
-- Da un ejemplo correcto de uso apropiado de `reduce` (agregación real).
-- Da un ejemplo correcto de uso inapropiado (donde `filter`/`map` serían más legibles).
-
-### Ejercicio 2: Elegir la estructura correcta
-
-**Enunciado:** dado el requisito "contar cuántas veces aparece cada producto en una lista de 10,000 ventas, donde el nombre del producto es arbitrario y no se conoce de antemano", justifica si usarías un objeto plano o un `Map`.
-
-**Solución esperada:** `Map`, porque las claves (nombres de producto) son verdaderamente dinámicas y no se conocen de antemano, evitando el riesgo de colisión con propiedades heredadas del prototipo de `Object`, y porque `Map` expone `size` directamente y es iterable de forma nativa con `for...of`, sin pasos adicionales de conversión.
-
-**Criterios de éxito:**
-- Elige `Map` y justifica correctamente con al menos una de las razones mencionadas (colisión de prototipo, `size`, iterabilidad directa).
-
-### Ejercicio 3: Actualizar sin mutar en profundidad
-
-**Enunciado:** dado `const config = { usuario: { preferencias: { tema: "claro", idioma: "es" } } }`, escribe la expresión que actualiza `tema` a `"oscuro"` sin mutar `config` en ningún nivel.
-
-**Solución esperada:**
-```js
-const nuevaConfig = {
-  ...config,
-  usuario: {
-    ...config.usuario,
-    preferencias: { ...config.usuario.preferencias, tema: "oscuro" },
-  },
-};
-```
-
-**Criterios de éxito:**
-- Aplica spread en los tres niveles de anidamiento relevantes.
-- Verifica (o explica cómo verificaría) que `config` original permanece completamente intacto.
-
----
 
 ## Rúbrica del proyecto
 

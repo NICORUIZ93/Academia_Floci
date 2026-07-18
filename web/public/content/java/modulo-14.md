@@ -254,34 +254,6 @@ Parte del proyecto 13 y conserva un tag funcional anterior.
 - Fijar `-Xmx` igual al límite: deja memoria para metaspace, stacks, buffers, JIT y nativa.
 - Crear jlink una vez: versiona y reconstruye runtime ante cada actualización relevante.
 
-## Ejercicios de evaluación
-
-### Ejercicio 1: volatile insuficiente
-
-Dos hilos ejecutan `volatile int counter; counter++;`. ¿Por qué puede perder incrementos?
-
-<details><summary>Solución razonada</summary>
-
-Cada read/write es visible, pero el incremento son tres acciones. Ambos pueden leer 4 y escribir 5. Usa operación atómica o lock; el mecanismo debe proteger el invariante completo.
-</details>
-
-### Ejercicio 2: benchmark milagroso
-
-Una función se vuelve “cero nanosegundos” cuando su resultado deja de imprimirse. ¿Qué ocurrió?
-
-<details><summary>Solución razonada</summary>
-
-El JIT observó que el resultado no afectaba ningún comportamiento y eliminó el cálculo. JMH devuelve o consume resultado mediante Blackhole y organiza warmup/forks; todavía debe usarse entrada representativa.
-</details>
-
-### Ejercicio 3: runtime sin parche
-
-El host actualizó su JDK pero el contenedor jlink conserva una vulnerabilidad. ¿Por qué?
-
-<details><summary>Solución razonada</summary>
-
-La imagen personalizada contiene su propio runtime construido desde otra versión. Debe reconstruirse con JDK corregido, probarse y desplegarse. Actualizar host no reemplaza capas inmutables del contenedor.
-</details>
 
 ## Rúbrica del proyecto
 

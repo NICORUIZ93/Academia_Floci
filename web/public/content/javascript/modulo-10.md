@@ -211,39 +211,6 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 
 ---
 
-## Ejercicios de evaluación
-
-### Ejercicio 1: Elegir entre debounce y throttle
-
-**Enunciado:** para cada uno de estos dos escenarios, indica si usarías `debounce` o `throttle` y justifica: (a) validar un nombre de usuario contra el servidor mientras el usuario escribe, (b) actualizar la posición de una barra de progreso de lectura mientras el usuario hace scroll por un artículo largo.
-
-**Solución esperada:** (a) `debounce`, porque se quiere esperar a que el usuario termine de escribir antes de disparar la validación costosa contra el servidor; (b) `throttle`, porque se necesita actualizar la barra de progreso de forma continua y periódica durante todo el scroll activo, no solo al final cuando el usuario deja de desplazarse.
-
-**Criterios de éxito:**
-- Elige correctamente `debounce` para (a) y `throttle` para (b).
-- Justifica cada elección en términos de "esperar una pausa" frente a "responder periódicamente durante actividad continua".
-
-### Ejercicio 2: Cuándo memoizar es contraproducente
-
-**Enunciado:** explica por qué memoizar una función que genera un número aleatorio distinto en cada invocación sería incorrecto, y por qué memoizar una función que casi nunca recibe los mismos argumentos dos veces sería inútil aunque no incorrecto.
-
-**Solución esperada:** memoizar una función que genera un número aleatorio es incorrecto porque la función no es pura (su resultado no depende únicamente de sus argumentos, sino de una fuente de aleatoriedad), y el caché devolvería siempre el primer resultado aleatorio generado, en vez de un valor nuevo genuinamente aleatorio en cada invocación esperada. Memoizar una función con argumentos casi siempre distintos es inútil (no incorrecto) porque el caché prácticamente nunca tendría una coincidencia real que reutilizar, mientras consume memoria de forma creciente y permanente sin ningún beneficio real de rendimiento.
-
-**Criterios de éxito:**
-- Explica correctamente por qué la impureza hace la memoización incorrecta (no solo inútil) en el primer caso.
-- Distingue correctamente "incorrecto" (primer caso) de "inútil pero no incorrecto" (segundo caso).
-
-### Ejercicio 3: Diagnóstico basado en profiling
-
-**Enunciado:** tras grabar una interacción lenta en la pestaña Performance, el flame chart muestra que una función `ordenarResultados()` consume el 80% del tiempo total registrado. Describe el proceso completo que seguirías desde este punto hasta confirmar una optimización exitosa.
-
-**Solución esperada:** primero, investigar por qué `ordenarResultados()` es lenta (¿usa un algoritmo de ordenamiento ineficiente? ¿se ejecuta más veces de las necesarias? ¿podría beneficiarse de memoización si los mismos datos se ordenan repetidamente?); segundo, aplicar la optimización específica identificada (por ejemplo, memoizar si los mismos datos se ordenan repetidamente, o mover el ordenamiento a un Web Worker si bloquea perceptiblemente la UI); tercero, volver a grabar exactamente la misma interacción con la pestaña Performance y comparar el nuevo porcentaje de tiempo consumido por esa función contra el 80% original, confirmando una mejora real y medible antes de considerar la optimización exitosa.
-
-**Criterios de éxito:**
-- Propone investigar la causa específica antes de aplicar cualquier optimización genérica.
-- Incluye el paso final de volver a medir y comparar con el número original, no solo asumir la mejora.
-
----
 
 ## Rúbrica del proyecto
 

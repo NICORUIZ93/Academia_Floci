@@ -145,36 +145,6 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 
 ---
 
-## Ejercicios de evaluación
-
-### Ejercicio 1: Diferencia entre stub y mock
-
-**Enunciado:** ¿qué diferencia hay entre un stub y un mock?
-
-**Solución esperada:** un stub devuelve respuestas predefinidas y deterministas sin verificar la forma exacta de la invocación; un mock, en un sentido más estricto, además verifica que se invocó de una forma específica esperada (con ciertos argumentos, un número determinado de veces), agregando una capa de verificación de comportamiento sobre la simple sustitución de respuesta.
-
-**Criterios de éxito:**
-- Distingue correctamente la verificación adicional de invocación del mock frente al stub simple.
-
-### Ejercicio 2: Qué contratos se pueden probar localmente
-
-**Enunciado:** ¿qué contratos puedes probar localmente y cuáles necesitan el modelo real?
-
-**Solución esperada:** localmente se puede probar la estructura del contrato de integración (parseo de request/response, manejo de errores de API, flujo completo de la aplicación); se necesita el modelo real para validar la calidad y relevancia del contenido generado, el comportamiento ante prompts ambiguos, y los límites reales de tokens.
-
-**Criterios de éxito:**
-- Distingue correctamente estructura de integración (local) de calidad de contenido generativo (requiere modelo real).
-
-### Ejercicio 3: Por qué cloud local usa stubs deterministas para IA
-
-**Enunciado:** ¿por qué cloud local usa stubs deterministas para IA en vez de modelos reales?
-
-**Solución esperada:** los modelos de lenguaje reales son demasiado grandes y computacionalmente costosos para ejecutarse localmente de forma práctica; un stub determinista permite en cambio escribir pruebas automatizadas confiables sobre la estructura del flujo de integración, sin la variabilidad no determinista inherente de un modelo real que haría frágil cualquier aserción de prueba.
-
-**Criterios de éxito:**
-- Explica correctamente la impracticabilidad computacional y la necesidad de determinismo para pruebas confiables.
-
----
 
 ## Rúbrica del proyecto
 

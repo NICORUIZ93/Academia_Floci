@@ -182,36 +182,6 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 
 ---
 
-## Ejercicios de evaluación
-
-### Ejercicio 1: Por qué collectAsStateWithLifecycle es más seguro
-
-**Enunciado:** ¿por qué `collectAsStateWithLifecycle` es más seguro que `collectAsState` a secas en una app real?
-
-**Solución esperada:** `collectAsStateWithLifecycle` pausa automáticamente la recolección cuando la app va a background y la reanuda al volver a foreground, ahorrando recursos que `collectAsState` desperdiciaría recolectando actualizaciones de forma continua sin ninguna consideración del ciclo de vida.
-
-**Criterios de éxito:**
-- Explica correctamente la pausa/reanudación consciente del ciclo de vida como razón.
-
-### Ejercicio 2: Por qué SharedFlow para eventos de un solo uso
-
-**Enunciado:** ¿por qué un evento de "mostrar un Snackbar" debería modelarse con `SharedFlow` y no con `StateFlow`?
-
-**Solución esperada:** `StateFlow` siempre entrega un "valor actual" a cualquier nuevo observador, lo que haría que el evento se repitiera incorrectamente en una recomposición posterior (por ejemplo, tras rotar); `SharedFlow` entrega cada emisión una única vez a los observadores activos en ese momento, sin retener un valor "actual" que se repita.
-
-**Criterios de éxito:**
-- Explica correctamente la retención de "último valor" de `StateFlow` como el problema que `SharedFlow` evita.
-
-### Ejercicio 3: Qué es UDF
-
-**Enunciado:** ¿en qué consiste el patrón UDF (Unidirectional Data Flow) aplicado entre un `ViewModel` y su UI Compose?
-
-**Solución esperada:** el estado fluye en una única dirección desde el `ViewModel` hacia la UI (vía `StateFlow`), y las intenciones del usuario fluyen en la dirección contraria, desde la UI hacia el `ViewModel` (vía llamadas a funciones), sin que la UI modifique el estado directamente en ningún caso.
-
-**Criterios de éxito:**
-- Explica correctamente el flujo en una única dirección en ambos sentidos (estado hacia la UI, intenciones hacia el ViewModel).
-
----
 
 ## Rúbrica del proyecto
 

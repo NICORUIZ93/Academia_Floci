@@ -194,39 +194,6 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 
 ---
 
-## Ejercicios de evaluación
-
-### Ejercicio 1: Explicar la ventaja de buscar en logs centralizados
-
-**Enunciado:** explica, en tus propias palabras, por qué buscar en un sistema de logs centralizado es mucho más rápido que entrar individualmente a cada contenedor con `docker logs` para revisar sus logs por separado, especialmente en un sistema con más de 5 servicios distintos.
-
-**Solución esperada:** con `docker logs` sobre cada contenedor individual, tendrías que ejecutar el comando por separado en cada uno de los 5 o más servicios, revisar manualmente el contenido de cada uno, y tratar de correlacionar eventos relacionados entre ellos por proximidad de marca de tiempo, un proceso lento y propenso a error. Un sistema de logs centralizado permite una única búsqueda (por ejemplo, por correlation ID o por nivel de log) que devuelve instantáneamente los resultados relevantes de todos los servicios a la vez, ya correlacionados y ordenados cronológicamente, sin necesidad de revisar servicio por servicio de forma manual y separada.
-
-**Criterios de éxito:**
-- Explica que sin centralización, hay que revisar cada servicio individualmente y correlacionar manualmente por marca de tiempo.
-- Explica que la centralización permite una búsqueda única que devuelve resultados ya correlacionados de todos los servicios relevantes.
-
-### Ejercicio 2: Elegir entre Loki y Elasticsearch
-
-**Enunciado:** tu equipo ya usa Grafana extensamente para métricas con Prometheus, tiene un presupuesto de infraestructura ajustado, y sus necesidades de búsqueda en logs son principalmente filtrar por servicio y nivel de error, con ocasionales búsquedas de texto libre dentro de un subconjunto ya filtrado. ¿Recomendarías Loki o Elasticsearch? Justifica tu respuesta.
-
-**Solución esperada:** Loki, porque el equipo ya usa Grafana (integración nativa), tiene un presupuesto ajustado (Loki tiene menor coste operativo al no indexar contenido completo), y su patrón de uso principal —filtrar por labels como servicio y nivel, con búsquedas de texto libre ocasionales sobre un subconjunto ya acotado— es exactamente el caso de uso para el que Loki está optimizado, en contraste con necesitar búsquedas de texto libre extensas y frecuentes sobre volúmenes completos sin filtrar, que favorecerían a Elasticsearch a pesar de su mayor coste.
-
-**Criterios de éxito:**
-- Recomienda Loki, no Elasticsearch.
-- La justificación menciona al menos dos de los tres factores relevantes: integración con Grafana existente, presupuesto ajustado, y patrón de consulta principalmente basado en labels.
-
-### Ejercicio 3: Diseñar la propagación de un correlation ID
-
-**Enunciado:** tu sistema tiene un API Gateway (punto de entrada) que llama a un servicio de autenticación, que a su vez, si la autenticación es exitosa, llama a un servicio de procesamiento de pedidos. Describe, paso a paso, cómo se generaría y propagaría el correlation ID a través de esta cadena de tres servicios.
-
-**Solución esperada:** el API Gateway, al recibir la petición original del usuario (que no trae ningún correlation ID previo), genera un correlation ID nuevo y lo incluye en su propio log; al llamar al servicio de autenticación, propaga ese mismo correlation ID como cabecera HTTP. El servicio de autenticación lee ese correlation ID de la cabecera entrante (no genera uno nuevo, porque ya viene de un llamador anterior), lo incluye en sus propios logs, y si la autenticación es exitosa y necesita llamar al servicio de procesamiento de pedidos, propaga ese mismo correlation ID sin modificarlo. El servicio de procesamiento de pedidos hace exactamente lo mismo: lee el correlation ID entrante, lo usa en sus propios logs, sin generar uno nuevo.
-
-**Criterios de éxito:**
-- Explica correctamente que solo el primer servicio (el punto de entrada, sin un correlation ID previo) genera uno nuevo; los siguientes servicios de la cadena reutilizan el que ya reciben.
-- Describe correctamente la propagación consistente del mismo ID a través de los tres servicios de la cadena.
-
----
 
 ## Rúbrica del proyecto
 

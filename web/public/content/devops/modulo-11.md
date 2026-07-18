@@ -259,39 +259,6 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 
 ---
 
-## Ejercicios de evaluación
-
-### Ejercicio 1: Priorizar un reporte de vulnerabilidades
-
-**Enunciado:** un escaneo de Trivy sobre tu imagen reporta 40 vulnerabilidades: 2 críticas, 5 altas, 20 medias y 13 bajas. Tu equipo tiene tiempo limitado antes del próximo despliegue planeado. Describe cómo priorizarías la respuesta.
-
-**Solución esperada:** priorizar primero las 2 vulnerabilidades críticas, verificando si existe una versión corregida disponible para cada paquete afectado y actualizando esas dependencias específicas antes del despliegue si es posible; después revisar las 5 altas con el mismo criterio. Las vulnerabilidades de severidad media y baja pueden documentarse para atenderse en una ventana de mantenimiento posterior, sin necesariamente bloquear el despliegue planeado, salvo que alguna de ellas, tras revisión con criterio humano, resulte tener un impacto real mayor al que su severidad catalogada aislada sugiere en el contexto específico de esta aplicación.
-
-**Criterios de éxito:**
-- Prioriza explícitamente las vulnerabilidades críticas y altas antes que las medias y bajas.
-- Menciona verificar la disponibilidad de una versión corregida como parte del proceso de respuesta, no solo constatar la existencia de la vulnerabilidad.
-
-### Ejercicio 2: Diseñar permisos mínimos para un token de despliegue
-
-**Enunciado:** tu pipeline de CI/CD necesita, como parte de su tarea de despliegue, actualizar únicamente la imagen de un Deployment específico llamado `mi-api` en el namespace `produccion` de un clúster de Kubernetes. Alguien propone usar un token con permisos de administrador de clúster completo "para no tener problemas de permisos más adelante". Explica por qué esto viola el principio de mínimo privilegio y qué permisos exactos diseñarías en su lugar.
-
-**Solución esperada:** un token con permisos de administrador de clúster completo viola el principio de mínimo privilegio porque concede acceso muchísimo más amplio del que la tarea específica requiere; si ese token se filtra, el daño potencial sería sobre todo el clúster, no solo sobre el Deployment específico que el pipeline realmente necesita actualizar. Los permisos correctos, aplicando RBAC del módulo de Kubernetes de este track, serían un Role limitado al namespace `produccion` con permiso únicamente de `update` (y `get` para verificar el estado) sobre el recurso `deployments`, específicamente sobre el Deployment `mi-api`, sin ningún otro permiso adicional sobre otros recursos o namespaces del clúster.
-
-**Criterios de éxito:**
-- Explica correctamente que el token de administrador completo amplía innecesariamente el daño potencial ante una filtración.
-- Propone un Role acotado específicamente al namespace y al Deployment relevante, con solo los verbos necesarios (`update`, `get`), conectándolo con RBAC del módulo de Kubernetes.
-
-### Ejercicio 3: Elegir entre SAST, DAST y SCA
-
-**Enunciado:** para cada uno de estos tres escenarios, indica qué categoría de análisis de seguridad (SAST, DAST o SCA) es la más apropiada: (a) detectar que tu aplicación usa una versión de una librería de terceros con una vulnerabilidad conocida reportada recientemente; (b) detectar que tu propio código construye una consulta SQL concatenando directamente entrada de usuario sin sanitizar; (c) detectar que un endpoint de tu API, ya desplegado en un entorno de pruebas, responde con información sensible ante una petición malformada específica.
-
-**Solución esperada:** (a) SCA, porque es un problema de una dependencia de terceros con una vulnerabilidad conocida; (b) SAST, porque es un patrón detectable directamente en el código fuente propio sin necesidad de ejecutarlo; (c) DAST, porque requiere probar el comportamiento real de la aplicación ya en ejecución ante una petición específica.
-
-**Criterios de éxito:**
-- Las tres asignaciones coinciden con la solución esperada.
-- Puede explicar por qué SAST no detectaría (a) (no es código propio) ni (c) (requiere comportamiento en ejecución real).
-
----
 
 ## Rúbrica del proyecto
 

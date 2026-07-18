@@ -186,36 +186,6 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 
 ---
 
-## Ejercicios de evaluación
-
-### Ejercicio 1: Decisión más natural en SwiftUI
-
-**Enunciado:** ¿qué decisión de arquitectura te resultó más natural en SwiftUI comparado con otros frameworks que conozcas?
-
-**Solución esperada:** una respuesta válida identifica un aspecto específico de SwiftUI (por ejemplo, la integración de `@Observable` directamente con el sistema de tipos de Swift, o la verificación de exhaustividad de enums en el manejo de estado) y lo compara razonadamente con el enfoque equivalente en otro framework conocido (Compose, React).
-
-**Criterios de éxito:**
-- Identifica un aspecto concreto de SwiftUI y lo compara de forma razonada con otro framework.
-
-### Ejercicio 2: Parte que requirió más iteración
-
-**Enunciado:** ¿qué parte del proyecto (concurrencia, persistencia, testing) requirió más iteración para sentirse "correcta"?
-
-**Solución esperada:** una respuesta válida identifica una dificultad concreta (por ejemplo, coordinar correctamente la cancelación de tareas async al navegar entre pantallas, o sincronizar el `ModelContext` de SwiftData con las actualizaciones de red sin duplicar datos) y explica cómo se resolvió iterativamente.
-
-**Criterios de éxito:**
-- Identifica una dificultad de integración específica y razonada, no una respuesta genérica sin justificación.
-
-### Ejercicio 3: Los tres pilares de una app iOS nativa
-
-**Enunciado:** ¿qué combinación de características hace que una app iOS se perciba genuinamente "nativa" de la plataforma?
-
-**Solución esperada:** la combinación de seguridad de tipos incorporada desde el diseño del lenguaje (optionals, enums exhaustivos), concurrencia estructurada sin callbacks anidados (`async`/`await`, actors, `TaskGroup`), y una UI declarativa sincronizada automáticamente con el estado sin código manual de actualización (`@Observable`, `@Query`).
-
-**Criterios de éxito:**
-- Menciona al menos dos de los tres pilares (seguridad de tipos, concurrencia estructurada, UI reactiva) como parte de la respuesta.
-
----
 
 ## Rúbrica del proyecto
 

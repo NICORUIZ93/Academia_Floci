@@ -138,46 +138,6 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 
 ---
 
-## Ejercicios de evaluación
-
-### Ejercicio 1: Encapsulación adicional de JPMS
-
-**Enunciado:** ¿qué encapsulación adicional da JPMS que los modificadores `public`/`private` de Java no daban antes?
-
-**Solución esperada:** JPMS permite ocultar paquetes completos (incluso con clases marcadas como `public`) del resto de la aplicación, simplemente no incluyéndolos en la declaración `exports` del módulo; antes de JPMS, cualquier clase `public` era accesible desde cualquier otro código en el classpath completo, sin ninguna forma de restringir ese acceso a nivel de paquete o módulo completo.
-
-**Criterios de éxito:**
-- Explica correctamente la ocultación de paquetes completos vía `exports` como la encapsulación adicional de JPMS.
-
-### Ejercicio 2: Cuándo JPMS aporta valor
-
-**Enunciado:** ¿en qué tipo de proyecto JPMS realmente aporta valor frente a uno donde es complejidad innecesaria?
-
-**Solución esperada:** JPMS aporta valor real en bibliotecas grandes y de larga vida con muchos consumidores externos, o en sistemas grandes con muchos equipos compartiendo una misma base de código, donde los límites arquitectónicos verificados por el compilador previenen dependencias no deseadas; en un proyecto pequeño o un microservicio independiente, la ceremonia adicional de gestionar módulos suele ser complejidad sin beneficio proporcional.
-
-**Criterios de éxito:**
-- Distingue correctamente el caso de proyecto grande/biblioteca de larga vida (valor real) del caso pequeño (complejidad innecesaria).
-
-### Ejercicio 3: requires transitive
-
-**Enunciado:** ¿cuándo es necesario usar `requires transitive` en vez de un `requires` simple?
-
-**Solución esperada:** cuando un módulo expone en su propia API pública tipos que en realidad provienen de otro módulo del que depende, `requires transitive` garantiza que cualquier módulo que dependa del primero también obtenga automáticamente acceso al segundo, sin necesidad de declarar esa dependencia adicional por separado explícitamente.
-
-**Criterios de éxito:**
-- Explica correctamente el caso de exposición de tipos de un módulo dependiente en la API pública propia como razón para usar `requires transitive`.
-
-### Ejercicio 4: exports vs. opens
-
-**Enunciado:** tu módulo `exports com.miapp.dominio;` y compila sin errores, pero al integrar Jackson para serializar esas clases a JSON, la aplicación falla en tiempo de ejecución con `InaccessibleObjectException`. ¿Qué falta, y por qué `exports` no fue suficiente?
-
-**Solución esperada:** falta declarar `opens com.miapp.dominio to com.fasterxml.jackson.databind;` (o `opens` sin `to` si se acepta abrirlo a cualquier módulo). `exports` solo concede acceso de compilación y llamada directa entre módulos; el acceso reflexivo que Jackson necesita para inspeccionar y construir instancias de esas clases es una autorización independiente que solo otorga `opens`.
-
-**Criterios de éxito:**
-- Identifica `opens` (no una variante de `exports`) como la declaración faltante.
-- Explica que `exports` y `opens` conceden dos tipos de acceso distintos (compilación/llamada directa vs. reflexión).
-
----
 
 ## Rúbrica del proyecto
 

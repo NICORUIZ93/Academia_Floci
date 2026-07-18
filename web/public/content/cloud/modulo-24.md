@@ -145,39 +145,6 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 
 ---
 
-## Ejercicios de evaluación
-
-### Ejercicio 1: Diagnosticar una fase de build fallida
-
-**Enunciado:** modifica intencionalmente tu `buildspec.yml` para que la fase `build` ejecute un comando que falla (por ejemplo, `exit 1`), inicia la compilación, y usando `batch-get-builds` y los logs de CloudWatch, identifica en qué fase exacta falló.
-
-**Solución esperada:** `batch-get-builds` reporta `buildStatus: FAILED`, y los logs en `/aws/codebuild/<proyecto>` muestran la salida de la fase `build` incluyendo el código de salida distinto de cero, permitiendo identificar exactamente qué comando causó el fallo.
-
-**Criterios de éxito:**
-- Provocaste realmente el fallo y lo diagnosticaste con las herramientas correctas (batch-get-builds + CloudWatch Logs), no solo describiste el proceso en teoría.
-- Identificas correctamente que las fases posteriores (`post_build`) no se ejecutan si una fase anterior falla.
-
-### Ejercicio 2: Compara AllAtOnce vs Canary
-
-**Enunciado:** despliega la misma función Lambda dos veces: una vez con `LambdaAllAtOnce` y otra con `LambdaCanary10Percent5Minutes`. Documenta la diferencia de tiempo total de despliegue y explica en qué escenario de producción elegirías cada una.
-
-**Solución esperada:** `AllAtOnce` completa casi inmediatamente porque cambia el 100% del tráfico de una vez; `Canary` tarda al menos el intervalo configurado (5 minutos) porque mantiene el tráfico dividido durante ese tiempo antes de completar. `AllAtOnce` es apropiado para cambios de bajo riesgo o entornos no críticos; `Canary` es preferible en producción donde limitar el impacto de un bug es prioritario sobre la velocidad de despliegue.
-
-**Criterios de éxito:**
-- Ejecutaste realmente ambos despliegues y comparaste tiempos reales, no estimados.
-- La justificación de cuándo usar cada estrategia se basa en el trade-off riesgo/velocidad, no en preferencia arbitraria.
-
-### Ejercicio 3: Simula un lifecycle hook que falla
-
-**Enunciado:** configura un despliegue Lambda con un lifecycle hook `BeforeAllowTraffic` que reporte `Failed` (usando `PutLifecycleEventHookExecutionStatus` con ese estado). Documenta qué le ocurre al alias `live` después.
-
-**Solución esperada:** CodeDeploy revierte automáticamente el alias `live` a la versión anterior sin completar el cambio de tráfico, y marca el despliegue como `Failed` — el alias nunca llega a apuntar a la versión nueva, protegiendo a los usuarios de una versión potencialmente defectuosa.
-
-**Criterios de éxito:**
-- Confirmaste con `get-deployment` y una consulta al alias Lambda que efectivamente no cambió de versión.
-- Explicas por qué este mecanismo de reversión automática es preferible a que un humano tenga que notar el problema y revertir manualmente.
-
----
 
 ## Rúbrica del proyecto
 

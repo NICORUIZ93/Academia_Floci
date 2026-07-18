@@ -188,40 +188,6 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 
 ---
 
-## Ejercicios de evaluación
-
-### Ejercicio 1: Explicar la insuficiencia de depends_on sin healthcheck
-
-**Enunciado:** un compañero configuró `depends_on: - db` (sin `condition: service_healthy`) y sigue viendo errores intermitentes de conexión al arrancar su stack completo, aunque `db` aparece como "arrancado" en `docker compose ps`. Explica por qué esto ocurre y cómo lo corregirías.
-
-**Solución esperada:** `depends_on` sin condición solo garantiza el orden en que Docker Compose inicia los contenedores, no que el servicio dentro de `db` ya esté realmente listo para aceptar conexiones; muchos servicios (especialmente bases de datos) tardan un tiempo adicional después de que el contenedor arranca antes de estar funcionalmente disponibles. La corrección es añadir un healthcheck apropiado al servicio `db` y cambiar la dependencia a `depends_on: db: condition: service_healthy`, para que Compose espere activamente a que el healthcheck reporte éxito antes de arrancar el servicio dependiente.
-
-**Criterios de éxito:**
-- Explica correctamente que `depends_on` simple solo garantiza orden de arranque, no disponibilidad funcional.
-- Propone añadir un healthcheck y usar `condition: service_healthy` como la corrección.
-
-### Ejercicio 2: Gestionar un secreto correctamente
-
-**Enunciado:** un compañero acaba de subir accidentalmente su archivo `.env` real (con contraseñas de producción) al repositorio compartido. Más allá de eliminarlo del último commit, ¿qué medidas adicionales recomendarías, y qué debería haber estado configurado desde el principio para evitar este incidente?
-
-**Solución esperada:** eliminar el archivo del último commit no es suficiente, porque el secreto ya quedó expuesto en el historial de Git (recuperable por cualquiera con acceso al repositorio, incluso después de un commit posterior que lo borre); es necesario rotar (cambiar) inmediatamente cualquier credencial expuesta, asumiendo que ya está comprometida. Para evitar que vuelva a ocurrir, `.env` debería estar listado en `.gitignore` desde el inicio del proyecto, y el equipo debería versionar únicamente un `.env.example` con valores de marcador de posición, nunca el archivo real con secretos.
-
-**Criterios de éxito:**
-- Menciona que el secreto sigue expuesto en el historial de Git incluso después de eliminarlo en un commit posterior.
-- Recomienda rotar la credencial comprometida, no solo eliminar el archivo.
-- Identifica `.gitignore` para `.env` (con `.env.example` como plantilla versionada) como la prevención correcta desde el inicio.
-
-### Ejercicio 3: Diseñar perfiles apropiados
-
-**Enunciado:** tu equipo tiene un stack con `app`, `db`, `cache`, una herramienta de administración visual de base de datos (solo usada ocasionalmente por 2 de 8 desarrolladores), y un servicio que genera datos de prueba masivos (solo usado antes de demos, nunca en desarrollo diario). Diseña la asignación de perfiles para estos cinco servicios.
-
-**Solución esperada:** `app`, `db` y `cache` sin ningún perfil asignado (se levantan siempre, porque son necesarios para el flujo de trabajo diario de todo el equipo); la herramienta de administración visual con `profiles: ["debug"]` (o un nombre similar), activada solo por quienes la necesiten ocasionalmente; el generador de datos de prueba con `profiles: ["demo"]`, activado solo antes de una demostración.
-
-**Criterios de éxito:**
-- Deja `app`, `db` y `cache` sin perfil (uso diario de todo el equipo).
-- Asigna un perfil específico y con nombre descriptivo a los dos servicios de uso ocasional, cada uno diferenciado según su propósito real.
-
----
 
 ## Rúbrica del proyecto
 

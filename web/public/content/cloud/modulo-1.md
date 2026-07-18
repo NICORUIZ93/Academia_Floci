@@ -301,39 +301,6 @@ Repite la comprobación visual primero en StackPort y después en Floci UI, o en
 
 ---
 
-## Ejercicios de evaluación
-
-### Ejercicio 1: Imagen vs contenedor
-
-**Enunciado:** ejecuta `docker images` y `docker ps -a` en tu terminal, y explica con tus propias palabras, usando la salida real de ambos comandos, la diferencia entre una imagen y un contenedor.
-
-**Solución esperada:** `docker images` debe mostrar al menos las imágenes `hello-world` y `floci/floci`, con su tamaño en disco; `docker ps -a` debe mostrar contenedores (instancias) creados a partir de esas imágenes, cada uno con su propio ID y estado (`Up` o `Exited`). La explicación correcta identifica que una misma imagen puede dar lugar a múltiples contenedores distintos.
-
-**Criterios de éxito:**
-- Ejecutaste realmente ambos comandos y usaste su salida real, no una genérica.
-- La explicación distingue correctamente imagen (plantilla) de contenedor (instancia en ejecución).
-
-### Ejercicio 2: Diagnosticar con logs
-
-**Enunciado:** detén Floci con `floci stop --remove`, vuelve a levantarlo en un puerto distinto con `floci start --port 4599`, e intenta ejecutar `aws s3 ls` usando las variables de entorno cargadas con `eval $(floci env)` de un paso anterior (que todavía apuntan al puerto 4566). Diagnostica el problema con `floci status` y `floci doctor`, corrige el problema, y vuelve a verificar.
-
-**Solución esperada:** `aws s3 ls` falla con un error de conexión porque `AWS_ENDPOINT_URL` sigue apuntando a `http://localhost.floci.io:4566`, pero Floci ahora escucha en el 4599. `floci status` (que autodetecta el puerto del contenedor) muestra el puerto real; la corrección es volver a ejecutar `eval $(floci env)` para que recoja el nuevo puerto, o relanzar Floci en el puerto por defecto.
-
-**Criterios de éxito:**
-- Identificaste el problema usando `floci status`/`floci doctor`, no solo por ensayo y error.
-- Corregiste las variables de entorno y verificaste que `aws s3 ls` vuelve a responder correctamente.
-
-### Ejercicio 3: Levantar y destruir el entorno completo
-
-**Enunciado:** partiendo de un estado limpio (`floci stop --remove`), levanta Floci de nuevo con `floci start`, crea un bucket con `aws s3 mb s3://prueba-modulo-1`, confírmalo con `aws s3 ls`, y después destruye completamente el entorno con `floci stop --remove`. Vuelve a levantarlo y comprueba si el bucket sigue existiendo.
-
-**Solución esperada:** sin `--persist` configurado, el bucket desaparece al destruir y recrear el contenedor, porque el estado de Floci vivía únicamente dentro de la capa efímera del contenedor eliminado. `aws s3 ls` después de recrearlo debe devolver una lista vacía.
-
-**Criterios de éxito:**
-- Confirmaste explícitamente, con el comando `aws s3 ls`, que el bucket ya no existe tras recrear el contenedor.
-- Puedes explicar por qué desapareció (falta de `floci start --persist ./data`) relacionándolo con el Tema 5 de este módulo.
-
----
 
 ## Rúbrica del proyecto
 

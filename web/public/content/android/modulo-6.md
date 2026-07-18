@@ -187,36 +187,6 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 
 ---
 
-## Ejercicios de evaluación
-
-### Ejercicio 1: Ventaja de un DAO reactivo
-
-**Enunciado:** ¿qué ventaja da que un DAO devuelva `Flow` en vez de una lista simple?
-
-**Solución esperada:** Room emite automáticamente una nueva lista a través del `Flow` cada vez que cambian los datos de la tabla subyacente, manteniendo la UI sincronizada sin necesidad de volver a consultar manualmente la base de datos.
-
-**Criterios de éxito:**
-- Explica correctamente la actualización automática y reactiva como la ventaja del `Flow`.
-
-### Ejercicio 2: Por qué offline-first mejora la experiencia con buena conexión
-
-**Enunciado:** ¿por qué offline-first mejora la experiencia incluso con buena conexión?
-
-**Solución esperada:** la UI muestra datos instantáneamente desde el caché local sin esperar ninguna latencia de red, mientras la sincronización con la API ocurre de forma transparente en segundo plano, resultando en una percepción de velocidad mayor que esperar activamente una respuesta de red.
-
-**Criterios de éxito:**
-- Explica correctamente la lectura instantánea del caché local como razón de la mejora percibida.
-
-### Ejercicio 3: Necesidad de migraciones
-
-**Enunciado:** ¿qué pasa si cambias el esquema de una entidad Room sin proveer la migración correspondiente?
-
-**Solución esperada:** Room detecta una discrepancia entre la versión de esquema declarada en el código y la que existe en el archivo de base de datos del dispositivo, y lanza una excepción en tiempo de ejecución, en vez de aplicar el cambio silenciosamente.
-
-**Criterios de éxito:**
-- Menciona correctamente la excepción por discrepancia de versión de esquema como consecuencia.
-
----
 
 ## Rúbrica del proyecto
 

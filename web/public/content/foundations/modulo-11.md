@@ -16,19 +16,6 @@ Crea un portafolio con un experimento de sistemas, teoría, datos, inteligencia 
 
 **Verificación:** cada uno de los seis experimentos declara una pregunta distinta, incluye un artefacto reproducible, registra al menos una medición y explica una limitación sin exagerar conclusiones. Otra persona puede ejecutar uno de ellos usando exclusivamente su README. La comparación final debe justificar qué especialización continuarías, qué prerrequisito te falta y qué evidencia cambiaría tu decisión.
 
-## Ejercicios de evaluación
-
-### Ejercicio 1: mapa de prerrequisitos
-
-Dibuja dependencias entre matemáticas, algoritmos, sistemas, datos e inteligencia artificial.
-
-### Ejercicio 2: experimento reproducible
-
-Implementa dos áreas y compara sus métodos de validación.
-
-### Ejercicio 3: responsabilidad profesional
-
-Analiza impacto, privacidad, accesibilidad, energía y riesgo de una solución.
 
 ## Rúbrica del proyecto
 

@@ -10,7 +10,7 @@
 ```
 Eres un profesor experto y autor de un libro técnico llamado "De Cero a Master".
 Genera UNA lección completa en formato Markdown en español, siguiendo EXACTAMENTE
-la estructura de las 9 secciones de abajo. No omitas ninguna sección, no cambies
+la estructura de las secciones de abajo. No omitas ninguna sección, no cambies
 el orden ni los títulos.
 
 ## DATOS DE LA LECCIÓN
@@ -29,10 +29,9 @@ el orden ni los títulos.
    - profesional: técnico directo, jerga de industria, compara con alternativas.
 2. Todo bloque de código debe compilar/ejecutar tal cual. Indica el lenguaje en el fence.
 3. Ningún ejemplo con `foo`/`bar`: usa casos realistas (tienda, tareas, biblioteca...).
-4. Los ejercicios NUNCA llevan la solución al lado; van al final en sección aparte.
-5. Máximo 2 pantallas de teoría antes del primer código. Si el tema necesita más
+4. Máximo 2 pantallas de teoría antes del primer código. Si el tema necesita más
    teoría, intercala código entre las explicaciones.
-6. Si el tema usa servicios cloud, usa Floci en local
+5. Si el tema usa servicios cloud, usa Floci en local
 
 ### Regla para conceptos técnicos
 
@@ -68,13 +67,6 @@ Todo diagrama debe responder una pregunta técnica concreta. Antes del gráfico 
 1-2 modificaciones que provocan un error real: mostrar el mensaje de error exacto,
 explicar la causa y cómo se arregla.
 
-## 🧩 Ejercicios (sin solución visible)
-3 ejercicios en dificultad creciente:
-- Ejercicio 1 (calentamiento): variación pequeña del ejemplo.
-- Ejercicio 2 (aplicación): caso nuevo con lo aprendido.
-- Ejercicio 3 (reto): integra esta lección con una lección anterior del módulo.
-Cada uno con una pista plegable (<details><summary>Pista</summary>...</details>).
-
 ## 💼 Pregunta de entrevista
 1 pregunta real de entrevista sobre este tema, calibrada al nivel
 (Básico=junior, Medio=mid, Avanzado=senior, Master=staff/arquitecto),
@@ -86,13 +78,8 @@ tuviera 10 años". Incluye un ejemplo de respuesta aceptable.
 
 ## ✅ Checklist de salida
 - [ ] Ejecuté el ejemplo y vi la salida esperada
-- [ ] Resolví al menos 2 de los 3 ejercicios
 - [ ] Puedo responder la pregunta de entrevista sin mirar
 - [ ] Escribí mi explicación Feynman
-
----
-## 🔑 Soluciones
-Soluciones completas y comentadas de los 3 ejercicios (al final, nunca antes).
 ```
 
 ---

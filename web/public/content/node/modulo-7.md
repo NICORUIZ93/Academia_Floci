@@ -171,37 +171,6 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 
 ---
 
-## Ejercicios de evaluación
-
-### Ejercicio 1: Confianza de un test de integración con base real
-
-**Enunciado:** explica por qué un test de integración con una base de datos real (efímera) da más confianza que uno que mockea completamente la base de datos.
-
-**Solución esperada:** un mock de la base de datos asume un comportamiento simplificado que podría no reflejar fielmente el comportamiento real del motor (restricciones de integridad, tipos, comportamiento exacto de transacciones); un test contra una base real (aunque efímera) verifica el comportamiento genuino del sistema completo, incluyendo interacciones reales con el motor de base de datos que un mock simplificado no capturaría.
-
-**Criterios de éxito:**
-- Explica correctamente que un mock puede no reflejar fielmente el comportamiento real del motor de base de datos.
-
-### Ejercicio 2: Ventaja de Testcontainers sobre una base compartida
-
-**Enunciado:** ¿qué ventaja concreta ofrece Testcontainers sobre apuntar las pruebas a una base de datos compartida de "test" persistente?
-
-**Solución esperada:** Testcontainers garantiza aislamiento completo entre ejecuciones (cada corrida parte de un estado limpio, sin riesgo de interferencia de pruebas paralelas o de ejecuciones anteriores que dejaron datos residuales), mientras que una base compartida persistente puede ensuciarse progresivamente y producir resultados de pruebas inconsistentes o dependientes del orden de ejecución.
-
-**Criterios de éxito:**
-- Explica correctamente el aislamiento completo entre ejecuciones como la ventaja clave.
-
-### Ejercicio 3: Qué mockear siempre
-
-**Enunciado:** ¿qué tipo de dependencia deberías mockear siempre en un test, sin excepción, y por qué?
-
-**Solución esperada:** cualquier servicio externo de terceros fuera del control del propio proyecto (proveedores de email, pasarelas de pago, APIs externas), porque depender de su disponibilidad y conectividad real haría las pruebas lentas, no deterministas, y potencialmente costosas si el servicio cobra por uso real.
-
-**Criterios de éxito:**
-- Identifica correctamente los servicios externos de terceros como la categoría a mockear siempre.
-- Justifica con al menos una de las razones (lentitud, no determinismo, costo).
-
----
 
 ## Rúbrica del proyecto
 

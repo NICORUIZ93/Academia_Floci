@@ -158,36 +158,6 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 
 ---
 
-## Ejercicios de evaluación
-
-### Ejercicio 1: Causa típica de recomposición innecesaria
-
-**Enunciado:** ¿qué causa típicamente una recomposición innecesaria en Compose?
-
-**Solución esperada:** pasar una lambda nueva en cada recomposición del padre (en vez de una referencia estable), lo que rompe la comparación de igualdad que Compose usa para decidir si puede saltarse (skip) una recomposición, invalidando esa optimización incluso si el resultado visual sería idéntico.
-
-**Criterios de éxito:**
-- Explica correctamente las lambdas recreadas como causa típica.
-
-### Ejercicio 2: Por qué la accesibilidad no es opcional
-
-**Enunciado:** ¿por qué la accesibilidad no es "opcional" sino parte del estándar de una app profesional?
-
-**Solución esperada:** porque excluye a usuarios reales con discapacidades visuales u otras limitaciones si se omite, impidiéndoles usar funcionalidad básica de la app (como identificar qué hace un botón sin texto visible mediante TalkBack).
-
-**Criterios de éxito:**
-- Explica correctamente la exclusión de usuarios reales como razón central.
-
-### Ejercicio 3: Qué optimiza un Baseline Profile
-
-**Enunciado:** ¿qué optimiza específicamente un Baseline Profile?
-
-**Solución esperada:** precompila ahead-of-time las rutas de código más usadas al inicio de la app, reduciendo el tiempo de arranque percibido y el jank inicial, en vez de dejar que esas rutas se interpreten o compilen just-in-time en el primer uso real de cada usuario.
-
-**Criterios de éxito:**
-- Explica correctamente la precompilación AOT de rutas de arranque como lo que optimiza.
-
----
 
 ## Rúbrica del proyecto
 

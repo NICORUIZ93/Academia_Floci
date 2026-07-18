@@ -278,39 +278,6 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 
 ---
 
-## Ejercicios de evaluación
-
-### Ejercicio 1: Explicar el riesgo de editar el estado a mano
-
-**Enunciado:** un compañero, con prisa por corregir un problema, edita directamente el archivo `terraform.tfstate` para "arreglar" una discrepancia que notó, en vez de usar los comandos de Terraform diseñados para modificar el estado de forma segura (como `terraform state mv` o `terraform import`). Explica qué riesgo concreto introduce esta edición manual, incluso si el cambio parece correcto a simple vista.
-
-**Solución esperada:** el archivo de estado tiene una estructura interna específica (incluyendo metadatos de dependencias entre recursos, checksums, y referencias cruzadas) que Terraform gestiona internamente de forma consistente; una edición manual, aunque parezca corregir el valor visible de un atributo, puede dejar esa estructura interna inconsistente de formas no evidentes a simple vista, causando comportamiento incorrecto o errores en operaciones futuras de `plan`/`apply` que dependen de esa estructura interna estando correctamente formada. Los comandos diseñados específicamente para modificar el estado (`terraform state mv`, `terraform import`) actualizan esa estructura interna de forma consistente y segura, a diferencia de una edición de texto manual arbitraria.
-
-**Criterios de éxito:**
-- Explica que el riesgo no es solo el valor visible editado, sino la estructura interna consistente del archivo que una edición manual puede romper de formas no evidentes.
-- Menciona los comandos apropiados (`terraform state mv`, `terraform import`) como la alternativa segura.
-
-### Ejercicio 2: Diseñar la interfaz de un módulo
-
-**Enunciado:** estás diseñando un módulo reutilizable para provisionar una base de datos gestionada, usada por múltiples equipos con necesidades ligeramente distintas (algunos necesitan más capacidad de almacenamiento, algunos necesitan copias de seguridad más frecuentes). ¿Qué variables de entrada expondrías en la interfaz de este módulo, y qué decisiones mantendrías fijas (no configurables) dentro del módulo?
-
-**Solución esperada:** una respuesta razonable expondría como variables de entrada aquello que legítimamente varía entre equipos (tamaño de almacenamiento, frecuencia de copias de seguridad, quizás el nombre de la base de datos), mientras mantendría fijas dentro del módulo las decisiones de buenas prácticas que no deberían variar entre equipos (por ejemplo, que el cifrado en reposo siempre esté activado, que las copias de seguridad automáticas nunca estén completamente desactivadas, o convenciones de etiquetado estándar de la organización), evitando que un equipo pueda, por descuido o desconocimiento, desplegar una base de datos sin esas protecciones básicas que deberían ser no negociables.
-
-**Criterios de éxito:**
-- Identifica variables de entrada razonables que reflejan necesidades legítimamente distintas entre equipos.
-- Identifica al menos una decisión de buena práctica (como cifrado en reposo) que debería mantenerse fija y no configurable, para evitar que un equipo la desactive por error.
-
-### Ejercicio 3: Elegir entre Terraform, Ansible y Pulumi
-
-**Enunciado:** tu equipo necesita (a) crear una nueva red virtual con varias subredes y un balanceador de carga en un proveedor de nube; (b) instalar y configurar un agente de monitorización específico dentro de un conjunto de máquinas virtuales ya existentes; (c) tu equipo tiene fuerte experiencia en TypeScript y prefiere aprovechar tipado estático y estructuras de control completas para definiciones de infraestructura complejas con mucha lógica condicional. Asigna la herramienta más apropiada (Terraform, Ansible o Pulumi) para cada escenario.
-
-**Solución esperada:** (a) Terraform (o Pulumi, ver el caso c), porque es un problema de aprovisionamiento de infraestructura nueva; (b) Ansible, porque es un problema de configuración de software dentro de máquinas ya existentes, no de aprovisionar infraestructura nueva; (c) Pulumi, porque el equipo específicamente valora el tipado estático y las estructuras de control completas de un lenguaje de programación real como TypeScript, en vez del alcance más limitado de HCL.
-
-**Criterios de éxito:**
-- Asigna Terraform (o Pulumi) al escenario (a), Ansible al escenario (b), sin confundir los propósitos de aprovisionamiento vs configuración.
-- Reconoce en (c) que la preferencia explícita de tipado estático y lenguaje de programación real apunta hacia Pulumi como la elección más alineada con esa necesidad específica.
-
----
 
 ## Rúbrica del proyecto
 

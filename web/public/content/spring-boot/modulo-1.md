@@ -143,36 +143,6 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 
 ---
 
-## Ejercicios de evaluación
-
-### Ejercicio 1: Ventaja de externalizar configuración por perfil
-
-**Enunciado:** ¿qué ventaja da externalizar configuración por perfil en vez de tener un único `application.properties`?
-
-**Solución esperada:** permite desplegar exactamente el mismo artefacto compilado en múltiples entornos distintos, variando únicamente qué perfil se activa en cada despliegue, sin necesidad de recompilar ni mantener archivos de configuración completos duplicados por entorno.
-
-**Criterios de éxito:**
-- Explica correctamente el despliegue del mismo artefacto en múltiples entornos como el beneficio principal.
-
-### Ejercicio 2: Responsabilidad de cada capa
-
-**Enunciado:** ¿qué responsabilidad debería tener (y NO tener) cada capa: controller, service, repository?
-
-**Solución esperada:** `controller` recibe peticiones HTTP y traduce hacia/desde DTOs, sin contener lógica de negocio; `service` contiene la lógica de negocio, sin ningún conocimiento de detalles HTTP; `repository` se encarga exclusivamente del acceso a datos, sin lógica de negocio ni de presentación.
-
-**Criterios de éxito:**
-- Describe correctamente la responsabilidad delimitada de cada una de las tres capas.
-
-### Ejercicio 3: Starters y dependency hell
-
-**Enunciado:** ¿qué problema evitan los starters de Spring Boot frente a agregar dependencias sueltas manualmente?
-
-**Solución esperada:** los starters evitan el "dependency hell" de tener que investigar y resolver manualmente qué versiones específicas de cada dependencia individual son compatibles entre sí para una versión dada de Spring Boot, ofreciendo en cambio conjuntos curados y ya probados de dependencias compatibles para un propósito específico.
-
-**Criterios de éxito:**
-- Explica correctamente la resolución de compatibilidad de versiones como el problema evitado por los starters.
-
----
 
 ## Rúbrica del proyecto
 

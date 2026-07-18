@@ -303,47 +303,6 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 
 ---
 
-## Ejercicios de evaluación
-
-### Ejercicio 1: Cuándo escribir un platform channel propio
-
-**Enunciado:** ¿cuándo deberías escribir un platform channel propio en vez de buscar un plugin existente?
-
-**Solución esperada:** solo cuando el plugin necesario no existe ya publicado en pub.dev, o se requiere una integración muy específica de bajo nivel que ningún plugin genérico existente cubre adecuadamente; buscar primero un plugin existente ahorra el esfuerzo de mantener código nativo duplicado por plataforma.
-
-**Criterios de éxito:**
-- Explica correctamente la ausencia de un plugin existente adecuado como la condición para justificar un platform channel propio.
-
-### Ejercicio 2: Qué distingue a un plugin federado
-
-**Enunciado:** ¿qué hace un "plugin federado" distinto de un plugin simple?
-
-**Solución esperada:** un plugin federado separa formalmente la interfaz Dart pública de las implementaciones específicas de cada plataforma, cada una en un paquete independiente, permitiendo que la comunidad agregue soporte para una plataforma nueva sin modificar el paquete principal ni las implementaciones ya existentes de otras plataformas.
-
-**Criterios de éxito:**
-- Explica correctamente la separación de interfaz e implementaciones por plataforma en paquetes independientes.
-
-### Ejercicio 3: Por qué un MethodChannel requiere implementación en ambos lados
-
-**Enunciado:** ¿por qué un `MethodChannel` requiere implementar el lado receptor por separado en Kotlin y en Swift?
-
-**Solución esperada:** Dart no tiene acceso directo a las APIs nativas específicas de cada sistema operativo (las de Android están en Kotlin/Java, las de iOS en Swift/Objective-C), por lo que cada plataforma necesita su propia implementación del `setMethodCallHandler` que invoque las APIs nativas específicas correspondientes a esa plataforma.
-
-**Criterios de éxito:**
-- Explica correctamente la falta de acceso directo de Dart a las APIs nativas de cada plataforma como la razón.
-
-### Ejercicio 4: Evidencia robusta con conectividad intermitente
-
-**Enunciado:** diseña los estados de la pantalla desde que el conductor abre la cámara hasta que el backend confirma la evidencia. Incluye cancelación, permiso denegado, archivo inválido y pérdida de red al 50 %.
-
-**Solución esperada:** estados explícitos como `idle`, `capturing`, `preview`, `uploading(progress)`, `saved(url)` y `failure(retryable, message)`. Cancelar vuelve a `idle`; permiso y validación muestran acciones específicas; la pérdida de red conserva la evidencia y la clave de idempotencia para reintentar; solo `saved` permite completar la entrega.
-
-**Criterios de éxito:**
-- Distingue una evidencia local, una carga en curso y una confirmación remota.
-- Evita duplicados mediante idempotencia.
-- Propone feedback y recuperación para cada fallo solicitado.
-
----
 
 ## Rúbrica del proyecto
 

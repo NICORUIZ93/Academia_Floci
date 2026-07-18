@@ -165,36 +165,6 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 
 ---
 
-## Ejercicios de evaluación
-
-### Ejercicio 1: Cuándo elegir Hive sobre sqflite
-
-**Enunciado:** ¿cuándo elegirías Hive sobre `sqflite`, y viceversa?
-
-**Solución esperada:** Hive es más simple y directo para modelos de objetos sin relaciones complejas entre entidades; `sqflite` (SQL real) es mejor cuando la app necesita queries relacionales complejas, joins entre tablas, o agregaciones que el modelo NoSQL simple de Hive no ofrece de forma nativa.
-
-**Criterios de éxito:**
-- Distingue correctamente el caso de uso de cada uno según la necesidad de relaciones complejas.
-
-### Ejercicio 2: Por qué shared_preferences no es apropiado para listas grandes
-
-**Enunciado:** ¿por qué `shared_preferences` NO es apropiado para guardar una lista grande de objetos estructurados?
-
-**Solución esperada:** su modelo de almacenamiento clave-valor simple no está diseñado para consultas eficientes sobre datos relacionales o estructurados en volumen; forzar ese caso hacia `shared_preferences` sacrifica rendimiento y la capacidad de consultar o modificar elementos individuales de forma eficiente.
-
-**Criterios de éxito:**
-- Explica correctamente la falta de eficiencia para datos estructurados en volumen como la razón.
-
-### Ejercicio 3: Ventaja de offline-first
-
-**Enunciado:** ¿qué ventaja da que la UI siempre lea de la caché local en vez de depender directamente de la API?
-
-**Solución esperada:** la app permanece funcional (mostrando al menos el último caché sincronizado) incluso sin conexión a internet, y muestra datos instantáneamente sin esperar la latencia de red, mientras la sincronización con la API ocurre de forma transparente en segundo plano.
-
-**Criterios de éxito:**
-- Explica correctamente la funcionalidad sin conexión y la respuesta instantánea como ventajas.
-
----
 
 ## Rúbrica del proyecto
 

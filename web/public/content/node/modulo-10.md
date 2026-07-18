@@ -162,38 +162,6 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 
 ---
 
-## Ejercicios de evaluación
-
-### Ejercicio 1: Por qué la concatenación de SQL es peligrosa siempre
-
-**Enunciado:** explica por qué concatenar strings para construir SQL es peligroso incluso en un proyecto interno pequeño donde "nunca vas a tener atacantes".
-
-**Solución esperada:** la suposición de "nunca voy a tener atacantes" es frecuentemente incorrecta y difícil de garantizar con certeza (proyectos internos pueden exponerse accidentalmente, o un usuario interno malicioso o descuidado puede introducir el mismo problema sin intención maliciosa explícita, como un valor inesperado que rompe la consulta); además, el coste de usar consultas parametrizadas desde el inicio es mínimo comparado con el riesgo potencial, haciendo que la disciplina de siempre parametrizar sea la práctica correcta sin excepciones, independientemente de cuán "improbable" parezca un ataque en un contexto específico.
-
-**Criterios de éxito:**
-- Explica correctamente por qué la suposición de ausencia de atacantes es poco confiable.
-- Menciona que el coste de usar parámetros es mínimo frente al riesgo potencial.
-
-### Ejercicio 2: Qué resuelve el rate limiting más allá de "verse profesional"
-
-**Enunciado:** describe dos problemas reales y concretos, más allá de una cuestión estética, que el rate limiting resuelve.
-
-**Solución esperada:** (1) protege la disponibilidad del servicio ante saturación de peticiones, ya sea maliciosa (un ataque de denegación de servicio simple) o accidental (un cliente con un bug que reintenta sin control); (2) dificulta significativamente ataques de fuerza bruta contra endpoints sensibles como login, limitando el número de intentos posibles de contraseña que un atacante puede probar en un período de tiempo dado.
-
-**Criterios de éxito:**
-- Menciona correctamente ambos problemas: disponibilidad ante saturación, y dificultad de fuerza bruta.
-
-### Ejercicio 3: Auditar un endpoint contra OWASP
-
-**Enunciado:** un endpoint `GET /pedidos/:id` devuelve el pedido solicitado sin verificar si el usuario autenticado actual es realmente el dueño de ese pedido. ¿A qué categoría del OWASP API Security Top 10 corresponde este problema, y cómo lo corregirías?
-
-**Solución esperada:** corresponde a "autorización a nivel de objeto rota" (Broken Object Level Authorization), donde cualquier usuario autenticado puede acceder a datos de otro usuario simplemente cambiando el id en la URL. La corrección requiere verificar explícitamente, en el manejador de la ruta, que el `usuarioId` del pedido solicitado coincide con el usuario autenticado actual (`req.usuario.id`), rechazando con `403` si no coincide, en vez de asumir que la autenticación por sí sola (saber quién es el usuario) es suficiente para autorizar el acceso a cualquier recurso específico.
-
-**Criterios de éxito:**
-- Identifica correctamente la categoría "autorización a nivel de objeto rota".
-- Propone la corrección concreta de verificar explícitamente la propiedad del recurso antes de devolverlo.
-
----
 
 ## Rúbrica del proyecto
 

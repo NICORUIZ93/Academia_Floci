@@ -215,39 +215,6 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 
 ---
 
-## Ejercicios de evaluación
-
-### Ejercicio 1: Qué eliminó el Angular moderno
-
-**Enunciado:** explica qué generaba `ng new` hace algunos años que ya no forma parte de un proyecto Angular generado hoy, y qué reemplaza esa funcionalidad.
-
-**Solución esperada:** generaba un `AppModule` (y NgModules en general) que declaraba explícitamente qué componentes, directivas y pipes pertenecían a cada módulo, y qué módulos importaba cada uno; hoy cada componente standalone declara directamente sus propias dependencias en su propio `@Component({imports: [...]})`, eliminando la capa intermedia de organización por módulos.
-
-**Criterios de éxito:**
-- Identifica correctamente los NgModules como lo eliminado.
-- Explica que cada componente ahora declara sus propias dependencias directamente.
-
-### Ejercicio 2: Interpolación frente a property binding
-
-**Enunciado:** explica por qué `<button disabled="{{ cargando }}">` no funciona como se espera, y cómo corregirlo.
-
-**Solución esperada:** la interpolación siempre produce texto, así que `disabled="{{ cargando }}"` establecería el atributo `disabled` a la representación textual del valor (por ejemplo, el string `"false"`), y en HTML la sola presencia del atributo `disabled` (independientemente de su valor textual) deshabilita el botón, incluso si el texto dice "false". La corrección correcta es usar property binding: `[disabled]="cargando"`, que enlaza directamente con la propiedad booleana real del DOM.
-
-**Criterios de éxito:**
-- Explica correctamente por qué la interpolación produce el bug (presencia del atributo, no su valor textual).
-- Propone la corrección con `[disabled]`.
-
-### Ejercicio 3: unknown frente a any
-
-**Enunciado:** dado `const datos: unknown = JSON.parse(texto);`, explica por qué TypeScript no permite `datos.nombre` directamente, y qué se necesita para acceder a esa propiedad de forma segura.
-
-**Solución esperada:** TypeScript no permite acceder a propiedades de un valor `unknown` sin antes realizar narrowing explícito, porque el tipo real del valor no se conoce de antemano; se necesita verificar explícitamente la forma esperada (por ejemplo, con un type guard que confirme que `datos` es un objeto con una propiedad `nombre` de tipo `string`) antes de que TypeScript permita el acceso de forma segura.
-
-**Criterios de éxito:**
-- Explica correctamente que `unknown` exige narrowing antes de cualquier operación específica.
-- Propone un mecanismo válido de narrowing (type guard, verificación de forma).
-
----
 
 ## Rúbrica del proyecto
 

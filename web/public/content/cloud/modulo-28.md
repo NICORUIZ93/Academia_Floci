@@ -131,39 +131,6 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 
 ---
 
-## Ejercicios de evaluación
-
-### Ejercicio 1: Modela un grafo de recomendaciones
-
-**Enunciado:** diseña (en Gremlin, ejecutándolo si quieres) un pequeño grafo donde usuarios "compraron" productos, y luego escribe una consulta que responda: "¿qué productos compraron otros usuarios que también compraron el producto X?" — la base de una recomendación simple de "quienes compraron esto también compraron".
-
-**Solución esperada:** un grafo con vértices `usuario` y `producto`, conectados por aristas `compro`. La consulta recorre desde el producto X hacia los usuarios que lo compraron (`in('compro')`), y desde esos usuarios hacia otros productos que también compraron (`out('compro')`), excluyendo el producto X original del resultado.
-
-**Criterios de éxito:**
-- El modelo de vértices y aristas es coherente con el problema de recomendación planteado.
-- La consulta Gremlin realmente recorre dos saltos (producto → usuarios → otros productos), no solo uno.
-
-### Ejercicio 2: Modo simulado vs modo real en CI
-
-**Enunciado:** tu pipeline de CI ejecuta cientos de pruebas de integración por hora y solo necesita verificar que tu código de Terraform crea correctamente un dominio OpenSearch con la configuración esperada, sin ejecutar búsquedas reales. Justifica si usarías modo `mock` o modo real, y cuál sería el impacto de elegir el modo incorrecto.
-
-**Solución esperada:** modo `mock` es la elección correcta — no necesitas el plano de datos real, solo validar la configuración del plano de gestión. Usar modo real innecesariamente añadiría el tiempo de arranque de un contenedor OpenSearch completo a cada ejecución de CI, ralentizando significativamente el pipeline sin ningún beneficio para lo que realmente se está probando.
-
-**Criterios de éxito:**
-- La justificación se basa en qué necesita realmente validar la prueba (configuración vs comportamiento de búsqueda real).
-- Reconoce el costo de tiempo de arranque como la razón concreta para preferir modo simulado en este contexto.
-
-### Ejercicio 3: Arquitectura de tres vistas sobre los mismos datos
-
-**Enunciado:** para el Sistema de Gestión de Tareas del Módulo 9, describe cómo extenderías la arquitectura para que, además de DynamoDB como fuente de verdad, las tareas sean buscables por texto (OpenSearch) y puedas consultar relaciones de tipo "tareas que dependen de esta tarea" (Neptune), sin duplicar lógica de escritura en tu API.
-
-**Solución esperada:** usar DynamoDB Streams (Módulo 4) para capturar cada cambio en la tabla de tareas y disparar una Lambda que replica ese cambio hacia OpenSearch (para búsqueda) y hacia Neptune (para relaciones de dependencia), manteniendo la API original escribiendo únicamente en DynamoDB como única fuente de verdad — el resto de las vistas se mantienen sincronizadas automáticamente vía el stream, sin lógica de escritura duplicada en el código de la API.
-
-**Criterios de éxito:**
-- Reconoce DynamoDB Streams como el mecanismo correcto de propagación, no escritura duplicada manual en cada endpoint.
-- La arquitectura propuesta mantiene una única fuente de verdad (DynamoDB) con vistas derivadas, no tres fuentes de verdad independientes.
-
----
 
 ## Rúbrica del proyecto
 

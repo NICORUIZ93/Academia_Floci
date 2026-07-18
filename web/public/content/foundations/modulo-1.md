@@ -217,25 +217,6 @@ Implementa por incrementos y crea un commit después de cada etapa:
 - Atrapar todo error sin explicarlo: captura solo excepciones esperadas.
 - Crear una función enorme: separa entrada, regla y presentación.
 
-## Ejercicios de evaluación
-
-### Ejercicio 1: diseñar antes de programar
-
-**Enunciado:** escribe entradas, salidas, restricciones y cinco casos para calcular tarifa de estacionamiento.
-
-**Solución esperada:** especifica unidades y fronteras, incluye cero, cambio de tarifa e inválidos.
-
-### Ejercicio 2: trazar un bucle
-
-**Enunciado:** predice paso a paso el acumulador al sumar `[4, 0, -1, 7]`.
-
-**Solución esperada:** registra `0 → 4 → 4 → 3 → 10` y explica el invariante.
-
-### Ejercicio 3: refactorizar responsabilidades
-
-**Enunciado:** divide una función que lee, calcula e imprime en tres funciones.
-
-**Solución esperada:** cada función tiene entrada/salida clara y la regla puede probarse sin terminal.
 
 ## Rúbrica del proyecto
 

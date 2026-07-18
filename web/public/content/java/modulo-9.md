@@ -153,36 +153,6 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 
 ---
 
-## Ejercicios de evaluación
-
-### Ejercicio 1: Mock vs stub
-
-**Enunciado:** ¿qué diferencia hay entre un mock y un stub en el contexto de Mockito?
-
-**Solución esperada:** un stub configura un comportamiento simulado específico que un objeto simulado debe devolver ante ciertas llamadas (`when(...).thenReturn(...)`); un mock, en un sentido más estricto, es el objeto simulado en sí, sobre el cual además se puede verificar que ciertas interacciones específicas efectivamente ocurrieron (`verify(...)`), una capacidad de verificación de comportamiento que un stub puro no necesariamente ofrece por sí solo.
-
-**Criterios de éxito:**
-- Distingue correctamente la configuración de comportamiento simulado (stub) de la verificación de interacciones ocurridas (mock/verify).
-
-### Ejercicio 2: Por qué aislar con mocks hace las pruebas más rápidas y confiables
-
-**Enunciado:** ¿por qué aislar el test de sus dependencias externas (con mocks) hace el test más rápido y confiable?
-
-**Solución esperada:** sin mocks, la prueba dependería de infraestructura externa real (una base de datos, un servicio de red), que puede ser lenta, no estar siempre disponible, o tener un estado impredecible entre ejecuciones sucesivas; mockear esas dependencias hace que la prueba se ejecute instantáneamente y con un resultado completamente determinista, sin depender de factores externos fuera del control de la propia prueba.
-
-**Criterios de éxito:**
-- Explica correctamente la eliminación de dependencia de infraestructura externa lenta o impredecible como razón de velocidad y confiabilidad.
-
-### Ejercicio 3: Cobertura de código y su límite
-
-**Enunciado:** ¿qué limitación tiene la cobertura de código medida por JaCoCo como indicador de calidad de las pruebas?
-
-**Solución esperada:** cualquier respuesta razonable; una respuesta común señala que la cobertura mide únicamente si una línea o rama se ejecutó durante alguna prueba, no si esa ejecución efectivamente verificó el comportamiento correcto con una aserción significativa — es posible tener alta cobertura con pruebas que ejecutan código sin realmente verificar nada relevante sobre su comportamiento.
-
-**Criterios de éxito:**
-- Reconoce correctamente que cobertura alta no garantiza necesariamente pruebas efectivas o significativas.
-
----
 
 ## Rúbrica del proyecto
 

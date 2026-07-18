@@ -143,36 +143,6 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 
 ---
 
-## Ejercicios de evaluación
-
-### Ejercicio 1: Por qué Context no reemplaza a Redux completamente
-
-**Enunciado:** explica por qué Context no es un reemplazo completo de un gestor de estado global como Redux.
-
-**Solución esperada:** Context re-renderiza a todos sus consumidores ante cualquier cambio del valor provisto, sin granularidad de suscripción selectiva; además, Context por sí solo no ofrece herramientas de depuración de historial de cambios, middleware, ni un patrón estructurado de actions/reducers; Redux (o Redux Toolkit, Módulo 7) ofrece esas capacidades adicionales para aplicaciones que las necesitan genuinamente.
-
-**Criterios de éxito:**
-- Menciona correctamente la falta de granularidad de re-render y la ausencia de herramientas de depuración estructuradas como diferencias clave.
-
-### Ejercicio 2: Prop drilling aceptable vs Context necesario
-
-**Enunciado:** ¿cuándo el prop drilling es aceptable, y cuándo es momento de introducir Context?
-
-**Solución esperada:** el prop drilling es aceptable cuando la cadena de componentes intermedios es corta (uno o dos niveles) y esos componentes intermedios de todas formas tienen alguna relación con el dato pasado; se vuelve problemático, y Context se justifica, cuando la cadena es larga y los componentes intermedios no tienen ninguna relación real con el dato, simplemente lo reenvían.
-
-**Criterios de éxito:**
-- Explica correctamente el criterio de longitud de la cadena y relación real de los componentes intermedios con el dato.
-
-### Ejercicio 3: Componentes compuestos y Context interno
-
-**Enunciado:** ¿por qué el Context usado internamente por `Tabs` no se expone directamente al usuario del componente?
-
-**Solución esperada:** exponerlo directamente rompería la encapsulación del componente, permitiendo que código externo modifique el estado de coordinación interna de forma no controlada; mantenerlo privado preserva una API pública limpia (`<Tabs><Tabs.Tab>...</Tabs.Tab></Tabs>`) mientras la coordinación interna permanece como un detalle de implementación oculto.
-
-**Criterios de éxito:**
-- Explica correctamente la preservación de encapsulación y la API pública limpia resultante.
-
----
 
 ## Rúbrica del proyecto
 

@@ -172,36 +172,6 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 
 ---
 
-## Ejercicios de evaluación
-
-### Ejercicio 1: Qué previene un actor
-
-**Enunciado:** ¿qué problema de concurrencia (data races) previene un actor que una clase normal no previene?
-
-**Solución esperada:** un actor garantiza, verificado por el compilador, que el acceso a su estado interno mutable está serializado, de modo que dos llamadas concurrentes nunca pueden modificarlo simultáneamente de forma que lo corrompan; una clase normal no ofrece esa garantía, permitiendo condiciones de carrera si se accede desde múltiples hilos sin sincronización manual.
-
-**Criterios de éxito:**
-- Explica correctamente la serialización garantizada por el compilador como la prevención del actor.
-
-### Ejercicio 2: Por qué async/await es más fácil de razonar
-
-**Enunciado:** ¿por qué `async`/`await` es más fácil de razonar que el "callback hell" de versiones anteriores de Swift?
-
-**Solución esperada:** permite leer código asíncrono de forma lineal y secuencial, como si fuera código síncrono normal, en vez de anidar closures de callback sucesivos que dificultan seguir el flujo del código, especialmente al encadenar múltiples operaciones asíncronas dependientes entre sí.
-
-**Criterios de éxito:**
-- Explica correctamente la lectura lineal como la razón de mayor facilidad de razonamiento.
-
-### Ejercicio 3: Garantía de @MainActor
-
-**Enunciado:** ¿qué garantiza `@MainActor` sobre una clase marcada con ese atributo?
-
-**Solución esperada:** garantiza, verificado por el compilador, que cualquier acceso a su estado ocurre específicamente en el hilo principal, previniendo actualizaciones inseguras de UI desde hilos en segundo plano que podrían provocar comportamiento indefinido o crashes intermitentes.
-
-**Criterios de éxito:**
-- Explica correctamente el aislamiento al hilo principal verificado en compilación como la garantía.
-
----
 
 ## Rúbrica del proyecto
 

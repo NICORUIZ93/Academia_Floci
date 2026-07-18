@@ -225,34 +225,6 @@ Trabaja sobre el proyecto del módulo 13 y conserva una versión desplegable ant
 - Medir solo Lighthouse: combina laboratorio con distribución real por versión.
 - Activar SW sin plan: prueba datos privados, versiones, actualización y rollback.
 
-## Ejercicios de evaluación
-
-### Ejercicio 1: control falso
-
-Un `<div role="button" (click)="save()">` es visible y clicable. ¿Qué falta y cuál es la mejor corrección?
-
-<details><summary>Solución razonada</summary>
-
-No entra naturalmente en tabulación ni responde a teclado, disabled o semántica completa. La mejor corrección es `<button type="button">`; reconstruir todo con tabindex y key handlers aumenta riesgo sin beneficio.
-</details>
-
-### Ejercicio 2: bypass peligroso
-
-Un desarrollador usa `bypassSecurityTrustHtml(api.description)`. Explica por qué el nombre no implica sanitización.
-
-<details><summary>Solución razonada</summary>
-
-El método marca el valor como confiable y evita defensa de Angular. Si la API contiene texto controlable, habilita XSS almacenado. Debe mostrarse como texto o sanitizar un subconjunto mediante política revisada antes de la frontera.
-</details>
-
-### Ejercicio 3: build más pequeño, usuario más lento
-
-El bundle baja 15 %, pero INP empeora. ¿Es éxito?
-
-<details><summary>Solución razonada</summary>
-
-No puede afirmarse. El tamaño es una señal; INP indica respuesta de interacción y pudo empeorar por trabajo síncrono o hydration. Analiza trazas, segmentos y significancia y conserva el cambio solo si mejora el objetivo real.
-</details>
 
 ## Rúbrica del proyecto
 

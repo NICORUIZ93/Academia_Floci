@@ -216,36 +216,6 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 
 ---
 
-## Ejercicios de evaluación
-
-### Ejercicio 1: Qué garantiza sound null safety
-
-**Enunciado:** ¿qué garantiza el "sound null safety" de Dart que JavaScript no garantiza por defecto?
-
-**Solución esperada:** garantiza, de forma verificada consistentemente en todo el programa (incluyendo librerías externas ya migradas), que un valor declarado como no-nullable nunca contendrá `null`, detectando en tiempo de análisis estático cualquier intento de violar esa garantía; JavaScript no ofrece ninguna estructura equivalente en su sistema de tipos, permitiendo que un valor `undefined` cause un fallo en tiempo de ejecución sin advertencia previa.
-
-**Criterios de éxito:**
-- Explica correctamente la verificación consistente en todo el programa como la garantía distintiva del sound null safety.
-
-### Ejercicio 2: Diferencia entre herencia simple y mixin
-
-**Enunciado:** ¿qué diferencia hay entre herencia simple y un mixin en Dart?
-
-**Solución esperada:** la herencia simple (`extends`) establece la relación de tipo principal de una clase (solo se puede heredar de una única clase); un mixin (`with`) agrega comportamiento reutilizable adicional a una clase sin participar en su jerarquía de herencia principal, permitiendo compartir ese comportamiento entre clases que no están relacionadas entre sí.
-
-**Criterios de éxito:**
-- Distingue correctamente la relación de herencia principal de la composición de comportamiento transversal vía mixin.
-
-### Ejercicio 3: Legibilidad de async/await
-
-**Enunciado:** ¿por qué `async`/`await` sobre un `Future` es más fácil de leer que encadenar callbacks?
-
-**Solución esperada:** permite que el código asíncrono se lea de forma lineal y secuencial, exactamente como código síncrono normal, en vez de anidar closures de callback sucesivos que dificultan seguir el flujo del código al encadenar múltiples operaciones asíncronas dependientes.
-
-**Criterios de éxito:**
-- Explica correctamente la lectura lineal como razón de la mayor facilidad frente a callbacks anidados.
-
----
 
 ## Rúbrica del proyecto
 

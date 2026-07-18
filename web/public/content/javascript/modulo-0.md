@@ -252,39 +252,6 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 
 ---
 
-## Ejercicios de evaluación
-
-### Ejercicio 1: Predecir la coerción
-
-**Enunciado:** sin ejecutar el código, predice el resultado exacto de cada una de estas cinco comparaciones: `1 == "1"`, `1 === "1"`, `null == undefined`, `null === undefined`, `"" == 0`. Después, verifica tus predicciones ejecutándolas.
-
-**Solución esperada:** `1 == "1"` → `true`; `1 === "1"` → `false`; `null == undefined` → `true`; `null === undefined` → `false`; `"" == 0` → `true`.
-
-**Criterios de éxito:**
-- Predice correctamente al menos 4 de las 5 comparaciones antes de ejecutarlas.
-- Explica en cada caso si hubo coerción y, si la hubo, hacia qué tipo.
-
-### Ejercicio 2: typeof null
-
-**Enunciado:** explica por qué `typeof null` devuelve `"object"` en vez de `"null"`, y qué implicación práctica tiene esto si quieres verificar de forma confiable si un valor es `null`.
-
-**Solución esperada:** es un bug histórico del lenguaje presente desde 1995, nunca corregido por razones de compatibilidad retroactiva con el enorme volumen de código web existente. La implicación práctica es que no se puede usar `typeof valor === "object"` para descartar `null`; hay que comparar explícitamente `valor === null`, o usar `valor == null` (comparación laxa, deliberadamente) para capturar tanto `null` como `undefined` a la vez.
-
-**Criterios de éxito:**
-- Identifica que es un bug histórico de compatibilidad, no un comportamiento "lógico" del sistema de tipos.
-- Explica correctamente cómo verificar `null` de forma confiable sin depender de `typeof`.
-
-### Ejercicio 3: Scope de bloque frente a scope de función
-
-**Enunciado:** escribe un ejemplo de código donde una variable declarada con `var` dentro de un `if` cause un bug (por ejemplo, sobreescribir una variable que debería ser independiente), y reescribe el mismo ejemplo con `let` para eliminar el bug.
-
-**Solución esperada:** un ejemplo típico: un bucle `for (var i = 0; ...)` usado dentro de callbacks asíncronos (como `setTimeout`) donde todas las callbacks terminan compartiendo el mismo valor final de `i` porque `var` tiene scope de función, no de bloque; al cambiar a `let`, cada iteración del bucle obtiene su propia copia independiente de `i`, y las callbacks capturan correctamente el valor de su propia iteración.
-
-**Criterios de éxito:**
-- El ejemplo demuestra concretamente el bug real de `var` en un contexto asíncrono o de bloque anidado.
-- La corrección con `let` resuelve el bug, y la explicación conecta correctamente con el concepto de scope de bloque.
-
----
 
 ## Rúbrica del proyecto
 

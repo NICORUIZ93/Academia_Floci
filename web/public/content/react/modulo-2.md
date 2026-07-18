@@ -159,36 +159,6 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 
 ---
 
-## Ejercicios de evaluación
-
-### Ejercicio 1: Por qué useEffect sin dependencias corre en cada render
-
-**Enunciado:** explica por qué un `useEffect` sin array de dependencias se ejecuta después de cada render, y en qué se diferencia de pasar un array vacío.
-
-**Solución esperada:** sin ningún array de dependencias, React no tiene ninguna condición para decidir si debe saltarse la re-ejecución del efecto, por lo que lo ejecuta después de cada render sin excepción; un array vacío `[]` le indica explícitamente a React que no hay ninguna dependencia que vigilar, por lo que el efecto se ejecuta una única vez, tras el montaje inicial.
-
-**Criterios de éxito:**
-- Explica correctamente la diferencia entre ausencia de array (cada render) y array vacío (solo al montar).
-
-### Ejercicio 2: Cuándo useMemo realmente ayuda
-
-**Enunciado:** da un ejemplo donde `useMemo` NO aporta ningún beneficio real, y otro donde sí lo aporta claramente.
-
-**Solución esperada:** `useMemo` sobre una suma trivial de dos números no aporta beneficio, dado que el propio overhead de comparar dependencias es más costoso que recalcular la suma; `useMemo` sobre un cálculo genuinamente costoso (por ejemplo, procesar y ordenar un arreglo grande de miles de elementos) sí aporta beneficio real, evitando recalcular ese trabajo costoso en cada render si sus dependencias no cambiaron.
-
-**Criterios de éxito:**
-- Da ejemplos correctos que distinguen un caso trivial (sin beneficio) de un caso genuinamente costoso (con beneficio).
-
-### Ejercicio 3: Reglas de los hooks
-
-**Enunciado:** explica por qué llamar un hook dentro de un `if` rompe el funcionamiento correcto de React.
-
-**Solución esperada:** React asocia cada hook con su estado interno basándose estrictamente en el orden posicional en que fueron llamados durante el render, no en un nombre explícito; si un hook se llama condicionalmente (a veces sí, a veces no), el orden posicional de los hooks siguientes cambia entre renders, haciendo que React asocie el estado equivocado a cada hook.
-
-**Criterios de éxito:**
-- Explica correctamente la asociación posicional de hooks y por qué una llamada condicional la rompe.
-
----
 
 ## Rúbrica del proyecto
 

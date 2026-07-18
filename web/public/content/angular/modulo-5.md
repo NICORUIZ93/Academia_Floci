@@ -173,45 +173,6 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 
 ---
 
-## Ejercicios de evaluación
-
-### Ejercicio 1: Por qué Reactive Forms es más testeable
-
-**Enunciado:** explica por qué Reactive Forms es más fácil de testear que template-driven forms.
-
-**Solución esperada:** Reactive Forms define la estructura completa del formulario (controles, validadores) explícitamente como un objeto TypeScript, invocable y verificable directamente en una prueba unitaria sin necesidad de renderizar ningún HTML real; template-driven forms infiere su estructura a partir de directivas en la plantilla, requiriendo renderizar y manipular el DOM real para probar su comportamiento completo.
-
-**Criterios de éxito:**
-- Explica correctamente que la estructura explícita en TypeScript es lo que permite testing sin renderizar HTML.
-
-### Ejercicio 2: Cuándo usar template-driven hoy
-
-**Enunciado:** describe un escenario concreto donde seguirías usando template-driven forms hoy, y justifica por qué Reactive Forms sería exceso de ingeniería en ese caso.
-
-**Solución esperada:** un ejemplo razonable: un único campo de búsqueda con `[(ngModel)]="textoBusqueda"`, sin ninguna validación real más allá de existir o no; declarar un `FormGroup` completo con un único `FormControl` para este caso sería una sobrecarga innecesaria de código repetitivo frente a la simplicidad directa de `ngModel` para un caso tan trivial.
-
-**Criterios de éxito:**
-- Da un escenario genuinamente trivial y justifica correctamente por qué Reactive Forms sería sobrecarga innecesaria ahí.
-
-### Ejercicio 3: Diseñar un validador de confirmación de contraseña
-
-**Enunciado:** diseña un validador (a nivel de `FormGroup`, no de un control individual) que verifique que los campos `contraseña` y `confirmarContraseña` de un formulario coinciden.
-
-**Solución esperada:**
-```ts
-function contraseñasCoincidenValidator(grupo: AbstractControl): ValidationErrors | null {
-  const contraseña = grupo.get('contraseña')?.value;
-  const confirmar = grupo.get('confirmarContraseña')?.value;
-  return contraseña === confirmar ? null : { contraseñasNoCoinciden: true };
-}
-// aplicado como segundo argumento del FormGroup: new FormGroup({...}, { validators: contraseñasCoincidenValidator })
-```
-
-**Criterios de éxito:**
-- El validador se aplica a nivel de grupo (no de un control individual), porque necesita comparar dos campos entre sí.
-- Devuelve `null` si coinciden, o un objeto de error específico si no.
-
----
 
 ## Rúbrica del proyecto
 

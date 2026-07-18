@@ -179,36 +179,6 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 
 ---
 
-## Ejercicios de evaluación
-
-### Ejercicio 1: Garantía de WorkManager frente a un coroutine simple
-
-**Enunciado:** ¿qué garantiza WorkManager que un simple coroutine lanzado desde la Activity no garantiza?
-
-**Solución esperada:** WorkManager garantiza que la solicitud de trabajo persiste independientemente del ciclo de vida del proceso de la app, ejecutándose eventualmente incluso si el usuario cierra la app o el sistema mata el proceso; un coroutine lanzado desde `viewModelScope` se cancela automáticamente cuando el componente que lo lanzó se destruye.
-
-**Criterios de éxito:**
-- Explica correctamente la persistencia independiente del proceso como la garantía de WorkManager.
-
-### Ejercicio 2: Por qué WorkManager respeta constraints
-
-**Enunciado:** ¿por qué WorkManager respeta constraints de batería en vez de ejecutar el trabajo inmediatamente siempre?
-
-**Solución esperada:** porque prioriza la salud general de la batería y los recursos del dispositivo sobre la puntualidad exacta de un trabajo en segundo plano no crítico para el usuario en ese instante, retrasando la ejecución hasta que las condiciones declaradas se cumplan.
-
-**Criterios de éxito:**
-- Explica correctamente la priorización de la salud del dispositivo como razón de respetar constraints.
-
-### Ejercicio 3: Intervalo mínimo de trabajo periódico
-
-**Enunciado:** ¿por qué WorkManager no garantiza una ejecución exacta cada 15 minutos para trabajo periódico, incluso configurando exactamente ese intervalo?
-
-**Solución esperada:** WorkManager solo garantiza que el trabajo correrá "aproximadamente" con esa periodicidad, ajustando el momento exacto según la actividad general del dispositivo (agrupando trabajos de distintas apps para minimizar cuántas veces el dispositivo debe despertar completamente), priorizando batería sobre puntualidad exacta.
-
-**Criterios de éxito:**
-- Explica correctamente la priorización de batería/agrupación de trabajos como razón de la falta de exactitud.
-
----
 
 ## Rúbrica del proyecto
 

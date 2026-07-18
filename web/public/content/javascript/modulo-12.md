@@ -224,39 +224,6 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 
 ---
 
-## Ejercicios de evaluación
-
-### Ejercicio 1: Qué automatiza un framework
-
-**Enunciado:** tras completar este proyecto, enumera al menos tres capacidades concretas que un framework como Angular o React automatiza, que tú tuviste que implementar manualmente en este proyecto.
-
-**Solución esperada:** tres respuestas razonables: (1) el "binding" declarativo entre estado y DOM, evitando escribir manualmente `createElement`/`appendChild` en cada actualización; (2) el diffing eficiente, actualizando solo las partes del DOM que realmente cambiaron en vez de re-renderizar todo; (3) la gestión automática del ciclo de vida de componentes, incluyendo la cancelación automática de suscripciones al desmontar una vista, en vez de gestionarla manualmente con el valor de retorno de `subscribe`.
-
-**Criterios de éxito:**
-- Enumera al menos tres capacidades concretas y correctamente atribuidas a lo que un framework automatiza.
-- Conecta cada una con la experiencia concreta y específica de haberla implementado manualmente en este proyecto.
-
-### Ejercicio 2: Diagnosticar un bug de sincronización de rutas
-
-**Enunciado:** un usuario reporta que, al usar el botón de retroceso del navegador, la URL cambia correctamente pero el contenido visible en pantalla no se actualiza. ¿Cuál es la causa más probable y cómo la corregirías?
-
-**Solución esperada:** la causa más probable es que la aplicación no está escuchando el evento `popstate`, o lo escucha pero no vuelve a invocar la función de renderizado correspondiente a la nueva ruta resultante de `location.pathname`. La corrección es añadir (o corregir) un listener de `popstate` en `window` que invoque `render(location.pathname)` cada vez que se dispara.
-
-**Criterios de éxito:**
-- Identifica correctamente la ausencia (o el mal funcionamiento) del listener de `popstate` como la causa.
-- Propone la corrección concreta y correcta.
-
-### Ejercicio 3: Diseñar el estado de una operación asíncrona
-
-**Enunciado:** diseña la estructura del estado del store para una vista que carga el detalle de un producto por id, considerando que el usuario puede navegar rápidamente entre distintos productos antes de que la petición anterior termine.
-
-**Solución esperada:** una estructura razonable incluye `{ cargando: boolean, producto: Producto | null, error: string | null, idSolicitado: number | null }`, donde `idSolicitado` permite verificar, al recibir una respuesta tardía de una petición anterior, si esa respuesta corresponde efectivamente al producto actualmente solicitado o si debe descartarse por corresponder a una navegación ya obsoleta (un problema de condición de carrera similar al discutido con `AbortController` en el Módulo 6, que también sería una solución válida y complementaria aquí).
-
-**Criterios de éxito:**
-- Incluye los tres estados esenciales (cargando, datos, error).
-- Identifica y aborda explícitamente el riesgo de condición de carrera ante navegación rápida entre productos distintos.
-
----
 
 ## Rúbrica del proyecto
 

@@ -190,39 +190,6 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 
 ---
 
-## Ejercicios de evaluación
-
-### Ejercicio 1: Diseñar el orden correcto de un pipeline
-
-**Enunciado:** ordena correctamente estas etapas de un pipeline CI/CD y justifica por qué ese orden (y no otro) es el correcto: (a) escaneo de vulnerabilidades con Trivy, (b) tests unitarios, (c) build de la imagen Docker, (d) push al registry, (e) despliegue con Helm, (f) verificación de métricas post-despliegue.
-
-**Solución esperada:** el orden correcto es: (b) tests unitarios → (c) build de la imagen → (a) escaneo de vulnerabilidades sobre la imagen ya construida → (d) push al registry (solo si el escaneo pasa) → (e) despliegue con Helm → (f) verificación de métricas post-despliegue. Los tests unitarios van primero porque son la verificación más rápida y barata, fallando rápido antes de invertir tiempo en construir una imagen; el escaneo ocurre después del build porque necesita la imagen ya construida para analizarla; el push solo ocurre si el escaneo pasa, como gate bloqueante; la verificación post-despliegue es la última etapa porque solo tiene sentido una vez que el despliegue ya ocurrió.
-
-**Criterios de éxito:**
-- El orden propuesto es correcto: tests → build → escaneo → push → despliegue → verificación.
-- La justificación explica por qué los tests van primero (fallar rápido y barato) y por qué el escaneo es un gate antes del push.
-
-### Ejercicio 2: Diagnosticar un despliegue fallido sin rollback
-
-**Enunciado:** un pipeline desplegó una nueva versión hace 20 minutos; las métricas de Grafana muestran que la tasa de error subió del 0.1% al 15% inmediatamente después del despliegue, pero no se disparó ningún rollback automático. Enumera, en orden, qué revisarías para diagnosticar por qué el rollback automático no se activó.
-
-**Solución esperada:** una secuencia razonable de diagnóstico: (1) ¿existe realmente una regla de alerta configurada en Prometheus/Alertmanager sobre la tasa de error, o solo un dashboard visual sin alerta activa? (Módulo 9); (2) si existe la alerta, ¿su umbral y su duración (`for`) son apropiados, o el umbral es demasiado alto para haberse disparado con un 15% de error? (3) si la alerta se disparó, ¿está realmente conectada a una acción automatizada de rollback, o solo notifica a un humano que aún no ha respondido? (4) revisar los logs del propio pipeline o del agente GitOps (si aplica, Módulo 12) para ver si el rollback se intentó y falló silenciosamente.
-
-**Criterios de éxito:**
-- Verifica primero si la alerta existe y está correctamente configurada, antes de asumir un fallo del mecanismo de rollback en sí.
-- Distingue entre "la alerta notifica a un humano" y "la alerta dispara un rollback automatizado", dos niveles distintos de automatización.
-
-### Ejercicio 3: Diseñar un runbook mínimo
-
-**Enunciado:** escribe un runbook mínimo (4-6 líneas) para el escenario "la tasa de error del servicio X superó el 10% durante más de 5 minutos", que alguien de guardia sin contexto previo del sistema pueda seguir.
-
-**Solución esperada:** un runbook razonable incluye: (1) síntoma: alerta de tasa de error >10% sostenida 5+ minutos en el servicio X; (2) primer diagnóstico: revisar el dashboard de Grafana del servicio para identificar si el error se concentra en una ruta específica o es generalizado; (3) verificar si hubo un despliegue reciente (últimos 30 minutos) mediante el historial de Helm (`helm history`); (4) si hubo un despliegue reciente, ejecutar `helm rollback` inmediatamente; (5) si no hubo despliegue reciente, escalar a la persona responsable del servicio X, adjuntando el enlace al dashboard; (6) verificar que la tasa de error vuelve a la línea base tras cualquier acción tomada.
-
-**Criterios de éxito:**
-- El runbook es accionable paso a paso, no una descripción teórica general.
-- Distingue explícitamente el camino de acción según haya habido o no un despliegue reciente, e incluye un criterio claro de escalación.
-
----
 
 ## Rúbrica del proyecto
 

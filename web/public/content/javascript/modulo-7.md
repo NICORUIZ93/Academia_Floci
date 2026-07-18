@@ -234,39 +234,6 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 
 ---
 
-## Ejercicios de evaluación
-
-### Ejercicio 1: ESM habilita tree-shaking, CommonJS lo dificulta
-
-**Enunciado:** explica en tus propias palabras por qué ESM permite tree-shaking de forma confiable y CommonJS lo dificulta considerablemente.
-
-**Solución esperada:** ESM requiere que `import`/`export` aparezcan en el nivel superior del módulo, de forma estática y analizable sin ejecutar código, permitiendo que un bundler determine con certeza exactamente qué se usa de cada módulo. CommonJS permite `require` dinámico dentro de condicionales con rutas calculadas en tiempo de ejecución, lo que impide a un bundler determinar con la misma certeza, sin ejecutar el código, qué exports se usan realmente.
-
-**Criterios de éxito:**
-- Explica correctamente la diferencia de análisis estático (ESM) frente a dinámico (CommonJS).
-- Conecta esa diferencia directamente con la viabilidad del tree-shaking.
-
-### Ejercicio 2: Diseñar lazy loading de una funcionalidad opcional
-
-**Enunciado:** una aplicación tiene una funcionalidad de exportación a PDF que usa una biblioteca pesada, pero solo el 5% de los usuarios la usa alguna vez. Explica cómo aplicarías `import()` dinámico para optimizar el tamaño del bundle inicial en este escenario.
-
-**Solución esperada:** en vez de importar la biblioteca de PDF estáticamente en el nivel superior del archivo (lo que la incluiría en el bundle inicial para el 100% de los usuarios), se importaría dinámicamente solo dentro del manejador del evento que dispara la exportación (`boton.addEventListener("click", async () => { const pdf = await import("libreria-pdf"); ... })`), de modo que el código de esa biblioteca solo se descarga para el subconjunto de usuarios que efectivamente usan esa funcionalidad.
-
-**Criterios de éxito:**
-- Propone usar `import()` dinámico dentro del manejador del evento específico, no en el nivel superior del archivo.
-- Explica correctamente que esto reduce el bundle inicial para la mayoría de usuarios que nunca usan esa funcionalidad.
-
-### Ejercicio 3: Diagnosticar un problema de exports
-
-**Enunciado:** un proyecto configurado con `"type": "module"` en su `package.json` falla al intentar `require("./utilidad.js")` desde otro archivo del mismo proyecto. Explica por qué falla y cómo corregirlo.
-
-**Solución esperada:** falla porque `"type": "module"` hace que todos los `.js` del proyecto se interpreten como ESM por defecto, y `require` no está disponible de forma nativa en módulos ESM (es una función específica de CommonJS). La corrección es usar `import` en vez de `require` para mantener consistencia con ESM, o renombrar el archivo específico a `.cjs` si genuinamente necesita usar CommonJS dentro de un proyecto configurado como ESM.
-
-**Criterios de éxito:**
-- Identifica correctamente que `"type": "module"` hace que `require` no esté disponible por defecto.
-- Propone una corrección válida (usar `import`, o usar la extensión `.cjs` para el archivo específico).
-
----
 
 ## Rúbrica del proyecto
 

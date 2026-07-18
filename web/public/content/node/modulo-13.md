@@ -255,34 +255,6 @@ Evoluciona una vertical del proyecto final —crear tarea y notificarla— sin r
 - Reintentar cada 4xx: clasifica permanente, rate limit y transitorio; respeta presupuesto.
 - DLQ sin procedimiento: alerta, inspecciona, corrige y reproduce con auditoría.
 
-## Ejercicios de evaluación
-
-### Ejercicio 1: ilusión de tipos
-
-¿Por qué `const body = req.body as User` puede compilar y fallar con `body.email.toLowerCase()`?
-
-<details><summary>Solución razonada</summary>
-
-El cast solo cambia la visión del compilador. El cliente puede omitir email o enviar número. Se necesita un parser runtime que produzca `User` únicamente tras comprobar estructura y restricciones.
-</details>
-
-### Ejercicio 2: carrera de idempotencia
-
-Dos requests hacen `SELECT key`, no encuentran y crean. ¿Qué propiedad falta?
-
-<details><summary>Solución razonada</summary>
-
-La decisión no es atómica. Una restricción única decide un ganador y la transacción coordina registro, efecto y respuesta. El perdedor observa estado en progreso o completado sin repetir el caso de uso.
-</details>
-
-### Ejercicio 3: webhook duplicado
-
-El receptor completó pero perdió su `200`. Describe el comportamiento de ambas partes.
-
-<details><summary>Solución razonada</summary>
-
-El emisor reintenta el mismo delivery ID con firma nueva según timestamp. El receptor verifica firma, reconoce ID ya procesado y devuelve éxito sin repetir efecto. La reconciliación confirma convergencia si persiste duda.
-</details>
 
 ## Rúbrica del proyecto
 

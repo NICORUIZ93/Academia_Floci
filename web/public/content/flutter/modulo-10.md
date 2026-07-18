@@ -158,36 +158,6 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 
 ---
 
-## Ejercicios de evaluación
-
-### Ejercicio 1: Por qué adaptar Material/Cupertino hace la app más nativa
-
-**Enunciado:** ¿por qué adaptar Material/Cupertino según la plataforma hace que una app Flutter se sienta más nativa?
-
-**Solución esperada:** cumple con las expectativas visuales y de interacción específicas que los usuarios de cada plataforma ya tienen formadas por el uso constante de otras apps nativas de esa misma plataforma (Material en Android, Cupertino en iOS), en vez de mostrar siempre el mismo estilo genérico independientemente de la plataforma.
-
-**Criterios de éxito:**
-- Explica correctamente las expectativas específicas de plataforma como razón de la sensación de "nativo".
-
-### Ejercicio 2: Qué revela activar un lector de pantalla
-
-**Enunciado:** ¿qué revela activar un lector de pantalla en tu propia app que no notarías de otra forma?
-
-**Solución esperada:** revela elementos interactivos sin texto visible que el lector describe únicamente como "botón" genérico sin ninguna indicación de qué acción específica realizan, un problema de accesibilidad que una inspección puramente visual del diseño, sin usar el lector de pantalla real, no puede detectar.
-
-**Criterios de éxito:**
-- Explica correctamente la descripción genérica sin contexto como lo que revela el lector de pantalla.
-
-### Ejercicio 3: Riesgo de probar solo un modo de color
-
-**Enunciado:** ¿qué riesgo hay al probar la app solo en modo claro y asumir que también funciona bien en modo oscuro?
-
-**Solución esperada:** puede haber contrastes de color insuficientes (texto oscuro sobre fondo oscuro por un color hardcodeado que ignora el tema activo) o iconografía que se vuelve invisible o difícil de distinguir específicamente en el modo no probado, problemas que solo se detectan probando explícitamente ambos modos.
-
-**Criterios de éxito:**
-- Explica correctamente los problemas de contraste/iconografía como el riesgo de no probar ambos modos.
-
----
 
 ## Rúbrica del proyecto
 

@@ -180,51 +180,6 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 
 ---
 
-## Ejercicios de evaluación
-
-### Ejercicio 1: Mock, spy y fake
-
-**Enunciado:** explica la diferencia entre un mock, un spy y un fake, dando un ejemplo concreto de cuándo usarías cada uno.
-
-**Solución esperada:** un spy observa invocaciones de una función real sin alterar su comportamiento (ejemplo: verificar que una función callback fue llamada con ciertos argumentos); un mock reemplaza completamente una dependencia con una versión controlada (ejemplo: mockear `fetch` para devolver una respuesta fija sin red real); un fake es una implementación alternativa simplificada pero funcional (ejemplo: una base de datos en memoria en vez de una conexión real a una base de datos de producción).
-
-**Criterios de éxito:**
-- Distingue correctamente los tres conceptos.
-- Da un ejemplo apropiado y realista para cada uno.
-
-### Ejercicio 2: Por qué 100% de cobertura no basta
-
-**Enunciado:** un compañero afirma que si la suite de pruebas alcanza 100% de cobertura, el código está "libre de bugs". Explica por qué esta afirmación es incorrecta con un ejemplo concreto.
-
-**Solución esperada:** cobertura mide solo que una línea se ejecutó al menos una vez, no que su resultado fue verificado correctamente. Ejemplo: una prueba que invoca `dividir(10, 2)` y no afirma nada sobre el resultado (o afirma algo trivial e incorrecto) cubre la línea de la función `dividir`, pero no detectaría un bug en la implementación, ni cubre el caso límite de dividir entre cero, que podría no estar cubierto en absoluto si ningún test lo ejercita específicamente.
-
-**Criterios de éxito:**
-- Explica correctamente que cobertura mide ejecución, no verificación correcta.
-- Da un ejemplo concreto de una prueba con alta cobertura pero baja calidad de verificación.
-
-### Ejercicio 3: Diseñar una prueba con fake timers
-
-**Enunciado:** escribe la prueba de Vitest que verifica que `throttle(fn, 1000)` (del Módulo 10) ejecuta `fn` como máximo una vez por cada intervalo de 1000ms, aunque se invoque repetidamente durante ese intervalo.
-
-**Solución esperada:**
-```js
-it("ejecuta como máximo una vez por intervalo", () => {
-  vi.useFakeTimers();
-  const spy = vi.fn();
-  const conThrottle = throttle(spy, 1000);
-  conThrottle(); conThrottle(); conThrottle(); // 3 llamadas dentro del mismo intervalo
-  expect(spy).toHaveBeenCalledTimes(1);
-  vi.advanceTimersByTime(1000);
-  conThrottle();
-  expect(spy).toHaveBeenCalledTimes(2); // nuevo intervalo, nueva ejecución permitida
-});
-```
-
-**Criterios de éxito:**
-- Usa `vi.useFakeTimers()` y `vi.advanceTimersByTime()` correctamente.
-- Verifica tanto el bloqueo dentro del mismo intervalo como la nueva ejecución permitida tras avanzar el tiempo.
-
----
 
 ## Rúbrica del proyecto
 

@@ -142,36 +142,6 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 
 ---
 
-## Ejercicios de evaluación
-
-### Ejercicio 1: Diferencia entre Access Token, ID Token y Refresh Token
-
-**Enunciado:** ¿qué diferencia hay entre Access Token, ID Token y Refresh Token?
-
-**Solución esperada:** el Access Token autoriza acceso a recursos protegidos (APIs); el ID Token comunica identidad del usuario a la aplicación cliente; el Refresh Token renueva los otros dos sin requerir reingreso de credenciales, cada uno con un propósito distinto y no intercambiable.
-
-**Criterios de éxito:**
-- Distingue correctamente el propósito de cada uno de los tres tokens.
-
-### Ejercicio 2: Por qué no construir tu propio sistema de autenticación
-
-**Enunciado:** ¿por qué NO debes construir tu propio sistema de autenticación?
-
-**Solución esperada:** requiere resolver correctamente numerosos detalles críticos de seguridad (hashing de contraseñas, gestión de sesiones, protección contra fuerza bruta) donde un único error puede comprometer completamente la seguridad de todos los usuarios, algo que servicios auditados como Cognito ya resuelven de forma probada y extensamente revisada por expertos.
-
-**Criterios de éxito:**
-- Explica correctamente el riesgo de errores críticos de seguridad como razón de usar un servicio auditado en vez de construir uno propio.
-
-### Ejercicio 3: Qué es PKCE y para qué sirve
-
-**Enunciado:** ¿qué es el flujo PKCE y para qué sirve?
-
-**Solución esperada:** es una extensión de seguridad de OAuth 2.0 para clientes que no pueden almacenar un secreto de forma segura (apps móviles, SPAs), donde se genera un verificador aleatorio y su desafío derivado al inicio del flujo, exigiendo presentar el verificador original al final del intercambio, previniendo que un código de autorización interceptado sea explotable sin también poseer ese verificador nunca transmitido en el paso interceptable.
-
-**Criterios de éxito:**
-- Explica correctamente el propósito de proteger clientes sin capacidad de guardar secretos de forma segura.
-
----
 
 ## Rúbrica del proyecto
 

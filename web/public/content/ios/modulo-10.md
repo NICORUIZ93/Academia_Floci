@@ -278,47 +278,6 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 
 ---
 
-## Ejercicios de evaluación
-
-### Ejercicio 1: Qué revela Instruments que el simulador no revela
-
-**Enunciado:** ¿qué revela Instruments que el simulador "se ve fluido" no revela?
-
-**Solución esperada:** revela cuellos de botella de rendimiento reales y medibles (consumo de CPU, memoria, frames perdidos) que la percepción subjetiva de fluidez no puede detectar, dado que el simulador corre en hardware de escritorio considerablemente más potente que los dispositivos reales de los usuarios, ocultando problemas que solo se manifiestan en hardware real.
-
-**Criterios de éxito:**
-- Explica correctamente la diferencia de hardware entre simulador y dispositivo real como razón de la brecha.
-
-### Ejercicio 2: Por qué las HIG hacen que una app se sienta nativa
-
-**Enunciado:** ¿por qué seguir las Human Interface Guidelines hace que una app "se sienta" nativa, más allá de usar SwiftUI?
-
-**Solución esperada:** las HIG documentan convenciones específicas de comportamiento e interacción esperadas por el usuario habitual de iOS (tamaños de área táctil, iconografía consistente, patrones de navegación estándar); usar SwiftUI por sí solo no garantiza automáticamente seguir esas convenciones si las decisiones de diseño se apartan de ellas.
-
-**Criterios de éxito:**
-- Explica correctamente que SwiftUI no garantiza automáticamente el cumplimiento de las convenciones documentadas en las HIG.
-
-### Ejercicio 3: Por qué usar el propio ícono sin descripción es un problema real
-
-**Enunciado:** ¿qué problema real ocurre si un ícono interactivo carece de `.accessibilityLabel`?
-
-**Solución esperada:** VoiceOver lo lee simplemente como "imagen" genérica, una descripción completamente inútil para un usuario con discapacidad visual que necesita entender qué hace ese elemento específico antes de interactuar con él.
-
-**Criterios de éxito:**
-- Explica correctamente la descripción genérica e inútil de VoiceOver como el problema concreto.
-
-### Ejercicio 4: Diagnóstico de una pantalla UIKit que no se libera
-
-**Enunciado:** `StopsViewController` desaparece visualmente, pero `deinit` nunca se ejecuta. El controlador posee un ViewModel y este guarda un closure que actualiza la tabla. Explica cómo comprobar y corregir el problema sin aplicar `weak` indiscriminadamente.
-
-**Solución esperada:** usa Memory Graph o Instruments para inspeccionar la cadena de retención. Si el closure retenido por el ViewModel captura fuertemente al controlador, existe el ciclo controlador→ViewModel→closure→controlador. Captura `self` débilmente o cambia la propiedad del callback; después repite el flujo y verifica `deinit`. Las dependencias que sí representan propiedad estable permanecen fuertes.
-
-**Criterios de éxito:**
-- Identifica la cadena completa de referencias.
-- Verifica el diagnóstico con una herramienta.
-- Justifica dónde usar referencia fuerte, débil o ninguna captura.
-
----
 
 ## Rúbrica del proyecto
 

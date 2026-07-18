@@ -262,7 +262,6 @@ export class LessonViewerComponent implements OnDestroy {
     });
 
     this.groupTopics(container);
-    this.collapseExerciseSolutions(container);
   }
 
   private collapseSecondarySections(container: HTMLElement): void {
@@ -365,37 +364,6 @@ export class LessonViewerComponent implements OnDestroy {
       // La práctica cierra el tema. Antes se insertaba antes de mover los nodos
       // al cuerpo y terminaba como primer contenido visible de la lección.
       body.appendChild(practice);
-    });
-  }
-
-  private collapseExerciseSolutions(container: HTMLElement): void {
-    container.querySelectorAll<HTMLElement>('.section-ejercicios-de-evaluacion h3').forEach((heading, index) => {
-      if (!heading.textContent?.trim().startsWith('Ejercicio ')) return;
-      const card = document.createElement('article');
-      card.className = 'exercise-card';
-      heading.parentNode?.insertBefore(card, heading);
-      card.appendChild(heading);
-      let node = card.nextSibling;
-      while (node && !(node instanceof HTMLHeadingElement && ['H2', 'H3'].includes(node.tagName))) {
-        const next = node.nextSibling;
-        card.appendChild(node);
-        node = next;
-      }
-      const solution = Array.from(card.querySelectorAll('p')).find(p => p.textContent?.trim().startsWith('Solución esperada:'));
-      if (!solution) return;
-      const details = document.createElement('details');
-      details.className = 'exercise-solution';
-      const summary = document.createElement('summary');
-      summary.textContent = 'Ver solución razonada';
-      details.appendChild(summary);
-      let solutionNode: Node | null = solution;
-      while (solutionNode) {
-        const next: Node | null = solutionNode.nextSibling;
-        details.appendChild(solutionNode);
-        solutionNode = next;
-      }
-      card.appendChild(details);
-      card.dataset['exerciseIndex'] = String(index);
     });
   }
 

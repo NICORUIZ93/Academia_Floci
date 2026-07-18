@@ -161,39 +161,6 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 
 ---
 
-## Ejercicios de evaluación
-
-### Ejercicio 1: RunInstances vs docker run directo
-
-**Enunciado:** lanza un contenedor con `docker run -d alpine tail -f /dev/null` directamente, y por otro lado lanza una instancia EC2 con `aws ec2 run-instances --image-id ami-alpine`. Compara ambos con `docker inspect` y explica qué hace Floci de más en el segundo caso.
-
-**Solución esperada:** ambos terminan siendo contenedores Docker reales y muy similares en `docker inspect`, pero el lanzado vía EC2 tiene metadatos adicionales (variables de entorno con el endpoint IMDS, posiblemente una clave SSH inyectada) y está registrado en el estado interno de Floci como una instancia EC2 con `InstanceId`, estado y atributos consultables vía `describe-instances` — algo que el contenedor lanzado directamente con `docker run` no tiene.
-
-**Criterios de éxito:**
-- Ejecutaste ambos comandos y comparaste su salida real con `docker inspect`.
-- Identificas correctamente que la capa EC2 añade metadatos y registro de estado sobre el mismo mecanismo de Docker.
-
-### Ejercicio 2: Diagnosticar un IMDS que no responde
-
-**Enunciado:** intenta consultar IMDS desde tu terminal (fuera de cualquier contenedor) con `curl http://localhost:9169/latest/meta-data/instance-id` y probablemente falle si no expusiste el puerto. Diagnostica el problema y corrígelo sin destruir la instancia que ya tienes corriendo.
-
-**Solución esperada:** el puerto `9169` no estaba expuesto en el `docker-compose.yml` del host de Floci (aunque dentro del contenedor de la instancia sí funciona vía `169.254.169.254`). La corrección es añadir el mapeo de puerto y reiniciar Floci; la instancia EC2 en sí no se ve afectada porque su ciclo de vida es independiente del reinicio de Floci si usas almacenamiento persistente.
-
-**Criterios de éxito:**
-- Diagnosticaste correctamente que el problema es de exposición de puerto del host, no del servicio IMDS en sí.
-- Aplicaste la corrección y verificaste con un nuevo `curl` que ahora responde.
-
-### Ejercicio 3: Scale-in manual y protección de instancias
-
-**Enunciado:** con tu Auto Scaling Group en 4 instancias, baja la capacidad deseada a 1 con `set-desired-capacity`, y documenta con `describe-scaling-activities` qué instancias se terminaron y en qué orden. Luego explica cómo protegerías una instancia específica de ser terminada en un scale-in.
-
-**Solución esperada:** el reconciliador selecciona 3 instancias `InService` no protegidas, las da de baja de cualquier grupo objetivo adjunto y las termina, dejando exactamente 1 activa. Para proteger una instancia específica de terminación durante scale-in, se marcaría con protección contra reducción de escala (instance scale-in protection) antes de bajar la capacidad deseada.
-
-**Criterios de éxito:**
-- Documentaste con evidencia real de `describe-scaling-activities` las 3 terminaciones.
-- Explicas correctamente el mecanismo de protección contra scale-in, aunque no lo hayas ejecutado.
-
----
 
 ## Rúbrica del proyecto
 

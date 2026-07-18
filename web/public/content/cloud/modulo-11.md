@@ -145,36 +145,6 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 
 ---
 
-## Ejercicios de evaluación
-
-### Ejercicio 1: Cuándo usar SNS y cuándo EventBridge
-
-**Enunciado:** ¿cuándo usar SNS y cuándo usar EventBridge?
-
-**Solución esperada:** SNS es apropiado para fan-out simple hacia múltiples suscriptores sin necesidad de filtrado complejo por contenido; EventBridge es apropiado cuando se necesita enrutamiento basado en filtros declarativos sobre la estructura del evento, especialmente centralizando eventos de múltiples orígenes distintos en un único bus.
-
-**Criterios de éxito:**
-- Distingue correctamente el caso de uso de fan-out simple frente a enrutamiento con filtrado de contenido.
-
-### Ejercicio 2: Qué es el patrón fan-out
-
-**Enunciado:** ¿qué es el patrón fan-out y cuándo lo necesitas?
-
-**Solución esperada:** distribuye una única publicación hacia múltiples suscriptores independientes simultáneamente, sin que el publicador conozca su número o identidad; se necesita cuando un mismo evento de negocio debe disparar múltiples acciones independientes entre sí sin coordinación explícita del publicador original.
-
-**Criterios de éxito:**
-- Explica correctamente la distribución simultánea a múltiples suscriptores independientes como definición del fan-out.
-
-### Ejercicio 3: Por qué SQS + SNS son más robustos que SNS solo
-
-**Enunciado:** ¿por qué SQS + SNS juntos son más robustos que SNS solo?
-
-**Solución esperada:** si el consumidor final está temporalmente caído o sobrecargado, los mensajes permanecen retenidos de forma segura en la cola SQS hasta que pueda procesarlos, en vez de perderse como podría ocurrir si SNS entregara directamente a un endpoint HTTP que no responde en ese momento.
-
-**Criterios de éxito:**
-- Explica correctamente la retención segura ante consumidores temporalmente no disponibles como la razón de mayor robustez.
-
----
 
 ## Rúbrica del proyecto
 

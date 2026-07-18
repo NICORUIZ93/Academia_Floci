@@ -122,39 +122,6 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 
 ---
 
-## Ejercicios de evaluación
-
-### Ejercicio 1: Justifica Transfer Family frente a un servidor SFTP propio
-
-**Enunciado:** una empresa de logística necesita recibir archivos CSV diarios de sus proveedores por SFTP, y actualmente opera su propio servidor SFTP en una instancia EC2 que alguien del equipo mantiene manualmente. Escribe una justificación de negocio para migrar a Transfer Family, incluyendo qué trabajo operativo específico se elimina.
-
-**Solución esperada:** la justificación debe mencionar la eliminación de: parches de seguridad del sistema operativo del servidor SFTP, gestión de escalado si aumenta el volumen de transferencias, gestión de almacenamiento en disco (reemplazado por S3, con su durabilidad y escalabilidad nativas), y la reducción de superficie de ataque al no exponer una instancia EC2 completa a internet solo para SFTP.
-
-**Criterios de éxito:**
-- La justificación identifica al menos tres cargas operativas concretas que se eliminan, no una afirmación genérica de "es más fácil".
-- Reconoce que los proveedores externos no necesitan cambiar ninguna herramienta de su lado.
-
-### Ejercicio 2: Diseña el aislamiento de usuarios por proveedor
-
-**Enunciado:** la misma empresa de logística tiene tres proveedores distintos que deben poder subir archivos, pero cada uno debe ver únicamente su propia carpeta, sin acceso a los archivos de los otros dos. Diseña la configuración de usuarios y directorios de inicio que lograría este aislamiento.
-
-**Solución esperada:** crear tres usuarios distintos (uno por proveedor) en el mismo servidor, cada uno con un `home-directory` distinto apuntando a un prefijo exclusivo dentro del bucket S3 (por ejemplo `/proveedor-a`, `/proveedor-b`, `/proveedor-c`), y un rol IAM por usuario que restrinja el acceso exclusivamente a su propio prefijo, evitando que un proveedor pueda navegar fuera de su directorio asignado.
-
-**Criterios de éxito:**
-- El diseño usa usuarios y directorios de inicio distintos, no un único usuario compartido con convención de nombres.
-- Reconoce que el aislamiento real requiere también restricción a nivel de rol IAM, no solo un directorio de inicio por convención.
-
-### Ejercicio 3: Qué validarías contra AWS real antes de producción
-
-**Enunciado:** basándote en el Tema 4, lista específicamente qué aspectos de tu configuración de Transfer Family no puedes validar completamente en Floci y necesitarías probar contra un servidor Transfer Family real antes de llevarlo a producción.
-
-**Solución esperada:** la conectividad SFTP real (que un cliente externo efectivamente pueda conectarse y subir/descargar archivos), el comportamiento real de autenticación criptográfica con la clave privada correspondiente, el rendimiento bajo carga real de transferencias concurrentes, y la integración real de permisos IAM aplicados durante una transferencia efectiva de archivos.
-
-**Criterios de éxito:**
-- La lista identifica específicamente aspectos de plano de datos, no repite aspectos de plano de gestión que sí están cubiertos.
-- Demuestra haber entendido la distinción Fase 1/Fase 2 aplicada a este servicio en particular, no solo memorizada de forma genérica.
-
----
 
 ## Rúbrica del proyecto
 

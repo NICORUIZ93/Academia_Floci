@@ -223,34 +223,6 @@ Trabaja sobre el proyecto del módulo 12 y conserva una rama o tag previo para c
 - Publicar source maps junto al bundle: separa carga de producción del almacenamiento de diagnóstico.
 - Guardar fechas sin semántica: decide si es instante ocurrido o fecha civil futura y conserva zona cuando corresponda.
 
-## Ejercicios de evaluación
-
-### Ejercicio 1: contexto de salida
-
-¿Por qué una función `escapeHtml` no permite insertar el resultado dentro de cualquier URL o script?
-
-<details><summary>Solución razonada</summary>
-
-Cada parser interpreta caracteres y secuencias diferentes. Escapar texto HTML no valida protocolos de URL ni evita cerrar un literal JavaScript. La defensa debe corresponder al sink; preferir APIs seguras evita mezclar lenguajes.
-</details>
-
-### Ejercicio 2: fuga alcanzable
-
-Un nodo fue eliminado del DOM, pero aparece retenido por `window -> listener -> closure`. Explica la corrección.
-
-<details><summary>Solución razonada</summary>
-
-Eliminar el nodo no rompe la ruta desde la raíz global. La función de desmontaje debe retirar o abortar el listener y liberar otras suscripciones. Después se repite el escenario y se comprueba que las instancias no crecen.
-</details>
-
-### Ejercicio 3: fecha desplazada
-
-Una tienda guarda `2026-03-01` y al mostrarlo algunos usuarios ven 28 de febrero. ¿Qué supuesto falta?
-
-<details><summary>Solución razonada</summary>
-
-El string puede interpretarse como instante UTC y luego convertirse a zona local. Si representa una fecha civil sin hora debe modelarse como tal; si representa un evento, requiere instante y zona/política de presentación explícitos.
-</details>
 
 ## Rúbrica del proyecto
 

@@ -278,39 +278,6 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 
 ---
 
-## Ejercicios de evaluación
-
-### Ejercicio 1: Elegir el tipo de métrica correcto
-
-**Enunciado:** para cada una de estas cuatro métricas, indica si usarías un counter, un gauge o un histogram: (a) el número total de usuarios registrados históricamente en la aplicación; (b) el número de trabajos actualmente en proceso en una cola; (c) la distribución de tiempos de respuesta de una API; (d) el número total de bytes descargados acumulados por un servicio de archivos.
-
-**Solución esperada:** (a) counter (solo crece con el tiempo, nunca decrece); (b) gauge (sube y baja según se añaden y completan trabajos); (c) histogram (necesitas la distribución completa, no solo un promedio, para calcular percentiles); (d) counter (los bytes acumulados descargados solo crecen con el tiempo).
-
-**Criterios de éxito:**
-- Las cuatro asignaciones coinciden con la solución esperada.
-- Puede justificar (b) explicando por qué un counter sería incorrecto para un valor que legítimamente decrece.
-
-### Ejercicio 2: Diseñar un SLO razonable
-
-**Enunciado:** tu equipo mide que, actualmente, el 99.7% de las peticiones de su API responden en menos de 300ms, medido sobre los últimos 30 días. Alguien propone fijar el SLO en "99.9% de peticiones bajo 300ms" para "forzar al equipo a mejorar". Explica por qué esta propuesta puede ser problemática, y qué considerarías en su lugar.
-
-**Solución esperada:** fijar un SLO más estricto que el rendimiento actual observado (99.9% cuando el sistema real está en 99.7%) garantiza que el equipo estará permanentemente "incumpliendo" su propio objetivo desde el primer día, incluso sin que nada haya empeorado realmente, lo que socava el propósito del SLO como lenguaje objetivo de si el sistema está funcionando bien; un SLO debería fijarse considerando tanto las expectativas reales del negocio y los usuarios como la capacidad actual demostrada del sistema, estableciendo quizás un objetivo ligeramente por debajo del rendimiento actual observado (por ejemplo, 99.5%) como un objetivo alcanzable con margen, y planificando mejoras incrementales documentadas hacia un objetivo más ambicioso en el futuro, en vez de fijar de entrada una meta que el sistema actual no puede cumplir.
-
-**Criterios de éxito:**
-- Explica correctamente que fijar un SLO por encima del rendimiento actual real garantiza incumplimiento permanente desde el inicio.
-- Propone considerar el rendimiento actual demostrado al fijar el SLO, con mejoras incrementales planificadas en vez de un salto brusco poco realista.
-
-### Ejercicio 3: Conectar una práctica de DevOps con una métrica DORA
-
-**Enunciado:** explica cómo la adopción de feature flags (Módulo 5 de este track) y de un pipeline de CI robusto (Módulo 4) podría mejorar específicamente el Change Failure Rate y el Lead Time for Changes de un equipo, dos de las cuatro métricas DORA.
-
-**Solución esperada:** un pipeline de CI robusto reduce el Change Failure Rate al detectar automáticamente errores antes de que lleguen a producción, y reduce el Lead Time al automatizar la validación (en vez de depender de revisión manual lenta) permitiendo que cambios validados lleguen a producción más rápido. Los feature flags reducen el Change Failure Rate al permitir desplegar código nuevo "apagado" sin exponerlo a usuarios reales hasta estar seguros de que funciona, y reducen efectivamente el riesgo percibido de cada despliegue individual, lo que en la práctica anima a los equipos a desplegar con más frecuencia y en lotes más pequeños (mejorando también el Lead Time y la Deployment Frequency), porque cada despliegue individual es menos arriesgado.
-
-**Criterios de éxito:**
-- Explica correctamente cómo CI reduce tanto Change Failure Rate como Lead Time.
-- Explica correctamente cómo los feature flags reducen el riesgo percibido de cada despliegue, conectándolo con Change Failure Rate.
-
----
 
 ## Rúbrica del proyecto
 

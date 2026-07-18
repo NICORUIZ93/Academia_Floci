@@ -130,39 +130,6 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 
 ---
 
-## Ejercicios de evaluación
-
-### Ejercicio 1: Firehose vs consumidor Kinesis propio
-
-**Enunciado:** tienes un caso de uso donde solo necesitas que los eventos de clics de tu aplicación terminen en S3 para analizarlos después con Athena, sin ninguna lógica de procesamiento en tiempo real. Justifica si usarías Firehose o construirías un consumidor Kinesis Data Streams propio, y qué complejidad te ahorra la opción elegida.
-
-**Solución esperada:** Firehose es la opción correcta — no necesitas lógica de procesamiento en tránsito, solo entrega confiable a S3. Construir un consumidor Kinesis propio significaría escribir, desplegar y operar código adicional (una Lambda o un proceso que haga polling de shards) sin ningún beneficio funcional para este caso de uso específico.
-
-**Criterios de éxito:**
-- La justificación se basa en la ausencia de necesidad de procesamiento en tránsito, no en preferencia arbitraria.
-- Reconoce explícitamente qué código y operación se ahorra al elegir Firehose.
-
-### Ejercicio 2: Diseña un pipe con filtrado
-
-**Enunciado:** documenta cómo configurarías un pipe que solo invoque la Lambda destino cuando el mensaje de la cola SQS de origen contenga el campo `"prioridad": "alta"`, dejando pasar los demás mensajes sin disparar la Lambda.
-
-**Solución esperada:** al crear o actualizar el pipe, se configura un criterio de filtrado (`FilterCriteria`) sobre el origen, especificando un patrón que solo coincide con mensajes donde el campo `prioridad` sea `"alta"`; los mensajes que no cumplan el patrón se descartan del flujo hacia el destino sin invocar la Lambda.
-
-**Criterios de éxito:**
-- Identifica correctamente que el filtrado se aplica sobre el origen antes de llegar al destino, no dentro del código de la Lambda.
-- El patrón de filtro propuesto coincide específicamente con el campo y valor solicitados.
-
-### Ejercicio 3: Elige la herramienta correcta para tres escenarios
-
-**Enunciado:** para cada escenario, decide si usarías un Pipe, una regla EventBridge, o una Step Function, y justifica: (a) conectar una cola SQS directamente a una única Lambda de procesamiento; (b) un evento de "pedido creado" que debe disparar simultáneamente una notificación por email, una actualización de inventario y un registro de auditoría; (c) un proceso de aprobación de crédito con varios pasos condicionales, reintentos y posible intervención humana.
-
-**Solución esperada:** (a) Pipe — origen y destino únicos y conocidos; (b) regla EventBridge — un evento debe enrutarse hacia múltiples destinos independientes según su tipo; (c) Step Functions — lógica condicional, reintentos y orquestación de múltiples pasos con estado.
-
-**Criterios de éxito:**
-- Las tres elecciones son correctas y justificadas con el criterio de complejidad apropiada, no solo "porque sí".
-- Reconoce que estos tres servicios no son mutuamente excluyentes y pueden combinarse en una arquitectura real.
-
----
 
 ## Rúbrica del proyecto
 

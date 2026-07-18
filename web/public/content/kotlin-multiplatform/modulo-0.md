@@ -187,36 +187,6 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 
 ---
 
-## Ejercicios de evaluación
-
-### Ejercicio 1: String vs String?
-
-**Enunciado:** ¿por qué Kotlin distingue entre `String` y `String?` en el sistema de tipos?
-
-**Solución esperada:** esta distinción permite que el compilador verifique en tiempo de compilación si una variable puede legítimamente ser `null`, obligando a manejar explícitamente ese caso (con safe call, Elvis, o verificación explícita) antes de acceder a sus miembros, eliminando una categoría completa de errores de referencia nula que de otro modo solo se detectarían en tiempo de ejecución.
-
-**Criterios de éxito:**
-- Explica correctamente la verificación en compilación como la razón de esta distinción de tipos.
-
-### Ejercicio 2: Qué evita el null safety de Kotlin
-
-**Enunciado:** ¿qué evita en la práctica el null safety de Kotlin que Java no evita por defecto?
-
-**Solución esperada:** evita que el código compile si existe una posibilidad no manejada de acceder a un miembro de una referencia nula, forzando a manejar explícitamente ese caso antes de compilar; Java, sin anotaciones adicionales de nulabilidad, permite que ese mismo código compile sin advertencia, y el error solo se manifiesta como un `NullPointerException` en tiempo de ejecución.
-
-**Criterios de éxito:**
-- Explica correctamente la detección en compilación (Kotlin) frente a la detección solo en ejecución (Java sin anotaciones).
-
-### Ejercicio 3: Exhaustividad de when sin else
-
-**Enunciado:** ¿por qué `when` sobre una sealed class no necesita una rama `else` para ser exhaustivo?
-
-**Solución esperada:** una sealed class restringe explícitamente qué subtipos existen; el compilador conoce ese conjunto cerrado y completo de posibilidades, y puede verificar que el `when` cubre todos los casos posibles sin necesidad de una rama `else` genérica como respaldo.
-
-**Criterios de éxito:**
-- Explica correctamente la restricción del conjunto de subtipos de una sealed class como razón de la exhaustividad verificable.
-
----
 
 ## Rúbrica del proyecto
 

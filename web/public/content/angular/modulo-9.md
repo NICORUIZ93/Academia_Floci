@@ -147,36 +147,6 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 
 ---
 
-## Ejercicios de evaluación
-
-### Ejercicio 1: Encapsulación en un store de signals
-
-**Enunciado:** explica por qué `CarritoStore` expone `lista` como `this.items.asReadonly()` en vez de exponer `items` directamente.
-
-**Solución esperada:** exponer el signal mutable directamente permitiría que cualquier código externo lo modifique con `.set()` o `.update()` sin pasar por los métodos `agregar()`/`quitar()` del store, rompiendo la encapsulación y permitiendo cambios de estado no controlados ni rastreables; `asReadonly()` expone una versión de solo lectura que solo puede leerse, no modificarse, forzando toda modificación a pasar por los métodos públicos explícitos.
-
-**Criterios de éxito:**
-- Explica correctamente el riesgo de exponer el signal mutable y el rol de `asReadonly()`.
-
-### Ejercicio 2: Reducers puros
-
-**Enunciado:** ¿por qué los reducers de NgRx deben ser funciones puras que no mutan el estado original?
-
-**Solución esperada:** un reducer puro que siempre devuelve un nuevo objeto de estado (sin mutar el original) garantiza que la detección de cambios y las herramientas de depuración (como time-travel debugging) puedan confiar en que cada referencia de estado distinta representa un momento distinto e inmutable en el historial; mutar el estado original rompería esa garantía, haciendo indistinguibles estados que en realidad son diferentes momentos en el tiempo.
-
-**Criterios de éxito:**
-- Explica correctamente la relación entre pureza/inmutabilidad y la confiabilidad del historial de estado.
-
-### Ejercicio 3: Justificar NgRx
-
-**Enunciado:** da un ejemplo concreto de un escenario donde la ceremonia adicional de NgRx estaría genuinamente justificada frente a un store de signals.
-
-**Solución esperada:** cualquier respuesta razonable que mencione historial de cambios inspeccionable para depurar bugs complejos en producción, necesidad de un patrón único y predecible en un equipo grande con muchos desarrolladores, o coordinación de side-effects asíncronos complejos (múltiples acciones encadenadas condicionalmente, cancelación coordinada de flujos).
-
-**Criterios de éxito:**
-- Da un ejemplo concreto y razonablemente justificado, no solo "podría ser útil".
-
----
 
 ## Rúbrica del proyecto
 

@@ -259,50 +259,6 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 
 ---
 
-## Ejercicios de evaluación
-
-### Ejercicio 1: ¿await bloquea el hilo?
-
-**Enunciado:** un compañero afirma que `await` "bloquea" el hilo de JavaScript mientras espera. Explica por qué esto es impreciso y qué ocurre realmente durante la espera.
-
-**Solución esperada:** `await` pausa la ejecución de la función `async` específica donde aparece, pero no bloquea el hilo único de JavaScript ni el Event Loop; mientras esa función está pausada, el Event Loop sigue libre para procesar otras tareas (otros eventos, otras funciones), y la función pausada se reanuda como una microtask cuando la Promesa esperada se resuelve.
-
-**Criterios de éxito:**
-- Distingue correctamente "pausa de una función específica" de "bloqueo del hilo completo".
-- Explica que el Event Loop sigue procesando otras tareas durante la espera.
-
-### Ejercicio 2: Diseñar manejo de errores en cadena
-
-**Enunciado:** escribe una función `async` que obtenga un usuario por id y, si la petición falla, devuelva un objeto de usuario "invitado" por defecto en vez de propagar el error.
-
-**Solución esperada:**
-```js
-async function obtenerUsuarioOInvitado(id) {
-  try {
-    const r = await fetch(`/usuarios/${id}`);
-    if (!r.ok) throw new Error(`HTTP ${r.status}`);
-    return await r.json();
-  } catch {
-    return { id: null, nombre: "Invitado", esInvitado: true };
-  }
-}
-```
-
-**Criterios de éxito:**
-- Verifica `respuesta.ok` antes de parsear.
-- Devuelve el objeto por defecto en el `catch`, sin propagar el error hacia quien invocó la función.
-
-### Ejercicio 3: AbortController en un escenario de búsqueda
-
-**Enunciado:** explica qué bug ocurriría en una interfaz de búsqueda en vivo si NO se usa `AbortController` para cancelar peticiones anteriores, y cómo `AbortController` lo resuelve.
-
-**Solución esperada:** sin cancelación, si el usuario escribe rápido, se disparan múltiples peticiones que pueden resolver en un orden distinto al que se dispararon (por ejemplo, la petición de la búsqueda "gat" podría resolver después que la de "gato" si la red tarda de forma variable), sobrescribiendo los resultados correctos con datos obsoletos de una búsqueda anterior ya irrelevante. `AbortController` resuelve esto cancelando explícitamente la petición anterior en cuanto se dispara una nueva, evitando que su respuesta (si llegara tarde) sobrescriba los resultados correctos.
-
-**Criterios de éxito:**
-- Identifica correctamente el bug de condición de carrera (respuesta desordenada sobrescribiendo resultados más recientes).
-- Explica que `AbortController` cancela explícitamente la petición obsoleta antes de que su respuesta pueda causar daño.
-
----
 
 ## Rúbrica del proyecto
 

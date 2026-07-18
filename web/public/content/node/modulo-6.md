@@ -170,37 +170,6 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 
 ---
 
-## Ejercicios de evaluación
-
-### Ejercicio 1: Por qué nunca cifrar contraseñas en vez de hashearlas
-
-**Enunciado:** explica por qué cifrar una contraseña (de forma reversible) es incorrecto, incluso si el cifrado usado es criptográficamente fuerte.
-
-**Solución esperada:** el cifrado es reversible por diseño (existe una clave que permite recuperar el texto original), lo que significa que si esa clave de cifrado se compromete (por ejemplo, en una brecha de seguridad), todas las contraseñas cifradas almacenadas podrían revertirse de vuelta a texto plano de una sola vez. El hashing es irreversible por diseño: incluso si la base de datos completa de hashes se filtra, no existe ninguna clave que permita revertirlos directamente, solo un ataque de fuerza bruta deliberadamente costoso gracias a algoritmos como bcrypt.
-
-**Criterios de éxito:**
-- Explica correctamente la diferencia de reversibilidad entre cifrado y hashing.
-- Identifica el riesgo específico de que una clave de cifrado comprometida exponga todas las contraseñas de una vez.
-
-### Ejercicio 2: Diseñar el flujo de refresh
-
-**Enunciado:** describe el flujo completo que ocurre cuando un access token expira mientras el usuario sigue usando la aplicación activamente, sin que el usuario perciba ninguna interrupción.
-
-**Solución esperada:** el cliente detecta que una petición falla con 401 (access token expirado), automáticamente realiza una petición al endpoint `/refresh` incluyendo el refresh token almacenado de forma segura; si el refresh token es válido, el servidor emite un nuevo access token; el cliente reintenta automáticamente la petición original fallida con el nuevo access token, sin que el usuario perciba ninguna interrupción visible en su experiencia.
-
-**Criterios de éxito:**
-- Describe correctamente la detección del 401, la petición a `/refresh`, y el reintento automático de la petición original.
-
-### Ejercicio 3: Diagnosticar un fallo de autorización
-
-**Enunciado:** un usuario autenticado correctamente recibe un error 403 al intentar borrar una tarea, mientras que otro usuario puede hacerlo sin problema. ¿Cuál es la causa más probable?
-
-**Solución esperada:** la causa más probable es que el usuario que recibe 403 no tiene el rol requerido (por ejemplo, "admin") que el middleware `requireRole` verifica para esa ruta específica, mientras que el otro usuario sí lo tiene; 403 específicamente indica que la autenticación fue exitosa (de lo contrario sería 401) pero el permiso específico no se cumple.
-
-**Criterios de éxito:**
-- Identifica correctamente que 403 implica autenticación exitosa pero rol insuficiente, distinguiéndolo de un problema de autenticación (401).
-
----
 
 ## Rúbrica del proyecto
 

@@ -238,40 +238,6 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 
 ---
 
-## Ejercicios de evaluación
-
-### Ejercicio 1: Diseñar un esquema de claves
-
-**Enunciado:** vas a guardar en S3 los avatares de perfil de los usuarios de una aplicación. Diseña un esquema de nomenclatura de claves (no necesitas ejecutar comandos) que permita identificar fácilmente a qué usuario pertenece cada avatar, y que evite colisiones si un mismo usuario sube varios avatares a lo largo del tiempo.
-
-**Solución esperada:** un esquema razonable es `avatares/<id-usuario>/<timestamp-o-uuid>.jpg`, por ejemplo `avatares/u-4471/1710092400.jpg`. El prefijo `avatares/<id-usuario>/` agrupa visualmente todos los avatares de un mismo usuario, y el sufijo con timestamp o UUID evita que subir un avatar nuevo sobrescriba silenciosamente al anterior si no quieres versionado, o simplemente da trazabilidad histórica clara si lo combinas con versionado.
-
-**Criterios de éxito:**
-- El esquema incluye el ID del usuario como parte de la clave.
-- El esquema evita colisiones entre subidas sucesivas del mismo usuario.
-- Puedes justificar la elección conectándola con el Tema 1 (nomenclatura) y el Tema 2 (claves) de este módulo.
-
-### Ejercicio 2: Recuperar una versión específica
-
-**Enunciado:** sobre el bucket `mi-bucket-versionado` del Laboratorio 2.2, sube una tercera versión de `informe.txt` con el contenido `version 3`. Sin borrar nada, recupera y muestra en pantalla el contenido de las tres versiones (1, 2 y 3) usando sus respectivos `VersionId`.
-
-**Solución esperada:** tres ejecuciones de `aws s3api get-object ... --version-id <id> archivo-temporal.txt`, una por cada versión, seguidas de `cat` sobre cada archivo temporal descargado, mostrando `version 1`, `version 2` y `version 3` respectivamente.
-
-**Criterios de éxito:**
-- Usaste `list-object-versions` para obtener los tres `VersionId` correctos antes de descargar.
-- Las tres descargas muestran el contenido correcto correspondiente a cada versión.
-
-### Ejercicio 3: Elegir el mecanismo de acceso correcto
-
-**Enunciado:** para cada uno de estos tres escenarios, indica cuál de los tres mecanismos del Tema 5 (política de bucket, ACL, o URL pre-firmada) usarías, y por qué: (a) permitir que cualquier persona de internet descargue los archivos de un bucket de imágenes públicas de un blog; (b) permitir que un usuario específico de tu aplicación descargue, durante 10 minutos, un recibo privado que generaste para él; (c) dar acceso de lectura a un bucket completo a otro equipo dentro de tu misma organización, de forma que sea fácil de auditar más adelante.
-
-**Solución esperada:** (a) política de bucket con una regla que permite `s3:GetObject` a cualquier principal (`*`) sobre ese bucket específico, ya que es acceso público permanente e intencional; (b) una URL pre-firmada con expiración de 10 minutos, porque es acceso temporal y específico a un objeto concreto; (c) una política de bucket (o, mejor aún, una política IAM del otro equipo) en vez de una ACL, precisamente porque necesitas que sea auditable con claridad más adelante.
-
-**Criterios de éxito:**
-- Las tres respuestas coinciden con la solución esperada.
-- La justificación de cada una menciona el criterio correcto (permanencia vs temporalidad, alcance público vs privado, o auditabilidad) del Tema 5.
-
----
 
 ## Rúbrica del proyecto
 

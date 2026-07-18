@@ -166,36 +166,6 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 
 ---
 
-## Ejercicios de evaluación
-
-### Ejercicio 1: Decisión de diseño al escalar 100x
-
-**Enunciado:** ¿qué decisión de arquitectura tomarías distinto si este microservicio tuviera que escalar a 100 veces el tráfico actual?
-
-**Solución esperada:** cualquier respuesta razonablemente justificada; respuestas comunes incluyen evaluar WebFlux o virtual threads para mayor concurrencia (Módulo 9, Módulo 5 del track de Java), introducir un circuit breaker y service discovery si el sistema se divide en más microservicios (Módulo 10), o revisar el modelo de persistencia para evitar cuellos de botella específicos bajo la nueva carga.
-
-**Criterios de éxito:**
-- Propone un cambio concreto y justificado relacionado con el aumento de escala.
-
-### Ejercicio 2: Parte más compleja del ecosistema Spring
-
-**Enunciado:** ¿qué parte del ecosistema Spring (Security, Data JPA, Testcontainers) te resultó más compleja de dominar?
-
-**Solución esperada:** cualquier respuesta razonablemente justificada, vinculando la parte elegida con una dificultad concreta observada durante el desarrollo del proyecto (por ejemplo, la configuración del filtro JWT en Spring Security, o diagnosticar el problema N+1 en Spring Data JPA).
-
-**Criterios de éxito:**
-- Justifica su elección con una dificultad concreta y específica observada en el proyecto propio.
-
-### Ejercicio 3: Cierre del track — qué distingue un microservicio productivo
-
-**Enunciado:** ¿qué distingue un microservicio Spring Boot "productivo" de simplemente tener un CRUD funcionando?
-
-**Solución esperada:** la combinación de seguridad declarativa protegiendo endpoints sensibles, persistencia versionada con migraciones revisables en vez de esquemas inferidos automáticamente, observabilidad (health checks y métricas) expuesta desde el inicio, y una suite de tests de integración que verifica el flujo crítico contra infraestructura real, dando confianza genuina para desplegar sin temor.
-
-**Criterios de éxito:**
-- Menciona correctamente al menos tres de los cuatro elementos (seguridad, persistencia versionada, observabilidad, tests de integración) como lo que distingue un microservicio productivo.
-
----
 
 ## Rúbrica del proyecto
 

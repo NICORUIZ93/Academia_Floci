@@ -230,34 +230,6 @@ No dividas el sistema en muchos microservicios. Conserva el núcleo modular y a�
 - SLO basado en CPU: vincúlalo con resultado y latencia percibidos por usuario.
 - Postmortem “el operador falló”: investiga por qué una acción humana podía causar impacto sin barreras.
 
-## Ejercicios de evaluación
-
-### Ejercicio 1: timeout ambiguo
-
-Un cliente vence esperando un retiro. ¿Qué debe hacer y qué garantía necesita el servidor?
-
-<details><summary>Solución razonada</summary>
-
-Debe repetir con el mismo `operation_id`, respetando deadline y backoff. El servidor registra esa identidad junto al efecto y devuelve el resultado anterior si ya existe. Crear otra identidad convertiría recuperación en una nueva operación.
-</details>
-
-### Ejercicio 2: consistencia por operación
-
-Clasifica lectura de catálogo, reserva del último artículo y contador analítico.
-
-<details><summary>Solución razonada</summary>
-
-Catálogo suele tolerar lectura algo obsoleta; la última reserva necesita coordinación o cupos que preserven el invariante; el contador puede converger eventualmente. La decisión depende del daño y reparación, no del nombre de la base.
-</details>
-
-### Ejercicio 3: alerta útil
-
-Propón una alerta mejor que “CPU superior a 80 % durante un minuto”.
-
-<details><summary>Solución razonada</summary>
-
-Alerta por consumo acelerado del error budget de retiros válidos, usando ventanas corta y larga. CPU aporta diagnóstico, pero no prueba impacto. El aviso enlaza dashboard y runbook y debe permitir una acción concreta.
-</details>
 
 ## Rúbrica del proyecto
 

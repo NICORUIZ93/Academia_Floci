@@ -179,36 +179,6 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 
 ---
 
-## Ejercicios de evaluación
-
-### Ejercicio 1: inject() frente a inyección por constructor
-
-**Enunciado:** explica qué diferencia práctica concreta hay entre `inject()` y la inyección por constructor, más allá de la sintaxis.
-
-**Solución esperada:** `inject()` funciona en cualquier contexto de inyección válido, incluyendo dentro de guards funcionales e interceptores funcionales (que son simples funciones, sin constructor donde declarar parámetros inyectados); la inyección por constructor solo funciona dentro del constructor de una clase. Además, `inject()` simplifica la herencia de clases, evitando que las clases hijas necesiten replicar manualmente los parámetros del constructor de la clase base únicamente para pasarlos a `super()`.
-
-**Criterios de éxito:**
-- Menciona correctamente que `inject()` funciona en contextos funcionales donde la inyección por constructor no es viable.
-
-### Ejercicio 2: Resolución en niveles múltiples
-
-**Enunciado:** si un servicio se provee tanto en `root` como en el array `providers` de un componente específico, ¿qué instancia recibe ese componente al inyectar el servicio? Justifica.
-
-**Solución esperada:** el componente recibe la instancia provista localmente en su propio nivel (el inyector de componente), no la instancia global de `root`, porque Angular resuelve la dependencia comenzando por el inyector más cercano al punto de solicitud, y ese inyector local ya tiene un proveedor registrado, así que no necesita (ni debe) subir a buscar en el inyector raíz.
-
-**Criterios de éxito:**
-- Explica correctamente que el nivel más cercano al punto de inyección tiene prioridad sobre niveles superiores de la jerarquía.
-
-### Ejercicio 3: Diseñar un token de inyección para pruebas
-
-**Enunciado:** explica cómo un `InjectionToken` de configuración facilita escribir pruebas para un servicio que depende de una URL de API externa.
-
-**Solución esperada:** en las pruebas, se puede proveer un valor distinto para el `InjectionToken` (por ejemplo, la URL de un servidor simulado o de pruebas) en el array de providers del entorno de test, sin necesidad de modificar el código del servicio mismo, que simplemente inyecta el token y usa el valor que reciba en cada contexto, sea producción o pruebas.
-
-**Criterios de éxito:**
-- Explica correctamente que el valor del token puede sustituirse en el contexto de pruebas sin modificar el código del servicio.
-
----
 
 ## Rúbrica del proyecto
 

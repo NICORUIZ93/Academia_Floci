@@ -148,36 +148,6 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 
 ---
 
-## Ejercicios de evaluación
-
-### Ejercicio 1: Por qué no guardar secretos en variables de entorno
-
-**Enunciado:** ¿por qué no debes guardar secretos en variables de entorno hardcodeadas en el código?
-
-**Solución esperada:** expone el secreto a cualquiera con acceso de lectura al repositorio, incluyendo el historial completo de commits pasados incluso si se elimina posteriormente, sin ningún control de acceso granular ni auditoría de quién accedió a ese valor.
-
-**Criterios de éxito:**
-- Explica correctamente la exposición en el historial de versiones y la falta de auditoría como razones.
-
-### Ejercicio 2: Diferencia entre SSM Parameter Store y Secrets Manager
-
-**Enunciado:** ¿qué diferencia hay entre SSM Parameter Store y Secrets Manager?
-
-**Solución esperada:** Parameter Store es más simple y económico, apropiado para configuración general no necesariamente sensible; Secrets Manager ofrece capacidades avanzadas específicas de gestión de secretos, como rotación automática programada, reservado para credenciales sensibles.
-
-**Criterios de éxito:**
-- Distingue correctamente el caso de uso de cada uno según sensibilidad y necesidad de rotación automática.
-
-### Ejercicio 3: Qué es envelope encryption
-
-**Enunciado:** ¿qué es envelope encryption?
-
-**Solución esperada:** un patrón de cifrado de dos niveles donde una clave de datos efímera cifra el volumen real de información localmente (rápido, sin límite de tamaño), y esa clave de datos se cifra a su vez con la clave maestra centralizada de KMS (que nunca sale del servicio), combinando eficiencia práctica con seguridad centralizada.
-
-**Criterios de éxito:**
-- Explica correctamente el cifrado en dos niveles (clave de datos cifrando datos, clave maestra cifrando la clave de datos).
-
----
 
 ## Rúbrica del proyecto
 

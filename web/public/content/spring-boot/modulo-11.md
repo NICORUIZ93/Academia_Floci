@@ -127,36 +127,6 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 
 ---
 
-## Ejercicios de evaluación
-
-### Ejercicio 1: Valor del arranque en milisegundos con autoscaling
-
-**Enunciado:** ¿qué ventaja real da un arranque en milisegundos (GraalVM native) para un sistema con autoscaling agresivo?
-
-**Solución esperada:** permite que nuevas instancias añadidas rápidamente ante un pico de tráfico estén disponibles para recibir tráfico casi instantáneamente, en vez de tardar varios segundos en arrancar (como la JVM tradicional), lo cual reduce el tiempo que el sistema tarda en escalar efectivamente su capacidad real durante exactamente el período donde más se necesita esa capacidad adicional.
-
-**Criterios de éxito:**
-- Explica correctamente la disponibilidad casi instantánea de nuevas instancias como el beneficio concreto.
-
-### Ejercicio 2: Por qué el empaquetado por capas reduce el tamaño de actualizaciones
-
-**Enunciado:** ¿por qué empaquetar por capas reduce el tamaño de las actualizaciones de imagen en cada deploy?
-
-**Solución esperada:** separar las dependencias (que cambian con poca frecuencia) del código de la aplicación (que cambia en cada commit) en capas distintas permite que Docker reutilice la capa de dependencias sin cambios entre deploys sucesivos, subiendo únicamente la capa de código de la aplicación, considerablemente más pequeña, en cada nuevo deploy.
-
-**Criterios de éxito:**
-- Explica correctamente la reutilización de la capa de dependencias estable como razón de la reducción de tamaño.
-
-### Ejercicio 3: Limitación de GraalVM native image
-
-**Enunciado:** ¿qué limitación concreta introduce compilar a GraalVM native image respecto a ejecutar sobre la JVM tradicional?
-
-**Solución esperada:** el uso de reflexión (usado internamente por muchas librerías Java, incluyendo partes de Spring) requiere configuración explícita adicional para el compilador nativo, dado que este no puede inferir dinámicamente ese uso en tiempo de compilación ahead-of-time como sí podría la JVM tradicional en tiempo de ejecución; además, el tiempo de build es significativamente más lento.
-
-**Criterios de éxito:**
-- Menciona correctamente la necesidad de configuración explícita para reflexión y/o el build más lento como limitaciones.
-
----
 
 ## Rúbrica del proyecto
 

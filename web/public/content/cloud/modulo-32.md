@@ -185,17 +185,6 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 
 **Verificación:** las diez comunicaciones producen exactamente cinco permisos y cinco denegaciones justificadas; la restauración recupera los tres recorridos dentro de sus RTO/RPO declarados; el experimento se detiene al alcanzar la condición de aborto; y el runbook permite que otra persona repita la pérdida y recuperación. Conserva tiempos medidos, logs, comprobaciones funcionales y diferencias frente al diseño como evidencia.
 
-## Ejercicios de evaluación
-
-1. Una base replica sincrónicamente entre zonas. ¿Por qué todavía necesita backups?
-2. El negocio pide RTO=0 y RPO=0 para un blog. ¿Cómo conducirías la decisión?
-3. Diseña una prueba negativa de red y otra de restauración que detecten una falsa sensación de seguridad.
-
-### Soluciones orientativas
-
-1. La réplica conserva disponibilidad, pero puede propagar borrado, corrupción o credenciales comprometidas; el backup aporta punto histórico/aislamiento.
-2. Cuantifica impacto, costo y complejidad, propone objetivos por recorrido y compara estrategias; no acepta números sin consecuencia empresarial.
-3. Verificar que una carga no autorizada no llega a la base; restaurar y completar un flujo de negocio, no limitarse al estado “completed”.
 
 ## Rúbrica del proyecto
 

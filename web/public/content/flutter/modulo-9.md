@@ -174,36 +174,6 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 
 ---
 
-## Ejercicios de evaluación
-
-### Ejercicio 1: Diferencia entre widget test e integration test
-
-**Enunciado:** ¿qué diferencia hay entre un widget test (entorno simulado) y un integration test (dispositivo real)?
-
-**Solución esperada:** un widget test renderiza el widget en un entorno de renderizado simulado sin necesidad de un dispositivo físico, considerablemente más rápido; un integration test corre contra un dispositivo o emulador real, validando la integración completa de la app (plugins nativos, persistencia real, navegación completa) tal como la experimentaría un usuario real, a costa de ser considerablemente más lento.
-
-**Criterios de éxito:**
-- Distingue correctamente velocidad y alcance de validación entre ambos tipos de test.
-
-### Ejercicio 2: Por qué mocktail hace los tests más rápidos y confiables
-
-**Enunciado:** ¿por qué aislar dependencias externas con `mocktail` hace los widget tests más rápidos y confiables?
-
-**Solución esperada:** elimina la dependencia de latencia real de red o disco y de la disponibilidad de servicios externos reales que podrían fallar o variar entre ejecuciones, permitiendo que el test corra en milisegundos con un resultado predecible y controlado explícitamente.
-
-**Criterios de éxito:**
-- Explica correctamente la eliminación de dependencias externas reales como la razón de rapidez y confiabilidad.
-
-### Ejercicio 3: Por qué usar pumpAndSettle en integration tests
-
-**Enunciado:** ¿por qué `tester.pumpAndSettle()` es apropiado en un integration test pero `tester.pump()` simple suele ser suficiente en un widget test?
-
-**Solución esperada:** en un integration test las animaciones y transiciones reales sí ocurren, por lo que es necesario esperar a que completen todas antes de continuar con las siguientes aserciones; en un widget test simulado, un único `pump()` suele ser suficiente para reflejar la reconstrucción disparada por una interacción simple sin animaciones complejas de por medio.
-
-**Criterios de éxito:**
-- Explica correctamente la presencia de animaciones/transiciones reales como razón de usar `pumpAndSettle` en integration tests.
-
----
 
 ## Rúbrica del proyecto
 

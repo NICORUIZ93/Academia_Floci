@@ -147,36 +147,6 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 
 ---
 
-## Ejercicios de evaluación
-
-### Ejercicio 1: Cuándo elegir DynamoDB sobre RDS
-
-**Enunciado:** ¿cuándo elegir DynamoDB sobre RDS y viceversa?
-
-**Solución esperada:** DynamoDB es apropiado cuando el patrón de acceso a los datos es conocido de antemano y simple (consultas por clave), necesitando escala horizontal ilimitada sin gestión operativa; RDS es apropiado cuando la aplicación necesita relaciones complejas entre entidades, transacciones ACID multi-fila, o consultas ad hoc flexibles no conocidas de antemano.
-
-**Criterios de éxito:**
-- Distingue correctamente el caso de uso de cada uno según complejidad de relaciones y patrón de acceso.
-
-### Ejercicio 2: Diferencia entre RDS en cloud local y PostgreSQL en Docker simple
-
-**Enunciado:** ¿qué diferencia hay entre una instancia RDS en cloud local y un PostgreSQL en Docker simple?
-
-**Solución esperada:** cloud local expone la misma API de gestión de AWS (crear instancia, snapshots, restore vía comandos `aws rds`) sobre un PostgreSQL real subyacente, permitiendo practicar el flujo completo de gestión de RDS (no solo el motor de base de datos en sí) de forma idéntica a como se haría contra AWS real, algo que un contenedor Docker de PostgreSQL simple sin esa capa de gestión no ofrece.
-
-**Criterios de éxito:**
-- Explica correctamente la capa de gestión de AWS (snapshots, ciclo de vida de instancia) como la diferencia respecto a un contenedor simple.
-
-### Ejercicio 3: Qué es una migration y por qué es importante
-
-**Enunciado:** ¿qué es una migration y por qué es importante?
-
-**Solución esperada:** es un cambio de esquema versionado y ejecutado de forma reproducible y rastreable, en vez de comandos SQL ad hoc manuales directamente contra producción; es importante porque garantiza que el esquema evolucione consistentemente a través de distintos entornos y en el tiempo, con un historial claro de qué cambios se aplicaron y en qué orden.
-
-**Criterios de éxito:**
-- Explica correctamente la evolución versionada y consistente del esquema como definición e importancia de una migration.
-
----
 
 ## Rúbrica del proyecto
 

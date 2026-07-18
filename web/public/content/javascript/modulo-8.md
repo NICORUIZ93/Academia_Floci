@@ -243,39 +243,6 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 
 ---
 
-## Ejercicios de evaluación
-
-### Ejercicio 1: Justificar la delegación de eventos
-
-**Enunciado:** explica por qué la delegación de eventos es más eficiente que un listener por elemento, usando un ejemplo concreto de una lista de 10,000 elementos donde nuevos elementos se añaden dinámicamente cada pocos segundos.
-
-**Solución esperada:** con un listener por elemento, cada uno de los 10,000 elementos consume memoria adicional para su propio listener registrado, y cada nuevo elemento añadido dinámicamente requeriría registrar manualmente un nuevo listener explícito. Con delegación, un único listener registrado en el contenedor padre cubre automáticamente los 10,000 elementos existentes y cualquier elemento añadido después, sin memoria adicional proporcional al número de elementos ni necesidad de gestión manual de listeners para elementos nuevos.
-
-**Criterios de éxito:**
-- Explica correctamente el ahorro de memoria proporcional al número de elementos.
-- Explica que la delegación cubre automáticamente elementos añadidos dinámicamente después del registro inicial.
-
-### Ejercicio 2: localStorage frente a sessionStorage
-
-**Enunciado:** explica la diferencia entre `localStorage` y `sessionStorage`, y da un ejemplo de un caso de uso apropiado para cada uno.
-
-**Solución esperada:** `localStorage` persiste indefinidamente entre recargas y sesiones del navegador hasta que se borra explícitamente; `sessionStorage` se limpia automáticamente al cerrar la pestaña o ventana. Un caso apropiado para `localStorage` es recordar la preferencia de tema (claro/oscuro) del usuario a largo plazo; un caso apropiado para `sessionStorage` es mantener el estado temporal de un formulario multi-paso solo durante la sesión actual de llenado, sin necesidad de persistirlo más allá de esa sesión específica.
-
-**Criterios de éxito:**
-- Explica correctamente la diferencia de persistencia entre ambos.
-- Da un ejemplo apropiado y bien justificado para cada uno.
-
-### Ejercicio 3: Elegir la API de observación correcta
-
-**Enunciado:** para cada uno de estos tres escenarios, indica qué observador usarías: (a) cargar más resultados cuando el usuario se acerca al final de una lista, (b) reaccionar cuando una biblioteca externa inserta un banner publicitario dentro de un contenedor específico, (c) ajustar el layout de un componente cuando su contenedor cambia de tamaño por un redimensionamiento de la ventana.
-
-**Solución esperada:** (a) `IntersectionObserver`, para detectar cuándo un elemento sentinela se vuelve visible; (b) `MutationObserver`, para detectar la inserción de nuevos nodos dentro del contenedor observado; (c) `ResizeObserver`, para detectar cambios de tamaño del elemento contenedor específico.
-
-**Criterios de éxito:**
-- Asigna correctamente cada uno de los tres observadores a su escenario correspondiente.
-- Justifica brevemente por qué cada observador es apropiado para ese escenario específico.
-
----
 
 ## Rúbrica del proyecto
 

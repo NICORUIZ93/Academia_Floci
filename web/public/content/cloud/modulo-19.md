@@ -152,36 +152,6 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 
 ---
 
-## Ejercicios de evaluación
-
-### Ejercicio 1: Diferencia entre data lake y data warehouse
-
-**Enunciado:** ¿qué diferencia hay entre un data lake y un data warehouse?
-
-**Solución esperada:** un data lake almacena datos en su formato original directamente en almacenamiento de objetos, difiriendo la definición de esquema hasta el momento de la consulta (schema-on-read); un data warehouse tradicional exige un esquema estructurado predefinido antes de cargar los datos (schema-on-write), típicamente en una base de datos relacional optimizada para consultas analíticas.
-
-**Criterios de éxito:**
-- Distingue correctamente schema-on-read (data lake) de schema-on-write (data warehouse tradicional).
-
-### Ejercicio 2: Por qué Parquet es más eficiente que CSV
-
-**Enunciado:** ¿por qué Parquet es 10x más eficiente que CSV para analítica?
-
-**Solución esperada:** Parquet organiza los datos por columna, permitiendo leer únicamente las columnas efectivamente referenciadas en una consulta, con compresión considerablemente más eficiente al agrupar valores similares del mismo tipo contiguos entre sí; CSV requiere leer el archivo completo fila por fila incluyendo columnas irrelevantes para la consulta.
-
-**Criterios de éxito:**
-- Explica correctamente el almacenamiento columnar y la lectura selectiva de columnas como razón de la eficiencia.
-
-### Ejercicio 3: Cómo reducir el costo de Athena con particiones
-
-**Enunciado:** ¿cómo reduces el costo de Athena con particiones?
-
-**Solución esperada:** organizando los datos físicamente en carpetas separadas de S3 según una columna de alta relevancia para el patrón de consulta habitual (como fecha), permitiendo que Athena aplique partition pruning e ignore por completo las particiones fuera del rango de filtro de la consulta, reduciendo drásticamente los bytes escaneados.
-
-**Criterios de éxito:**
-- Explica correctamente el partition pruning y la reducción de bytes escaneados como el mecanismo de reducción de costo.
-
----
 
 ## Rúbrica del proyecto
 

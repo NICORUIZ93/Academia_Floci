@@ -170,36 +170,6 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 
 ---
 
-## Ejercicios de evaluación
-
-### Ejercicio 1: Problema resuelto por la inversión de control
-
-**Enunciado:** ¿qué problema resuelve la inversión de control frente a que cada clase cree sus propias dependencias?
-
-**Solución esperada:** evita el acoplamiento fuerte de una clase a una implementación concreta específica de sus dependencias, permitiendo sustituir esas implementaciones (por ejemplo, con mocks en tests, o con una implementación alternativa en producción) sin modificar el código interno de la clase consumidora.
-
-**Criterios de éxito:**
-- Explica correctamente el desacoplamiento de la construcción de dependencias como el problema resuelto.
-
-### Ejercicio 2: Por qué la inyección por constructor facilita tests
-
-**Enunciado:** ¿por qué la inyección por constructor facilita escribir tests sin levantar el contenedor de Spring?
-
-**Solución esperada:** con inyección por constructor, basta con invocar directamente `new ServicioTareas(repositorioMockeado)`, pasando explícitamente un mock como argumento, sin necesidad de ningún mecanismo especial del contenedor de Spring para lograrlo; con inyección por campo, no existe una forma directa de asignar el mock al campo privado sin recurrir a reflexión o utilidades especiales.
-
-**Criterios de éxito:**
-- Explica correctamente la posibilidad de usar `new` directo con un mock como argumento del constructor.
-
-### Ejercicio 3: Diferencia funcional de @Repository
-
-**Enunciado:** ¿qué comportamiento funcional adicional tiene `@Repository` que `@Service` no tiene?
-
-**Solución esperada:** `@Repository` traduce automáticamente excepciones específicas de la tecnología de persistencia subyacente a una jerarquía de excepciones propia y consistente de Spring, independiente de esa tecnología concreta; `@Service` no agrega ningún comportamiento funcional adicional respecto a `@Component`, solo documenta intención.
-
-**Criterios de éxito:**
-- Identifica correctamente la traducción de excepciones como el comportamiento funcional adicional de `@Repository`.
-
----
 
 ## Rúbrica del proyecto
 

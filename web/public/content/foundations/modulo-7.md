@@ -213,25 +213,6 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 - Refactor grande sin tests: caracteriza y divide.
 - Documentar solo éxito: registra consecuencias y límites.
 
-## Ejercicios de evaluación
-
-### Ejercicio 1: requisito medible
-
-**Enunciado:** convierte “debe ser seguro y rápido” en dos escenarios.
-
-**Solución esperada:** define amenaza/acción, entorno, respuesta y métricas independientes.
-
-### Ejercicio 2: dependencia
-
-**Enunciado:** detecta por qué dominio importando sqlite3 dificulta pruebas/evolución.
-
-**Solución esperada:** acopla regla a mecanismo; propone puerto en límite con implementación externa.
-
-### Ejercicio 3: ADR
-
-**Enunciado:** documenta elegir monolito modular frente a microservicios.
-
-**Solución esperada:** contexto, alternativas, decisión, consecuencias y disparadores de revisión.
 
 ## Rúbrica del proyecto
 

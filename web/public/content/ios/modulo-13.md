@@ -214,17 +214,6 @@ Convierte el proyecto del módulo 12 en una entrega preparada para producción.
 
 La entrega contiene código, pruebas, capturas del perfil, tabla de amenazas, política de datos y runbook. Una afirmación sin evidencia reproducible cuenta como hipótesis, no como resultado.
 
-## Ejercicios de evaluación
-
-1. Una creación llegó al servidor, pero el cliente perdió la respuesta. ¿Por qué reintentar con otro UUID es incorrecto y qué contrato necesitas?
-2. Compara `UserDefaults`, Keychain y un archivo con Data Protection para preferencia visual, refresh token y adjunto sensible.
-3. Diseña un conflicto para una tarea editada sin red en dos dispositivos. Indica versiones, política, estado visible y prueba.
-
-### Soluciones orientativas
-
-1. Otro UUID representa otra operación y puede duplicar el efecto. Cliente y servidor deben conservar una clave estable de idempotencia y devolver el resultado original.
-2. La preferencia puede vivir en `UserDefaults`; el token en Keychain con accesibilidad deliberada; el adjunto en almacenamiento privado con protección, retención y exclusión de backup si aplica.
-3. Ambos clientes parten de versión 7; el primero produce 8 y el segundo recibe conflicto. Puede hacerse merge por campos o pedir decisión humana, mostrando “requiere revisión” y probando que ninguna edición desaparezca silenciosamente.
 
 ## Rúbrica del proyecto
 

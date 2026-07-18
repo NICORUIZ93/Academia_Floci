@@ -250,39 +250,6 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 
 ---
 
-## Ejercicios de evaluación
-
-### Ejercicio 1: Justificar Helm sobre YAML suelto
-
-**Enunciado:** un compañero argumenta que su equipo de 3 personas con una sola aplicación simple no necesita Helm, y que mantener un puñado de archivos YAML es suficientemente simple. ¿En qué condiciones estarías de acuerdo, y qué señales indicarían que ya deberían adoptar Helm?
-
-**Solución esperada:** para un equipo pequeño con una única aplicación simple y sin necesidad real de desplegar la misma configuración con variaciones entre múltiples entornos, mantener YAML suelto puede efectivamente ser razonable y no justificar la complejidad adicional de Helm todavía. Las señales de que deberían adoptar Helm incluyen: empezar a duplicar archivos YAML casi idénticos para distintos entornos (desarrollo, staging, producción), necesitar coordinar actualizaciones de múltiples manifiestos relacionados de forma consistente, o querer reutilizar la misma configuración base para desplegar múltiples aplicaciones similares.
-
-**Criterios de éxito:**
-- Reconoce que Helm no es universalmente necesario para cualquier equipo, dependiendo del contexto.
-- Identifica correctamente al menos una señal concreta (duplicación de YAML entre entornos, coordinación de múltiples manifiestos relacionados) que justificaría la adopción de Helm.
-
-### Ejercicio 2: Diagnosticar una liveness probe mal configurada
-
-**Enunciado:** un servicio empieza a reiniciarse constantemente cada pocos minutos, aunque revisando sus logs no hay ningún error real de la aplicación; la liveness probe configurada verifica una ruta que, a su vez, comprueba la conectividad a una base de datos externa que ocasionalmente tiene demoras temporales normales. Explica el problema y la corrección.
-
-**Solución esperada:** el problema es que la liveness probe está verificando una dependencia externa (la base de datos) que fluctúa de forma normal y temporal, en vez de verificar únicamente si el proceso interno de la aplicación sigue funcionando correctamente; cuando la base de datos tiene una demora temporal, la liveness probe falla y Kubernetes reinicia innecesariamente un contenedor que en realidad estaba perfectamente sano internamente. La corrección es mover esa verificación de dependencia externa a la readiness probe (que solo saca al Pod de recibir tráfico temporalmente, sin reiniciarlo) y dejar la liveness probe verificando únicamente la salud interna básica del proceso.
-
-**Criterios de éxito:**
-- Identifica correctamente que la liveness probe está verificando una dependencia externa que no debería determinar un reinicio.
-- Propone mover esa verificación a la readiness probe como la corrección adecuada.
-
-### Ejercicio 3: Diseñar RBAC de mínimo privilegio
-
-**Enunciado:** una aplicación necesita, como parte de su funcionamiento normal, consultar (no modificar) el estado de otros Pods dentro de su mismo namespace, para implementar un mecanismo interno de descubrimiento. Diseña el Role y el RoleBinding necesarios, siguiendo el principio de mínimo privilegio.
-
-**Solución esperada:** un Role limitado al namespace correspondiente, con permisos únicamente de `get` y `list` sobre el recurso `pods` (sin `create`, `delete`, ni `update`, que esta aplicación no necesita); un RoleBinding que conecte ese Role específicamente con la ServiceAccount usada por esa aplicación, no con una identidad más amplia ni con permisos de administrador general del clúster.
-
-**Criterios de éxito:**
-- Limita los verbos del Role únicamente a `get` y `list`, sin conceder permisos de escritura innecesarios.
-- Conecta el Role mediante un RoleBinding específicamente con la ServiceAccount de esa aplicación, no con un acceso más amplio.
-
----
 
 ## Rúbrica del proyecto
 

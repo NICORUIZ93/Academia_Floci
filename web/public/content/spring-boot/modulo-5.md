@@ -136,36 +136,6 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 
 ---
 
-## Ejercicios de evaluación
-
-### Ejercicio 1: Por qué preferir @ConfigurationProperties tipado
-
-**Enunciado:** ¿por qué preferir `@ConfigurationProperties` tipado sobre leer valores sueltos con `@Value`?
-
-**Solución esperada:** `@ConfigurationProperties` agrupa configuración relacionada en un único tipo fuertemente tipado, con autocompletado del IDE, verificación de tipos en compilación, y validación centralizada de todo el grupo; `@Value` disperso disemina ese conocimiento a través de múltiples clases no relacionadas, sin esa estructura ni validación agrupada.
-
-**Criterios de éxito:**
-- Explica correctamente la agrupación, tipado y validación centralizada como ventajas frente a `@Value` disperso.
-
-### Ejercicio 2: Ventaja de fallar al arranque
-
-**Enunciado:** ¿qué ventaja da que la app falle al ARRANCAR por configuración inválida, en vez de fallar más tarde en producción?
-
-**Solución esperada:** detecta el problema en el momento más temprano y controlado posible (el despliegue, típicamente supervisado activamente), con un mensaje de error claro y específico, en vez de manifestarse de forma impredecible y más difícil de diagnosticar durante la operación normal bajo tráfico real en producción.
-
-**Criterios de éxito:**
-- Explica correctamente la detección temprana y controlada como ventaja frente a la falla tardía e impredecible.
-
-### Ejercicio 3: Consistencia del manejo de errores entre entornos
-
-**Enunciado:** ¿por qué el formato de error debería ser idéntico sin importar el entorno (dev/test/prod) donde se ejecute la aplicación?
-
-**Solución esperada:** un formato de error consistente entre entornos permite que los clientes de la API (y las pruebas automatizadas que verifican ese formato) confíen en un contrato predecible sin importar el entorno, evitando sorpresas o comportamiento inconsistente al promover código entre entornos distintos.
-
-**Criterios de éxito:**
-- Explica correctamente la previsibilidad del contrato de error entre entornos como la razón de esa consistencia.
-
----
 
 ## Rúbrica del proyecto
 

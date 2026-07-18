@@ -218,31 +218,6 @@ volumes:
 - `SIGTERM` no llega: usa `CMD` exec y evita una shell como PID 1.
 - Carrera pese al lock: un lock local no coordina varios procesos; protege en la base.
 
-## Ejercicios de evaluación
-
-### Ejercicio 1 — Diagnóstico
-
-Un servicio devuelve “conexión rechazada”. Distingue proceso caído, interfaz incorrecta y puerto diferente.
-
-<details><summary>Solución razonada</summary>
-Comprueba proceso y salida, luego logs, después `ss -ltnp` y finalmente `curl` dentro y fuera. Cada observación responde una pregunta; reiniciar primero no demuestra ninguna hipótesis.
-</details>
-
-### Ejercicio 2 — Invariante concurrente
-
-Define la propiedad y una protección válida para varios workers que retiran stock.
-
-<details><summary>Solución razonada</summary>
-El invariante es `stock >= 0` y cada retiro aceptado se descuenta una vez. Fuerza competencia con una barrera. Usa transacción y `UPDATE ... WHERE stock >= cantidad`; las filas afectadas deciden aceptación. `CHECK(stock >= 0)` agrega defensa.
-</details>
-
-### Ejercicio 3 — Reemplazo reversible
-
-Clasifica imagen, configuración, secretos y datos; diseña una actualización reversible.
-
-<details><summary>Solución razonada</summary>
-Código y dependencias van en imagen; configuración se inyecta; secretos vienen de un gestor; datos van en volumen. Prueba sobre copia, usa migraciones compatibles y conserva imagen anterior y restore. Revertir código no deshace una migración destructiva.
-</details>
 
 ## Rúbrica del proyecto
 

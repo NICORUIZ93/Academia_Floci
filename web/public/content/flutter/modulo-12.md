@@ -190,36 +190,6 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 
 ---
 
-## Ejercicios de evaluación
-
-### Ejercicio 1: Decisión de arquitectura ante un equipo creciente
-
-**Enunciado:** ¿qué decisión de arquitectura cambiarías si el equipo creciera a 5 personas trabajando en paralelo?
-
-**Solución esperada:** una respuesta razonable menciona reforzar los límites entre features (evitando dependencias cruzadas no declaradas entre `features/tareas` y `features/auth`), adoptar convenciones más estrictas de Clean Architecture para minimizar conflictos de merge, o considerar Bloc sobre Riverpod si el equipo valora la estructura explícita basada en eventos para coordinar trabajo paralelo de forma más predecible.
-
-**Criterios de éxito:**
-- Propone una consideración arquitectónica razonable relacionada con límites de features o consistencia de convenciones a mayor escala de equipo.
-
-### Ejercicio 2: Parte del ecosistema más distinta a lo conocido
-
-**Enunciado:** ¿qué parte del ecosistema Flutter (widgets, estado, platform channels) te resultó más distinta a lo que conocías de otros frameworks?
-
-**Solución esperada:** una respuesta válida identifica un aspecto específico de Flutter (por ejemplo, el modelo de constraints "go down, sizes go up" del Módulo 2, o la necesidad de `MethodChannel` para integraciones nativas que en otros frameworks podría estar más abstraída) y lo compara razonadamente con el enfoque equivalente en otro framework conocido.
-
-**Criterios de éxito:**
-- Identifica un aspecto concreto de Flutter y lo compara de forma razonada con otro framework.
-
-### Ejercicio 3: Costo de la consistencia de Flutter
-
-**Enunciado:** ¿cuál es el costo principal de que Flutter logre apariencia y rendimiento consistentes entre Android e iOS?
-
-**Solución esperada:** requiere aprender un ecosistema de widgets completamente propio de Flutter, distinto tanto de las tecnologías web como de cada plataforma nativa, dado que Flutter renderiza con su propio motor gráfico en vez de envolver componentes nativos de cada sistema operativo.
-
-**Criterios de éxito:**
-- Menciona correctamente el aprendizaje de un ecosistema de widgets propio como el costo principal.
-
----
 
 ## Rúbrica del proyecto
 

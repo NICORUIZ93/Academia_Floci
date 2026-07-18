@@ -157,36 +157,6 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 
 ---
 
-## Ejercicios de evaluación
-
-### Ejercicio 1: Diferencia práctica entre let, run, apply y also
-
-**Enunciado:** ¿qué diferencia práctica hay entre `let`, `run`, `apply` y `also`?
-
-**Solución esperada:** se diferencian en qué devuelven (`apply`/`also` devuelven el objeto receptor original; `let`/`run` devuelven el resultado del bloque ejecutado) y en cómo se referencia el receptor dentro del bloque (`this` implícito en `run`/`apply`; `it` explícito en `let`/`also`).
-
-**Criterios de éxito:**
-- Explica correctamente ambos ejes de diferenciación (qué devuelven y cómo referencian el receptor).
-
-### Ejercicio 2: Exhaustividad sin else
-
-**Enunciado:** ¿por qué `when` sobre una sealed class no necesita una rama `else` para ser exhaustivo?
-
-**Solución esperada:** una sealed class restringe explícitamente el conjunto completo y cerrado de subtipos posibles; el compilador conoce ese conjunto y puede verificar que el `when` cubre absolutamente todos los casos posibles sin necesidad de una rama `else` genérica de respaldo.
-
-**Criterios de éxito:**
-- Explica correctamente la restricción del conjunto de subtipos como razón de la exhaustividad verificable sin `else`.
-
-### Ejercicio 3: Encadenar operaciones funcionales
-
-**Enunciado:** reescribe con `filter` y `map` encadenados un bucle manual que recorre una lista de personas, filtra las mayores de edad, y extrae solo sus nombres.
-
-**Solución esperada:** `val nombres = personas.filter { it.edad >= 18 }.map { it.nombre }`, expresando declarativamente en una única expresión encadenada exactamente la misma transformación que el bucle manual realizaría de forma imperativa y más verbosa.
-
-**Criterios de éxito:**
-- Escribe correctamente la cadena `filter` + `map` equivalente al bucle manual descrito.
-
----
 
 ## Rúbrica del proyecto
 

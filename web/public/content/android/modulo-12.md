@@ -198,36 +198,6 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 
 ---
 
-## Ejercicios de evaluación
-
-### Ejercicio 1: Decisión de arquitectura ante escalamiento
-
-**Enunciado:** ¿qué decisión de arquitectura cambiarías si la app tuviera que soportar 10 pantallas más?
-
-**Solución esperada:** una respuesta razonable menciona dividir el proyecto en módulos Gradle adicionales por feature (extendiendo el patrón del Módulo 0), y/o introducir un store de estado más centralizado si múltiples pantallas necesitan compartir estado más allá de lo que un `ViewModel` por pantalla puede ofrecer de forma aislada.
-
-**Criterios de éxito:**
-- Propone una consideración arquitectónica razonable relacionada con modularización o gestión de estado a mayor escala.
-
-### Ejercicio 2: Parte más difícil de integrar
-
-**Enunciado:** ¿qué parte del proyecto (Compose, Room, Hilt) fue la más difícil de integrar correctamente con las demás?
-
-**Solución esperada:** una respuesta válida identifica una dificultad concreta de integración (por ejemplo, coordinar el scope correcto de Hilt con el ciclo de vida del `ViewModel`, o sincronizar correctamente el `Flow` de Room con el `StateFlow` expuesto) y explica cómo se resolvió.
-
-**Criterios de éxito:**
-- Identifica una dificultad de integración específica y razonada, no una respuesta genérica sin justificación.
-
-### Ejercicio 3: Qué define una app Android profesional
-
-**Enunciado:** ¿qué hace que una app Android sea "completa" en el sentido profesional del término, más allá de tener pantallas atractivas con Compose?
-
-**Solución esperada:** la combinación de un flujo de datos predecible (UDF), resiliencia ante pérdida de conexión (offline-first), dependencias desacopladas y testeables (Hilt), y una base de tests que da confianza real antes de publicar, no solo la apariencia visual de la UI.
-
-**Criterios de éxito:**
-- Menciona al menos dos de los cuatro pilares (UDF, offline-first, DI, testing) como parte de la definición de "completa".
-
----
 
 ## Rúbrica del proyecto
 

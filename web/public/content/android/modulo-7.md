@@ -182,36 +182,6 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 
 ---
 
-## Ejercicios de evaluación
-
-### Ejercicio 1: Problema de acoplamiento que resuelve Hilt
-
-**Enunciado:** ¿qué problema de acoplamiento resuelve Hilt frente a instanciar dependencias manualmente en cada clase?
-
-**Solución esperada:** sin Hilt, cada clase que necesita una dependencia debe conocer exactamente cómo construirla, duplicando ese conocimiento en cada punto de uso y dificultando cambiar la implementación real más adelante; Hilt centraliza ese conocimiento de construcción en módulos, y las clases simplemente reciben la dependencia ya construida.
-
-**Criterios de éxito:**
-- Explica correctamente la centralización del conocimiento de construcción como la solución de Hilt.
-
-### Ejercicio 2: Cuándo usar @Provides en vez de @Inject directo
-
-**Enunciado:** ¿cuándo usarías `@Provides` en vez de `@Inject` directo en el constructor?
-
-**Solución esperada:** cuando la dependencia es una clase externa (de una librería de terceros) que no se puede modificar para anotar su propio constructor con `@Inject`, requiriendo en cambio un método `@Provides` dentro de un `@Module` que describa explícitamente cómo construirla.
-
-**Criterios de éxito:**
-- Menciona correctamente clases externas no anotables como el caso de uso de `@Provides`.
-
-### Ejercicio 3: Elección correcta de scope
-
-**Enunciado:** ¿qué riesgo hay al elegir un scope de Hilt demasiado amplio (como `@Singleton`) para una dependencia que solo debería vivir mientras un `ViewModel` específico vive?
-
-**Solución esperada:** el objeto se retiene en memoria más tiempo del necesario (mientras la app entera vive, no solo mientras el `ViewModel` correspondiente existe), previniendo que se libere cuando ya no hace falta y potencialmente reteniendo estado obsoleto entre distintas instancias de ese `ViewModel`.
-
-**Criterios de éxito:**
-- Explica correctamente la retención innecesaria en memoria como el riesgo de un scope demasiado amplio.
-
----
 
 ## Rúbrica del proyecto
 

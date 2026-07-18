@@ -152,36 +152,6 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 
 ---
 
-## Ejercicios de evaluación
-
-### Ejercicio 1: Por qué una API stateless con JWT no necesita CSRF
-
-**Enunciado:** ¿por qué una API stateless con JWT generalmente no necesita protección CSRF?
-
-**Solución esperada:** CSRF explota el envío automático de cookies de sesión por el navegador hacia cualquier petición dirigida a ese dominio; una API con JWT no depende de cookies enviadas automáticamente, sino que requiere que el token se incluya explícitamente en el header `Authorization` por el código cliente, algo que un atacante externo no puede replicar sin conocer ese token específico de la víctima.
-
-**Criterios de éxito:**
-- Explica correctamente la ausencia de envío automático del token JWT como la razón que elimina la superficie de ataque de CSRF.
-
-### Ejercicio 2: Autenticación vs autorización
-
-**Enunciado:** ¿qué diferencia hay entre autenticación (quién eres) y autorización (qué puedes hacer)?
-
-**Solución esperada:** la autenticación verifica la identidad de quien realiza la petición (que efectivamente es quien dice ser, típicamente mediante credenciales o un token válido); la autorización, una vez verificada la identidad, determina qué acciones específicas esa identidad tiene permitido realizar (por ejemplo, si tiene el rol necesario para eliminar un recurso específico).
-
-**Criterios de éxito:**
-- Distingue correctamente verificación de identidad (autenticación) de verificación de permisos (autorización).
-
-### Ejercicio 3: Relevancia de CORS
-
-**Enunciado:** ¿por qué CORS es relevante específicamente para peticiones desde un navegador, y no para llamadas directas entre servidores?
-
-**Solución esperada:** CORS es una política de seguridad implementada e impuesta por los navegadores para restringir qué peticiones JavaScript de origen cruzado están permitidas; las llamadas directas entre servidores no pasan por un navegador y por lo tanto no están sujetas a esa política, que es específicamente un mecanismo de seguridad del lado del navegador, no del servidor.
-
-**Criterios de éxito:**
-- Explica correctamente que CORS es una restricción impuesta por navegadores, no aplicable a llamadas servidor-a-servidor.
-
----
 
 ## Rúbrica del proyecto
 

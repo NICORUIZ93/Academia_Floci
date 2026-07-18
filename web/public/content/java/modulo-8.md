@@ -140,36 +140,6 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 
 ---
 
-## Ejercicios de evaluación
-
-### Ejercicio 1: Ventaja y desventaja de Gradle Kotlin DSL
-
-**Enunciado:** ¿qué ventaja tiene Gradle (Kotlin DSL) sobre el XML de Maven, y qué desventaja?
-
-**Solución esperada:** la ventaja es mayor flexibilidad para expresar lógica de configuración condicional o programática, al ser efectivamente código Kotlin ejecutable en vez de datos puramente declarativos; la desventaja es una curva de aprendizaje ligeramente mayor y menor previsibilidad estructural que la rigidez estándar y ampliamente conocida del XML de Maven.
-
-**Criterios de éxito:**
-- Menciona correctamente tanto la flexibilidad de Gradle como el costo de curva de aprendizaje/previsibilidad como desventaja.
-
-### Ejercicio 2: Por qué separar dependencias por scope importa
-
-**Enunciado:** ¿por qué separar dependencias por scope (compile, test, runtime) importa para el tamaño del artefacto final?
-
-**Solución esperada:** separar por scope garantiza que dependencias necesarias únicamente para ciertas fases (como las pruebas) no se incluyan en el artefacto final de producción, reduciendo su tamaño y evitando exponer dependencias innecesarias (con su propia superficie de vulnerabilidades potenciales) en lo que efectivamente se despliega en producción.
-
-**Criterios de éxito:**
-- Explica correctamente la exclusión del artefacto final y la reducción de tamaño/superficie de exposición.
-
-### Ejercicio 3: Límites de un proyecto multi-módulo
-
-**Enunciado:** ¿qué garantiza un proyecto multi-módulo que un único proyecto con paquetes separados no garantiza?
-
-**Solución esperada:** un proyecto multi-módulo impone límites de dependencia verificados por la herramienta de build entre subproyectos: un módulo debe declarar explícitamente su dependencia hacia otro para poder usar su código, previniendo que módulos accedan accidentalmente a código de otros módulos que no declararon necesitar, una verificación que simples paquetes separados dentro de un único proyecto no imponen de la misma forma.
-
-**Criterios de éxito:**
-- Explica correctamente la verificación de dependencias explícitas a nivel de build como la garantía adicional del multi-módulo.
-
----
 
 ## Rúbrica del proyecto
 

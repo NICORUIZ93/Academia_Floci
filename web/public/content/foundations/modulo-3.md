@@ -224,25 +224,6 @@ Fases:
 - Eliminar focus outline: crea un estilo visible.
 - Diseñar con tamaños fijos: usa restricciones y prueba extremos.
 
-## Ejercicios de evaluación
-
-### Ejercicio 1: diagnóstico por capas
-
-**Enunciado:** diferencia DNS fallido, conexión rechazada y HTTP 404.
-
-**Solución esperada:** ocurren en resolución, transporte/escucha y aplicación respectivamente.
-
-### Ejercicio 2: petición observable
-
-**Enunciado:** identifica método, ruta, headers, estado y tipo de contenido de una petición real.
-
-**Solución esperada:** presenta evidencia de Network o curl y explica cada campo.
-
-### Ejercicio 3: accesibilidad semántica
-
-**Enunciado:** corrige un div clicable y un input sin label.
-
-**Solución esperada:** button nativo y label asociado, conservando teclado, foco y nombre accesible.
 
 ## Rúbrica del proyecto
 

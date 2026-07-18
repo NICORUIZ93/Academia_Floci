@@ -146,39 +146,6 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 
 ---
 
-## Ejercicios de evaluación
-
-### Ejercicio 1: Fase 1 vs Fase 2 en ELB v2
-
-**Enunciado:** después de crear tu ALB, listener y regla, intenta enviar una petición HTTP real al balanceador (por ejemplo con `curl`). Documenta qué ocurre y explica por qué, relacionándolo con el estado actual de implementación de ELB v2 en Floci.
-
-**Solución esperada:** la petición no llega a ningún objetivo real porque Floci todavía no implementa el plano de datos de ELB v2 (Fase 2, planeada): no hay un puerto de escucha TCP real vinculado al balanceador. Todo el plano de control (balanceador, grupo objetivo, listener, regla) es completamente funcional y consultable, pero el reenvío de tráfico real no ocurre todavía.
-
-**Criterios de éxito:**
-- Intentaste realmente la petición HTTP y documentaste el resultado real, no uno supuesto.
-- Explicas correctamente la distinción entre plano de gestión (completo) y plano de datos (pendiente) en ELB v2.
-
-### Ejercicio 2: Certificado privado vs emitido por Amazon
-
-**Enunciado:** solicita un certificado sin `CertificateAuthorityArn` (tipo `AMAZON_ISSUED`) y otro con ese parámetro (tipo `PRIVATE`). Intenta exportar ambos con `ExportCertificate` y documenta la diferencia de comportamiento.
-
-**Solución esperada:** el certificado `PRIVATE` se exporta correctamente junto a su clave privada cifrada con la passphrase proporcionada; el certificado `AMAZON_ISSUED` rechaza la exportación, igual que en AWS real, donde Amazon nunca entrega la clave privada de un certificado que ella misma gestiona.
-
-**Criterios de éxito:**
-- Ejecutaste realmente ambas solicitudes y ambos intentos de exportación.
-- Explicas correctamente por qué AWS distingue estos dos tipos de certificado en términos de quién controla la clave privada.
-
-### Ejercicio 3: Diseña la cadena completa de borde
-
-**Enunciado:** sin ejecutar nada todavía, dibuja (en texto o diagrama) la cadena completa de servicios que un usuario atraviesa al visitar `https://tienda.example.com` en una arquitectura que use ACM, CloudFront, S3 y Route53, indicando en qué punto se verifica el certificado TLS y en qué punto se resuelve el nombre de dominio.
-
-**Solución esperada:** el navegador resuelve `tienda.example.com` consultando Route53 (que devuelve el nombre DNS de la distribución CloudFront vía un registro alias/CNAME); la conexión TLS se establece con CloudFront usando el certificado ACM adjunto a la distribución; CloudFront sirve el contenido desde caché o lo solicita al origen S3 si no está cacheado.
-
-**Criterios de éxito:**
-- El orden de la cadena (DNS → TLS → CDN → origen) es correcto.
-- Identificas correctamente que la verificación TLS ocurre en el borde (CloudFront), no directamente contra S3.
-
----
 
 ## Rúbrica del proyecto
 

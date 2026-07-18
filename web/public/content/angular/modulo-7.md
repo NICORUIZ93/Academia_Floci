@@ -151,36 +151,6 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 
 ---
 
-## Ejercicios de evaluación
-
-### Ejercicio 1: Por qué clonar la petición
-
-**Enunciado:** explica por qué `authInterceptor` usa `req.clone({...})` en vez de modificar `req` directamente.
-
-**Solución esperada:** las peticiones HTTP de Angular son objetos inmutables por diseño; intentar mutar `req` directamente no tendría efecto (o generaría un error), por lo que la única forma correcta de agregar un header es crear una copia modificada con `clone()`, dejando el objeto original intacto.
-
-**Criterios de éxito:**
-- Explica correctamente la inmutabilidad de las peticiones HTTP y la necesidad de `clone()`.
-
-### Ejercicio 2: Centralizar el manejo de errores
-
-**Enunciado:** ¿qué problema evita centralizar el manejo de errores 401 en un interceptor, en vez de manejarlo individualmente en cada componente que hace una petición HTTP?
-
-**Solución esperada:** evita duplicar la misma lógica de `catchError` en cada llamada individual, garantiza un comportamiento uniforme en toda la aplicación, y permite modificar el manejo de errores (por ejemplo, agregar un reintento automático) en un único lugar sin tener que tocar cada componente que hace peticiones.
-
-**Criterios de éxito:**
-- Explica correctamente el problema de duplicación y el beneficio de un único punto de cambio.
-
-### Ejercicio 3: Orden de interceptores
-
-**Enunciado:** si `errorInterceptor` se registrara antes que `authInterceptor` en `withInterceptors([...])`, ¿en qué orden se ejecutarían para la petición saliente?
-
-**Solución esperada:** `errorInterceptor` se ejecutaría primero, seguido de `authInterceptor`, siguiendo estrictamente el orden del arreglo para las peticiones salientes.
-
-**Criterios de éxito:**
-- Identifica correctamente que el orden de ejecución en la petición saliente sigue el orden literal del arreglo.
-
----
 
 ## Rúbrica del proyecto
 

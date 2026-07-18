@@ -206,52 +206,6 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 
 ---
 
-## Ejercicios de evaluación
-
-### Ejercicio 1: Hoisting comparado
-
-**Enunciado:** dado el código `console.log(saludar()); function saludar() { return "hola"; }` y su variante `console.log(saludar2()); const saludar2 = () => "hola";`, predice qué ocurre en cada caso y explica por qué.
-
-**Solución esperada:** el primero imprime `"hola"` sin error, porque las function declarations se hoistean completas. El segundo lanza un `ReferenceError: Cannot access 'saludar2' before initialization`, porque `const` se hoistea pero permanece en la Temporal Dead Zone hasta su línea de declaración.
-
-**Criterios de éxito:**
-- Identifica correctamente que el primero funciona y el segundo lanza error.
-- Explica la causa en términos de hoisting completo (declaración) frente a TDZ (const/let).
-
-### Ejercicio 2: Diseñar una función de orden superior propia
-
-**Enunciado:** escribe `once(fn)`, una función de orden superior que devuelva una versión de `fn` que solo puede ejecutarse una vez; llamadas subsecuentes deben devolver el resultado de la primera ejecución sin volver a ejecutar `fn`.
-
-**Solución esperada:**
-```js
-function once(fn) {
-  let ejecutada = false;
-  let resultado;
-  return (...args) => {
-    if (!ejecutada) {
-      resultado = fn(...args);
-      ejecutada = true;
-    }
-    return resultado;
-  };
-}
-```
-
-**Criterios de éxito:**
-- La función devuelta ejecuta `fn` solo en la primera llamada.
-- Llamadas subsecuentes devuelven el resultado cacheado de la primera ejecución, sin re-ejecutar `fn`.
-
-### Ejercicio 3: rest frente a arguments
-
-**Enunciado:** explica por qué esta función falla: `const sumarTodos = (...nums) => arguments.length;` al invocarse como `sumarTodos(1,2,3)`, y cómo corregirla.
-
-**Solución esperada:** falla porque `arguments` no existe dentro de arrow functions (lanza `ReferenceError: arguments is not defined`, o hereda el `arguments` del scope contenedor si existe, dando un resultado incorrecto). La corrección es usar directamente `nums.length` (el array capturado por rest), sin necesidad de `arguments` en absoluto.
-
-**Criterios de éxito:**
-- Identifica que `arguments` no está disponible en arrow functions.
-- Propone la corrección usando el parámetro rest directamente (`nums.length`).
-
----
 
 ## Rúbrica del proyecto
 

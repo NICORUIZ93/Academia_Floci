@@ -254,34 +254,6 @@ Evoluciona el módulo `shared` del proyecto 11 como si dos equipos distintos lo 
 - API check verde igual a compatibilidad: añade pruebas conductuales y schemas.
 - Crash sin dSYM/mapping: archiva símbolos por build ID antes de distribuir.
 
-## Ejercicios de evaluación
-
-### Ejercicio 1: abstracción costosa
-
-Android e iOS piden flujos de permisos distintos. ¿Debe existir `expect fun requestPermission()` común?
-
-<details><summary>Solución razonada</summary>
-
-Probablemente no como flujo completo: lifecycle, UX y tipos son nativos. Common puede expresar capacidad/resultado de dominio mediante interfaz; cada plataforma implementa y presenta su flujo. `expect/actual` sirve mejor para una primitiva pequeña.
-</details>
-
-### Ejercicio 2: ciclo cruzado
-
-Swift ViewModel retiene client Kotlin y este retiene closure que captura ViewModel. ¿Por qué ambos collectors pueden conservarlo?
-
-<details><summary>Solución razonada</summary>
-
-Existe ruta fuerte a través de runtimes. Define propietario, captura weak en Swift, cancela subscription/Job en lifecycle y prueba deinit/heap tras navegación repetida.
-</details>
-
-### Ejercicio 3: ABI verde, app rota
-
-La firma `sync(): Result` no cambia, pero ahora callback llega en background y Swift toca UI. ¿Qué compatibilidad se rompió?
-
-<details><summary>Solución razonada</summary>
-
-La ABI sigue igual, pero cambió contrato conductual de threading. Documenta dispatcher, entrega UI en main o exige al adapter hacerlo y añade prueba consumidor. API dump no detecta semántica.
-</details>
 
 ## Rúbrica del proyecto
 

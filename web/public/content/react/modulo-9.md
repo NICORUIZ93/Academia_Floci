@@ -155,36 +155,6 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 
 ---
 
-## Ejercicios de evaluación
-
-### Ejercicio 1: Por qué medir antes de optimizar
-
-**Enunciado:** explica por qué optimizar sin medir primero con el Profiler suele ser tiempo perdido.
-
-**Solución esperada:** sin el Profiler, la identificación del componente problemático se basa en intuición o suposición, que frecuentemente apunta al componente equivocado; el Profiler proporciona evidencia concreta de qué componentes se re-renderizan y por qué, dirigiendo el esfuerzo de optimización exactamente al lugar donde efectivamente existe un problema medible.
-
-**Criterios de éxito:**
-- Explica correctamente el riesgo de optimizar el componente equivocado sin evidencia concreta del Profiler.
-
-### Ejercicio 2: Cuándo virtualizar es necesario
-
-**Enunciado:** ¿cuándo virtualizar una lista es necesario, y cuándo es over-engineering?
-
-**Solución esperada:** virtualizar es necesario cuando la lista tiene un número grande de elementos (típicamente miles) que causan un costo mensurable de renderizado inicial o de memoria si se renderizan todos simultáneamente; es over-engineering aplicarlo a listas pequeñas (decenas de elementos) donde el costo de renderizar todos los elementos completos es insignificante, agregando la complejidad de virtualización sin ningún beneficio real medible.
-
-**Criterios de éxito:**
-- Distingue correctamente el caso de listas grandes (virtualización necesaria) del caso de listas pequeñas (over-engineering).
-
-### Ejercicio 3: Fiber y trabajo interrumpible
-
-**Enunciado:** ¿qué capacidad habilita la arquitectura Fiber que el reconciliador anterior de React no tenía?
-
-**Solución esperada:** Fiber representa el árbol de trabajo de renderizado como una estructura que puede pausarse, reanudarse y priorizarse de forma incremental, permitiendo que React interrumpa trabajo de renderizado no urgente en favor de actualizaciones más urgentes (como `useTransition`/`useDeferredValue`), algo que el reconciliador síncrono e ininterrumpible anterior no permitía.
-
-**Criterios de éxito:**
-- Explica correctamente la interrupción y priorización del trabajo de renderizado como la capacidad habilitada por Fiber.
-
----
 
 ## Rúbrica del proyecto
 

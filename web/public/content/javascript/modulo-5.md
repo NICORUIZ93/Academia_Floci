@@ -210,39 +210,6 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 
 ---
 
-## Ejercicios de evaluación
-
-### Ejercicio 1: Predecir el orden exacto
-
-**Enunciado:** predice el orden de salida de: `console.log("A"); Promise.resolve().then(() => console.log("B")); setTimeout(() => console.log("C"), 0); Promise.resolve().then(() => console.log("D")); console.log("E");`
-
-**Solución esperada:** el orden es `A, E, B, D, C`. Primero todo el código síncrono (`A`, `E`), luego todas las microtasks en el orden en que se registraron (`B`, `D`), y finalmente la macrotask (`C`).
-
-**Criterios de éxito:**
-- Predice correctamente el orden completo: `A, E, B, D, C`.
-- Explica que ambas microtasks se procesan antes que la única macrotask, en el orden de registro entre ellas.
-
-### Ejercicio 2: Elegir el combinador correcto
-
-**Enunciado:** una aplicación necesita cargar el perfil de usuario, sus notificaciones y sus preferencias desde tres endpoints independientes; si las preferencias fallan, la aplicación debería seguir funcionando con valores por defecto, mostrando perfil y notificaciones normalmente. ¿Qué combinador de Promesas usarías y por qué?
-
-**Solución esperada:** `Promise.allSettled`, porque las tres operaciones son independientes y un fallo parcial (preferencias) no debería impedir procesar los resultados exitosos de las otras dos; usar `Promise.all` haría que el fallo de preferencias descartara también los resultados ya exitosos de perfil y notificaciones.
-
-**Criterios de éxito:**
-- Elige `Promise.allSettled` y no `Promise.all`.
-- Justifica correctamente en términos de tolerancia a fallos parciales independientes.
-
-### Ejercicio 3: Diagnosticar una fuga de memoria conceptual
-
-**Enunciado:** explica por qué mantener un array global que crece indefinidamente con eventos de log de una aplicación de larga duración (sin nunca eliminar entradas antiguas) puede considerarse una "fuga de memoria", aunque JavaScript tiene recolección automática de basura.
-
-**Solución esperada:** el recolector de basura solo libera objetos que ya no son alcanzables desde ninguna referencia activa; mientras el array global siga existiendo y siga referenciando todas las entradas de log acumuladas, esas entradas permanecen alcanzables y, por tanto, nunca son candidatas a liberación, sin importar que ya no se necesiten realmente. El problema no es ausencia de recolección, sino mantener una referencia activa (el array sin límite) que impide que el recolector considere esos objetos como basura.
-
-**Criterios de éxito:**
-- Explica correctamente que el recolector solo libera objetos inalcanzables.
-- Identifica que el array global sin límite es la referencia que mantiene artificialmente vivas las entradas antiguas.
-
----
 
 ## Rúbrica del proyecto
 

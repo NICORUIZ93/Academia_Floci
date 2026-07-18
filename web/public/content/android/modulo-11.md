@@ -180,36 +180,6 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 
 ---
 
-## Ejercicios de evaluación
-
-### Ejercicio 1: Por qué un App Bundle en vez de un APK universal
-
-**Enunciado:** ¿por qué Google Play requiere un App Bundle en vez de un APK universal?
-
-**Solución esperada:** a partir de un único bundle, Play genera automáticamente APKs optimizados para cada combinación de arquitectura, idioma y densidad de pantalla del dispositivo del usuario, reduciendo el tamaño de descarga real comparado con un APK universal que debería incluir recursos para todas las configuraciones posibles simultáneamente.
-
-**Criterios de éxito:**
-- Explica correctamente la generación de APKs optimizados por dispositivo como razón.
-
-### Ejercicio 2: Diferencia entre versionCode y versionName
-
-**Enunciado:** ¿qué diferencia hay entre `versionCode` y `versionName`, y por qué ambos importan?
-
-**Solución esperada:** `versionCode` es un entero estrictamente incremental usado internamente por Play para ordenar releases inequívocamente y rechazar uploads no incrementales; `versionName` es un string visible al usuario (típicamente semver) que comunica la magnitud del cambio de forma legible para humanos.
-
-**Criterios de éxito:**
-- Distingue correctamente el propósito técnico interno de `versionCode` frente al propósito comunicativo de `versionName`.
-
-### Ejercicio 3: Propósito de los tracks de Play Console
-
-**Enunciado:** ¿qué propósito cumplen los tracks progresivos de Play Console (pruebas internas → cerradas → abiertas → producción)?
-
-**Solución esperada:** permiten validar la app con un grupo cada vez más amplio de usuarios reales antes del lanzamiento completo, detectando problemas (crashes, bugs específicos de dispositivos) con un impacto limitado antes de exponer la app a la totalidad de la base de usuarios potenciales.
-
-**Criterios de éxito:**
-- Explica correctamente la validación progresiva con impacto limitado como propósito de los tracks.
-
----
 
 ## Rúbrica del proyecto
 

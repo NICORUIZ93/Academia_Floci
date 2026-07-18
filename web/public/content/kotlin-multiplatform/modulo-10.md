@@ -172,36 +172,6 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 
 ---
 
-## Ejercicios de evaluación
-
-### Ejercicio 1: Por qué validar ambos targets en cada push
-
-**Enunciado:** ¿por qué validar ambos targets en CI en cada push, y no solo antes de un release?
-
-**Solución esperada:** validar en cada push detecta regresiones específicas de plataforma inmediatamente después de introducirse, con el contexto del cambio todavía fresco y fácil de diagnosticar, en vez de descubrir el problema días o semanas después, justo antes de un release planificado, cuando ya es más difícil rastrear qué cambio intermedio específico rompió el build.
-
-**Criterios de éxito:**
-- Explica correctamente la detección temprana con contexto fresco como razón de validar en cada push.
-
-### Ejercicio 2: Qué automatiza Fastlane
-
-**Enunciado:** ¿qué automatiza Fastlane que sería tedioso hacer manualmente en cada release?
-
-**Solución esperada:** firma de código con certificados y perfiles correctos, incremento consistente del número de build, y la subida efectiva a las plataformas de distribución (TestFlight, Play Console), todo reducido a un único comando consistente y repetible.
-
-**Criterios de éxito:**
-- Menciona correctamente al menos dos de los tres pasos automatizados (firma, versionado, subida) como lo que Fastlane automatiza.
-
-### Ejercicio 3: Necesidad de un runner macOS para iOS
-
-**Enunciado:** ¿por qué un pipeline de CI para KMP necesita un runner macOS específicamente para compilar el target de iOS?
-
-**Solución esperada:** las herramientas de compilación necesarias para producir binarios de iOS (el toolchain de Xcode de Apple) solo están disponibles en macOS, a diferencia del build de Android, que puede ejecutarse en cualquier runner Linux estándar más económico.
-
-**Criterios de éxito:**
-- Explica correctamente la dependencia del toolchain de Xcode exclusivo de macOS como razón de esa necesidad.
-
----
 
 ## Rúbrica del proyecto
 

@@ -268,39 +268,6 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 
 ---
 
-## Ejercicios de evaluación
-
-### Ejercicio 1: Diseñar la clave primaria correcta
-
-**Enunciado:** vas a diseñar una tabla para guardar los comentarios de un blog. Cada comentario pertenece a un artículo específico, y necesitas poder consultar eficientemente "todos los comentarios de un artículo, ordenados por fecha de publicación". Propón el esquema de clave primaria (simple o compuesta, con sus atributos) para esta tabla, y justifica tu elección.
-
-**Solución esperada:** una clave compuesta con `articulo_id` como clave de partición (HASH) y `fecha_publicacion` como clave de ordenación (RANGE). Esto agrupa todos los comentarios de un mismo artículo bajo la misma partición, y permite consultarlos eficientemente con Query, ya ordenados por fecha gracias a la clave de ordenación, sin necesidad de un Scan ni de un índice secundario adicional.
-
-**Criterios de éxito:**
-- Elige una clave compuesta, no simple.
-- Identifica correctamente `articulo_id` como partición y `fecha_publicacion` como ordenación.
-- La justificación menciona explícitamente que esto habilita el uso de Query en vez de Scan para el patrón de consulta descrito.
-
-### Ejercicio 2: Corregir un tipo de dato mal elegido
-
-**Enunciado:** un compañero diseñó una tabla de productos donde el precio se guarda como `{"S": "19.99"}` en vez de como número. Explica qué problema concreto puede causar esta elección más adelante, y cómo lo corregirías.
-
-**Solución esperada:** guardar el precio como `S` (string) impide realizar comparaciones numéricas correctas (por ejemplo, ordenar o filtrar por rango de precio no funcionaría como se espera, porque compararía los textos carácter por carácter: "9.99" se consideraría "mayor" que "19.99" al comparar el primer carácter, "9" vs "1"). La corrección es cambiar el tipo del atributo a `{"N": "19.99"}`, lo que en una tabla con datos existentes normalmente requiere migrar (leer, transformar y volver a escribir) cada item afectado, ya que DynamoDB no ofrece un `ALTER COLUMN` nativo para cambiar el tipo de un atributo existente.
-
-**Criterios de éxito:**
-- Identifica correctamente el problema de comparación numérica incorrecta con strings.
-- Menciona que la corrección requiere migrar los items existentes, no solo cambiar una definición de tabla.
-
-### Ejercicio 3: Justificar cuándo un Scan es aceptable
-
-**Enunciado:** describe un escenario legítimo donde usar Scan, en vez de Query, sea una decisión razonable y no un error de diseño.
-
-**Solución esperada:** una respuesta válida podría ser una tabla de configuración global de la aplicación, deliberadamente pequeña (unos pocos items, que se sabe que nunca va a crecer significativamente), donde se necesita leer todos los items ocasionalmente (por ejemplo, al arrancar la aplicación) y el coste de examinar la tabla completa es insignificante por su tamaño reducido. Otra respuesta válida sería una exportación completa y poco frecuente de todos los datos de una tabla para un proceso de backup o migración, donde de todas formas se necesitan todos los items sin excepción.
-
-**Criterios de éxito:**
-- El escenario propuesto justifica el uso de Scan por tamaño reducido de la tabla, baja frecuencia de la operación, o necesidad genuina de leer el 100% de los items, no como sustituto habitual de un patrón de consulta frecuente.
-
----
 
 ## Rúbrica del proyecto
 

@@ -147,36 +147,6 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 
 ---
 
-## Ejercicios de evaluación
-
-### Ejercicio 1: Ventaja de un loader
-
-**Enunciado:** explica qué ventaja da un loader de ruta frente a hacer fetch dentro de un `useEffect` del componente.
-
-**Solución esperada:** el loader completa la carga de datos antes de que el componente se renderice por primera vez, evitando el parpadeo visual de un estado intermedio "cargando" que ocurriría si el fetch se disparara dentro de un `useEffect` después de que el componente ya se montó.
-
-**Criterios de éxito:**
-- Explica correctamente la diferencia de timing y el parpadeo evitado.
-
-### Ejercicio 2: Code-splitting y tiempo de carga inicial
-
-**Enunciado:** ¿por qué el code-splitting por ruta mejora el tiempo de carga inicial de la aplicación?
-
-**Solución esperada:** sin code-splitting, el bundle inicial incluiría el código de todas las rutas de la aplicación, incluso las que el usuario podría nunca visitar en esa sesión; con code-splitting, cada ruta se compila en un chunk separado, descargado únicamente cuando el usuario efectivamente navega a esa ruta, reduciendo el tamaño del bundle inicial descargado.
-
-**Criterios de éxito:**
-- Explica correctamente la reducción del bundle inicial al diferir el código de rutas no visitadas todavía.
-
-### Ejercicio 3: Rutas protegidas
-
-**Enunciado:** ¿qué patrón conceptualmente equivalente a una ruta protegida de React Router existe en Angular Router?
-
-**Solución esperada:** un guard funcional `CanActivateFn` (Módulo 4 del track de Angular), que también verifica una condición de acceso antes de permitir la navegación a una ruta, redirigiendo si la condición no se cumple, aunque implementado como una función dedicada del sistema de routing en vez de un componente envolvente como en React Router.
-
-**Criterios de éxito:**
-- Identifica correctamente `CanActivateFn` como el equivalente conceptual en Angular.
-
----
 
 ## Rúbrica del proyecto
 

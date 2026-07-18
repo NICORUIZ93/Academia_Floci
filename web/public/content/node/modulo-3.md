@@ -184,39 +184,6 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 
 ---
 
-## Ejercicios de evaluación
-
-### Ejercicio 1: Qué automatiza Express
-
-**Enunciado:** tras construir este servidor con `http` nativo, enumera al menos tres tareas específicas que tuviste que escribir manualmente que Express automatiza.
-
-**Solución esperada:** tres respuestas razonables: (1) parsear el body JSON de una petición (Express lo hace con `express.json()`, exponiendo directamente `req.body` ya parseado); (2) hacer match de rutas según método y URL (Express lo hace con `app.get()`/`app.post()` declarativos); (3) el manejo centralizado y consistente de errores (Express permite un middleware de manejo de errores único para toda la aplicación, en vez de repetir `try`/`catch` en cada rama manual).
-
-**Criterios de éxito:**
-- Enumera al menos tres tareas específicas y correctamente atribuidas.
-- Conecta cada una con la experiencia concreta de haberla implementado manualmente en este laboratorio.
-
-### Ejercicio 2: Por qué el body llega como stream
-
-**Enunciado:** explica por qué el body de una petición POST en Node llega como un stream de chunks en vez de como un objeto ya parseado desde el inicio.
-
-**Solución esperada:** porque Node no puede saber de antemano cuándo termina el cuerpo de la petición ni cuánto tamaño tiene sin procesar los datos entrantes progresivamente (el cuerpo puede ser arbitrariamente grande, y Node sigue su principio de I/O no bloqueante y procesamiento por streams, estudiado en el Módulo 2), y porque asumir un formato específico (JSON) de antemano sería incorrecto para peticiones con otros tipos de contenido; el runtime deja la decisión de qué formato esperar y cómo procesarlo en manos del código de la aplicación (o de un middleware específico), en vez de imponer una única interpretación fija para todas las peticiones.
-
-**Criterios de éxito:**
-- Explica correctamente que Node no puede asumir el tamaño ni el formato del body de antemano.
-- Conecta esta decisión con el principio general de streams y procesamiento incremental estudiado en el Módulo 2.
-
-### Ejercicio 3: Elegir el código de estado correcto
-
-**Enunciado:** para cada uno de estos tres escenarios, indica el código de estado HTTP apropiado: (a) un cliente envía un POST con JSON malformado, (b) un cliente solicita GET a una ruta que nunca fue definida en el servidor, (c) el servidor crea exitosamente un nuevo recurso a partir de un POST válido.
-
-**Solución esperada:** (a) `400` (Bad Request), porque el problema está en la petición del cliente; (b) `404` (Not Found), porque el recurso solicitado no existe; (c) `201` (Created), específicamente para comunicar que un nuevo recurso fue creado exitosamente, distinto de un `200` genérico.
-
-**Criterios de éxito:**
-- Asigna correctamente los tres códigos de estado a sus escenarios correspondientes.
-- Distingue correctamente `201` de un `200` genérico para el caso de creación exitosa.
-
----
 
 ## Rúbrica del proyecto
 

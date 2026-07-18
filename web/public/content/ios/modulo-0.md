@@ -316,47 +316,6 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 
 ---
 
-## Ejercicios de evaluación
-
-### Ejercicio 1: Qué previene el sistema de optionals
-
-**Enunciado:** ¿qué problema de `NullPointerException` (o equivalente) previene el sistema de optionals de Swift?
-
-**Solución esperada:** al incorporar la ausencia de valor en el sistema de tipos (`String?` distinto de `String`), el compilador rechaza código que intente usar un optional sin desenvolverlo primero, detectando el problema en tiempo de compilación en vez de descubrirlo como un crash en tiempo de ejecución en producción.
-
-**Criterios de éxito:**
-- Explica correctamente la detección en tiempo de compilación como el mecanismo de prevención.
-
-### Ejercicio 2: Cuándo elegir struct sobre class
-
-**Enunciado:** ¿cuándo elegirías `struct` sobre `class` para un modelo de datos?
-
-**Solución esperada:** cuando se quiere que cada asignación cree una copia independiente, previniendo mutaciones inesperadas compartidas entre distintas partes del código; `class` es apropiada en cambio cuando la identidad compartida y la mutación observable desde múltiples lugares es el comportamiento deseado.
-
-**Criterios de éxito:**
-- Explica correctamente la copia independiente de `struct` como razón para preferirlo en modelos de datos.
-
-### Ejercicio 3: Ventaja de la verificación de exhaustividad
-
-**Enunciado:** ¿qué ventaja da que el compilador de Swift verifique la exhaustividad de un `switch` sobre un enum con valores asociados?
-
-**Solución esperada:** obliga a manejar explícitamente todos los casos posibles (o proveer un `default` deliberado), de modo que agregar un nuevo caso al enum en el futuro genera errores de compilación en cada `switch` existente que no lo contemple, forzando una actualización consciente en vez de un comportamiento silenciosamente incorrecto.
-
-**Criterios de éxito:**
-- Explica correctamente la detección forzada de casos nuevos no manejados como la ventaja.
-
-### Ejercicio 4: Closure, genérico y pérdida silenciosa de información
-
-**Enunciado:** una función convierte `[Stop]` en `[UUID: Stop]` mediante `Dictionary(uniqueKeysWithValues:)` y la aplicación falla cuando llegan IDs repetidos. Diseña una alternativa genérica y explica la función de la closure que extrae la identidad.
-
-**Solución esperada:** una función `indexed<Element, ID: Hashable>(_:by:) throws -> [ID: Element]` recibe una closure `(Element) -> ID`, detecta el ID antes de sobrescribir y devuelve un error tipado. La closure permite reutilizar el algoritmo con cualquier elemento e identidad sin convertirlos a `Any`.
-
-**Criterios de éxito:**
-- Mantiene tipos genéricos y la restricción `Hashable` mínima necesaria.
-- Detecta duplicados de forma explícita.
-- Explica por qué la closure separa política de identidad y algoritmo de indexación.
-
----
 
 ## Rúbrica del proyecto
 

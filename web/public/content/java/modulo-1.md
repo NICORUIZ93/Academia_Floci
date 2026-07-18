@@ -220,36 +220,6 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 
 ---
 
-## Ejercicios de evaluación
-
-### Ejercicio 1: Sobrecarga vs sobreescritura
-
-**Enunciado:** explica la diferencia entre sobrecargar (overload) y sobreescribir (override) un método.
-
-**Solución esperada:** sobrecargar define múltiples métodos con el mismo nombre pero distintas firmas dentro de la misma clase, resuelto en tiempo de compilación según los argumentos de cada llamada; sobreescribir redefine el comportamiento de un método heredado con exactamente la misma firma en una subclase, resuelto en tiempo de ejecución según el tipo real del objeto.
-
-**Criterios de éxito:**
-- Explica correctamente ambos conceptos y el momento de resolución de cada uno (compilación vs ejecución).
-
-### Ejercicio 2: Clase abstracta vs interfaz
-
-**Enunciado:** ¿cuándo usarías una clase abstracta y cuándo una interfaz?
-
-**Solución esperada:** una clase abstracta cuando existe comportamiento genuinamente compartido entre subclases relacionadas entre sí, que vale la pena centralizar; una interfaz cuando se necesita definir un contrato puro que clases potencialmente no relacionadas entre sí (y que Java permite implementar múltiples simultáneamente) deben cumplir.
-
-**Criterios de éxito:**
-- Distingue correctamente comportamiento compartido real (clase abstracta) de contrato puro (interfaz).
-
-### Ejercicio 3: Modificadores de acceso
-
-**Enunciado:** ordena los modificadores `private`, package-private (sin modificador), `protected` y `public` de menor a mayor visibilidad, y describe qué agrega cada nivel respecto al anterior.
-
-**Solución esperada:** `private` (solo la propia clase) < package-private (agrega el mismo paquete) < `protected` (agrega subclases, incluso en otros paquetes) < `public` (accesible desde cualquier lugar sin restricción).
-
-**Criterios de éxito:**
-- Ordena correctamente los cuatro niveles y describe qué agrega cada uno respecto al anterior.
-
----
 
 ## Rúbrica del proyecto
 

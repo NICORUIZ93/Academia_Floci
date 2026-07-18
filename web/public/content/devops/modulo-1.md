@@ -278,39 +278,6 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 
 ---
 
-## Ejercicios de evaluación
-
-### Ejercicio 1: Elegir la estrategia de branching correcta
-
-**Enunciado:** un equipo de 4 personas, con buena cobertura de tests automatizados y un pipeline de CI que corre en menos de 3 minutos, quiere reducir la fricción de integrar cambios. Otro equipo de 40 personas, con un proceso de certificación regulatoria antes de cada release trimestral, necesita saber exactamente qué contiene cada versión publicada. Recomienda una estrategia de branching para cada uno, justificando tu elección.
-
-**Solución esperada:** para el primer equipo, trunk-based development, aprovechando su CI rápido y su buena cobertura de tests para integrar constantemente a `main` con feature flags para trabajo incompleto. Para el segundo equipo, GitFlow (o una variante con ramas de release explícitas), porque la necesidad de certificar exactamente el contenido de cada versión antes de publicarla encaja mejor con la estructura más formal de ramas `release/*` que con la integración constante y menos delimitada de trunk-based development.
-
-**Criterios de éxito:**
-- Recomienda trunk-based para el primer equipo y GitFlow (o similar) para el segundo.
-- La justificación conecta la elección con las condiciones específicas de cada equipo (madurez de CI, necesidad de certificación), no solo con una preferencia genérica.
-
-### Ejercicio 2: Explicar el riesgo de reescribir historial compartido
-
-**Enunciado:** un compañero, sin saber que tú ya clonaste su rama `feature/pagos` para revisar su código, ejecuta un `git rebase -i` sobre esa rama para limpiar el historial y hace `git push --force`. Explica qué problema vas a encontrar tú al intentar sincronizar tu copia local de esa rama, y qué deberías hacer para resolverlo.
-
-**Solución esperada:** al haber reescrito el historial, los commits de la rama remota ahora tienen hashes distintos a los que tú ya tienes localmente, aunque el contenido final sea similar; al intentar `git pull`, Git reportará una divergencia de historiales (o requerirá una fusión no trivial) porque, desde su perspectiva, ambas versiones son historiales distintos con un punto de origen común pero commits diferentes después de ese punto. La forma más simple de resolverlo es descartar tu copia local de esa rama y volver a clonarla (o hacer `git fetch` seguido de `git reset --hard origin/feature/pagos`) en vez de intentar reconciliar manualmente ambos historiales divergentes.
-
-**Criterios de éxito:**
-- Explica correctamente que el problema es una divergencia de historial causada por hashes de commit distintos tras el rebase.
-- Propone descartar la copia local divergente y resincronizar desde el remoto, no intentar fusionar manualmente ambas versiones.
-
-### Ejercicio 3: Reset vs revert
-
-**Enunciado:** necesitas deshacer un commit que ya fue fusionado a `main` hace tres días, y sabes que al menos otros dos compañeros ya han hecho `pull` de esa rama desde entonces. ¿Usarías `git reset` o `git revert`? Justifica tu respuesta.
-
-**Solución esperada:** `git revert`, porque `main` es una rama compartida que otros compañeros ya sincronizaron; `revert` crea un nuevo commit que deshace el cambio sin reescribir el historial existente, evitando el problema de divergencia que un `reset` sobre una rama ya compartida causaría a los compañeros que ya tienen la versión anterior del historial.
-
-**Criterios de éxito:**
-- Elige `revert`, no `reset`.
-- La justificación menciona explícitamente que `main` es una rama compartida y que `reset` reescribiría el historial que otros ya sincronizaron.
-
----
 
 ## Rúbrica del proyecto
 

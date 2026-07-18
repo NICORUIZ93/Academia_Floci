@@ -145,36 +145,6 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 
 ---
 
-## Ejercicios de evaluación
-
-### Ejercicio 1: Por qué exponer DTOs en vez de entidades
-
-**Enunciado:** ¿por qué exponer DTOs en vez de entidades JPA directamente en la API?
-
-**Solución esperada:** exponer entidades directamente filtraría detalles internos de persistencia hacia el contrato público, puede producir errores de serialización con relaciones lazy, y acopla el contrato público de la API al modelo interno de persistencia, impidiendo que ambos evolucionen de forma independiente.
-
-**Criterios de éxito:**
-- Menciona correctamente al menos dos de las tres razones (filtrado de detalles internos, errores de serialización lazy, acoplamiento).
-
-### Ejercicio 2: Ventaja de centralizar el manejo de errores
-
-**Enunciado:** ¿qué ventaja da centralizar el manejo de errores en un `@ControllerAdvice`?
-
-**Solución esperada:** garantiza que todos los controllers de la aplicación compartan exactamente el mismo formato de respuesta de error, reduce la duplicación de lógica de manejo repetida en cada controller individual, y facilita a los clientes de la API confiar en un formato de error predecible y consistente.
-
-**Criterios de éxito:**
-- Explica correctamente la consistencia del formato de error y la reducción de duplicación como beneficios.
-
-### Ejercicio 3: Elegir el código de estado correcto
-
-**Enunciado:** ¿qué código de estado HTTP devolverías al intentar eliminar un recurso que no existe, y por qué?
-
-**Solución esperada:** 404 (Not Found), dado que comunica con precisión semántica que el recurso solicitado no existe, permitiendo que el cliente de la API distinga programáticamente ese caso específico de otros resultados posibles (como un 200 exitoso o un 400 por entrada inválida).
-
-**Criterios de éxito:**
-- Identifica correctamente 404 como el código apropiado y justifica con la precisión semántica del código de estado.
-
----
 
 ## Rúbrica del proyecto
 

@@ -146,36 +146,6 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 
 ---
 
-## Ejercicios de evaluación
-
-### Ejercicio 1: Qué reemplaza al AppModule
-
-**Enunciado:** explica qué reemplaza exactamente a `AppModule` en una aplicación standalone, y dónde vive la configuración de providers globales.
-
-**Solución esperada:** `bootstrapApplication(App, appConfig)` reemplaza el arranque tradicional vía `AppModule`; la configuración de providers globales vive en un objeto `ApplicationConfig` plano (típicamente en `app.config.ts`), usando funciones `provide*()` explícitas en vez de `imports` de módulo.
-
-**Criterios de éxito:**
-- Identifica correctamente `bootstrapApplication` y `ApplicationConfig` como reemplazo del `AppModule`.
-
-### Ejercicio 2: Organización por feature frente a por tipo
-
-**Enunciado:** ¿qué problema resuelve organizar el código por feature en vez de por tipo de archivo?
-
-**Solución esperada:** organizar por tipo dispersa todo lo relacionado con una única funcionalidad a través de múltiples carpetas distantes, obligando a saltar entre ellas para entender o modificar esa funcionalidad completa; organizar por feature agrupa todo lo que cambia junto en una única carpeta, maximizando cohesión y facilitando eliminar una funcionalidad completa como una unidad.
-
-**Criterios de éxito:**
-- Explica correctamente el problema de dispersión de la organización por tipo y el beneficio de cohesión de la organización por feature.
-
-### Ejercicio 3: Pasos de migración
-
-**Enunciado:** describe los tres pasos generales para migrar un componente de un NgModule a standalone.
-
-**Solución esperada:** (1) convertir el componente a `standalone: true`, moviendo sus dependencias del `imports` del módulo al propio componente; (2) reemplazar la configuración de routing del módulo por `provideRouter` en `bootstrapApplication`; (3) eliminar el NgModule ya vacío una vez que todos sus componentes son standalone.
-
-**Criterios de éxito:**
-- Describe correctamente los tres pasos en el orden apropiado.
-
----
 
 ## Rúbrica del proyecto
 

@@ -157,36 +157,6 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 
 ---
 
-## Ejercicios de evaluación
-
-### Ejercicio 1: Qué resuelve expect/actual mejor que una interfaz común
-
-**Enunciado:** ¿qué resuelve `expect`/`actual` que una simple interfaz común no resolvería igual de bien?
-
-**Solución esperada:** `expect`/`actual` vincula el contrato con su implementación específica de plataforma directamente en tiempo de compilación para cada target, sin la ceremonia adicional de selección en tiempo de ejecución (como inyección de dependencias) que una interfaz común normalmente requeriría para decidir qué implementación concreta usar.
-
-**Criterios de éxito:**
-- Explica correctamente la vinculación en tiempo de compilación sin ceremonia de selección en tiempo de ejecución.
-
-### Ejercicio 2: Por qué commonMain no puede usar APIs específicas
-
-**Enunciado:** ¿por qué el código en `commonMain` no puede usar APIs específicas de Android o iOS directamente?
-
-**Solución esperada:** `commonMain` se compila para todas las plataformas de destino configuradas simultáneamente; una API específica de Android (como `android.os.Build`) simplemente no existe en el entorno de compilación de iOS, por lo que el compilador rechazaría ese código si estuviera en `commonMain`, dado que no podría producir una compilación válida para todos los targets configurados.
-
-**Criterios de éxito:**
-- Explica correctamente que las APIs específicas de plataforma no existen en el entorno de compilación de las demás plataformas.
-
-### Ejercicio 3: Targets más allá de Android/iOS
-
-**Enunciado:** ¿a qué otros targets, además de Android e iOS, puede compilar un proyecto KMP?
-
-**Solución esperada:** JVM (útil para compartir lógica con un backend), JS/WebAssembly (para ejecutarse en un navegador web), y Native para sistemas de escritorio como Linux, Windows y macOS.
-
-**Criterios de éxito:**
-- Menciona correctamente al menos dos de los tres targets adicionales (JVM, JS/Wasm, Native de escritorio).
-
----
 
 ## Rúbrica del proyecto
 

@@ -272,39 +272,6 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 
 ---
 
-## Ejercicios de evaluación
-
-### Ejercicio 1: Explicar la jerarquía Pod/ReplicaSet/Deployment
-
-**Enunciado:** sin mirar el Tema 1, explica con tus propias palabras qué pasaría si, en un clúster con un Deployment de 3 réplicas, eliminas manualmente el ReplicaSet directamente (no un Pod individual, sino el ReplicaSet completo). ¿El Deployment se ve afectado? ¿Los Pods existentes desaparecen inmediatamente?
-
-**Solución esperada:** eliminar el ReplicaSet directamente elimina también, en cascada, los Pods gestionados por ese ReplicaSet (porque el ReplicaSet es su propietario). Sin embargo, el Deployment detecta esta discrepancia (ya no existe el ReplicaSet que debería estar gestionando 3 réplicas) y, siguiendo su propio ciclo de reconciliación continua, crea un ReplicaSet nuevo (idéntico en configuración al eliminado) que a su vez crea 3 Pods nuevos, restaurando el estado deseado automáticamente, sin necesidad de que un humano intervenga para recrear el ReplicaSet manualmente.
-
-**Criterios de éxito:**
-- Explica correctamente que eliminar el ReplicaSet elimina también sus Pods en cascada.
-- Explica que el Deployment detecta la discrepancia y recrea automáticamente el ReplicaSet (y por tanto los Pods), sin intervención manual.
-
-### Ejercicio 2: Elegir el tipo de Service correcto
-
-**Enunciado:** tienes tres servicios en tu clúster: (a) una base de datos que solo debe ser accesible por otros servicios dentro del mismo clúster; (b) una API que necesitas exponer directamente a internet en un entorno de nube real; (c) un servicio de pruebas rápidas que solo necesitas acceder ocasionalmente desde tu propia máquina apuntando directamente a un nodo del clúster. Asigna el tipo de Service correcto a cada uno.
-
-**Solución esperada:** (a) `ClusterIP`, porque no necesita ningún acceso externo al clúster; (b) `LoadBalancer`, porque necesita exposición directa a internet en un entorno de nube real, aprovisionando automáticamente un balanceador externo; (c) `NodePort`, como una solución simple y directa para acceso ocasional apuntando a un puerto específico de cualquier nodo, sin necesidad de un balanceador externo completo.
-
-**Criterios de éxito:**
-- Las tres asignaciones coinciden con la solución esperada.
-- Puede justificar cada elección en términos del alcance de acceso necesario (interno, externo permanente, externo ocasional).
-
-### Ejercicio 3: ConfigMap o Secret
-
-**Enunciado:** para cada uno de estos cuatro valores de configuración, indica si lo guardarías en un ConfigMap o en un Secret, y menciona la limitación real de seguridad de los Secrets nativos de Kubernetes que deberías tener presente: (a) el nivel de logging (`info`, `debug`); (b) la contraseña de conexión a una base de datos; (c) la URL base de una API externa; (d) un token de autenticación de un servicio de terceros.
-
-**Solución esperada:** (a) ConfigMap, no es sensible; (b) Secret; (c) ConfigMap, no es sensible; (d) Secret. La limitación real a tener presente es que los Secrets nativos de Kubernetes solo están codificados en base64 por defecto, no cifrados criptográficamente, por lo que para datos verdaderamente críticos en producción conviene combinar Kubernetes con un gestor de secretos externo dedicado (como Vault) o cifrado en reposo configurado explícitamente a nivel de clúster.
-
-**Criterios de éxito:**
-- Clasifica correctamente los cuatro valores entre ConfigMap y Secret.
-- Menciona explícitamente la limitación de que los Secrets nativos solo están codificados en base64, no cifrados, por defecto.
-
----
 
 ## Rúbrica del proyecto
 

@@ -195,36 +195,6 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 
 ---
 
-## Ejercicios de evaluación
-
-### Ejercicio 1: Por qué el índice como key es riesgoso
-
-**Enunciado:** explica con un ejemplo concreto por qué usar el índice del array como `key` puede causar bugs sutiles al reordenar una lista con inputs controlados por fila.
-
-**Solución esperada:** si cada fila tiene un input con estado propio, y la lista se reordena, React identifica las filas por su posición (el índice), no por su identidad real; al reordenarse, la fila que antes ocupaba la posición 2 ahora puede ocupar la posición 0, pero React, guiándose por el índice como key, puede reutilizar el DOM (y el estado del input) de la posición 0 anterior para el nuevo contenido en esa posición, haciendo que el valor tecleado aparezca asociado a la fila incorrecta.
-
-**Criterios de éxito:**
-- Explica correctamente que el índice cambia con el reordenamiento mientras la identidad real del dato no cambia, y las consecuencias de esa discrepancia.
-
-### Ejercicio 2: JSX y createElement
-
-**Enunciado:** explica qué transforma realmente el compilador cuando procesa `<button onClick={onClick}>{texto}</button>`.
-
-**Solución esperada:** el compilador transforma esa expresión JSX en una llamada `React.createElement('button', { onClick }, texto)`, que devuelve un objeto JavaScript plano que describe el elemento a renderizar, no un elemento DOM real todavía.
-
-**Criterios de éxito:**
-- Explica correctamente la transformación a `createElement` y que el resultado es un objeto descriptivo, no el DOM real.
-
-### Ejercicio 3: && frente a ternario
-
-**Enunciado:** ¿cuándo usarías `{condicion && <Componente />}` en vez de `{condicion ? <A /> : <B />}`?
-
-**Solución esperada:** `&&` es apropiado cuando existen solo dos posibilidades: mostrar el componente, o no mostrar nada en absoluto; el ternario es apropiado cuando existen dos alternativas de contenido reales que mostrar, cada una con su propio elemento concreto.
-
-**Criterios de éxito:**
-- Distingue correctamente el caso de "algo o nada" del caso de "dos alternativas reales".
-
----
 
 ## Rúbrica del proyecto
 

@@ -248,34 +248,6 @@ Parte del proyecto 12. Si migraste una vista a Next.js, ejecuta las pruebas de s
 - Silenciar hydration: elimina no determinismo o aísla la diferencia inevitable mínima.
 - Formatear según navegador tras SSR: conserva la misma decisión de locale/zona en ambos lados.
 
-## Ejercicios de evaluación
-
-### Ejercicio 1: límite del boundary
-
-Un `setTimeout` lanza después del render y la pantalla completa desaparece. ¿Por qué el boundary cercano no lo capturó?
-
-<details><summary>Solución razonada</summary>
-
-Los callbacks asíncronos ordinarios están fuera del render descendiente que observa el boundary. El callback debe capturar/rechazar explícitamente y convertir el resultado en estado o reportarlo; no debe lanzar sin dueño.
-</details>
-
-### Ejercicio 2: autorización visual
-
-Solo usuarios admin ven el botón “Eliminar”, pero cualquiera puede invocar la Server Action. ¿Cuál es la corrección?
-
-<details><summary>Solución razonada</summary>
-
-Ocultar mejora UX, no seguridad. La acción obtiene sesión confiable, autoriza el recurso y valida entrada en servidor antes de mutar; además registra intento y responde sin filtrar datos.
-</details>
-
-### Ejercicio 3: mismatch de fecha
-
-Servidor muestra 1 de marzo y cliente 28 de febrero. ¿Qué debe modelarse?
-
-<details><summary>Solución razonada</summary>
-
-Locale y zona fueron diferentes o la fecha civil se interpretó como instante. Define semántica, transporta decisión usada en SSR y repite en primer render cliente. Silenciar warning dejaría significado inconsistente.
-</details>
 
 ## Rúbrica del proyecto
 

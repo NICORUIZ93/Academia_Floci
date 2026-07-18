@@ -150,36 +150,6 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 
 ---
 
-## Ejercicios de evaluación
-
-### Ejercicio 1: Cuándo una animación implícita es suficiente
-
-**Enunciado:** ¿cuándo una animación implícita es suficiente y cuándo necesitas el control de una explícita?
-
-**Solución esperada:** una animación implícita es suficiente cuando basta con interpolar automáticamente entre dos valores de una propiedad simple; se necesita una explícita para curvas de interpolación no lineales, repetición controlada, o composición de múltiples animaciones coordinadas entre sí que una animación implícita simple no puede expresar.
-
-**Criterios de éxito:**
-- Distingue correctamente el caso de uso simple (implícita) del caso complejo (explícita).
-
-### Ejercicio 2: Por qué const mejora el rendimiento
-
-**Enunciado:** ¿por qué marcar un widget como `const` puede mejorar el rendimiento de forma medible?
-
-**Solución esperada:** le comunica a Flutter, verificado por el compilador, que ese widget nunca necesita reconstruirse, permitiendo que Flutter lo omita por completo durante una reconstrucción del árbol que lo contiene, reduciendo trabajo innecesario especialmente en árboles grandes con muchos elementos estáticos repetidos.
-
-**Criterios de éxito:**
-- Explica correctamente la omisión completa durante reconstrucciones como el mecanismo de mejora.
-
-### Ejercicio 3: Qué revela DevTools sobre el jank
-
-**Enunciado:** ¿qué revela grabar una sesión con Flutter DevTools que la percepción visual subjetiva durante desarrollo no revela?
-
-**Solución esperada:** revela el tiempo real y medible de cada frame, y señala exactamente qué fase específica del renderizado (build, layout o paint) consumió tiempo excesivo en un frame problemático, permitiendo diagnósticos precisos en vez de depender de la impresión general de "se ve fluido" en hardware de desarrollo potencialmente más potente que los dispositivos reales de los usuarios.
-
-**Criterios de éxito:**
-- Explica correctamente la medición objetiva y localización precisa de la causa como lo que revela DevTools.
-
----
 
 ## Rúbrica del proyecto
 

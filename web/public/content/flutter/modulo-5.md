@@ -171,36 +171,6 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 
 ---
 
-## Ejercicios de evaluación
-
-### Ejercicio 1: Ventajas de dio sobre http
-
-**Enunciado:** ¿qué ventajas tiene `dio` sobre el paquete `http` nativo para una app de tamaño real?
-
-**Solución esperada:** `dio` ofrece interceptores, cancelación de peticiones en curso, y timeouts configurables como parte de su API central, capacidades que `http` no ofrece nativamente y que requerirían implementarse manualmente con código adicional propio si se usara solo `http`.
-
-**Criterios de éxito:**
-- Menciona al menos dos de: interceptores, cancelación, timeouts configurables como ventajas de `dio`.
-
-### Ejercicio 2: Por qué json_serializable es más seguro
-
-**Enunciado:** ¿por qué generar modelos con `json_serializable` es más seguro que parsear JSON manualmente con `Map<String, dynamic>`?
-
-**Solución esperada:** un campo faltante o mal tipado produce un error claro y explícito al deserializar con el código generado, en vez de fallar silenciosamente (por ejemplo, obteniendo `null` de una clave inexistente sin ningún error visible) hasta que ese valor problemático causa un fallo confuso en un punto distinto y más difícil de rastrear del código.
-
-**Criterios de éxito:**
-- Explica correctamente la detección clara y temprana de errores como la ventaja de seguridad.
-
-### Ejercicio 3: Ventaja de modelar estados con sealed class
-
-**Enunciado:** ¿qué ventaja da modelar los estados de una pantalla (cargando, éxito, error) con una `sealed class` en vez de variables booleanas sueltas?
-
-**Solución esperada:** el compilador verifica exhaustivamente que un `switch` sobre esos estados maneje todos los casos posibles, previniendo omitir accidentalmente el manejo de algún estado (especialmente el de error), a diferencia de variables booleanas independientes que podrían combinarse de formas inconsistentes o incompletas sin ninguna verificación estructural.
-
-**Criterios de éxito:**
-- Explica correctamente la verificación exhaustiva del compilador como la ventaja de usar `sealed class`.
-
----
 
 ## Rúbrica del proyecto
 

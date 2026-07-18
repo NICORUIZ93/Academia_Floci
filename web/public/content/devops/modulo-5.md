@@ -210,39 +210,6 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 
 ---
 
-## Ejercicios de evaluación
-
-### Ejercicio 1: Elegir entre blue-green y canary
-
-**Enunciado:** tu equipo va a desplegar un cambio de esquema de base de datos incompatible hacia atrás (la versión nueva y la versión anterior de la aplicación no pueden coexistir accediendo a la misma base de datos simultáneamente sin corromper datos). ¿Elegirías blue-green o canary para este despliegue específico? Justifica tu respuesta.
-
-**Solución esperada:** blue-green, porque un cambio de esquema incompatible hacia atrás no permite que una fracción del tráfico use la versión antigua mientras otra fracción usa la versión nueva simultáneamente (que es exactamente lo que canary requeriría durante su periodo de incremento gradual); blue-green permite un corte limpio y total de todo el tráfico de una vez, coordinado con la migración del esquema, sin el periodo de coexistencia parcial entre ambas versiones que canary necesitaría.
-
-**Criterios de éxito:**
-- Elige blue-green, no canary.
-- La justificación identifica correctamente que un cambio de esquema incompatible impide la coexistencia parcial de ambas versiones que canary requiere.
-
-### Ejercicio 2: Diagnosticar un feature flag mal diseñado
-
-**Enunciado:** un compañero implementó un feature flag que, al desactivarse, deja el código de la funcionalidad nueva completamente desplegado pero también deja expuesta accidentalmente una ruta de API nueva sin protección, aunque la interfaz de usuario que la usaría esté oculta. Explica el riesgo de este diseño y cómo lo corregirías.
-
-**Solución esperada:** el riesgo es que un feature flag mal diseñado que solo oculta la interfaz visual, sin proteger también el backend correspondiente, deja esa funcionalidad accesible para cualquiera que descubra la ruta de API directamente (por ejemplo, inspeccionando el código del frontend, o simplemente probando rutas comunes), aunque nadie vea el botón o la pantalla que la activaría normalmente. La corrección es que el feature flag debe verificarse también en el backend, rechazando explícitamente las peticiones a esa funcionalidad mientras el flag esté desactivado, no solo ocultar su acceso visual en el frontend.
-
-**Criterios de éxito:**
-- Identifica correctamente que ocultar solo la interfaz visual no protege el backend correspondiente.
-- Propone verificar el flag también del lado del servidor, rechazando la funcionalidad ahí, no solo en la interfaz.
-
-### Ejercicio 3: Diseñar un umbral de rollback automático razonable
-
-**Enunciado:** estás configurando un rollback automático basado en la tasa de error HTTP 5xx de un servicio que normalmente opera con una tasa de error de fondo de aproximadamente 0.1% (errores ocasionales normales de cualquier sistema real). Alguien propone un umbral de "cualquier error 5xx dispara el rollback inmediatamente". Explica por qué ese umbral es probablemente demasiado sensible, y propón una alternativa más razonable.
-
-**Solución esperada:** un umbral de "cualquier error" no distingue entre la tasa de error de fondo normal (0.1%, presente incluso sin ningún despliegue nuevo) y un problema real introducido por el despliegue; con ese umbral, el sistema revertiría despliegues completamente sanos solo por la fluctuación estadística normal del sistema. Una alternativa más razonable sería un umbral significativamente por encima de la tasa de fondo conocida (por ejemplo, tasa de error superior al 2% o 3%, varias veces la tasa normal) sostenido durante una ventana de tiempo mínima (por ejemplo, 5 minutos consecutivos), para distinguir un problema real y sostenido de fluctuaciones normales y momentáneas.
-
-**Criterios de éxito:**
-- Explica correctamente que "cualquier error" no distingue la tasa de fondo normal de un problema real.
-- Propone un umbral significativamente por encima de la tasa de fondo conocida, sostenido durante una ventana de tiempo mínima, no una reacción instantánea a cualquier error individual.
-
----
 
 ## Rúbrica del proyecto
 

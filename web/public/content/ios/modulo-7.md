@@ -149,36 +149,6 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 
 ---
 
-## Ejercicios de evaluación
-
-### Ejercicio 1: Comparación de Combine con RxJS/RxSwift
-
-**Enunciado:** ¿en qué se parece y en qué difiere Combine de RxJS/RxSwift?
-
-**Solución esperada:** se parece en el principio fundamental de modelar flujos continuos de valores en el tiempo con Publishers/Observables y operadores de transformación declarativos; difiere en ser el framework nativo de Apple con integración directa a Swift y SwiftUI, mientras RxJS es una librería de terceros para JavaScript con su propio ecosistema de operadores.
-
-**Criterios de éxito:**
-- Menciona correctamente el principio compartido de flujos continuos, y al menos una diferencia relevante (nativo vs librería de terceros).
-
-### Ejercicio 2: Por qué preferir async/await para código nuevo
-
-**Enunciado:** ¿por qué muchos equipos prefieren `async`/`await` para código nuevo y reservan Combine para flujos continuos (streams de eventos)?
-
-**Solución esperada:** `async`/`await` se lee de forma lineal y secuencial, más simple para operaciones puntuales con un resultado final; Combine sigue siendo más natural específicamente para casos que no encajan en ese modelo (streams de valores repetidos en el tiempo), donde `async`/`await` no representa bien ese comportamiento continuo.
-
-**Criterios de éxito:**
-- Explica correctamente la distinción entre operación puntual y flujo continuo como razón de la preferencia.
-
-### Ejercicio 3: Propósito de debounce
-
-**Enunciado:** ¿qué problema resuelve `debounce` en un buscador en tiempo real?
-
-**Solución esperada:** evita disparar una búsqueda costosa en cada tecla presionada individualmente, esperando en cambio a que el usuario deje de escribir por un breve instante antes de ejecutar la búsqueda real, reduciendo peticiones innecesarias al backend.
-
-**Criterios de éxito:**
-- Explica correctamente la espera de silencio antes de reaccionar como el propósito de `debounce`.
-
----
 
 ## Rúbrica del proyecto
 

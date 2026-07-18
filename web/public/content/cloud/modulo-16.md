@@ -148,36 +148,6 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 
 ---
 
-## Ejercicios de evaluación
-
-### Ejercicio 1: Cuándo usar Step Functions vs EventBridge Pipes
-
-**Enunciado:** ¿cuándo usar Step Functions y cuándo es suficiente con EventBridge Pipes?
-
-**Solución esperada:** Step Functions es apropiado cuando se necesita lógica condicional (Choice), reintentos declarativos complejos, o coordinación de múltiples pasos secuenciales o paralelos; EventBridge Pipes es suficiente y más simple cuando la necesidad real es simplemente conectar dos servicios directamente sin esa complejidad de orquestación adicional.
-
-**Criterios de éxito:**
-- Distingue correctamente la necesidad de lógica de orquestación compleja (Step Functions) frente a conexión simple directa (EventBridge Pipes).
-
-### Ejercicio 2: Diferencia entre orquestación y coreografía
-
-**Enunciado:** ¿qué diferencia hay entre orquestación y coreografía de servicios?
-
-**Solución esperada:** en la orquestación (Step Functions), un coordinador central explícito dirige la secuencia completa de pasos y decide qué servicio invocar a continuación; en la coreografía, cada servicio reacciona de forma autónoma a eventos publicados (por ejemplo, vía SNS/EventBridge) sin un coordinador central único que dirija explícitamente el flujo completo.
-
-**Criterios de éxito:**
-- Distingue correctamente la presencia de un coordinador central (orquestación) frente a reacción autónoma descentralizada a eventos (coreografía).
-
-### Ejercicio 3: Cuándo usar Express vs Standard
-
-**Enunciado:** ¿cuándo usar Express vs Standard workflows?
-
-**Solución esperada:** Standard es apropiado para flujos de larga duración con garantía de ejecución exactamente una vez y trazabilidad completa, apropiado para procesos críticos; Express es apropiado para flujos de alto volumen y corta duración donde el costo y throughput importan más que la trazabilidad exhaustiva.
-
-**Criterios de éxito:**
-- Distingue correctamente el caso de uso de cada uno según duración, volumen y necesidad de trazabilidad.
-
----
 
 ## Rúbrica del proyecto
 

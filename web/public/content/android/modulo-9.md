@@ -186,36 +186,6 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 
 ---
 
-## Ejercicios de evaluación
-
-### Ejercicio 1: Rapidez y confiabilidad de un repositorio fake
-
-**Enunciado:** ¿por qué probar un ViewModel con un repositorio fake es más rápido y confiable que con la API real?
-
-**Solución esperada:** el test corre en milisegundos sin depender de la disponibilidad de un servidor externo ni de latencia de red variable, eliminando el riesgo de que el test falle por razones ajenas a la lógica bajo prueba.
-
-**Criterios de éxito:**
-- Explica correctamente la eliminación de dependencias externas como razón de rapidez/confiabilidad.
-
-### Ejercicio 2: Qué cubre un test de Compose UI adicionalmente
-
-**Enunciado:** ¿qué cubre un test de Compose UI que un test de ViewModel solo no cubre?
-
-**Solución esperada:** verifica que el estado correcto efectivamente se traduzca en la UI renderizada correcta, cerrando la brecha entre "el estado interno es correcto" y "la UI que ve el usuario refleja ese estado correctamente".
-
-**Criterios de éxito:**
-- Explica correctamente la verificación del renderizado real como lo adicional que cubre.
-
-### Ejercicio 3: Cuándo preferir un fake sobre un mock
-
-**Enunciado:** ¿cuándo preferirías un fake sobre un mock para un repositorio en tus tests?
-
-**Solución esperada:** cuando se quiere una implementación reutilizable entre múltiples tests con comportamiento consistente y fácil de razonar, o cuando se necesita compatibilidad multiplataforma; un mock puede ser más conveniente para verificar interacciones puntuales muy específicas sin mantener una implementación fake completa.
-
-**Criterios de éxito:**
-- Explica correctamente la reutilización/consistencia como razón para preferir un fake.
-
----
 
 ## Rúbrica del proyecto
 

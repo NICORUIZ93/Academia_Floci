@@ -249,49 +249,6 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 
 ---
 
-## Ejercicios de evaluación
-
-### Ejercicio 1: Diagnosticar un closure compartido por error
-
-**Enunciado:** dado `function crearContadores() { let valor = 0; return [() => ++valor, () => ++valor]; } const [a, b] = crearContadores(); a(); a(); console.log(b());`, predice el resultado y explica por qué.
-
-**Solución esperada:** el resultado es `3`. Ambas funciones devueltas comparten el mismo closure sobre la misma variable `valor` (no son closures independientes como en `createCounter()` invocado dos veces), porque provienen de una única invocación de `crearContadores()`. Tras dos llamadas a `a()`, `valor` es `2`; `b()` incrementa la misma variable compartida a `3`.
-
-**Criterios de éxito:**
-- Predice correctamente el resultado `3`.
-- Explica que ambas funciones comparten el mismo closure porque provienen de la misma invocación, no de invocaciones separadas.
-
-### Ejercicio 2: this perdido en un callback
-
-**Enunciado:** dado `class Reloj { constructor() { this.hora = 10; } mostrar() { console.log(this.hora); } } const r = new Reloj(); setTimeout(r.mostrar, 100);`, explica qué se imprime y cómo corregirlo para que imprima `10`.
-
-**Solución esperada:** se imprime `undefined` (o lanza error en modo estricto al intentar leer `this.hora` cuando `this` es `undefined`), porque `r.mostrar` se pasa como referencia suelta a `setTimeout`, perdiendo su vínculo con `r`. La corrección: `setTimeout(r.mostrar.bind(r), 100)`, o `setTimeout(() => r.mostrar(), 100)` usando una arrow function que preserva `this` léxicamente en el momento de la invocación real.
-
-**Criterios de éxito:**
-- Identifica correctamente que `this` se pierde al pasar el método como referencia suelta.
-- Propone una corrección válida usando `bind` o una arrow function envolvente.
-
-### Ejercicio 3: Diseñar un módulo con estado usando closures
-
-**Enunciado:** implementa `crearCarrito()` que devuelva un objeto con `agregar(producto, precio)`, `total()` y `vaciar()`, manteniendo la lista de productos completamente privada (inaccesible desde fuera).
-
-**Solución esperada:**
-```js
-function crearCarrito() {
-  let items = [];
-  return {
-    agregar: (producto, precio) => { items.push({ producto, precio }); },
-    total: () => items.reduce((acc, i) => acc + i.precio, 0),
-    vaciar: () => { items = []; },
-  };
-}
-```
-
-**Criterios de éxito:**
-- `items` es verdaderamente inaccesible desde fuera del objeto devuelto (no existe ninguna forma de leerla o modificarla directamente).
-- `total()` calcula correctamente la suma de precios tras varias llamadas a `agregar()`.
-
----
 
 ## Rúbrica del proyecto
 

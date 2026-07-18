@@ -169,37 +169,6 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 
 ---
 
-## Ejercicios de evaluación
-
-### Ejercicio 1: Por qué el correlation ID es esencial
-
-**Enunciado:** explica por qué el correlation ID es esencial para diagnosticar un error en producción, en un sistema con miles de peticiones concurrentes.
-
-**Solución esperada:** sin un correlation ID, los logs de miles de peticiones concurrentes se entremezclan en el mismo flujo de salida, haciendo prácticamente imposible reconstruir el rastro completo de una petición específica que falló; con un correlation ID único por petición, se puede filtrar exactamente los logs correspondientes a esa petición específica, reconstruyendo su rastro completo de principio a fin sin interferencia de las demás peticiones concurrentes.
-
-**Criterios de éxito:**
-- Explica correctamente el problema de logs entremezclados sin correlation ID.
-- Explica cómo el correlation ID resuelve ese problema mediante filtrado preciso.
-
-### Ejercicio 2: Error capturado frente a no capturado
-
-**Enunciado:** explica qué diferencia hay, en términos de qué debes hacer, entre un error capturado (manejado con `try`/`catch`) y uno no capturado.
-
-**Solución esperada:** un error capturado se maneja explícitamente en el punto donde ocurre (mostrando un mensaje al usuario, reintentando, usando un valor por defecto), permitiendo que el proceso continúe funcionando normalmente de forma segura; un error no capturado deja el proceso en un estado potencialmente corrupto e impredecible, y la respuesta correcta es registrar el error con la máxima información posible y terminar deliberadamente el proceso, confiando en que el orquestador reinicie una instancia limpia, en vez de intentar continuar funcionando tras un estado de corrupción desconocida.
-
-**Criterios de éxito:**
-- Distingue correctamente el manejo local (capturado) del manejo global con terminación deliberada (no capturado).
-
-### Ejercicio 3: Por qué importa el graceful shutdown
-
-**Enunciado:** describe un escenario concreto donde la ausencia de graceful shutdown causaría un problema real para un usuario, durante una operación rutinaria de la infraestructura (no un fallo).
-
-**Solución esperada:** durante un despliegue de rolling update (Módulo 5 del track DevOps), Kubernetes envía `SIGTERM` a una instancia antigua mientras un usuario tiene una petición en curso hacia esa instancia específica; sin graceful shutdown, esa petición se corta abruptamente a mitad de procesamiento, y el usuario recibe un error inesperado durante lo que debería ser una operación de despliegue completamente transparente para él.
-
-**Criterios de éxito:**
-- Describe correctamente un escenario de operación rutinaria (no un fallo) donde la ausencia de graceful shutdown afecta a un usuario real.
-
----
 
 ## Rúbrica del proyecto
 

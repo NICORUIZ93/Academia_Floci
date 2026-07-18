@@ -198,23 +198,6 @@ Selecciona una vertical de RutaFlow —cotización, asignación, tracking, evide
 
 La definición de terminado requiere código ejecutable, prueba automatizada, diagrama, ADR, enlace oficial con versión, medición antes/después y un procedimiento de limpieza. No se aceptan capturas sin comandos ni resultados imposibles de repetir.
 
-## Ejercicios de evaluación
-
-### Ejercicio 1: comparación profesional
-
-Compara dos alternativas mediante cinco criterios: complejidad, seguridad, coste, portabilidad y operación. Elige una y escribe qué evidencia futura haría cambiar la decisión.
-
-### Ejercicio 2: fallo deliberado
-
-Interrumpe una dependencia o introduce configuración inválida. Conserva la prueba que reproduce el defecto, mejora el mensaje de error y verifica recuperación sin pérdida ni duplicación.
-
-### Ejercicio 3: transferencia a RutaFlow
-
-Integra tres temas del capítulo en una sola vertical. Dibuja las fronteras, identifica el dato sensible y demuestra observabilidad de extremo a extremo mediante correlation ID.
-
-### Ejercicio 4: enseñar para demostrar dominio
-
-Explica el tema más difícil en lenguaje cotidiano, presenta un ejemplo mínimo y responde cuándo no debería utilizarse. La explicación debe diferenciar hecho, estimación y opinión.
 
 ## Rúbrica del proyecto
 

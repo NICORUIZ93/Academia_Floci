@@ -193,39 +193,6 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 
 ---
 
-## Ejercicios de evaluación
-
-### Ejercicio 1: Diseñar la separación de jobs
-
-**Enunciado:** estás diseñando un pipeline para un proyecto que necesita ejecutar linting (rápido, unos 10 segundos), pruebas unitarias (moderado, 2 minutos) y pruebas de integración contra una base de datos real (lento, 8 minutos). ¿Los pondrías todos en un único job secuencial, o los separarías en jobs distintos? Justifica tu respuesta.
-
-**Solución esperada:** separarlos en jobs distintos que corran en paralelo (linting, pruebas unitarias, y pruebas de integración cada uno como su propio job), en vez de un único job secuencial. Esto permite que el linting rápido reporte su resultado casi inmediatamente sin esperar a que termine el job más lento de pruebas de integración, dando retroalimentación más rápida sobre los problemas más simples de detectar, mientras las verificaciones más costosas siguen corriendo en paralelo sin bloquear esa retroalimentación temprana.
-
-**Criterios de éxito:**
-- Recomienda separar en jobs paralelos, no un único job secuencial.
-- La justificación menciona la retroalimentación más rápida sobre problemas simples (lint) sin esperar a las verificaciones más lentas.
-
-### Ejercicio 2: Diagnosticar caché ineficaz
-
-**Enunciado:** un compañero configuró `cache: 'npm'` en su workflow, pero reporta que cada ejecución sigue tardando lo mismo que sin caché, como si nunca se estuviera reutilizando. Menciona al menos una causa probable, relacionada con el Tema 2.
-
-**Solución esperada:** una causa probable es que el proyecto no tiene un `package-lock.json` versionado (o lo tiene, pero cambia en cada ejecución por alguna razón, como generarse dinámicamente en un step previo), lo que le impide a la caché tener una clave estable derivada de su contenido; sin un lockfile estable, la clave de caché cambia en cada ejecución, forzando efectivamente una instalación completa cada vez, como si no hubiera caché en absoluto.
-
-**Criterios de éxito:**
-- Identifica la ausencia (o inestabilidad) del lockfile como causa probable de la caché ineficaz.
-- Conecta explícitamente esto con el mecanismo de clave de caché derivada del contenido del lockfile, del Tema 2.
-
-### Ejercicio 3: Justificar CI obligatorio
-
-**Enunciado:** un miembro del equipo argumenta que "confiamos en que cada desarrollador corra los tests localmente antes de hacer push, así que no necesitamos bloquear técnicamente los merges sin CI en verde". Explica por qué esta política, basada solo en confianza social, es más frágil que hacer CI obligatorio a nivel técnico del repositorio.
-
-**Solución esperada:** depender de que cada persona recuerde y efectivamente ejecute las pruebas localmente antes de cada push es una norma social, no una garantía técnica: basta con que una sola persona lo olvide una sola vez (por prisa, distracción, o simplemente asumir que "seguro está bien") para que código roto llegue a la rama principal sin que nadie lo detecte a tiempo. Configurar el repositorio para bloquear técnicamente cualquier fusión de pull request mientras el pipeline de CI no reporte éxito convierte esa protección en una regla imposible de saltarse por accidente u olvido, independientemente de la disciplina individual de cada persona en un momento dado.
-
-**Criterios de éxito:**
-- Explica que una norma social depende de que nadie la olvide nunca, mientras que una regla técnica no depende de la memoria o disciplina individual.
-- Menciona explícitamente el riesgo de que basta un solo descuido para que código roto llegue a la rama principal bajo el enfoque solo social.
-
----
 
 ## Rúbrica del proyecto
 

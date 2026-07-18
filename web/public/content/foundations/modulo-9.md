@@ -219,34 +219,6 @@ Crea `analysis/fundamentos-matematicos.ipynb` o un documento ejecutable equivale
 - Concluir causalidad por correlación: identifica variables de confusión y diseña control o experimento.
 - Ejecutar celdas fuera de orden: reinicia y ejecuta todo automáticamente antes de entregar.
 
-## Ejercicios de evaluación
-
-### Ejercicio 1: negar una política
-
-Niega formalmente: “todo usuario activo tiene al menos un rol permitido”.
-
-<details><summary>Solución razonada</summary>
-
-La negación es: “existe un usuario activo que no tiene ningún rol permitido”. El cuantificador universal cambia a existencial y el predicado interno se niega. No significa que ningún usuario tenga roles.
-</details>
-
-### Ejercicio 2: ciclo arquitectónico
-
-Explica por qué el conjunto `A -> B`, `B -> C`, `C -> A` no admite orden topológico y qué evidencia produciría DFS.
-
-<details><summary>Solución razonada</summary>
-
-Cada nodo exige que otro del ciclo aparezca primero, una contradicción. DFS llega desde A nuevamente a A mientras A sigue en el conjunto activo; ese back edge constituye el testigo del ciclo y debe reportarse como ruta, no solo como booleano.
-</details>
-
-### Ejercicio 3: mejora dudosa
-
-La media baja de 20 ms a 18 ms en cinco mediciones. ¿Puede afirmarse una mejora del 10 %?
-
-<details><summary>Solución razonada</summary>
-
-Solo describe esas medias. Faltan dispersión, distribución, calentamiento, independencia, ambiente, tamaño del efecto estable e incertidumbre. Se debe ampliar y controlar el experimento; además hay que decidir si 2 ms importan al usuario o al SLO.
-</details>
 
 ## Rúbrica del proyecto
 

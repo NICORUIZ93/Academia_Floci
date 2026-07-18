@@ -214,40 +214,6 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 
 ---
 
-## Ejercicios de evaluación
-
-### Ejercicio 1: Explicar la entrega duplicada
-
-**Enunciado:** un compañero de equipo te dice: "SQS garantiza que cada mensaje se entrega exactamente una vez, así que no me preocupo por procesar el mismo mensaje dos veces". Explica por qué esta afirmación es incorrecta para una cola Standard, y qué debería hacer ese compañero en su código para manejar esta situación correctamente.
-
-**Solución esperada:** SQS Standard garantiza entrega "al menos una vez", no "exactamente una vez"; un mensaje puede entregarse más de una vez si, por ejemplo, el consumidor lo procesa correctamente pero falla al llamar a `delete-message`, o si el tiempo de visibilidad expira antes de que termine de procesarlo. El compañero debería diseñar su lógica de procesamiento para ser idempotente: por ejemplo, verificando primero si ese mensaje (identificado por un ID único de negocio, no necesariamente el `MessageId` de SQS) ya fue procesado antes de aplicar su efecto, para que procesarlo dos veces no duplique el resultado.
-
-**Criterios de éxito:**
-- Identifica correctamente que Standard es "al menos una vez", no "exactamente una vez".
-- Explica al menos una causa concreta de la entrega duplicada.
-- Propone idempotencia (o un mecanismo equivalente de verificación) como solución, no simplemente "confiar en que no pasará".
-
-### Ejercicio 2: Configurar un maxReceiveCount razonable
-
-**Enunciado:** tu equipo está debatiendo qué valor de `maxReceiveCount` usar para la DLQ de una cola que procesa pagos, donde los fallos transitorios (por ejemplo, una demora de red hacia un servicio de facturación externo) son ocasionales pero normales. Alguien propone `maxReceiveCount=1`. Explica por qué ese valor es probablemente demasiado bajo, y propón un valor alternativo con su justificación.
-
-**Solución esperada:** con `maxReceiveCount=1`, cualquier mensaje que falle una sola vez —incluso por un problema transitorio y no por un error real del mensaje— se mueve inmediatamente a la DLQ sin darle ninguna oportunidad de reintento, lo que probablemente movería a la DLQ pagos que en realidad se habrían procesado bien en un segundo intento. Un valor entre 3 y 5 permite absorber fallos transitorios ocasionales sin retrasar demasiado la detección de mensajes genuinamente problemáticos.
-
-**Criterios de éxito:**
-- Explica correctamente por qué `maxReceiveCount=1` no distingue entre fallo transitorio y mensaje genuinamente problemático.
-- Propone un valor razonable (entre 3 y 5 es aceptable) con una justificación relacionada con el Tema 3.
-
-### Ejercicio 3: Elegir entre FIFO y Standard
-
-**Enunciado:** describe, para cada uno de estos dos sistemas, si usarías una cola FIFO o Standard, justificando tu elección: (a) un sistema que envía un correo electrónico de bienvenida cada vez que un usuario nuevo se registra; (b) un sistema que procesa eventos de un carrito de compras (agregar producto, aplicar cupón, confirmar compra) donde aplicar los eventos fuera de orden produciría un total incorrecto.
-
-**Solución esperada:** (a) Standard, porque el orden entre distintos correos de bienvenida a distintos usuarios no importa, y el mayor rendimiento de Standard es preferible; (b) FIFO, agrupando los eventos de un mismo carrito bajo el mismo `MessageGroupId`, porque el orden de aplicación de esos eventos afecta directamente a la corrección del resultado final.
-
-**Criterios de éxito:**
-- Ambas respuestas coinciden con la solución esperada.
-- La justificación de (b) menciona explícitamente que el orden afecta a la corrección del resultado, no solo "por si acaso".
-
----
 
 ## Rúbrica del proyecto
 

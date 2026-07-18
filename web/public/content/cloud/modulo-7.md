@@ -239,39 +239,6 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 
 ---
 
-## Ejercicios de evaluación
-
-### Ejercicio 1: Corregir una política demasiado permisiva
-
-**Enunciado:** un compañero escribió esta política para un usuario que solo necesita subir archivos a un bucket específico: `{"Effect":"Allow","Action":"s3:*","Resource":"*"}`. Explica qué problema tiene, en términos del principio de mínimo privilegio, y reescribe la política correctamente.
-
-**Solución esperada:** la política concede todas las acciones de S3 (`s3:*`, incluyendo borrar, cambiar permisos, etc.) sobre todos los recursos de S3 de la cuenta (`Resource: "*"`), muy por encima de lo que el caso de uso (subir archivos a un bucket específico) requiere. La versión correcta sería `{"Effect":"Allow","Action":"s3:PutObject","Resource":"arn:aws:s3:::nombre-del-bucket/*"}`, limitando tanto la acción (solo `PutObject`, no todas las acciones de S3) como el recurso (solo ese bucket específico, no todos).
-
-**Criterios de éxito:**
-- Identifica correctamente los dos problemas: acción demasiado amplia (`s3:*`) y recurso demasiado amplio (`*`).
-- La política corregida limita tanto la acción como el recurso a exactamente lo necesario.
-
-### Ejercicio 2: Justificar un rol sobre un usuario
-
-**Enunciado:** un compañero de equipo propone crear un usuario IAM con credenciales de acceso, y embeber esas credenciales directamente como variables de entorno en una función Lambda, para que la función pueda leer de una tabla DynamoDB. Explica por qué esto no sigue las buenas prácticas del Tema 3 y el Tema 5, y qué harías en su lugar.
-
-**Solución esperada:** embeber credenciales de larga duración de un usuario en una función Lambda expone esas credenciales permanentemente en la configuración de la función (visibles para cualquiera con acceso a esa configuración, y con riesgo si se filtran en un log o en el código fuente), y esas credenciales no expiran por sí solas si se filtran. La alternativa correcta es crear un rol IAM con los permisos necesarios sobre esa tabla DynamoDB, y asignar ese rol directamente a la función Lambda al desplegarla; Lambda asumirá ese rol automáticamente en cada ejecución, obteniendo credenciales temporales sin que el desarrollador tenga que gestionar ni exponer ninguna credencial de larga duración manualmente.
-
-**Criterios de éxito:**
-- Identifica el riesgo de exponer credenciales de larga duración en la configuración de la función.
-- Propone explícitamente un rol IAM asignado a la Lambda como la alternativa correcta, no simplemente "tener más cuidado" con las credenciales del usuario.
-
-### Ejercicio 3: Diagnosticar con el simulador de políticas
-
-**Enunciado:** un usuario reporta que no puede subir archivos a un bucket, aunque tú revisaste su política adjunta y ves claramente una declaración `Allow` para `s3:PutObject` sobre ese bucket. ¿Qué otra causa, relacionada con la estructura de políticas del Tema 4, podría explicar este comportamiento a pesar de ese `Allow` aparente?
-
-**Solución esperada:** podría existir una declaración `Deny` explícita en otra política adjunta a ese mismo usuario, a un grupo del que sea miembro, o a nivel de política de organización (Service Control Policy, en AWS real), que deniegue esa misma acción sobre ese recurso, o sobre un ámbito más amplio que lo incluya. Como viste en el Tema 4, un `Deny` explícito siempre prevalece sobre cualquier `Allow`, sin importar cuántas políticas permisivas existan. La forma de confirmarlo es usar `simulate-principal-policy` incluyendo todas las políticas relevantes, que reporta explícitamente si el resultado fue `explicitDeny` y, en ese caso, normalmente identifica cuál de las políticas evaluadas causó esa denegación.
-
-**Criterios de éxito:**
-- Identifica correctamente la posibilidad de un `Deny` explícito en otra política como la causa.
-- Menciona que un `Deny` explícito prevalece sobre un `Allow`, conectándolo con el Tema 4.
-
----
 
 ## Rúbrica del proyecto
 

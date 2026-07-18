@@ -141,36 +141,6 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 
 ---
 
-## Ejercicios de evaluación
-
-### Ejercicio 1: Qué garantiza un switch exhaustivo sobre sealed
-
-**Enunciado:** ¿qué garantiza el compilador cuando usas un switch exhaustivo sobre una sealed interface?
-
-**Solución esperada:** el compilador garantiza que el switch cubre absolutamente todos los casos posibles de esa sealed interface, dado que `permits` restringe exactamente qué implementaciones existen; si se agrega una nueva implementación a `permits` y se olvida su caso correspondiente en algún switch existente, el compilador falla inmediatamente en ese punto, en vez de dejarlo como un bug silencioso.
-
-**Criterios de éxito:**
-- Explica correctamente la verificación de exhaustividad y la detección en compilación de casos faltantes.
-
-### Ejercicio 2: Boilerplate eliminado por record
-
-**Enunciado:** ¿qué boilerplate elimina `record` comparado con una clase POJO tradicional?
-
-**Solución esperada:** `record` genera automáticamente el constructor, los métodos de acceso a cada componente, y las implementaciones de `equals()`, `hashCode()` y `toString()` basadas en el valor de todos los componentes, eliminando la necesidad de escribir manualmente (o generar con herramientas externas) todo ese código repetitivo para una clase inmutable simple.
-
-**Criterios de éxito:**
-- Enumera correctamente al menos tres de los cinco elementos generados automáticamente (constructor, getters, equals, hashCode, toString).
-
-### Ejercicio 3: Pattern matching para instanceof
-
-**Enunciado:** compara el patrón clásico de `instanceof` + casteo manual con el pattern matching moderno para `instanceof`.
-
-**Solución esperada:** el patrón clásico requiere verificar `instanceof` y luego castear manualmente la variable a ese tipo en una línea adicional redundante y propensa a error; el pattern matching moderno (`if (obj instanceof Circulo c)`) combina la verificación y la declaración de una variable ya correctamente tipada en una única expresión, eliminando la redundancia y el riesgo de un casteo incorrecto.
-
-**Criterios de éxito:**
-- Explica correctamente la eliminación de la redundancia del casteo manual mediante el pattern matching moderno.
-
----
 
 ## Rúbrica del proyecto
 

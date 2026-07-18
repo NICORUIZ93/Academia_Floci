@@ -144,36 +144,6 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 
 ---
 
-## Ejercicios de evaluación
-
-### Ejercicio 1: Problema de acoplamiento resuelto por mensajería
-
-**Enunciado:** ¿qué problema de acoplamiento resuelve publicar un evento en vez de llamar directamente a otro servicio?
-
-**Solución esperada:** publicar un evento desacopla completamente al servicio publicador de sus consumidores: el publicador no necesita conocer la existencia ni la interfaz de ningún consumidor específico, y se pueden agregar o quitar consumidores sin modificar el código publicador, a diferencia de una llamada directa que acopla ambos servicios explícitamente.
-
-**Criterios de éxito:**
-- Explica correctamente el desacoplamiento entre publicador y consumidores como el problema resuelto.
-
-### Ejercicio 2: Consecuencia sin dead-letter queue
-
-**Enunciado:** ¿qué pasa con un mensaje que falla repetidamente sin una dead-letter queue configurada?
-
-**Solución esperada:** según la configuración específica del consumer, puede bloquear el procesamiento de todos los mensajes siguientes en la misma partición, o perderse silenciosamente sin ningún registro, ambos escenarios problemáticos comparados con aislarlo explícitamente en una cola separada para investigación posterior.
-
-**Criterios de éxito:**
-- Menciona correctamente al menos una de las dos consecuencias (bloqueo o pérdida silenciosa) como riesgo sin dead-letter queue.
-
-### Ejercicio 3: Kafka vs RabbitMQ
-
-**Enunciado:** ¿en qué escenario elegirías Kafka sobre RabbitMQ, y viceversa?
-
-**Solución esperada:** Kafka cuando múltiples consumidores independientes necesitan leer el mismo stream completo de eventos, posiblemente releyendo eventos históricos ya procesados, o cuando se necesita alto throughput particionado; RabbitMQ para patrones más simples de distribución de trabajo punto-a-punto donde retener el historial completo no es un requisito real.
-
-**Criterios de éxito:**
-- Distingue correctamente el caso de retención/múltiples lectores (Kafka) del caso simple punto-a-punto (RabbitMQ).
-
----
 
 ## Rúbrica del proyecto
 

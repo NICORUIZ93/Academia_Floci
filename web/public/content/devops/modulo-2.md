@@ -251,46 +251,6 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 
 ---
 
-## Ejercicios de evaluación
-
-### Ejercicio 1: Diagnosticar un Dockerfile mal ordenado
-
-**Enunciado:** un compañero se queja de que cada build de su Dockerfile tarda varios minutos reinstalando dependencias, incluso cuando solo cambió una línea de código de la aplicación. Revisa este fragmento y explica el problema:
-```dockerfile
-FROM node:22-alpine
-WORKDIR /app
-COPY . .
-RUN npm ci
-CMD ["node", "index.js"]
-```
-
-**Solución esperada:** el problema es que `COPY . .` copia todo el código fuente (incluyendo archivos que cambian con frecuencia) antes de instalar las dependencias con `npm ci`; cualquier cambio en cualquier archivo del proyecto invalida la capa de `COPY . .`, y por cascada, invalida también la capa de `npm ci` siguiente, forzando una reinstalación completa en cada build. La corrección es copiar primero `package.json` y su archivo de lock, ejecutar `npm ci` en una capa separada, y solo después copiar el resto del código con `COPY . .`.
-
-**Criterios de éxito:**
-- Identifica correctamente que el orden de las instrucciones invalida el caché de `npm ci` en cada build.
-- Propone la corrección de separar la copia de `package.json` y la instalación de dependencias, antes de copiar el resto del código.
-
-### Ejercicio 2: Elegir la imagen base correcta
-
-**Enunciado:** estás preparando la imagen final de producción de un servicio crítico expuesto a internet, donde minimizar la superficie de ataque es una prioridad explícita del equipo de seguridad, y no necesitas depurar interactivamente dentro del contenedor en producción (tienes logging y observabilidad centralizados para eso). ¿Qué tipo de imagen base elegirías: completa, Alpine o distroless? Justifica tu respuesta.
-
-**Solución esperada:** distroless, porque la prioridad explícita es minimizar la superficie de ataque, y la ausencia de shell y gestor de paquetes en distroless elimina herramientas que un atacante podría usar si comprometiera la aplicación; la falta de capacidad de depuración interactiva directa dentro del contenedor no es un problema relevante en este escenario, porque el equipo ya cuenta con observabilidad centralizada como alternativa.
-
-**Criterios de éxito:**
-- Elige distroless, no una imagen completa ni Alpine.
-- La justificación conecta la elección con la prioridad de seguridad explícita y la disponibilidad de observabilidad como alternativa a la depuración interactiva.
-
-### Ejercicio 3: Volumen o bind mount
-
-**Enunciado:** estás configurando el entorno de desarrollo local de un equipo, donde cada desarrollador necesita ver reflejados instantáneamente los cambios que hace en su editor de código dentro del contenedor en ejecución, sin reconstruir la imagen cada vez. ¿Usarías un volumen gestionado o un bind mount para el código fuente? Justifica tu respuesta.
-
-**Solución esperada:** un bind mount, vinculando la carpeta local de código fuente de cada desarrollador directamente a la ruta correspondiente dentro del contenedor, de forma que cualquier cambio guardado en el editor se refleje inmediatamente sin necesidad de reconstruir la imagen ni el contenedor.
-
-**Criterios de éxito:**
-- Elige bind mount, no volumen gestionado.
-- La justificación menciona explícitamente la necesidad de reflejo instantáneo de cambios de código durante el desarrollo activo.
-
----
 
 ## Rúbrica del proyecto
 

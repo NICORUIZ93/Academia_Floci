@@ -181,17 +181,6 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 
 Entrega código, tests, captura de DevTools, tabla antes/después, threat model y runbook reproducible.
 
-## Ejercicios de evaluación
-
-1. Explica por qué envolver un parseo pesado en `Future` no evita jank.
-2. Diseña el contrato idempotente de “crear pedido” cuando se pierde la respuesta.
-3. Clasifica tema visual, refresh token y adjunto médico, indicando almacén, backup y borrado.
-
-### Soluciones orientativas
-
-1. El cálculo sigue ejecutándose en el mismo isolate; `Future` modela finalización, no paralelismo. Se requiere reducir trabajo o usar otro isolate.
-2. El cliente conserva UUID y el servidor almacena UUID→resultado; el mismo reintento devuelve el resultado original.
-3. Tema en preferencias; token en Keychain/Keystore; adjunto privado protegido, con retención mínima, backup deliberado y borrado por cuenta.
 
 ## Rúbrica del proyecto
 

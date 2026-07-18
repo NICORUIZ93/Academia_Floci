@@ -172,17 +172,6 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 
 La entrega incluye repositorio reproducible, consultas, alertas, timeline, evidencias criptográficas, pruebas de política y decisión arquitectónica.
 
-## Ejercicios de evaluación
-
-1. Un servicio tiene 99.95% mensual con SLO 99.9%. ¿Puede desplegar sin más análisis?
-2. ¿Por qué una imagen firmada todavía puede ser vulnerable o maliciosa?
-3. Diferencia alerta de página y ticket con un ejemplo de cada una.
-
-### Soluciones orientativas
-
-1. Tiene presupuesto restante, pero debe revisar tendencia, ventanas rápidas, riesgo y otros SLIs; el número aislado no autoriza automáticamente.
-2. La firma prueba identidad e integridad respecto a un digest, no bondad del contenido. Se necesita identidad confiable, procedencia, revisión, escaneo y políticas.
-3. Caída que quema presupuesto rápidamente requiere página y contención; capacidad que alcanzará límite en semanas genera ticket planificable.
 
 ## Rúbrica del proyecto
 

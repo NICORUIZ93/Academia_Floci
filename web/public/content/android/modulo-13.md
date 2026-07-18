@@ -246,34 +246,6 @@ Trabaja sobre el proyecto 12 con backend de prueba que soporte operation ID y ve
 - Usar `suspend` como prueba de main-safety: mueve bloqueo con dispatcher y mide.
 - Detener rollout como rollback: planifica hotfix para instalaciones ya afectadas.
 
-## Ejercicios de evaluación
-
-### Ejercicio 1: secreto en APK
-
-Una clave está en `local.properties` y se copia a BuildConfig solo en CI. ¿Es secreta para usuarios?
-
-<details><summary>Solución razonada</summary>
-
-No aparece en Git, pero queda dentro del artefacto y puede extraerse. Restringe la clave por identidad/cuota y deja operaciones privilegiadas en backend; usa secretos de CI solo para build/signing que no deban llegar al APK.
-</details>
-
-### Ejercicio 2: ACK perdido
-
-Servidor aceptó op-42 y la app murió antes de limpiar outbox. ¿Qué ocurre al reiniciar?
-
-<details><summary>Solución razonada</summary>
-
-WorkManager reenvía op-42. El servidor reconoce operation ID y devuelve resultado previo; una transacción local aplica versión y elimina pendiente. Generar op-43 duplicaría intención.
-</details>
-
-### Ejercicio 3: ANR indirecto
-
-Main thread espera un `Mutex` y el dueño hace I/O. ¿Dónde está la causa?
-
-<details><summary>Solución razonada</summary>
-
-El stack main muestra espera, pero el hilo/coroutine dueño y la sección crítica larga explican bloqueo. Reduce sección, no sostengas lock durante I/O y mueve operación; analiza todos los hilos.
-</details>
 
 ## Rúbrica del proyecto
 

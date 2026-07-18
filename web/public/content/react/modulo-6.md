@@ -142,36 +142,6 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 
 ---
 
-## Ejercicios de evaluación
-
-### Ejercicio 1: Loading hell resuelto por TanStack Query
-
-**Enunciado:** enumera al menos tres problemas de manejar fetching manualmente con `useState`/`useEffect` que TanStack Query resuelve automáticamente.
-
-**Solución esperada:** cualquier combinación razonable de: deduplicación de peticiones idénticas simultáneas, cache compartida entre componentes que usan la misma `queryKey`, revalidación automática al recuperar el foco de la ventana, gestión automática de los estados de carga/error/datos sin código manual repetido en cada componente.
-
-**Criterios de éxito:**
-- Menciona al menos tres problemas concretos resueltos automáticamente.
-
-### Ejercicio 2: Riesgo de los optimistic updates
-
-**Enunciado:** ¿qué riesgo tiene un optimistic update, y cómo se mitiga?
-
-**Solución esperada:** el riesgo es mostrar temporalmente un cambio en la interfaz que finalmente no se aplicó realmente en el servidor si la mutación falla; se mitiga guardando el estado anterior en `onMutate` y revirtiendo explícitamente a ese estado guardado en `onError`, además de cancelar queries en curso para evitar que una respuesta tardía sobreescriba la actualización optimista.
-
-**Criterios de éxito:**
-- Explica correctamente el riesgo de mostrar un cambio no confirmado y el mecanismo de reversión.
-
-### Ejercicio 3: Por qué invalidar en vez de actualizar directamente la cache
-
-**Enunciado:** ¿por qué invalidar la query tras una mutación exitosa es preferible a actualizar manualmente la cache con el resultado exacto de la mutación?
-
-**Solución esperada:** invalidar y dejar que TanStack Query vuelva a solicitar los datos reales garantiza que la vista refleje el estado verdadero y completo del servidor tras el cambio (incluyendo cualquier efecto secundario en el servidor que la mutación pudo haber disparado), mientras que actualizar manualmente la cache con el resultado devuelto por la mutación puede desincronizarse sutilmente si el servidor aplicó cambios adicionales no reflejados directamente en esa respuesta.
-
-**Criterios de éxito:**
-- Explica correctamente el riesgo de desincronización de actualizar manualmente frente a la garantía de invalidar y refrescar.
-
----
 
 ## Rúbrica del proyecto
 

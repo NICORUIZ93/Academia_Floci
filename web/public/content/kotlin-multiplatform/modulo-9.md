@@ -168,36 +168,6 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 
 ---
 
-## Ejercicios de evaluación
-
-### Ejercicio 1: Confianza de testear la capa común una sola vez
-
-**Enunciado:** ¿por qué testear la capa común una sola vez te da confianza de que se comporta igual en ambas plataformas?
-
-**Solución esperada:** dado que la lógica bajo prueba vive completamente en `commonMain` sin ningún código específico de plataforma, el mismo test en `commonTest` se compila y ejecuta contra ambos targets de forma independiente, verificando el mismo comportamiento exacto en cada uno, sin necesidad de duplicar el esfuerzo de escribir pruebas separadas por plataforma.
-
-**Criterios de éxito:**
-- Explica correctamente que la ausencia de código específico de plataforma en la lógica bajo prueba es lo que garantiza la validez de un único test para ambos targets.
-
-### Ejercicio 2: Cuándo usar un fake en vez de un mock
-
-**Enunciado:** ¿cuándo usarías un fake en vez de un mock para una dependencia de plataforma?
-
-**Solución esperada:** en código de `commonTest`, dado que las librerías de mocking tradicionales frecuentemente dependen de mecanismos específicos de la JVM no disponibles de forma universal en todos los targets de Kotlin Multiplatform (como iOS); un fake, al ser código Kotlin ordinario, funciona de forma idéntica en cualquier target sin esa limitación.
-
-**Criterios de éxito:**
-- Explica correctamente la limitación de compatibilidad de mocks dependientes de la JVM como razón para preferir fakes en código multiplataforma.
-
-### Ejercicio 3: Por qué runTest evita esperas reales
-
-**Enunciado:** ¿cómo logra `runTest` que un test con `delay()` interno corra instantáneamente sin esperar el tiempo real?
-
-**Solución esperada:** `runTest` gestiona un dispatcher de tiempo virtual dentro del cual cualquier `delay()` invocado se "salta" automáticamente sin esperar ese tiempo en el reloj físico real, permitiendo que el test complete en milisegundos reales incluso si la lógica bajo prueba simula esperas de segundos o minutos.
-
-**Criterios de éxito:**
-- Explica correctamente el concepto de tiempo virtual gestionado por `runTest` como el mecanismo que evita las esperas reales.
-
----
 
 ## Rúbrica del proyecto
 

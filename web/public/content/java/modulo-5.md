@@ -154,36 +154,6 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 
 ---
 
-## Ejercicios de evaluación
-
-### Ejercicio 1: Por qué los virtual threads son tan baratos
-
-**Enunciado:** ¿qué hace a los virtual threads tan baratos comparados con los threads de plataforma tradicionales?
-
-**Solución esperada:** los virtual threads son gestionados enteramente por la JVM en vez de mapear directamente a un hilo del sistema operativo, consumiendo una fracción diminuta de la memoria de un thread de plataforma (que requiere aproximadamente 1 MB de stack), y la JVM multiplexa muchos virtual threads sobre un número mucho más pequeño de threads de plataforma reales, liberando ese recurso real mientras un virtual thread espera una operación de I/O bloqueante.
-
-**Criterios de éxito:**
-- Explica correctamente la gestión por la JVM y la multiplexación sobre carrier threads como razones del bajo costo.
-
-### Ejercicio 2: Por qué una condición de carrera puede no manifestarse en pruebas
-
-**Enunciado:** ¿por qué una condición de carrera puede no manifestarse en pruebas pero sí en producción?
-
-**Solución esperada:** el resultado de una condición de carrera depende del orden impredecible en que el sistema operativo intercala la ejecución de los hilos involucrados; en un entorno de pruebas con poca carga o pocos hilos concurrentes reales, ese entrelazado problemático específico puede simplemente no ocurrir con la frecuencia o bajo las condiciones necesarias para manifestarse, mientras que en producción, con mayor carga y concurrencia real, esas condiciones específicas se vuelven mucho más probables.
-
-**Criterios de éxito:**
-- Explica correctamente la dependencia del entrelazado de ejecución impredecible como razón de la inconsistencia entre entornos.
-
-### Ejercicio 3: ExecutorService y reutilización de hilos
-
-**Enunciado:** ¿qué problema resuelve `ExecutorService` frente a crear un `Thread` nuevo manualmente para cada tarea?
-
-**Solución esperada:** `ExecutorService` reutiliza un pool fijo de hilos ya existentes entre tareas sucesivas, reduciendo significativamente el overhead de creación y destrucción repetida de hilos, particularmente relevante para cargas de trabajo con muchas tareas concurrentes breves y frecuentes.
-
-**Criterios de éxito:**
-- Explica correctamente la reutilización de hilos como el beneficio principal frente a crear un `Thread` por tarea.
-
----
 
 ## Rúbrica del proyecto
 

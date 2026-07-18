@@ -142,36 +142,6 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 
 ---
 
-## Ejercicios de evaluación
-
-### Ejercicio 1: Por qué React Hook Form evita re-renders
-
-**Enunciado:** explica qué problema de rendimiento resuelve React Hook Form frente a manejar cada campo con `useState` individual.
-
-**Solución esperada:** con `useState` por campo, cada tecla en cualquier campo dispara un re-render del componente formulario completo; React Hook Form registra los inputs de forma no controlada por debajo, evitando ese re-render en cada tecla, un beneficio mensurable en formularios con muchos campos.
-
-**Criterios de éxito:**
-- Explica correctamente el re-render por tecla evitado por el registro no controlado de React Hook Form.
-
-### Ejercicio 2: Eventos sintéticos
-
-**Enunciado:** ¿por qué los eventos en React son "sintéticos" y no directamente los eventos nativos del DOM?
-
-**Solución esperada:** React envuelve los eventos nativos en un objeto `SyntheticEvent` con una API consistente entre distintos motores de navegador, evitando que el código de la aplicación tenga que lidiar con diferencias de implementación entre navegadores, y permitiendo optimizaciones internas de registro y despacho de eventos.
-
-**Criterios de éxito:**
-- Explica correctamente la consistencia entre navegadores como razón principal de los eventos sintéticos.
-
-### Ejercicio 3: Estado compartido en formularios multi-paso
-
-**Enunciado:** ¿por qué el estado combinado de un formulario multi-paso vive en un componente padre compartido, en vez de en cada paso individual por separado?
-
-**Solución esperada:** si cada paso mantuviera su propio estado aislado, los datos de un paso anterior se perderían al navegar a otro paso y desmontarse ese componente; mantener el estado combinado en un padre compartido permite prellenar los campos con los valores previamente ingresados al retroceder a un paso anterior.
-
-**Criterios de éxito:**
-- Explica correctamente la pérdida de datos que ocurriría sin estado compartido en el padre.
-
----
 
 ## Rúbrica del proyecto
 

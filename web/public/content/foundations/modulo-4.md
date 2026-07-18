@@ -235,25 +235,6 @@ Copia el Proyecto 2 a una rama nueva. Conserva el JSON como fuente de migración
 - Abrir una conexión por cada fila: agrupa trabajo en transacciones.
 - Elegir NoSQL por evitar modelado: empieza por patrones y garantías.
 
-## Ejercicios de evaluación
-
-### Ejercicio 1: modelado
-
-**Enunciado:** modela autores, libros y préstamos con cardinalidades.
-
-**Solución esperada:** resuelve muchos-a-muchos autor/libro mediante tabla intermedia y préstamos referencian ejemplar/usuario.
-
-### Ejercicio 2: JOIN
-
-**Enunciado:** explica cuándo LEFT JOIN conserva información que INNER JOIN pierde.
-
-**Solución esperada:** conserva filas de la izquierda sin coincidencia, como categorías vacías.
-
-### Ejercicio 3: fallo transaccional
-
-**Enunciado:** demuestra que una transferencia se revierte si falla la segunda actualización.
-
-**Solución esperada:** provoca restricción, captura error y verifica ambos saldos originales.
 
 ## Rúbrica del proyecto
 

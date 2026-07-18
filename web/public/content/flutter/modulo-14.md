@@ -269,23 +269,6 @@ Parte de una carpeta vacía de feature dentro de RutaFlow. Define primero el con
 
 La definición de terminado exige comandos reproducibles, datos ficticios, secretos fuera del repositorio y una demostración en dispositivo o entorno de integración. No basta con que el marcador se mueva.
 
-## Ejercicios de evaluación
-
-### Ejercicio 1: seguridad y propiedad
-
-Intenta leer o modificar una entrega ajena con un token válido. Escribe la prueba negativa y corrige autorización sin depender solo del rol.
-
-### Ejercicio 2: red inestable
-
-Confirma una entrega, pierde la respuesta y reintenta. Demuestra que existe un único efecto y que la interfaz distingue pendiente de fallido.
-
-### Ejercicio 3: geografía honesta
-
-Procesa una posición antigua, una imprecisa y otra fuera de orden. Explica cuál descartas, cuál conservas y cómo lo comunicas.
-
-### Ejercicio 4: alternativa tecnológica
-
-Compara Google Maps con MapLibre, Socket.IO con WebSocket/STOMP y MySQL Spatial con PostGIS según licencia, capacidades, operación y portabilidad. No hay ganador universal.
 
 ## Rúbrica del proyecto
 

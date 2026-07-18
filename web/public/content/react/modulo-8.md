@@ -136,36 +136,6 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 
 ---
 
-## Ejercicios de evaluación
-
-### Ejercicio 1: Por qué evitar queries por clase CSS
-
-**Enunciado:** explica por qué Testing Library evita deliberadamente queries por clase CSS o estructura del DOM.
-
-**Solución esperada:** consultar por clase CSS o estructura interna acopla la prueba a detalles de implementación que pueden cambiar por razones puramente cosméticas sin afectar el comportamiento real del componente; consultar por rol/texto refleja cómo un usuario real (o una tecnología asistiva) identifica ese elemento, haciendo que la prueba sobreviva a esos refactors cosméticos.
-
-**Criterios de éxito:**
-- Explica correctamente el acoplamiento a detalles de implementación evitado por las queries de rol/texto.
-
-### Ejercicio 2: MSW frente a mockear fetch directamente
-
-**Enunciado:** ¿qué ventaja da MSW sobre mockear `fetch` directamente con `vi.fn()`?
-
-**Solución esperada:** MSW intercepta a nivel de red, permitiendo que el código de producción realice sus peticiones exactamente como en producción real, sin ninguna modificación ni conocimiento de que está siendo interceptado; mockear `fetch` directamente requiere que el mock replique exactamente cómo el código invoca `fetch`, un acoplamiento más frágil a los detalles internos de esa invocación específica.
-
-**Criterios de éxito:**
-- Explica correctamente la interceptación transparente a nivel de red de MSW frente al acoplamiento de mockear `fetch` directamente.
-
-### Ejercicio 3: Testing de hooks aislado
-
-**Enunciado:** ¿qué ventaja da `renderHook` frente a crear un componente de prueba dedicado únicamente para probar un hook personalizado?
-
-**Solución esperada:** `renderHook` prueba la lógica del hook de forma aislada, sin acoplar la prueba a detalles de renderizado visual de un componente que no tienen relación real con la lógica de estado y efectos que efectivamente se está verificando, manteniendo la prueba más simple y enfocada.
-
-**Criterios de éxito:**
-- Explica correctamente el aislamiento de la lógica del hook respecto a detalles visuales innecesarios.
-
----
 
 ## Rúbrica del proyecto
 

@@ -219,25 +219,6 @@ Trabaja en una rama `quality/test-suite`:
 - Commits gigantes: separa intenciones.
 - CI distinto al entorno local: documenta versiones y comandos idénticos.
 
-## Ejercicios de evaluación
-
-### Ejercicio 1: clasificar pruebas
-
-**Enunciado:** clasifica validar descuento, guardar SQLite y completar compra por navegador.
-
-**Solución esperada:** unidad, integración y E2E respectivamente, explicando alcance.
-
-### Ejercicio 2: prueba de regresión
-
-**Enunciado:** corrige cantidades negativas siguiendo rojo-verde-refactor.
-
-**Solución esperada:** test falla antes, cambio mínimo pasa y refactor conserva verde.
-
-### Ejercicio 3: revisión
-
-**Enunciado:** redacta comentario sobre SQL concatenado.
-
-**Solución esperada:** explica riesgo de inyección, señala ubicación y propone parametrización sin ataque personal.
 
 ## Rúbrica del proyecto
 

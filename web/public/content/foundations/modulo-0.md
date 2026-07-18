@@ -221,25 +221,6 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 - **Editar sin guardar.** Activa Auto Save o guarda antes de ejecutar.
 - **Pegar comandos administrativos.** Detente y comprende cada parte antes de aceptar privilegios.
 
-## Ejercicios de evaluación
-
-### Ejercicio 1: Programa frente a proceso
-
-**Enunciado:** explica qué permanece y qué desaparece después de cerrar tu programa.
-
-**Solución esperada:** permanece el archivo con código fuente en almacenamiento; termina el proceso y se libera su memoria asignada.
-
-### Ejercicio 2: Ruta relativa
-
-**Enunciado:** explica por qué `python3 hola.py` puede funcionar en una carpeta y fallar en otra.
-
-**Solución esperada:** `hola.py` es una ruta relativa resuelta desde la carpeta actual; al cambiarla, puede dejar de apuntar al archivo.
-
-### Ejercicio 3: Diagnóstico reproducible
-
-**Enunciado:** documenta un error usando observación, hipótesis, cambio y evidencia.
-
-**Solución esperada:** incluye el mensaje literal, una hipótesis relacionada, un único cambio controlado y la salida posterior que confirma o refuta la hipótesis.
 
 ## Rúbrica del proyecto
 

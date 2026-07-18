@@ -151,36 +151,6 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 
 ---
 
-## Ejercicios de evaluación
-
-### Ejercicio 1: Mapeo de sealed class hacia Swift
-
-**Enunciado:** ¿cómo se mapea una `sealed class` de Kotlin al lado de Swift?
-
-**Solución esperada:** se expone como una jerarquía de clases regular en Swift, manejable con un `switch`, aunque Swift no verifica automáticamente la exhaustividad completa contra el conjunto cerrado original de Kotlin de la misma forma estricta en que Kotlin sí lo hace, dado que Swift la ve simplemente como una jerarquía de clases regular.
-
-**Criterios de éxito:**
-- Explica correctamente el mapeo a jerarquía de clases manejable con switch, y la pérdida de la garantía estricta de exhaustividad.
-
-### Ejercicio 2: Qué cambia al llamar una función suspend desde Swift
-
-**Enunciado:** ¿qué cambia para Swift al llamar una función `suspend` de Kotlin comparado con una función normal?
-
-**Solución esperada:** Kotlin/Native expone la función suspend hacia Swift como una función con callback (recibiendo el resultado o el error en un cierre), o directamente como `async`/`await` nativo con librerías más recientes, en vez de la sintaxis lineal que esa misma función tendría al invocarse desde código Kotlin.
-
-**Criterios de éxito:**
-- Explica correctamente el cambio de sintaxis de invocación (callback o async/await) para funciones suspend expuestas a Swift.
-
-### Ejercicio 3: CocoaPods vs SPM
-
-**Enunciado:** ¿qué diferencia hay entre distribuir el framework KMP con CocoaPods frente a Swift Package Manager?
-
-**Solución esperada:** CocoaPods fue históricamente la forma estándar, integrándose con su propio sistema externo de gestión de dependencias; Swift Package Manager es la alternativa moderna recomendada por Apple, con integración nativa directamente en Xcode sin necesidad de herramientas externas adicionales, generalmente preferida para proyectos nuevos.
-
-**Criterios de éxito:**
-- Distingue correctamente la integración nativa de SPM frente a la herramienta externa de CocoaPods.
-
----
 
 ## Rúbrica del proyecto
 

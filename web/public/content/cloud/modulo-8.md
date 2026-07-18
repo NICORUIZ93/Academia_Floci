@@ -209,53 +209,6 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 
 ---
 
-## Ejercicios de evaluación
-
-### Ejercicio 1: Completar la tabla comparativa
-
-**Enunciado:** sin mirar el Tema 3, completa de memoria esta tabla con el servicio equivalente de cada proveedor:
-
-| Categoría | AWS | Azure | GCP |
-|---|---|---|---|
-| Almacenamiento de objetos | S3 | ? | ? |
-| Mensajería | SQS | ? | ? |
-| Base de datos NoSQL | DynamoDB | ? | ? |
-| Serverless | Lambda | ? | ? |
-
-**Solución esperada:**
-
-| Categoría | AWS | Azure | GCP |
-|---|---|---|---|
-| Almacenamiento de objetos | S3 | Blob Storage | Cloud Storage |
-| Mensajería | SQS | Queue Storage | Pub/Sub |
-| Base de datos NoSQL | DynamoDB | Cosmos DB | Firestore |
-| Serverless | Lambda | Azure Functions | Cloud Functions |
-
-**Criterios de éxito:**
-- Las ocho celdas completadas coinciden con la tabla de solución.
-- Puedes explicar, sin mirar la tabla, por qué Pub/Sub no es un calco exacto de SQS (conectándolo con el Tema 2).
-
-### Ejercicio 2: Elegir el servicio de mensajería correcto
-
-**Enunciado:** estás diseñando un sistema donde un evento (por ejemplo, "pedido confirmado") debe procesarse de forma completamente independiente por tres sistemas distintos a la vez: uno que envía un correo de confirmación, otro que actualiza el inventario, y otro que genera una factura. ¿Usarías SQS, Queue Storage o Pub/Sub como base de este diseño, y por qué?
-
-**Solución esperada:** Pub/Sub es la elección más directa, porque su modelo nativo de un topic con múltiples suscripciones independientes encaja exactamente con la necesidad de que tres sistemas distintos reciban y procesen, cada uno por su cuenta, una copia independiente del mismo evento. Replicar este mismo comportamiento con SQS requeriría combinarlo con un servicio adicional de fan-out (como SNS, que vas a ver en un módulo avanzado), mientras que Pub/Sub lo resuelve de forma nativa sin necesidad de un segundo servicio.
-
-**Criterios de éxito:**
-- Elige Pub/Sub como la opción más directa para este caso de uso.
-- La justificación menciona explícitamente el modelo de topic con múltiples suscripciones independientes, conectándolo con el Tema 2 y el Tema 3.
-
-### Ejercicio 3: Justificar la elección de proveedor por contexto
-
-**Enunciado:** una empresa ya tiene toda su infraestructura de backend corriendo en AWS (Lambda, DynamoDB, S3), y necesita añadir una nueva función que procese archivos subidos por usuarios. ¿Recomendarías introducir Azure Functions y Blob Storage para esta nueva funcionalidad, o usar Lambda y S3? Justifica tu respuesta usando el criterio del Tema 3.
-
-**Solución esperada:** usar Lambda y S3, manteniendo la nueva funcionalidad dentro del mismo proveedor donde ya vive el resto de la infraestructura. Como se explica en el Tema 3, cuando la equivalencia funcional entre proveedores es alta (como en almacenamiento de objetos y serverless), la elección debería basarse principalmente en la integración con lo que ya existe, no en una ventaja funcional decisiva de un proveedor sobre otro para este caso concreto; introducir un segundo proveedor añadiría complejidad operativa (gestión de credenciales adicionales, curva de aprendizaje del equipo, monitorización distribuida entre dos nubes) sin un beneficio claro que lo justifique.
-
-**Criterios de éxito:**
-- Recomienda mantenerse en AWS (Lambda y S3), no introducir Azure sin justificación.
-- La justificación se basa en la integración con la infraestructura existente y el coste de complejidad de introducir un segundo proveedor, no en una supuesta superioridad técnica de un servicio sobre otro.
-
----
 
 ## Rúbrica del proyecto
 

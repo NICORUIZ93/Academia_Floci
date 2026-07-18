@@ -235,34 +235,6 @@ Evoluciona el proyecto 12 mediante una vertical de “crear pedido y proyectar r
 - Tag con ID: usa baja cardinalidad en métricas y contexto protegido en trace/log.
 - Liveness consulta todas las dependencias: separa vida de preparación para tráfico.
 
-## Ejercicios de evaluación
-
-### Ejercicio 1: transacción ausente
-
-`public process()` llama `this.saveTransactional()` y la segunda escritura falla, pero la primera queda. ¿Por qué?
-
-<details><summary>Solución razonada</summary>
-
-La llamada interna no atraviesa el proxy AOP que inicia el interceptor. Coloca el caso de uso transaccional en método público invocado desde otro bean/proxy o usa `TransactionTemplate`; verifica rollback real.
-</details>
-
-### Ejercicio 2: EOS limitado
-
-Un listener Kafka escribe PostgreSQL y publica otro topic bajo transacción Kafka. ¿Está todo exactamente una vez?
-
-<details><summary>Solución razonada</summary>
-
-Kafka puede coordinar offset y publicación Kafka, pero PostgreSQL es otro recurso. Sin protocolo adicional queda ventana de doble commit. Usa patrón apropiado, idempotencia y reconciliación; documenta garantía exacta.
-</details>
-
-### Ejercicio 3: métrica explosiva
-
-`orders_total{user_id=...}` parece útil. ¿Qué problema crea?
-
-<details><summary>Solución razonada</summary>
-
-Cada usuario crea una serie y dispara cardinalidad, memoria/coste y consultas lentas, además de privacidad. Agrega por dimensiones limitadas; conserva ID en log/trace protegido y muestreado.
-</details>
 
 ## Rúbrica del proyecto
 

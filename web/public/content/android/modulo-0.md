@@ -208,36 +208,6 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 
 ---
 
-## Ejercicios de evaluación
-
-### Ejercicio 1: Por qué externalizar strings
-
-**Enunciado:** ¿por qué externalizar strings a un archivo de recursos en vez de hardcodearlos en el código?
-
-**Solución esperada:** externalizar strings centraliza cada texto en una única fuente de verdad (facilitando correcciones), y permite traducir la app agregando archivos de recursos por idioma sin tocar el código Kotlin, dado que Android resuelve automáticamente el archivo correcto según la configuración del dispositivo.
-
-**Criterios de éxito:**
-- Menciona correctamente centralización y/o traducción sin tocar código como razones.
-
-### Ejercicio 2: Qué declara el manifiesto
-
-**Enunciado:** ¿qué declara el `AndroidManifest.xml` que el sistema operativo necesita saber antes de instalar la app?
-
-**Solución esperada:** declara los componentes de la app (Activities, Services, BroadcastReceivers), el punto de entrada (intent-filter de MAIN/LAUNCHER), los permisos requeridos, y metadatos como ícono y nombre, todo leído por el sistema antes de instalar o ejecutar la app.
-
-**Criterios de éxito:**
-- Menciona al menos dos de: componentes, permisos, punto de entrada, metadatos.
-
-### Ejercicio 3: Ventaja de separar en módulos Gradle
-
-**Enunciado:** ¿qué ventaja da dividir un proyecto Android en módulos Gradle separados (`:app`, `:core`) en vez de un solo módulo monolítico?
-
-**Solución esperada:** fuerza límites explícitos entre partes de la app y permite compilaciones incrementales más rápidas, dado que Gradle solo necesita recompilar el módulo que cambió, no el proyecto entero.
-
-**Criterios de éxito:**
-- Explica correctamente al menos uno de: límites explícitos, compilación incremental más rápida.
-
----
 
 ## Rúbrica del proyecto
 

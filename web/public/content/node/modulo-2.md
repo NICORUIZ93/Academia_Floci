@@ -192,39 +192,6 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 
 ---
 
-## Ejercicios de evaluación
-
-### Ejercicio 1: Por qué un archivo grande no escala en memoria
-
-**Enunciado:** explica por qué cargar un archivo de 10 GB completo en memoria con `readFileSync` no escala, incluso en un servidor con suficiente RAM técnicamente disponible para ese archivo específico.
-
-**Solución esperada:** aunque el servidor tenga suficiente RAM para un archivo específico de 10 GB, ese enfoque no escala porque cada petición o proceso concurrente que intente cargar un archivo similar competiría por la misma memoria limitada del sistema, y el enfoque tampoco es generalizable a archivos aún más grandes sin requerir aumentar indefinidamente la memoria disponible; además, mientras se carga el archivo completo, el hilo único de JavaScript permanece bloqueado (si se usa la versión síncrona) o consume una porción significativa y de golpe de la memoria disponible (incluso con la versión asíncrona), en vez de procesar el archivo de forma incremental con un uso de memoria acotado y predecible independientemente del tamaño real del archivo.
-
-**Criterios de éxito:**
-- Explica que el problema no es solo el archivo individual, sino la falta de escalabilidad ante múltiples peticiones concurrentes o archivos aún más grandes.
-- Contrasta correctamente con el uso de memoria acotado que los streams proporcionan.
-
-### Ejercicio 2: pipeline() frente a .pipe() encadenado
-
-**Enunciado:** explica qué problema concreto resuelve `pipeline()` que `.pipe()` encadenado manualmente no resuelve, con un escenario de fallo específico.
-
-**Solución esperada:** `pipeline()` propaga correctamente los errores a través de toda la cadena de streams y garantiza que todos se cierren correctamente ante cualquier fallo; `.pipe()` encadenado manualmente no hace esto automáticamente. Escenario: si el stream de transformación intermedio lanza un error al procesar una línea corrupta del CSV, con `.pipe()` encadenado manualmente el stream de escritura y el de lectura podrían quedar abiertos indefinidamente (una fuga de descriptores de archivo), mientras que `pipeline()` cerraría automáticamente todos los streams involucrados ante ese mismo fallo.
-
-**Criterios de éxito:**
-- Identifica correctamente la propagación de errores y el cierre garantizado de recursos como la diferencia clave.
-- Da un escenario de fallo concreto y realista donde esa diferencia importa.
-
-### Ejercicio 3: Diagnosticar backpressure
-
-**Enunciado:** un script que copia un archivo grande usando streams parece "pausarse" periódicamente durante la ejecución en vez de progresar de forma continua. ¿Es esto necesariamente un bug? Explica.
-
-**Solución esperada:** no es necesariamente un bug; es probablemente el mecanismo de backpressure funcionando correctamente, pausando la lectura mientras el destino de escritura (posiblemente más lento, como un disco mecánico o una conexión de red) procesa el búfer acumulado antes de aceptar más datos. Esto es el comportamiento esperado y deseado que previene el agotamiento de memoria, no un error del script.
-
-**Criterios de éxito:**
-- Reconoce que la pausa periódica es probablemente backpressure funcionando correctamente, no un bug.
-- Explica que esto previene el agotamiento de memoria ante un destino más lento que la fuente.
-
----
 
 ## Rúbrica del proyecto
 

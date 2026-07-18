@@ -290,47 +290,6 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 
 ---
 
-## Ejercicios de evaluación
-
-### Ejercicio 1: Problema resuelto por un Config Server centralizado
-
-**Enunciado:** ¿qué problema de configuración resuelve un Config Server centralizado en un sistema de muchos microservicios?
-
-**Solución esperada:** evita tener que modificar y redesplegar cada microservicio individual ante un cambio de configuración compartida entre varios de ellos, centralizando esa configuración en un único lugar (típicamente respaldado por Git) desde donde se propaga a todos los servicios que la consumen.
-
-**Criterios de éxito:**
-- Explica correctamente la evitación de redespliegues individuales como el problema resuelto.
-
-### Ejercicio 2: Qué hace un circuit breaker
-
-**Enunciado:** ¿qué hace un circuit breaker y por qué es mejor que dejar que las llamadas fallidas se acumulen sin control?
-
-**Solución esperada:** un circuit breaker detiene automáticamente los intentos de llamar a un servicio que está fallando repetidamente, invocando en su lugar un fallback inmediato, evitando que las peticiones se acumulen esperando timeouts completos y agotando recursos (threads, conexiones) que podrían propagar el fallo en cascada hacia los servicios dependientes.
-
-**Criterios de éxito:**
-- Explica correctamente la prevención del agotamiento de recursos y la propagación en cascada como beneficio del circuit breaker.
-
-### Ejercicio 3: Service discovery por nombre
-
-**Enunciado:** ¿qué ventaja da resolver un servicio por nombre lógico (service discovery) en vez de una URL fija hardcodeada?
-
-**Solución esperada:** permite que las instancias físicas de un servicio cambien de ubicación, se escalen horizontalmente, o se reemplacen, sin que el código cliente necesite ninguna actualización, dado que la resolución de la ubicación física actual ocurre dinámicamente a través del servidor de registro (Eureka) en el momento de cada llamada.
-
-**Criterios de éxito:**
-- Explica correctamente la tolerancia a cambios de ubicación/escalado sin modificar el código cliente.
-
-### Ejercicio 4: Límite de dominio antes del despliegue
-
-**Enunciado:** el equipo propone crear `journey-service`, `position-service` e `invoice-service`, todos leyendo las mismas tablas. Decide qué conservarías, qué cambiarías y qué evidencia pedirías antes de extraer procesos.
-
-**Solución esperada:** jornadas y posiciones pertenecen inicialmente al mismo agregado si registrar una posición debe respetar el estado de la jornada; facturación conserva modelo y datos propios. Ningún servicio consulta tablas ajenas. Antes de extraer se justifican límites mediante reglas, patrón de cambios, necesidad de escalado, aislamiento de fallos y propiedad de equipo; si la evidencia es insuficiente, se implementan módulos internos con dependencias controladas.
-
-**Criterios de éxito:**
-- Distingue límites de negocio de entidades o capas técnicas.
-- Asigna dueño único a datos y reglas.
-- Propone contrato explícito y reconoce cuándo un monolito modular es la opción más segura.
-
----
 
 ## Rúbrica del proyecto
 

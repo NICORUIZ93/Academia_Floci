@@ -161,36 +161,6 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 
 ---
 
-## Ejercicios de evaluación
-
-### Ejercicio 1: Por qué SSR mejora el SEO
-
-**Enunciado:** explica por qué SSR beneficia directamente al posicionamiento en buscadores.
-
-**Solución esperada:** los rastreadores de motores de búsqueda que no ejecutan JavaScript de forma completa o confiable pueden indexar directamente el HTML completo que el servidor ya generó con SSR, en vez de encontrarse con un documento HTML vacío que requeriría ejecutar JavaScript para revelar su contenido real, algo que muchos rastreadores no hacen de forma confiable.
-
-**Criterios de éxito:**
-- Explica correctamente la relación entre HTML ya completo al llegar al rastreador y la indexación confiable.
-
-### Ejercicio 2: Por qué la hidratación reutiliza el DOM
-
-**Enunciado:** ¿qué problema evita la hidratación al reutilizar el DOM existente en vez de descartarlo y volver a renderizar todo desde cero?
-
-**Solución esperada:** descartar y volver a renderizar todo desde cero produciría un parpadeo visual perceptible cuando el contenido generado por el servidor se reemplaza completamente, además de un costo de rendimiento innecesario al reconstruir algo que ya existía correctamente; reutilizar el DOM existente evita ambos problemas.
-
-**Criterios de éxito:**
-- Explica correctamente el parpadeo visual y el costo de rendimiento evitados.
-
-### Ejercicio 3: Elegir el trigger de @defer apropiado
-
-**Enunciado:** un panel de comentarios solo debe cargarse cuando el usuario hace clic en un botón "Ver comentarios". ¿Qué trigger de `@defer` usarías y por qué?
-
-**Solución esperada:** `on interaction`, porque el contenido diferido debe cargarse específicamente en respuesta a una acción explícita del usuario (el clic en el botón), no simplemente por entrar en el área visible de la pantalla (`on viewport`) ni por inactividad del navegador (`on idle`).
-
-**Criterios de éxito:**
-- Elige correctamente `on interaction` y justifica en términos de acción explícita del usuario.
-
----
 
 ## Rúbrica del proyecto
 

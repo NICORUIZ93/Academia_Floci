@@ -166,36 +166,6 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 
 ---
 
-## Ejercicios de evaluación
-
-### Ejercicio 1: Separación cliente/servidor como decisión arquitectónica
-
-**Enunciado:** ¿qué decisión de arquitectura suele costar más definir en un proyecto React real: la separación de estado de cliente vs servidor, o la elección de un router?
-
-**Solución esperada:** cualquier respuesta razonablemente justificada; la respuesta esperada más común es la separación de estado de cliente vs servidor, dado que requiere criterio continuo a lo largo de todo el desarrollo (cada nuevo pedazo de estado debe clasificarse correctamente), mientras que la elección de un router es una decisión puntual tomada una única vez al inicio del proyecto.
-
-**Criterios de éxito:**
-- Justifica su elección con un argumento coherente, sin limitarse a nombrar una opción sin explicación.
-
-### Ejercicio 2: Impacto del ecosistema en la calidad del código
-
-**Enunciado:** ¿qué parte del ecosistema React (TanStack Query, React Router, TypeScript) tuvo el mayor impacto en la calidad del código final de tu proyecto integrador?
-
-**Solución esperada:** cualquier respuesta razonablemente justificada; una respuesta común y bien fundamentada señala TanStack Query por eliminar la gestión manual de loading/error/cache repetida en cada componente, o TypeScript por detectar errores de props y de forma de datos en tiempo de compilación antes de llegar a producción.
-
-**Criterios de éxito:**
-- Justifica la elección con un argumento concreto vinculado a un beneficio real observado durante la construcción del proyecto.
-
-### Ejercicio 3: Encapsular acceso a datos en un hook dedicado
-
-**Enunciado:** ¿qué beneficio concreto aporta encapsular `queryKey`/`queryFn` detrás de un hook como `useTareas` en vez de invocar `useQuery` directamente en cada componente?
-
-**Solución esperada:** centraliza en un único lugar cualquier cambio futuro relacionado con cómo se obtienen los datos (endpoint, headers, transformación de la respuesta), sin necesidad de modificar cada componente individual que consume esos datos, además de dar un nombre significativo y específico del dominio a esa lógica de acceso a datos.
-
-**Criterios de éxito:**
-- Explica correctamente la centralización de cambios futuros como el beneficio principal.
-
----
 
 ## Rúbrica del proyecto
 

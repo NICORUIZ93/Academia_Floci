@@ -212,40 +212,6 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 
 ---
 
-## Ejercicios de evaluación
-
-### Ejercicio 1: Predecir el orden de ejecución
-
-**Enunciado:** predice el orden de salida de: `console.log("A"); setTimeout(() => console.log("B"), 0); setImmediate(() => console.log("C")); process.nextTick(() => console.log("D")); console.log("E");` (ejecutado en el nivel superior de un script, fuera de cualquier callback de I/O).
-
-**Solución esperada:** el orden es `A, E, D, ` y luego `B` y `C` en un orden que puede variar entre ejecuciones (no determinista fuera de I/O), aunque `D` (`process.nextTick`) siempre se ejecuta antes que ambos, inmediatamente después del código síncrono.
-
-**Criterios de éxito:**
-- Identifica correctamente que el código síncrono (`A`, `E`) se ejecuta primero.
-- Identifica que `process.nextTick` (`D`) tiene prioridad sobre `setTimeout` y `setImmediate`.
-- Reconoce que el orden entre `setTimeout` y `setImmediate` no es determinista en este contexto específico (fuera de I/O).
-
-### Ejercicio 2: Por qué Node maneja miles de conexiones con un hilo
-
-**Enunciado:** explica, en tus propias palabras, qué hace posible que Node maneje miles de conexiones simultáneas con un único hilo de JavaScript, y qué tipo de carga de trabajo rompería esta ventaja.
-
-**Solución esperada:** es posible porque las operaciones de I/O se delegan a libuv, que las ejecuta de forma asíncrona (usando el sistema operativo o un pool de hilos interno), liberando el hilo único de JavaScript para atender otras peticiones mientras cada I/O se completa en segundo plano. Esta ventaja se rompe con cargas de trabajo dominadas por cómputo intensivo de CPU (no I/O), que bloquearían el único hilo de JavaScript disponible, impidiendo procesar cualquier otra petición concurrente mientras ese cómputo se completa.
-
-**Criterios de éxito:**
-- Explica correctamente el rol de libuv delegando I/O de forma asíncrona.
-- Identifica que el cómputo intensivo de CPU (no I/O) es el caso que rompe esta ventaja.
-
-### Ejercicio 3: Diagnosticar bloqueo del Event Loop
-
-**Enunciado:** una API Node responde con lentitud creciente a medida que aumenta el tráfico, y un compañero sospecha que hay una operación síncrona bloqueando el Event Loop en el camino crítico de las peticiones. ¿Qué buscarías en el código para confirmar o descartar esta sospecha?
-
-**Solución esperada:** buscaría el uso de funciones síncronas (terminadas en `Sync`, como `fs.readFileSync`) dentro de manejadores de rutas HTTP, o cómputo intensivo de CPU ejecutado directamente en el hilo principal sin delegarlo a un Worker Thread (Módulo 8); también verificaría si hay bucles largos o recursión de `process.nextTick` sin límite que pudieran monopolizar el Event Loop.
-
-**Criterios de éxito:**
-- Identifica correctamente las funciones síncronas como sospechosas principales dentro del camino crítico de peticiones.
-- Menciona al menos una alternativa correcta (delegar a Worker Thread) para cómputo intensivo de CPU.
-
----
 
 ## Rúbrica del proyecto
 

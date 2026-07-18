@@ -272,39 +272,6 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 
 ---
 
-## Ejercicios de evaluación
-
-### Ejercicio 1: Explicar el contrato de una Lambda
-
-**Enunciado:** sin mirar el laboratorio, explica qué recibe exactamente el parámetro `event` de una función Lambda invocada directamente con `aws lambda invoke --payload '{"a":1}'`, y qué diferencia hay con lo que recibiría esa misma función si estuviera conectada a un trigger de S3.
-
-**Solución esperada:** en una invocación directa, `event` es exactamente el JSON pasado en `--payload`, en este caso `{"a":1}`, sin ninguna transformación. Si la misma función estuviera conectada a un trigger de S3, `event` tendría una estructura completamente distinta, definida por AWS, que incluye información sobre el bucket y la clave del objeto que disparó el evento, no el contenido arbitrario que el desarrollador decida pasar.
-
-**Criterios de éxito:**
-- Explica correctamente que el payload de una invocación directa es exactamente lo que se pasa, sin transformación.
-- Reconoce que el formato de `event` cambia según el origen (invocación directa vs trigger de servicio), no es un formato fijo universal.
-
-### Ejercicio 2: Corregir una función con estado indebido
-
-**Enunciado:** un compañero escribió esta función Lambda en Node.js para contar cuántas veces se ha invocado: `let contador = 0; exports.handler = async () => { contador++; return { contador }; };`. Explica por qué este contador no es confiable en producción, y propón una alternativa correcta.
-
-**Solución esperada:** la variable `contador` vive en memoria del entorno de ejecución de Lambda, que no está garantizado que persista entre invocaciones (Lambda puede crear un entorno nuevo en cualquier momento, especialmente con invocaciones concurrentes, cada una con su propia copia de `contador` empezando en 0). La alternativa correcta es guardar el contador en un almacenamiento externo duradero, como un item de DynamoDB con una operación atómica de incremento (`update-item` con una expresión `ADD`), de forma que el valor persista de forma consistente sin depender de la memoria de un entorno de ejecución específico.
-
-**Criterios de éxito:**
-- Identifica correctamente que la variable en memoria no persiste de forma confiable entre invocaciones.
-- Propone un almacenamiento externo (DynamoDB u otro servicio duradero) como solución, conectándolo con el concepto de statelessness del Tema 2.
-
-### Ejercicio 3: Elegir el tipo de integración correcto
-
-**Enunciado:** para cada uno de estos dos casos, indica si usarías una integración síncrona (API Gateway) o asíncrona (trigger de S3 o DynamoDB Streams), y justifica tu elección: (a) una función que valida y responde inmediatamente si un formulario de contacto enviado por un usuario es válido; (b) una función que genera automáticamente una miniatura cada vez que se sube una imagen a un bucket.
-
-**Solución esperada:** (a) síncrona vía API Gateway, porque el usuario que envía el formulario necesita una respuesta inmediata (válido/inválido) antes de continuar; (b) asíncrona vía trigger de S3, porque generar la miniatura es un efecto secundario que no requiere que quien subió la imagen espere activamente ese procesamiento para continuar con lo que estaba haciendo.
-
-**Criterios de éxito:**
-- Ambas respuestas coinciden con la solución esperada.
-- La justificación de cada una se basa en si el invocador original necesita esperar una respuesta inmediata o no, conectándolo con el Tema 6.
-
----
 
 ## Rúbrica del proyecto
 

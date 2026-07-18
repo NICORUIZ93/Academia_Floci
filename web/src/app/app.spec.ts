@@ -64,12 +64,6 @@ const answer = 42;
 
 Construye y verifica el ejemplo.
 
-## Ejercicios de evaluación
-
-### Ejercicio 1: explicar
-
-**Solución esperada:** relaciona entrada y salida.
-
 ## Rúbrica del proyecto
 
 | Criterio | Peso |
@@ -134,7 +128,8 @@ La evidencia demuestra el aprendizaje.`;
       expect(page.querySelector('.code-example.wrap-lines')).toBeTruthy();
       expect(wrapCode?.getAttribute('aria-pressed')).toBe('true');
       expect(text).toContain('Práctica opcional');
-      expect(text).toContain('Ver solución razonada');
+      expect(text).not.toContain('Ejercicios de evaluación');
+      expect(page.querySelector('.exercise-card')).toBeFalsy();
       expect(text).toContain('Desde una carpeta vacía');
       expect(text).toContain('Prepara el proyecto para Cómo funciona tu entorno de desarrollo');
       expect(page.querySelector('.project-bootstrap')).toBeTruthy();

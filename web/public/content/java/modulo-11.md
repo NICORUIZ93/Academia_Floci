@@ -137,36 +137,6 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 
 ---
 
-## Ejercicios de evaluación
-
-### Ejercicio 1: Por qué ZGC puede tener menor throughput que G1
-
-**Enunciado:** ¿por qué un recolector de basura con pausas más cortas (ZGC) puede tener throughput total menor que uno con pausas más largas (G1)?
-
-**Solución esperada:** ZGC dedica trabajo adicional constante a mantener sus pausas extremadamente cortas (procesando concurrentemente mientras la aplicación sigue ejecutándose, en vez de detenerla completamente por períodos más largos como podría hacer G1 en ciertos casos), un overhead general que reduce el throughput total disponible para el trabajo útil de la aplicación, a cambio de esas pausas mínimas.
-
-**Criterios de éxito:**
-- Explica correctamente el overhead adicional de mantener pausas mínimas como razón del menor throughput de ZGC.
-
-### Ejercicio 2: Información que da un heap dump
-
-**Enunciado:** ¿qué información te da un heap dump que los logs normales no dan?
-
-**Solución esperada:** un heap dump proporciona un volcado completo y detallado del contenido exacto de la heap en el instante específico de un fallo de memoria, mostrando exactamente qué objetos consumían la memoria disponible y en qué cantidades; los logs normales no capturan ese nivel de detalle del estado completo de la memoria en un instante específico.
-
-**Criterios de éxito:**
-- Explica correctamente el detalle específico del estado de memoria en un instante que un heap dump ofrece, frente a la ausencia de ese detalle en los logs normales.
-
-### Ejercicio 3: Qué hace el JIT compiler
-
-**Enunciado:** explica qué hace el JIT compiler y por qué una aplicación Java suele acelerarse después de sus primeros segundos de ejecución.
-
-**Solución esperada:** el JIT compiler identifica dinámicamente el código "caliente" (ejecutado con muchísima frecuencia) durante la ejecución real, y lo compila a código máquina nativo optimizado específicamente para ese patrón de uso observado, en vez de seguir interpretando ese código repetidamente; esta transición progresiva de interpretación a código máquina optimizado es la razón del "warm-up" donde el rendimiento mejora tras los primeros momentos de ejecución.
-
-**Criterios de éxito:**
-- Explica correctamente la identificación de código caliente y su compilación progresiva a código máquina optimizado.
-
----
 
 ## Rúbrica del proyecto
 

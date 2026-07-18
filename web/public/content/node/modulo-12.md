@@ -304,36 +304,6 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 
 ---
 
-## Ejercicios de evaluación
-
-### Ejercicio 1: Justificar decisiones de arquitectura propias
-
-**Enunciado:** describe una decisión de arquitectura que tomaste en este proyecto (por ejemplo, dónde ubicar una validación específica) y justifica por qué la ubicaste en esa capa en particular y no en otra.
-
-**Solución esperada:** una respuesta válida podría ser: ubicar la validación de "el título de una tarea no puede estar vacío" en la capa de servicio (no en el controlador ni en el repositorio), porque es una regla de negocio del dominio (no depende de HTTP ni de la base de datos específica usada), y debe aplicarse consistentemente sin importar desde qué controlador o incluso desde qué otro servicio se invoque esa lógica de creación de tareas.
-
-**Criterios de éxito:**
-- Justifica la decisión en términos de qué capa es responsable de qué tipo de lógica según los principios del Tema 1.
-
-### Ejercicio 2: Reconsiderar una decisión de diseño
-
-**Enunciado:** describe qué parte de este proyecto integrador te hizo reconsiderar una decisión de diseño anterior, y qué cambiaste como resultado.
-
-**Solución esperada:** una respuesta razonable y realista podría describir, por ejemplo, haber descubierto al escribir los tests de integración del Módulo 7 que cierta lógica de validación estaba duplicada entre el controlador y el servicio, llevando a refactorizarla para que existiera en un único lugar (el servicio), consolidando la fuente de verdad de esa regla de negocio.
-
-**Criterios de éxito:**
-- Describe una reconsideración de diseño concreta y plausible, con la corrección aplicada como resultado.
-
-### Ejercicio 3: Qué le falta a esta API para producción real
-
-**Enunciado:** enumera al menos dos elementos concretos que le faltarían a esta API para considerarla verdaderamente lista para tráfico real de producción, más allá de lo cubierto en este proyecto.
-
-**Solución esperada:** dos respuestas razonables: (1) monitoreo activo con alertas reales sobre métricas de la aplicación, no solo logs pasivos que alguien debe revisar manualmente; (2) gestión de secretos mediante un servicio dedicado (Secrets Manager/Vault) en vez de archivos `.env` locales, además de pruebas de carga para conocer los límites reales de capacidad antes de que el tráfico real los encuentre por sorpresa.
-
-**Criterios de éxito:**
-- Enumera al menos dos elementos concretos y correctamente identificados como faltantes para producción real.
-
----
 
 ## Rúbrica del proyecto
 

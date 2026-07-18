@@ -146,39 +146,6 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 
 ---
 
-## Ejercicios de evaluación
-
-### Ejercicio 1: Interpreta un desglose de costo real
-
-**Enunciado:** después de crear varios recursos EC2, S3 y Lambda a lo largo del curso, ejecuta `get-cost-and-usage` agrupado por `SERVICE` y ordena los resultados de mayor a menor costo sintetizado. Explica por qué algunos servicios aparecen con costo mayor a cero y otros con exactamente cero, aunque los estés usando activamente.
-
-**Solución esperada:** los servicios con costo mayor a cero (EC2, S3, Lambda) tienen un `ResourceUsageEnumerator` con un modelo de precio real implementado en Floci; los demás servicios que usas (DynamoDB, SQS, etc.) aparecen en el catálogo de dimensiones pero con cantidad cero, porque Floci solo implementó síntesis de costo real para un subconjunto representativo de servicios, no para el catálogo completo.
-
-**Criterios de éxito:**
-- Ejecutaste realmente la consulta con datos de recursos reales creados durante el curso, no datos hipotéticos.
-- La explicación identifica correctamente la causa (cobertura parcial de enumeradores), no una suposición genérica.
-
-### Ejercicio 2: Audita consistencia de etiquetado
-
-**Enunciado:** usando `GetTagKeys`, lista todas las claves de etiqueta distintas que existen actualmente en tu cuenta de Floci a partir de los recursos que has etiquetado a lo largo del curso. Si encuentras inconsistencias (por ejemplo, `Proyecto` y `proyecto` como claves distintas), documenta cómo las corregirías.
-
-**Solución esperada:** `GetTagKeys` devuelve todas las claves distintas usadas; si hay inconsistencias de mayúsculas/minúsculas o nombres similares pero distintos, la corrección implica re-etiquetar los recursos afectados con la clave estandarizada correcta y eliminar la clave inconsistente con `UntagResources`.
-
-**Criterios de éxito:**
-- Ejecutaste realmente la consulta contra tu estado real de recursos etiquetados.
-- Si no encontraste inconsistencias, documenta explícitamente qué convención de nombres seguiste para evitarlas desde el principio.
-
-### Ejercicio 3: Diseña un flujo assume-role multi-cuenta
-
-**Enunciado:** diseña un flujo donde un pipeline de CI con credenciales de la cuenta `111111111111` necesita desplegar recursos en la cuenta `222222222222` usando `AssumeRole`. Documenta los pasos exactos y qué verificarías con `GetCallerIdentity` en cada etapa para confirmar que el aislamiento de cuenta funciona correctamente.
-
-**Solución esperada:** el pipeline llama a `AssumeRole` especificando el ARN de un rol en la cuenta `222222222222`, obtiene credenciales temporales, y las usa para todas las operaciones de despliegue subsiguientes. Antes del `AssumeRole`, `GetCallerIdentity` debe mostrar la cuenta `111111111111`; después, usando las credenciales temporales, debe mostrar la cuenta `222222222222` — confirmando que el cambio de identidad efectivamente ocurrió y que los recursos creados después quedan aislados en la cuenta destino.
-
-**Criterios de éxito:**
-- El flujo diseñado usa `GetCallerIdentity` en ambos momentos (antes y después) como mecanismo de verificación, no solo asume que funcionó.
-- Reconoce que las credenciales temporales tienen vigencia limitada y deben renovarse si el pipeline es de larga duración.
-
----
 
 ## Rúbrica del proyecto
 

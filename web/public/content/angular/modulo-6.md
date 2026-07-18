@@ -170,37 +170,6 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 
 ---
 
-## Ejercicios de evaluación
-
-### Ejercicio 1: switchMap frente a mergeMap
-
-**Enunciado:** explica por qué `switchMap` cancela la petición anterior y `mergeMap` no, con un ejemplo de cuándo cada uno es apropiado.
-
-**Solución esperada:** `switchMap` está diseñado específicamente para descartar el Observable interno anterior en cuanto llega una nueva emisión, apropiado cuando solo la respuesta más reciente importa (un buscador, donde una respuesta desactualizada de una búsqueda anterior ya no es relevante); `mergeMap` ejecuta todos los Observables internos en paralelo sin cancelar ninguno, apropiado cuando cada operación es independiente y todas deben completarse (por ejemplo, enviar varias notificaciones simultáneamente sin que una cancele a otra).
-
-**Criterios de éxito:**
-- Explica correctamente el comportamiento de cancelación de `switchMap` frente a la ejecución paralela de `mergeMap`.
-- Da un ejemplo apropiado para cada uno.
-
-### Ejercicio 2: Fuga de memoria evitada por el async pipe
-
-**Enunciado:** explica qué fuga de memoria evita el `async` pipe que un `subscribe()` manual sin `unsubscribe()` no evita.
-
-**Solución esperada:** un `subscribe()` manual sin desuscripción mantiene la suscripción activa incluso después de que el componente se destruye, manteniendo referencias activas que impiden que el recolector de basura libere la memoria del componente, y potencialmente ejecutando código que intenta actualizar un componente que ya no existe; el `async` pipe se desuscribe automáticamente cuando el componente se destruye, eliminando ambos problemas sin código manual adicional.
-
-**Criterios de éxito:**
-- Explica correctamente que la desuscripción automática del `async` pipe previene tanto la referencia persistente como la ejecución sobre un componente ya destruido.
-
-### Ejercicio 3: Elegir el operador de aplanamiento correcto
-
-**Enunciado:** un botón de "Enviar pedido" dispara una petición HTTP; el usuario podría hacer clic varias veces rápidamente por error antes de que la primera petición complete. ¿Qué operador de aplanamiento usarías para prevenir un envío duplicado, y por qué?
-
-**Solución esperada:** `exhaustMap`, porque ignora completamente nuevas emisiones (clics adicionales) mientras el Observable interno anterior (la petición en curso) todavía no ha completado, previniendo efectivamente el envío duplicado sin necesidad de deshabilitar manualmente el botón mientras la petición está en curso.
-
-**Criterios de éxito:**
-- Elige correctamente `exhaustMap` y justifica en términos de ignorar emisiones mientras una operación anterior sigue en curso.
-
----
 
 ## Rúbrica del proyecto
 

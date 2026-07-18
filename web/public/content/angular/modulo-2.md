@@ -171,40 +171,6 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 
 ---
 
-## Ejercicios de evaluación
-
-### Ejercicio 1: Por qué push() no dispara la actualización
-
-**Enunciado:** explica exactamente por qué `tareas().push(nuevaTarea)` dentro de un signal no dispara la actualización de la interfaz de usuario.
-
-**Solución esperada:** los signals detectan cambios comparando la referencia del valor almacenado, no su contenido profundo; `push()` muta el array existente in-place, sin crear una nueva referencia, así que desde la perspectiva del signal, "nada cambió" (la referencia sigue siendo idéntica antes y después), y por tanto no se notifica a ningún `computed()` o `effect()` que dependa de ese signal.
-
-**Criterios de éxito:**
-- Explica correctamente que la detección es por referencia, no por contenido profundo.
-
-### Ejercicio 2: Cuándo preferirías RxJS sobre un signal
-
-**Enunciado:** describe un escenario concreto donde preferirías un Observable de RxJS sobre un signal simple.
-
-**Solución esperada:** un escenario razonable: un buscador que debe esperar una pausa en la escritura del usuario (debounce), cancelar automáticamente la petición anterior si el usuario sigue escribiendo (switchMap), y combinar el resultado con otro flujo de datos (como un filtro seleccionado por separado); esta composición temporal de múltiples operadores es precisamente lo que RxJS está diseñado para expresar, y que un signal simple, por diseño síncrono, no cubre directamente sin recurrir de todas formas a RxJS por debajo.
-
-**Criterios de éxito:**
-- Da un escenario que genuinamente requiere composición temporal (debounce, cancelación, combinación de flujos).
-
-### Ejercicio 3: Diseñar un computed derivado
-
-**Enunciado:** dado un signal `tareas` con una lista de tareas (cada una con una propiedad `completada: boolean`), escribe un `computed()` que derive cuántas tareas están pendientes.
-
-**Solución esperada:**
-```ts
-const tareas = signal<Tarea[]>([]);
-const pendientes = computed(() => tareas().filter(t => !t.completada).length);
-```
-
-**Criterios de éxito:**
-- Usa `computed()` correctamente, derivando del signal `tareas` sin necesidad de un `effect()` innecesario.
-
----
 
 ## Rúbrica del proyecto
 

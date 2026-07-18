@@ -251,39 +251,6 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 
 ---
 
-## Ejercicios de evaluación
-
-### Ejercicio 1: Identificar qué SÍ cambia al ir a producción real
-
-**Enunciado:** más allá del endpoint y las credenciales (que sí cambian de forma directa y simple), menciona al menos dos aspectos operativos que, aunque la configuración técnica de Terraform sea prácticamente idéntica, requieren atención adicional real al desplegar contra un proveedor cloud real que no eran relevantes al practicar contra Floci.
-
-**Solución esperada:** dos respuestas razonables incluyen: (1) el coste real asociado a cada recurso desplegado, que en Floci era inexistente pero en un proveedor real requiere atención a los límites de autoscaling y al etiquetado de recursos para control de gastos (Tema 4); (2) la gestión real de credenciales IAM con mínimo privilegio genuino (en Floci, las credenciales de marcador de posición no representaban ningún riesgo real, mientras que en producción una credencial mal configurada tiene consecuencias de seguridad reales). Otras respuestas válidas podrían mencionar la latencia de red real entre servicios en distintas regiones, o el comportamiento a escala que un emulador local no puede replicar (mencionado en el Módulo 0 del track Cloud).
-
-**Criterios de éxito:**
-- Menciona al menos dos aspectos operativos reales más allá de la simple configuración de endpoint/credenciales.
-- Conecta esos aspectos con conceptos ya estudiados en el track (coste, mínimo privilegio, escala real).
-
-### Ejercicio 2: GitOps frente a CD tradicional
-
-**Enunciado:** un compañero argumenta que GitOps es "básicamente lo mismo" que el pipeline de CD tradicional del Módulo 5 de este track, solo con otro nombre. Explica la diferencia arquitectónica clave (pull frente a push) y por qué esa diferencia tiene una implicación real de seguridad.
-
-**Solución esperada:** en el CD tradicional, un sistema externo (el pipeline de CI/CD) empuja (push) activamente cambios hacia el clúster, lo que requiere que ese sistema externo tenga credenciales con permiso de escritura directa sobre el clúster de producción. En GitOps, un agente que vive dentro del propio clúster consulta (pull) activamente el repositorio Git en busca de cambios y se autoreconciliar, sin que ningún sistema externo necesite credenciales de escritura sobre el clúster. Esta diferencia (pull en vez de push) elimina la necesidad de exponer credenciales sensibles de escritura sobre el clúster hacia sistemas externos de CI/CD, reduciendo directamente la superficie de ataque de ese tipo específico de credencial sensible.
-
-**Criterios de éxito:**
-- Identifica correctamente la diferencia pull (GitOps) frente a push (CD tradicional).
-- Explica la implicación de seguridad: GitOps no requiere exponer credenciales de escritura del clúster hacia sistemas externos.
-
-### Ejercicio 3: Diseñar un ítem de checklist accionable
-
-**Enunciado:** convierte este ítem vago de checklist en uno accionable y verificable de forma objetiva: "Tener buena observabilidad".
-
-**Solución esperada:** una versión accionable podría ser: "El servicio expone métricas de tasa de peticiones, tasa de error y latencia p95 a Prometheus; existe al menos un dashboard de Grafana que las visualiza; y existe al menos una regla de alerta configurada sobre la tasa de error, con un umbral y una duración sostenida (`for`) definidos explícitamente, verificada con una prueba real de que efectivamente se dispara ante una condición simulada de error elevado."
-
-**Criterios de éxito:**
-- La versión reescrita es verificable objetivamente como sí/no, no una afirmación vaga de intención general.
-- Incluye componentes específicos y concretos (métricas específicas, dashboard, alerta con umbral definido).
-
----
 
 ## Rúbrica del proyecto
 

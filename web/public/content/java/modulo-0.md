@@ -330,36 +330,6 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 
 ---
 
-## Ejercicios de evaluación
-
-### Ejercicio 1: Por qué bytecode en vez de código máquina nativo
-
-**Enunciado:** explica por qué Java compila a bytecode en vez de código máquina nativo directamente.
-
-**Solución esperada:** compilar a bytecode permite que el mismo archivo compilado se ejecute sin recompilar en cualquier plataforma que tenga una JVM disponible, dado que la JVM específica de cada plataforma es la responsable de traducir ese bytecode universal al código máquina específico de esa plataforma, en vez de requerir una recompilación separada para cada plataforma de destino.
-
-**Criterios de éxito:**
-- Explica correctamente la portabilidad entre plataformas como razón principal.
-
-### Ejercicio 2: Cada palabra de main
-
-**Enunciado:** explica qué significa cada palabra de `public static void main(String[] args)`.
-
-**Solución esperada:** `public` (accesible desde cualquier lugar, necesario para que la JVM lo invoque desde fuera), `static` (pertenece a la clase, no requiere una instancia previa), `void` (no devuelve ningún valor), `main` (nombre exacto buscado por convención), `String[] args` (argumentos de línea de comandos).
-
-**Criterios de éxito:**
-- Explica correctamente el propósito de cada una de las cinco partes de la firma.
-
-### Ejercicio 3: JDK, JRE y JVM
-
-**Enunciado:** ¿qué necesitas instalar si solo quieres ejecutar un `.jar` ya compilado por otra persona, sin desarrollar código Java tú mismo?
-
-**Solución esperada:** en principio, el JRE es suficiente, dado que incluye la JVM más las librerías estándar necesarias para ejecutar programas Java, sin necesitar las herramientas de desarrollo (como `javac`) que solo el JDK completo incluye; en la práctica moderna, sin embargo, es común instalar directamente el JDK completo incluso para este caso.
-
-**Criterios de éxito:**
-- Identifica correctamente el JRE como suficiente en principio, mencionando que el JDK agrega herramientas de desarrollo no necesarias para solo ejecutar.
-
----
 
 ## Rúbrica del proyecto
 

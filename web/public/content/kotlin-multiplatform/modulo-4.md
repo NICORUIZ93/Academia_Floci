@@ -153,36 +153,6 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 
 ---
 
-## Ejercicios de evaluación
-
-### Ejercicio 1: Por qué depender de una interfaz facilita testear
-
-**Enunciado:** ¿por qué definir el caso de uso contra una interfaz de repositorio (no una implementación) facilita testear la lógica?
-
-**Solución esperada:** al depender únicamente de la interfaz, el caso de uso funciona idénticamente sin importar qué implementación concreta reciba, permitiendo sustituir la implementación real por una fake trivial durante las pruebas (sin red ni base de datos real), sin ningún cambio necesario en el código del caso de uso en sí.
-
-**Criterios de éxito:**
-- Explica correctamente la sustitución transparente de implementaciones (real por fake) como el beneficio para testabilidad.
-
-### Ejercicio 2: Proporción de lógica compartible
-
-**Enunciado:** ¿qué porcentaje de una app típica suele ser lógica de negocio compartible vs UI específica de plataforma?
-
-**Solución esperada:** cualquier estimación razonable con justificación; una respuesta común señala que gran parte de la lógica de negocio, networking y persistencia (con frecuencia 50-80% del código total dependiendo de la app) es compartible, mientras que la UI y ciertas integraciones nativas específicas permanecen como código específico de plataforma.
-
-**Criterios de éxito:**
-- Da una estimación razonable con una justificación coherente sobre qué tipo de código es compartible frente a específico.
-
-### Ejercicio 3: Ventaja de Koin multiplataforma
-
-**Enunciado:** ¿qué ventaja da usar Koin en `commonMain` frente a un framework de DI distinto por plataforma?
-
-**Solución esperada:** permite declarar la configuración completa de inyección de dependencias una única vez en código compartido, funcionando idénticamente en todas las plataformas, evitando duplicar y potencialmente desincronizar esa configuración entre implementaciones distintas por plataforma.
-
-**Criterios de éxito:**
-- Explica correctamente la evitación de duplicación y desincronización como ventaja de Koin multiplataforma.
-
----
 
 ## Rúbrica del proyecto
 

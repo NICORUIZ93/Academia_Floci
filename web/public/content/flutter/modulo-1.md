@@ -168,36 +168,6 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 
 ---
 
-## Ejercicios de evaluación
-
-### Ejercicio 1: Cuándo se necesita realmente una Key
-
-**Enunciado:** ¿cuándo necesitas realmente una `Key`, más allá de "Flutter lo pide"?
-
-**Solución esperada:** cuando se reordena una lista de widgets del mismo tipo que mantienen estado interno propio (como un checkbox), sin una `Key` estable Flutter puede confundir qué estado interno corresponde a qué elemento tras el reordenamiento, dado que por defecto identifica los widgets principalmente por su posición.
-
-**Criterios de éxito:**
-- Explica correctamente el reordenamiento de listas con estado interno como el caso concreto donde una `Key` es necesaria.
-
-### Ejercicio 2: Por qué un StatelessWidget puede ser dinámico
-
-**Enunciado:** ¿por qué un `StatelessWidget` puede seguir siendo "dinámico" si sus datos vienen de un padre que sí tiene estado?
-
-**Solución esperada:** un `StatelessWidget` no mantiene estado propio, pero se reconstruye automáticamente cuando su padre (que sí tiene estado, vía `StatefulWidget`) le pasa datos nuevos como parámetros de constructor; la dinámica proviene del padre, no del `StatelessWidget` en sí mismo.
-
-**Criterios de éxito:**
-- Explica correctamente que la dinámica proviene de la reconstrucción impulsada por el padre con nuevos datos.
-
-### Ejercicio 3: Rebuild vs re-render
-
-**Enunciado:** ¿qué diferencia hay entre "rebuild" (Flutter) y "re-render" (React)?
-
-**Solución esperada:** ambos términos describen el mismo principio fundamental: volver a ejecutar la función/método que describe la UI en respuesta a un cambio de estado, y reconciliar el resultado contra el árbol anterior para aplicar únicamente los cambios necesarios al renderizado real, aunque cada framework usa terminología distinta para el mismo concepto.
-
-**Criterios de éxito:**
-- Reconoce correctamente que ambos términos describen el mismo principio de reconciliación, con terminología distinta por framework.
-
----
 
 ## Rúbrica del proyecto
 

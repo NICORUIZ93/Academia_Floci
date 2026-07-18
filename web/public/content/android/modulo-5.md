@@ -182,36 +182,6 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 
 ---
 
-## Ejercicios de evaluación
-
-### Ejercicio 1: Retrofit + coroutines vs Callback
-
-**Enunciado:** ¿por qué Retrofit + coroutines es más simple de leer que el Retrofit clásico con `Callback`?
-
-**Solución esperada:** con `suspend`, el código de red se lee de forma lineal y secuencial como si fuera síncrono, sin bloquear el hilo; el Retrofit clásico con `Callback` requiere anidar `onResponse`/`onFailure` en callbacks, dificultando seguir el flujo del código especialmente al encadenar múltiples llamadas.
-
-**Criterios de éxito:**
-- Explica correctamente la lectura lineal/secuencial de coroutines frente al anidamiento de callbacks.
-
-### Ejercicio 2: Consecuencia de no modelar el error
-
-**Enunciado:** ¿qué pasa con tu pantalla si nunca modelas explícitamente el estado de error?
-
-**Solución esperada:** la app no puede comunicar al usuario qué salió mal (si es un problema de conexión o un error del servidor), ni decidir automáticamente si vale la pena reintentar la operación, dejando a la UI en un estado indefinido o mostrando un mensaje genérico poco útil.
-
-**Criterios de éxito:**
-- Explica correctamente la falta de comunicación específica al usuario como consecuencia.
-
-### Ejercicio 3: Propósito de un interceptor
-
-**Enunciado:** ¿qué problema resuelve un interceptor de OkHttp frente a repetir la misma lógica en cada llamada?
-
-**Solución esperada:** centraliza una transformación transversal (logging, autenticación) en un único punto que se aplica automáticamente a cada request/response, evitando duplicar esa lógica manualmente en cada llamada individual de la API.
-
-**Criterios de éxito:**
-- Menciona correctamente la centralización de lógica transversal como el problema que resuelve.
-
----
 
 ## Rúbrica del proyecto
 

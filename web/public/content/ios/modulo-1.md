@@ -158,36 +158,6 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 
 ---
 
-## Ejercicios de evaluación
-
-### Ejercicio 1: Por qué el orden de modificadores cambia el resultado
-
-**Enunciado:** ¿por qué el orden de los modificadores (`.padding` antes o después de `.background`) cambia el resultado visual?
-
-**Solución esperada:** cada modificador envuelve la vista anterior en una nueva vista compuesta; aplicar `.padding()` antes de `.background()` hace que el fondo cubra también el espacio del padding, mientras que el orden inverso deja el fondo ajustado al tamaño original, con el padding agregado por fuera sin cobertura de color.
-
-**Criterios de éxito:**
-- Explica correctamente el mecanismo de envoltura sucesiva como razón del cambio visual según el orden.
-
-### Ejercicio 2: Ventaja del sistema de Previews
-
-**Enunciado:** ¿qué ventaja da el sistema de Previews frente a ejecutar la app completa en el simulador para cada cambio?
-
-**Solución esperada:** renderiza la vista directamente en el canvas de Xcode sin compilar ni ejecutar la app completa, reduciendo drásticamente el ciclo de iteración al diseñar o ajustar una vista específica.
-
-**Criterios de éxito:**
-- Explica correctamente la reducción del ciclo de iteración como la ventaja principal.
-
-### Ejercicio 3: Composición uniforme de vistas
-
-**Enunciado:** ¿por qué una vista propia (como `TarjetaTarea`) puede componerse dentro de otra exactamente igual que una vista nativa de SwiftUI como `Text`?
-
-**Solución esperada:** ambas conforman al mismo protocolo `View` con una propiedad `body` que describe su contenido, sin ninguna distinción especial entre "vista de sistema" y "vista propia" en el mecanismo de composición de SwiftUI.
-
-**Criterios de éxito:**
-- Explica correctamente el protocolo `View` compartido como la razón de la composición uniforme.
-
----
 
 ## Rúbrica del proyecto
 

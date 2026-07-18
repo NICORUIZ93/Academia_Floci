@@ -157,36 +157,6 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 
 ---
 
-## Ejercicios de evaluación
-
-### Ejercicio 1: Ganancia y riesgo de compartir UI
-
-**Enunciado:** ¿qué gana un equipo al compartir UI (no solo lógica) entre Android e iOS, y qué riesgo asume?
-
-**Solución esperada:** gana una reducción considerable de duplicación de trabajo de construcción de interfaz entre plataformas, con coherencia visual garantizada por diseño; asume el riesgo de que la UI no luzca ni se comporte exactamente según las convenciones nativas específicas de cada sistema operativo, a menos que se invierta esfuerzo adicional en adaptaciones específicas de plataforma.
-
-**Criterios de éxito:**
-- Menciona correctamente la reducción de duplicación como ganancia y la posible pérdida de convenciones nativas específicas como riesgo.
-
-### Ejercicio 2: Por qué Compose Multiplatform es más limitado en iOS
-
-**Enunciado:** ¿por qué Compose Multiplatform en iOS es relativamente más nuevo/limitado que en Android?
-
-**Solución esperada:** Jetpack Compose lleva más tiempo consolidado como la UI recomendada por defecto en Android; su extensión hacia iOS mediante Compose Multiplatform es una capacidad más reciente, por lo que ciertas integraciones con capacidades nativas específicas de iOS todavía requieren puentes adicionales o, en algunos casos, recurrir a SwiftUI nativo.
-
-**Criterios de éxito:**
-- Explica correctamente la mayor madurez relativa de Android como razón de la diferencia actual de soporte.
-
-### Ejercicio 3: Alcance de Compose Multiplatform más allá de móvil
-
-**Enunciado:** ¿a qué otros targets, además de Android e iOS, se extiende Compose Multiplatform?
-
-**Solución esperada:** desktop (Windows, macOS, Linux) y web (mediante WebAssembly), ampliando el alcance de UI compartida más allá de la combinación de plataformas móviles.
-
-**Criterios de éxito:**
-- Menciona correctamente desktop y/o web como targets adicionales de Compose Multiplatform.
-
----
 
 ## Rúbrica del proyecto
 

@@ -145,39 +145,6 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 
 ---
 
-## Ejercicios de evaluación
-
-### Ejercicio 1: Diseña una regla de Config y explica su límite en Floci
-
-**Enunciado:** crea una regla de Config llamada `dynamodb-backup-enabled` (fuente `AWS`, identificador `DYNAMODB_IN_BACKUP_PLAN`) y consulta su estado de cumplimiento con `DescribeComplianceByConfigRule`. Explica por qué el resultado no te dice si tus tablas realmente están protegidas.
-
-**Solución esperada:** la regla se crea y se almacena correctamente, pero `DescribeComplianceByConfigRule` devuelve `INSUFFICIENT_DATA` porque Floci no ejecuta la lógica de evaluación real de la regla administrada; para saber si tus tablas están efectivamente en un plan de respaldo, tendrías que consultarlo directamente contra AWS Backup, no contra Config.
-
-**Criterios de éxito:**
-- Ejecutaste realmente la creación de la regla y la consulta de cumplimiento.
-- Explicas correctamente que la limitación es de evaluación, no de almacenamiento de la configuración de la regla.
-
-### Ejercicio 2: Cambia un feature flag sin desplegar código
-
-**Enunciado:** despliega una configuración `{"modo_mantenimiento": false}` con AppConfig, simula que tu aplicación la lee con AppConfigData, y luego despliega una nueva versión con `{"modo_mantenimiento": true}`. Documenta cuánto tiempo pasa entre el despliegue y que el cambio sea visible para el plano de datos.
-
-**Solución esperada:** con una estrategia de despliegue inmediata (duración 0), el cambio es visible en la siguiente llamada a `GetLatestConfiguration` después del `StartDeployment`, sin necesidad de reiniciar ni redesplegar ninguna aplicación.
-
-**Criterios de éxito:**
-- Ejecutaste realmente ambos despliegues y verificaste el cambio con el plano de datos, no solo lo describiste.
-- Reconoces que ninguna parte de este flujo requirió tocar código de la aplicación.
-
-### Ejercicio 3: Ordena correctamente la eliminación de recursos de Backup
-
-**Enunciado:** intenta eliminar, en este orden, primero la bóveda, luego el plan, y finalmente la selección. Documenta en qué paso falla cada intento y cuál es el orden correcto.
-
-**Solución esperada:** eliminar la bóveda falla mientras contiene puntos de recuperación; eliminar el plan falla mientras tiene selecciones activas. El orden correcto es: eliminar la selección primero, luego el plan, y finalmente vaciar y eliminar la bóveda (eliminando sus puntos de recuperación).
-
-**Criterios de éxito:**
-- Intentaste realmente los tres pasos en el orden incorrecto y documentaste los errores exactos devueltos por la API.
-- El orden correcto propuesto respeta las dependencias reales entre selección, plan y bóveda.
-
----
 
 ## Rúbrica del proyecto
 

@@ -140,36 +140,6 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 
 ---
 
-## Ejercicios de evaluación
-
-### Ejercicio 1: Ventaja de Path sobre File
-
-**Enunciado:** ¿qué ventaja da `java.nio.file.Path` sobre la antigua clase `File`?
-
-**Solución esperada:** `Path`, junto con la clase `Files`, ofrece una API considerablemente más expresiva para operaciones comunes (copiar, mover, recorrer directorios recursivamente como stream) y mejor manejo de errores mediante excepciones descriptivas, en vez de simplemente devolver `false` ante un error sin indicar la causa específica, como hacía frecuentemente la antigua clase `File`.
-
-**Criterios de éxito:**
-- Menciona correctamente la mejora en manejo de errores y/o la mayor expresividad de operaciones como ventajas de `Path`/`Files`.
-
-### Ejercicio 2: Por qué leer con buffer evita problemas de memoria
-
-**Enunciado:** ¿por qué leer un archivo grande con buffer evita problemas de memoria que `readAllBytes` no evita?
-
-**Solución esperada:** `readAllBytes` carga el contenido completo del archivo en memoria simultáneamente, un enfoque inviable si el archivo se acerca o supera la memoria disponible; leer con un `BufferedReader` línea por línea mantiene en memoria únicamente la línea actual (más el buffer interno de lectura) en cualquier momento dado, sin importar el tamaño total del archivo completo.
-
-**Criterios de éxito:**
-- Explica correctamente la diferencia entre cargar todo el contenido de una vez y procesar incrementalmente.
-
-### Ejercicio 3: Recursos del classpath frente a archivos del sistema
-
-**Enunciado:** ¿por qué usar `getResourceAsStream` en vez de `Files` para cargar un archivo de configuración empaquetado con la aplicación?
-
-**Solución esperada:** un recurso del classpath viaja empaquetado dentro del propio JAR de la aplicación, garantizando su disponibilidad sin importar en qué máquina o entorno se despliegue esa aplicación; un archivo cargado con `Files` depende de que exista físicamente en una ubicación específica del sistema de archivos del entorno donde la aplicación se ejecuta, una dependencia externa que el recurso empaquetado del classpath evita completamente.
-
-**Criterios de éxito:**
-- Explica correctamente la garantía de disponibilidad empaquetada del classpath frente a la dependencia de una ubicación externa del sistema de archivos.
-
----
 
 ## Rúbrica del proyecto
 

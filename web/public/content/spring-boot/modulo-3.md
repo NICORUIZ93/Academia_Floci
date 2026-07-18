@@ -144,36 +144,6 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 
 ---
 
-## Ejercicios de evaluación
-
-### Ejercicio 1: Riesgo de ddl-auto en producción
-
-**Enunciado:** ¿por qué confiar en `hibernate.ddl-auto=update` es riesgoso en producción comparado con migraciones versionadas?
-
-**Solución esperada:** Hibernate podría inferir un cambio de esquema distinto al pretendido realmente por el desarrollador, y ese cambio no queda registrado en ningún historial versionado ni revisable antes de aplicarse; las migraciones versionadas son explícitas, revisables en code review, y se aplican de forma idéntica y predecible en cada entorno.
-
-**Criterios de éxito:**
-- Explica correctamente la falta de versionado/revisión y la imprevisibilidad de la inferencia automática como riesgos.
-
-### Ejercicio 2: Causa y detección del problema N+1
-
-**Enunciado:** ¿qué causa el problema N+1 y cómo lo detectas?
-
-**Solución esperada:** ocurre cuando se itera sobre una colección de entidades accediendo a una relación con carga perezosa de cada una, disparando una query SQL separada por cada elemento de la colección; se detecta observando el log de queries ejecutadas (o con una herramienta de monitoreo de SQL) y notando que el número de queries escala proporcionalmente al tamaño de la colección iterada, en vez de mantenerse constante.
-
-**Criterios de éxito:**
-- Explica correctamente la causa (carga perezosa iterada) y un método razonable de detección (conteo/log de queries).
-
-### Ejercicio 3: Cuándo usar un método derivado vs @Query
-
-**Enunciado:** ¿cuándo preferirías un método derivado sobre `@Query` explícito, y viceversa?
-
-**Solución esperada:** un método derivado es apropiado para consultas simples y directas expresables claramente por convención de nombres (`findByCompletadaFalse`); `@Query` es apropiado cuando la consulta necesaria es demasiado compleja o específica (agregaciones, joins particulares) para expresarse de forma legible mediante esa convención de nombres.
-
-**Criterios de éxito:**
-- Distingue correctamente el caso simple (método derivado) del caso complejo (`@Query` explícito).
-
----
 
 ## Rúbrica del proyecto
 

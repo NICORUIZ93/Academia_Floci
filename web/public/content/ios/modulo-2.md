@@ -181,36 +181,6 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 
 ---
 
-## Ejercicios de evaluación
-
-### Ejercicio 1: Diferencia entre @State y @Binding
-
-**Enunciado:** ¿qué diferencia hay entre `@State` (estado propio de una vista) y `@Binding` (referencia al estado de otra)?
-
-**Solución esperada:** `@State` posee el valor y pertenece exclusivamente a la vista donde se declara; `@Binding` no posee el valor sino que mantiene una referencia mutable hacia el estado de otra vista (típicamente el padre), de modo que modificarlo desde el hijo efectivamente modifica el estado original.
-
-**Criterios de éxito:**
-- Distingue correctamente posesión (`@State`) de referencia (`@Binding`).
-
-### Ejercicio 2: Qué resuelve @Observable
-
-**Enunciado:** ¿qué resuelve `@Observable` que `ObservableObject` + `@Published` resolvía antes, de forma más simple?
-
-**Solución esperada:** `@Observable` redibuja solo las vistas que leen específicamente la propiedad que cambió, en vez de redibujar cualquier vista que observe el objeto completo, mejorando el rendimiento frente al comportamiento de sobre-notificación del modelo anterior.
-
-**Criterios de éxito:**
-- Explica correctamente el redibujado granular como la mejora de `@Observable`.
-
-### Ejercicio 3: Problema que resuelve @Environment
-
-**Enunciado:** ¿qué problema resuelve `@Environment` frente a pasar una dependencia manualmente por cada inicializador?
-
-**Solución esperada:** evita el "prop drilling" de pasar la dependencia explícitamente a través de cada vista intermedia que no la usa directamente pero se encuentra en el camino jerárquico hacia una vista descendiente que sí la necesita.
-
-**Criterios de éxito:**
-- Menciona correctamente el prop drilling como el problema evitado.
-
----
 
 ## Rúbrica del proyecto
 

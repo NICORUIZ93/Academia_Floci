@@ -164,36 +164,6 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 
 ---
 
-## Ejercicios de evaluación
-
-### Ejercicio 1: Decisión de diseño al escalar 10x
-
-**Enunciado:** ¿qué decisión de diseño cambiarías si tuvieras que escalar esta aplicación a 10 veces el volumen de datos?
-
-**Solución esperada:** cualquier respuesta razonablemente justificada; respuestas comunes incluyen reconsiderar el recolector de basura (Módulo 11) según el nuevo perfil de memoria, evaluar si la capa de infraestructura necesita paginación o procesamiento por lotes en vez de cargar todo en memoria, o revisar si el número de virtual threads lanzados simultáneamente requiere algún límite adicional para no saturar recursos externos compartidos (como una base de datos con un límite de conexiones concurrentes).
-
-**Criterios de éxito:**
-- Propone un cambio concreto y justificado con una razón técnica relacionada con el aumento de escala.
-
-### Ejercicio 2: Feature de Java moderna con mayor impacto
-
-**Enunciado:** ¿qué parte del proyecto te hizo apreciar más una feature de Java moderna (records, virtual threads, pattern matching)?
-
-**Solución esperada:** cualquier respuesta razonablemente justificada, vinculando una feature específica con un beneficio concreto observado durante la construcción del proyecto (por ejemplo, virtual threads simplificando el procesamiento concurrente sin reescribir en estilo asíncrono, o records eliminando boilerplate del modelo de dominio).
-
-**Criterios de éxito:**
-- Vincula correctamente una feature específica con un beneficio concreto observado en el proyecto propio.
-
-### Ejercicio 3: Cierre del track — habilidades combinadas
-
-**Enunciado:** enumera las habilidades concretas del track de Java que este proyecto integrador combina en una única aplicación.
-
-**Solución esperada:** programación orientada a objetos y modelado con records/sealed interfaces (Módulos 1 y 7), concurrencia con virtual threads (Módulo 5), manejo robusto de excepciones (Módulo 3), testing aislado con JUnit 5 y Mockito (Módulo 9), y un build reproducible con Gradle o Maven (Módulo 8).
-
-**Criterios de éxito:**
-- Enumera al menos cuatro de las cinco habilidades combinadas, vinculándolas correctamente a los módulos donde se estudiaron.
-
----
 
 ## Rúbrica del proyecto
 

@@ -188,39 +188,6 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 
 ---
 
-## Ejercicios de evaluación
-
-### Ejercicio 1: any frente a tipado correcto
-
-**Enunciado:** explica qué pierdes realmente, en términos concretos y verificables por el compilador, si usas `any` en vez de tipar correctamente un parámetro de función.
-
-**Solución esperada:** con `any`, el compilador no verifica ninguna operación realizada sobre ese valor: se puede invocar cualquier método, acceder a cualquier propiedad, o pasarlo a cualquier función, sin ningún error de compilación, incluso si esas operaciones son incorrectas para el valor real en tiempo de ejecución. Se pierde toda la verificación estática que TypeScript ofrece específicamente para ese valor, además de perder el autocompletado preciso del editor y cualquier documentación implícita que un tipo correcto proporcionaría a otros desarrolladores que lean o usen esa función después.
-
-**Criterios de éxito:**
-- Explica que `any` desactiva completamente la verificación de tipos para ese valor específico.
-- Menciona al menos una consecuencia práctica adicional (pérdida de autocompletado, documentación implícita perdida).
-
-### Ejercicio 2: interface frente a type
-
-**Enunciado:** ¿en qué situación usarías un `type alias` en vez de una `interface`, dando un ejemplo concreto?
-
-**Solución esperada:** un `type alias` es necesario (no solo preferible) para expresar tipos unión (`type Estado = "activo" | "inactivo";`), tipos de función independientes, o combinaciones de tipos mediante intersección, casos que una `interface` no puede expresar directamente por sí sola. Una `interface`, en cambio, es la convención más común para describir la forma de un objeto o de una clase, especialmente cuando se anticipa la necesidad de extenderla posteriormente en declaraciones separadas.
-
-**Criterios de éxito:**
-- Da un ejemplo correcto de un caso donde `type` es necesario (típicamente una unión).
-- Explica correctamente por qué ese caso específico no se puede expresar de la misma forma con `interface`.
-
-### Ejercicio 3: Los límites de TypeScript en runtime
-
-**Enunciado:** explica por qué TypeScript no puede proteger contra un caso en el que una API externa cambia el formato de su respuesta JSON sin previo aviso, y qué se necesitaría adicionalmente para detectar ese cambio de forma confiable.
-
-**Solución esperada:** TypeScript verifica los tipos únicamente en tiempo de compilación, sobre el código fuente; no tiene ningún mecanismo para inspeccionar en tiempo de ejecución si los datos reales recibidos de una API externa efectivamente cumplen la forma declarada por una `interface`. Si la API cambia su formato sin que el código se actualice, TypeScript seguirá confiando ciegamente en la anotación de tipo declarada, sin detectar la discrepancia. Se necesitaría una biblioteca de validación en tiempo de ejecución (como Zod) que verifique explícitamente, en el momento de recibir la respuesta, que su forma real coincide con lo esperado, lanzando un error detectable si no coincide.
-
-**Criterios de éxito:**
-- Explica correctamente que TypeScript solo verifica en tiempo de compilación, no en runtime.
-- Propone una solución concreta (validación en runtime con una biblioteca como Zod, o un type guard manual).
-
----
 
 ## Rúbrica del proyecto
 

@@ -157,36 +157,6 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 
 ---
 
-## Ejercicios de evaluación
-
-### Ejercicio 1: Ventaja de un Server Component
-
-**Enunciado:** explica qué ventaja tiene un Server Component que nunca envía su JavaScript al navegador.
-
-**Solución esperada:** reduce directamente el tamaño del bundle de JavaScript que el cliente necesita descargar y ejecutar, un beneficio particularmente significativo para componentes que dependen de librerías pesadas del servidor, que de otro modo tendrían que incluirse completas en el bundle del cliente aunque solo produzcan el HTML final.
-
-**Criterios de éxito:**
-- Explica correctamente la reducción del bundle del cliente como beneficio principal.
-
-### Ejercicio 2: Cuándo es obligatorio use client
-
-**Enunciado:** ¿cuándo es obligatorio marcar un componente como `"use client"`?
-
-**Solución esperada:** cuando el componente usa hooks de estado (`useState`, `useEffect`) o manejadores de eventos interactivos (`onClick`, `onChange`), dado que esas capacidades requieren un entorno de ejecución en el navegador donde el JavaScript del componente corre después de la carga inicial, algo que un Server Component no ofrece por definición.
-
-**Criterios de éxito:**
-- Identifica correctamente hooks de estado y manejadores de eventos interactivos como los casos que requieren `"use client"`.
-
-### Ejercicio 3: Server Actions frente a un endpoint API manual
-
-**Enunciado:** ¿qué código repetitivo evita una Server Action frente a definir manualmente un endpoint API y un manejador de submit del lado del cliente?
-
-**Solución esperada:** evita definir una ruta API separada, un manejador de submit que capture el evento, prevenga el comportamiento por defecto del formulario, serialice los datos, y realice una petición `fetch` manual hacia esa ruta; Next.js genera automáticamente esa infraestructura de comunicación al usar una Server Action directamente en el `action` del formulario.
-
-**Criterios de éxito:**
-- Enumera correctamente el código repetitivo evitado (ruta API, manejador manual, serialización, fetch manual).
-
----
 
 ## Rúbrica del proyecto
 

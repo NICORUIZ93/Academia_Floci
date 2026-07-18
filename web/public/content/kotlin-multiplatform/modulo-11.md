@@ -188,36 +188,6 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 
 ---
 
-## Ejercicios de evaluación
-
-### Ejercicio 1: Proporción real de código compartido
-
-**Enunciado:** ¿qué porcentaje real de tu código terminó siendo compartido vs específico de plataforma?
-
-**Solución esperada:** cualquier estimación razonable con justificación basada en el proyecto propio; una respuesta común señala que dominio, casos de uso, networking y persistencia (una proporción considerable del código total) terminaron compartidos, mientras que la UI (si se optó por nativa) permaneció específica de plataforma.
-
-**Criterios de éxito:**
-- Da una estimación razonable y coherente con las decisiones de arquitectura tomadas en el proyecto propio.
-
-### Ejercicio 2: Decisión de arquitectura que ahorró más tiempo
-
-**Enunciado:** ¿qué decisión de arquitectura te ahorró más tiempo al final del proyecto?
-
-**Solución esperada:** cualquier respuesta razonablemente justificada; respuestas comunes incluyen compartir la lógica de sincronización de datos (evitando implementarla dos veces con el riesgo de que ambas implementaciones diverjan), o compartir los tests de la capa común (verificando ambas plataformas con un único esfuerzo de escritura de pruebas).
-
-**Criterios de éxito:**
-- Justifica su elección con un ahorro concreto de tiempo o esfuerzo observado en el proyecto propio.
-
-### Ejercicio 3: Cierre del track — la promesa realista de KMP
-
-**Enunciado:** explica la promesa realista de KMP: qué comparte y qué no pretende reemplazar.
-
-**Solución esperada:** KMP comparte específicamente la lógica de negocio, networking y persistencia, áreas donde la duplicación entre plataformas es pura redundancia sin beneficio real; no pretende reemplazar el desarrollo nativo completo, dejando la UI como una decisión de arquitectura deliberada entre fidelidad nativa por plataforma o velocidad de desarrollo con UI compartida (Compose Multiplatform).
-
-**Criterios de éxito:**
-- Explica correctamente la distinción entre lo que KMP comparte (lógica, networking, persistencia) y lo que deja como decisión deliberada (UI).
-
----
 
 ## Rúbrica del proyecto
 

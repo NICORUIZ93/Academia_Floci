@@ -142,36 +142,6 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 
 ---
 
-## Ejercicios de evaluación
-
-### Ejercicio 1: Cuándo usar Kinesis sobre SQS
-
-**Enunciado:** ¿cuándo usar Kinesis sobre SQS?
-
-**Solución esperada:** cuando múltiples consumidores independientes necesitan leer el mismo flujo completo de eventos manteniendo cada uno su propia posición, sin que el consumo de uno afecte a los demás, a diferencia de SQS donde un mensaje se elimina al ser consumido por un único consumidor competitivo entre varios.
-
-**Criterios de éxito:**
-- Explica correctamente la lectura independiente por múltiples consumidores como razón de elegir Kinesis sobre SQS.
-
-### Ejercicio 2: Qué es un consumer group y por qué existe
-
-**Enunciado:** ¿qué es un consumer group en Kafka y por qué existe?
-
-**Solución esperada:** es un conjunto de consumidores que colaboran para procesar en paralelo las particiones de un topic, con el offset rastreado por grupo para permitir recuperar la posición de lectura exacta tras un reinicio; existe para permitir escalar horizontalmente el procesamiento distribuyendo particiones entre múltiples consumidores del mismo grupo lógico.
-
-**Criterios de éxito:**
-- Explica correctamente el paralelismo y la persistencia del offset por grupo como razón de existencia.
-
-### Ejercicio 3: Diferencia entre Kinesis Data Streams y Firehose
-
-**Enunciado:** ¿qué diferencia hay entre Kinesis Data Streams y Kinesis Data Firehose?
-
-**Solución esperada:** Data Streams ofrece control de bajo nivel para procesamiento personalizado en tiempo real por un consumidor propio; Data Firehose automatiza la entrega hacia un destino final (S3, warehouse) con transformaciones opcionales, sin necesidad de código de consumidor personalizado.
-
-**Criterios de éxito:**
-- Distingue correctamente el control fino (Streams) de la entrega automatizada gestionada (Firehose).
-
----
 
 ## Rúbrica del proyecto
 

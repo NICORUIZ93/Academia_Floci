@@ -311,47 +311,6 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 
 ---
 
-## Ejercicios de evaluación
-
-### Ejercicio 1: Qué garantiza Riverpod en tiempo de compilación
-
-**Enunciado:** ¿qué garantiza Riverpod "en tiempo de compilación" que Provider no garantiza?
-
-**Solución esperada:** Riverpod verifica la existencia y el tipo correcto de un provider en tiempo de compilación, detectando errores de "provider no encontrado" inmediatamente; Provider depende del árbol de widgets en runtime, por lo que ese mismo error solo se manifiesta como una excepción al ejecutar el código afectado.
-
-**Criterios de éxito:**
-- Explica correctamente la verificación en compilación de Riverpod frente a la dependencia del árbol en runtime de Provider.
-
-### Ejercicio 2: Ventaja del modelo de eventos de Bloc/Cubit
-
-**Enunciado:** ¿qué ventaja da el modelo de eventos de Bloc/Cubit para apps con lógica de negocio compleja?
-
-**Solución esperada:** fuerza una separación explícita y estructurada entre "qué pasó" (el evento) y "cómo cambia el estado en respuesta" (la emisión resultante), un patrón considerablemente más predecible y fácil de testear de forma aislada que mutaciones de estado dispersas directamente en callbacks de UI.
-
-**Criterios de éxito:**
-- Explica correctamente la separación evento/estado como la ventaja de predictibilidad y testeabilidad.
-
-### Ejercicio 3: Límite de setState al compartir estado
-
-**Enunciado:** ¿por qué `setState` se vuelve incómodo cuando varios widgets distantes necesitan compartir el mismo estado?
-
-**Solución esperada:** la única forma de compartir ese estado con `setState` puro sería elevarlo hasta un ancestro común y pasarlo manualmente hacia abajo por cada nivel intermedio del árbol (prop drilling), un patrón tedioso y frágil que se agrava cuanto más distantes están los widgets que necesitan ese mismo estado compartido.
-
-**Criterios de éxito:**
-- Explica correctamente el prop drilling manual como la razón de la incomodidad al escalar.
-
-### Ejercicio 4: Estados de un formulario que puede fallar
-
-**Enunciado:** explica por qué `isValid == true` no basta para representar el formulario y diseña la reacción de la interfaz ante doble toque, timeout y error de campo devuelto por el servidor.
-
-**Solución esperada:** la validez representa solamente reglas locales. El envío necesita estados `idle/sending/success/failure`; durante `sending` se bloquea otro envío, un timeout conserva entradas y ofrece reintento, y un error de campo remoto se asocia a la entrada correspondiente sin reemplazar las reglas locales ni mostrar datos sensibles.
-
-**Criterios de éxito:**
-- Separa validación local de resultado remoto.
-- Evita peticiones duplicadas.
-- Mantiene datos y feedback accesible ante errores recuperables.
-
----
 
 ## Rúbrica del proyecto
 

@@ -203,25 +203,6 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 - Registrar requests completos: redacta datos sensibles.
 - Tratar CORS como autenticación: exige credenciales/permisos reales.
 
-## Ejercicios de evaluación
-
-### Ejercicio 1: threat model
-
-**Enunciado:** identifica una amenaza por categoría STRIDE sobre login.
-
-**Solución esperada:** amenaza concreta, activo/flujo, impacto y control verificable, sin confundir categoría con solución.
-
-### Ejercicio 2: contraseña
-
-**Enunciado:** explica salt y función lenta.
-
-**Solución esperada:** salt único evita tablas/reutilización entre hashes; coste ralentiza intentos masivos; parámetros se almacenan.
-
-### Ejercicio 3: prueba negativa
-
-**Enunciado:** demuestra que lector no elimina productos.
-
-**Solución esperada:** espera denegación y confirma que fila/audit log no muestran eliminación.
 
 ## Rúbrica del proyecto
 

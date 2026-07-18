@@ -169,37 +169,6 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 
 ---
 
-## Ejercicios de evaluación
-
-### Ejercicio 1: Worker Thread frente a cola de trabajo
-
-**Enunciado:** explica cuándo un Worker Thread es la herramienta correcta y cuándo una cola de trabajo lo es, con un ejemplo de cada caso.
-
-**Solución esperada:** un Worker Thread es apropiado para cómputo pesado que debe completarse como parte de la misma petición HTTP en curso (por ejemplo, procesar una imagen subida y devolver el resultado procesado en la misma respuesta); una cola de trabajo es apropiada cuando el trabajo puede procesarse de forma completamente asíncrona sin que el cliente necesite esperar el resultado inmediato en la misma petición (por ejemplo, enviar un email de confirmación tras un registro, donde el cliente solo necesita saber que el registro se completó, no esperar a que el email termine de enviarse).
-
-**Criterios de éxito:**
-- Da un ejemplo correcto y bien justificado para cada herramienta.
-
-### Ejercicio 2: Por qué cluster no comparte memoria
-
-**Enunciado:** explica por qué el módulo `cluster` no comparte memoria entre procesos como sí lo hace, en cierto sentido, un `worker_thread` dentro del mismo proceso.
-
-**Solución esperada:** cada proceso de `cluster` es un proceso del sistema operativo genuinamente independiente, con su propio espacio de memoria completamente aislado por el propio sistema operativo; un `worker_thread`, en cambio, es un hilo dentro del mismo proceso, y aunque tampoco comparte memoria directamente por defecto (se comunica por mensajes, igual que cluster), técnicamente puede compartir memoria explícitamente mediante `SharedArrayBuffer`, una capacidad que procesos completamente separados del sistema operativo no tienen de la misma forma directa.
-
-**Criterios de éxito:**
-- Explica correctamente que cluster usa procesos del sistema operativo genuinamente separados, con aislamiento de memoria impuesto por el propio sistema operativo.
-
-### Ejercicio 3: Diagnosticar una fuga de memoria con heap snapshots
-
-**Enunciado:** un proceso Node de larga duración muestra un uso de memoria que crece constantemente sin estabilizarse. Describe el proceso que seguirías con heap snapshots para diagnosticar la causa.
-
-**Solución esperada:** tomaría un primer heap snapshot en un momento dado, dejaría el proceso ejecutándose normalmente durante un tiempo, tomaría un segundo snapshot, y compararía ambos usando Chrome DevTools para identificar qué tipo específico de objeto creció de forma sospechosa en cantidad entre ambos snapshots; esa categoría de objeto sería el punto de partida para investigar qué parte del código mantiene referencias innecesarias a esos objetos, impidiendo que el recolector de basura los libere.
-
-**Criterios de éxito:**
-- Describe correctamente el proceso de tomar y comparar dos snapshots en momentos distintos.
-- Explica que el objetivo es identificar qué tipo de objeto crece sospechosamente para investigar las referencias que lo mantienen vivo.
-
----
 
 ## Rúbrica del proyecto
 

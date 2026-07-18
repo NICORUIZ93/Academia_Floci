@@ -154,36 +154,6 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 
 ---
 
-## Ejercicios de evaluación
-
-### Ejercicio 1: Qué garantiza la concurrencia estructurada
-
-**Enunciado:** ¿qué garantiza la "concurrencia estructurada" que un callback o thread manual no garantiza?
-
-**Solución esperada:** garantiza que la cancelación de un `coroutineScope` padre cancela automáticamente en cascada todas las coroutines hijas lanzadas dentro de ese scope, evitando tareas huérfanas ejecutándose sin control tras perder toda relevancia; un callback o thread manual no ofrece esa garantía estructural de cancelación en cascada por sí solo.
-
-**Criterios de éxito:**
-- Explica correctamente la cancelación en cascada garantizada como la propiedad distintiva de la concurrencia estructurada.
-
-### Ejercicio 2: Cuándo usar StateFlow
-
-**Enunciado:** ¿cuándo usarías `StateFlow` en vez de un `Flow` normal para representar estado de UI?
-
-**Solución esperada:** `StateFlow` es apropiado cuando siempre existe un estado "actual" válido que un nuevo observador debe poder consultar inmediatamente al empezar a observar, sin esperar la siguiente emisión futura, exactamente el caso de representar el estado actual de una pantalla de UI.
-
-**Criterios de éxito:**
-- Explica correctamente la necesidad de un valor actual siempre disponible como el criterio para elegir `StateFlow`.
-
-### Ejercicio 3: Mutex frente a synchronized
-
-**Enunciado:** ¿por qué se usa `Mutex` en vez de `synchronized` dentro de código que usa coroutines?
-
-**Solución esperada:** `synchronized` bloquearía el thread físico completo durante toda la sección crítica, contradiciendo el modelo de suspensión de coroutines (diseñado para liberar el thread físico durante esperas); `Mutex` está diseñado específicamente para ser compatible con la suspensión de coroutines, proporcionando exclusión mutua sin bloquear el thread físico subyacente.
-
-**Criterios de éxito:**
-- Explica correctamente la incompatibilidad de `synchronized` con el modelo de suspensión como razón para usar `Mutex`.
-
----
 
 ## Rúbrica del proyecto
 

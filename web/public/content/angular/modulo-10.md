@@ -148,36 +148,6 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 
 ---
 
-## Ejercicios de evaluación
-
-### Ejercicio 1: setInput frente a asignación directa
-
-**Enunciado:** explica por qué no se puede simplemente hacer `fixture.componentInstance.titulo = 'Hola'` para asignar un input signal en una prueba.
-
-**Solución esperada:** los inputs creados con `input()` son signals de solo lectura desde la perspectiva del propio componente; Angular los actualiza internamente mediante su propio mecanismo de binding, no mediante una asignación directa de propiedad. `fixture.componentRef.setInput(...)` pasa por ese mismo mecanismo interno correcto que Angular usa en producción, mientras que una asignación directa fallaría o no reflejaría el comportamiento real.
-
-**Criterios de éxito:**
-- Explica correctamente que los inputs signal requieren `setInput` para respetar el mecanismo real de Angular.
-
-### Ejercicio 2: Consultas orientadas al usuario
-
-**Enunciado:** ¿por qué `screen.getByRole('button', { name: /ver más/i })` es preferible a `fixture.nativeElement.querySelector('.btn-ver-mas')`?
-
-**Solución esperada:** consultar por rol y texto visible refleja cómo un usuario real (o una tecnología asistiva) identifica ese elemento, haciendo que la prueba sobreviva a refactors cosméticos internos (cambiar nombres de clases CSS, reorganizar el HTML interno) que no afectan el comportamiento observable; un selector CSS interno se rompe ante cualquiera de esos cambios, aunque el comportamiento real siga siendo idéntico.
-
-**Criterios de éxito:**
-- Explica correctamente la resiliencia a refactors de las consultas orientadas al usuario frente a los selectores CSS internos.
-
-### Ejercicio 3: Aislamiento de pruebas HTTP
-
-**Enunciado:** ¿qué problema evita usar `HttpTestingController` en vez de dejar que las pruebas hagan peticiones HTTP reales contra un backend?
-
-**Solución esperada:** las peticiones reales harían las pruebas no deterministas (dependientes de la disponibilidad y el estado real de un backend externo), lentas, y difíciles de usar para simular casos de error específicos; `HttpTestingController` intercepta las peticiones y permite simular exactamente la respuesta (exitosa o de error) que la prueba necesita, de forma rápida y determinista.
-
-**Criterios de éxito:**
-- Explica correctamente los problemas de determinismo y velocidad que `HttpTestingController` resuelve.
-
----
 
 ## Rúbrica del proyecto
 

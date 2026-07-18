@@ -154,36 +154,6 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 
 ---
 
-## Ejercicios de evaluación
-
-### Ejercicio 1: Qué evita Ktor Client compartido
-
-**Enunciado:** ¿qué evita tener que duplicar (URLSession en iOS, OkHttp en Android) al usar Ktor Client desde `commonMain`?
-
-**Solución esperada:** evita mantener y sincronizar dos implementaciones completamente separadas de cliente HTTP, cada una con su propia lógica de manejo de errores, reintentos y configuración, dado que Ktor Client abstrae el motor de transporte nativo de cada plataforma detrás de una única API común compartida.
-
-**Criterios de éxito:**
-- Explica correctamente la evitación de duplicación de implementaciones separadas como el beneficio de Ktor Client compartido.
-
-### Ejercicio 2: Por qué modelar errores como un tipo explícito
-
-**Enunciado:** ¿por qué modelar errores de red como un tipo de retorno explícito es mejor que dejar que las excepciones se propaguen sin control?
-
-**Solución esperada:** hace visible en la propia firma de la función que la operación puede fallar, forzando a cada punto de la aplicación que consume ese resultado a manejar explícitamente ambos casos posibles (éxito o error), en vez de que un error no manejado se propague silenciosamente hasta terminar en un crash inesperado en un punto no relacionado del código.
-
-**Criterios de éxito:**
-- Explica correctamente la visibilidad forzada en la firma de tipo y el manejo explícito obligatorio como beneficios.
-
-### Ejercicio 3: Configuración centralizada de autenticación
-
-**Enunciado:** ¿qué ventaja da configurar la autenticación como un interceptor centralizado en el cliente HTTP compartido?
-
-**Solución esperada:** garantiza que ninguna llamada de red individual del código de la aplicación olvide incluir las credenciales necesarias, centralizando esa responsabilidad transversal en un único lugar de configuración, en vez de repetir manualmente esa lógica en cada llamada individual a lo largo del código.
-
-**Criterios de éxito:**
-- Explica correctamente la centralización evitando olvidos y duplicación como el beneficio del interceptor.
-
----
 
 ## Rúbrica del proyecto
 

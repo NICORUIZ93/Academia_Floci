@@ -226,25 +226,6 @@ No uses una librería de benchmarking para ocultar el proceso. Aísla la operaci
 - Confundir O(1) con tiempo cero: significa crecimiento independiente de n en el modelo.
 - Recursión sin progreso: identifica caso base y reducción.
 
-## Ejercicios de evaluación
-
-### Ejercicio 1: elección de estructura
-
-**Enunciado:** elige estructura para permisos únicos, historial de deshacer y usuarios por email.
-
-**Solución esperada:** conjunto, pila y diccionario, justificando operaciones y restricciones.
-
-### Ejercicio 2: precondición rota
-
-**Enunciado:** explica por qué binaria puede fallar sobre `[10, 2, 7]` aunque el objetivo exista.
-
-**Solución esperada:** las comparaciones solo permiten descartar mitades si el orden total está garantizado.
-
-### Ejercicio 3: tiempo frente a memoria
-
-**Enunciado:** compara las dos soluciones de duplicados.
-
-**Solución esperada:** doble bucle usa poca memoria extra y O(n²); conjunto usa O(n) memoria esperada y O(n) tiempo esperado.
 
 ## Rúbrica del proyecto
 

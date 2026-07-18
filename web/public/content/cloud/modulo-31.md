@@ -301,46 +301,6 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 
 ---
 
-## Ejercicios de evaluación
-
-### Ejercicio 1: Qué es transferible entre proveedores
-
-**Enunciado:** ¿qué aprendiste en AWS que aplica directamente en Azure y GCP?
-
-**Solución esperada:** los principios arquitectónicos fundamentales (serverless orientado a eventos, colas para desacoplar productores y consumidores, NoSQL para patrones de acceso simples y conocidos, almacenamiento de objetos, autenticación delegada a un servicio especializado) se aplican de forma prácticamente idéntica en los tres proveedores, aunque la sintaxis exacta de cada API sea distinta.
-
-**Criterios de éxito:**
-- Identifica correctamente al menos dos principios arquitectónicos transferibles entre los tres proveedores.
-
-### Ejercicio 2: Qué fue fundamentalmente diferente entre los proveedores
-
-**Enunciado:** ¿qué fue fundamentalmente diferente entre los 3 proveedores?
-
-**Solución esperada:** una respuesta válida identifica diferencias concretas de sintaxis de API, nomenclatura de servicios equivalentes (SQS vs Service Bus vs Pub/Sub), y detalles operativos particulares (formato de políticas de permisos, configuración de triggers) que requieren aprendizaje específico por proveedor, no transferible directamente entre ellos.
-
-**Criterios de éxito:**
-- Identifica correctamente diferencias concretas de sintaxis/API como lo fundamentalmente distinto entre proveedores.
-
-### Ejercicio 3: Qué falta para pasar a producción en nube real
-
-**Enunciado:** ¿qué quedaría pendiente para pasar a producción en nube real?
-
-**Solución esperada:** una prueba final de validación contra el entorno real de cada proveedor, dado que aspectos como límites reales de cuota, latencia de red genuina entre regiones reales, comportamiento bajo carga a escala de producción real, y particularidades específicas de servicios gestionados no son completamente replicables ni siquiera por un emulador de alta fidelidad como cloud local.
-
-**Criterios de éxito:**
-- Menciona correctamente la validación final contra el entorno real como el paso pendiente, con al menos una razón concreta de por qué el emulador no es suficiente por sí solo.
-
-### Ejercicio 4: Por qué Testcontainers arranca un contenedor nuevo por suite
-
-**Enunciado:** un compañero de equipo propone que, para ahorrar tiempo de CI, todas las suites de test compartan un único Floci ya arrancado de antemano (en vez de que cada suite arranque su propio `FlociContainer`). ¿Qué problema concreto puede introducir esa optimización, y en qué escenario sí sería aceptable?
-
-**Solución esperada:** compartir un único Floci de larga duración entre suites reintroduce fuga de estado entre pruebas (un bucket, cola o tabla creada por la suite A todavía existe cuando corre la suite B) y conflictos si varias suites corren en paralelo contra el mismo puerto fijo — exactamente los dos problemas que el ciclo de vida aislado de Testcontainers evita. Es aceptable como optimización deliberada cuando las suites son secuenciales, no paralelas, y las propias pruebas limpian explícitamente su estado al terminar (o usan namespaces/prefijos únicos por suite para evitar colisiones).
-
-**Criterios de éxito:**
-- Identifica la fuga de estado entre pruebas y/o los conflictos de puerto en paralelo como el riesgo concreto.
-- Reconoce al menos una condición bajo la cual compartir un Floci sería razonable.
-
----
 
 ## Rúbrica del proyecto
 

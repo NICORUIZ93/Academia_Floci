@@ -154,36 +154,6 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 
 ---
 
-## Ejercicios de evaluación
-
-### Ejercicio 1: Cómo Flutter calcula el tamaño final de un widget
-
-**Enunciado:** ¿cómo calcula Flutter el tamaño final de un widget a partir de las constraints que recibe de su padre?
-
-**Solución esperada:** el padre comunica un rango de tamaños permitido (constraints mínimas y máximas) hacia el hijo; el hijo decide su tamaño final dentro de ese rango permitido y lo comunica de vuelta al padre, siguiendo el protocolo "constraints go down, sizes go up" en una única pasada eficiente sobre el árbol.
-
-**Criterios de éxito:**
-- Explica correctamente el protocolo unidireccional de constraints hacia abajo y tamaños hacia arriba.
-
-### Ejercicio 2: Por qué SafeArea importa más en algunos dispositivos
-
-**Enunciado:** ¿por qué `SafeArea` importa más en algunos dispositivos que en otros?
-
-**Solución esperada:** los elementos físicos y del sistema que invaden los bordes de pantalla (notch, barra de estado, controles de gestos de navegación) varían considerablemente entre modelos de dispositivo; un dispositivo con notch pronunciado o controles de gestos necesita insets mayores que uno sin esos elementos.
-
-**Criterios de éxito:**
-- Explica correctamente la variación de elementos físicos/del sistema entre dispositivos como razón.
-
-### Ejercicio 3: Cuándo preferir LayoutBuilder sobre MediaQuery
-
-**Enunciado:** ¿cuándo preferirías `LayoutBuilder` sobre `MediaQuery` para decidir el layout de un widget?
-
-**Solución esperada:** cuando el widget no ocupa la pantalla completa (por ejemplo, un panel anidado dentro de otros contenedores), `LayoutBuilder` refleja el espacio real y específico disponible para ese widget en su posición actual, mientras `MediaQuery` daría el tamaño total de la pantalla, potencialmente incorrecto para esa decisión de layout específica.
-
-**Criterios de éxito:**
-- Explica correctamente la precisión de `LayoutBuilder` para widgets que no ocupan toda la pantalla.
-
----
 
 ## Rúbrica del proyecto
 

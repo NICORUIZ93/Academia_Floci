@@ -160,36 +160,6 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 
 ---
 
-## Ejercicios de evaluación
-
-### Ejercicio 1: Ventaja de CloudFormation frente a la CLI manual
-
-**Enunciado:** ¿qué ventaja tiene CloudFormation frente a crear recursos con la CLI a mano?
-
-**Solución esperada:** CloudFormation trata la infraestructura completa como una unidad versionada y reproducible entre entornos, con eliminación garantizada sin residuos huérfanos; crear recursos manualmente con la CLI no deja ningún registro versionado estructurado y dificulta recrear o eliminar la infraestructura de forma completa y confiable.
-
-**Criterios de éxito:**
-- Explica correctamente la reproducibilidad versionada y la eliminación limpia como ventajas de CloudFormation.
-
-### Ejercicio 2: Por qué revisar un change set antes de aplicarlo
-
-**Enunciado:** ¿por qué revisar un change set antes de aplicarlo?
-
-**Solución esperada:** permite anticipar consecuencias inesperadas de una modificación aparentemente inocua (como un reemplazo completo de un recurso que causaría pérdida de datos), convirtiendo el riesgo implícito en una decisión explícita e informada antes de proceder con el cambio real.
-
-**Criterios de éxito:**
-- Explica correctamente la anticipación de consecuencias destructivas inesperadas como razón de revisar el change set.
-
-### Ejercicio 3: Qué es drift detection
-
-**Enunciado:** ¿qué es drift detection?
-
-**Solución esperada:** compara el estado actual real de los recursos desplegados contra el estado declarado en el template de CloudFormation, señalando cualquier divergencia causada por modificaciones manuales realizadas fuera del proceso oficial de CloudFormation.
-
-**Criterios de éxito:**
-- Explica correctamente la comparación entre estado real y estado declarado como definición de drift detection.
-
----
 
 ## Rúbrica del proyecto
 

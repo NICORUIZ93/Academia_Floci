@@ -130,39 +130,6 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 
 ---
 
-## Ejercicios de evaluación
-
-### Ejercicio 1: Cuándo SÍ y cuándo NO usar caché
-
-**Enunciado:** para cada uno de estos tres casos, decide si un caché en memoria ayudaría y justifica por qué: (a) el catálogo de productos de una tienda, que cambia una vez al día; (b) el saldo de una cuenta bancaria, que debe reflejar siempre el valor exacto más reciente; (c) el conteo de visualizaciones de un video, donde un pequeño retraso es aceptable.
-
-**Solución esperada:** (a) sí ayuda mucho — datos que cambian poco y se leen mucho son el caso ideal; (b) no conviene cachear sin invalidación estricta — la exactitud es más importante que la velocidad; (c) sí ayuda — tolera datos ligeramente desactualizados a cambio de mucha menor carga sobre la base de datos.
-
-**Criterios de éxito:**
-- Justificaste cada respuesta en términos de frecuencia de cambio y tolerancia a datos desactualizados, no solo con una respuesta intuitiva.
-- Reconoces que (b) podría cachearse igual, pero con invalidación activa en cada escritura, no con TTL pasivo.
-
-### Ejercicio 2: Implementa cache-aside con Python
-
-**Enunciado:** escribe una función en Python que reciba un `usuario_id`, primero intente leerlo de Redis (`GET`), y si no existe, simule una consulta a base de datos (puede ser un diccionario en memoria), guarde el resultado en Redis con TTL de 30 segundos, y lo devuelva. Ejecuta la función dos veces seguidas y demuestra con logs cuál llamada fue cache hit y cuál cache miss.
-
-**Solución esperada:** la primera llamada es un cache miss (Redis devuelve `None`, se consulta la "base de datos" simulada, se guarda en caché); la segunda llamada dentro de los 30 segundos es un cache hit (Redis devuelve el valor directamente sin tocar la base de datos simulada).
-
-**Criterios de éxito:**
-- El código realmente distingue y loguea cache hit vs cache miss, no solo devuelve el valor.
-- El TTL se configura correctamente con `EX=30` al escribir en Redis.
-
-### Ejercicio 3: Migra de contraseña fija a autenticación IAM
-
-**Enunciado:** documenta, paso a paso, qué cambiarías en el código de una aplicación que actualmente se conecta a ElastiCache con una contraseña fija en una variable de entorno, para que en su lugar use autenticación IAM con `ValidateIamAuthToken`.
-
-**Solución esperada:** eliminar la contraseña fija de la configuración; crear un usuario ElastiCache con `CreateUser` y una cadena de acceso apropiada; en el código de conexión, generar un token de autenticación IAM temporal (usando las credenciales del rol/usuario IAM de la aplicación) en vez de leer una contraseña de una variable de entorno; renovar el token periódicamente ya que las credenciales IAM temporales expiran.
-
-**Criterios de éxito:**
-- El plan elimina completamente la dependencia de un secreto estático almacenado en configuración.
-- Reconoce que los tokens IAM son temporales y requieren renovación, a diferencia de una contraseña fija.
-
----
 
 ## Rúbrica del proyecto
 

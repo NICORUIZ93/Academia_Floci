@@ -162,36 +162,6 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 
 ---
 
-## Ejercicios de evaluación
-
-### Ejercicio 1: Pasos específicos vs comunes de publicación
-
-**Enunciado:** ¿qué pasos de publicación son específicos de cada tienda y cuáles son comunes gracias a una sola base de código?
-
-**Solución esperada:** el código Dart de la app (lógica de negocio, widgets, UI) es común gracias a una sola base de código; los pasos de firma (credenciales y certificados distintos), el formato del artefacto de build (`.aab` vs `.ipa`), y el proceso de subida y revisión son específicos e inevitablemente distintos para cada tienda.
-
-**Criterios de éxito:**
-- Distingue correctamente el código compartido de los pasos de publicación específicos por plataforma.
-
-### Ejercicio 2: Ventaja de automatizar ambos builds
-
-**Enunciado:** ¿qué ventaja da automatizar ambos builds con un solo pipeline en vez de generarlos manualmente?
-
-**Solución esperada:** reduce el proceso manual repetido de publicación a un pipeline configurado una única vez y ejecutado consistentemente en cada release, disminuyendo el riesgo de errores humanos u omisiones al repetir manualmente los mismos pasos en cada nueva versión.
-
-**Criterios de éxito:**
-- Explica correctamente la reducción de esfuerzo manual repetido y errores humanos como la ventaja.
-
-### Ejercicio 3: Por qué el build de iOS requiere macOS
-
-**Enunciado:** ¿por qué generar el build de release para iOS con Flutter requiere específicamente un entorno macOS?
-
-**Solución esperada:** el toolchain de compilación de Apple (Xcode) necesario para producir binarios iOS solo está disponible en macOS, exactamente la misma restricción que aplica al desarrollo nativo de iOS estudiado en ese track, independientemente de que la app esté escrita en Dart en vez de Swift.
-
-**Criterios de éxito:**
-- Explica correctamente la exclusividad del toolchain de Apple en macOS como la razón.
-
----
 
 ## Rúbrica del proyecto
 

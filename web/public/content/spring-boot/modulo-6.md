@@ -149,36 +149,6 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 
 ---
 
-## Ejercicios de evaluación
-
-### Ejercicio 1: Por qué un slice es más rápido que SpringBootTest completo
-
-**Enunciado:** ¿por qué un test de slice (`@WebMvcTest`) es más rápido que uno con `@SpringBootTest` completo?
-
-**Solución esperada:** `@WebMvcTest` levanta únicamente el contexto necesario para la capa web, mockeando el resto de las dependencias, en vez de inicializar absolutamente todos los componentes de la aplicación completa como hace `@SpringBootTest`, evitando el costo de arranque de componentes no relevantes para lo que específicamente se está probando.
-
-**Criterios de éxito:**
-- Explica correctamente la carga parcial del contexto como razón de la mayor velocidad.
-
-### Ejercicio 2: Ventaja de Testcontainers sobre H2
-
-**Enunciado:** ¿qué ventaja da Testcontainers sobre una base de datos H2 en memoria para tests de integración?
-
-**Solución esperada:** Testcontainers usa la misma tecnología de base de datos real (PostgreSQL) que efectivamente se usa en producción, evitando discrepancias de comportamiento del dialecto SQL, tipos de datos, o funciones específicas que H2 podría manejar de forma sutilmente distinta, produciendo pruebas más fieles al comportamiento real en producción.
-
-**Criterios de éxito:**
-- Explica correctamente la fidelidad de comportamiento con la base de datos real de producción como ventaja de Testcontainers.
-
-### Ejercicio 3: Estrategia de pirámide de tests
-
-**Enunciado:** describe la estrategia recomendada de balance entre los tres niveles de testing en Spring Boot.
-
-**Solución esperada:** muchos tests unitarios rápidos con Mockito puro sin contexto de Spring, verificando lógica de negocio aislada; algunos tests de slice verificando la integración de una capa específica con su infraestructura relevante; y pocos tests de `@SpringBootTest` completo reservados para los flujos más críticos de principio a fin.
-
-**Criterios de éxito:**
-- Describe correctamente la proporción decreciente (muchos/algunos/pocos) según el nivel de contexto requerido.
-
----
 
 ## Rúbrica del proyecto
 

@@ -235,23 +235,6 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 
 **Verificación:** desde una instancia limpia de Floci, el script de despliegue termina sin errores; la secuencia `curl` crea, consulta, actualiza y elimina una tarea; el adjunto aparece bajo `adjuntos/<tarea_id>/`; el mensaje asíncrono se procesa una sola vez o termina en la DLQ tras agotar los reintentos; y cada función opera con un rol IAM distinto. Guarda comandos, respuestas HTTP, logs del consumidor y el resultado de consultar la DLQ como evidencia reproducible.
 
-## Ejercicios de evaluación
-
-1. Dibuja el recorrido completo de una creación de tarea e identifica qué componente garantiza persistencia, autorización y desacoplamiento.
-2. Explica qué ocurre si Lambda guarda en DynamoDB pero falla antes de responder; propone un contrato que evite duplicados al reintentar.
-3. Ejecuta el despliegue en una instancia limpia, registra un fallo real y mejora la guía para que otra persona pueda recuperarse sin ayuda oral.
-
-### Rúbrica de evaluación
-
-| Criterio | Insuficiente | Aceptable | Sobresaliente |
-|---|---|---|---|
-| CRUD de tareas | Falta alguna operación, o usa Scan en vez de Query para listar | Las cuatro operaciones funcionan correctamente usando Query | Además, valida correctamente entradas inválidas con mensajes de error claros |
-| Archivos adjuntos | No implementado, o el archivo se guarda incorrectamente en DynamoDB en vez de S3 | El archivo se guarda en S3 con su referencia correctamente registrada en DynamoDB | Además, la convención de nomenclatura de claves es clara y evita colisiones entre tareas |
-| Procesamiento en segundo plano | No implementado, o se procesa de forma síncrona bloqueando la respuesta al usuario | Al menos un flujo se procesa de forma asíncrona vía SQS | Además, tiene una DLQ configurada y probada explícitamente |
-| IAM de mínimo privilegio | Un único rol genérico con permisos amplios compartido por todas las funciones | Cada función tiene su propio rol, con permisos razonablemente acotados | Los permisos están acotados a nivel de recurso específico (no solo de acción), verificados con el simulador de políticas del Módulo 7 |
-| Documentación | Ausente o incompleta (faltan endpoints o pasos de despliegue) | Cubre todos los endpoints y los pasos de despliegue principales | Además, incluye ejemplos de error y una guía de despliegue verificada realmente desde cero |
-
----
 
 ## Rúbrica del proyecto
 

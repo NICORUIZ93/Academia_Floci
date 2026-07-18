@@ -164,36 +164,6 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 
 ---
 
-## Ejercicios de evaluación
-
-### Ejercicio 1: Por qué mezclar estado de servidor y cliente es un error
-
-**Enunciado:** explica por qué mezclar estado del servidor con estado de cliente en el mismo store suele ser un error.
-
-**Solución esperada:** el estado de servidor necesita cache, expiración y revalidación, capacidades que TanStack Query ya ofrece de fábrica; mezclarlo en un store de estado de cliente obligaría a reimplementar manualmente esas capacidades de forma más pobre, mientras que el estado de cliente puro no se beneficia en nada de compartir infraestructura con datos de red de ciclo de vida distinto.
-
-**Criterios de éxito:**
-- Explica correctamente la reimplementación innecesaria de capacidades de TanStack Query como el problema central.
-
-### Ejercicio 2: Cuándo no necesitas ninguna librería de estado global
-
-**Enunciado:** ¿cuándo NO necesitas ninguna librería de estado global, ni siquiera Context?
-
-**Solución esperada:** cuando el estado relevante solo se usa dentro de un único componente, o dentro de ese componente y sus hijos directos pasables cómodamente vía props, sin necesidad de compartirse entre componentes lejanos en el árbol; en ese caso, `useState` local es suficiente y preferible.
-
-**Criterios de éxito:**
-- Identifica correctamente el criterio de alcance limitado del estado como razón para no introducir ninguna librería.
-
-### Ejercicio 3: Zustand frente a Redux Toolkit
-
-**Enunciado:** compara la ceremonia de implementar el mismo carrito de compras con Zustand frente a Redux Toolkit.
-
-**Solución esperada:** Zustand requiere una única función `create()` sin infraestructura adicional (sin Provider obligatorio, sin definición separada de actions/reducers); Redux Toolkit requiere definir un slice con `createSlice`, configurar un store central, y envolver la aplicación con un `Provider` de Redux, una ceremonia estructural considerablemente mayor, aunque reducida respecto al Redux clásico gracias a Immer y los slices.
-
-**Criterios de éxito:**
-- Compara correctamente la ausencia de infraestructura de Zustand frente a la ceremonia estructural de Redux Toolkit.
-
----
 
 ## Rúbrica del proyecto
 

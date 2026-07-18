@@ -15,7 +15,7 @@ TRACKS = (
 )
 
 errors: list[str] = []
-totals = {"files": 0, "topics": 0, "code": 0, "labs": 0, "exercises": 0, "cases": 0, "diagrams": 0}
+totals = {"files": 0, "topics": 0, "code": 0, "labs": 0, "cases": 0, "diagrams": 0}
 
 if not METHODOLOGY.exists():
     errors.append("falta docs/METODOLOGIA-DE-APRENDIZAJE.md")
@@ -40,13 +40,12 @@ for track in TRACKS:
         totals["files"] += 1
         totals["code"] += text.count("```") // 2
         totals["labs"] += text.count("## Laboratorio práctico")
-        totals["exercises"] += text.count("### Ejercicio ")
         totals["cases"] += text.count("**Casos de uso reales:**")
         totals["diagrams"] += text.count("**Diagrama:**")
 
         for required in (
             "## Sílabo", "## Contenido teórico", "## Laboratorio práctico",
-            "## Ejercicios de evaluación", "## Rúbrica del proyecto",
+            "## Rúbrica del proyecto",
             "## Bibliografía y fundamento académico", "## Resumen del módulo",
         ):
             if required not in text:
@@ -75,7 +74,7 @@ if errors:
 print(
     "Pedagogía OK: "
     f"{totals['files']} lecciones, {totals['topics']} temas, "
-    f"{totals['code']} bloques de código, {totals['labs']} laboratorios y "
-    f"{totals['exercises']} ejercicios. Casos reales explícitos: {totals['cases']}/{totals['topics']}; "
+    f"{totals['code']} bloques de código y {totals['labs']} laboratorios. "
+    f"Casos reales explícitos: {totals['cases']}/{totals['topics']}; "
     f"diagramas editoriales: {totals['diagrams']}/{totals['topics']} (los faltantes permanecen como deuda; no se generan gráficos decorativos)."
 )

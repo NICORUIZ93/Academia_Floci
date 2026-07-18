@@ -167,36 +167,6 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 
 ---
 
-## Ejercicios de evaluación
-
-### Ejercicio 1: Ventaja de loadComponent
-
-**Enunciado:** explica qué ventaja real da `loadComponent` frente a importar todos los componentes de forma estática al inicio de la aplicación.
-
-**Solución esperada:** `loadComponent` descarga el código de una ruta específica solo cuando el usuario navega hacia ella, reduciendo el tamaño del bundle inicial y mejorando el tiempo de carga percibido, especialmente en aplicaciones con muchas rutas o funcionalidades de uso poco frecuente que la mayoría de usuarios nunca visitan en una sesión típica.
-
-**Criterios de éxito:**
-- Explica correctamente la reducción del bundle inicial y la mejora de tiempo de carga percibido.
-
-### Ejercicio 2: Testabilidad de guards funcionales
-
-**Enunciado:** explica por qué un guard funcional es más simple de testear que una clase guard clásica.
-
-**Solución esperada:** un guard funcional es simplemente una función pura (con dependencias inyectadas explícitamente mediante `inject()`), que se puede invocar directamente en una prueba con argumentos simulados y verificar su valor de retorno; una clase guard clásica requeriría instanciarla mediante `TestBed`, simulando su ciclo completo de inyección de dependencias como clase, una prueba considerablemente más elaborada.
-
-**Criterios de éxito:**
-- Explica correctamente que un guard funcional se prueba como cualquier función simple, sin necesidad de `TestBed`.
-
-### Ejercicio 3: Elegir el mecanismo de routing correcto
-
-**Enunciado:** para cada uno de estos tres escenarios, indica qué mecanismo de routing usarías: (a) advertir al usuario antes de abandonar un formulario con cambios sin guardar, (b) precargar los datos de un perfil de usuario antes de mostrar la vista de detalle, (c) aplicar el mismo guard de autenticación a todas las rutas hijas de una sección de administración.
-
-**Solución esperada:** (a) `CanDeactivateFn`; (b) `ResolveFn`; (c) `canActivateChild` en la ruta padre de la sección de administración.
-
-**Criterios de éxito:**
-- Asigna correctamente los tres mecanismos a sus escenarios correspondientes.
-
----
 
 ## Rúbrica del proyecto
 

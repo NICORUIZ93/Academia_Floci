@@ -149,36 +149,6 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 
 ---
 
-## Ejercicios de evaluación
-
-### Ejercicio 1: Cuándo elegir LinkedList sobre ArrayList
-
-**Enunciado:** ¿cuándo elegirías un `LinkedList` sobre un `ArrayList`?
-
-**Solución esperada:** cuando el patrón de acceso predominante involucra inserciones o eliminaciones frecuentes al inicio o en medio de la lista, dado que `LinkedList` realiza esas operaciones sin necesidad de desplazar elementos, a diferencia de `ArrayList`, donde esas mismas operaciones requieren desplazar todos los elementos posteriores.
-
-**Criterios de éxito:**
-- Identifica correctamente el patrón de inserción/eliminación frecuente en los extremos como el criterio de elección.
-
-### Ejercicio 2: Comparable vs Comparator
-
-**Enunciado:** ¿qué diferencia hay entre implementar `Comparable` y pasar un `Comparator`?
-
-**Solución esperada:** `Comparable` se implementa directamente en la clase y define su único orden natural; `Comparator` es una función o clase externa que define un orden alternativo adicional sin modificar la clase original, permitiendo múltiples criterios de orden distintos según el contexto.
-
-**Criterios de éxito:**
-- Distingue correctamente el orden natural único (Comparable) del orden alternativo externo (Comparator).
-
-### Ejercicio 3: Type erasure
-
-**Enunciado:** explica qué es el type erasure y una consecuencia práctica de su existencia.
-
-**Solución esperada:** el type erasure borra la información de tipo genérico del bytecode final, existiendo únicamente durante la compilación para verificación de tipos; una consecuencia práctica es que, en tiempo de ejecución, `Caja<String>` y `Caja<Integer>` son la misma clase sin distinción de tipo genérico retenida, lo cual limita ciertas operaciones de reflexión o verificación de tipos genéricos en tiempo de ejecución.
-
-**Criterios de éxito:**
-- Explica correctamente el borrado de información de tipo genérico en tiempo de ejecución y menciona una consecuencia práctica razonable.
-
----
 
 ## Rúbrica del proyecto
 

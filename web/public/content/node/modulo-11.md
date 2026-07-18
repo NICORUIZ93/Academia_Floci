@@ -181,38 +181,6 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 
 ---
 
-## Ejercicios de evaluación
-
-### Ejercicio 1: Por qué multi-stage es más seguro y liviano
-
-**Enunciado:** explica por qué una imagen Docker multi-stage es más segura y liviana que una de una sola etapa, con al menos dos razones concretas.
-
-**Solución esperada:** (1) es más liviana porque excluye el código fuente sin compilar, las herramientas de build y las devDependencies, incluyendo solo el resultado compilado y las dependencias estrictamente de producción; (2) es más segura porque menos paquetes instalados en la imagen final significa menos superficie de vulnerabilidades potenciales de terceros presentes en el entorno de ejecución real.
-
-**Criterios de éxito:**
-- Menciona correctamente la reducción de tamaño (exclusión de devDependencies y build tools).
-- Menciona correctamente la reducción de superficie de ataque como razón de seguridad.
-
-### Ejercicio 2: Ventaja de un healthcheck a nivel de Docker/Kubernetes
-
-**Enunciado:** explica qué ventaja concreta da un healthcheck frente a simplemente verificar que el proceso Node sigue en ejecución.
-
-**Solución esperada:** un proceso puede seguir técnicamente en ejecución mientras está en un estado interno defectuoso (por ejemplo, sin poder conectarse a su base de datos), algo que un simple chequeo de "¿el proceso sigue vivo?" no detectaría; un healthcheck a nivel de aplicación (verificando activamente dependencias críticas como la conexión a base de datos) captura esta categoría de fallo, permitiendo que el orquestador reaccione (reiniciando o evitando dirigir tráfico) ante un estado genuinamente no saludable, no solo ante un proceso completamente caído.
-
-**Criterios de éxito:**
-- Explica correctamente la diferencia entre "proceso vivo" y "aplicación genuinamente saludable".
-
-### Ejercicio 3: Condiciones para zero-downtime
-
-**Enunciado:** enumera las condiciones mínimas necesarias para lograr un despliegue sin downtime.
-
-**Solución esperada:** al menos dos instancias de la aplicación ejecutándose simultáneamente detrás de un balanceador de carga, y un healthcheck confiable que el balanceador u orquestador consulte antes de dirigir tráfico real hacia una instancia recién actualizada, actualizando las instancias de una en una (rolling update) para que siempre exista al menos una instancia sana atendiendo tráfico durante todo el proceso de despliegue.
-
-**Criterios de éxito:**
-- Menciona correctamente las dos condiciones mínimas: múltiples instancias y healthcheck confiable.
-- Menciona el patrón de actualización gradual (rolling update) como el mecanismo que las combina.
-
----
 
 ## Rúbrica del proyecto
 

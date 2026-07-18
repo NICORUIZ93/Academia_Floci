@@ -458,57 +458,6 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 
 ---
 
-## Ejercicios de evaluación
-
-### Ejercicio 1: Diagnosticar permisos
-
-**Enunciado:** un compañero reporta que su script `deploy.sh` falla con `Permission denied` al intentar ejecutarlo en un servidor, aunque el archivo existe y su contenido es correcto. Sin ejecutar nada, explica cuál es la causa más probable y el comando exacto para solucionarla.
-
-**Solución esperada:** la causa más probable es que el archivo no tiene el bit de ejecución activado para el usuario que intenta ejecutarlo. La solución es `chmod +x deploy.sh` (o, de forma más explícita y siguiendo la notación octal del Tema 1, `chmod 755 deploy.sh` si además se quiere garantizar lectura para grupo y otros).
-
-**Criterios de éxito:**
-- Identifica correctamente la falta del bit de ejecución como causa más probable, no un problema de contenido del script.
-- Proporciona el comando `chmod` correcto.
-
-### Ejercicio 2: Elegir la señal correcta
-
-**Enunciado:** necesitas detener un proceso que sabes que maneja conexiones activas de usuarios y que, si se le da la oportunidad, cierra esas conexiones de forma ordenada antes de terminar. Explica qué señal usarías primero, por qué, y en qué circunstancia recurrirías a la alternativa más agresiva.
-
-**Solución esperada:** usarías `SIGTERM` (`kill <pid>`) primero, porque el proceso puede capturarla y realizar su cierre ordenado de conexiones antes de terminar, respetando el trabajo en curso de sus usuarios. Solo recurrirías a `SIGKILL` (`kill -9 <pid>`) si, tras un tiempo razonable de espera, el proceso no responde a `SIGTERM` y necesitas forzar su terminación de todas formas, aceptando el riesgo de dejar recursos en un estado inconsistente.
-
-**Criterios de éxito:**
-- Elige `SIGTERM` como primera opción, no `SIGKILL`.
-- Explica correctamente que `SIGTERM` permite un cierre ordenado y `SIGKILL` no da esa oportunidad.
-
-### Ejercicio 3: Corregir un script frágil
-
-**Enunciado:** revisa este script y explica qué añadirías para hacerlo más robusto según lo aprendido en el Tema 4, sin cambiar su lógica de negocio:
-```bash
-#!/bin/bash
-cd /var/www/mi-app
-git pull
-npm install
-npm run build
-```
-
-**Solución esperada:** añadir `set -euo pipefail` justo después de la primera línea (`#!/bin/bash`). Sin esto, si `cd` falla (por ejemplo, porque el directorio no existe en ese servidor), el script continuaría ejecutando `git pull`, `npm install` y `npm run build` en el directorio equivocado (probablemente el directorio desde el que se invocó el script), con resultados potencialmente destructivos o confusos, en vez de detenerse inmediatamente ante ese primer fallo.
-
-**Criterios de éxito:**
-- Propone añadir `set -euo pipefail` (o como mínimo `set -e`) como la corrección principal.
-- Explica correctamente la consecuencia concreta de no tenerlo: seguir ejecutando comandos en un directorio incorrecto si el `cd` falla.
-
-### Ejercicio 4: Diagnosticar un 502 sin culpar a la red
-
-**Enunciado:** NGINX responde `502`, pero su proceso está activo y el DNS público resuelve correctamente. Describe una secuencia de diagnóstico desde el proxy hasta el backend.
-
-**Solución esperada:** correlacionar access/error log mediante request ID; inspeccionar `$upstream_addr`; resolver el nombre del upstream desde la red del proxy; comprobar puerto y proceso; solicitar `/health` directamente desde el contenedor edge; revisar timeout y ruta transformada por `proxy_pass`; confirmar que el backend escucha en `0.0.0.0`, no solo en localhost; restaurar y verificar `200`.
-
-**Criterios de éxito:**
-- Distingue disponibilidad del proxy de disponibilidad del upstream.
-- Recorre DNS, conexión, ruta y respuesta en orden.
-- Verifica recuperación con la misma petición y evidencia de logs.
-
----
 
 ## Rúbrica del proyecto
 

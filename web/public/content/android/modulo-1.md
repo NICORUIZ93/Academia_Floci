@@ -165,36 +165,6 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 
 ---
 
-## Ejercicios de evaluación
-
-### Ejercicio 1: Por qué el ViewModel sobrevive a rotación pero no a la muerte del proceso
-
-**Enunciado:** ¿por qué un `ViewModel` sobrevive a una rotación de pantalla pero no a que el sistema mate el proceso completamente?
-
-**Solución esperada:** el `ViewModel` está vinculado al `ViewModelStore`, que Android preserva deliberadamente a través de recreaciones por cambio de configuración como la rotación; pero si el sistema mata el proceso completo por falta de memoria, todo lo que vive en memoria (incluyendo ese `ViewModelStore`) se pierde junto con el proceso, sin excepción para el `ViewModel`.
-
-**Criterios de éxito:**
-- Explica correctamente la preservación del `ViewModelStore` frente a rotación, y su pérdida total ante muerte de proceso.
-
-### Ejercicio 2: Diferencia entre lo que sobrevive un ViewModel y SavedStateHandle
-
-**Enunciado:** ¿qué diferencia hay entre lo que sobrevive un `ViewModel` y lo que sobrevive `SavedStateHandle`?
-
-**Solución esperada:** un `ViewModel` normal sobrevive solo a recreaciones dentro del mismo proceso (como la rotación); `SavedStateHandle` persiste sus valores en un mecanismo que sobrevive incluso a la muerte completa del proceso, restaurándolos automáticamente cuando el usuario regresa a la app.
-
-**Criterios de éxito:**
-- Distingue correctamente el nivel de supervivencia de cada mecanismo.
-
-### Ejercicio 3: Cuándo liberar un recurso costoso
-
-**Enunciado:** ¿qué evento del ciclo de vida deberías usar para liberar un recurso costoso como una cámara?
-
-**Solución esperada:** iniciarla en `onResume` y liberarla en `onPause`, de modo que el recurso solo esté activo mientras la Activity es visible e interactiva, evitando consumo innecesario de batería mientras la app está en background.
-
-**Criterios de éxito:**
-- Menciona correctamente `onResume`/`onPause` como el par de callbacks apropiado.
-
----
 
 ## Rúbrica del proyecto
 

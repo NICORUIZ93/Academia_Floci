@@ -184,36 +184,6 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 
 ---
 
-## Ejercicios de evaluación
-
-### Ejercicio 1: Ventaja de argumentos tipados
-
-**Enunciado:** ¿qué ventaja da pasar argumentos tipados en vez de un `Bundle` genérico como antes?
-
-**Solución esperada:** Navigation Compose valida y extrae el argumento con el tipo declarado automáticamente, evitando errores de conversión manual que serían responsabilidad del desarrollador con un `Bundle` genérico no tipado.
-
-**Criterios de éxito:**
-- Menciona correctamente la validación/extracción automática como ventaja frente al `Bundle` genérico.
-
-### Ejercicio 2: Por qué stacks independientes por sección
-
-**Enunciado:** ¿por qué cada sección de un bottom navigation suele necesitar su propio stack independiente?
-
-**Solución esperada:** para que navegar profundamente dentro de una sección y luego cambiar a otra mediante la bottom bar preserve ese historial al regresar, cumpliendo con la expectativa de UX de que cada pestaña es un contexto de navegación persistente y separado.
-
-**Criterios de éxito:**
-- Explica correctamente la preservación del historial por sección como razón.
-
-### Ejercicio 3: Qué resuelve un deep link
-
-**Enunciado:** ¿qué problema de experiencia de usuario resuelve un deep link configurado correctamente?
-
-**Solución esperada:** permite que una entrada externa (notificación, link compartido) lleve al usuario directamente a la pantalla relevante con el argumento ya resuelto, en vez de aterrizar en la pantalla principal y tener que navegar manualmente hasta encontrarla.
-
-**Criterios de éxito:**
-- Explica correctamente la llegada directa a la pantalla relevante como beneficio del deep link.
-
----
 
 ## Rúbrica del proyecto
 

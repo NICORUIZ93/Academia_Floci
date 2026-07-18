@@ -190,58 +190,6 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 
 ---
 
-## Ejercicios de evaluación
-
-### Ejercicio 1: Prototipos frente a copia
-
-**Enunciado:** explica por qué, si modificas `animalProto.hablar = function() {...}` después de crear `perro` con `Object.create(animalProto)`, el cambio se refleja inmediatamente al invocar `perro.hablar()`, aunque `perro` ya existía antes de la modificación.
-
-**Solución esperada:** porque `perro` no tiene una copia propia del método `hablar`; delega la búsqueda hacia `animalProto` cada vez que se invoca `perro.hablar()`. Como la delegación ocurre en el momento de la invocación (no en el momento de la creación de `perro`), cualquier cambio posterior en `animalProto` se refleja inmediatamente en todos los objetos que delegan hacia él, sin necesidad de recrearlos.
-
-**Criterios de éxito:**
-- Explica correctamente que la delegación ocurre en tiempo de invocación, no de creación.
-- Distingue este comportamiento del que tendría un modelo de herencia por copia.
-
-### Ejercicio 2: Diseñar una jerarquía con super
-
-**Enunciado:** define una clase `Vehiculo` con un método `describir()` que devuelva `"Vehículo genérico"`, y una clase `Auto extends Vehiculo` que sobreescriba `describir()` para devolver el resultado de `super.describir()` seguido de `" — es un auto"`.
-
-**Solución esperada:**
-```js
-class Vehiculo {
-  describir() { return "Vehículo genérico"; }
-}
-class Auto extends Vehiculo {
-  describir() { return `${super.describir()} — es un auto`; }
-}
-new Auto().describir(); // "Vehículo genérico — es un auto"
-```
-
-**Criterios de éxito:**
-- `Auto.describir()` invoca correctamente `super.describir()` en vez de duplicar el texto manualmente.
-- El resultado final combina ambas partes en el orden correcto.
-
-### Ejercicio 3: Diseñar encapsulación con validación
-
-**Enunciado:** diseña una clase `Termometro` con un campo privado `#temperatura`, un getter `temperatura`, y un setter `temperatura` que lance un error si el valor asignado es menor a -273.15 (cero absoluto).
-
-**Solución esperada:**
-```js
-class Termometro {
-  #temperatura = 20;
-  get temperatura() { return this.#temperatura; }
-  set temperatura(valor) {
-    if (valor < -273.15) throw new Error("Temperatura por debajo del cero absoluto");
-    this.#temperatura = valor;
-  }
-}
-```
-
-**Criterios de éxito:**
-- El setter valida correctamente el límite físico antes de asignar.
-- El campo `#temperatura` permanece inaccesible directamente desde fuera de la clase.
-
----
 
 ## Rúbrica del proyecto
 

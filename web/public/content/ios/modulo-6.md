@@ -161,36 +161,6 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 
 ---
 
-## Ejercicios de evaluación
-
-### Ejercicio 1: Qué simplifica SwiftData
-
-**Enunciado:** ¿qué simplifica SwiftData frente a configurar Core Data manualmente (`NSManagedObject`, `NSFetchRequest`)?
-
-**Solución esperada:** genera automáticamente, mediante macros declarativas (`@Model`, `@Query`), toda la infraestructura de persistencia necesaria, sin requerir definir manualmente subclases de `NSManagedObject` ni mantener sincronizado un archivo de esquema `.xcdatamodeld` separado.
-
-**Criterios de éxito:**
-- Explica correctamente la generación automática de infraestructura mediante macros como la simplificación.
-
-### Ejercicio 2: Cuándo preferir Core Data directo
-
-**Enunciado:** ¿cuándo seguirías prefiriendo Core Data directamente sobre SwiftData?
-
-**Solución esperada:** en apps existentes que ya invirtieron considerablemente en su configuración de Core Data, o en casos que requieren control muy fino sobre aspectos avanzados del stack de persistencia que SwiftData, como capa de más alto nivel, todavía no expone con el mismo nivel de detalle.
-
-**Criterios de éxito:**
-- Menciona correctamente apps existentes y/o necesidad de control fino como razones válidas.
-
-### Ejercicio 3: Ventaja de un DAO/Query reactivo
-
-**Enunciado:** ¿qué ventaja da que `@Query` observe automáticamente los datos persistidos, comparado con consultarlos manualmente cada vez?
-
-**Solución esperada:** la vista se actualiza automáticamente cada vez que los datos subyacentes cambian (inserción, actualización, eliminación), sin que el desarrollador escriba ningún mecanismo de notificación de cambios manual ni vuelva a consultar explícitamente los datos.
-
-**Criterios de éxito:**
-- Explica correctamente la actualización automática sin notificación manual como la ventaja.
-
----
 
 ## Rúbrica del proyecto
 

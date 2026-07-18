@@ -253,39 +253,6 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 
 ---
 
-## Ejercicios de evaluación
-
-### Ejercicio 1: Explicar el valor de la integración proxy
-
-**Enunciado:** explica, sin mirar el Tema 3, qué aporta específicamente la integración proxy (`AWS_PROXY`) frente a configurar manualmente plantillas de mapeo de entrada y salida (integración `AWS` sin proxy).
-
-**Solución esperada:** la integración proxy reenvía la petición HTTP completa sin transformación, delegando toda la lógica de interpretación de esos datos al código de la función Lambda (un lenguaje de programación de propósito general), en vez de tener que escribir y mantener plantillas de transformación en VTL dentro de la configuración de infraestructura. Esto simplifica la configuración y concentra toda la lógica de negocio en un único lugar (el código), a costa de que la función deba encargarse ella misma de devolver el formato exacto `statusCode`/`headers`/`body` que API Gateway espera.
-
-**Criterios de éxito:**
-- Menciona que la integración proxy no transforma los datos, dejando esa responsabilidad al código de Lambda.
-- Reconoce el compromiso: menos configuración de infraestructura, pero la función debe devolver el formato de respuesta exacto esperado.
-
-### Ejercicio 2: Diagnosticar un despliegue faltante
-
-**Enunciado:** añadiste un nuevo método `POST` sobre el recurso `/tareas`, lo probaste con `curl` contra el stage `dev`, y obtuviste un error `Missing Authentication Token`, aunque el método `GET` sobre ese mismo recurso funciona perfectamente. ¿Cuál es la causa más probable, y cómo la corriges?
-
-**Solución esperada:** la causa más probable es que el método `POST` se configuró correctamente pero nunca se desplegó al stage `dev` con un nuevo `create-deployment`; el stage sigue sirviendo la configuración anterior, en la que ese método `POST` no existía todavía, por lo que API Gateway lo trata como una ruta no reconocida. La corrección es ejecutar `aws apigateway create-deployment --rest-api-id <api-id> --stage-name dev` de nuevo, para publicar la configuración actualizada que ya incluye el nuevo método.
-
-**Criterios de éxito:**
-- Identifica correctamente la falta de un nuevo despliegue como la causa más probable, no un problema de la integración en sí.
-- La solución propuesta es ejecutar un nuevo `create-deployment` al stage correcto.
-
-### Ejercicio 3: Elegir entre API REST y API HTTP
-
-**Enunciado:** estás diseñando una API nueva que simplemente expone tres funciones Lambda distintas mediante integración proxy, sin necesidad de validación de modelos ni de autorizadores personalizados complejos. En un entorno real de AWS (no en Floci), ¿elegirías una API REST o una API HTTP? Justifica tu respuesta.
-
-**Solución esperada:** una API HTTP, porque el caso de uso descrito —integración proxy simple con Lambda, sin necesidad de las funcionalidades más avanzadas de REST como validación de modelos o plantillas de mapeo personalizadas— es exactamente el escenario para el que las API HTTP fueron diseñadas: menor complejidad de configuración, menor latencia y menor coste por petición en una cuenta real, sin sacrificar nada que este caso de uso concreto necesite.
-
-**Criterios de éxito:**
-- Elige API HTTP, no REST.
-- La justificación menciona que el caso de uso no requiere las funcionalidades avanzadas exclusivas de REST, conectándolo con el Tema 1.
-
----
 
 ## Rúbrica del proyecto
 

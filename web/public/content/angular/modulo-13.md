@@ -176,36 +176,6 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 
 ---
 
-## Ejercicios de evaluación
-
-### Ejercicio 1: Separación de features
-
-**Enunciado:** explica por qué `auth/` y `tareas/` se mantienen como features separadas en vez de mezclar toda la lógica en una única carpeta.
-
-**Solución esperada:** mantenerlas separadas refleja una separación real de responsabilidades de dominio (quién es el usuario y qué puede hacer, frente a la lógica de negocio de gestión de tareas en sí), permitiendo que cada feature evolucione independientemente y que la lógica de tareas no necesite conocer los detalles internos de cómo funciona la autenticación, solo su punto de integración explícito (el guard, el interceptor).
-
-**Criterios de éxito:**
-- Explica correctamente la separación de responsabilidades de dominio entre ambas features.
-
-### Ejercicio 2: Por qué un store de signals aquí, no NgRx
-
-**Enunciado:** justifica por qué `TareasStore` usa un store de signals directo en vez de NgRx, según los criterios estudiados en el Módulo 9.
-
-**Solución esperada:** la complejidad de este caso (un store simple con estado local y una sincronización HTTP directa) no requiere historial de cambios inspeccionable, ni un patrón único obligatorio para un equipo grande, ni coordinación de side-effects asíncronos complejos, los tres criterios que justificarían la ceremonia adicional de NgRx según el Módulo 9; un store de signals simple es suficiente y más simple de mantener para este caso.
-
-**Criterios de éxito:**
-- Justifica correctamente aplicando los criterios de decisión estudiados en el Módulo 9, no solo una preferencia sin fundamento.
-
-### Ejercicio 3: Cierre del track — habilidades combinadas
-
-**Enunciado:** enumera las habilidades concretas del track de Angular que este proyecto integrador combina en una única aplicación.
-
-**Solución esperada:** reactividad basada en signals (Módulo 2), arquitectura standalone organizada por features (Módulo 8), routing con guards funcionales y carga perezosa (Módulo 4), consumo de datos reales con HttpClient e interceptores (Módulo 7), formularios reactivos con validación (Módulo 5), y una base de pruebas para los componentes críticos (Módulo 10).
-
-**Criterios de éxito:**
-- Enumera al menos cuatro de las seis habilidades combinadas, vinculándolas correctamente a los módulos donde se estudiaron.
-
----
 
 ## Rúbrica del proyecto
 

@@ -155,36 +155,6 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 
 ---
 
-## Ejercicios de evaluación
-
-### Ejercicio 1: Por qué necesitas ECR si tienes Docker Hub
-
-**Enunciado:** ¿por qué necesitas ECR si tienes Docker Hub?
-
-**Solución esperada:** ECR ofrece control de acceso granular integrado nativamente con IAM sobre repositorios privados, apropiado para imágenes con código propietario que requieren ese nivel de control auditado e integrado con el resto de la infraestructura de permisos de la misma cuenta, algo que Docker Hub gestiona con un sistema de acceso separado.
-
-**Criterios de éxito:**
-- Explica correctamente la integración nativa con IAM como razón de usar ECR sobre Docker Hub para casos privados.
-
-### Ejercicio 2: Diferencia entre ECS y EKS
-
-**Enunciado:** ¿qué diferencia hay entre ECS y EKS?
-
-**Solución esperada:** ECS es una solución de orquestación de contenedores propietaria y específica de AWS, más simple de operar; EKS ofrece Kubernetes gestionado, el estándar de facto de orquestación multi-nube, apropiado cuando se requiere portabilidad explícita entre proveedores o aprovechar el ecosistema de herramientas de Kubernetes ya existente.
-
-**Criterios de éxito:**
-- Distingue correctamente la propiedad específica de AWS (ECS) frente al estándar portable (EKS/Kubernetes).
-
-### Ejercicio 3: Cuándo usar contenedores sobre Lambda
-
-**Enunciado:** ¿cuándo usar contenedores sobre Lambda?
-
-**Solución esperada:** cuando la carga de trabajo tiene duración prolongada más allá de los límites de Lambda, requiere control fino sobre el entorno de ejecución con dependencias específicas que no encajan en el runtime restringido de Lambda, o cuando la aplicación ya está empaquetada como contenedor por otras razones (por ejemplo, portabilidad a Kubernetes).
-
-**Criterios de éxito:**
-- Menciona al menos una razón concreta (duración, control de runtime, o empaquetado ya existente) para elegir contenedores.
-
----
 
 ## Rúbrica del proyecto
 

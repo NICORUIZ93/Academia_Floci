@@ -152,36 +152,6 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 
 ---
 
-## Ejercicios de evaluación
-
-### Ejercicio 1: Por qué un metric filter es más barato
-
-**Enunciado:** ¿qué es un metric filter y por qué es más barato que métricas custom?
-
-**Solución esperada:** un metric filter deriva automáticamente una métrica numérica a partir de patrones ya presentes en logs que la aplicación emite de todas formas, sin requerir instrumentación manual adicional de una métrica custom separada, aprovechando información ya existente en vez de duplicar ese esfuerzo.
-
-**Criterios de éxito:**
-- Explica correctamente la derivación automática desde logs existentes como razón del menor costo.
-
-### Ejercicio 2: Por qué el correlation ID es esencial
-
-**Enunciado:** ¿por qué el correlation ID es esencial para diagnosticar problemas?
-
-**Solución esperada:** permite filtrar todos los logs relacionados con una transacción específica que atraviesa múltiples servicios mediante una búsqueda directa por ese identificador único, en vez de correlacionar manualmente logs dispersos basándose en suposiciones de timing entre servicios distintos.
-
-**Criterios de éxito:**
-- Explica correctamente la correlación directa de logs de una misma transacción como la razón de su importancia.
-
-### Ejercicio 3: Cómo encontrar la causa de un error sin adivinar
-
-**Enunciado:** ¿cómo encuentras la causa de un error sin adivinar?
-
-**Solución esperada:** combinando un proceso sistemático de filtrar logs por el patrón de error, extraer el correlation ID para reconstruir el recorrido completo de las transacciones afectadas, y consultar métricas y traces (X-Ray) para entender el contexto general y la latencia exacta por segmento, en vez de depender de conjeturas sin evidencia concreta.
-
-**Criterios de éxito:**
-- Describe correctamente un proceso sistemático basado en evidencia (logs, correlation ID, métricas, traces).
-
----
 
 ## Rúbrica del proyecto
 

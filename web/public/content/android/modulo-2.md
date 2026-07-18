@@ -182,36 +182,6 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 
 ---
 
-## Ejercicios de evaluación
-
-### Ejercicio 1: Por qué Compose recompone
-
-**Enunciado:** ¿por qué Compose vuelve a ejecutar (recomponer) una función composable, y qué la dispara?
-
-**Solución esperada:** un composable se recompone cuando cambia cualquiera de los valores de los que depende su salida (parámetros de entrada o estado observado como `remember`/`StateFlow`), dado que un composable describe la UI como una función pura de esos valores; Compose vuelve a ejecutar la función para producir la descripción actualizada correspondiente al nuevo estado.
-
-**Criterios de éxito:**
-- Explica correctamente que el cambio en parámetros o estado observado dispara la recomposición.
-
-### Ejercicio 2: Qué problema resuelve state hoisting
-
-**Enunciado:** ¿qué problema resuelve elevar el estado (state hoisting) a un componente padre?
-
-**Solución esperada:** hace que el componente hijo sea reutilizable en cualquier contexto (sin depender de una instancia específica de estado interno) y testeable de forma aislada, dado que su comportamiento depende únicamente de los parámetros y callbacks que recibe, sin ningún estado propio oculto.
-
-**Criterios de éxito:**
-- Menciona correctamente reutilización y/o testeo aislado como beneficio.
-
-### Ejercicio 3: remember vs rememberSaveable
-
-**Enunciado:** ¿qué diferencia hay entre `remember` y `rememberSaveable` respecto a una rotación de pantalla?
-
-**Solución esperada:** `remember` conserva el valor solo entre recomposiciones dentro de la misma instancia de Activity, perdiéndose ante una rotación (que destruye y recrea la Activity); `rememberSaveable` serializa el valor a un `Bundle` de estado que sí sobrevive a esa recreación, restaurándolo automáticamente.
-
-**Criterios de éxito:**
-- Distingue correctamente la supervivencia a rotación como la diferencia clave entre ambos.
-
----
 
 ## Rúbrica del proyecto
 

@@ -136,36 +136,6 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 
 ---
 
-## Ejercicios de evaluación
-
-### Ejercicio 1: Por qué Ivy fue importante
-
-**Enunciado:** explica qué beneficios trajo la adopción de Ivy como motor de renderizado por defecto en Angular 9.
-
-**Solución esperada:** Ivy produjo bundles de producción significativamente más pequeños gracias a mejor tree-shaking, y mensajes de error considerablemente más claros y específicos en tiempo de desarrollo, un cambio interno que la mayoría de aplicaciones no necesitó modificar código para aprovechar.
-
-**Criterios de éxito:**
-- Menciona correctamente bundles más pequeños y mejores mensajes de error como beneficios de Ivy.
-
-### Ejercicio 2: Riesgo de saltar versiones
-
-**Enunciado:** ¿por qué no se recomienda saltar directamente de Angular 11 a Angular 17 en un único paso?
-
-**Solución esperada:** las migraciones automáticas de `ng update` están diseñadas para saltos de una versión mayor a la vez; saltar directamente varias versiones no ejecutaría las migraciones automáticas de las versiones intermedias, dejando el proyecto en un estado inconsistente, y acumulando el riesgo de múltiples cambios simultáneos en un único paso difícil de diagnosticar si algo falla.
-
-**Criterios de éxito:**
-- Explica correctamente la falta de ruta de migración automática confiable y el riesgo acumulado.
-
-### Ejercicio 3: Usar update.angular.io
-
-**Enunciado:** ¿qué información específica proporciona update.angular.io que un simple changelog genérico no proporciona?
-
-**Solución esperada:** update.angular.io genera una checklist específica y personalizada según la versión de origen y destino exactas indicadas, mostrando exactamente qué pasos automáticos y manuales aplican para esa migración particular, en vez de un listado genérico de todos los cambios históricos del framework sin relación con el punto de partida real del proyecto.
-
-**Criterios de éxito:**
-- Explica correctamente la personalización según origen/destino frente a un changelog genérico.
-
----
 
 ## Rúbrica del proyecto
 

@@ -147,36 +147,6 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 
 ---
 
-## Ejercicios de evaluación
-
-### Ejercicio 1: Problema que resuelve Builder
-
-**Enunciado:** ¿qué problema concreto resuelve el patrón Builder frente a un constructor con 8 parámetros?
-
-**Solución esperada:** un constructor con muchos parámetros posicionales es propenso a confundir el orden de los argumentos, especialmente entre parámetros del mismo tipo, y no deja ninguna indicación clara en el sitio de la llamada de qué representa cada valor; Builder encadena métodos con nombres descriptivos por cada campo, haciendo el código autoexplicativo y permitiendo omitir directamente los campos opcionales sin marcadores de posición.
-
-**Criterios de éxito:**
-- Explica correctamente la confusión de orden posicional evitada y la claridad ganada con nombres descriptivos.
-
-### Ejercicio 2: Reconocer cuándo no aplicar un patrón
-
-**Enunciado:** ¿cómo reconoces cuándo NO aplicar un patrón de diseño?
-
-**Solución esperada:** cuando no existe la variabilidad real que el patrón está diseñado para gestionar (una Factory con un único caso posible sin perspectiva de agregar otro, un Strategy sin ninguna alternativa real prevista), aplicar el patrón agrega una capa de indirección sin ningún beneficio real a cambio, siendo preferible código simple y directo en ese caso.
-
-**Criterios de éxito:**
-- Explica correctamente la ausencia de variabilidad real como el criterio para no aplicar un patrón.
-
-### Ejercicio 3: Responsabilidad única en la práctica
-
-**Enunciado:** identifica en un ejemplo propio una clase que viola el principio de responsabilidad única, y describe cómo la separarías.
-
-**Solución esperada:** cualquier ejemplo razonable donde una clase acumule dos o más responsabilidades no relacionadas (por ejemplo, modelar datos y además enviar notificaciones), separadas en clases independientes, cada una con una única razón de cambio real.
-
-**Criterios de éxito:**
-- Identifica correctamente al menos dos responsabilidades no relacionadas en el ejemplo, y propone una separación coherente.
-
----
 
 ## Rúbrica del proyecto
 

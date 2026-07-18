@@ -137,36 +137,6 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 
 ---
 
-## Ejercicios de evaluación
-
-### Ejercicio 1: Diferencia entre certificado de desarrollo y distribución
-
-**Enunciado:** ¿qué diferencia hay entre un certificado de desarrollo y uno de distribución?
-
-**Solución esperada:** un certificado de desarrollo firma builds destinados a correr únicamente en dispositivos físicos registrados manualmente durante el desarrollo; un certificado de distribución firma builds destinados a TestFlight y la App Store, autorizando una distribución más amplia sin necesidad de registrar cada dispositivo individual de antemano.
-
-**Criterios de éxito:**
-- Distingue correctamente el alcance de dispositivos autorizados entre ambos tipos de certificado.
-
-### Ejercicio 2: Ventaja de probar con TestFlight antes de la App Store
-
-**Enunciado:** ¿qué ventaja da probar con TestFlight antes de enviar la app a revisión de la App Store?
-
-**Solución esperada:** permite detectar problemas (crashes, bugs de UX) con un grupo controlado y de impacto limitado, evitando que esos mismos problemas se descubran directamente en producción frente a la totalidad de usuarios potenciales tras la publicación completa.
-
-**Criterios de éxito:**
-- Explica correctamente la validación con impacto limitado como la ventaja de TestFlight.
-
-### Ejercicio 3: Requisitos obligatorios de metadata
-
-**Enunciado:** ¿qué elemento de metadata es obligatorio sin excepción antes de que Apple revise cualquier app?
-
-**Solución esperada:** la política de privacidad, junto con las respuestas del cuestionario de privacidad que declara qué datos recolecta la app, es un requisito obligatorio sin excepción antes de que la revisión pueda proceder.
-
-**Criterios de éxito:**
-- Menciona correctamente la política de privacidad como requisito obligatorio sin excepción.
-
----
 
 ## Rúbrica del proyecto
 

@@ -133,39 +133,6 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 
 ---
 
-## Ejercicios de evaluación
-
-### Ejercicio 1: Diseña un esquema GraphQL para el proyecto del curso
-
-**Enunciado:** diseña (sin necesariamente implementarlo) un esquema GraphQL con un tipo `Tarea` y una query `tareas` que devuelva una lista, pensando en el Sistema de Gestión de Tareas del Módulo 9. Explica qué ventaja tendría un cliente móvil al consumir esta API GraphQL frente a la API REST que ya construiste con API Gateway.
-
-**Solución esperada:** un esquema con `type Tarea { id: ID!, titulo: String!, estado: String! }` y `type Query { tareas: [Tarea] }`. La ventaja para un cliente móvil es poder pedir solo los campos que la pantalla actual necesita mostrar (por ejemplo, solo `titulo` y `estado` en una lista, pero todos los campos en el detalle), reduciendo el tamaño de la respuesta en conexiones móviles lentas, algo que una API REST fija no permite sin crear endpoints adicionales.
-
-**Criterios de éxito:**
-- El esquema propuesto es sintácticamente válido en GraphQL.
-- La justificación de la ventaja se basa en la selección de campos por el cliente, no en una ventaja genérica sin fundamento técnico.
-
-### Ejercicio 2: Prueba automatizada de manejo de rebotes
-
-**Enunciado:** escribe (en pseudocódigo o en tu lenguaje preferido) una prueba automatizada que envíe un correo a `bounce@simulator.amazonses.com`, y verifique que tu aplicación marca correctamente esa dirección como "no entregable" en tu base de datos, sin depender de infraestructura de correo real.
-
-**Solución esperada:** la prueba llama a `SendEmail` con destino la dirección de rebote del simulador, luego consulta el buzón de inspección o el mecanismo de notificación configurado (por ejemplo, un tema SNS asociado) para confirmar que se emitió el evento `Bounce`, y verifica que la lógica de la aplicación que escucha ese evento efectivamente actualizó el estado de la dirección en la base de datos.
-
-**Criterios de éxito:**
-- La prueba usa la dirección determinista del simulador, no intenta provocar un rebote real de forma indirecta.
-- Verifica el efecto de negocio completo (actualización en base de datos), no solo que el correo se envió.
-
-### Ejercicio 3: SES v1 vs v2 — mismo estado, dos superficies
-
-**Enunciado:** crea una plantilla de correo con `CreateTemplate` (API v1), y luego consúltala con `GetEmailTemplate` (API v2). Documenta el resultado y explica qué implica para un equipo que está migrando gradualmente su código de v1 a v2.
-
-**Solución esperada:** la plantilla creada con v1 es completamente visible y utilizable desde v2, porque ambas APIs comparten el mismo estado subyacente en Floci. Esto significa que un equipo puede migrar su código gradualmente, servicio por servicio o incluso llamada por llamada, sin tener que migrar todo de una vez ni mantener dos copias sincronizadas del mismo recurso.
-
-**Criterios de éxito:**
-- Confirmaste con evidencia real (la consulta v2 exitosa) que el estado se comparte, no solo lo asumiste.
-- La explicación de la implicación para migración gradual es coherente con el comportamiento observado.
-
----
 
 ## Rúbrica del proyecto
 

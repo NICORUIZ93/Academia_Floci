@@ -188,38 +188,6 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 
 ---
 
-## Ejercicios de evaluación
-
-### Ejercicio 1: Cuándo un ORM ayuda y cuándo estorba
-
-**Enunciado:** describe un escenario donde un ORM como Prisma claramente ahorra tiempo, y otro donde recurrir a SQL crudo sería preferible.
-
-**Solución esperada:** un ORM ahorra tiempo en operaciones CRUD estándar con relaciones simples (crear, listar, actualizar registros con validación de tipos automática); SQL crudo es preferible para consultas analíticas complejas con múltiples agregaciones y joins optimizados manualmente, donde la abstracción del ORM podría generar SQL subóptimo o donde se necesita aprovechar características muy específicas del motor de base de datos no expuestas directamente por el ORM.
-
-**Criterios de éxito:**
-- Da un ejemplo correcto de ventaja de un ORM.
-- Da un ejemplo correcto de un caso donde SQL crudo sería preferible.
-
-### Ejercicio 2: Por qué un pool de conexiones
-
-**Enunciado:** explica por qué abrir una conexión nueva a PostgreSQL en cada petición HTTP no escala, incluso si el servidor de base de datos tiene suficientes recursos técnicamente disponibles.
-
-**Solución esperada:** establecer una conexión tiene una latencia no despreciable (afectando el tiempo de respuesta de cada petición) y PostgreSQL impone un límite máximo configurado de conexiones simultáneas; bajo tráfico concurrente alto, abrir una conexión nueva por petición agotaría rápidamente ese límite máximo, rechazando nuevas conexiones aunque el servidor tenga capacidad de cómputo de sobra para procesarlas.
-
-**Criterios de éxito:**
-- Explica correctamente la latencia de establecer conexiones y el límite máximo de conexiones simultáneas.
-
-### Ejercicio 3: Diseñar una transacción
-
-**Enunciado:** describe qué operaciones agruparías en una transacción para el caso de "transferir dinero entre dos cuentas bancarias", y qué pasaría si no se usara una transacción.
-
-**Solución esperada:** agruparía en una transacción: verificar que la cuenta origen tiene saldo suficiente, descontar el monto de la cuenta origen, y añadir el monto a la cuenta destino. Sin transacción, un fallo entre el descuento de la cuenta origen y la adición a la cuenta destino (por ejemplo, una caída del servidor a mitad de proceso) dejaría el dinero "perdido": descontado de una cuenta sin haberse acreditado en la otra, un estado inconsistente grave.
-
-**Criterios de éxito:**
-- Identifica correctamente las tres operaciones que deben agruparse atómicamente.
-- Explica el estado inconsistente específico que ocurriría sin la transacción.
-
----
 
 ## Rúbrica del proyecto
 

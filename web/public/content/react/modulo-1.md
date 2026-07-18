@@ -179,36 +179,6 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 
 ---
 
-## Ejercicios de evaluación
-
-### Ejercicio 1: El bug de count + 1 repetido
-
-**Enunciado:** explica exactamente por qué `setCount(count + 1)` llamado tres veces seguidas en el mismo manejador de evento no triplica el valor de `count`.
-
-**Solución esperada:** las tres llamadas leen el mismo valor de `count` capturado en el closure de esa ejecución específica del componente; ninguna de las llamadas anteriores actualiza sincrónicamente ese valor capturado antes de que la siguiente lo lea, por lo que las tres calculan el mismo resultado (`count + 1`) en vez de acumularse.
-
-**Criterios de éxito:**
-- Explica correctamente el concepto de closure aplicado al valor de estado capturado en la ejecución de render.
-
-### Ejercicio 2: Render vs commit
-
-**Enunciado:** da un ejemplo de un escenario donde la función de un componente se ejecuta (fase de render) sin que ocurra ningún cambio visual en el DOM (fase de commit).
-
-**Solución esperada:** cualquier ejemplo razonable donde el nuevo árbol de elementos calculado durante el render sea idéntico al anterior (por ejemplo, un componente padre que se re-renderiza por un cambio de estado no relacionado, ejecutando de nuevo la función de un componente hijo cuyas props no cambiaron, produciendo el mismo árbol de elementos que React no necesita aplicar de nuevo al DOM).
-
-**Criterios de éxito:**
-- Da un ejemplo coherente que distingue correctamente ejecución de la función componente de cambio real en el DOM.
-
-### Ejercicio 3: Batching de actualizaciones
-
-**Enunciado:** ¿cuántas veces se ejecuta un `console.log` colocado en el cuerpo del componente si un manejador de evento llama a tres funciones `setState` distintas seguidas? Explica por qué.
-
-**Solución esperada:** una única vez adicional, porque React agrupa (batchea) las tres actualizaciones de estado ocurridas dentro del mismo manejador de evento en un único ciclo de render, en vez de ejecutar un render separado por cada llamada individual a una función de actualización de estado.
-
-**Criterios de éxito:**
-- Responde correctamente "una vez" y explica el concepto de batching.
-
----
 
 ## Rúbrica del proyecto
 

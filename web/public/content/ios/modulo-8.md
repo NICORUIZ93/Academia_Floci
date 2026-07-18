@@ -166,36 +166,6 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 
 ---
 
-## Ejercicios de evaluación
-
-### Ejercicio 1: Problema que resuelve separar lógica de la vista
-
-**Enunciado:** ¿qué problema concreto resuelve separar la lógica de negocio de la vista en SwiftUI?
-
-**Solución esperada:** resuelve el problema de testeabilidad (no se puede testear lógica de negocio de forma aislada si está mezclada con la descripción de la UI) y de mantenibilidad (una vista con múltiples responsabilidades mezcladas se vuelve progresivamente más difícil de razonar a medida que crece).
-
-**Criterios de éxito:**
-- Menciona correctamente testeabilidad y/o mantenibilidad como el problema resuelto.
-
-### Ejercicio 2: Cuándo MVVM empieza a quedarse corto
-
-**Enunciado:** ¿cuándo MVVM empieza a quedarse corto para una app que crece?
-
-**Solución esperada:** cuando los ViewModels crecen desmesuradamente, la lógica de negocio se duplica entre varios ViewModels que necesitan la misma operación, o se vuelve difícil razonar sobre flujos de estado complejos que involucran múltiples pantallas coordinadas; en esos casos se agrega una capa de casos de uso o se adopta una arquitectura como TCA.
-
-**Criterios de éxito:**
-- Identifica correctamente al menos una señal concreta de que MVVM simple ya no es suficiente.
-
-### Ejercicio 3: Ventaja de inyectar por inicializador
-
-**Enunciado:** ¿qué ventaja da inyectar un servicio por el inicializador del ViewModel en vez de acceder a un singleton global?
-
-**Solución esperada:** permite sustituir esa dependencia por un fake en tests simplemente construyendo el ViewModel con un servicio distinto, sin ninguna configuración global adicional, a diferencia de un singleton accedido directamente desde cualquier punto del código, que es mucho más difícil de sustituir de forma aislada en un contexto de test.
-
-**Criterios de éxito:**
-- Explica correctamente la facilidad de sustitución en tests como la ventaja de la inyección por inicializador.
-
----
 
 ## Rúbrica del proyecto
 

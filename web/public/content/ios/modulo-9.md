@@ -169,36 +169,6 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 
 ---
 
-## Ejercicios de evaluación
-
-### Ejercicio 1: Ventaja de legibilidad de Swift Testing
-
-**Enunciado:** ¿qué ventaja de legibilidad ofrece Swift Testing sobre XCTest clásico?
-
-**Solución esperada:** reemplaza las múltiples variantes específicas de `XCTAssert` con una única macro `#expect` que acepta cualquier expresión booleana, y no requiere heredar de `XCTestCase`, resultando en una sintaxis considerablemente más concisa y con mejor soporte nativo para tests parametrizados.
-
-**Criterios de éxito:**
-- Menciona correctamente la simplificación de `#expect` frente a las múltiples variantes de `XCTAssert`.
-
-### Ejercicio 2: Por qué un UI Test es más lento y frágil
-
-**Enunciado:** ¿por qué un UI Test es más lento y frágil que un unit test de la capa de dominio?
-
-**Solución esperada:** un UI Test lanza la app real completa y simula interacciones contra la UI efectivamente renderizada, considerablemente más costoso que ejecutar lógica pura en memoria; además es más propenso a fallar por razones ajenas a la lógica bajo prueba, como cambios de layout o timing de animaciones.
-
-**Criterios de éxito:**
-- Explica correctamente el costo de lanzar la app real y la fragilidad ante factores ajenos a la lógica como razones.
-
-### Ejercicio 3: Simplificación de testing async
-
-**Enunciado:** ¿qué simplifica marcar una función de test como `async` en Swift Testing, comparado con el modelo anterior basado en `XCTestExpectation`?
-
-**Solución esperada:** permite usar `await` directamente dentro del test de forma lineal, sin necesidad de crear manualmente una expectativa, cumplirla dentro de un callback, y esperarla con un timeout configurado explícitamente, un mecanismo considerablemente más verboso y propenso a errores.
-
-**Criterios de éxito:**
-- Explica correctamente la eliminación de expectativas manuales como la simplificación.
-
----
 
 ## Rúbrica del proyecto
 

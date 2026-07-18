@@ -165,36 +165,6 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 
 ---
 
-## Ejercicios de evaluación
-
-### Ejercicio 1: Error detectado en compilación por SQLDelight
-
-**Enunciado:** ¿qué error detecta SQLDelight en tiempo de COMPILACIÓN que un ORM dinámico solo detectaría en runtime?
-
-**Solución esperada:** un nombre de columna mal escrito, un tipo incompatible, o un error de sintaxis SQL en cualquier query declarada en un archivo `.sq`; SQLDelight verifica la validez completa del SQL en tiempo de compilación, mientras que un ORM dinámico construiría y validaría esa misma query solo en tiempo de ejecución, cuando efectivamente se invoque.
-
-**Criterios de éxito:**
-- Menciona correctamente errores de SQL (columnas, tipos, sintaxis) como lo detectado en compilación por SQLDelight.
-
-### Ejercicio 2: Por qué se necesita un driver distinto por plataforma
-
-**Enunciado:** ¿por qué necesitas un driver distinto por plataforma aunque las queries sean compartidas?
-
-**Solución esperada:** las queries son código de alto nivel compartido, expresando qué se quiere consultar; el driver es el mecanismo de bajo nivel que efectivamente ejecuta esas queries contra el motor SQLite nativo, y Android e iOS exponen el acceso a SQLite mediante mecanismos nativos completamente distintos entre sí, requiriendo una implementación `actual` específica para cada uno.
-
-**Criterios de éxito:**
-- Explica correctamente la diferencia entre queries de alto nivel (compartidas) y el mecanismo de ejecución nativo (específico por plataforma).
-
-### Ejercicio 3: Aplicación de migraciones según versión
-
-**Enunciado:** ¿cómo determina SQLDelight qué migraciones aplicar en el dispositivo de un usuario específico?
-
-**Solución esperada:** SQLDelight compara la versión de esquema almacenada en el dispositivo del usuario contra la versión más reciente conocida por el código actual de la aplicación, aplicando en orden secuencial únicamente las migraciones intermedias pendientes necesarias para llevar ese dispositivo específico desde su versión actual hasta la más reciente.
-
-**Criterios de éxito:**
-- Explica correctamente la comparación de versiones y la aplicación secuencial de migraciones pendientes.
-
----
 
 ## Rúbrica del proyecto
 

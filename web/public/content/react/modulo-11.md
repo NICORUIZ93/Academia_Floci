@@ -149,36 +149,6 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 
 ---
 
-## Ejercicios de evaluación
-
-### Ejercicio 1: Beneficio de tipar props
-
-**Enunciado:** ¿qué gana tu equipo al tipar las props de un componente en vez de confiar en PropTypes (validación en tiempo de ejecución) o en nada?
-
-**Solución esperada:** tipar las props con TypeScript detecta errores de uso del componente (props faltantes, tipos incorrectos) en tiempo de compilación, antes de que el código llegue a producción; PropTypes valida en tiempo de ejecución, detectando el error solo cuando efectivamente se ejecuta el código con datos incorrectos, potencialmente ya en producción.
-
-**Criterios de éxito:**
-- Explica correctamente la diferencia entre detección en tiempo de compilación (TypeScript) y en tiempo de ejecución (PropTypes).
-
-### Ejercicio 2: Por qué un hook genérico es más reutilizable
-
-**Enunciado:** ¿por qué un hook genérico como `useLocalStorage<T>` es más reutilizable que uno con un tipo fijo como `useLocalStorage` tipado únicamente para `string`?
-
-**Solución esperada:** un hook genérico se escribe una única vez de forma abstracta sobre un tipo `T` no especificado todavía, permitiendo reutilizarlo correctamente tipado para cualquier tipo de dato concreto en cada punto de uso; un hook con un tipo fijo solo funcionaría correctamente tipado para ese único tipo específico, requiriendo duplicar la implementación para cualquier otro tipo de dato necesario.
-
-**Criterios de éxito:**
-- Explica correctamente la reutilización sin duplicación que ofrece el parámetro de tipo genérico.
-
-### Ejercicio 3: Componentes polimórficos
-
-**Enunciado:** explica qué problema de tipado resuelve un componente polimórfico correctamente tipado que uno sin ese tipado no resolvería.
-
-**Solución esperada:** un componente polimórfico correctamente tipado ajusta dinámicamente qué props son válidas según el elemento indicado en `as` (por ejemplo, aceptando `href` solo cuando `as="a"`); sin ese tipado dinámico, o bien se aceptarían props inválidas para el elemento actual sin ninguna advertencia de TypeScript, o bien habría que fijar de antemano un único elemento posible, perdiendo la flexibilidad del componente.
-
-**Criterios de éxito:**
-- Explica correctamente la validación dinámica de props según el elemento indicado en `as`.
-
----
 
 ## Rúbrica del proyecto
 

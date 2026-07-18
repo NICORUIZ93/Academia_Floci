@@ -168,36 +168,6 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 
 ---
 
-## Ejercicios de evaluación
-
-### Ejercicio 1: Qué problema resuelve go_router
-
-**Enunciado:** ¿qué problema de navegación declarativa resuelve go_router frente al Navigator 1.0 imperativo?
-
-**Solución esperada:** el Navigator 1.0 gestiona la navegación como una secuencia de operaciones push/pop sobre una pila, sin ninguna representación explícita de en qué URL/ruta se encuentra la app; go_router trata la navegación como una función pura de la URL actual, resolviendo automáticamente el stack correspondiente, un modelo más natural para deep linking y Flutter Web.
-
-**Criterios de éxito:**
-- Explica correctamente la ausencia de representación explícita de URL en el Navigator 1.0 como el problema resuelto.
-
-### Ejercicio 2: Por qué el deep linking es más directo con un router declarativo
-
-**Enunciado:** ¿por qué el deep linking es más directo de configurar con un router declarativo?
-
-**Solución esperada:** dado que la navegación ya es una función de la URL, un deep link externo simplemente provee esa URL de entrada al mismo sistema de rutas ya existente, sin requerir un mecanismo paralelo separado de traducción de URLs externas hacia operaciones imperativas de push como sería necesario con el Navigator 1.0.
-
-**Criterios de éxito:**
-- Explica correctamente que el deep link reutiliza el mismo mecanismo de navegación basado en URL, sin lógica especial adicional.
-
-### Ejercicio 3: Ventaja de centralizar un guard en la ruta
-
-**Enunciado:** ¿qué ventaja da centralizar un guard de autenticación en la definición de la ruta (`redirect`) en vez de verificarlo manualmente dentro de cada pantalla protegida?
-
-**Solución esperada:** centraliza la lógica de protección en un único lugar mantenible, evitando verificaciones dispersas y propensas a omitirse al agregar una ruta nueva que también debería estar protegida pero que un desarrollador podría olvidar verificar manualmente.
-
-**Criterios de éxito:**
-- Explica correctamente la centralización y reducción de omisiones como la ventaja.
-
----
 
 ## Rúbrica del proyecto
 

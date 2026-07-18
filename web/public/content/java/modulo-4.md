@@ -143,36 +143,6 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 
 ---
 
-## Ejercicios de evaluación
-
-### Ejercicio 1: Por qué Optional reemplaza con ventaja a null
-
-**Enunciado:** explica por qué `Optional` reemplaza con ventaja a devolver `null` directamente.
-
-**Solución esperada:** `Optional` obliga, en el propio tipo de retorno, a que el código que llama considere explícitamente el caso de ausencia de valor (mediante `orElseThrow`, `orElse`, `ifPresent`, etc.), en vez de descubrir esa ausencia únicamente en producción mediante un `NullPointerException` inesperado al usar un valor `null` sin haberlo verificado previamente.
-
-**Criterios de éxito:**
-- Explica correctamente la obligación explícita en el tipo frente al riesgo silencioso de `null`.
-
-### Ejercicio 2: Cuándo un stream paralelo ayuda o empeora
-
-**Enunciado:** ¿cuándo un stream paralelo realmente mejora el rendimiento y cuándo lo empeora?
-
-**Solución esperada:** mejora el rendimiento con datasets grandes y operaciones genuinamente intensivas en CPU sin efectos secundarios compartidos; lo empeora en colecciones pequeñas o con operaciones simples y rápidas, donde el overhead de coordinar la división y recombinación del trabajo entre hilos supera cualquier ganancia de paralelización.
-
-**Criterios de éxito:**
-- Distingue correctamente el caso de dataset grande + CPU-intensivo (ayuda) del caso pequeño/simple (empeora).
-
-### Ejercicio 3: Operaciones intermedias vs terminales
-
-**Enunciado:** explica la diferencia entre una operación intermedia (como `filter`) y una operación terminal (como `collect`) en un stream.
-
-**Solución esperada:** una operación intermedia describe un paso de la cadena sin ejecutar nada por sí sola, devolviendo un nuevo stream sobre el que se puede seguir encadenando; una operación terminal dispara la ejecución completa de todo el pipeline de operaciones intermedias descritas previamente, procesando cada elemento en una única pasada.
-
-**Criterios de éxito:**
-- Explica correctamente la evaluación perezosa de las operaciones intermedias y el disparo de ejecución de la operación terminal.
-
----
 
 ## Rúbrica del proyecto
 

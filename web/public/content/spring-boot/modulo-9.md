@@ -342,36 +342,6 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 
 ---
 
-## Ejercicios de evaluación
-
-### Ejercicio 1: Cuándo WebFlux justifica su complejidad
-
-**Enunciado:** ¿cuándo el modelo no bloqueante de WebFlux realmente justifica su complejidad adicional frente a Spring MVC?
-
-**Solución esperada:** cuando el sistema maneja muchas conexiones concurrentes dominadas por I/O (llamadas a otros servicios, streaming) con recursos de threads limitados, donde evitar mantener un thread bloqueado por conexión activa aporta un beneficio real de escalabilidad; para CRUDs simples con concurrencia moderada, Spring MVC (más simple de razonar) suele ser suficiente.
-
-**Criterios de éxito:**
-- Identifica correctamente alta concurrencia de I/O con recursos limitados como el escenario que justifica WebFlux.
-
-### Ejercicio 2: Riesgo de mezclar código bloqueante en un flujo reactivo
-
-**Enunciado:** ¿qué pasa si mezclas código bloqueante (ej. JDBC tradicional) dentro de un flujo reactivo?
-
-**Solución esperada:** ese código bloqueante ocupa uno de los pocos threads del pool reactivo (diseñado para nunca bloquearse) durante toda la duración de la operación bloqueante, pudiendo agotar ese pool compartido y afectar negativamente a todas las demás peticiones reactivas concurrentes.
-
-**Criterios de éxito:**
-- Explica correctamente el agotamiento del pool reactivo compartido como la consecuencia del código bloqueante mezclado.
-
-### Ejercicio 3: Mono vs Flux
-
-**Enunciado:** ¿cuándo usarías `Mono` y cuándo `Flux` para el retorno de un endpoint?
-
-**Solución esperada:** `Mono` cuando el resultado esperado es de cero o un único elemento (buscar una entidad por su id); `Flux` cuando el resultado esperado es una secuencia de cero a N elementos (listar todas las entidades de un tipo).
-
-**Criterios de éxito:**
-- Distingue correctamente la cardinalidad esperada (cero-o-uno frente a cero-a-N) como criterio de elección.
-
----
 
 ## Rúbrica del proyecto
 

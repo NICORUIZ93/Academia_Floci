@@ -131,19 +131,6 @@ Then cambia una sola vez, persiste un evento y expone el mismo resultado ante re
 
 **Definición de terminado:** otra persona puede clonar el repositorio, seguir instrucciones, ejecutar la prueba, observar el fallo controlado y comprender la decisión sin preguntarte qué botón presionar.
 
-## Ejercicios de evaluación
-
-### Ejercicio 1: explica antes de programar
-
-Construye un diagrama propio, define tres términos con palabras cotidianas y señala un supuesto peligroso. Contrasta estado y evento, estimación y hecho, o identidad y permiso según corresponda.
-
-### Ejercicio 2: rompe la solución
-
-Introduce duplicación, concurrencia, pérdida de conexión o datos fuera de orden. Conserva la prueba que reproduce el defecto y corrige la causa sin capturar todas las excepciones ni esconder el error.
-
-### Ejercicio 3: decisión profesional
-
-Escribe un ADR de una página con contexto, dos alternativas, decisión, consecuencias, señal que obligaría a revisarla y fuente oficial consultada. Incluye una consideración de accesibilidad, privacidad o coste.
 
 ## Rúbrica del proyecto
 

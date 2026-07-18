@@ -176,39 +176,6 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 
 ---
 
-## Ejercicios de evaluación
-
-### Ejercicio 1: Interpretar rangos de semver
-
-**Enunciado:** dado `"express": "~4.19.0"`, ¿aceptaría este rango la versión `4.19.5`? ¿Y la versión `4.20.0`? Justifica.
-
-**Solución esperada:** sí aceptaría `4.19.5` (el prefijo `~` permite actualizaciones de parche dentro de `4.19.x`); no aceptaría `4.20.0` (eso sería una actualización de versión menor, que `~` no permite, a diferencia de `^`).
-
-**Criterios de éxito:**
-- Responde correctamente ambos casos.
-- Justifica correctamente la diferencia entre `~` (solo parches) y lo que permitiría `^` (menores y parches) para contraste.
-
-### Ejercicio 2: Por qué npm ci es más seguro en CI
-
-**Enunciado:** explica por qué `npm ci` es más seguro que `npm install` en un pipeline de CI, con un escenario concreto donde la diferencia importaría.
-
-**Solución esperada:** `npm ci` instala exactamente lo que especifica el lockfile y falla si está desincronizado con `package.json`, garantizando que el pipeline de CI prueba exactamente las mismas versiones que el desarrollador probó localmente. Escenario concreto: un desarrollador añade una dependencia nueva a `package.json` pero olvida regenerar el lockfile antes de hacer commit; `npm install` en CI podría resolver silenciosamente esa dependencia con una versión distinta a la que el desarrollador probó localmente, mientras que `npm ci` fallaría explícitamente, alertando del problema antes de que se propague a producción.
-
-**Criterios de éxito:**
-- Explica correctamente que `npm ci` falla ante desincronización, mientras `npm install` la resolvería silenciosamente.
-- Da un escenario concreto y realista donde esa diferencia tiene impacto práctico.
-
-### Ejercicio 3: Diseñar un monorepo
-
-**Enunciado:** tienes una biblioteca de validación de datos que necesitan compartir tanto una API backend como un script de procesamiento por lotes, ambos desarrollados por el mismo equipo con cambios frecuentes coordinados entre los tres. ¿Recomendarías un monorepo con workspaces o repositorios separados? Justifica.
-
-**Solución esperada:** un monorepo con workspaces, porque los tres componentes (biblioteca compartida, API, script de procesamiento) evolucionan conjuntamente con frecuencia y son mantenidos por el mismo equipo, haciendo que el enlace automático de workspaces (sin necesidad de publicar y reinstalar la biblioteca compartida en cada cambio) reduzca significativamente la fricción de mantener esa relación sincronizada.
-
-**Criterios de éxito:**
-- Recomienda monorepo con workspaces.
-- Justifica correctamente en términos de acoplamiento frecuente y mismo equipo, los criterios relevantes para esta decisión.
-
----
 
 ## Rúbrica del proyecto
 

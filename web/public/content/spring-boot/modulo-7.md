@@ -148,36 +148,6 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 
 ---
 
-## Ejercicios de evaluación
-
-### Ejercicio 1: Liveness vs readiness
-
-**Enunciado:** ¿qué diferencia hay entre un health check de "liveness" y uno de "readiness" en el contexto de Actuator + Kubernetes?
-
-**Solución esperada:** liveness determina si Kubernetes debe reiniciar completamente el pod porque la aplicación está en un estado genuinamente roto; readiness determina si el pod debe recibir tráfico en este momento específico, sin necesariamente requerir un reinicio si simplemente está temporalmente no listo (por ejemplo, durante el arranque).
-
-**Criterios de éxito:**
-- Distingue correctamente el reinicio (liveness) de la exclusión temporal de tráfico (readiness).
-
-### Ejercicio 2: Valor de las métricas de negocio
-
-**Enunciado:** ¿por qué exponer métricas de negocio (no solo técnicas) le da valor al equipo de producto, no solo a infraestructura?
-
-**Solución esperada:** las métricas de negocio custom (como el conteo de pedidos creados) permiten observar tendencias reales relevantes para el negocio (picos o caídas inusuales de actividad), información que las métricas puramente técnicas de infraestructura (CPU, memoria) no capturan, ampliando el valor de la plataforma de observabilidad más allá de su propósito técnico.
-
-**Criterios de éxito:**
-- Explica correctamente la observación de tendencias de negocio como el valor adicional de las métricas custom.
-
-### Ejercicio 3: Health indicator personalizado
-
-**Enunciado:** ¿qué verifica un `HealthIndicator` personalizado que el health check estándar de Actuator no verifica por sí solo?
-
-**Solución esperada:** el health check estándar verifica principalmente que la propia aplicación está funcionando; un `HealthIndicator` personalizado puede extender esa verificación para incluir la disponibilidad real de dependencias externas críticas específicas de las que la aplicación depende, dando una imagen más completa de si la aplicación está efectivamente en condiciones de operar correctamente.
-
-**Criterios de éxito:**
-- Explica correctamente la extensión hacia dependencias externas críticas como lo que agrega un health indicator personalizado.
-
----
 
 ## Rúbrica del proyecto
 

@@ -172,36 +172,6 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 
 ---
 
-## Ejercicios de evaluación
-
-### Ejercicio 1: Qué elimina Codable
-
-**Enunciado:** ¿por qué `Codable` elimina gran parte del parsing manual de JSON que existía antes en Objective-C/Swift clásico?
-
-**Solución esperada:** el compilador genera automáticamente la conformidad completa a `Codable` para cualquier `struct` cuyas propiedades sean todas también `Codable`, sin necesidad de extraer y convertir manualmente cada campo desde un diccionario genérico no tipado como se hacía anteriormente.
-
-**Criterios de éxito:**
-- Explica correctamente la generación automática de conformidad como razón de la eliminación del parsing manual.
-
-### Ejercicio 2: Ventaja de un enum de error propio
-
-**Enunciado:** ¿qué ventaja da modelar errores con un enum propio frente a propagar `NSError` genérico?
-
-**Solución esperada:** permite un manejo específico y verificado exhaustivamente por el compilador para cada categoría de fallo (sin conexión, error del servidor, error de decodificación), comunicando mensajes más útiles y precisos que un error genérico indiferenciado.
-
-**Criterios de éxito:**
-- Menciona correctamente el manejo específico por categoría verificado por el compilador como la ventaja.
-
-### Ejercicio 3: Por qué cancelar una tarea en curso
-
-**Enunciado:** ¿por qué es importante cancelar una `Task` en curso al iniciar una nueva búsqueda?
-
-**Solución esperada:** evita que una respuesta tardía de la petición anterior sobrescriba incorrectamente el resultado de la petición más reciente, un problema de "race condition de UI" que ocurre si ambas peticiones se procesan sin ningún mecanismo de cancelación explícita.
-
-**Criterios de éxito:**
-- Explica correctamente la prevención de resultados obsoletos sobrescribiendo resultados recientes.
-
----
 
 ## Rúbrica del proyecto
 

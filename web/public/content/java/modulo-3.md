@@ -141,36 +141,6 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 
 ---
 
-## Ejercicios de evaluación
-
-### Ejercicio 1: Por qué el compilador obliga a manejar checked exceptions
-
-**Enunciado:** explica por qué el compilador obliga a manejar las checked exceptions y no las unchecked.
-
-**Solución esperada:** las checked exceptions representan condiciones externas previsibles y recuperables (un archivo que podría no existir), donde forzar al desarrollador a considerar explícitamente ese caso mediante el compilador tiene sentido; las unchecked típicamente representan errores de programación (un bug), que no tendría sentido forzar a manejar explícitamente en cada punto del código donde pudieran ocurrir.
-
-**Criterios de éxito:**
-- Explica correctamente la distinción entre condición externa previsible (checked) y error de programación (unchecked).
-
-### Ejercicio 2: Problema del catch vacío
-
-**Enunciado:** ¿qué problema causa un catch vacío que "traga" la excepción?
-
-**Solución esperada:** el error ocurrido desaparece silenciosamente sin ningún registro, haciendo que el bug correspondiente se vuelva invisible y mucho más difícil de diagnosticar cuando sus consecuencias eventualmente se manifiesten downstream de forma confusa, sin relación aparente con la causa raíz real.
-
-**Criterios de éxito:**
-- Explica correctamente la invisibilidad del error y la dificultad de diagnóstico posterior como consecuencias del catch vacío.
-
-### Ejercicio 3: try-with-resources y AutoCloseable
-
-**Enunciado:** ¿qué requisito debe cumplir una clase propia para poder usarse dentro de un try-with-resources?
-
-**Solución esperada:** debe implementar la interfaz `AutoCloseable`, que declara un único método `close()`, invocado automáticamente por Java al finalizar el bloque try, garantizando el cierre del recurso incluso si ocurre una excepción dentro del bloque.
-
-**Criterios de éxito:**
-- Identifica correctamente `AutoCloseable` como el requisito necesario.
-
----
 
 ## Rúbrica del proyecto
 
