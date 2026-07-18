@@ -26,7 +26,7 @@
     },
     {
       "path": ".gitignore",
-      "lines": 24,
+      "lines": 25,
       "kind": "project-file",
       "symbols": [],
       "imports": [],
@@ -34,7 +34,7 @@
     },
     {
       "path": "README.md",
-      "lines": 301,
+      "lines": 250,
       "kind": "documentation",
       "symbols": [],
       "imports": [],
@@ -49,8 +49,8 @@
         "# 5. Validar todo el entorno",
         "# docker compose --profile multicloud up   # AWS + Azure + GCP",
         "## Metodologia",
-        "## Modulos (app estatica, `web/index.html`)",
-        "## Contenido aplicado (app estatica)"
+        "## Tracks de la academia",
+        "## Actualizaci\u00f3n tecnol\u00f3gica"
       ]
     },
     {
@@ -106,23 +106,6 @@
         "## Aplicaci\u00f3n en el lector",
         "## Mantenimiento tecnol\u00f3gico",
         "## Calidad del c\u00f3digo en toda la academia"
-      ]
-    },
-    {
-      "path": "docs/METODOLOGIA.md",
-      "lines": 67,
-      "kind": "documentation",
-      "symbols": [],
-      "imports": [],
-      "headings": [
-        "# Metodolog\u00eda de Aprendizaje \u2014 Academia Floci",
-        "## 1. Principios (basados en evidencia)",
-        "## 2. El ciclo de cada lecci\u00f3n (regla 20/60/20)",
-        "## 3. Ruta por perfil",
-        "## 4. Progresi\u00f3n por niveles (por m\u00f3dulo)",
-        "## 5. Herramientas del alumno",
-        "## 6. Cadencia semanal recomendada",
-        "## 7. C\u00f3mo se genera el contenido"
       ]
     },
     {
@@ -2340,47 +2323,8 @@
       "headings": []
     },
     {
-      "path": "scripts/build_curriculum.py",
-      "lines": 273,
-      "kind": "automation-script",
-      "symbols": [
-        "source_text",
-        "normalize_ascii",
-        "clean_module_name",
-        "parse_curriculum",
-        "js_string",
-        "render_app_data",
-        "main"
-      ],
-      "imports": [
-        "__future__",
-        "json",
-        "re",
-        "pathlib"
-      ],
-      "headings": []
-    },
-    {
-      "path": "scripts/build_definitive_topic_registry.py",
-      "lines": 95,
-      "kind": "automation-script",
-      "symbols": [
-        "clean",
-        "fold",
-        "module_number"
-      ],
-      "imports": [
-        "pathlib",
-        "argparse",
-        "json",
-        "re",
-        "unicodedata"
-      ],
-      "headings": []
-    },
-    {
       "path": "scripts/build_repo_graph.py",
-      "lines": 446,
+      "lines": 445,
       "kind": "automation-script",
       "symbols": [
         "FileNode",
@@ -2411,47 +2355,6 @@
         "dataclasses",
         "datetime",
         "pathlib"
-      ],
-      "headings": []
-    },
-    {
-      "path": "scripts/build_requested_practical_examples.py",
-      "lines": 142,
-      "kind": "automation-script",
-      "symbols": [
-        "fold",
-        "parse_source",
-        "module_for",
-        "identifier",
-        "example",
-        "render",
-        "main"
-      ],
-      "imports": [
-        "__future__",
-        "argparse",
-        "json",
-        "re",
-        "unicodedata",
-        "difflib",
-        "pathlib"
-      ],
-      "headings": []
-    },
-    {
-      "path": "scripts/build_supplemental_topic_registry.py",
-      "lines": 116,
-      "kind": "automation-script",
-      "symbols": [
-        "fold",
-        "module_id"
-      ],
-      "imports": [
-        "pathlib",
-        "argparse",
-        "json",
-        "re",
-        "unicodedata"
       ],
       "headings": []
     },
@@ -2644,7 +2547,7 @@
     },
     {
       "path": "scripts/validate.sh",
-      "lines": 439,
+      "lines": 120,
       "kind": "automation-script",
       "symbols": [],
       "imports": [],
@@ -2669,20 +2572,6 @@
         "json",
         "pathlib",
         "re"
-      ],
-      "headings": []
-    },
-    {
-      "path": "scripts/validate_definitive_topics.py",
-      "lines": 18,
-      "kind": "automation-script",
-      "symbols": [
-        "fold"
-      ],
-      "imports": [
-        "pathlib",
-        "json",
-        "unicodedata"
       ],
       "headings": []
     },
@@ -2747,17 +2636,6 @@
       "headings": []
     },
     {
-      "path": "scripts/validate_requested_practical_examples.py",
-      "lines": 23,
-      "kind": "automation-script",
-      "symbols": [],
-      "imports": [
-        "pathlib",
-        "json"
-      ],
-      "headings": []
-    },
-    {
       "path": "scripts/validate_rutaflow.py",
       "lines": 94,
       "kind": "automation-script",
@@ -2767,20 +2645,6 @@
         "importlib.util",
         "subprocess",
         "sys"
-      ],
-      "headings": []
-    },
-    {
-      "path": "scripts/validate_supplemental_topics.py",
-      "lines": 14,
-      "kind": "automation-script",
-      "symbols": [
-        "fold"
-      ],
-      "imports": [
-        "pathlib",
-        "json",
-        "unicodedata"
       ],
       "headings": []
     },
@@ -2826,7 +2690,7 @@
     },
     {
       "path": "web/README.md",
-      "lines": 72,
+      "lines": 39,
       "kind": "documentation",
       "symbols": [],
       "imports": [],
@@ -2847,35 +2711,6 @@
       "headings": []
     },
     {
-      "path": "web/app-data.js",
-      "lines": 2451,
-      "kind": "project-file",
-      "symbols": [],
-      "imports": [
-        "./Component.module.css",
-        "./module",
-        "./component",
-        "./Component"
-      ],
-      "headings": []
-    },
-    {
-      "path": "web/app.css",
-      "lines": 824,
-      "kind": "project-file",
-      "symbols": [],
-      "imports": [],
-      "headings": []
-    },
-    {
-      "path": "web/app.js",
-      "lines": 596,
-      "kind": "project-file",
-      "symbols": [],
-      "imports": [],
-      "headings": []
-    },
-    {
       "path": "web/e2e/academy.spec.ts",
       "lines": 39,
       "kind": "project-file",
@@ -2883,39 +2718,6 @@
       "imports": [
         "@playwright/test"
       ],
-      "headings": []
-    },
-    {
-      "path": "web/index.html",
-      "lines": 282,
-      "kind": "project-file",
-      "symbols": [
-        "progressLabel",
-        "progressBar",
-        "openCloudLab",
-        "toggleNav",
-        "levelLabel",
-        "nextLevelLabel",
-        "xpValue",
-        "streakValue",
-        "openBadges",
-        "badgeValue",
-        "timeValue",
-        "courseNav",
-        "resetProgress",
-        "closeNav",
-        "courseList",
-        "courseLabel",
-        "difficultyBadge",
-        "timeBadge",
-        "lessonTitle",
-        "lessonText",
-        "lessonHint",
-        "objectiveText",
-        "theoryText",
-        "curiosityText"
-      ],
-      "imports": [],
       "headings": []
     },
     {
@@ -9893,14 +9695,6 @@
       "path": "web/public/content/topic-index.json",
       "lines": 5366,
       "kind": "course-content",
-      "symbols": [],
-      "imports": [],
-      "headings": []
-    },
-    {
-      "path": "web/scripts/.translation-cache.json",
-      "lines": 1,
-      "kind": "project-file",
       "symbols": [],
       "imports": [],
       "headings": []

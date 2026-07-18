@@ -10,6 +10,7 @@ dist/
 web/dist/
 web/.angular/cache/
 web/ng-serve*.log
+web/scripts/.translation-cache.json
 examples/node/node_modules/
 
 # Python

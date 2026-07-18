@@ -1,16 +1,11 @@
 # Academia_Floci
 
-Academia en espanol para estudiar desarrollo profesional y cloud local. El repo
-mantiene dos experiencias:
-
-- `web/index.html`: version estatica, sin build ni backend.
-- `web/src`: version Angular "Academia Cloud Local", usada por build, unit tests
-  y e2e.
+Academia en español para estudiar desarrollo profesional y cloud local. La
+experiencia oficial es una aplicación Angular con lecciones Markdown.
 
 La academia reúne 13 rutas, 200 capítulos y más de 750 temas en formato de
 libro, con proyectos acumulativos, práctica, evaluación y fuentes académicas.
 
-- [Abrir la academia](web/index.html)
 - [Guia web](web/README.md)
 - [Mapa compacto del repo](docs/repo-graph.md)
 - [Metodología de aprendizaje](docs/METODOLOGIA-DE-APRENDIZAJE.md)
@@ -21,24 +16,12 @@ libro, con proyectos acumulativos, práctica, evaluación y fuentes académicas.
 
 ## Como empezar
 
-1. Abre `web/index.html` en tu navegador.
-2. Elige un modulo en el panel izquierdo.
-3. Estudia objetivo, teoria, practica, profundizacion, errores, reto y recursos.
-4. Haz la practica propuesta.
-5. Escribe una nota con lo que entendiste.
-6. Marca la leccion como completada.
+1. Instala Node.js LTS y clona el repositorio.
+2. Ejecuta `cd web && npm ci && npm start`.
+3. Abre `http://localhost:4200`.
+4. Elige un track y avanza tema por tema ejecutando sus ejemplos.
 
 El progreso se guarda localmente en tu navegador con `localStorage`.
-
-Si prefieres servirlo por HTTP:
-
-```bash
-./scripts/start.sh
-```
-
-Luego abre `http://localhost:8081`.
-
-Para trabajar con la version Angular:
 
 ```bash
 cd web
@@ -136,30 +119,7 @@ Cada tema sigue una estructura simple:
 - Reto.
 - Recursos para seguir.
 
-## Modulos (app estatica, `web/index.html`)
-
-| Modulo | Enfoque | Proyecto final |
-|---|---|---|
-| JavaScript | Lenguaje, DOM, asincronia, rendimiento y seguridad web defensiva | Juego Adivina el numero |
-| Node.js | Backend, APIs, bases de datos, observabilidad y arquitectura | API REST de tareas con JWT |
-| Angular | TypeScript, Signals, routing, SSR, NgRx e internals | Panel de administracion |
-| React | Hooks, state management, Next.js, testing y accesibilidad | E-commerce con carrito |
-| Java | OOP, collections, concurrencia, JVM y testing | Biblioteca por consola |
-| Spring Boot | REST, JPA, seguridad, cloud, WebFlux y arquitectura hexagonal | API de reservas |
-| DevOps | Linux, Git, Docker, Kubernetes, IaC, GitOps y DevSecOps | Pipeline CI/CD |
-| Cloud | AWS, Azure, GCP, Floci, seguridad, observabilidad e IaC | Sistema desplegado en Floci |
-
-## Contenido aplicado (app estatica)
-
-El archivo `web/app-data.js` se genera desde el esquema ampliado del libro con:
-
-- 8 modulos.
-- 213 lecciones tematicas.
-- Mas de 900 subtemas aplicados dentro de las lecciones.
-- 7 secciones por leccion: objetivo, teoria, practica, profundizacion, errores
-  comunes, reto y recursos.
-
-## Tracks de la app Angular (`web/src`)
+## Tracks de la academia
 
 La version Angular tiene su propio contenido, mas amplio, en formato Markdown
 (`web/public/content/<track>/modulo-N.md`), organizado en 14 tracks, 224
@@ -227,12 +187,6 @@ detectar una revisión pendiente aunque el repositorio no reciba cambios. Las
 funciones preview o experimentales se presentan como tales y nunca como base
 obligatoria de producción.
 
-Para regenerar el curriculo desde el texto fuente disponible en esta sesion:
-
-```bash
-python3 scripts/build_curriculum.py
-```
-
 ## Seguridad
 
 Los temas de seguridad se tratan desde una practica defensiva y autorizada:
@@ -250,10 +204,6 @@ Academia_Floci/
 ├── examples/
 ├── scripts/
 └── web/
-    ├── index.html
-    ├── app.css
-    ├── app-data.js
-    ├── app.js
     ├── src/
     ├── README.md
     └── public/content/
@@ -267,9 +217,8 @@ Antes de subir cambios, ejecuta:
 ./scripts/validate.sh
 ```
 
-La validacion comprueba que la app estatica exista, que tenga 8 modulos, que el
-curriculo genere lecciones consecutivas, que aplique los subtemas del libro y
-que el mapa del repo este actualizado.
+La validación comprueba la aplicación Angular, la relación entre tracks y
+Markdown, las auditorías educativas y el mapa actualizado del repositorio.
 
 El CI tambien ejecuta build y tests de Angular:
 

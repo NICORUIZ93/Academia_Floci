@@ -299,7 +299,6 @@ def render_markdown(root: Path, nodes: list[FileNode]) -> str:
         "README.md",
         "scripts/validate.sh",
         "scripts/build_repo_graph.py",
-        "web/index.html",
         "web/src/app/app.ts",
         "web/src/app/course-data.ts",
         "web/src/app/catalog/course-catalog.ts",
