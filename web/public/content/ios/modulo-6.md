@@ -26,7 +26,7 @@ App con persistencia local en SwiftData y una vista que reacciona a cambios, má
 
 ---
 
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: @Model y ModelContainer
 

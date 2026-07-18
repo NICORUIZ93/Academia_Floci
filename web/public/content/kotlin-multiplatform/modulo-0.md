@@ -46,7 +46,7 @@ Verifica `java --version` y `git --version`. En macOS abre Xcode una vez y acept
 
 Si Gradle no encuentra Java, configura `JAVA_HOME` hacia el JDK, no hacia una JRE. No intentes resolver problemas de lógica común y de toolchain iOS al mismo tiempo: haz funcionar primero `commonTest`, después cada plataforma por separado.
 
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: Null safety real
 

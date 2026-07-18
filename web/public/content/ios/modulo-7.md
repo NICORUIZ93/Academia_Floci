@@ -26,7 +26,7 @@ Buscador con debounce implementado con Combine, más tres ejercicios de evaluaci
 
 ---
 
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: Publishers y Subscribers
 

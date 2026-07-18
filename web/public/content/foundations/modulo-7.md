@@ -10,7 +10,7 @@ Transformar necesidades en software mantenible: especificar resultados verificab
 
 **Prerrequisitos:** módulos 0–6 y proyectos de inventario con datos, pruebas, CI y seguridad.
 
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: Requisitos, stakeholders y criterios verificables
 

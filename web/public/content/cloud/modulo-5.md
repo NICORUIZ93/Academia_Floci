@@ -29,7 +29,7 @@ Dos laboratorios (desplegar/invocar una función, y actualizar su código y conf
 
 ---
 
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: Qué es serverless — ventajas y desventajas
 

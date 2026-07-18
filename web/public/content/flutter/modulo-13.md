@@ -9,7 +9,7 @@ Compartir código no comparte automáticamente garantías. Flutter entrega una i
 3. Isolates, frame budget, memoria y rendimiento medible.
 4. Sincronización, observabilidad y releases seguros.
 
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: Una API Dart puede terminar en una frontera nativa
 

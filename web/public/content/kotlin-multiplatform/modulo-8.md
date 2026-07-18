@@ -26,7 +26,7 @@ App SwiftUI consumiendo el módulo compartido KMP a través del framework genera
 
 ---
 
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: El framework generado para iOS
 

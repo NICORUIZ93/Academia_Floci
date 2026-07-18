@@ -28,7 +28,7 @@ Imagen Docker publicada en ECR y ejecutándose como task en ECS, más tres ejerc
 
 ---
 
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: ECR y por qué no basta con Docker Hub
 

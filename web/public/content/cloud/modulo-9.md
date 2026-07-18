@@ -28,7 +28,7 @@ El proyecto final completo (descrito abajo con requisitos funcionales, técnicos
 
 ---
 
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: Arquitectura de la aplicación — frontend, backend y base de datos
 

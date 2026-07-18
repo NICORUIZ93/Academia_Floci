@@ -27,7 +27,7 @@ Lista de datos con fetching, cache y mutaciones optimistas usando TanStack Query
 
 ---
 
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: useQuery y el problema que resuelve
 

@@ -28,7 +28,7 @@ Una suite de pruebas de integración que levanta la API contra una base de datos
 
 ---
 
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: Vitest y Supertest — pruebas de integración HTTP reales
 

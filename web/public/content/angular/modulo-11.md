@@ -27,7 +27,7 @@ Configuración de SSR con hidratación y un bloque `@defer` con trigger apropiad
 
 ---
 
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: Server-Side Rendering
 

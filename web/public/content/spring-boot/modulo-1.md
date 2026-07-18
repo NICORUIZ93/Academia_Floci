@@ -26,7 +26,7 @@ Proyecto Spring Boot con perfiles dev/prod y configuración externalizada, más 
 
 ---
 
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: Spring Initializr y starters
 

@@ -26,7 +26,7 @@ App con lógica de negocio, networking y persistencia compartidos, funcionando e
 
 ---
 
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: Arquitectura del proyecto integrador
 

@@ -26,7 +26,7 @@ App con theming consistente, dark mode y accesibilidad auditada, más tres ejerc
 
 ---
 
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: ThemeData con Material 3
 

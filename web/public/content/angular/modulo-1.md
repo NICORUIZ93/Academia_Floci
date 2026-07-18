@@ -32,7 +32,7 @@ Un componente reutilizable con consultas signal y medición posterior al render,
 
 ---
 
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: input()/output() basados en signals
 

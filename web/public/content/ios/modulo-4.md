@@ -26,7 +26,7 @@ Función `async` que combina dos llamadas de red en paralelo con `TaskGroup`, m�
 
 ---
 
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: async/await y Task
 

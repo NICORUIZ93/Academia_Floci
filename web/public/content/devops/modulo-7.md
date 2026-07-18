@@ -31,7 +31,7 @@ Un laboratorio que empaqueta una aplicación como Helm chart, expone con Ingress
 
 ---
 
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: Helm charts y values
 

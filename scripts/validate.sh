@@ -70,7 +70,7 @@ for (const [trackId, sourceFile] of Object.entries(TRACK_SOURCES)) {
   }
   for (const [heading, required] of [
     ['## Sílabo', true],
-    ['## Contenido teórico', true],
+    ['## Aprende construyendo', true],
     ['## Resumen del módulo', true],
   ]) {
     const missing = [];

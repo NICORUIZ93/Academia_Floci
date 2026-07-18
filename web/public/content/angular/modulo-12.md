@@ -26,7 +26,7 @@ Planificación de una migración concreta usando update.angular.io, más tres ej
 
 ---
 
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: Los saltos que importan
 

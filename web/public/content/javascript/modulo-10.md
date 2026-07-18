@@ -31,7 +31,7 @@ Una optimización medible (antes/después con métricas reales) de una función 
 
 ---
 
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: Debounce y throttle
 

@@ -27,7 +27,7 @@ Utilidad que lee/escribe JSON desde y hacia disco con manejo de errores, más tr
 
 ---
 
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: NIO.2 — Path y Files
 

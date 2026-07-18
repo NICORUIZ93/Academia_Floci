@@ -29,7 +29,7 @@ Un laboratorio que documenta la migración de un módulo Terraform de Floci a un
 
 ---
 
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: De cloud local a un proveedor cloud real
 

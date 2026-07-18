@@ -28,7 +28,7 @@ Jerarquía de clases con al menos una interfaz y una clase abstracta, más tres 
 
 ---
 
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: Clases, objetos, constructores y encapsulación
 

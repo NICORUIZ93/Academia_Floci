@@ -26,7 +26,7 @@ Dos laboratorios prácticos (un stream Firehose que entrega a S3 automáticament
 
 ---
 
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: Amazon Data Firehose — entrega gestionada sin consumidores propios
 

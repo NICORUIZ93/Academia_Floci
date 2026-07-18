@@ -26,7 +26,7 @@ Formulario con estado compartido entre vistas padre/hijo usando `@Binding`, más
 
 ---
 
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: @State y @Binding
 

@@ -31,7 +31,7 @@ Auditoría de accesibilidad y pantalla UIKit verificable, más cuatro ejercicios
 
 ---
 
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: Instruments
 

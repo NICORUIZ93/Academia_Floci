@@ -27,7 +27,7 @@ API con Actuator expuesto y al menos una métrica de negocio custom, más tres e
 
 ---
 
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: Actuator y health checks personalizados
 

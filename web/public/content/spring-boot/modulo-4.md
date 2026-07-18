@@ -28,7 +28,7 @@ API protegida con JWT y rutas con autorización por rol, más tres ejercicios de
 
 ---
 
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: SecurityFilterChain moderno
 

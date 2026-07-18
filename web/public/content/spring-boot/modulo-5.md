@@ -26,7 +26,7 @@ Configuración tipada y validada al arranque, sin valores hardcodeados, más tre
 
 ---
 
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: @ConfigurationProperties tipado
 

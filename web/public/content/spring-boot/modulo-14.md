@@ -6,7 +6,7 @@
 
 **Evaluación:** 40 % implementación, 25 % pruebas, 20 % explicación y decisiones, 15 % seguridad y operación.
 
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: CRUD API y contratos
 

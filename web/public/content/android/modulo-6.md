@@ -26,7 +26,7 @@ App con caché local en Room que funciona sin conexión a internet, más tres ej
 
 ---
 
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: Entities, DAOs y Database
 

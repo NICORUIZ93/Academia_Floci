@@ -10,7 +10,7 @@ Una app móvil se ejecuta en un dispositivo que puede perderse, restaurarse, que
 4. ANR, crashes, rendimiento y releases graduales.
 5. Proyecto: auditoría operativa y de seguridad de la app.
 
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: El sistema operativo conecta tu app con entradas externas
 

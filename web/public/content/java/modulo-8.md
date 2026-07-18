@@ -27,7 +27,7 @@ Proyecto multi-módulo con Gradle (o Maven) y dependencias bien acotadas, más t
 
 ---
 
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: pom.xml vs build.gradle.kts
 

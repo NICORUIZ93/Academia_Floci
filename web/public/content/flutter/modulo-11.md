@@ -26,7 +26,7 @@ Builds de release generados para Android e iOS listos para subir a sus tiendas, 
 
 ---
 
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: Builds de release para cada plataforma
 

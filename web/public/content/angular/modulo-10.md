@@ -27,7 +27,7 @@ Suite de pruebas para un componente con input signal y un servicio que consume H
 
 ---
 
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: TestBed y componentes standalone
 

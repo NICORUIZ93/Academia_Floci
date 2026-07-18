@@ -27,7 +27,7 @@ Aplicación Next.js con App Router, Server Components y al menos una Server Acti
 
 ---
 
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: Server Components por defecto
 

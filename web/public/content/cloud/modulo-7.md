@@ -28,7 +28,7 @@ Un laboratorio que crea un usuario con permisos mínimos verificados con el simu
 
 ---
 
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: Principio de mínimo privilegio
 

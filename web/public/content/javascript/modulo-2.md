@@ -30,7 +30,7 @@ Implementación de un contador privado y un módulo con estado usando closures, 
 
 ---
 
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: Scope léxico y closures
 

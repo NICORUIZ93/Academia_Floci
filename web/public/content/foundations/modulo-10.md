@@ -10,7 +10,7 @@ Una aplicación local puede asumir que una llamada termina o falla de forma visi
 4. Resiliencia, observabilidad, SLI, SLO e incidentes.
 5. Proyecto 10: inventario distribuido mínimo con fallos controlados.
 
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: La red convierte el resultado en una incertidumbre
 

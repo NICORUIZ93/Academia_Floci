@@ -26,7 +26,7 @@ Dos laboratorios (uno por proveedor) y tres ejercicios de evaluación sobre equi
 
 ---
 
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: floci-az — Blob Storage, Queue Storage, Table Storage, Cosmos DB, Functions
 

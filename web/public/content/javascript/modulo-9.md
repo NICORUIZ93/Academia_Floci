@@ -27,7 +27,7 @@ Una suite de pruebas con cobertura mayor al 80% sobre la biblioteca de funciones
 
 ---
 
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: Unit testing con Vitest
 

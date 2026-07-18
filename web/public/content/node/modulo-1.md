@@ -26,7 +26,7 @@ Un monorepo con dos paquetes propios enlazados vía workspaces, más tres ejerci
 
 ---
 
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: package.json y semver
 

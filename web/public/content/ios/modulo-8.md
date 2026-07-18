@@ -26,7 +26,7 @@ App reestructurada en capas (vista/viewmodel/datos) con dependencias inyectadas,
 
 ---
 
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: De una vista "gorda" a MVVM
 

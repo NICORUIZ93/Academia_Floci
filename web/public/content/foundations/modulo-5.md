@@ -10,7 +10,7 @@ Aplicar un proceso reproducible de calidad: convertir fallos en hipótesis y pru
 
 **Prerrequisitos:** módulos 0–4; funciones, errores, Git básico, SQL y proyecto de inventario.
 
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: Depurar con evidencia, no con cambios aleatorios
 

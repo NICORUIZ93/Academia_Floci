@@ -30,7 +30,7 @@ Un proyecto multi-módulo construido con Vite, con el bundle final auditado, má
 
 ---
 
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: ESM frente a CommonJS
 

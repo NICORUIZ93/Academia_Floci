@@ -10,7 +10,7 @@ Elegir y utilizar estructuras de datos según las operaciones que necesita un pr
 
 **Prerrequisitos:** módulos 0 y 1; variables, condiciones, bucles, funciones y casos de prueba.
 
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: Elegir estructuras según las operaciones
 

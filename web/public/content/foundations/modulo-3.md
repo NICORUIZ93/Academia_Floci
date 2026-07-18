@@ -10,7 +10,7 @@ Explicar el recorrido de una petición web y construir una interfaz HTML/CSS sem
 
 **Prerrequisitos:** módulos 0–2; manejo de terminal, archivos, funciones y lectura de estructuras.
 
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: De una URL al servidor: red, DNS, IP y puertos
 

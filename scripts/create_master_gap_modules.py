@@ -73,7 +73,7 @@ flowchart LR
 
 **Evaluación:** 20 % fundamento, 35 % implementación, 25 % pruebas y fallos, 10 % seguridad, 10 % documentación y comunicación.
 
-## Contenido teórico
+## Aprende construyendo
 
 {''.join(sections)}
 

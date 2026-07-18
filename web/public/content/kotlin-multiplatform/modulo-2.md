@@ -29,7 +29,7 @@ Función suspendida que combina dos fuentes de datos con manejo de errores estru
 
 ---
 
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: suspend functions y concurrencia estructurada
 

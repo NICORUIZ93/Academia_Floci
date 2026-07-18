@@ -27,7 +27,7 @@ Refactor de un módulo propio aplicando al menos dos patrones de diseño justifi
 
 ---
 
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: Builder — constructores con muchos parámetros opcionales
 

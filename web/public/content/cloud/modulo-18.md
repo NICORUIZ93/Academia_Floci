@@ -28,7 +28,7 @@ API REST protegida con Cognito Authorizer donde solo usuarios autenticados puede
 
 ---
 
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: Por qué no construir tu propio sistema de autenticación
 

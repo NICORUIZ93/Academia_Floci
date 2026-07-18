@@ -26,7 +26,7 @@ Dos laboratorios prácticos (desplegar configuración dinámica con AppConfig, y
 
 ---
 
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: AWS Config — rastrear reglas sobre tus recursos
 

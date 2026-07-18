@@ -28,7 +28,7 @@ App con navegación tipo stack, una tab bar y al menos un sheet modal, más tres
 
 ---
 
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: NavigationStack y NavigationPath
 

@@ -28,7 +28,7 @@ Microservicio Spring Boot con auth, persistencia real, Actuator y tests de integ
 
 ---
 
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: Arquitectura del microservicio integrador
 

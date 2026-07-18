@@ -26,7 +26,7 @@ API REST con validación de entrada y manejo centralizado de errores, más tres 
 
 ---
 
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: Por qué DTOs en vez de entidades directamente
 

@@ -27,7 +27,7 @@ Servicio que publica y consume eventos vía Kafka con manejo de errores, más tr
 
 ---
 
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: Producers y consumers con Spring Kafka
 

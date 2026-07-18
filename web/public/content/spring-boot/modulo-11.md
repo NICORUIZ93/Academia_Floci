@@ -26,7 +26,7 @@ Imagen Docker de un servicio Spring Boot optimizada por capas, más tres ejercic
 
 ---
 
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: Fat JAR vs capas de Docker
 

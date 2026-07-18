@@ -27,7 +27,7 @@ App que consume una API real con estados loading/error/success explícitos, más
 
 ---
 
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: http vs dio
 

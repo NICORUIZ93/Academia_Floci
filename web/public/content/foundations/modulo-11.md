@@ -4,7 +4,7 @@
 
 **Objetivo general:** comprender el mapa de Ciencias de la Computación, sus relaciones y prerrequisitos mediante experimentos reproducibles antes de elegir una especialización.
 
-## Contenido teórico
+## Aprende construyendo
 
 ## Criterio transversal de calidad del código
 

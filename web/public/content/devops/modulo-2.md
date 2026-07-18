@@ -30,7 +30,7 @@ Un laboratorio que construye, mide y optimiza progresivamente la imagen de una A
 
 ---
 
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: Dockerfile multi-stage
 

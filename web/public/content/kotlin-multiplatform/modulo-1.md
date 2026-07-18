@@ -26,7 +26,7 @@ Modelo de estado (loading/success/error) con sealed classes manejado exhaustivam
 
 ---
 
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: Funciones de orden superior
 

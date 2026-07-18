@@ -29,7 +29,7 @@ Dashboard de CloudWatch con logs, métricas de errores y alarma configurada, má
 
 ---
 
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: Log groups, log streams y correlation ID
 

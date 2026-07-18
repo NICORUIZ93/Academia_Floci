@@ -55,7 +55,7 @@ Comprueba `node -v` y `git --version`. Crea una carpeta `primer-js`, ábrela en 
 
 Ábrelo en el navegador y usa `F12` → **Console** para ver errores. Crea también `hola.js` con `console.log('Hola')` y ejecuta `node hola.js`. Así distingues desde el primer día los dos entornos: navegador (DOM) y Node.js (sistema operativo/servidor).
 
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: Variables — let, const y var
 

@@ -28,7 +28,7 @@ Consumo de una API con interceptor de autenticación y manejo centralizado de er
 
 ---
 
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: HttpClient con backend fetch
 

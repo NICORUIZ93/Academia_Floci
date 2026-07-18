@@ -30,7 +30,7 @@ Un cliente que consume una API pública con reintentos, timeout y cancelación, 
 
 ---
 
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: async/await sobre promesas
 

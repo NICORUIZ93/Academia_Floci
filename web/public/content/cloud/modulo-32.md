@@ -9,7 +9,7 @@ Una colección de servicios funcionales todavía puede fallar como sistema. La a
 3. Alta disponibilidad, disaster recovery, RTO y RPO.
 4. Backups restaurables, chaos experiments y runbooks.
 
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: Una red segura empieza por flujos, no por subredes
 

@@ -9,7 +9,7 @@ Automatizar despliegues es el comienzo, no el final. Un sistema profesional defi
 3. SBOM, procedencia, firma y verificación de artefactos.
 4. GitOps, policy as code y golden paths de plataforma.
 
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: Confiabilidad es una expectativa cuantificada
 

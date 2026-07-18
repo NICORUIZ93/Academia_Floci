@@ -35,7 +35,7 @@ Dos microservicios Spring Boot comunicándose vía gateway con circuit breaker, 
 
 ---
 
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: Config Server y service discovery
 

@@ -48,7 +48,7 @@ flutter run
 
 Selecciona Chrome o un emulador si hay varios dispositivos. Cambia el texto en `lib/main.dart` y usa hot reload (`r` en la terminal). Si `flutter` no se reconoce, el problema es `PATH`; si no aparecen dispositivos, el SDK funciona pero falta configurar un destino.
 
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: Sound null safety
 

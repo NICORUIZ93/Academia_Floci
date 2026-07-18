@@ -26,7 +26,7 @@ Construcción de un store de carrito de compras con signals, y comparación con 
 
 ---
 
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: Store propio con signals
 

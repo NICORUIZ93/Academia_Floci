@@ -26,7 +26,7 @@ Un laboratorio práctico (crear un servidor, un usuario y una clave SSH, y contr
 
 ---
 
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: Qué resuelve Transfer Family
 

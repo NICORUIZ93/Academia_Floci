@@ -30,7 +30,7 @@ Un diagrama y una demo ejecutable que predicen el orden exacto de ejecución de 
 
 ---
 
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: El Event Loop
 

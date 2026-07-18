@@ -31,7 +31,7 @@ Un laboratorio que limpia un historial con rebase, provoca y resuelve un conflic
 
 ---
 
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: Trunk-based development vs GitFlow
 

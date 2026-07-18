@@ -29,7 +29,7 @@ Un buscador con debounce y cancelación de peticiones previas usando `switchMap`
 
 ---
 
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: Observable frente a Promise
 

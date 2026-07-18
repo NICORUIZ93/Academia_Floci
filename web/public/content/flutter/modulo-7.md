@@ -28,7 +28,7 @@ Platform channel propio y flujo de evidencia fotográfica verificable, más cuat
 
 ---
 
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: MethodChannel
 

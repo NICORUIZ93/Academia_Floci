@@ -27,7 +27,7 @@ Migración de un componente complejo a TypeScript estricto sin `any`, más tres 
 
 ---
 
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: Tipado de props y children
 

@@ -27,7 +27,7 @@ Un formulario multi-paso con validación reactiva y mensajes de error claros, m�
 
 ---
 
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: Reactive Forms — FormGroup y FormControl
 

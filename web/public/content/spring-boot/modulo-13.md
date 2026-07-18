@@ -10,7 +10,7 @@ Anotar un método con `@Transactional`, publicar en Kafka y exponer Actuator no 
 4. Observabilidad, resiliencia, SLO e incidentes.
 5. Proyecto: microservicio verificable bajo fallos parciales.
 
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: `@Transactional` funciona en una frontera, no como encantamiento
 

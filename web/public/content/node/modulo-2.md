@@ -26,7 +26,7 @@ Un script que transforma un archivo CSV grande a JSON usando streams, sin cargar
 
 ---
 
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: fs/promises frente a callbacks
 

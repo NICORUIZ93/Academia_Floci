@@ -27,7 +27,7 @@ No reinstales todo como primer intento. Anota: sistema operativo, comando ejecut
 
 Cada módulo agrega una vertical ejecutable al mismo repositorio: primero dominio; luego persistencia; API; web; móvil; optimización y tiempo real; finanzas; finalmente despliegue y operación. Cada entrega conserva README, ADR, prueba automatizada, comandos de ejecución y una demostración breve. No se copia una solución final: se avanza con commits pequeños y se registra por qué cambió el diseño.
 
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: El proceso logístico como sistema
 

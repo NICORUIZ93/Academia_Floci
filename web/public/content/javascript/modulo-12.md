@@ -27,7 +27,7 @@ Una SPA funcional (varias vistas, estado compartido, datos reales) sin ningún f
 
 ---
 
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: Routing manual con History API
 

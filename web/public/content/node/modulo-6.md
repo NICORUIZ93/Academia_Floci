@@ -28,7 +28,7 @@ Una API protegida con JWT, refresh tokens y rutas con control de roles, más tre
 
 ---
 
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: Hashing de contraseñas
 

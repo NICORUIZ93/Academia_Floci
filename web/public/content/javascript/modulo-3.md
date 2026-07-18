@@ -30,7 +30,7 @@ Una jerarquía de clases con herencia y encapsulación real (campos privados), m
 
 ---
 
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: Prototype chain y Object.create
 

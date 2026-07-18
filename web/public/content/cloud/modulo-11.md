@@ -29,7 +29,7 @@ Sistema de notificaciones que distribuye alertas por SNS a múltiples destinos, 
 
 ---
 
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: El patrón fan-out con SNS
 

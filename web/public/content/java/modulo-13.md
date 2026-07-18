@@ -27,7 +27,7 @@ Aplicación Java con lógica concurrente, tests y build reproducible documentado
 
 ---
 
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: Arquitectura por capas del proyecto integrador
 

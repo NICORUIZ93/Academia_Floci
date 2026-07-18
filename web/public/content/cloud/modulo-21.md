@@ -28,7 +28,7 @@ Dos laboratorios prácticos (lanzar una instancia real con acceso SSH y crear un
 
 ---
 
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: El modelo de ejecución de EC2 — instancias que son contenedores Docker reales
 

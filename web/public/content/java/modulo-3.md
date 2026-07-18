@@ -26,7 +26,7 @@ Lector de archivos con manejo robusto de excepciones y try-with-resources, más 
 
 ---
 
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: Checked vs unchecked exceptions
 

@@ -27,7 +27,7 @@ Un laboratorio que construye un pipeline de CI completo con matriz, caché y art
 
 ---
 
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: Jobs, steps y matrices de build
 

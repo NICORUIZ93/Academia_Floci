@@ -44,7 +44,7 @@ for track in TRACKS:
         totals["diagrams"] += text.count("**Diagrama:**")
 
         for required in (
-            "## Sílabo", "## Contenido teórico", "## Laboratorio práctico",
+            "## Sílabo", "## Aprende construyendo", "## Laboratorio práctico",
             "## Rúbrica del proyecto",
             "## Bibliografía y fundamento académico", "## Resumen del módulo",
         ):

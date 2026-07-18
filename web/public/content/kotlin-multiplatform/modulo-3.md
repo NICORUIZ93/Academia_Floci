@@ -26,7 +26,7 @@ Proyecto KMP con un módulo compartido que compila para Android e iOS, más tres
 
 ---
 
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: Source sets
 

@@ -38,7 +38,7 @@ describe('App', () => {
   it('renders a clean educational lesson with progressive topics', async () => {
     const markdown = `# título repetido
 
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: Un concepto verificable
 
@@ -47,6 +47,8 @@ describe('App', () => {
 **Analogía:** una receta reproducible.
 
 **¿Por qué es importante?** permite explicar el resultado.
+
+La explicación detallada continúa después del ejemplo ejecutable.
 
 \`\`\`ts
 const answer = 42;
@@ -105,7 +107,14 @@ La evidencia demuestra el aprendizaje.`;
       expect(page.querySelectorAll('.implementation-guide')).toHaveLength(0);
       expect(page.querySelector('.learning-contract')).toBeFalsy();
       expect(page.querySelectorAll('.topic-card.expanded')).toHaveLength(1);
-      expect(page.querySelector('.topic-card.expanded > .topic-body > :last-child')?.classList.contains('topic-practice')).toBe(true);
+      expect(text).toContain('Aprende construyendo');
+      expect(text).not.toContain('Contenido teórico');
+      expect(page.querySelector('.topic-practice')).toBeFalsy();
+      const firstTopicBody = page.querySelector('.topic-card.expanded > .topic-body');
+      const firstCode = firstTopicBody?.querySelector('.code-example');
+      const detailedExplanation = Array.from(firstTopicBody?.children ?? []).find(element => element.textContent?.includes('explicación detallada'));
+      expect(firstCode && detailedExplanation).toBeTruthy();
+      expect(Array.from(firstTopicBody?.children ?? []).indexOf(firstCode!)).toBeLessThan(Array.from(firstTopicBody?.children ?? []).indexOf(detailedExplanation!));
       const secondTopicToggle = page.querySelectorAll<HTMLButtonElement>('.topic-toggle')[1];
       expect(secondTopicToggle?.getAttribute('aria-expanded')).toBe('false');
       secondTopicToggle?.click();
@@ -127,7 +136,7 @@ La evidencia demuestra el aprendizaje.`;
       wrapCode?.click();
       expect(page.querySelector('.code-example.wrap-lines')).toBeTruthy();
       expect(wrapCode?.getAttribute('aria-pressed')).toBe('true');
-      expect(text).toContain('Práctica opcional');
+      expect(text).not.toContain('Práctica opcional');
       expect(text).not.toContain('Ejercicios de evaluación');
       expect(page.querySelector('.exercise-card')).toBeFalsy();
       expect(text).toContain('Desde una carpeta vacía');

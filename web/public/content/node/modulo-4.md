@@ -29,7 +29,7 @@ Una API REST con middleware de logging, validación y manejo de errores centrali
 
 ---
 
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: Middleware — orden de ejecución y next()
 

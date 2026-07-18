@@ -63,7 +63,7 @@ ng serve --open
 
 Si ves la aplicación en `http://localhost:4200`, el entorno funciona. Detén el servidor con `Ctrl+C`. Si `ng` no existe, cierra y abre la terminal; si aún falla, ejecuta `npx ng version` para distinguir un problema de instalación de uno de `PATH`.
 
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: El CLI ya no genera NgModules
 

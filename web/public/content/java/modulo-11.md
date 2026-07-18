@@ -29,7 +29,7 @@ Reporte de profiling de una aplicación propia identificando un cuello de botell
 
 ---
 
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: Generaciones de memoria y recolectores
 

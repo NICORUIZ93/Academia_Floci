@@ -26,7 +26,7 @@ Cliente HTTP compartido que consume una API real desde Android e iOS, más tres 
 
 ---
 
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: Ktor Client multiplataforma
 

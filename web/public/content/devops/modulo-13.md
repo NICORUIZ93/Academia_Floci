@@ -27,7 +27,7 @@ Un proyecto integrador que implementa (o documenta con evidencia detallada de di
 
 ---
 
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: El pipeline completo — de commit a producción verificada
 

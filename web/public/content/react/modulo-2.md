@@ -29,7 +29,7 @@ Componente con un efecto de suscripción externa correctamente limpiado al desmo
 
 ---
 
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: useEffect — dependencias y limpieza
 

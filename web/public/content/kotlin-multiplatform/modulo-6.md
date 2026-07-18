@@ -26,7 +26,7 @@ Capa de persistencia compartida con al menos una migración de esquema, más tre
 
 ---
 
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: Esquemas SQLDelight y queries tipadas
 

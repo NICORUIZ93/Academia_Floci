@@ -31,7 +31,7 @@ Un laboratorio que despliega una aplicación propia en un clúster local con Dep
 
 ---
 
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: Pod, ReplicaSet, Deployment
 

@@ -27,7 +27,7 @@ Modelo de dominio inmutable usando records y sealed interfaces con pattern match
 
 ---
 
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: record — modelos inmutables sin boilerplate
 

@@ -29,7 +29,7 @@ Pantalla compuesta por widgets propios reutilizables, con estado local mínimo, 
 
 ---
 
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: StatelessWidget vs StatefulWidget
 

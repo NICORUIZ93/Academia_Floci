@@ -29,7 +29,7 @@ Una API con logging estructurado, correlation ID y apagado controlado, más tres
 
 ---
 
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: Logging estructurado
 

@@ -55,7 +55,7 @@ git --version
 
 Clona el repositorio, entra en su carpeta y ejecuta `docker compose up -d`. Después usa `docker compose ps`: el contenedor debe estar en estado saludable. Si un comando “no existe”, corrige su instalación antes de avanzar; si Docker no conecta con el daemon, abre Docker Desktop o inicia el servicio Docker en Linux. No configures credenciales reales de producción para este curso.
 
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: Fundamentos absolutos — qué es una terminal, un comando y un sistema operativo
 

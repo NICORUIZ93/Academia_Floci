@@ -27,7 +27,7 @@ App con rutas declarativas (go_router), una ruta protegida y deep linking, más 
 
 ---
 
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: go_router: navegación como función de la URL
 

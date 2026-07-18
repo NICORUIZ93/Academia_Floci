@@ -32,7 +32,7 @@ API completa con los mismos endpoints funcionando en AWS local, Azure local y GC
 
 ---
 
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: Arquitectura multi-nube y portabilidad de conocimiento
 

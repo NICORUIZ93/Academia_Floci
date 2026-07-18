@@ -10,7 +10,7 @@ Diseñar y operar una base de datos relacional pequeña, preservando integridad 
 
 **Prerrequisitos:** módulos 0–3; estructuras de datos, archivos JSON, funciones y terminal.
 
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: Del mundo real al modelo relacional
 

@@ -10,7 +10,7 @@ El proyecto anterior demuestra integración técnica, pero una aplicación produ
 4. Presupuestos, experiencia real, caché y actualización segura.
 5. Proyecto: auditoría de producción de la aplicación standalone.
 
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: Accesibilidad es comportamiento, no una puntuación
 

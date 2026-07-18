@@ -29,7 +29,7 @@ Un laboratorio de operaciones CRUD completas y otro de Query vs Scan, más tres 
 
 ---
 
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: Qué es NoSQL y cuándo usarlo
 

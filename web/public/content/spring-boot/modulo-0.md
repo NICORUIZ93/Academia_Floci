@@ -49,7 +49,7 @@ No necesitas instalar Maven si el proyecto incluye `mvnw`/`mvnw.cmd`: ese *wrapp
 
 Visita `http://localhost:8080`. Un 404 significa que el servidor sí arrancó pero aún no existe una ruta; “connection refused” significa que no arrancó. Lee siempre desde la primera línea `Caused by:` del error, no solo la última.
 
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: Inversión de control y el contenedor de Spring
 

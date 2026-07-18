@@ -27,7 +27,7 @@ Theme switcher (claro/oscuro) implementado con Context, sin prop drilling, más 
 
 ---
 
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: createContext y useContext
 

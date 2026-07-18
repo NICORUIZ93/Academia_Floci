@@ -26,7 +26,7 @@ Capa de dominio compartida (modelos + casos de uso) sin código específico de p
 
 ---
 
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: Modelos de dominio y casos de uso
 

@@ -31,7 +31,7 @@ Feature completa implementada con Riverpod (o Bloc), formulario validado y cuatr
 
 ---
 
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: setState y sus límites
 

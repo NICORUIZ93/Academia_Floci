@@ -29,7 +29,7 @@ Optimización medible (antes/después con el Profiler) de una vista con listas l
 
 ---
 
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: Medir antes de optimizar
 

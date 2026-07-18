@@ -27,7 +27,7 @@ Un laboratorio que construye una arquitectura de tres servicios con healthchecks
 
 ---
 
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: Servicios, dependencias y healthchecks
 

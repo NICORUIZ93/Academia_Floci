@@ -29,7 +29,7 @@ API que procesa documentos con Textract, guarda el texto en DynamoDB y genera un
 
 ---
 
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: Bedrock Runtime y respuestas stub deterministas
 

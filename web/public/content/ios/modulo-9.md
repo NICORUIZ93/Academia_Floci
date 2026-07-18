@@ -26,7 +26,7 @@ Suite de tests sobre la capa de dominio usando Swift Testing, más tres ejercici
 
 ---
 
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: XCTest clásico y Swift Testing
 

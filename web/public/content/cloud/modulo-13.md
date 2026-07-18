@@ -28,7 +28,7 @@ API que usa RDS PostgreSQL como backend, con migraciones de esquema ejecutadas a
 
 ---
 
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: RDS Instance y cuándo elegir SQL sobre NoSQL
 

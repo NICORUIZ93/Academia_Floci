@@ -27,7 +27,7 @@ Build subido a TestFlight listo para pruebas internas, más tres ejercicios de e
 
 ---
 
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: Certificados y provisioning profiles
 

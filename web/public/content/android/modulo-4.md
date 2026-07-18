@@ -26,7 +26,7 @@ Pantalla con UDF completo: eventos de usuario → `ViewModel` → `StateFlow` �
 
 ---
 
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: StateFlow en el ViewModel
 

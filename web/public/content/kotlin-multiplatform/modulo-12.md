@@ -10,7 +10,7 @@ La app integradora demuestra que el código común compila y funciona. Un produc
 4. Seguridad, observabilidad y release coordinado.
 5. Proyecto: convertir el módulo compartido en SDK operable.
 
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: La mejor frontera compartida es deliberadamente pequeña
 

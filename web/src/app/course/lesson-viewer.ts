@@ -337,13 +337,6 @@ export class LessonViewerComponent implements OnDestroy {
         card.appendChild(node);
         node = next;
       }
-      const practice = document.createElement('details');
-      practice.className = 'topic-practice';
-      const title = escapeHtml(heading.textContent?.replace(/^Tema\s+\d+:\s*/, '').trim() || 'este concepto');
-      const hasCode = card.querySelector('.code-example') !== null;
-      practice.innerHTML = hasCode
-        ? `<summary>Práctica opcional · 5–10 min</summary><div><ol><li>Sin ejecutar el ejemplo, predice su resultado y explica por qué.</li><li>Cambia un dato, condición o parámetro relacionado con <strong>${title}</strong>; vuelve a predecir y ejecuta.</li><li>Provoca un error deliberado, lee el mensaje completo y corrígelo.</li></ol></div>`
-        : `<summary>Práctica opcional · 5–10 min</summary><div><ol><li>Explica <strong>${title}</strong> con tus palabras.</li><li>Contrástalo con una alternativa: ¿cuándo no lo usarías?</li><li>Describe un caso real y una señal para verificarlo.</li></ol></div>`;
       const toggle = document.createElement('button');
       toggle.type = 'button';
       toggle.className = 'topic-toggle';
@@ -361,10 +354,27 @@ export class LessonViewerComponent implements OnDestroy {
       }
       card.classList.toggle('expanded', index === 0);
       card.appendChild(body);
-      // La práctica cierra el tema. Antes se insertaba antes de mover los nodos
-      // al cuerpo y terminaba como primer contenido visible de la lección.
-      body.appendChild(practice);
+      this.prioritizeFirstCodeExample(body);
     });
+  }
+
+  /**
+   * Mantiene el modelo mental inicial y acerca el primer ejemplo ejecutable.
+   * El resto de la explicación permanece después del código para que el lector
+   * pueda contrastarla con algo concreto en lugar de atravesar varios párrafos
+   * antes de ver qué está construyendo.
+   */
+  private prioritizeFirstCodeExample(body: HTMLElement): void {
+    const example = body.querySelector<HTMLElement>('.code-example');
+    if (!example) return;
+    const paragraphs = Array.from(body.children).filter(
+      (element): element is HTMLParagraphElement => element instanceof HTMLParagraphElement
+        && !element.classList.contains('concept-keyline'),
+    );
+    const anchor = paragraphs[0] ?? body.querySelector<HTMLElement>('.concept-keyline');
+    if (!anchor || anchor.nextElementSibling === example) return;
+    anchor.insertAdjacentElement('afterend', example);
+    example.classList.add('primary-code-example');
   }
 
   async copyCode(event: Event): Promise<void> {

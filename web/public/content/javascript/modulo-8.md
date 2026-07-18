@@ -29,7 +29,7 @@ Un componente de UI interactivo (lista filtrable) sin frameworks, solo DOM API, 
 
 ---
 
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: Selección y manipulación del DOM
 

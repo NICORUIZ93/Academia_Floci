@@ -29,7 +29,7 @@ Un laboratorio que escanea una imagen propia, la integra al pipeline como gate o
 
 ---
 
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: Escaneo de imágenes y dependencias (Trivy, Snyk)
 

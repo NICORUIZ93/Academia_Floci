@@ -22,7 +22,7 @@ La fuente principal es [floci.io](https://floci.io/) y las documentaciones mante
 - Crea `examples/tracks/cloud/floci-oficial/` para guardar comandos, resultados y errores.
 - Nunca uses credenciales de producción. Los valores locales `test` no conceden acceso a AWS.
 
-## Contenido teórico
+## Aprende construyendo
 
 ### 1. Instalación en macOS, Linux y Windows
 

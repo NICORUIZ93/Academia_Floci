@@ -29,7 +29,7 @@ Una API con persistencia real en PostgreSQL usando Prisma y migraciones versiona
 
 ---
 
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: PostgreSQL desde Node con el driver puro
 

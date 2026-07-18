@@ -26,7 +26,7 @@ App con al menos 4 pantallas, navegación con argumentos y un bottom navigation,
 
 ---
 
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: NavHost y NavController
 

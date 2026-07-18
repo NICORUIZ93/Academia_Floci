@@ -12,7 +12,7 @@ Al finalizar podrás describir entradas y salidas, escribir pseudocódigo, traza
 
 **Prerrequisitos:** Módulo 0 completado; Python y Git verificados; capacidad de crear carpetas y ejecutar archivos desde la terminal.
 
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: Del problema al algoritmo y a los casos de prueba
 

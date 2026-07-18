@@ -29,7 +29,7 @@ Una imagen Docker de producción de la API, optimizada y sin dependencias de des
 
 ---
 
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: Dockerfile multi-stage para Node
 

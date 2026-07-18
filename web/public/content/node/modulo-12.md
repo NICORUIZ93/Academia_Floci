@@ -31,7 +31,7 @@ Una API REST con autenticación, base de datos real, tests de integración y Doc
 
 ---
 
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: Arquitectura por capas
 

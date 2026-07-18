@@ -26,7 +26,7 @@ Un laboratorio práctico (crear un clúster, leer/escribir con redis-cli, y crea
 
 ---
 
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: Qué resuelve un caché en memoria — y cuándo no ayuda
 

@@ -27,7 +27,7 @@ Un laboratorio con el ciclo completo de una cola estándar y una DLQ, otro labor
 
 ---
 
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: Colas, productores y consumidores
 

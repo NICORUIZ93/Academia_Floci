@@ -29,7 +29,7 @@ Servicio concurrente que procesa N tareas en paralelo usando virtual threads, m�
 
 ---
 
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: ExecutorService y gestión de hilos
 

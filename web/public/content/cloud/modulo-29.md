@@ -28,7 +28,7 @@ Dos laboratorios prácticos (consultar costo sintetizado y exportarlo, y descubr
 
 ---
 
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: Cost Explorer — costos sintetizados a partir de tu estado real
 

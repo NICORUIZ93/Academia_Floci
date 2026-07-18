@@ -28,7 +28,7 @@ Un laboratorio que configura un pipeline de CD hacia staging con una simulación
 
 ---
 
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: Blue-green deployment
 

@@ -29,7 +29,7 @@ Un pipeline de transformación de datos (CSV a JSON agregado) usando solo métod
 
 ---
 
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: map, filter, reduce, find, some/every
 

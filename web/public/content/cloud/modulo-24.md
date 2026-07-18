@@ -27,7 +27,7 @@ Dos laboratorios prácticos (una compilación real con CodeBuild, y un despliegu
 
 ---
 
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: CodeBuild — compilaciones reales dentro de contenedores Docker
 

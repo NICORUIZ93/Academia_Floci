@@ -50,7 +50,7 @@ npm run dev
 
 Abre la dirección que muestra la terminal, normalmente `http://localhost:5173`. Edita `src/App.jsx`, guarda y confirma que el navegador cambia sin reiniciar el servidor. `npm install` descarga dependencias; `npm run dev` inicia el entorno de desarrollo; `Ctrl+C` lo detiene. Si aparece un error de permisos, no uses `sudo npm`: instala Node mediante `nvm` y vuelve a intentarlo.
 
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: JSX es azúcar sintáctica sobre createElement
 

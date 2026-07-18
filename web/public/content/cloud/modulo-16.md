@@ -28,7 +28,7 @@ Flujo de procesamiento de tareas con validación, guardado, notificación y mane
 
 ---
 
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: State machine y Task states
 

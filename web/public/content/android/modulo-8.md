@@ -27,7 +27,7 @@ Tarea periódica con WorkManager que sincroniza datos con constraints de red, m�
 
 ---
 
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: CoroutineWorker y garantía de ejecución
 

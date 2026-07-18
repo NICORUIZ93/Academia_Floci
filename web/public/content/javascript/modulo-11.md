@@ -27,7 +27,7 @@ Una migración de un módulo JavaScript existente a TypeScript estricto sin usar
 
 ---
 
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: Tipos básicos, interfaces y type aliases
 

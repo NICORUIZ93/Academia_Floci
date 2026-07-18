@@ -28,7 +28,7 @@ App con todas sus dependencias (repos, servicios) inyectadas vía Hilt, más tre
 
 ---
 
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: Configuración básica de Hilt
 

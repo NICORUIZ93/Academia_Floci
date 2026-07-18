@@ -27,7 +27,7 @@ Migración de un componente NgModule a standalone y reorganización por feature,
 
 ---
 
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: Bootstrap sin NgModules
 

@@ -27,7 +27,7 @@ App con caché local que funciona sin conexión a internet, más tres ejercicios
 
 ---
 
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: shared_preferences
 

@@ -27,7 +27,7 @@ App Bundle firmado, listo para subir a un track de pruebas internas en Play Cons
 
 ---
 
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: Firma de la app
 

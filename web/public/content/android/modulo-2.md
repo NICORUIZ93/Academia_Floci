@@ -29,7 +29,7 @@ Pantalla Compose con estado elevado (state hoisting) correctamente aplicado, má
 
 ---
 
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: Composables y recomposición
 

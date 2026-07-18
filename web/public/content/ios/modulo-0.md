@@ -49,7 +49,7 @@ Instala Swift desde [swift.org/install](https://www.swift.org/install/) y VS Cod
 
 Si Xcode indica que no encuentra un runtime, instálalo en Settings → Platforms. Si falla la licencia, ejecuta `sudo xcodebuild -license accept`. Conserva espacio libre suficiente: Xcode y los simuladores pueden ocupar decenas de GB.
 
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: Optionals y unwrapping seguro
 

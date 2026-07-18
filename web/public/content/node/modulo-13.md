@@ -10,7 +10,7 @@ Una API puede compilar, pasar pruebas y aun romper consumidores o duplicar cobro
 4. Webhooks firmados, entrega repetida y reconciliación.
 5. Proyecto: evolución confiable de la API integradora.
 
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: Tipos estáticos dentro, datos desconocidos en la frontera
 

@@ -48,7 +48,7 @@ node -e "console.log('Node funciona', process.version)"
 
 `npm init -y` crea `package.json`, el documento que describe el proyecto. Nunca copies `node_modules` ni lo subas a Git: se reconstruye con `npm install`. Si npm muestra `EACCES`, no lo arregles con `sudo`; reinstala Node con un administrador de versiones.
 
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: Node no es "JavaScript en el servidor" sin más
 

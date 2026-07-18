@@ -27,7 +27,7 @@ Suite de widget tests sobre una feature completa de la app, más tres ejercicios
 
 ---
 
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: Unit tests y widget tests
 

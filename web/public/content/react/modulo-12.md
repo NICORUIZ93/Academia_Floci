@@ -27,7 +27,7 @@ Construcción completa de la SPA descrita, más tres ejercicios de evaluación d
 
 ---
 
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: Estructura del proyecto integrador
 

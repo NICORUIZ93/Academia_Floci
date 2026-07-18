@@ -27,7 +27,7 @@ App Android con Compose, datos reales, persistencia offline y tests, más tres e
 
 ---
 
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: Arquitectura MVVM completa con UDF
 

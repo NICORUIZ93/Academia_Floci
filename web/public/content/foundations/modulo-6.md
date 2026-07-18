@@ -10,7 +10,7 @@ Diseñar seguridad como propiedad del sistema: identificar activos y amenazas, a
 
 **Prerrequisitos:** módulos 0–5; HTTP, SQL parametrizado, pruebas, Git y CI.
 
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: Activos, amenazas, riesgos y límites de confianza
 

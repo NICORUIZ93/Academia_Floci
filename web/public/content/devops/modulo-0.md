@@ -61,7 +61,7 @@ docker run --rm hello-world
 
 Aprende antes estos cuatro comandos seguros: `pwd` muestra dónde estás, `ls` lista archivos, `cd` cambia de carpeta y `mkdir` crea una carpeta. Comprueba siempre `pwd` antes de usar comandos que borren o cambien permisos. Nunca pegues un comando con `sudo` sin entender cada argumento.
 
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: Sistema de archivos y permisos (chmod/chown)
 

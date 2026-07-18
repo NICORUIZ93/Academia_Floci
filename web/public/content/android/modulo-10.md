@@ -30,7 +30,7 @@ Auditoría de performance de una pantalla con el Layout Inspector y al menos una
 
 ---
 
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: Detectar y corregir recomposición innecesaria
 

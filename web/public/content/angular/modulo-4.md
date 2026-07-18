@@ -29,7 +29,7 @@ Una aplicación con al menos 4 rutas, una protegida por guard y una cargada de f
 
 ---
 
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: Router config con rutas standalone
 

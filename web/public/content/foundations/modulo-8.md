@@ -10,7 +10,7 @@ Hasta ahora construiste un inventario, lo protegiste con pruebas y seguridad y s
 4. Imágenes, contenedores, redes y volúmenes.
 5. Proyecto 8: ejecutar el inventario de forma reproducible y segura.
 
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: El sistema operativo como administrador y frontera
 

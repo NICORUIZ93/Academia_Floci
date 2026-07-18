@@ -27,7 +27,7 @@ Cliente de red que consume una API real con manejo de errores tipado, más tres 
 
 ---
 
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: URLSession con async/await y Codable
 

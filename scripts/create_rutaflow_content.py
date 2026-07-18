@@ -106,7 +106,7 @@ Al terminar, podrás explicar las decisiones con vocabulario técnico sencillo, 
 
 {before}
 
-## Contenido teórico
+## Aprende construyendo
 
 {''.join(theory)}
 {QUALITY}

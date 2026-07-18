@@ -27,7 +27,7 @@ Aplicación que lee todos sus secretos y configuración desde la nube, sin nada 
 
 ---
 
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: Secrets Manager y por qué no usar variables de entorno hardcodeadas
 

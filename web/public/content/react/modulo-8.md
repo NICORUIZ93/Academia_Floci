@@ -27,7 +27,7 @@ Suite de pruebas de un flujo completo (formulario + fetching) con MSW, más tres
 
 ---
 
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: Queries por rol, no por clase CSS
 

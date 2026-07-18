@@ -28,7 +28,7 @@ Un laboratorio completo que construye un endpoint HTTP funcional conectado a la 
 
 ---
 
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: Qué es API Gateway y tipos de API — REST, HTTP, WebSocket
 

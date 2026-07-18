@@ -10,7 +10,7 @@ Las matemáticas de este módulo no son una colección de fórmulas para memoriz
 4. Probabilidad, estadística descriptiva, muestreo e inferencia responsable.
 5. Proyecto 9: cuaderno reproducible de razonamiento y evidencia.
 
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: Lógica para especificar antes de programar
 

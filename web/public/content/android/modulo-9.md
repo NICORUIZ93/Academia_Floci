@@ -27,7 +27,7 @@ Suite de tests: ViewModel con coroutines test + al menos un test de Compose UI, 
 
 ---
 
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: Testing de ViewModels con fakes y runTest
 

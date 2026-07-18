@@ -26,7 +26,7 @@ Pantalla que se adapta correctamente entre un teléfono y una tablet, más tres 
 
 ---
 
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: MediaQuery vs LayoutBuilder
 

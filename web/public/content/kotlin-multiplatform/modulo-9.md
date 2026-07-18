@@ -26,7 +26,7 @@ Suite de tests sobre el módulo common que corre igual en Android e iOS, más tr
 
 ---
 
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: kotlin.test en commonTest
 

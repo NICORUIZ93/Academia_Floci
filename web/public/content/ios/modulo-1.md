@@ -29,7 +29,7 @@ Pantalla SwiftUI compuesta a partir de al menos 3 vistas reutilizables propias, 
 
 ---
 
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: El protocolo View y composición
 

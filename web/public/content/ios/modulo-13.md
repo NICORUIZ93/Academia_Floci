@@ -10,7 +10,7 @@ Una app no termina cuando compila ni cuando pasa revisión. En producción recib
 4. Hangs, crashes, métricas, migraciones y releases graduales.
 5. Proyecto: dossier verificable de preparación para producción.
 
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: El sandbox reduce superficie, pero no valida intenciones
 

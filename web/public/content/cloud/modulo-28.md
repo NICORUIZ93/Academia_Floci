@@ -26,7 +26,7 @@ Dos laboratorios prácticos (un grafo de relaciones con Neptune, y un dominio Op
 
 ---
 
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: Bases de datos de grafos — cuando las relaciones son el dato
 

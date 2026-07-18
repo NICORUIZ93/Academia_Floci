@@ -29,7 +29,7 @@ Query SQL que analiza 100k registros en S3 y devuelve el top 10 de clientes en m
 
 ---
 
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: Data lake y Glue Catalog
 

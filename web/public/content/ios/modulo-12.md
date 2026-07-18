@@ -27,7 +27,7 @@ App iOS con SwiftUI, datos reales, persistencia local y tests, más tres ejercic
 
 ---
 
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: Arquitectura del proyecto integrador
 

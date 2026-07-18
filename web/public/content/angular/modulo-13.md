@@ -27,7 +27,7 @@ Construcción completa de la aplicación de gestión de tareas descrita, más tr
 
 ---
 
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: Estructura del proyecto integrador
 

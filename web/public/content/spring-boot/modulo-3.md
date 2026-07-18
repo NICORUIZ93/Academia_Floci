@@ -30,7 +30,7 @@ API con persistencia real en PostgreSQL y migraciones versionadas con Flyway, m√
 
 ---
 
-## Contenido te√≥rico
+## Aprende construyendo
 
 ### Tema 1: Entidades y repositorios derivados
 

@@ -29,7 +29,7 @@ Pipeline de streaming que ingiere eventos de Kinesis, los procesa con Lambda y l
 
 ---
 
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: Streams vs colas
 

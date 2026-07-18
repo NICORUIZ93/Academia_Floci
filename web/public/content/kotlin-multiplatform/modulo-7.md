@@ -28,7 +28,7 @@ Pantalla compartida en Compose Multiplatform renderizada en Android e iOS, más 
 
 ---
 
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: Compose Multiplatform vs Jetpack Compose
 

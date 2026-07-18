@@ -30,7 +30,7 @@ Pipeline de procesamiento de datos con Streams que reemplaza loops manuales, má
 
 ---
 
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: Stream API — map, filter, reduce, collect
 

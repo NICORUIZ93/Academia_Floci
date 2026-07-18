@@ -137,12 +137,6 @@
 .lesson-markdown ::ng-deep .target-demo { display:grid; gap:4px; margin:0 0 26px; padding:16px 18px; border:1px solid color-mix(in srgb,var(--track-color) 24%,#{$bd}); border-radius:13px; background:$wh; box-shadow:$sh; }
 .lesson-markdown ::ng-deep .target-demo small { color:$mu; font:700 10px Inter,sans-serif; text-transform:uppercase; letter-spacing:.06em; }
 .lesson-markdown ::ng-deep .target-demo strong { color:$ink; font:700 14px/1.5 Inter,sans-serif; }
-.lesson-markdown ::ng-deep .topic-practice { margin-top:28px; border:1px solid color-mix(in srgb,var(--accent) 28%,transparent); border-radius:12px; background:$pl; }
-.lesson-markdown ::ng-deep .topic-practice summary { padding:13px 16px; cursor:pointer; color:$ph; font:800 12.5px Inter,sans-serif; }
-.lesson-markdown ::ng-deep .topic-practice[open] summary { border-bottom:1px solid color-mix(in srgb,var(--accent) 20%,transparent); }
-.lesson-markdown ::ng-deep .topic-practice > div { padding:15px 17px 17px; }
-.lesson-markdown ::ng-deep .topic-practice ol { margin:0 0 14px; font-size:15px; line-height:1.65; }
-.lesson-markdown ::ng-deep .topic-practice textarea { width:100%; min-height:90px; resize:vertical; padding:11px 12px; border:1px solid $bd2; border-radius:8px; background:$wh; color:$ink; font:14px/1.55 'Source Serif 4',serif; }
 .lesson-markdown ::ng-deep .concept-flow { margin:26px 0; padding:16px; border:1px solid $bd; border-radius:12px; background:$bg2; }
 .lesson-markdown ::ng-deep .concept-flow figcaption { margin-bottom:12px; color:$mu; font:800 10px Inter,sans-serif; text-transform:uppercase; letter-spacing:.08em; }
 .lesson-markdown ::ng-deep .concept-flow > div { display:grid; grid-template-columns:1fr auto 1fr auto 1fr; gap:10px; align-items:center; }

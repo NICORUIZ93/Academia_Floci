@@ -30,7 +30,7 @@ Un componente con estado derivado completamente con signals y `computed`, sin Rx
 
 ---
 
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: signal(), computed() y effect()
 

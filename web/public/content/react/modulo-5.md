@@ -27,7 +27,7 @@ Aplicación con rutas anidadas, una ruta protegida y carga perezosa de al menos 
 
 ---
 
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: Rutas anidadas y layouts compartidos
 

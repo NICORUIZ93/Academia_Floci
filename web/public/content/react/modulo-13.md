@@ -10,7 +10,7 @@ Una SPA puede aprobar el flujo feliz y aun desaparecer ante un error de render, 
 4. Hidratación, internacionalización, rendimiento y releases.
 5. Proyecto: auditoría de producción de la aplicación React.
 
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: Diseñar estados de carga, error y recuperación
 

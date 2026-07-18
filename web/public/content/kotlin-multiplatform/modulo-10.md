@@ -26,7 +26,7 @@ Pipeline CI que compila el módulo compartido para Android e iOS en cada push, m
 
 ---
 
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: Pipeline Gradle multiplataforma en CI
 

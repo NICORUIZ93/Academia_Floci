@@ -27,7 +27,7 @@ Dos laboratorios prácticos (balanceador con grupo objetivo, y certificado + dis
 
 ---
 
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: ELB v2 — balanceadores, grupos objetivo y reglas
 

@@ -31,7 +31,7 @@ Un laboratorio que provisiona, modifica y modulariza infraestructura con Terrafo
 
 ---
 
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: Providers, resources y data sources
 

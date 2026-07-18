@@ -28,7 +28,7 @@ Proyecto dividido en al menos dos módulos JPMS con dependencias explícitas, m�
 
 ---
 
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: module-info.java y encapsulación fuerte
 

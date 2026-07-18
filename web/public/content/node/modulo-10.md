@@ -27,7 +27,7 @@ Una API con rate limiting, cabeceras seguras y validación estricta de entrada, 
 
 ---
 
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: Cabeceras seguras con helmet
 

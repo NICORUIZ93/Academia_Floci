@@ -10,7 +10,7 @@ Una aplicación no está terminada cuando muestra datos. En producción recibe e
 4. Compatibilidad, mejora progresiva, internacionalización y tiempo.
 5. Proyecto: auditoría y endurecimiento de la SPA sin framework.
 
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: Datos no confiables y seguridad en el navegador
 

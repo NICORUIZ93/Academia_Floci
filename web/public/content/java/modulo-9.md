@@ -29,7 +29,7 @@ Suite de pruebas unitarias con mocks para un servicio con dependencias externas,
 
 ---
 
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: JUnit 5 — anotaciones y ciclo de vida
 

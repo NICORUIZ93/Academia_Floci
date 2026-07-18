@@ -2721,7 +2721,7 @@
         "# M\u00f3dulo 0: Kotlin aplicado a Android",
         "## S\u00edlabo",
         "## Antes de comenzar: instala Android Studio y un dispositivo de prueba",
-        "## Contenido te\u00f3rico",
+        "## Aprende construyendo",
         "### Tema 1: Estructura de un proyecto Android Studio",
         "### Tema 2: Recursos externalizados",
         "### Tema 3: AndroidManifest.xml y m\u00f3dulos Gradle",
@@ -2741,7 +2741,7 @@
       "headings": [
         "# M\u00f3dulo 1: Ciclo de vida: Activities y ViewModel",
         "## S\u00edlabo",
-        "## Contenido te\u00f3rico",
+        "## Aprende construyendo",
         "### Tema 1: Ciclo de vida de una Activity",
         "### Tema 2: ViewModel sobrevive a la rotaci\u00f3n",
         "### Tema 3: SavedStateHandle",
@@ -2761,7 +2761,7 @@
       "headings": [
         "# M\u00f3dulo 10: Performance, Material 3 y accesibilidad",
         "## S\u00edlabo",
-        "## Contenido te\u00f3rico",
+        "## Aprende construyendo",
         "### Tema 1: Detectar y corregir recomposici\u00f3n innecesaria",
         "### Tema 2: Baseline Profiles y ciclo de efectos",
         "### Tema 3: Accesibilidad e interop con Views",
@@ -2781,7 +2781,7 @@
       "headings": [
         "# M\u00f3dulo 11: Publicaci\u00f3n en Google Play",
         "## S\u00edlabo",
-        "## Contenido te\u00f3rico",
+        "## Aprende construyendo",
         "### Tema 1: Firma de la app",
         "### Tema 2: App Bundle vs APK",
         "### Tema 3: Versionado, tracks y pol\u00edticas",
@@ -2801,7 +2801,7 @@
       "headings": [
         "# M\u00f3dulo 12: Proyecto integrador: app Android completa",
         "## S\u00edlabo",
-        "## Contenido te\u00f3rico",
+        "## Aprende construyendo",
         "### Tema 1: Arquitectura MVVM completa con UDF",
         "### Tema 2: Inyecci\u00f3n de dependencias en toda la app",
         "### Tema 3: Cierre del track y pr\u00f3ximos pasos",
@@ -2822,7 +2822,7 @@
       "headings": [
         "# M\u00f3dulo 13: Android en producci\u00f3n \u2014 seguridad, sincronizaci\u00f3n y calidad",
         "## S\u00edlabo",
-        "## Contenido te\u00f3rico",
+        "## Aprende construyendo",
         "### Tema 1: El sistema operativo conecta tu app con entradas externas",
         "### Tema 2: Proteger datos exige conocer copias y ciclo de vida",
         "### Tema 3: Offline-first necesita un protocolo de cambios",
@@ -2843,7 +2843,7 @@
       "headings": [
         "# M\u00f3dulo 14: Compose Master: pruebas, accesibilidad y animaci\u00f3n",
         "## S\u00edlabo",
-        "## Contenido te\u00f3rico",
+        "## Aprende construyendo",
         "### Tema 1: ComposeTestRule",
         "### Tema 2: Finders, assertions y actions",
         "### Tema 3: Semantics y clearAndSetSemantics",
@@ -2864,7 +2864,7 @@
       "headings": [
         "# M\u00f3dulo 2: Jetpack Compose: UI declarativa",
         "## S\u00edlabo",
-        "## Contenido te\u00f3rico",
+        "## Aprende construyendo",
         "### Tema 1: Composables y recomposici\u00f3n",
         "#### Qu\u00e9 hace realmente `@Composable`",
         "### Tema 2: State hoisting",
@@ -2885,7 +2885,7 @@
       "headings": [
         "# M\u00f3dulo 3: Navegaci\u00f3n con Navigation Compose",
         "## S\u00edlabo",
-        "## Contenido te\u00f3rico",
+        "## Aprende construyendo",
         "### Tema 1: NavHost y NavController",
         "### Tema 2: Argumentos tipados y deep links",
         "### Tema 3: Navegaci\u00f3n anidada con stacks independientes",
@@ -2905,7 +2905,7 @@
       "headings": [
         "# M\u00f3dulo 4: Estado con StateFlow y Compose",
         "## S\u00edlabo",
-        "## Contenido te\u00f3rico",
+        "## Aprende construyendo",
         "### Tema 1: StateFlow en el ViewModel",
         "### Tema 2: collectAsStateWithLifecycle y UDF",
         "### Tema 3: SharedFlow para eventos de un solo uso",
@@ -2925,7 +2925,7 @@
       "headings": [
         "# M\u00f3dulo 5: Networking con Retrofit/Ktor",
         "## S\u00edlabo",
-        "## Contenido te\u00f3rico",
+        "## Aprende construyendo",
         "### Tema 1: Retrofit con coroutines",
         "### Tema 2: Manejo de errores HTTP",
         "### Tema 3: Interceptores de OkHttp",
@@ -2945,7 +2945,7 @@
       "headings": [
         "# M\u00f3dulo 6: Persistencia local con Room",
         "## S\u00edlabo",
-        "## Contenido te\u00f3rico",
+        "## Aprende construyendo",
         "### Tema 1: Entities, DAOs y Database",
         "### Tema 2: Room + Flow reactivo, y migraciones",
         "### Tema 3: Estrategia offline-first",
@@ -2965,7 +2965,7 @@
       "headings": [
         "# M\u00f3dulo 7: Inyecci\u00f3n de dependencias con Hilt",
         "## S\u00edlabo",
-        "## Contenido te\u00f3rico",
+        "## Aprende construyendo",
         "### Tema 1: Configuraci\u00f3n b\u00e1sica de Hilt",
         "### Tema 2: @Provides y @Binds",
         "### Tema 3: Scopes y testing con Hilt",
@@ -2985,7 +2985,7 @@
       "headings": [
         "# M\u00f3dulo 8: Trabajo en segundo plano",
         "## S\u00edlabo",
-        "## Contenido te\u00f3rico",
+        "## Aprende construyendo",
         "### Tema 1: CoroutineWorker y garant\u00eda de ejecuci\u00f3n",
         "### Tema 2: Constraints y trabajo peri\u00f3dico",
         "### Tema 3: Notificaciones desde background work",
@@ -3005,7 +3005,7 @@
       "headings": [
         "# M\u00f3dulo 9: Testing en Android",
         "## S\u00edlabo",
-        "## Contenido te\u00f3rico",
+        "## Aprende construyendo",
         "### Tema 1: Testing de ViewModels con fakes y runTest",
         "### Tema 2: Compose UI Testing",
         "### Tema 3: Espresso y fakes vs mocks",
@@ -3030,7 +3030,7 @@
         "### macOS",
         "### Linux (Ubuntu/Debian)",
         "### Tu primer proyecto verificable",
-        "## Contenido te\u00f3rico",
+        "## Aprende construyendo",
         "### Tema 1: El CLI ya no genera NgModules",
         "### Tema 2: Interpolaci\u00f3n y property binding",
         "### Tema 3: TypeScript a fondo \u2014 unknown, any, never y utility types",
@@ -3046,7 +3046,7 @@
       "headings": [
         "# M\u00f3dulo 1: Componentes, plantillas y data binding",
         "## S\u00edlabo",
-        "## Contenido te\u00f3rico",
+        "## Aprende construyendo",
         "### Tema 1: input()/output() basados en signals",
         "### Tema 2: Control de flujo nativo \u2014 @if, @for, @switch",
         "### Tema 3: Content projection con ng-content",
@@ -3067,7 +3067,7 @@
       "headings": [
         "# M\u00f3dulo 10: Testing en Angular",
         "## S\u00edlabo",
-        "## Contenido te\u00f3rico",
+        "## Aprende construyendo",
         "### Tema 1: TestBed y componentes standalone",
         "### Tema 2: Angular Testing Library",
         "### Tema 3: Mockear HttpClient y el nuevo builder basado en Vitest",
@@ -3087,7 +3087,7 @@
       "headings": [
         "# M\u00f3dulo 11: Performance, SSR y zoneless",
         "## S\u00edlabo",
-        "## Contenido te\u00f3rico",
+        "## Aprende construyendo",
         "### Tema 1: Server-Side Rendering",
         "### Tema 2: Hidrataci\u00f3n",
         "### Tema 3: @defer \u2014 carga diferida de vistas",
@@ -3108,7 +3108,7 @@
       "headings": [
         "# M\u00f3dulo 12: Ap\u00e9ndice: qu\u00e9 cambi\u00f3 entre versiones mayores",
         "## S\u00edlabo",
-        "## Contenido te\u00f3rico",
+        "## Aprende construyendo",
         "### Tema 1: Los saltos que importan",
         "### Tema 2: C\u00f3mo leer un Angular Update Guide",
         "### Tema 3: Por qu\u00e9 migrar una versi\u00f3n mayor a la vez",
@@ -3128,7 +3128,7 @@
       "headings": [
         "# M\u00f3dulo 13: Proyecto integrador \u2014 aplicaci\u00f3n standalone completa",
         "## S\u00edlabo",
-        "## Contenido te\u00f3rico",
+        "## Aprende construyendo",
         "### Tema 1: Estructura del proyecto integrador",
         "### Tema 2: Integrando routing, store y formularios",
         "### Tema 3: TareasStore \u2014 combinando signals, computed y HttpClient",
@@ -3149,7 +3149,7 @@
       "headings": [
         "# M\u00f3dulo 14: Angular en producci\u00f3n \u2014 accesibilidad, seguridad e internacionalizaci\u00f3n",
         "## S\u00edlabo",
-        "## Contenido te\u00f3rico",
+        "## Aprende construyendo",
         "### Tema 1: Accesibilidad es comportamiento, no una puntuaci\u00f3n",
         "### Tema 2: La seguridad autom\u00e1tica tiene fronteras expl\u00edcitas",
         "### Tema 3: Internacionalizar implica significado, no reemplazo de texto",
@@ -3170,7 +3170,7 @@
       "headings": [
         "# M\u00f3dulo 15: Angular Master: pruebas, animaci\u00f3n y SSR",
         "## S\u00edlabo",
-        "## Contenido te\u00f3rico",
+        "## Aprende construyendo",
         "### Tema 1: TestBed y ComponentFixture",
         "### Tema 2: Pruebas de Signals",
         "### Tema 3: Cypress y Playwright",
@@ -3191,7 +3191,7 @@
       "headings": [
         "# M\u00f3dulo 2: Signals \u2014 el nuevo modelo de reactividad",
         "## S\u00edlabo",
-        "## Contenido te\u00f3rico",
+        "## Aprende construyendo",
         "### Tema 1: signal(), computed() y effect()",
         "### Tema 2: Mutaci\u00f3n frente a actualizaci\u00f3n inmutable",
         "### Tema 3: Signals frente a Observables",
@@ -3212,7 +3212,7 @@
       "headings": [
         "# M\u00f3dulo 3: Servicios e inyecci\u00f3n de dependencias",
         "## S\u00edlabo",
-        "## Contenido te\u00f3rico",
+        "## Aprende construyendo",
         "### Tema 1: @Injectable y providedIn: root",
         "#### Qu\u00e9 significa `@` aqu\u00ed: decoradores y metadatos de Angular",
         "### Tema 2: inject() frente a inyecci\u00f3n por constructor",
@@ -3233,7 +3233,7 @@
       "headings": [
         "# M\u00f3dulo 4: Routing y navegaci\u00f3n",
         "## S\u00edlabo",
-        "## Contenido te\u00f3rico",
+        "## Aprende construyendo",
         "### Tema 1: Router config con rutas standalone",
         "### Tema 2: Guards funcionales",
         "### Tema 3: Lazy loading con loadComponent",
@@ -3254,7 +3254,7 @@
       "headings": [
         "# M\u00f3dulo 5: Formularios reactivos y template-driven",
         "## S\u00edlabo",
-        "## Contenido te\u00f3rico",
+        "## Aprende construyendo",
         "### Tema 1: Reactive Forms \u2014 FormGroup y FormControl",
         "### Tema 2: Validadores as\u00edncronos",
         "### Tema 3: FormArray para campos din\u00e1micos",
@@ -3275,7 +3275,7 @@
       "headings": [
         "# M\u00f3dulo 6: RxJS esencial para Angular",
         "## S\u00edlabo",
-        "## Contenido te\u00f3rico",
+        "## Aprende construyendo",
         "### Tema 1: Observable frente a Promise",
         "### Tema 2: Operadores clave \u2014 debounceTime, distinctUntilChanged, switchMap, combineLatest",
         "### Tema 3: Manejo de suscripciones sin fugas de memoria",
@@ -3296,7 +3296,7 @@
       "headings": [
         "# M\u00f3dulo 7: HttpClient e interceptores",
         "## S\u00edlabo",
-        "## Contenido te\u00f3rico",
+        "## Aprende construyendo",
         "### Tema 1: HttpClient con backend fetch",
         "### Tema 2: Interceptores funcionales",
         "### Tema 3: Registro de interceptores y centralizaci\u00f3n del manejo de errores",
@@ -3316,7 +3316,7 @@
       "headings": [
         "# M\u00f3dulo 8: Standalone components y arquitectura sin NgModules",
         "## S\u00edlabo",
-        "## Contenido te\u00f3rico",
+        "## Aprende construyendo",
         "### Tema 1: Bootstrap sin NgModules",
         "### Tema 2: Organizaci\u00f3n por feature",
         "### Tema 3: Migraci\u00f3n desde NgModules",
@@ -3336,7 +3336,7 @@
       "headings": [
         "# M\u00f3dulo 9: Gesti\u00f3n de estado",
         "## S\u00edlabo",
-        "## Contenido te\u00f3rico",
+        "## Aprende construyendo",
         "### Tema 1: Store propio con signals",
         "### Tema 2: NgRx \u2014 actions, reducers y selectors",
         "### Tema 3: Cu\u00e1ndo NgRx justifica su complejidad",
@@ -3357,7 +3357,7 @@
         "# M\u00f3dulo 0: Introducci\u00f3n y preparaci\u00f3n",
         "## S\u00edlabo",
         "## Antes de comenzar: instalaci\u00f3n guiada por sistema operativo",
-        "## Contenido te\u00f3rico",
+        "## Aprende construyendo",
         "### Tema 1: Fundamentos absolutos \u2014 qu\u00e9 es una terminal, un comando y un sistema operativo",
         "### Tema 2: Fundamentos de redes \u2014 direcciones IP, puertos, HTTP y APIs",
         "### Tema 3: Qu\u00e9 vas a aprender y c\u00f3mo est\u00e1 estructurado el curso",
@@ -3377,7 +3377,7 @@
       "headings": [
         "# M\u00f3dulo 1: Fundamentos de Docker y contenedores",
         "## S\u00edlabo",
-        "## Contenido te\u00f3rico",
+        "## Aprende construyendo",
         "### Tema 1: Virtualizaci\u00f3n vs contenedores",
         "### Tema 2: Im\u00e1genes y capas",
         "### Tema 3: Registros de contenedores (Docker Hub)",
@@ -3398,7 +3398,7 @@
       "headings": [
         "# M\u00f3dulo 10: Secretos y configuraci\u00f3n: Secrets Manager, Key Vault y Secret Manager",
         "## S\u00edlabo",
-        "## Contenido te\u00f3rico",
+        "## Aprende construyendo",
         "### Tema 1: Secrets Manager y por qu\u00e9 no usar variables de entorno hardcodeadas",
         "### Tema 2: KMS y envelope encryption",
         "### Tema 3: SSM Parameter Store vs Secrets Manager",
@@ -3418,7 +3418,7 @@
       "headings": [
         "# M\u00f3dulo 11: Mensajer\u00eda Pub/Sub: SNS, EventBridge y Azure Event Hubs",
         "## S\u00edlabo",
-        "## Contenido te\u00f3rico",
+        "## Aprende construyendo",
         "### Tema 1: El patr\u00f3n fan-out con SNS",
         "### Tema 2: EventBridge: bus de eventos con filtrado declarativo",
         "# Solo eventos con source=\"mi.app\" disparan esta regla, filtrado declarativo sobre el contenido",
@@ -3439,7 +3439,7 @@
       "headings": [
         "# M\u00f3dulo 12: Observabilidad con CloudWatch: logs, m\u00e9tricas y alarmas",
         "## S\u00edlabo",
-        "## Contenido te\u00f3rico",
+        "## Aprende construyendo",
         "### Tema 1: Log groups, log streams y correlation ID",
         "# El mismo correlation_id se propaga a trav\u00e9s de CADA servicio que procesa esta solicitud",
         "### Tema 2: Metric filters y alarmas",
@@ -3460,7 +3460,7 @@
       "headings": [
         "# M\u00f3dulo 13: Bases de datos relacionales con RDS (PostgreSQL real)",
         "## S\u00edlabo",
-        "## Contenido te\u00f3rico",
+        "## Aprende construyendo",
         "### Tema 1: RDS Instance y cu\u00e1ndo elegir SQL sobre NoSQL",
         "### Tema 2: Snapshots y restore",
         "# mi-postgres-2 es una instancia NUEVA e independiente; mi-postgres original permanece intacta",
@@ -3481,7 +3481,7 @@
       "headings": [
         "# M\u00f3dulo 14: Contenedores: ECR, ECS y comparaci\u00f3n con Cloud Run",
         "## S\u00edlabo",
-        "## Contenido te\u00f3rico",
+        "## Aprende construyendo",
         "### Tema 1: ECR y por qu\u00e9 no basta con Docker Hub",
         "### Tema 2: Task Definition y ECS Cluster",
         "### Tema 3: Contenedores vs Lambda, y EKS",
@@ -3501,7 +3501,7 @@
       "headings": [
         "# M\u00f3dulo 15: Infraestructura como c\u00f3digo con CloudFormation",
         "## S\u00edlabo",
-        "## Contenido te\u00f3rico",
+        "## Aprende construyendo",
         "### Tema 1: Stack, Template y por qu\u00e9 no crear recursos manualmente con la CLI",
         "### Tema 2: Change sets",
         "### Tema 3: Drift detection, Terraform/CDK, y compatibilidad multi-herramienta",
@@ -3521,7 +3521,7 @@
       "headings": [
         "# M\u00f3dulo 16: Orquestaci\u00f3n de flujos con Step Functions",
         "## S\u00edlabo",
-        "## Contenido te\u00f3rico",
+        "## Aprende construyendo",
         "### Tema 1: State machine y Task states",
         "### Tema 2: Choice state, Retry y Catch",
         "### Tema 3: Express vs Standard, y cu\u00e1ndo EventBridge Pipes es suficiente",
@@ -3541,7 +3541,7 @@
       "headings": [
         "# M\u00f3dulo 17: Streaming: Kinesis, MSK (Kafka) y Pub/Sub avanzado",
         "## S\u00edlabo",
-        "## Contenido te\u00f3rico",
+        "## Aprende construyendo",
         "### Tema 1: Streams vs colas",
         "### Tema 2: MSK (Kafka gestionado) y consumer groups",
         "### Tema 3: Kinesis Data Streams vs Firehose, y GCP Managed Kafka",
@@ -3561,7 +3561,7 @@
       "headings": [
         "# M\u00f3dulo 18: Autenticaci\u00f3n de usuarios con Cognito",
         "## S\u00edlabo",
-        "## Contenido te\u00f3rico",
+        "## Aprende construyendo",
         "### Tema 1: Por qu\u00e9 no construir tu propio sistema de autenticaci\u00f3n",
         "### Tema 2: Access Token, ID Token y Refresh Token",
         "### Tema 3: OAuth 2.0 y PKCE",
@@ -3581,7 +3581,7 @@
       "headings": [
         "# M\u00f3dulo 19: Anal\u00edtica de datos con Athena y Glue",
         "## S\u00edlabo",
-        "## Contenido te\u00f3rico",
+        "## Aprende construyendo",
         "### Tema 1: Data lake y Glue Catalog",
         "### Tema 2: Glue Crawler y Athena",
         "# \u2192 descubre esquema autom\u00e1ticamente y lo registra en Glue Catalog",
@@ -3602,7 +3602,7 @@
       "headings": [
         "# M\u00f3dulo 2: Almacenamiento en la nube con S3",
         "## S\u00edlabo",
-        "## Contenido te\u00f3rico",
+        "## Aprende construyendo",
         "### Tema 1: Objetos, buckets y su nomenclatura",
         "### Tema 2: Claves y metadatos",
         "### Tema 3: Versionado y ciclo de vida",
@@ -3623,7 +3623,7 @@
       "headings": [
         "# M\u00f3dulo 20: IA y servicios especializados: Bedrock, Textract y Transcribe",
         "## S\u00edlabo",
-        "## Contenido te\u00f3rico",
+        "## Aprende construyendo",
         "### Tema 1: Bedrock Runtime y respuestas stub deterministas",
         "# cloud local: MISMA entrada \u2192 SIEMPRE la misma salida stub (determinista)",
         "# AWS real: misma entrada \u2192 puede variar entre invocaciones (no determinista)",
@@ -3644,7 +3644,7 @@
       "headings": [
         "# M\u00f3dulo 21: C\u00f3mputo el\u00e1stico con EC2 y Auto Scaling",
         "## S\u00edlabo",
-        "## Contenido te\u00f3rico",
+        "## Aprende construyendo",
         "### Tema 1: El modelo de ejecuci\u00f3n de EC2 \u2014 instancias que son contenedores Docker reales",
         "### Tema 2: AMIs, grupos de seguridad y claves SSH",
         "### Tema 3: UserData e IMDS \u2014 arranque automatizado y credenciales por instancia",
@@ -3665,7 +3665,7 @@
       "headings": [
         "# M\u00f3dulo 22: Balanceo de carga, CDN y DNS \u2014 ELB, CloudFront, Route53 y ACM",
         "## S\u00edlabo",
-        "## Contenido te\u00f3rico",
+        "## Aprende construyendo",
         "### Tema 1: ELB v2 \u2014 balanceadores, grupos objetivo y reglas",
         "### Tema 2: ACM \u2014 certificados TLS con criptograf\u00eda real",
         "### Tema 3: CloudFront \u2014 distribuci\u00f3n de contenido y control de acceso al origen",
@@ -3686,7 +3686,7 @@
       "headings": [
         "# M\u00f3dulo 23: Cach\u00e9 en memoria con ElastiCache",
         "## S\u00edlabo",
-        "## Contenido te\u00f3rico",
+        "## Aprende construyendo",
         "### Tema 1: Qu\u00e9 resuelve un cach\u00e9 en memoria \u2014 y cu\u00e1ndo no ayuda",
         "### Tema 2: Arquitectura de ElastiCache en Floci \u2014 contenedores reales, no simulaci\u00f3n",
         "### Tema 3: Creaci\u00f3n de cl\u00fasteres y conexi\u00f3n con clientes est\u00e1ndar",
@@ -3707,7 +3707,7 @@
       "headings": [
         "# M\u00f3dulo 24: CI/CD nativo de AWS con CodeBuild y CodeDeploy",
         "## S\u00edlabo",
-        "## Contenido te\u00f3rico",
+        "## Aprende construyendo",
         "### Tema 1: CodeBuild \u2014 compilaciones reales dentro de contenedores Docker",
         "### Tema 2: buildspec.yml \u2014 fases y artefactos",
         "### Tema 3: CodeDeploy \u2014 aplicaciones, grupos y configuraciones predefinidas",
@@ -3728,7 +3728,7 @@
       "headings": [
         "# M\u00f3dulo 25: Gobierno, configuraci\u00f3n y continuidad \u2014 AWS Config, AppConfig y Backup",
         "## S\u00edlabo",
-        "## Contenido te\u00f3rico",
+        "## Aprende construyendo",
         "### Tema 1: AWS Config \u2014 rastrear reglas sobre tus recursos",
         "### Tema 2: AppConfig \u2014 desplegar configuraci\u00f3n sin redeployar c\u00f3digo",
         "### Tema 3: AppConfigData \u2014 el plano de datos que consume tu aplicaci\u00f3n",
@@ -3749,7 +3749,7 @@
       "headings": [
         "# M\u00f3dulo 26: Streaming e integraci\u00f3n avanzada \u2014 Firehose y EventBridge Pipes",
         "## S\u00edlabo",
-        "## Contenido te\u00f3rico",
+        "## Aprende construyendo",
         "### Tema 1: Amazon Data Firehose \u2014 entrega gestionada sin consumidores propios",
         "### Tema 2: Firehose vs Kinesis Data Streams \u2014 qui\u00e9n consume los datos",
         "### Tema 3: EventBridge Pipes \u2014 conectar origen y destino sin c\u00f3digo de pegamento",
@@ -3770,7 +3770,7 @@
       "headings": [
         "# M\u00f3dulo 27: APIs GraphQL con AppSync y correo transaccional con SES",
         "## S\u00edlabo",
-        "## Contenido te\u00f3rico",
+        "## Aprende construyendo",
         "### Tema 1: AppSync \u2014 APIs GraphQL gestionadas",
         "### Tema 2: Fuentes de datos y resolvers",
         "### Tema 3: SES \u2014 identidades, env\u00edo y plantillas",
@@ -3791,7 +3791,7 @@
       "headings": [
         "# M\u00f3dulo 28: Bases de datos de grafos y b\u00fasqueda \u2014 Neptune y OpenSearch",
         "## S\u00edlabo",
-        "## Contenido te\u00f3rico",
+        "## Aprende construyendo",
         "### Tema 1: Bases de datos de grafos \u2014 cuando las relaciones son el dato",
         "### Tema 2: Neptune en Floci \u2014 un servidor Gremlin real, no una simulaci\u00f3n",
         "### Tema 3: OpenSearch \u2014 modo simulado y modo real",
@@ -3812,7 +3812,7 @@
       "headings": [
         "# M\u00f3dulo 29: FinOps y gobierno de cuenta \u2014 Cost Explorer, Pricing, BCM Data Exports, Resource Groups Tagging y STS",
         "## S\u00edlabo",
-        "## Contenido te\u00f3rico",
+        "## Aprende construyendo",
         "### Tema 1: Cost Explorer \u2014 costos sintetizados a partir de tu estado real",
         "### Tema 2: Pricing \u2014 cat\u00e1logo de tarifas de referencia",
         "### Tema 3: BCM Data Exports \u2014 reportes de costo en formato est\u00e1ndar",
@@ -3833,7 +3833,7 @@
       "headings": [
         "# M\u00f3dulo 3: Mensajer\u00eda as\u00edncrona con SQS",
         "## S\u00edlabo",
-        "## Contenido te\u00f3rico",
+        "## Aprende construyendo",
         "### Tema 1: Colas, productores y consumidores",
         "### Tema 2: Ciclo de vida de un mensaje",
         "### Tema 3: Dead Letter Queues (DLQ)",
@@ -3854,7 +3854,7 @@
       "headings": [
         "# M\u00f3dulo 30: Transferencia de archivos gestionada con Transfer Family",
         "## S\u00edlabo",
-        "## Contenido te\u00f3rico",
+        "## Aprende construyendo",
         "### Tema 1: Qu\u00e9 resuelve Transfer Family",
         "### Tema 2: Ciclo de vida del servidor y modelo de usuarios",
         "### Tema 3: Claves p\u00fablicas SSH y autenticaci\u00f3n de usuarios",
@@ -3875,7 +3875,7 @@
       "headings": [
         "# M\u00f3dulo 31: Proyecto integrador: API multi-nube con AWS, Azure y GCP",
         "## S\u00edlabo",
-        "## Contenido te\u00f3rico",
+        "## Aprende construyendo",
         "### Tema 1: Arquitectura multi-nube y portabilidad de conocimiento",
         "### Tema 2: Arquitectura interna de cloud local y su uso en CI/CD",
         "### Tema 3: Migraci\u00f3n desde otros emuladores, y l\u00edmites de un emulador",
@@ -3896,7 +3896,7 @@
       "headings": [
         "# M\u00f3dulo 32: Arquitectura cloud resiliente \u2014 redes, landing zones y recuperaci\u00f3n",
         "## S\u00edlabo",
-        "## Contenido te\u00f3rico",
+        "## Aprende construyendo",
         "### Tema 1: Una red segura empieza por flujos, no por subredes",
         "### Tema 2: Una landing zone convierte gobierno en una base repetible",
         "### Tema 3: Disponibilidad y recuperaci\u00f3n responden preguntas distintas",
@@ -3917,7 +3917,7 @@
       "headings": [
         "# M\u00f3dulo 33: Cloud Master: plataforma, seguridad, datos y FinOps",
         "## S\u00edlabo",
-        "## Contenido te\u00f3rico",
+        "## Aprende construyendo",
         "### Tema 1: Terraform avanzado y CI/CD cloud",
         "### Tema 2: Kubernetes administrado, ECS y Service Mesh",
         "### Tema 3: EC2, VPC, RDS, S3 y DynamoDB avanzados",
@@ -3940,7 +3940,7 @@
         "## Qu\u00e9 construir\u00e1s y por qu\u00e9 importa",
         "## S\u00edlabo",
         "## Antes de empezar",
-        "## Contenido te\u00f3rico",
+        "## Aprende construyendo",
         "### 1. Instalaci\u00f3n en macOS, Linux y Windows",
         "### macOS",
         "### Instalaci\u00f3n en Linux",
@@ -3959,7 +3959,7 @@
       "headings": [
         "# M\u00f3dulo 4: Bases de datos NoSQL con DynamoDB",
         "## S\u00edlabo",
-        "## Contenido te\u00f3rico",
+        "## Aprende construyendo",
         "### Tema 1: Qu\u00e9 es NoSQL y cu\u00e1ndo usarlo",
         "### Tema 2: Tablas, items y atributos",
         "### Tema 3: Tipos de datos \u2014 S, N, B, BOOL, NULL, L, M",
@@ -3980,7 +3980,7 @@
       "headings": [
         "# M\u00f3dulo 5: Serverless con Lambda",
         "## S\u00edlabo",
-        "## Contenido te\u00f3rico",
+        "## Aprende construyendo",
         "### Tema 1: Qu\u00e9 es serverless \u2014 ventajas y desventajas",
         "### Tema 2: Estructura de una funci\u00f3n Lambda",
         "### Tema 3: Runtimes \u2014 Node.js, Python, Java, Go",
@@ -4001,7 +4001,7 @@
       "headings": [
         "# M\u00f3dulo 6: APIs con API Gateway",
         "## S\u00edlabo",
-        "## Contenido te\u00f3rico",
+        "## Aprende construyendo",
         "### Tema 1: Qu\u00e9 es API Gateway y tipos de API \u2014 REST, HTTP, WebSocket",
         "### Tema 2: Recursos, m\u00e9todos y stages",
         "### Tema 3: Integraci\u00f3n con Lambda (proxy)",
@@ -4022,7 +4022,7 @@
       "headings": [
         "# M\u00f3dulo 7: Identidad y acceso con IAM",
         "## S\u00edlabo",
-        "## Contenido te\u00f3rico",
+        "## Aprende construyendo",
         "### Tema 1: Principio de m\u00ednimo privilegio",
         "### Tema 2: Modelo de responsabilidad compartida",
         "### Tema 3: Usuarios, grupos y roles",
@@ -4043,7 +4043,7 @@
       "headings": [
         "# M\u00f3dulo 8: Azure y GCP con Floci",
         "## S\u00edlabo",
-        "## Contenido te\u00f3rico",
+        "## Aprende construyendo",
         "### Tema 1: floci-az \u2014 Blob Storage, Queue Storage, Table Storage, Cosmos DB, Functions",
         "### Tema 2: floci-gcp \u2014 Cloud Storage, Pub/Sub, Firestore, Cloud Functions",
         "### Tema 3: Comparativa AWS vs Azure vs GCP por categor\u00eda de servicio",
@@ -4064,7 +4064,7 @@
       "headings": [
         "# M\u00f3dulo 9: Proyecto final \u2014 Sistema de Gesti\u00f3n de Tareas",
         "## S\u00edlabo",
-        "## Contenido te\u00f3rico",
+        "## Aprende construyendo",
         "### Tema 1: Arquitectura de la aplicaci\u00f3n \u2014 frontend, backend y base de datos",
         "### Tema 2: CRUD de tareas sobre DynamoDB expuesto por Lambda",
         "### Tema 3: Archivos adjuntos en S3 y procesamiento en segundo plano con SQS",
@@ -4089,7 +4089,7 @@
         "### Windows",
         "### macOS",
         "### Linux (Ubuntu/Debian)",
-        "## Contenido te\u00f3rico",
+        "## Aprende construyendo",
         "### Tema 1: Sistema de archivos y permisos (chmod/chown)",
         "### Tema 2: Procesos, se\u00f1ales y jobs en segundo plano",
         "### Tema 3: Pipes, redirecci\u00f3n y filtros (grep, awk, sed)",
@@ -4106,7 +4106,7 @@
       "headings": [
         "# M\u00f3dulo 1: Git avanzado y estrategias de branching",
         "## S\u00edlabo",
-        "## Contenido te\u00f3rico",
+        "## Aprende construyendo",
         "### Tema 1: Trunk-based development vs GitFlow",
         "### Tema 2: Rebase interactivo vs merge",
         "### Tema 3: Bisect para encontrar regresiones",
@@ -4127,7 +4127,7 @@
       "headings": [
         "# M\u00f3dulo 10: Logging centralizado",
         "## S\u00edlabo",
-        "## Contenido te\u00f3rico",
+        "## Aprende construyendo",
         "### Tema 1: Logging estructurado (JSON)",
         "### Tema 2: Pipeline ELK/EFK",
         "### Tema 3: Loki + Grafana como alternativa ligera",
@@ -4148,7 +4148,7 @@
       "headings": [
         "# M\u00f3dulo 11: Seguridad DevSecOps",
         "## S\u00edlabo",
-        "## Contenido te\u00f3rico",
+        "## Aprende construyendo",
         "### Tema 1: Escaneo de im\u00e1genes y dependencias (Trivy, Snyk)",
         "### Tema 2: Integraci\u00f3n en el pipeline",
         "### Tema 3: Gesti\u00f3n de secretos (Vault, SOPS)",
@@ -4169,7 +4169,7 @@
       "headings": [
         "# M\u00f3dulo 12: DevOps y este curso \u2014 del laboratorio a la nube",
         "## S\u00edlabo",
-        "## Contenido te\u00f3rico",
+        "## Aprende construyendo",
         "### Tema 1: De cloud local a un proveedor cloud real",
         "### Tema 2: Gesti\u00f3n de secretos cloud-native",
         "### Tema 3: IaC multi-nube",
@@ -4190,7 +4190,7 @@
       "headings": [
         "# M\u00f3dulo 13: Proyecto integrador \u2014 pipeline CI/CD completo",
         "## S\u00edlabo",
-        "## Contenido te\u00f3rico",
+        "## Aprende construyendo",
         "### Tema 1: El pipeline completo \u2014 de commit a producci\u00f3n verificada",
         "### Tema 2: Uniendo cada m\u00f3dulo del track en un solo flujo",
         "### Tema 3: Cierre del track \u2014 checklist final y reflexi\u00f3n",
@@ -4211,7 +4211,7 @@
       "headings": [
         "# M\u00f3dulo 14: SRE y plataforma \u2014 confiabilidad, incidentes y supply chain",
         "## S\u00edlabo",
-        "## Contenido te\u00f3rico",
+        "## Aprende construyendo",
         "### Tema 1: Confiabilidad es una expectativa cuantificada",
         "### Tema 2: Una alerta debe conducir a una acci\u00f3n",
         "### Tema 3: Construir una imagen no demuestra de d\u00f3nde proviene",
@@ -4232,7 +4232,7 @@
       "headings": [
         "# M\u00f3dulo 15: DevOps Master: GitOps, Service Mesh y DevSecOps",
         "## S\u00edlabo",
-        "## Contenido te\u00f3rico",
+        "## Aprende construyendo",
         "### Tema 1: Docker y Compose avanzados",
         "### Tema 2: Kubernetes extensible y Helm avanzado",
         "### Tema 3: Service Mesh con Istio o Linkerd",
@@ -4253,7 +4253,7 @@
       "headings": [
         "# M\u00f3dulo 2: Docker \u2014 im\u00e1genes y buenas pr\u00e1cticas",
         "## S\u00edlabo",
-        "## Contenido te\u00f3rico",
+        "## Aprende construyendo",
         "### Tema 1: Dockerfile multi-stage",
         "### Tema 2: Capas e invalidaci\u00f3n de cach\u00e9",
         "### Tema 3: Im\u00e1genes base distroless/alpine",
@@ -4274,7 +4274,7 @@
       "headings": [
         "# M\u00f3dulo 3: Docker Compose y orquestaci\u00f3n local",
         "## S\u00edlabo",
-        "## Contenido te\u00f3rico",
+        "## Aprende construyendo",
         "### Tema 1: Servicios, dependencias y healthchecks",
         "### Tema 2: Variables de entorno y .env",
         "### Tema 3: Redes y descubrimiento por nombre de servicio",
@@ -4295,7 +4295,7 @@
       "headings": [
         "# M\u00f3dulo 4: CI \u2014 pipelines automatizados",
         "## S\u00edlabo",
-        "## Contenido te\u00f3rico",
+        "## Aprende construyendo",
         "### Tema 1: Jobs, steps y matrices de build",
         "### Tema 2: Cach\u00e9 de dependencias en CI",
         "### Tema 3: Artifacts y reportes de cobertura",
@@ -4316,7 +4316,7 @@
       "headings": [
         "# M\u00f3dulo 5: CD \u2014 estrategias de despliegue",
         "## S\u00edlabo",
-        "## Contenido te\u00f3rico",
+        "## Aprende construyendo",
         "### Tema 1: Blue-green deployment",
         "### Tema 2: Canary releases",
         "### Tema 3: Rolling updates",
@@ -4337,7 +4337,7 @@
       "headings": [
         "# M\u00f3dulo 6: Kubernetes \u2014 fundamentos",
         "## S\u00edlabo",
-        "## Contenido te\u00f3rico",
+        "## Aprende construyendo",
         "### Tema 1: Pod, ReplicaSet, Deployment",
         "### Tema 2: Service (ClusterIP, NodePort, LoadBalancer)",
         "### Tema 3: ConfigMaps y Secrets",
@@ -4358,7 +4358,7 @@
       "headings": [
         "# M\u00f3dulo 7: Kubernetes avanzado \u2014 Helm e Ingress",
         "## S\u00edlabo",
-        "## Contenido te\u00f3rico",
+        "## Aprende construyendo",
         "### Tema 1: Helm charts y values",
         "### Tema 2: Ingress Controllers y reglas de enrutamiento",
         "### Tema 3: HorizontalPodAutoscaler",
@@ -4379,7 +4379,7 @@
       "headings": [
         "# M\u00f3dulo 8: Infraestructura como c\u00f3digo con Terraform",
         "## S\u00edlabo",
-        "## Contenido te\u00f3rico",
+        "## Aprende construyendo",
         "### Tema 1: Providers, resources y data sources",
         "### Tema 2: State remoto y locking",
         "### Tema 3: M\u00f3dulos reutilizables",
@@ -4400,7 +4400,7 @@
       "headings": [
         "# M\u00f3dulo 9: Observabilidad con Prometheus y Grafana",
         "## S\u00edlabo",
-        "## Contenido te\u00f3rico",
+        "## Aprende construyendo",
         "### Tema 1: Modelo de m\u00e9tricas de Prometheus \u2014 counter, gauge, histogram",
         "### Tema 2: PromQL esencial",
         "### Tema 3: Dashboards en Grafana",
@@ -4560,7 +4560,7 @@
         "# M\u00f3dulo 0: Fundamentos de Dart",
         "## S\u00edlabo",
         "## Antes de comenzar: instala Flutter y valida todo",
-        "## Contenido te\u00f3rico",
+        "## Aprende construyendo",
         "### Tema 1: Sound null safety",
         "### Tema 2: Clases y mixins",
         "#### `extends`, `implements`, `with` y `@override` no significan lo mismo",
@@ -4580,7 +4580,7 @@
       "headings": [
         "# M\u00f3dulo 1: Widgets: stateless vs stateful",
         "## S\u00edlabo",
-        "## Contenido te\u00f3rico",
+        "## Aprende construyendo",
         "### Tema 1: StatelessWidget vs StatefulWidget",
         "### Tema 2: Layout con Row, Column y Stack, y ciclo de vida",
         "### Tema 3: Keys",
@@ -4600,7 +4600,7 @@
       "headings": [
         "# M\u00f3dulo 10: Theming, accesibilidad y Material/Cupertino",
         "## S\u00edlabo",
-        "## Contenido te\u00f3rico",
+        "## Aprende construyendo",
         "### Tema 1: ThemeData con Material 3",
         "### Tema 2: Adaptaci\u00f3n Material vs Cupertino",
         "### Tema 3: Accesibilidad con Semantics y dark mode",
@@ -4620,7 +4620,7 @@
       "headings": [
         "# M\u00f3dulo 11: Publicaci\u00f3n en App Store y Google Play",
         "## S\u00edlabo",
-        "## Contenido te\u00f3rico",
+        "## Aprende construyendo",
         "### Tema 1: Builds de release para cada plataforma",
         "### Tema 2: Iconos y splash screens",
         "# pubspec.yaml",
@@ -4641,7 +4641,7 @@
       "headings": [
         "# M\u00f3dulo 12: Proyecto integrador: app Flutter completa",
         "## S\u00edlabo",
-        "## Contenido te\u00f3rico",
+        "## Aprende construyendo",
         "### Tema 1: Arquitectura por features y Clean Architecture",
         "### Tema 2: Uniendo los m\u00f3dulos del track",
         "### Tema 3: Cierre del track",
@@ -4662,7 +4662,7 @@
       "headings": [
         "# M\u00f3dulo 13: Flutter en producci\u00f3n \u2014 seguridad, isolates y operaci\u00f3n",
         "## S\u00edlabo",
-        "## Contenido te\u00f3rico",
+        "## Aprende construyendo",
         "### Tema 1: Una API Dart puede terminar en una frontera nativa",
         "### Tema 2: Los secretos no pertenecen al binario",
         "### Tema 3: Fluidez se mide contra el presupuesto de cada frame",
@@ -4684,7 +4684,7 @@
         "# M\u00f3dulo 14: Flutter para entregas: mapas, GPS y tiempo real",
         "## S\u00edlabo",
         "## Antes de escribir c\u00f3digo: vertical y estructura de carpetas",
-        "## Contenido te\u00f3rico",
+        "## Aprende construyendo",
         "### Tema 1: Dise\u00f1o de pantallas y Riverpod",
         "### Tema 2: Google Maps y localizaci\u00f3n en tiempo real",
         "### Tema 3: Socket.IO y actualizaci\u00f3n de rutas",
@@ -4704,7 +4704,7 @@
       "headings": [
         "# M\u00f3dulo 15: Flutter Master: calidad, arquitectura y despliegue",
         "## S\u00edlabo",
-        "## Contenido te\u00f3rico",
+        "## Aprende construyendo",
         "### Tema 1: flutter test y WidgetTester",
         "### Tema 2: pumpAndSettle, golden e integration tests",
         "### Tema 3: Rendimiento, RepaintBoundary y Keys",
@@ -4725,7 +4725,7 @@
       "headings": [
         "# M\u00f3dulo 2: Layout y dise\u00f1o responsive",
         "## S\u00edlabo",
-        "## Contenido te\u00f3rico",
+        "## Aprende construyendo",
         "### Tema 1: MediaQuery vs LayoutBuilder",
         "### Tema 2: C\u00f3mo Flutter calcula tama\u00f1os",
         "### Tema 3: Breakpoints propios y SafeArea",
@@ -4745,7 +4745,7 @@
       "headings": [
         "# M\u00f3dulo 3: Navegaci\u00f3n y rutas",
         "## S\u00edlabo",
-        "## Contenido te\u00f3rico",
+        "## Aprende construyendo",
         "### Tema 1: go_router: navegaci\u00f3n como funci\u00f3n de la URL",
         "### Tema 2: Guards y deep linking",
         "### Tema 3: Transiciones personalizadas",
@@ -4765,7 +4765,7 @@
       "headings": [
         "# M\u00f3dulo 4: Gesti\u00f3n de estado",
         "## S\u00edlabo",
-        "## Contenido te\u00f3rico",
+        "## Aprende construyendo",
         "### Tema 1: setState y sus l\u00edmites",
         "### Tema 2: Riverpod",
         "### Tema 3: Bloc/Cubit y otras alternativas",
@@ -4786,7 +4786,7 @@
       "headings": [
         "# M\u00f3dulo 5: Networking",
         "## S\u00edlabo",
-        "## Contenido te\u00f3rico",
+        "## Aprende construyendo",
         "### Tema 1: http vs dio",
         "### Tema 2: json_serializable",
         "### Tema 3: Interceptores y estados expl\u00edcitos",
@@ -4806,7 +4806,7 @@
       "headings": [
         "# M\u00f3dulo 6: Persistencia local",
         "## S\u00edlabo",
-        "## Contenido te\u00f3rico",
+        "## Aprende construyendo",
         "### Tema 1: shared_preferences",
         "### Tema 2: sqflite vs Hive",
         "### Tema 3: Offline-first y Firebase",
@@ -4826,7 +4826,7 @@
       "headings": [
         "# M\u00f3dulo 7: Integraci\u00f3n con plataformas nativas",
         "## S\u00edlabo",
-        "## Contenido te\u00f3rico",
+        "## Aprende construyendo",
         "### Tema 1: MethodChannel",
         "### Tema 2: Plugins federados",
         "### Tema 3: Permisos de plataforma y cu\u00e1ndo escribir un platform channel propio",
@@ -4847,7 +4847,7 @@
       "headings": [
         "# M\u00f3dulo 8: Animaciones y rendimiento",
         "## S\u00edlabo",
-        "## Contenido te\u00f3rico",
+        "## Aprende construyendo",
         "### Tema 1: Animaciones impl\u00edcitas vs expl\u00edcitas",
         "### Tema 2: Flutter DevTools y detecci\u00f3n de jank",
         "### Tema 3: const widgets, RepaintBoundary y shouldRepaint",
@@ -4867,7 +4867,7 @@
       "headings": [
         "# M\u00f3dulo 9: Testing en Flutter",
         "## S\u00edlabo",
-        "## Contenido te\u00f3rico",
+        "## Aprende construyendo",
         "### Tema 1: Unit tests y widget tests",
         "### Tema 2: Mocking con mocktail",
         "### Tema 3: Integration tests",
@@ -4888,7 +4888,7 @@
         "# M\u00f3dulo 0: C\u00f3mo funciona tu entorno de desarrollo",
         "## S\u00edlabo",
         "## Antes de comenzar: instalaci\u00f3n guiada",
-        "## Contenido te\u00f3rico",
+        "## Aprende construyendo",
         "### Tema 1: Del hardware al programa en ejecuci\u00f3n",
         "### Tema 2: Archivos, carpetas y rutas sin perderse",
         "### Tema 3: C\u00f3mo leer un comando antes de ejecutarlo",
@@ -4908,7 +4908,7 @@
       "headings": [
         "# M\u00f3dulo 1: Pensamiento computacional y programaci\u00f3n",
         "## S\u00edlabo",
-        "## Contenido te\u00f3rico",
+        "## Aprende construyendo",
         "### Tema 1: Del problema al algoritmo y a los casos de prueba",
         "### Tema 2: Variables, tipos, expresiones y cambios de estado",
         "### Tema 3: Decisiones, repeticiones y trazado de ejecuci\u00f3n",
@@ -4929,7 +4929,7 @@
       "headings": [
         "# Sistemas distribuidos, resiliencia y observabilidad",
         "## S\u00edlabo",
-        "## Contenido te\u00f3rico",
+        "## Aprende construyendo",
         "### Tema 1: La red convierte el resultado en una incertidumbre",
         "### Tema 2: Replicaci\u00f3n, consistencia y decisiones expl\u00edcitas",
         "### Tema 3: Mensajes que se procesan con efectos exactamente una vez",
@@ -4950,7 +4950,7 @@
       "headings": [
         "# M\u00f3dulo 11: Ciencias de la Computaci\u00f3n: mapa de especializaciones",
         "## S\u00edlabo",
-        "## Contenido te\u00f3rico",
+        "## Aprende construyendo",
         "## Criterio transversal de calidad del c\u00f3digo",
         "## Laboratorio pr\u00e1ctico",
         "## R\u00fabrica del proyecto",
@@ -4968,7 +4968,7 @@
       "headings": [
         "# M\u00f3dulo 2: Estructuras de datos, algoritmos y complejidad",
         "## S\u00edlabo",
-        "## Contenido te\u00f3rico",
+        "## Aprende construyendo",
         "### Tema 1: Elegir estructuras seg\u00fan las operaciones",
         "### Tema 2: Pilas, colas y abstracciones de comportamiento",
         "### Tema 3: B\u00fasqueda, precondiciones y demostraci\u00f3n de correcci\u00f3n",
@@ -4989,7 +4989,7 @@
       "headings": [
         "# M\u00f3dulo 3: Fundamentos de web, redes y accesibilidad",
         "## S\u00edlabo",
-        "## Contenido te\u00f3rico",
+        "## Aprende construyendo",
         "### Tema 1: De una URL al servidor: red, DNS, IP y puertos",
         "### Tema 2: HTTP como contrato observable",
         "### Tema 3: HTML sem\u00e1ntico, formularios y el DOM",
@@ -5010,7 +5010,7 @@
       "headings": [
         "# M\u00f3dulo 4: Modelado de datos, SQL y persistencia",
         "## S\u00edlabo",
-        "## Contenido te\u00f3rico",
+        "## Aprende construyendo",
         "### Tema 1: Del mundo real al modelo relacional",
         "### Tema 2: SQL para definir, escribir, consultar y relacionar",
         "# Incorrecto: permite alterar la consulta",
@@ -5031,7 +5031,7 @@
       "headings": [
         "# M\u00f3dulo 5: Testing, depuraci\u00f3n, Git y CI",
         "## S\u00edlabo",
-        "## Contenido te\u00f3rico",
+        "## Aprende construyendo",
         "### Tema 1: Depurar con evidencia, no con cambios aleatorios",
         "### Tema 2: Pruebas con prop\u00f3sito y niveles adecuados",
         "### Tema 3: Git como historial de decisiones y colaboraci\u00f3n",
@@ -5052,7 +5052,7 @@
       "headings": [
         "# M\u00f3dulo 6: Seguridad, privacidad y modelado de amenazas",
         "## S\u00edlabo",
-        "## Contenido te\u00f3rico",
+        "## Aprende construyendo",
         "### Tema 1: Activos, amenazas, riesgos y l\u00edmites de confianza",
         "### Tema 2: Identidad, contrase\u00f1as, sesiones y autorizaci\u00f3n",
         "### Tema 3: Criptograf\u00eda aplicada, TLS, claves y secretos",
@@ -5073,7 +5073,7 @@
       "headings": [
         "# M\u00f3dulo 7: Requisitos, dise\u00f1o, arquitectura y mantenimiento",
         "## S\u00edlabo",
-        "## Contenido te\u00f3rico",
+        "## Aprende construyendo",
         "### Tema 1: Requisitos, stakeholders y criterios verificables",
         "### Tema 2: Arquitectura guiada por atributos de calidad",
         "### Tema 3: Dise\u00f1o modular, principios, patrones y refactoring",
@@ -5094,7 +5094,7 @@
       "headings": [
         "# Sistemas operativos, concurrencia, Linux y contenedores",
         "## S\u00edlabo",
-        "## Contenido te\u00f3rico",
+        "## Aprende construyendo",
         "### Tema 1: El sistema operativo como administrador y frontera",
         "### Tema 2: Memoria y concurrencia sin magia",
         "### Tema 3: Linux como entorno observable",
@@ -5115,7 +5115,7 @@
       "headings": [
         "# Matem\u00e1ticas discretas, l\u00f3gica y probabilidad para software",
         "## S\u00edlabo",
-        "## Contenido te\u00f3rico",
+        "## Aprende construyendo",
         "### Tema 1: L\u00f3gica para especificar antes de programar",
         "### Tema 2: Conjuntos, relaciones, funciones e inducci\u00f3n",
         "### Tema 3: Conteo, grafos y estructuras conectadas",
@@ -5139,7 +5139,7 @@
         "## Antes de comenzar: qu\u00e9 equipo necesitas realmente",
         "### macOS: entorno completo recomendado",
         "### Windows y Linux: etapa de fundamentos",
-        "## Contenido te\u00f3rico",
+        "## Aprende construyendo",
         "### Tema 1: Optionals y unwrapping seguro",
         "### Tema 2: struct vs class",
         "### Tema 3: Protocolos y enums con valores asociados",
@@ -5157,7 +5157,7 @@
       "headings": [
         "# M\u00f3dulo 1: SwiftUI: vistas y layout declarativo",
         "## S\u00edlabo",
-        "## Contenido te\u00f3rico",
+        "## Aprende construyendo",
         "### Tema 1: El protocolo View y composici\u00f3n",
         "### Tema 2: Orden de modificadores y layout con stacks",
         "### Tema 3: Previews, LazyVGrid/ScrollView y property wrappers",
@@ -5177,7 +5177,7 @@
       "headings": [
         "# M\u00f3dulo 10: Performance, accesibilidad y HIG",
         "## S\u00edlabo",
-        "## Contenido te\u00f3rico",
+        "## Aprende construyendo",
         "### Tema 1: Instruments",
         "### Tema 2: Accesibilidad con VoiceOver",
         "### Tema 3: Human Interface Guidelines, Dynamic Type e interop con UIKit",
@@ -5198,7 +5198,7 @@
       "headings": [
         "# M\u00f3dulo 11: Publicaci\u00f3n en App Store",
         "## S\u00edlabo",
-        "## Contenido te\u00f3rico",
+        "## Aprende construyendo",
         "### Tema 1: Certificados y provisioning profiles",
         "### Tema 2: Archivar, subir y TestFlight",
         "### Tema 3: Metadata y versionado",
@@ -5218,7 +5218,7 @@
       "headings": [
         "# M\u00f3dulo 12: Proyecto integrador: app SwiftUI completa",
         "## S\u00edlabo",
-        "## Contenido te\u00f3rico",
+        "## Aprende construyendo",
         "### Tema 1: Arquitectura del proyecto integrador",
         "### Tema 2: Sincronizaci\u00f3n entre red y persistencia local",
         "### Tema 3: Cierre del track",
@@ -5239,7 +5239,7 @@
       "headings": [
         "# M\u00f3dulo 13: iOS en producci\u00f3n \u2014 seguridad, sincronizaci\u00f3n y operaci\u00f3n",
         "## S\u00edlabo",
-        "## Contenido te\u00f3rico",
+        "## Aprende construyendo",
         "### Tema 1: El sandbox reduce superficie, pero no valida intenciones",
         "### Tema 2: Proteger datos es controlar todas sus copias",
         "### Tema 3: Offline-first es un protocolo, no una cach\u00e9",
@@ -5260,7 +5260,7 @@
       "headings": [
         "# M\u00f3dulo 14: SwiftUI Master: pruebas, animaci\u00f3n e interoperabilidad",
         "## S\u00edlabo",
-        "## Contenido te\u00f3rico",
+        "## Aprende construyendo",
         "### Tema 1: XCTest y pruebas as\u00edncronas",
         "### Tema 2: ViewInspector con criterio",
         "### Tema 3: Combine avanzado",
@@ -5281,7 +5281,7 @@
       "headings": [
         "# M\u00f3dulo 2: Estado y data flow",
         "## S\u00edlabo",
-        "## Contenido te\u00f3rico",
+        "## Aprende construyendo",
         "### Tema 1: @State y @Binding",
         "#### C\u00f3mo leer `@State`, `@Binding` y el prefijo `$`",
         "### Tema 2: @Observable",
@@ -5302,7 +5302,7 @@
       "headings": [
         "# M\u00f3dulo 3: Navegaci\u00f3n",
         "## S\u00edlabo",
-        "## Contenido te\u00f3rico",
+        "## Aprende construyendo",
         "### Tema 1: NavigationStack y NavigationPath",
         "### Tema 2: Sheets, full screen covers y TabView",
         "### Tema 3: Deep linking y controles de formulario",
@@ -5322,7 +5322,7 @@
       "headings": [
         "# M\u00f3dulo 4: Concurrencia moderna: async/await",
         "## S\u00edlabo",
-        "## Contenido te\u00f3rico",
+        "## Aprende construyendo",
         "### Tema 1: async/await y Task",
         "### Tema 2: Actors para estado mutable seguro",
         "### Tema 3: TaskGroup y MainActor",
@@ -5342,7 +5342,7 @@
       "headings": [
         "# M\u00f3dulo 5: Networking con URLSession",
         "## S\u00edlabo",
-        "## Contenido te\u00f3rico",
+        "## Aprende construyendo",
         "### Tema 1: URLSession con async/await y Codable",
         "### Tema 2: Errores tipados",
         "### Tema 3: Reintentos y cancelaci\u00f3n",
@@ -5362,7 +5362,7 @@
       "headings": [
         "# M\u00f3dulo 6: Persistencia con SwiftData",
         "## S\u00edlabo",
-        "## Contenido te\u00f3rico",
+        "## Aprende construyendo",
         "### Tema 1: @Model y ModelContainer",
         "### Tema 2: @Query y operaciones de escritura",
         "### Tema 3: Migraciones y SwiftData vs Core Data",
@@ -5382,7 +5382,7 @@
       "headings": [
         "# M\u00f3dulo 7: Combine y programaci\u00f3n reactiva",
         "## S\u00edlabo",
-        "## Contenido te\u00f3rico",
+        "## Aprende construyendo",
         "### Tema 1: Publishers y Subscribers",
         "### Tema 2: Operadores: debounce y combineLatest",
         "### Tema 3: Combine vs async/await",
@@ -5402,7 +5402,7 @@
       "headings": [
         "# M\u00f3dulo 8: Arquitectura MVVM",
         "## S\u00edlabo",
-        "## Contenido te\u00f3rico",
+        "## Aprende construyendo",
         "### Tema 1: De una vista \"gorda\" a MVVM",
         "### Tema 2: Capas del proyecto e inyecci\u00f3n por inicializador",
         "### Tema 3: Cu\u00e1ndo MVVM no alcanza",
@@ -5422,7 +5422,7 @@
       "headings": [
         "# M\u00f3dulo 9: Testing en iOS",
         "## S\u00edlabo",
-        "## Contenido te\u00f3rico",
+        "## Aprende construyendo",
         "### Tema 1: XCTest cl\u00e1sico y Swift Testing",
         "### Tema 2: Testing de c\u00f3digo async",
         "### Tema 3: UI Tests con XCUITest",
@@ -5443,7 +5443,7 @@
         "# M\u00f3dulo 0: Sintaxis, tipos y el modelo de la JVM",
         "## S\u00edlabo",
         "## Antes de comenzar: instala Java correctamente",
-        "## Contenido te\u00f3rico",
+        "## Aprende construyendo",
         "### Tema 1: Del c\u00f3digo fuente a la JVM",
         "### Tema 2: public static void main \u2014 qu\u00e9 significa cada palabra",
         "### Tema 3: JDK, JRE y JVM",
@@ -5463,7 +5463,7 @@
       "headings": [
         "# M\u00f3dulo 1: Programaci\u00f3n orientada a objetos",
         "## S\u00edlabo",
-        "## Contenido te\u00f3rico",
+        "## Aprende construyendo",
         "### Tema 1: Clases, objetos, constructores y encapsulaci\u00f3n",
         "### Tema 2: Herencia y sobreescritura",
         "#### Enfoque t\u00e9cnico: qu\u00e9 significa `@` en Java",
@@ -5484,7 +5484,7 @@
       "headings": [
         "# M\u00f3dulo 10: M\u00f3dulos (JPMS) y proyectos grandes",
         "## S\u00edlabo",
-        "## Contenido te\u00f3rico",
+        "## Aprende construyendo",
         "### Tema 1: module-info.java y encapsulaci\u00f3n fuerte",
         "### Tema 2: Migraci\u00f3n incremental y cu\u00e1ndo JPMS aporta valor",
         "### Tema 3: `opens` para acceso reflexivo controlado de frameworks",
@@ -5504,7 +5504,7 @@
       "headings": [
         "# M\u00f3dulo 11: JVM interna \u2014 GC, profiling y JIT",
         "## S\u00edlabo",
-        "## Contenido te\u00f3rico",
+        "## Aprende construyendo",
         "### Tema 1: Generaciones de memoria y recolectores",
         "### Tema 2: Java Flight Recorder y JIT compilation",
         "### Tema 3: Referencias especiales y heap dumps",
@@ -5524,7 +5524,7 @@
       "headings": [
         "# M\u00f3dulo 12: Buenas pr\u00e1cticas y patrones de dise\u00f1o",
         "## S\u00edlabo",
-        "## Contenido te\u00f3rico",
+        "## Aprende construyendo",
         "### Tema 1: Builder \u2014 constructores con muchos par\u00e1metros opcionales",
         "### Tema 2: Factory y Strategy",
         "### Tema 3: SOLID y cu\u00e1ndo NO aplicar un patr\u00f3n",
@@ -5544,7 +5544,7 @@
       "headings": [
         "# M\u00f3dulo 13: Proyecto integrador",
         "## S\u00edlabo",
-        "## Contenido te\u00f3rico",
+        "## Aprende construyendo",
         "### Tema 1: Arquitectura por capas del proyecto integrador",
         "### Tema 2: Integrando concurrencia, modelado y testing",
         "### Tema 3: Build reproducible y cierre del track",
@@ -5565,7 +5565,7 @@
       "headings": [
         "# M\u00f3dulo 14: Java en producci\u00f3n \u2014 memoria, benchmarks y runtime seguro",
         "## S\u00edlabo",
-        "## Contenido te\u00f3rico",
+        "## Aprende construyendo",
         "### Tema 1: Compartir memoria requiere orden y visibilidad",
         "### Tema 2: La JVM optimiza y puede invalidar un cron\u00f3metro ingenuo",
         "### Tema 3: Deserializar es permitir construcci\u00f3n y comportamiento",
@@ -5586,7 +5586,7 @@
       "headings": [
         "# M\u00f3dulo 15: Java Master: builds, testing y logging operacional",
         "## S\u00edlabo",
-        "## Contenido te\u00f3rico",
+        "## Aprende construyendo",
         "### Tema 1: Maven avanzado",
         "### Tema 2: Gradle y builds reproducibles",
         "### Tema 3: Proyectos multi-m\u00f3dulo",
@@ -5607,7 +5607,7 @@
       "headings": [
         "# M\u00f3dulo 2: Colecciones y gen\u00e9ricos",
         "## S\u00edlabo",
-        "## Contenido te\u00f3rico",
+        "## Aprende construyendo",
         "### Tema 1: List, Set, Map y sus implementaciones",
         "### Tema 2: Gen\u00e9ricos, wildcards y type erasure",
         "### Tema 3: Comparable vs Comparator, e iteraci\u00f3n",
@@ -5627,7 +5627,7 @@
       "headings": [
         "# M\u00f3dulo 3: Excepciones y manejo de recursos",
         "## S\u00edlabo",
-        "## Contenido te\u00f3rico",
+        "## Aprende construyendo",
         "### Tema 1: Checked vs unchecked exceptions",
         "### Tema 2: try-with-resources",
         "### Tema 3: Excepciones personalizadas y no tragar excepciones",
@@ -5647,7 +5647,7 @@
       "headings": [
         "# M\u00f3dulo 4: Streams y programaci\u00f3n funcional",
         "## S\u00edlabo",
-        "## Contenido te\u00f3rico",
+        "## Aprende construyendo",
         "### Tema 1: Stream API \u2014 map, filter, reduce, collect",
         "### Tema 2: Optional \u2014 evitar null expl\u00edcitamente",
         "### Tema 3: Streams paralelos y referencias a m\u00e9todos",
@@ -5667,7 +5667,7 @@
       "headings": [
         "# M\u00f3dulo 5: Concurrencia \u2014 hilos y virtual threads",
         "## S\u00edlabo",
-        "## Contenido te\u00f3rico",
+        "## Aprende construyendo",
         "### Tema 1: ExecutorService y gesti\u00f3n de hilos",
         "### Tema 2: CompletableFuture",
         "### Tema 3: Virtual threads",
@@ -5688,7 +5688,7 @@
       "headings": [
         "# M\u00f3dulo 6: I/O, NIO.2 y serializaci\u00f3n",
         "## S\u00edlabo",
-        "## Contenido te\u00f3rico",
+        "## Aprende construyendo",
         "### Tema 1: NIO.2 \u2014 Path y Files",
         "### Tema 2: Serializaci\u00f3n con Jackson",
         "### Tema 3: Archivos grandes y recursos del classpath",
@@ -5708,7 +5708,7 @@
       "headings": [
         "# M\u00f3dulo 7: Records, sealed classes y pattern matching",
         "## S\u00edlabo",
-        "## Contenido te\u00f3rico",
+        "## Aprende construyendo",
         "### Tema 1: record \u2014 modelos inmutables sin boilerplate",
         "### Tema 2: sealed \u2014 jerarqu\u00edas cerradas y exhaustividad",
         "### Tema 3: Pattern matching exhaustivo y para instanceof",
@@ -5728,7 +5728,7 @@
       "headings": [
         "# M\u00f3dulo 8: Build tools \u2014 Maven y Gradle",
         "## S\u00edlabo",
-        "## Contenido te\u00f3rico",
+        "## Aprende construyendo",
         "### Tema 1: pom.xml vs build.gradle.kts",
         "### Tema 2: Ciclo de vida de build y scopes",
         "### Tema 3: Proyectos multi-m\u00f3dulo",
@@ -5748,7 +5748,7 @@
       "headings": [
         "# M\u00f3dulo 9: Testing con JUnit 5 y Mockito",
         "## S\u00edlabo",
-        "## Contenido te\u00f3rico",
+        "## Aprende construyendo",
         "### Tema 1: JUnit 5 \u2014 anotaciones y ciclo de vida",
         "### Tema 2: Mockito \u2014 aislar dependencias",
         "### Tema 3: Tests parametrizados y cobertura",
@@ -5769,7 +5769,7 @@
         "# M\u00f3dulo 0: Fundamentos del lenguaje y el entorno",
         "## S\u00edlabo",
         "## Antes de comenzar: tu primer entorno de programaci\u00f3n",
-        "## Contenido te\u00f3rico",
+        "## Aprende construyendo",
         "### Tema 1: Variables \u2014 let, const y var",
         "### Tema 2: Tipos primitivos y typeof",
         "### Tema 3: Coerci\u00f3n impl\u00edcita \u2014 == frente a ===",
@@ -5789,7 +5789,7 @@
       "headings": [
         "# M\u00f3dulo 1: Operadores, control de flujo y funciones",
         "## S\u00edlabo",
-        "## Contenido te\u00f3rico",
+        "## Aprende construyendo",
         "### Tema 1: Tres formas de escribir una funci\u00f3n",
         "### Tema 2: Par\u00e1metros por defecto y rest/spread",
         "### Tema 3: Funciones de orden superior",
@@ -5810,7 +5810,7 @@
       "headings": [
         "# M\u00f3dulo 10: Patrones avanzados y rendimiento",
         "## S\u00edlabo",
-        "## Contenido te\u00f3rico",
+        "## Aprende construyendo",
         "### Tema 1: Debounce y throttle",
         "### Tema 2: Memoizaci\u00f3n",
         "### Tema 3: Web Workers para trabajo pesado",
@@ -5831,7 +5831,7 @@
       "headings": [
         "# M\u00f3dulo 11: TypeScript esencial para devs de JavaScript",
         "## S\u00edlabo",
-        "## Contenido te\u00f3rico",
+        "## Aprende construyendo",
         "### Tema 1: Tipos b\u00e1sicos, interfaces y type aliases",
         "### Tema 2: Generics",
         "### Tema 3: Narrowing y union types",
@@ -5852,7 +5852,7 @@
       "headings": [
         "# M\u00f3dulo 12: Proyecto integrador \u2014 SPA sin framework",
         "## S\u00edlabo",
-        "## Contenido te\u00f3rico",
+        "## Aprende construyendo",
         "### Tema 1: Routing manual con History API",
         "### Tema 2: Estado de aplicaci\u00f3n con un store propio",
         "### Tema 3: Consumo de una API real con manejo de errores",
@@ -5873,7 +5873,7 @@
       "headings": [
         "# M\u00f3dulo 13: JavaScript en producci\u00f3n \u2014 seguridad, memoria y compatibilidad",
         "## S\u00edlabo",
-        "## Contenido te\u00f3rico",
+        "## Aprende construyendo",
         "### Tema 1: Datos no confiables y seguridad en el navegador",
         "### Tema 2: Memoria administrada no significa memoria infinita",
         "### Tema 3: Errores \u00fatiles sin convertir usuarios en sensores involuntarios",
@@ -5894,7 +5894,7 @@
       "headings": [
         "# M\u00f3dulo 14: JavaScript Master: TypeScript, WASM y c\u00f3mputo emergente",
         "## S\u00edlabo",
-        "## Contenido te\u00f3rico",
+        "## Aprende construyendo",
         "### Tema 1: TypeScript avanzado",
         "### Tema 2: Workers y ejecuci\u00f3n fuera del hilo principal",
         "### Tema 3: Bundlers y optimizaci\u00f3n",
@@ -5915,7 +5915,7 @@
       "headings": [
         "# M\u00f3dulo 2: Scope, closures y el modelo de ejecuci\u00f3n",
         "## S\u00edlabo",
-        "## Contenido te\u00f3rico",
+        "## Aprende construyendo",
         "### Tema 1: Scope l\u00e9xico y closures",
         "### Tema 2: Hoisting y Temporal Dead Zone",
         "### Tema 3: Call stack y contexto de ejecuci\u00f3n",
@@ -5936,7 +5936,7 @@
       "headings": [
         "# M\u00f3dulo 3: Objetos, prototipos y clases",
         "## S\u00edlabo",
-        "## Contenido te\u00f3rico",
+        "## Aprende construyendo",
         "### Tema 1: Prototype chain y Object.create",
         "### Tema 2: class, extends y super",
         "### Tema 3: Getters, setters y propiedades computadas",
@@ -5957,7 +5957,7 @@
       "headings": [
         "# M\u00f3dulo 4: Arrays y estructuras de datos funcionales",
         "## S\u00edlabo",
-        "## Contenido te\u00f3rico",
+        "## Aprende construyendo",
         "### Tema 1: map, filter, reduce, find, some/every",
         "### Tema 2: Set y Map frente a Array y Object",
         "### Tema 3: Inmutabilidad y actualizaci\u00f3n de estructuras anidadas",
@@ -5978,7 +5978,7 @@
       "headings": [
         "# M\u00f3dulo 5: Asincron\u00eda I \u2014 Event Loop y Promesas",
         "## S\u00edlabo",
-        "## Contenido te\u00f3rico",
+        "## Aprende construyendo",
         "### Tema 1: El Event Loop",
         "### Tema 2: Promesas",
         "### Tema 3: Promise.all, allSettled, race y any",
@@ -5999,7 +5999,7 @@
       "headings": [
         "# M\u00f3dulo 6: Asincron\u00eda II \u2014 async/await y fetch",
         "## S\u00edlabo",
-        "## Contenido te\u00f3rico",
+        "## Aprende construyendo",
         "### Tema 1: async/await sobre promesas",
         "### Tema 2: try/catch en flujos as\u00edncronos",
         "### Tema 3: fetch API y AbortController",
@@ -6020,7 +6020,7 @@
       "headings": [
         "# M\u00f3dulo 7: M\u00f3dulos modernos y herramientas de build",
         "## S\u00edlabo",
-        "## Contenido te\u00f3rico",
+        "## Aprende construyendo",
         "### Tema 1: ESM frente a CommonJS",
         "### Tema 2: Tree-shaking y code-splitting",
         "### Tema 3: Vite y esbuild",
@@ -6041,7 +6041,7 @@
       "headings": [
         "# M\u00f3dulo 8: El DOM y eventos del navegador",
         "## S\u00edlabo",
-        "## Contenido te\u00f3rico",
+        "## Aprende construyendo",
         "### Tema 1: Selecci\u00f3n y manipulaci\u00f3n del DOM",
         "### Tema 2: Delegaci\u00f3n de eventos",
         "### Tema 3: Formularios y validaci\u00f3n nativa",
@@ -6062,7 +6062,7 @@
       "headings": [
         "# M\u00f3dulo 9: Testing y calidad de c\u00f3digo",
         "## S\u00edlabo",
-        "## Contenido te\u00f3rico",
+        "## Aprende construyendo",
         "### Tema 1: Unit testing con Vitest",
         "### Tema 2: Mocks, spies y fakes",
         "### Tema 3: Mockear fetch",
@@ -6084,7 +6084,7 @@
         "# M\u00f3dulo 0: Fundamentos de Kotlin",
         "## S\u00edlabo",
         "## Antes de comenzar: entorno Kotlin Multiplatform",
-        "## Contenido te\u00f3rico",
+        "## Aprende construyendo",
         "### Tema 1: Null safety real",
         "### Tema 2: data class y funciones de extensi\u00f3n",
         "### Tema 3: when como expresi\u00f3n",
@@ -6104,7 +6104,7 @@
       "headings": [
         "# M\u00f3dulo 1: Programaci\u00f3n funcional en Kotlin",
         "## S\u00edlabo",
-        "## Contenido te\u00f3rico",
+        "## Aprende construyendo",
         "### Tema 1: Funciones de orden superior",
         "### Tema 2: Scope functions",
         "### Tema 3: Sealed classes y colecciones funcionales",
@@ -6124,7 +6124,7 @@
       "headings": [
         "# M\u00f3dulo 10: CI/CD para KMP",
         "## S\u00edlabo",
-        "## Contenido te\u00f3rico",
+        "## Aprende construyendo",
         "### Tema 1: Pipeline Gradle multiplataforma en CI",
         "### Tema 2: Fastlane",
         "# fastlane/Fastfile",
@@ -6145,7 +6145,7 @@
       "headings": [
         "# M\u00f3dulo 11: Proyecto integrador \u2014 app KMP completa",
         "## S\u00edlabo",
-        "## Contenido te\u00f3rico",
+        "## Aprende construyendo",
         "### Tema 1: Arquitectura del proyecto integrador",
         "### Tema 2: Sincronizaci\u00f3n de datos remotos con cach\u00e9 local",
         "### Tema 3: Cierre del track \u2014 la promesa realista de KMP",
@@ -6166,7 +6166,7 @@
       "headings": [
         "# M\u00f3dulo 12: KMP en producci\u00f3n \u2014 fronteras, compatibilidad y observabilidad",
         "## S\u00edlabo",
-        "## Contenido te\u00f3rico",
+        "## Aprende construyendo",
         "### Tema 1: La mejor frontera compartida es deliberadamente peque\u00f1a",
         "### Tema 2: Garbage collection no cierra sockets ni rompe ciclos externos",
         "### Tema 3: Un artefacto compatible necesita m\u00e1s que el mismo n\u00famero de versi\u00f3n",
@@ -6187,7 +6187,7 @@
       "headings": [
         "# M\u00f3dulo 13: KMP Master: Native, Swift Export y publicaci\u00f3n",
         "## S\u00edlabo",
-        "## Contenido te\u00f3rico",
+        "## Aprende construyendo",
         "### Tema 1: Kotlin/Native",
         "### Tema 2: Interop con C",
         "### Tema 3: Swift Export",
@@ -6208,7 +6208,7 @@
       "headings": [
         "# M\u00f3dulo 2: Coroutines y Flow",
         "## S\u00edlabo",
-        "## Contenido te\u00f3rico",
+        "## Aprende construyendo",
         "### Tema 1: suspend functions y concurrencia estructurada",
         "### Tema 2: Flow, StateFlow y SharedFlow",
         "### Tema 3: Manejo de errores y exclusi\u00f3n mutua",
@@ -6228,7 +6228,7 @@
       "headings": [
         "# M\u00f3dulo 3: Arquitectura de un proyecto KMP",
         "## S\u00edlabo",
-        "## Contenido te\u00f3rico",
+        "## Aprende construyendo",
         "### Tema 1: Source sets",
         "### Tema 2: expect/actual",
         "### Tema 3: Gradle multiplataforma y targets disponibles",
@@ -6248,7 +6248,7 @@
       "headings": [
         "# M\u00f3dulo 4: L\u00f3gica de negocio compartida",
         "## S\u00edlabo",
-        "## Contenido te\u00f3rico",
+        "## Aprende construyendo",
         "### Tema 1: Modelos de dominio y casos de uso",
         "### Tema 2: Repositorios con interfaz com\u00fan",
         "### Tema 3: Inyecci\u00f3n de dependencias multiplataforma con Koin",
@@ -6268,7 +6268,7 @@
       "headings": [
         "# M\u00f3dulo 5: Networking compartido con Ktor Client",
         "## S\u00edlabo",
-        "## Contenido te\u00f3rico",
+        "## Aprende construyendo",
         "### Tema 1: Ktor Client multiplataforma",
         "### Tema 2: Manejo de errores de red con un tipo expl\u00edcito",
         "### Tema 3: Interceptores y autenticaci\u00f3n",
@@ -6288,7 +6288,7 @@
       "headings": [
         "# M\u00f3dulo 6: Persistencia compartida con SQLDelight",
         "## S\u00edlabo",
-        "## Contenido te\u00f3rico",
+        "## Aprende construyendo",
         "### Tema 1: Esquemas SQLDelight y queries tipadas",
         "### Tema 2: Drivers por plataforma",
         "### Tema 3: Migraciones de esquema",
@@ -6308,7 +6308,7 @@
       "headings": [
         "# M\u00f3dulo 7: Compose Multiplatform \u2014 UI compartida",
         "## S\u00edlabo",
-        "## Contenido te\u00f3rico",
+        "## Aprende construyendo",
         "### Tema 1: Compose Multiplatform vs Jetpack Compose",
         "#### Contrato t\u00e9cnico de `@Composable` en c\u00f3digo compartido",
         "### Tema 2: Theming y navegaci\u00f3n compartidos",
@@ -6329,7 +6329,7 @@
       "headings": [
         "# M\u00f3dulo 8: Interoperabilidad con iOS",
         "## S\u00edlabo",
-        "## Contenido te\u00f3rico",
+        "## Aprende construyendo",
         "### Tema 1: El framework generado para iOS",
         "### Tema 2: Mapeo de tipos Kotlin \u2194 Swift",
         "### Tema 3: Coroutines desde Swift, y distribuci\u00f3n del framework",
@@ -6349,7 +6349,7 @@
       "headings": [
         "# M\u00f3dulo 9: Testing multiplataforma",
         "## S\u00edlabo",
-        "## Contenido te\u00f3rico",
+        "## Aprende construyendo",
         "### Tema 1: kotlin.test en commonTest",
         "### Tema 2: Fakes en vez de mocks",
         "### Tema 3: runTest para coroutines",
@@ -6756,7 +6756,7 @@
         "# M\u00f3dulo 0: El runtime de Node \u2014 V8, libuv y el Event Loop",
         "## S\u00edlabo",
         "## Antes de comenzar: instala Node sin problemas de permisos",
-        "## Contenido te\u00f3rico",
+        "## Aprende construyendo",
         "### Tema 1: Node no es \"JavaScript en el servidor\" sin m\u00e1s",
         "### Tema 2: Fases del Event Loop de Node",
         "### Tema 3: process, global y m\u00f3dulos core",
@@ -6776,7 +6776,7 @@
       "headings": [
         "# M\u00f3dulo 1: M\u00f3dulos, npm/pnpm y gesti\u00f3n de dependencias",
         "## S\u00edlabo",
-        "## Contenido te\u00f3rico",
+        "## Aprende construyendo",
         "### Tema 1: package.json y semver",
         "### Tema 2: Lockfiles e instalaci\u00f3n reproducible",
         "### Tema 3: Workspaces \u2014 monorepos con npm/pnpm",
@@ -6797,7 +6797,7 @@
       "headings": [
         "# M\u00f3dulo 10: Seguridad en Node",
         "## S\u00edlabo",
-        "## Contenido te\u00f3rico",
+        "## Aprende construyendo",
         "### Tema 1: Cabeceras seguras con helmet",
         "### Tema 2: Rate limiting",
         "### Tema 3: Inyecci\u00f3n SQL y sanitizaci\u00f3n contra XSS",
@@ -6818,7 +6818,7 @@
       "headings": [
         "# M\u00f3dulo 11: Despliegue y contenedores",
         "## S\u00edlabo",
-        "## Contenido te\u00f3rico",
+        "## Aprende construyendo",
         "### Tema 1: Dockerfile multi-stage para Node",
         "### Tema 2: Variables de entorno por ambiente y healthchecks",
         "# .env.production          # .env.development",
@@ -6839,7 +6839,7 @@
       "headings": [
         "# M\u00f3dulo 12: Proyecto integrador \u2014 API productiva",
         "## S\u00edlabo",
-        "## Contenido te\u00f3rico",
+        "## Aprende construyendo",
         "### Tema 1: Arquitectura por capas",
         "### Tema 2: Uniendo cada m\u00f3dulo del track",
         "### Tema 3: Qu\u00e9 le falta a esta API para producci\u00f3n real",
@@ -6860,7 +6860,7 @@
       "headings": [
         "# M\u00f3dulo 13: TypeScript, contratos e integraciones confiables",
         "## S\u00edlabo",
-        "## Contenido te\u00f3rico",
+        "## Aprende construyendo",
         "### Tema 1: Tipos est\u00e1ticos dentro, datos desconocidos en la frontera",
         "### Tema 2: Un contrato HTTP es comportamiento, no solo documentaci\u00f3n",
         "### Tema 3: Reintentar sin duplicar el efecto",
@@ -6881,7 +6881,7 @@
       "headings": [
         "# M\u00f3dulo 14: Node.js Master: GraphQL, eventos y entrega",
         "## S\u00edlabo",
-        "## Contenido te\u00f3rico",
+        "## Aprende construyendo",
         "### Tema 1: TypeScript en Node.js",
         "### Tema 2: GraphQL avanzado y Federation",
         "### Tema 3: Microservicios, Kafka, RabbitMQ y sagas",
@@ -6902,7 +6902,7 @@
       "headings": [
         "# M\u00f3dulo 2: Sistema de archivos y streams",
         "## S\u00edlabo",
-        "## Contenido te\u00f3rico",
+        "## Aprende construyendo",
         "### Tema 1: fs/promises frente a callbacks",
         "### Tema 2: Streams legibles, escribibles y transform",
         "### Tema 3: Backpressure",
@@ -6923,7 +6923,7 @@
       "headings": [
         "# M\u00f3dulo 3: Servidores HTTP nativos",
         "## S\u00edlabo",
-        "## Contenido te\u00f3rico",
+        "## Aprende construyendo",
         "### Tema 1: El modelo request/response",
         "### Tema 2: Routing manual",
         "### Tema 3: Parsing de body y headers",
@@ -6944,7 +6944,7 @@
       "headings": [
         "# M\u00f3dulo 4: Express/Fastify \u2014 routing y middleware",
         "## S\u00edlabo",
-        "## Contenido te\u00f3rico",
+        "## Aprende construyendo",
         "### Tema 1: Middleware \u2014 orden de ejecuci\u00f3n y next()",
         "### Tema 2: Routers anidados",
         "### Tema 3: Validaci\u00f3n de entrada con Zod y manejo centralizado de errores",
@@ -6965,7 +6965,7 @@
       "headings": [
         "# M\u00f3dulo 5: Bases de datos \u2014 drivers y ORMs",
         "## S\u00edlabo",
-        "## Contenido te\u00f3rico",
+        "## Aprende construyendo",
         "### Tema 1: PostgreSQL desde Node con el driver puro",
         "### Tema 2: Prisma \u2014 schema, migraciones y queries tipadas",
         "#### C\u00f3mo leer `@id`, `@default`, `@relation` y `@@index`",
@@ -6986,7 +6986,7 @@
       "headings": [
         "# M\u00f3dulo 6: Autenticaci\u00f3n y autorizaci\u00f3n",
         "## S\u00edlabo",
-        "## Contenido te\u00f3rico",
+        "## Aprende construyendo",
         "### Tema 1: Hashing de contrase\u00f1as",
         "### Tema 2: JWT \u2014 access y refresh tokens",
         "### Tema 3: Middleware de autenticaci\u00f3n y control de roles",
@@ -7007,7 +7007,7 @@
       "headings": [
         "# M\u00f3dulo 7: Testing e integraci\u00f3n continua",
         "## S\u00edlabo",
-        "## Contenido te\u00f3rico",
+        "## Aprende construyendo",
         "### Tema 1: Vitest y Supertest \u2014 pruebas de integraci\u00f3n HTTP reales",
         "### Tema 2: Testcontainers \u2014 bases de datos de prueba reales y ef\u00edmeras",
         "### Tema 3: Mocks de servicios externos y CI",
@@ -7028,7 +7028,7 @@
       "headings": [
         "# M\u00f3dulo 8: Patrones as\u00edncronos avanzados",
         "## S\u00edlabo",
-        "## Contenido te\u00f3rico",
+        "## Aprende construyendo",
         "### Tema 1: Worker Threads para trabajo CPU-bound",
         "### Tema 2: Cluster module y balanceo entre procesos",
         "### Tema 3: Colas de trabajo con BullMQ",
@@ -7049,7 +7049,7 @@
       "headings": [
         "# M\u00f3dulo 9: Observabilidad y manejo de errores en producci\u00f3n",
         "## S\u00edlabo",
-        "## Contenido te\u00f3rico",
+        "## Aprende construyendo",
         "### Tema 1: Logging estructurado",
         "### Tema 2: Correlation ID por request",
         "### Tema 3: Excepciones no capturadas y graceful shutdown",
@@ -8771,7 +8771,7 @@
         "## S\u00edlabo",
         "## Antes de comenzar: instala el entorno",
         "### Crea tu primera aplicaci\u00f3n",
-        "## Contenido te\u00f3rico",
+        "## Aprende construyendo",
         "### Tema 1: JSX es az\u00facar sint\u00e1ctica sobre createElement",
         "### Tema 2: Listas con key estable",
         "### Tema 3: Composici\u00f3n sobre herencia, y Fragments",
@@ -8790,7 +8790,7 @@
       "headings": [
         "# M\u00f3dulo 1: Estado local y el ciclo de render",
         "## S\u00edlabo",
-        "## Contenido te\u00f3rico",
+        "## Aprende construyendo",
         "### Tema 1: useState y actualizaciones funcionales",
         "#### Por qu\u00e9 los Hooks dependen del orden de llamada",
         "### Tema 2: Render frente a commit",
@@ -8811,7 +8811,7 @@
       "headings": [
         "# M\u00f3dulo 10: Server Components y Next.js",
         "## S\u00edlabo",
-        "## Contenido te\u00f3rico",
+        "## Aprende construyendo",
         "### Tema 1: Server Components por defecto",
         "### Tema 2: use client para interactividad",
         "### Tema 3: Streaming con Suspense en el servidor",
@@ -8832,7 +8832,7 @@
       "headings": [
         "# M\u00f3dulo 11: TypeScript con React",
         "## S\u00edlabo",
-        "## Contenido te\u00f3rico",
+        "## Aprende construyendo",
         "### Tema 1: Tipado de props y children",
         "### Tema 2: Hooks gen\u00e9ricos",
         "### Tema 3: Eventos tipados y componentes polim\u00f3rficos",
@@ -8852,7 +8852,7 @@
       "headings": [
         "# M\u00f3dulo 12: Proyecto integrador \u2014 SPA con datos reales",
         "## S\u00edlabo",
-        "## Contenido te\u00f3rico",
+        "## Aprende construyendo",
         "### Tema 1: Estructura del proyecto integrador",
         "### Tema 2: Integrando rutas, TanStack Query y Zustand",
         "### Tema 3: useTareas \u2014 hook dedicado con TanStack Query",
@@ -8873,7 +8873,7 @@
       "headings": [
         "# M\u00f3dulo 13: React en producci\u00f3n \u2014 resiliencia, accesibilidad y seguridad",
         "## S\u00edlabo",
-        "## Contenido te\u00f3rico",
+        "## Aprende construyendo",
         "### Tema 1: Dise\u00f1ar estados de carga, error y recuperaci\u00f3n",
         "### Tema 2: La composici\u00f3n visual debe conservar sem\u00e1ntica y foco",
         "### Tema 3: Cliente y servidor forman una sola frontera de seguridad",
@@ -8894,7 +8894,7 @@
       "headings": [
         "# M\u00f3dulo 14: React Master: servidor, Next.js, a11y e i18n",
         "## S\u00edlabo",
-        "## Contenido te\u00f3rico",
+        "## Aprende construyendo",
         "### Tema 1: Server Components y streaming",
         "### Tema 2: Server Actions y seguridad",
         "### Tema 3: Next.js ISR, Metadata y Middleware",
@@ -8915,7 +8915,7 @@
       "headings": [
         "# M\u00f3dulo 2: Hooks esenciales",
         "## S\u00edlabo",
-        "## Contenido te\u00f3rico",
+        "## Aprende construyendo",
         "### Tema 1: useEffect \u2014 dependencias y limpieza",
         "### Tema 2: useRef \u2014 valores mutables sin re-render",
         "### Tema 3: useMemo y useCallback con criterio",
@@ -8936,7 +8936,7 @@
       "headings": [
         "# M\u00f3dulo 3: Formularios y eventos",
         "## S\u00edlabo",
-        "## Contenido te\u00f3rico",
+        "## Aprende construyendo",
         "### Tema 1: React Hook Form y el problema del re-render por tecla",
         "### Tema 2: Validaci\u00f3n con zod y formularios multi-paso",
         "### Tema 3: Eventos sint\u00e9ticos",
@@ -8956,7 +8956,7 @@
       "headings": [
         "# M\u00f3dulo 4: Context API y composici\u00f3n",
         "## S\u00edlabo",
-        "## Contenido te\u00f3rico",
+        "## Aprende construyendo",
         "### Tema 1: createContext y useContext",
         "### Tema 2: Cu\u00e1ndo Context es suficiente y cu\u00e1ndo no",
         "### Tema 3: Componentes compuestos, render props y hooks personalizados",
@@ -8976,7 +8976,7 @@
       "headings": [
         "# M\u00f3dulo 5: React Router \u2014 navegaci\u00f3n",
         "## S\u00edlabo",
-        "## Contenido te\u00f3rico",
+        "## Aprende construyendo",
         "### Tema 1: Rutas anidadas y layouts compartidos",
         "### Tema 2: Loaders \u2014 datos antes de renderizar",
         "### Tema 3: Rutas protegidas y code-splitting por ruta",
@@ -8996,7 +8996,7 @@
       "headings": [
         "# M\u00f3dulo 6: Data fetching moderno",
         "## S\u00edlabo",
-        "## Contenido te\u00f3rico",
+        "## Aprende construyendo",
         "### Tema 1: useQuery y el problema que resuelve",
         "### Tema 2: Mutations e invalidaci\u00f3n",
         "### Tema 3: Optimistic updates",
@@ -9016,7 +9016,7 @@
       "headings": [
         "# M\u00f3dulo 7: Gesti\u00f3n de estado global",
         "## S\u00edlabo",
-        "## Contenido te\u00f3rico",
+        "## Aprende construyendo",
         "### Tema 1: Zustand \u2014 stores m\u00ednimos sin boilerplate",
         "### Tema 2: Redux Toolkit \u2014 slices y ceremonia",
         "### Tema 3: Estado de servidor vs estado de cliente, y cu\u00e1ndo no necesitas nada de esto",
@@ -9037,7 +9037,7 @@
       "headings": [
         "# M\u00f3dulo 8: Testing en React",
         "## S\u00edlabo",
-        "## Contenido te\u00f3rico",
+        "## Aprende construyendo",
         "### Tema 1: Queries por rol, no por clase CSS",
         "### Tema 2: Mock Service Worker (MSW)",
         "### Tema 3: Testing de hooks personalizados",
@@ -9057,7 +9057,7 @@
       "headings": [
         "# M\u00f3dulo 9: Performance en React",
         "## S\u00edlabo",
-        "## Contenido te\u00f3rico",
+        "## Aprende construyendo",
         "### Tema 1: Medir antes de optimizar",
         "### Tema 2: React.memo con criterio",
         "### Tema 3: Virtualizaci\u00f3n y code-splitting",
@@ -9081,7 +9081,7 @@
         "## Antes de comenzar: instala y comprueba el entorno",
         "### Si la instalaci\u00f3n falla, no contin\u00faes a ciegas",
         "## Ruta de proyecto progresivo desde carpeta vac\u00eda",
-        "## Contenido te\u00f3rico",
+        "## Aprende construyendo",
         "### Tema 1: El proceso log\u00edstico como sistema",
         "### Tema 2: Entorno reproducible en Windows, macOS y Linux",
         "### Tema 3: Arquitectura, privacidad y amenazas",
@@ -9099,7 +9099,7 @@
       "headings": [
         "# M\u00f3dulo 1: Datos, geograf\u00eda y contabilidad de una entrega",
         "## S\u00edlabo",
-        "## Contenido te\u00f3rico",
+        "## Aprende construyendo",
         "### Tema 1: Modelo relacional e historial",
         "### Tema 2: Geograf\u00eda con precisi\u00f3n \u00fatil",
         "### Tema 3: Ledger de doble partida",
@@ -9119,7 +9119,7 @@
       "headings": [
         "# M\u00f3dulo 2: Backend: env\u00edos, asignaci\u00f3n e idempotencia",
         "## S\u00edlabo",
-        "## Contenido te\u00f3rico",
+        "## Aprende construyendo",
         "### Tema 1: Contratos HTTP y autorizaci\u00f3n",
         "### Tema 2: Casos de uso y transacciones",
         "### Tema 3: Outbox, colas y observabilidad",
@@ -9139,7 +9139,7 @@
       "headings": [
         "# M\u00f3dulo 3: Frontend web: cliente y centro de operaciones",
         "## S\u00edlabo",
-        "## Contenido te\u00f3rico",
+        "## Aprende construyendo",
         "### Tema 1: Estados expl\u00edcitos y arquitectura de interfaz",
         "### Tema 2: Mapas operativos",
         "### Tema 3: Accesibilidad, seguridad y rendimiento",
@@ -9159,7 +9159,7 @@
       "headings": [
         "# M\u00f3dulo 4: Aplicaci\u00f3n Flutter del conductor: GPS, bater\u00eda y offline",
         "## S\u00edlabo",
-        "## Contenido te\u00f3rico",
+        "## Aprende construyendo",
         "### Tema 1: Arquitectura Flutter por capacidades",
         "### Tema 2: GPS, permisos y bater\u00eda",
         "### Tema 3: Offline-first y prueba de entrega",
@@ -9179,7 +9179,7 @@
       "headings": [
         "# M\u00f3dulo 5: Rutas, mapas y seguimiento en tiempo real",
         "## S\u00edlabo",
-        "## Contenido te\u00f3rico",
+        "## Aprende construyendo",
         "### Tema 1: Grafos y problema de rutas",
         "### Tema 2: Geocoding y map matching",
         "### Tema 3: Streaming y ETA con incertidumbre",
@@ -9199,7 +9199,7 @@
       "headings": [
         "# M\u00f3dulo 6: Facturaci\u00f3n, recaudo, liquidaciones y fraude",
         "## S\u00edlabo",
-        "## Contenido te\u00f3rico",
+        "## Aprende construyendo",
         "### Tema 1: Cotizaci\u00f3n y facturaci\u00f3n reproducible",
         "### Tema 2: Recaudo, liquidaci\u00f3n y conciliaci\u00f3n",
         "### Tema 3: Fraude responsable",
@@ -9219,7 +9219,7 @@
       "headings": [
         "# M\u00f3dulo 7: Producci\u00f3n: cloud, DevOps, seguridad y operaci\u00f3n",
         "## S\u00edlabo",
-        "## Contenido te\u00f3rico",
+        "## Aprende construyendo",
         "### Tema 1: Infraestructura y entrega segura",
         "### Tema 2: SLO y respuesta a incidentes",
         "### Tema 3: Continuidad, costes y proyecto final",
@@ -9250,7 +9250,7 @@
         "## Antes de comenzar: del equipo vac\u00edo a Spring Boot",
         "# macOS/Linux",
         "# Windows PowerShell",
-        "## Contenido te\u00f3rico",
+        "## Aprende construyendo",
         "### Tema 1: Inversi\u00f3n de control y el contenedor de Spring",
         "### Tema 2: Inyecci\u00f3n por constructor vs por campo",
         "### Tema 3: Estereotipos, autoconfiguraci\u00f3n y scopes",
@@ -9268,7 +9268,7 @@
       "headings": [
         "# M\u00f3dulo 1: Spring Boot CLI y estructura de proyecto",
         "## S\u00edlabo",
-        "## Contenido te\u00f3rico",
+        "## Aprende construyendo",
         "### Tema 1: Spring Initializr y starters",
         "### Tema 2: application.yml vs application.properties",
         "### Tema 3: Perfiles y estructura por capas",
@@ -9289,7 +9289,7 @@
       "headings": [
         "# M\u00f3dulo 10: Microservicios con Spring Cloud",
         "## S\u00edlabo",
-        "## Contenido te\u00f3rico",
+        "## Aprende construyendo",
         "### Tema 1: Config Server y service discovery",
         "### Tema 2: Spring Cloud Gateway",
         "### Tema 3: Circuit breaker con Resilience4j",
@@ -9310,7 +9310,7 @@
       "headings": [
         "# M\u00f3dulo 11: Empaquetado y despliegue",
         "## S\u00edlabo",
-        "## Contenido te\u00f3rico",
+        "## Aprende construyendo",
         "### Tema 1: Fat JAR vs capas de Docker",
         "### Tema 2: GraalVM native image",
         "### Tema 3: Health checks para Kubernetes",
@@ -9330,7 +9330,7 @@
       "headings": [
         "# M\u00f3dulo 12: Proyecto integrador \u2014 microservicio productivo",
         "## S\u00edlabo",
-        "## Contenido te\u00f3rico",
+        "## Aprende construyendo",
         "### Tema 1: Arquitectura del microservicio integrador",
         "### Tema 2: Integrando seguridad, persistencia y observabilidad",
         "### Tema 3: Cierre del track y pr\u00f3ximos pasos",
@@ -9351,7 +9351,7 @@
       "headings": [
         "# M\u00f3dulo 13: Consistencia, contratos y operaci\u00f3n distribuida",
         "## S\u00edlabo",
-        "## Contenido te\u00f3rico",
+        "## Aprende construyendo",
         "### Tema 1: `@Transactional` funciona en una frontera, no como encantamiento",
         "### Tema 2: Recuperaci\u00f3n implica duplicaci\u00f3n segura",
         "### Tema 3: Contratos ejecutables protegen despliegues independientes",
@@ -9372,7 +9372,7 @@
       "headings": [
         "# M\u00f3dulo 14: Backend de entregas: MySQL espacial, archivos y tiempo real",
         "## S\u00edlabo",
-        "## Contenido te\u00f3rico",
+        "## Aprende construyendo",
         "### Tema 1: CRUD API y contratos",
         "### Tema 2: MySQL y datos espaciales",
         "### Tema 3: JPA e Hibernate Spatial",
@@ -9393,7 +9393,7 @@
       "headings": [
         "# M\u00f3dulo 15: Spring Master: hexagonal, reactivo y microservicios",
         "## S\u00edlabo",
-        "## Contenido te\u00f3rico",
+        "## Aprende construyendo",
         "### Tema 1: WebFlux, Mono, Flux y Netty",
         "### Tema 2: Testing avanzado con slices y Testcontainers",
         "### Tema 3: Arquitectura hexagonal",
@@ -9414,7 +9414,7 @@
       "headings": [
         "# M\u00f3dulo 2: REST APIs con Spring Web",
         "## S\u00edlabo",
-        "## Contenido te\u00f3rico",
+        "## Aprende construyendo",
         "### Tema 1: Por qu\u00e9 DTOs en vez de entidades directamente",
         "### Tema 2: Validaci\u00f3n con Bean Validation y ResponseEntity",
         "### Tema 3: Manejo centralizado de errores con @ControllerAdvice",
@@ -9434,7 +9434,7 @@
       "headings": [
         "# M\u00f3dulo 3: Persistencia con Spring Data JPA",
         "## S\u00edlabo",
-        "## Contenido te\u00f3rico",
+        "## Aprende construyendo",
         "### Tema 1: Entidades y repositorios derivados",
         "### Tema 2: El problema N+1 y su correcci\u00f3n",
         "### Tema 3: Migraciones con Flyway",
@@ -9454,7 +9454,7 @@
       "headings": [
         "# M\u00f3dulo 4: Spring Security",
         "## S\u00edlabo",
-        "## Contenido te\u00f3rico",
+        "## Aprende construyendo",
         "### Tema 1: SecurityFilterChain moderno",
         "### Tema 2: Filtro JWT y autorizaci\u00f3n por rol",
         "### Tema 3: CORS y CSRF",
@@ -9474,7 +9474,7 @@
       "headings": [
         "# M\u00f3dulo 5: Configuraci\u00f3n, perfiles y manejo de errores",
         "## S\u00edlabo",
-        "## Contenido te\u00f3rico",
+        "## Aprende construyendo",
         "### Tema 1: @ConfigurationProperties tipado",
         "### Tema 2: Fallar r\u00e1pido al arranque",
         "### Tema 3: Manejo global de excepciones consistente entre entornos",
@@ -9494,7 +9494,7 @@
       "headings": [
         "# M\u00f3dulo 6: Testing en Spring Boot",
         "## S\u00edlabo",
-        "## Contenido te\u00f3rico",
+        "## Aprende construyendo",
         "### Tema 1: Slices de testing \u2014 @WebMvcTest",
         "### Tema 2: @DataJpaTest con Testcontainers",
         "### Tema 3: @SpringBootTest completo y estrategia de pir\u00e1mide de tests",
@@ -9514,7 +9514,7 @@
       "headings": [
         "# M\u00f3dulo 7: Observabilidad con Actuator",
         "## S\u00edlabo",
-        "## Contenido te\u00f3rico",
+        "## Aprende construyendo",
         "### Tema 1: Actuator y health checks personalizados",
         "### Tema 2: M\u00e9tricas de negocio con Micrometer",
         "### Tema 3: Liveness vs readiness",
@@ -9534,7 +9534,7 @@
       "headings": [
         "# M\u00f3dulo 8: Mensajer\u00eda \u2014 Kafka/RabbitMQ",
         "## S\u00edlabo",
-        "## Contenido te\u00f3rico",
+        "## Aprende construyendo",
         "### Tema 1: Producers y consumers con Spring Kafka",
         "### Tema 2: Dead-letter queue",
         "### Tema 3: Kafka frente a RabbitMQ",
@@ -9563,7 +9563,7 @@
         "### 6. Exp\u00f3n endpoints sin llamar subscribe()",
         "### 7. Ejecuta y observa un resultado concreto",
         "### 8. Provoca tres fallos antes de continuar",
-        "## Contenido te\u00f3rico"
+        "## Aprende construyendo"
       ]
     },
     {
@@ -11359,7 +11359,7 @@
     },
     {
       "path": "web/src/app/app.spec.ts",
-      "lines": 148,
+      "lines": 157,
       "kind": "angular-app",
       "symbols": [],
       "imports": [
@@ -11592,7 +11592,7 @@
     },
     {
       "path": "web/src/app/course/lesson-viewer.scss",
-      "lines": 292,
+      "lines": 286,
       "kind": "angular-app",
       "symbols": [],
       "imports": [],
@@ -11600,7 +11600,7 @@
     },
     {
       "path": "web/src/app/course/lesson-viewer.ts",
-      "lines": 482,
+      "lines": 492,
       "kind": "angular-app",
       "symbols": [
         "LessonViewerComponent",

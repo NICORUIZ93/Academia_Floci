@@ -29,7 +29,7 @@ App Flutter con datos reales, persistencia offline y tests, corriendo en Android
 
 ---
 
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: Arquitectura por features y Clean Architecture
 

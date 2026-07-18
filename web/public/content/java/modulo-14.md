@@ -10,7 +10,7 @@ El proyecto anterior usa concurrencia y produce un artefacto reproducible. Para 
 4. Runtime mínimo, contenedores, observabilidad y actualización.
 5. Proyecto: endurecimiento del servicio concurrente.
 
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: Compartir memoria requiere orden y visibilidad
 

@@ -8,7 +8,7 @@ Al terminar, podrás explicar las decisiones con vocabulario técnico sencillo, 
 
 **Evaluación:** 20 % modelo y explicación, 40 % laboratorio ejecutable, 25 % pruebas y manejo de fallos, 15 % documentación y demostración.
 
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: Arquitectura Flutter por capacidades
 

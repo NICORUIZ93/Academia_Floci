@@ -29,7 +29,7 @@ Store global propio (carrito de compras o similar) con Zustand, más tres ejerci
 
 ---
 
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: Zustand — stores mínimos sin boilerplate
 

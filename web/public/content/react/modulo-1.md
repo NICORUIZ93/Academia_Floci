@@ -27,7 +27,7 @@ Formulario controlado con validación en tiempo real basada en `useState`, más 
 
 ---
 
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: useState y actualizaciones funcionales
 

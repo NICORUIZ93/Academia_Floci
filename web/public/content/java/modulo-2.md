@@ -29,7 +29,7 @@ Estructura de datos propia genérica (ej. cola de prioridad) con tests, más tre
 
 ---
 
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: List, Set, Map y sus implementaciones
 

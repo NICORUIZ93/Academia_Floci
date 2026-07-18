@@ -30,7 +30,7 @@ test/features/journey/
 
 La dirección de dependencias es `presentation → application → domain`; `data` implementa interfaces del dominio. Google Maps, Geolocator, Dio y Socket.IO son adaptadores reemplazables, no tipos que deban atravesar toda la aplicación. Ejecuta después de cada incremento con `flutter analyze` y `flutter test`; prueba permisos y ejecución en segundo plano en dispositivo real porque el simulador no reproduce todas las restricciones del sistema operativo.
 
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: Diseño de pantallas y Riverpod
 

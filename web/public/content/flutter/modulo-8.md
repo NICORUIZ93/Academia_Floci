@@ -28,7 +28,7 @@ Animación fluida propia auditada con DevTools sin frames perdidos, más tres ej
 
 ---
 
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: Animaciones implícitas vs explícitas
 

@@ -27,7 +27,7 @@ Formulario multi-paso con validación y persistencia de datos entre pasos, más 
 
 ---
 
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: React Hook Form y el problema del re-render por tecla
 

@@ -26,7 +26,7 @@ Dos laboratorios prácticos (una API GraphQL básica con AppSync, y pruebas de e
 
 ---
 
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: AppSync — APIs GraphQL gestionadas
 

@@ -28,7 +28,7 @@ Una cola de procesamiento en background (envío de emails) con reintentos y back
 
 ---
 
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: Worker Threads para trabajo CPU-bound
 

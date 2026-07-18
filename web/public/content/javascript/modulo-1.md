@@ -29,7 +29,7 @@ Una biblioteca de funciones utilitarias (debounce, pipe, curry) sin dependencias
 
 ---
 
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: Tres formas de escribir una función
 

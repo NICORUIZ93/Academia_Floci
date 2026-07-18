@@ -27,7 +27,7 @@ Pantalla que sobrevive a rotación de pantalla sin perder estado, usando `ViewMo
 
 ---
 
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: Ciclo de vida de una Activity
 

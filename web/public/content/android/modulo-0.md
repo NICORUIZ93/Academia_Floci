@@ -47,7 +47,7 @@ adb devices
 
 El emulador debe aparecer como `device`. Si figura `unauthorized`, acepta el diálogo del dispositivo; si no aparece, reinicia ADB desde Device Manager. La primera sincronización puede tardar porque descarga dependencias: no la canceles mientras haya actividad de red.
 
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: Estructura de un proyecto Android Studio
 

@@ -32,7 +32,7 @@ Stack YAML que despliega S3 + SQS + DynamoDB + Lambda con un solo `aws cloudform
 
 ---
 
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: Stack, Template y por qué no crear recursos manualmente con la CLI
 

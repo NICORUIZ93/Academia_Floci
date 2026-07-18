@@ -232,7 +232,7 @@ Debes observar `201 Created` al crear, un objeto con estado `CREATED` al consult
 
 Con esto tienes un proyecto mínimo reproducible. Ahora sí tiene sentido estudiar con detalle `Mono`, `Flux`, `WebClient`, backpressure y las decisiones frente a MVC.
 
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: Mono y Flux
 

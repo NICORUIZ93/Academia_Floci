@@ -29,7 +29,7 @@ Un servicio compartido de estado consumido por al menos tres componentes distint
 
 ---
 
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: @Injectable y providedIn: root
 

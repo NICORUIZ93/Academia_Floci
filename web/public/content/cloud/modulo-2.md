@@ -28,7 +28,7 @@ Dos laboratorios (operaciones CRUD básicas y versionado) y tres ejercicios de e
 
 ---
 
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: Objetos, buckets y su nomenclatura
 

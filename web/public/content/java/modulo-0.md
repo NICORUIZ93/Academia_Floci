@@ -56,7 +56,7 @@ public class Hola {
 
 Ejecuta `javac Hola.java` y luego `java Hola`. El primer comando produce `Hola.class`; el segundo lo ejecuta en la JVM. En Windows, si `javac` no se reconoce, revisa `JAVA_HOME` y que `%JAVA_HOME%\bin` esté en `Path`.
 
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: Del código fuente a la JVM
 

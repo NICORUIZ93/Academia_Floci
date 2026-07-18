@@ -29,7 +29,7 @@ No se presupone experiencia previa. Instala Visual Studio Code y Git desde sus s
 
 Un comando que muestra una versión demuestra dos cosas: el programa está instalado y la shell sabe localizarlo mediante `PATH`. No continúes si obtienes “comando no encontrado”; corrige primero la instalación.
 
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: Del hardware al programa en ejecución
 

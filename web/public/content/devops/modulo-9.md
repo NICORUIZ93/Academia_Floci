@@ -31,7 +31,7 @@ Un laboratorio que expone una métrica propia, la consulta con PromQL, la visual
 
 ---
 
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: Modelo de métricas de Prometheus — counter, gauge, histogram
 

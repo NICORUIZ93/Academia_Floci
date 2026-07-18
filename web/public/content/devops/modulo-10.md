@@ -27,7 +27,7 @@ Un laboratorio que centraliza logs de al menos dos servicios y los correlaciona 
 
 ---
 
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: Logging estructurado (JSON)
 

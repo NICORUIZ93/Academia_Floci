@@ -29,7 +29,7 @@ Suite de tests de integración con Testcontainers contra PostgreSQL real, más t
 
 ---
 
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: Slices de testing — @WebMvcTest
 

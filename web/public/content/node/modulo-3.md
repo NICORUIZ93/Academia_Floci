@@ -27,7 +27,7 @@ Un servidor HTTP nativo con 3 rutas y manejo de errores, sin frameworks, más tr
 
 ---
 
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: El modelo request/response
 

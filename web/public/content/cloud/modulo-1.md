@@ -29,7 +29,7 @@ Dos laboratorios prácticos (levantar Floci y configurar la AWS CLI contra él) 
 
 ---
 
-## Contenido teórico
+## Aprende construyendo
 
 ### Tema 1: Virtualización vs contenedores
 
