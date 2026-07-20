@@ -123,7 +123,7 @@
     },
     {
       "path": "docs/code-visual-quality.json",
-      "lines": 5544,
+      "lines": 5530,
       "kind": "project-file",
       "symbols": [],
       "imports": [],
@@ -247,7 +247,7 @@
     },
     {
       "path": "docs/student-journey-audit.json",
-      "lines": 4393,
+      "lines": 4390,
       "kind": "project-file",
       "symbols": [],
       "imports": [],
@@ -276,7 +276,7 @@
     },
     {
       "path": "docs/topic-learning-quality.json",
-      "lines": 18117,
+      "lines": 19010,
       "kind": "project-file",
       "symbols": [],
       "imports": [],
@@ -2284,10 +2284,11 @@
     },
     {
       "path": "scripts/audit_code_visual_quality.py",
-      "lines": 117,
+      "lines": 128,
       "kind": "automation-script",
       "symbols": [
         "student_visible_content",
+        "structural_text",
         "blocks",
         "evaluate",
         "build",
@@ -2306,9 +2307,10 @@
     },
     {
       "path": "scripts/audit_student_journey.py",
-      "lines": 146,
+      "lines": 157,
       "kind": "automation-script",
       "symbols": [
+        "structural_text",
         "topic_blocks",
         "has",
         "build_report",
@@ -2326,10 +2328,11 @@
     },
     {
       "path": "scripts/audit_topic_learning_quality.py",
-      "lines": 135,
+      "lines": 155,
       "kind": "automation-script",
       "symbols": [
         "student_visible_content",
+        "structural_text",
         "topic_blocks",
         "evaluate",
         "classify",
@@ -4616,7 +4619,7 @@
     },
     {
       "path": "web/public/content/foundations/modulo-0.md",
-      "lines": 192,
+      "lines": 197,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -4632,7 +4635,7 @@
         "## C\u00f3mo ejecutarlo",
         "## Resultado esperado",
         "## Error investigado",
-        "## Laboratorio pr\u00e1ctico"
+        "## Construcci\u00f3n guiada del cap\u00edtulo"
       ]
     },
     {
@@ -5344,7 +5347,7 @@
     },
     {
       "path": "web/public/content/javascript/modulo-0.md",
-      "lines": 209,
+      "lines": 229,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5353,12 +5356,14 @@
         "## Antes de comenzar: tu primer entorno de programaci\u00f3n",
         "## Aprende construyendo",
         "### Tema 1: Variables \u2014 let, const y var",
+        "#### Construcci\u00f3n RutaFlow",
         "### Tema 2: Tipos primitivos y typeof",
+        "#### Construcci\u00f3n RutaFlow",
         "### Tema 3: Coerci\u00f3n impl\u00edcita \u2014 == frente a ===",
+        "#### Construcci\u00f3n RutaFlow",
         "### Tema 4: Template literals",
-        "### Tema 5: Entorno \u2014 navegador frente a Node.js",
-        "## Ruta de proyecto progresivo desde carpeta vac\u00eda",
-        "## Laboratorio pr\u00e1ctico"
+        "#### Construcci\u00f3n RutaFlow",
+        "### Tema 5: Entorno \u2014 navegador frente a Node.js"
       ]
     },
     {

@@ -34,12 +34,23 @@ CRITERIA = {
 }
 
 
+def structural_text(text: str) -> str:
+    return re.sub(
+        r"^```[^\n]*\n[\s\S]*?^```[ \t]*$",
+        lambda match: re.sub(r"[^\n]", " ", match.group()),
+        text,
+        flags=re.MULTILINE,
+    )
+
+
 def topic_blocks(text: str):
-    headings = list(re.finditer(r"^###\s+(Tema(?:[^:]*)?:\s*.+)$", text, re.MULTILINE))
+    structure = structural_text(text)
+    headings = list(re.finditer(r"^###\s+(Tema(?:[^:]*)?:\s*.+)$", structure, re.MULTILINE))
     for index, match in enumerate(headings):
         end = headings[index + 1].start() if index + 1 < len(headings) else len(text)
         block = text[match.start():end]
-        h2 = re.search(r"^##\s+", block[match.end() - match.start():], re.MULTILINE)
+        block_structure = structure[match.start():end]
+        h2 = re.search(r"^##\s+", block_structure[match.end() - match.start():], re.MULTILINE)
         if h2:
             block = block[: match.end() - match.start() + h2.start()]
         yield match.group(1), block

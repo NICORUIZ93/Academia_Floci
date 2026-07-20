@@ -20,7 +20,7 @@
       "filePath": 4,
       "runCommand": 5,
       "expectedResult": 11,
-      "practice": 22,
+      "practice": 24,
       "project": 6,
       "modelMental": 49,
       "limitsDecision": 20,
@@ -50,11 +50,11 @@
       "filePath": 23,
       "runCommand": 102,
       "expectedResult": 31,
-      "practice": 70,
+      "practice": 71,
       "project": 8,
       "modelMental": 153,
       "limitsDecision": 77,
-      "practicable": 0,
+      "practicable": 8,
       "genericScaffold": 0
     },
     "devops": {
@@ -65,11 +65,11 @@
       "filePath": 18,
       "runCommand": 44,
       "expectedResult": 22,
-      "practice": 59,
+      "practice": 63,
       "project": 7,
       "modelMental": 91,
       "limitsDecision": 50,
-      "practicable": 1,
+      "practicable": 4,
       "genericScaffold": 0
     },
     "flutter": {
@@ -80,26 +80,26 @@
       "filePath": 8,
       "runCommand": 29,
       "expectedResult": 20,
-      "practice": 15,
+      "practice": 21,
       "project": 11,
       "modelMental": 57,
       "limitsDecision": 19,
-      "practicable": 0,
+      "practicable": 2,
       "genericScaffold": 0
     },
     "foundations": {
       "topics": 50,
-      "explanation": 49,
+      "explanation": 50,
       "code": 50,
-      "visual": 11,
+      "visual": 13,
       "filePath": 12,
       "runCommand": 35,
-      "expectedResult": 19,
-      "practice": 16,
-      "project": 6,
+      "expectedResult": 21,
+      "practice": 19,
+      "project": 10,
       "modelMental": 50,
-      "limitsDecision": 16,
-      "practicable": 6,
+      "limitsDecision": 17,
+      "practicable": 10,
       "genericScaffold": 0
     },
     "ios": {
@@ -110,7 +110,7 @@
       "filePath": 2,
       "runCommand": 39,
       "expectedResult": 16,
-      "practice": 20,
+      "practice": 21,
       "project": 8,
       "modelMental": 51,
       "limitsDecision": 24,
@@ -125,7 +125,7 @@
       "filePath": 9,
       "runCommand": 52,
       "expectedResult": 19,
-      "practice": 22,
+      "practice": 23,
       "project": 6,
       "modelMental": 59,
       "limitsDecision": 37,
@@ -137,14 +137,14 @@
       "explanation": 75,
       "code": 75,
       "visual": 13,
-      "filePath": 24,
-      "runCommand": 18,
-      "expectedResult": 27,
+      "filePath": 28,
+      "runCommand": 22,
+      "expectedResult": 29,
       "practice": 48,
-      "project": 6,
+      "project": 11,
       "modelMental": 75,
       "limitsDecision": 50,
-      "practicable": 6,
+      "practicable": 12,
       "genericScaffold": 0
     },
     "kotlin-multiplatform": {
@@ -155,7 +155,7 @@
       "filePath": 5,
       "runCommand": 17,
       "expectedResult": 11,
-      "practice": 13,
+      "practice": 16,
       "project": 6,
       "modelMental": 46,
       "limitsDecision": 23,
@@ -170,11 +170,11 @@
       "filePath": 21,
       "runCommand": 39,
       "expectedResult": 25,
-      "practice": 32,
+      "practice": 35,
       "project": 6,
       "modelMental": 64,
       "limitsDecision": 35,
-      "practicable": 0,
+      "practicable": 4,
       "genericScaffold": 0
     },
     "react": {
@@ -185,7 +185,7 @@
       "filePath": 11,
       "runCommand": 1,
       "expectedResult": 8,
-      "practice": 17,
+      "practice": 18,
       "project": 6,
       "modelMental": 55,
       "limitsDecision": 22,
@@ -241,6 +241,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 7,
           "practicable": false,
           "genericScaffold": false
         }
@@ -261,6 +262,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 5,
           "practicable": false,
           "genericScaffold": false
         }
@@ -281,6 +283,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 10,
           "practicable": false,
           "genericScaffold": false
         }
@@ -301,6 +304,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 4,
           "practicable": false,
           "genericScaffold": false
         }
@@ -321,6 +325,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 4,
           "practicable": false,
           "genericScaffold": false
         }
@@ -341,6 +346,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 6,
           "practicable": false,
           "genericScaffold": false
         }
@@ -355,12 +361,13 @@
           "filePath": false,
           "runCommand": false,
           "expectedResult": true,
-          "practice": false,
+          "practice": true,
           "project": false,
           "modelMental": true,
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 7,
           "practicable": false,
           "genericScaffold": false
         }
@@ -381,6 +388,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 3,
           "practicable": false,
           "genericScaffold": false
         }
@@ -401,6 +409,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 6,
           "practicable": false,
           "genericScaffold": false
         }
@@ -421,6 +430,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 9,
           "practicable": false,
           "genericScaffold": false
         }
@@ -441,6 +451,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 3,
           "practicable": false,
           "genericScaffold": false
         }
@@ -461,6 +472,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 3,
           "practicable": false,
           "genericScaffold": false
         }
@@ -481,6 +493,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 5,
           "practicable": false,
           "genericScaffold": false
         }
@@ -501,6 +514,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 6,
           "practicable": false,
           "genericScaffold": false
         }
@@ -521,6 +535,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 7,
           "practicable": false,
           "genericScaffold": false
         }
@@ -541,6 +556,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 7,
           "practicable": false,
           "genericScaffold": false
         }
@@ -555,12 +571,13 @@
           "filePath": false,
           "runCommand": false,
           "expectedResult": false,
-          "practice": false,
+          "practice": true,
           "project": false,
           "modelMental": true,
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 5,
           "practicable": false,
           "genericScaffold": false
         }
@@ -581,6 +598,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 3,
           "practicable": false,
           "genericScaffold": false
         }
@@ -601,6 +619,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 5,
           "practicable": false,
           "genericScaffold": false
         }
@@ -621,6 +640,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 10,
           "practicable": false,
           "genericScaffold": false
         }
@@ -641,6 +661,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 10,
           "practicable": false,
           "genericScaffold": false
         }
@@ -661,6 +682,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 10,
           "practicable": false,
           "genericScaffold": false
         }
@@ -681,6 +703,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 10,
           "practicable": false,
           "genericScaffold": false
         }
@@ -701,6 +724,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 10,
           "practicable": false,
           "genericScaffold": false
         }
@@ -721,6 +745,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 10,
           "practicable": false,
           "genericScaffold": false
         }
@@ -741,6 +766,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 6,
           "practicable": false,
           "genericScaffold": false
         }
@@ -761,6 +787,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 3,
           "practicable": false,
           "genericScaffold": false
         }
@@ -781,6 +808,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 5,
           "practicable": false,
           "genericScaffold": false
         }
@@ -801,6 +829,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 3,
           "practicable": false,
           "genericScaffold": false
         }
@@ -821,6 +850,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 4,
           "practicable": false,
           "genericScaffold": false
         }
@@ -841,6 +871,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 5,
           "practicable": false,
           "genericScaffold": false
         }
@@ -861,6 +892,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 4,
           "practicable": false,
           "genericScaffold": false
         }
@@ -881,6 +913,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 7,
           "practicable": false,
           "genericScaffold": false
         }
@@ -901,6 +934,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 4,
           "practicable": false,
           "genericScaffold": false
         }
@@ -921,6 +955,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 6,
           "practicable": false,
           "genericScaffold": false
         }
@@ -941,6 +976,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 8,
           "practicable": false,
           "genericScaffold": false
         }
@@ -961,6 +997,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 5,
           "practicable": false,
           "genericScaffold": false
         }
@@ -981,6 +1018,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 5,
           "practicable": false,
           "genericScaffold": false
         }
@@ -1001,6 +1039,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 3,
           "practicable": false,
           "genericScaffold": false
         }
@@ -1021,6 +1060,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 3,
           "practicable": false,
           "genericScaffold": false
         }
@@ -1041,6 +1081,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 5,
           "practicable": false,
           "genericScaffold": false
         }
@@ -1061,6 +1102,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 3,
           "practicable": false,
           "genericScaffold": false
         }
@@ -1081,6 +1123,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 5,
           "practicable": false,
           "genericScaffold": false
         }
@@ -1101,6 +1144,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 3,
           "practicable": false,
           "genericScaffold": false
         }
@@ -1121,6 +1165,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 3,
           "practicable": false,
           "genericScaffold": false
         }
@@ -1141,6 +1186,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 7,
           "practicable": false,
           "genericScaffold": false
         }
@@ -1161,6 +1207,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 8,
           "practicable": false,
           "genericScaffold": false
         }
@@ -1181,6 +1228,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 5,
           "practicable": false,
           "genericScaffold": false
         }
@@ -1201,6 +1249,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 8,
           "practicable": false,
           "genericScaffold": false
         }
@@ -1223,6 +1272,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 8,
           "practicable": false,
           "genericScaffold": false
         }
@@ -1243,6 +1293,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 4,
           "practicable": false,
           "genericScaffold": false
         }
@@ -1263,6 +1314,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 6,
           "practicable": false,
           "genericScaffold": false
         }
@@ -1283,6 +1335,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 6,
           "practicable": false,
           "genericScaffold": false
         }
@@ -1303,6 +1356,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 4,
           "practicable": false,
           "genericScaffold": false
         }
@@ -1323,6 +1377,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 5,
           "practicable": false,
           "genericScaffold": false
         }
@@ -1343,6 +1398,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 3,
           "practicable": false,
           "genericScaffold": false
         }
@@ -1363,6 +1419,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 7,
           "practicable": false,
           "genericScaffold": false
         }
@@ -1383,6 +1440,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 16,
           "practicable": true,
           "genericScaffold": false
         }
@@ -1403,6 +1461,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 7,
           "practicable": false,
           "genericScaffold": false
         }
@@ -1423,6 +1482,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 6,
           "practicable": false,
           "genericScaffold": false
         }
@@ -1443,6 +1503,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 5,
           "practicable": false,
           "genericScaffold": false
         }
@@ -1463,6 +1524,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 9,
           "practicable": false,
           "genericScaffold": false
         }
@@ -1483,6 +1545,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 3,
           "practicable": false,
           "genericScaffold": false
         }
@@ -1503,6 +1566,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 3,
           "practicable": false,
           "genericScaffold": false
         }
@@ -1523,6 +1587,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 8,
           "practicable": false,
           "genericScaffold": false
         }
@@ -1543,6 +1608,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 6,
           "practicable": false,
           "genericScaffold": false
         }
@@ -1563,6 +1629,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 5,
           "practicable": false,
           "genericScaffold": false
         }
@@ -1583,6 +1650,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 5,
           "practicable": false,
           "genericScaffold": false
         }
@@ -1603,6 +1671,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 7,
           "practicable": false,
           "genericScaffold": false
         }
@@ -1623,6 +1692,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 9,
           "practicable": false,
           "genericScaffold": false
         }
@@ -1643,6 +1713,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 3,
           "practicable": false,
           "genericScaffold": false
         }
@@ -1663,6 +1734,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 5,
           "practicable": false,
           "genericScaffold": false
         }
@@ -1683,6 +1755,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 3,
           "practicable": false,
           "genericScaffold": false
         }
@@ -1703,6 +1776,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 3,
           "practicable": false,
           "genericScaffold": false
         }
@@ -1723,6 +1797,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 8,
           "practicable": false,
           "genericScaffold": false
         }
@@ -1743,6 +1818,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 10,
           "practicable": false,
           "genericScaffold": false
         }
@@ -1763,6 +1839,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 10,
           "practicable": false,
           "genericScaffold": false
         }
@@ -1783,6 +1860,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 10,
           "practicable": false,
           "genericScaffold": false
         }
@@ -1803,6 +1881,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 10,
           "practicable": false,
           "genericScaffold": false
         }
@@ -1823,6 +1902,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 10,
           "practicable": false,
           "genericScaffold": false
         }
@@ -1843,6 +1923,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 10,
           "practicable": false,
           "genericScaffold": false
         }
@@ -1863,6 +1944,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 4,
           "practicable": false,
           "genericScaffold": false
         }
@@ -1883,6 +1965,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 6,
           "practicable": false,
           "genericScaffold": false
         }
@@ -1903,6 +1986,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 6,
           "practicable": false,
           "genericScaffold": false
         }
@@ -1923,6 +2007,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 10,
           "practicable": false,
           "genericScaffold": false
         }
@@ -1943,6 +2028,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 4,
           "practicable": false,
           "genericScaffold": false
         }
@@ -1963,6 +2049,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 6,
           "practicable": false,
           "genericScaffold": false
         }
@@ -1983,6 +2070,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 5,
           "practicable": false,
           "genericScaffold": false
         }
@@ -2003,6 +2091,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 4,
           "practicable": false,
           "genericScaffold": false
         }
@@ -2023,6 +2112,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 5,
           "practicable": false,
           "genericScaffold": false
         }
@@ -2043,6 +2133,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 9,
           "practicable": false,
           "genericScaffold": false
         }
@@ -2063,6 +2154,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 5,
           "practicable": false,
           "genericScaffold": false
         }
@@ -2083,6 +2175,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 6,
           "practicable": false,
           "genericScaffold": false
         }
@@ -2103,6 +2196,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 7,
           "practicable": false,
           "genericScaffold": false
         }
@@ -2123,6 +2217,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 5,
           "practicable": false,
           "genericScaffold": false
         }
@@ -2143,6 +2238,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 5,
           "practicable": false,
           "genericScaffold": false
         }
@@ -2163,6 +2259,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 8,
           "practicable": false,
           "genericScaffold": false
         }
@@ -2183,6 +2280,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 4,
           "practicable": false,
           "genericScaffold": false
         }
@@ -2203,6 +2301,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 4,
           "practicable": false,
           "genericScaffold": false
         }
@@ -2223,6 +2322,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 3,
           "practicable": false,
           "genericScaffold": false
         }
@@ -2243,6 +2343,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 4,
           "practicable": false,
           "genericScaffold": false
         }
@@ -2263,6 +2364,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 7,
           "practicable": false,
           "genericScaffold": false
         }
@@ -2283,6 +2385,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 5,
           "practicable": false,
           "genericScaffold": false
         }
@@ -2303,6 +2406,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 9,
           "practicable": false,
           "genericScaffold": false
         }
@@ -2323,6 +2427,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 5,
           "practicable": false,
           "genericScaffold": false
         }
@@ -2343,6 +2448,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 8,
           "practicable": false,
           "genericScaffold": false
         }
@@ -2363,6 +2469,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 3,
           "practicable": false,
           "genericScaffold": false
         }
@@ -2383,6 +2490,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 5,
           "practicable": false,
           "genericScaffold": false
         }
@@ -2403,6 +2511,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 5,
           "practicable": false,
           "genericScaffold": false
         }
@@ -2423,6 +2532,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 6,
           "practicable": false,
           "genericScaffold": false
         }
@@ -2445,6 +2555,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 11,
           "practicable": false,
           "genericScaffold": false
         }
@@ -2465,6 +2576,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 7,
           "practicable": false,
           "genericScaffold": false
         }
@@ -2485,6 +2597,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 11,
           "practicable": false,
           "genericScaffold": false
         }
@@ -2505,7 +2618,8 @@
           "limitsDecision": true
         },
         "classification": {
-          "practicable": false,
+          "rubricScore": 14,
+          "practicable": true,
           "genericScaffold": false
         }
       },
@@ -2525,6 +2639,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 9,
           "practicable": false,
           "genericScaffold": false
         }
@@ -2545,6 +2660,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 8,
           "practicable": false,
           "genericScaffold": false
         }
@@ -2565,6 +2681,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 10,
           "practicable": false,
           "genericScaffold": false
         }
@@ -2585,6 +2702,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 9,
           "practicable": false,
           "genericScaffold": false
         }
@@ -2605,7 +2723,8 @@
           "limitsDecision": true
         },
         "classification": {
-          "practicable": false,
+          "rubricScore": 12,
+          "practicable": true,
           "genericScaffold": false
         }
       },
@@ -2625,6 +2744,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 10,
           "practicable": false,
           "genericScaffold": false
         }
@@ -2645,6 +2765,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 10,
           "practicable": false,
           "genericScaffold": false
         }
@@ -2665,6 +2786,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 11,
           "practicable": false,
           "genericScaffold": false
         }
@@ -2685,6 +2807,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 8,
           "practicable": false,
           "genericScaffold": false
         }
@@ -2705,6 +2828,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 8,
           "practicable": false,
           "genericScaffold": false
         }
@@ -2725,7 +2849,8 @@
           "limitsDecision": true
         },
         "classification": {
-          "practicable": false,
+          "rubricScore": 12,
+          "practicable": true,
           "genericScaffold": false
         }
       },
@@ -2745,6 +2870,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 6,
           "practicable": false,
           "genericScaffold": false
         }
@@ -2765,6 +2891,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 5,
           "practicable": false,
           "genericScaffold": false
         }
@@ -2785,6 +2912,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 3,
           "practicable": false,
           "genericScaffold": false
         }
@@ -2805,6 +2933,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 7,
           "practicable": false,
           "genericScaffold": false
         }
@@ -2825,6 +2954,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 7,
           "practicable": false,
           "genericScaffold": false
         }
@@ -2845,6 +2975,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 6,
           "practicable": false,
           "genericScaffold": false
         }
@@ -2865,6 +2996,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 8,
           "practicable": false,
           "genericScaffold": false
         }
@@ -2885,6 +3017,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 5,
           "practicable": false,
           "genericScaffold": false
         }
@@ -2905,6 +3038,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 7,
           "practicable": false,
           "genericScaffold": false
         }
@@ -2925,6 +3059,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 6,
           "practicable": false,
           "genericScaffold": false
         }
@@ -2945,6 +3080,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 9,
           "practicable": false,
           "genericScaffold": false
         }
@@ -2965,6 +3101,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 6,
           "practicable": false,
           "genericScaffold": false
         }
@@ -2979,12 +3116,13 @@
           "filePath": true,
           "runCommand": true,
           "expectedResult": false,
-          "practice": false,
+          "practice": true,
           "project": false,
           "modelMental": true,
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 10,
           "practicable": false,
           "genericScaffold": false
         }
@@ -3005,6 +3143,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 9,
           "practicable": false,
           "genericScaffold": false
         }
@@ -3025,6 +3164,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 10,
           "practicable": false,
           "genericScaffold": false
         }
@@ -3045,6 +3185,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 7,
           "practicable": false,
           "genericScaffold": false
         }
@@ -3065,6 +3206,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 5,
           "practicable": false,
           "genericScaffold": false
         }
@@ -3085,6 +3227,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 4,
           "practicable": false,
           "genericScaffold": false
         }
@@ -3105,6 +3248,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 6,
           "practicable": false,
           "genericScaffold": false
         }
@@ -3125,6 +3269,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 5,
           "practicable": false,
           "genericScaffold": false
         }
@@ -3145,6 +3290,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 4,
           "practicable": false,
           "genericScaffold": false
         }
@@ -3165,6 +3311,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 8,
           "practicable": false,
           "genericScaffold": false
         }
@@ -3185,6 +3332,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 8,
           "practicable": false,
           "genericScaffold": false
         }
@@ -3205,6 +3353,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 5,
           "practicable": false,
           "genericScaffold": false
         }
@@ -3225,6 +3374,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 5,
           "practicable": false,
           "genericScaffold": false
         }
@@ -3245,6 +3395,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 5,
           "practicable": false,
           "genericScaffold": false
         }
@@ -3265,6 +3416,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 3,
           "practicable": false,
           "genericScaffold": false
         }
@@ -3285,6 +3437,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 8,
           "practicable": false,
           "genericScaffold": false
         }
@@ -3305,6 +3458,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 10,
           "practicable": false,
           "genericScaffold": false
         }
@@ -3325,6 +3479,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 7,
           "practicable": false,
           "genericScaffold": false
         }
@@ -3345,6 +3500,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 7,
           "practicable": false,
           "genericScaffold": false
         }
@@ -3365,6 +3521,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 10,
           "practicable": false,
           "genericScaffold": false
         }
@@ -3385,6 +3542,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 11,
           "practicable": false,
           "genericScaffold": false
         }
@@ -3405,6 +3563,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 5,
           "practicable": false,
           "genericScaffold": false
         }
@@ -3425,6 +3584,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 10,
           "practicable": false,
           "genericScaffold": false
         }
@@ -3445,6 +3605,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 8,
           "practicable": false,
           "genericScaffold": false
         }
@@ -3465,6 +3626,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 5,
           "practicable": false,
           "genericScaffold": false
         }
@@ -3485,6 +3647,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 3,
           "practicable": false,
           "genericScaffold": false
         }
@@ -3505,6 +3668,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 2,
           "practicable": false,
           "genericScaffold": false
         }
@@ -3525,6 +3689,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 4,
           "practicable": false,
           "genericScaffold": false
         }
@@ -3545,6 +3710,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 3,
           "practicable": false,
           "genericScaffold": false
         }
@@ -3565,6 +3731,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 8,
           "practicable": false,
           "genericScaffold": false
         }
@@ -3585,6 +3752,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 5,
           "practicable": false,
           "genericScaffold": false
         }
@@ -3605,6 +3773,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 5,
           "practicable": false,
           "genericScaffold": false
         }
@@ -3625,6 +3794,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 5,
           "practicable": false,
           "genericScaffold": false
         }
@@ -3645,6 +3815,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 2,
           "practicable": false,
           "genericScaffold": false
         }
@@ -3665,6 +3836,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 6,
           "practicable": false,
           "genericScaffold": false
         }
@@ -3685,6 +3857,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 3,
           "practicable": false,
           "genericScaffold": false
         }
@@ -3705,6 +3878,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 5,
           "practicable": false,
           "genericScaffold": false
         }
@@ -3725,6 +3899,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 5,
           "practicable": false,
           "genericScaffold": false
         }
@@ -3745,6 +3920,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 5,
           "practicable": false,
           "genericScaffold": false
         }
@@ -3765,6 +3941,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 5,
           "practicable": false,
           "genericScaffold": false
         }
@@ -3785,6 +3962,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 1,
           "practicable": false,
           "genericScaffold": false
         }
@@ -3805,6 +3983,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 2,
           "practicable": false,
           "genericScaffold": false
         }
@@ -3825,6 +4004,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 6,
           "practicable": false,
           "genericScaffold": false
         }
@@ -3845,6 +4025,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 2,
           "practicable": false,
           "genericScaffold": false
         }
@@ -3865,6 +4046,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 3,
           "practicable": false,
           "genericScaffold": false
         }
@@ -3885,6 +4067,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 4,
           "practicable": false,
           "genericScaffold": false
         }
@@ -3905,6 +4088,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 1,
           "practicable": false,
           "genericScaffold": false
         }
@@ -3925,6 +4109,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 2,
           "practicable": false,
           "genericScaffold": false
         }
@@ -3945,6 +4130,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 1,
           "practicable": false,
           "genericScaffold": false
         }
@@ -3965,6 +4151,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 3,
           "practicable": false,
           "genericScaffold": false
         }
@@ -3985,6 +4172,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 6,
           "practicable": false,
           "genericScaffold": false
         }
@@ -4005,6 +4193,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 2,
           "practicable": false,
           "genericScaffold": false
         }
@@ -4025,6 +4214,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 5,
           "practicable": false,
           "genericScaffold": false
         }
@@ -4045,6 +4235,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 5,
           "practicable": false,
           "genericScaffold": false
         }
@@ -4065,6 +4256,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 3,
           "practicable": false,
           "genericScaffold": false
         }
@@ -4085,6 +4277,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 1,
           "practicable": false,
           "genericScaffold": false
         }
@@ -4105,6 +4298,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 3,
           "practicable": false,
           "genericScaffold": false
         }
@@ -4125,6 +4319,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 3,
           "practicable": false,
           "genericScaffold": false
         }
@@ -4145,6 +4340,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 1,
           "practicable": false,
           "genericScaffold": false
         }
@@ -4165,6 +4361,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 5,
           "practicable": false,
           "genericScaffold": false
         }
@@ -4185,6 +4382,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 3,
           "practicable": false,
           "genericScaffold": false
         }
@@ -4205,6 +4403,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 3,
           "practicable": false,
           "genericScaffold": false
         }
@@ -4225,6 +4424,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 1,
           "practicable": false,
           "genericScaffold": false
         }
@@ -4245,6 +4445,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 5,
           "practicable": false,
           "genericScaffold": false
         }
@@ -4265,6 +4466,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 7,
           "practicable": false,
           "genericScaffold": false
         }
@@ -4285,6 +4487,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 8,
           "practicable": false,
           "genericScaffold": false
         }
@@ -4305,6 +4508,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 7,
           "practicable": false,
           "genericScaffold": false
         }
@@ -4325,6 +4529,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 8,
           "practicable": false,
           "genericScaffold": false
         }
@@ -4345,6 +4550,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 4,
           "practicable": false,
           "genericScaffold": false
         }
@@ -4365,6 +4571,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 1,
           "practicable": false,
           "genericScaffold": false
         }
@@ -4385,6 +4592,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 7,
           "practicable": false,
           "genericScaffold": false
         }
@@ -4405,6 +4613,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 4,
           "practicable": false,
           "genericScaffold": false
         }
@@ -4425,6 +4634,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 7,
           "practicable": false,
           "genericScaffold": false
         }
@@ -4445,6 +4655,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 5,
           "practicable": false,
           "genericScaffold": false
         }
@@ -4465,6 +4676,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 8,
           "practicable": false,
           "genericScaffold": false
         }
@@ -4485,6 +4697,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 8,
           "practicable": false,
           "genericScaffold": false
         }
@@ -4505,6 +4718,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 3,
           "practicable": false,
           "genericScaffold": false
         }
@@ -4525,6 +4739,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 7,
           "practicable": false,
           "genericScaffold": false
         }
@@ -4545,6 +4760,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 3,
           "practicable": false,
           "genericScaffold": false
         }
@@ -4565,6 +4781,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 8,
           "practicable": false,
           "genericScaffold": false
         }
@@ -4585,6 +4802,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 12,
           "practicable": false,
           "genericScaffold": false
         }
@@ -4605,6 +4823,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 10,
           "practicable": false,
           "genericScaffold": false
         }
@@ -4625,6 +4844,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 10,
           "practicable": false,
           "genericScaffold": false
         }
@@ -4645,6 +4865,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 10,
           "practicable": false,
           "genericScaffold": false
         }
@@ -4665,6 +4886,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 10,
           "practicable": false,
           "genericScaffold": false
         }
@@ -4685,6 +4907,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 10,
           "practicable": false,
           "genericScaffold": false
         }
@@ -4705,6 +4928,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 6,
           "practicable": false,
           "genericScaffold": false
         }
@@ -4725,6 +4949,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 10,
           "practicable": false,
           "genericScaffold": false
         }
@@ -4745,6 +4970,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 3,
           "practicable": false,
           "genericScaffold": false
         }
@@ -4765,6 +4991,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 7,
           "practicable": false,
           "genericScaffold": false
         }
@@ -4785,7 +5012,8 @@
           "limitsDecision": true
         },
         "classification": {
-          "practicable": false,
+          "rubricScore": 14,
+          "practicable": true,
           "genericScaffold": false
         }
       },
@@ -4805,6 +5033,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 6,
           "practicable": false,
           "genericScaffold": false
         }
@@ -4825,7 +5054,8 @@
           "limitsDecision": true
         },
         "classification": {
-          "practicable": false,
+          "rubricScore": 12,
+          "practicable": true,
           "genericScaffold": false
         }
       },
@@ -4845,6 +5075,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 14,
           "practicable": false,
           "genericScaffold": false
         }
@@ -4865,6 +5096,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 8,
           "practicable": false,
           "genericScaffold": false
         }
@@ -4885,6 +5117,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 2,
           "practicable": false,
           "genericScaffold": false
         }
@@ -4905,6 +5138,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 8,
           "practicable": false,
           "genericScaffold": false
         }
@@ -4925,6 +5159,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 8,
           "practicable": false,
           "genericScaffold": false
         }
@@ -4945,6 +5180,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 6,
           "practicable": false,
           "genericScaffold": false
         }
@@ -4965,6 +5201,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 8,
           "practicable": false,
           "genericScaffold": false
         }
@@ -4985,6 +5222,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 6,
           "practicable": false,
           "genericScaffold": false
         }
@@ -5005,6 +5243,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 8,
           "practicable": false,
           "genericScaffold": false
         }
@@ -5025,6 +5264,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 8,
           "practicable": false,
           "genericScaffold": false
         }
@@ -5045,7 +5285,8 @@
           "limitsDecision": true
         },
         "classification": {
-          "practicable": false,
+          "rubricScore": 12,
+          "practicable": true,
           "genericScaffold": false
         }
       },
@@ -5065,7 +5306,8 @@
           "limitsDecision": true
         },
         "classification": {
-          "practicable": false,
+          "rubricScore": 12,
+          "practicable": true,
           "genericScaffold": false
         }
       },
@@ -5085,7 +5327,8 @@
           "limitsDecision": true
         },
         "classification": {
-          "practicable": false,
+          "rubricScore": 12,
+          "practicable": true,
           "genericScaffold": false
         }
       },
@@ -5105,6 +5348,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 5,
           "practicable": false,
           "genericScaffold": false
         }
@@ -5125,6 +5369,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 7,
           "practicable": false,
           "genericScaffold": false
         }
@@ -5145,6 +5390,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 11,
           "practicable": false,
           "genericScaffold": false
         }
@@ -5165,6 +5411,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 7,
           "practicable": false,
           "genericScaffold": false
         }
@@ -5185,6 +5432,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 10,
           "practicable": false,
           "genericScaffold": false
         }
@@ -5205,6 +5453,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 7,
           "practicable": false,
           "genericScaffold": false
         }
@@ -5225,6 +5474,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 8,
           "practicable": false,
           "genericScaffold": false
         }
@@ -5245,6 +5495,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 9,
           "practicable": false,
           "genericScaffold": false
         }
@@ -5265,6 +5516,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 5,
           "practicable": false,
           "genericScaffold": false
         }
@@ -5285,6 +5537,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 10,
           "practicable": false,
           "genericScaffold": false
         }
@@ -5305,6 +5558,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 6,
           "practicable": false,
           "genericScaffold": false
         }
@@ -5325,6 +5579,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 11,
           "practicable": false,
           "genericScaffold": false
         }
@@ -5345,6 +5600,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 8,
           "practicable": false,
           "genericScaffold": false
         }
@@ -5365,6 +5621,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 8,
           "practicable": false,
           "genericScaffold": false
         }
@@ -5385,6 +5642,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 8,
           "practicable": false,
           "genericScaffold": false
         }
@@ -5405,6 +5663,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 8,
           "practicable": false,
           "genericScaffold": false
         }
@@ -5425,6 +5684,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 7,
           "practicable": false,
           "genericScaffold": false
         }
@@ -5445,6 +5705,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 9,
           "practicable": false,
           "genericScaffold": false
         }
@@ -5465,6 +5726,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 7,
           "practicable": false,
           "genericScaffold": false
         }
@@ -5485,6 +5747,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 9,
           "practicable": false,
           "genericScaffold": false
         }
@@ -5507,6 +5770,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 8,
           "practicable": false,
           "genericScaffold": false
         }
@@ -5527,6 +5791,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 10,
           "practicable": false,
           "genericScaffold": false
         }
@@ -5547,6 +5812,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 7,
           "practicable": false,
           "genericScaffold": false
         }
@@ -5567,6 +5833,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 7,
           "practicable": false,
           "genericScaffold": false
         }
@@ -5587,6 +5854,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 7,
           "practicable": false,
           "genericScaffold": false
         }
@@ -5607,6 +5875,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 9,
           "practicable": false,
           "genericScaffold": false
         }
@@ -5627,6 +5896,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 10,
           "practicable": false,
           "genericScaffold": false
         }
@@ -5647,6 +5917,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 11,
           "practicable": false,
           "genericScaffold": false
         }
@@ -5667,6 +5938,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 16,
           "practicable": true,
           "genericScaffold": false
         }
@@ -5687,6 +5959,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 5,
           "practicable": false,
           "genericScaffold": false
         }
@@ -5707,6 +5980,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 8,
           "practicable": false,
           "genericScaffold": false
         }
@@ -5727,6 +6001,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 5,
           "practicable": false,
           "genericScaffold": false
         }
@@ -5747,6 +6022,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 12,
           "practicable": false,
           "genericScaffold": false
         }
@@ -5761,12 +6037,13 @@
           "filePath": false,
           "runCommand": false,
           "expectedResult": false,
-          "practice": false,
+          "practice": true,
           "project": false,
           "modelMental": true,
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 8,
           "practicable": false,
           "genericScaffold": false
         }
@@ -5787,6 +6064,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 8,
           "practicable": false,
           "genericScaffold": false
         }
@@ -5807,6 +6085,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 5,
           "practicable": false,
           "genericScaffold": false
         }
@@ -5827,6 +6106,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 3,
           "practicable": false,
           "genericScaffold": false
         }
@@ -5847,6 +6127,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 10,
           "practicable": false,
           "genericScaffold": false
         }
@@ -5867,6 +6148,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 6,
           "practicable": false,
           "genericScaffold": false
         }
@@ -5887,6 +6169,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 7,
           "practicable": false,
           "genericScaffold": false
         }
@@ -5907,6 +6190,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 10,
           "practicable": false,
           "genericScaffold": false
         }
@@ -5927,6 +6211,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 9,
           "practicable": false,
           "genericScaffold": false
         }
@@ -5947,6 +6232,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 8,
           "practicable": false,
           "genericScaffold": false
         }
@@ -5967,6 +6253,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 9,
           "practicable": false,
           "genericScaffold": false
         }
@@ -5987,6 +6274,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 9,
           "practicable": false,
           "genericScaffold": false
         }
@@ -6001,12 +6289,13 @@
           "filePath": false,
           "runCommand": false,
           "expectedResult": true,
-          "practice": false,
+          "practice": true,
           "project": false,
           "modelMental": true,
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 10,
           "practicable": false,
           "genericScaffold": false
         }
@@ -6027,6 +6316,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 5,
           "practicable": false,
           "genericScaffold": false
         }
@@ -6047,6 +6337,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 10,
           "practicable": false,
           "genericScaffold": false
         }
@@ -6067,6 +6358,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 10,
           "practicable": false,
           "genericScaffold": false
         }
@@ -6087,6 +6379,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 10,
           "practicable": false,
           "genericScaffold": false
         }
@@ -6107,6 +6400,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 9,
           "practicable": false,
           "genericScaffold": false
         }
@@ -6127,6 +6421,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 9,
           "practicable": false,
           "genericScaffold": false
         }
@@ -6147,6 +6442,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 11,
           "practicable": false,
           "genericScaffold": false
         }
@@ -6167,6 +6463,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 12,
           "practicable": false,
           "genericScaffold": false
         }
@@ -6187,6 +6484,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 10,
           "practicable": false,
           "genericScaffold": false
         }
@@ -6207,6 +6505,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 3,
           "practicable": false,
           "genericScaffold": false
         }
@@ -6227,6 +6526,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 5,
           "practicable": false,
           "genericScaffold": false
         }
@@ -6247,6 +6547,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 7,
           "practicable": false,
           "genericScaffold": false
         }
@@ -6267,6 +6568,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 4,
           "practicable": false,
           "genericScaffold": false
         }
@@ -6287,6 +6589,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 12,
           "practicable": false,
           "genericScaffold": false
         }
@@ -6307,6 +6610,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 10,
           "practicable": false,
           "genericScaffold": false
         }
@@ -6327,6 +6631,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 10,
           "practicable": false,
           "genericScaffold": false
         }
@@ -6347,6 +6652,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 10,
           "practicable": false,
           "genericScaffold": false
         }
@@ -6367,6 +6673,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 10,
           "practicable": false,
           "genericScaffold": false
         }
@@ -6387,6 +6694,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 10,
           "practicable": false,
           "genericScaffold": false
         }
@@ -6401,12 +6709,13 @@
           "filePath": true,
           "runCommand": true,
           "expectedResult": false,
-          "practice": false,
+          "practice": true,
           "project": false,
           "modelMental": true,
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 10,
           "practicable": false,
           "genericScaffold": false
         }
@@ -6427,6 +6736,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 10,
           "practicable": false,
           "genericScaffold": false
         }
@@ -6447,7 +6757,8 @@
           "limitsDecision": true
         },
         "classification": {
-          "practicable": false,
+          "rubricScore": 12,
+          "practicable": true,
           "genericScaffold": false
         }
       },
@@ -6467,7 +6778,8 @@
           "limitsDecision": true
         },
         "classification": {
-          "practicable": false,
+          "rubricScore": 12,
+          "practicable": true,
           "genericScaffold": false
         }
       },
@@ -6487,6 +6799,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 11,
           "practicable": false,
           "genericScaffold": false
         }
@@ -6507,6 +6820,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 5,
           "practicable": false,
           "genericScaffold": false
         }
@@ -6527,6 +6841,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 9,
           "practicable": false,
           "genericScaffold": false
         }
@@ -6547,6 +6862,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 11,
           "practicable": false,
           "genericScaffold": false
         }
@@ -6567,6 +6883,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 9,
           "practicable": false,
           "genericScaffold": false
         }
@@ -6587,6 +6904,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 9,
           "practicable": false,
           "genericScaffold": false
         }
@@ -6607,6 +6925,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 11,
           "practicable": false,
           "genericScaffold": false
         }
@@ -6627,6 +6946,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 10,
           "practicable": false,
           "genericScaffold": false
         }
@@ -6647,6 +6967,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 7,
           "practicable": false,
           "genericScaffold": false
         }
@@ -6667,6 +6988,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 11,
           "practicable": false,
           "genericScaffold": false
         }
@@ -6687,6 +7009,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 10,
           "practicable": false,
           "genericScaffold": false
         }
@@ -6707,6 +7030,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 6,
           "practicable": false,
           "genericScaffold": false
         }
@@ -6727,6 +7051,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 4,
           "practicable": false,
           "genericScaffold": false
         }
@@ -6747,6 +7072,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 8,
           "practicable": false,
           "genericScaffold": false
         }
@@ -6767,6 +7093,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 7,
           "practicable": false,
           "genericScaffold": false
         }
@@ -6787,6 +7114,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 10,
           "practicable": false,
           "genericScaffold": false
         }
@@ -6807,6 +7135,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 9,
           "practicable": false,
           "genericScaffold": false
         }
@@ -6827,6 +7156,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 10,
           "practicable": false,
           "genericScaffold": false
         }
@@ -6847,6 +7177,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 10,
           "practicable": false,
           "genericScaffold": false
         }
@@ -6867,6 +7198,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 10,
           "practicable": false,
           "genericScaffold": false
         }
@@ -6887,6 +7219,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 4,
           "practicable": false,
           "genericScaffold": false
         }
@@ -6907,6 +7240,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 7,
           "practicable": false,
           "genericScaffold": false
         }
@@ -6927,6 +7261,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 8,
           "practicable": false,
           "genericScaffold": false
         }
@@ -6947,6 +7282,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 6,
           "practicable": false,
           "genericScaffold": false
         }
@@ -6967,6 +7303,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 10,
           "practicable": false,
           "genericScaffold": false
         }
@@ -6987,6 +7324,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 12,
           "practicable": false,
           "genericScaffold": false
         }
@@ -7007,6 +7345,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 7,
           "practicable": false,
           "genericScaffold": false
         }
@@ -7027,6 +7366,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 7,
           "practicable": false,
           "genericScaffold": false
         }
@@ -7047,6 +7387,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 8,
           "practicable": false,
           "genericScaffold": false
         }
@@ -7067,6 +7408,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 11,
           "practicable": false,
           "genericScaffold": false
         }
@@ -7087,6 +7429,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 11,
           "practicable": false,
           "genericScaffold": false
         }
@@ -7107,6 +7450,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 9,
           "practicable": false,
           "genericScaffold": false
         }
@@ -7127,6 +7471,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 8,
           "practicable": false,
           "genericScaffold": false
         }
@@ -7147,6 +7492,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 10,
           "practicable": false,
           "genericScaffold": false
         }
@@ -7167,7 +7513,8 @@
           "limitsDecision": true
         },
         "classification": {
-          "practicable": false,
+          "rubricScore": 14,
+          "practicable": true,
           "genericScaffold": false
         }
       },
@@ -7187,6 +7534,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 6,
           "practicable": false,
           "genericScaffold": false
         }
@@ -7201,12 +7549,13 @@
           "filePath": false,
           "runCommand": false,
           "expectedResult": false,
-          "practice": false,
+          "practice": true,
           "project": false,
           "modelMental": true,
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 7,
           "practicable": false,
           "genericScaffold": false
         }
@@ -7227,6 +7576,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 7,
           "practicable": false,
           "genericScaffold": false
         }
@@ -7247,6 +7597,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 7,
           "practicable": false,
           "genericScaffold": false
         }
@@ -7267,6 +7618,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 4,
           "practicable": false,
           "genericScaffold": false
         }
@@ -7287,6 +7639,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 8,
           "practicable": false,
           "genericScaffold": false
         }
@@ -7307,6 +7660,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 9,
           "practicable": false,
           "genericScaffold": false
         }
@@ -7329,6 +7683,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 7,
           "practicable": false,
           "genericScaffold": false
         }
@@ -7349,6 +7704,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 5,
           "practicable": false,
           "genericScaffold": false
         }
@@ -7369,6 +7725,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 5,
           "practicable": false,
           "genericScaffold": false
         }
@@ -7383,12 +7740,13 @@
           "filePath": false,
           "runCommand": true,
           "expectedResult": false,
-          "practice": false,
+          "practice": true,
           "project": false,
           "modelMental": true,
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 8,
           "practicable": false,
           "genericScaffold": false
         }
@@ -7409,6 +7767,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 5,
           "practicable": false,
           "genericScaffold": false
         }
@@ -7423,12 +7782,13 @@
           "filePath": false,
           "runCommand": true,
           "expectedResult": false,
-          "practice": false,
+          "practice": true,
           "project": false,
           "modelMental": true,
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 7,
           "practicable": false,
           "genericScaffold": false
         }
@@ -7449,6 +7809,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 3,
           "practicable": false,
           "genericScaffold": false
         }
@@ -7469,6 +7830,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 5,
           "practicable": false,
           "genericScaffold": false
         }
@@ -7489,6 +7851,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 7,
           "practicable": false,
           "genericScaffold": false
         }
@@ -7509,6 +7872,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 5,
           "practicable": false,
           "genericScaffold": false
         }
@@ -7529,6 +7893,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 5,
           "practicable": false,
           "genericScaffold": false
         }
@@ -7549,6 +7914,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 7,
           "practicable": false,
           "genericScaffold": false
         }
@@ -7569,6 +7935,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 7,
           "practicable": false,
           "genericScaffold": false
         }
@@ -7589,6 +7956,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 5,
           "practicable": false,
           "genericScaffold": false
         }
@@ -7603,12 +7971,13 @@
           "filePath": false,
           "runCommand": true,
           "expectedResult": false,
-          "practice": false,
+          "practice": true,
           "project": false,
           "modelMental": true,
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 8,
           "practicable": false,
           "genericScaffold": false
         }
@@ -7629,6 +7998,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 9,
           "practicable": false,
           "genericScaffold": false
         }
@@ -7649,6 +8019,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 3,
           "practicable": false,
           "genericScaffold": false
         }
@@ -7669,6 +8040,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 3,
           "practicable": false,
           "genericScaffold": false
         }
@@ -7689,6 +8061,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 3,
           "practicable": false,
           "genericScaffold": false
         }
@@ -7709,6 +8082,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 7,
           "practicable": false,
           "genericScaffold": false
         }
@@ -7729,6 +8103,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 10,
           "practicable": false,
           "genericScaffold": false
         }
@@ -7749,6 +8124,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 9,
           "practicable": false,
           "genericScaffold": false
         }
@@ -7769,6 +8145,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 9,
           "practicable": false,
           "genericScaffold": false
         }
@@ -7789,6 +8166,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 9,
           "practicable": false,
           "genericScaffold": false
         }
@@ -7809,6 +8187,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 9,
           "practicable": false,
           "genericScaffold": false
         }
@@ -7829,6 +8208,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 12,
           "practicable": false,
           "genericScaffold": false
         }
@@ -7849,6 +8229,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 10,
           "practicable": false,
           "genericScaffold": false
         }
@@ -7869,6 +8250,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 10,
           "practicable": false,
           "genericScaffold": false
         }
@@ -7889,6 +8271,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 10,
           "practicable": false,
           "genericScaffold": false
         }
@@ -7909,6 +8292,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 10,
           "practicable": false,
           "genericScaffold": false
         }
@@ -7929,6 +8313,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 10,
           "practicable": false,
           "genericScaffold": false
         }
@@ -7949,6 +8334,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 4,
           "practicable": false,
           "genericScaffold": false
         }
@@ -7969,6 +8355,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 5,
           "practicable": false,
           "genericScaffold": false
         }
@@ -7989,6 +8376,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 3,
           "practicable": false,
           "genericScaffold": false
         }
@@ -8009,6 +8397,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 5,
           "practicable": false,
           "genericScaffold": false
         }
@@ -8029,6 +8418,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 5,
           "practicable": false,
           "genericScaffold": false
         }
@@ -8049,6 +8439,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 5,
           "practicable": false,
           "genericScaffold": false
         }
@@ -8069,6 +8460,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 6,
           "practicable": false,
           "genericScaffold": false
         }
@@ -8089,6 +8481,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 10,
           "practicable": false,
           "genericScaffold": false
         }
@@ -8109,6 +8502,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 3,
           "practicable": false,
           "genericScaffold": false
         }
@@ -8129,7 +8523,8 @@
           "limitsDecision": false
         },
         "classification": {
-          "practicable": false,
+          "rubricScore": 15,
+          "practicable": true,
           "genericScaffold": false
         }
       },
@@ -8149,6 +8544,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 6,
           "practicable": false,
           "genericScaffold": false
         }
@@ -8169,6 +8565,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 7,
           "practicable": false,
           "genericScaffold": false
         }
@@ -8189,6 +8586,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 7,
           "practicable": false,
           "genericScaffold": false
         }
@@ -8209,6 +8607,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 6,
           "practicable": false,
           "genericScaffold": false
         }
@@ -8229,6 +8628,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 4,
           "practicable": false,
           "genericScaffold": false
         }
@@ -8249,6 +8649,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 5,
           "practicable": false,
           "genericScaffold": false
         }
@@ -8269,6 +8670,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 7,
           "practicable": false,
           "genericScaffold": false
         }
@@ -8289,6 +8691,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 9,
           "practicable": false,
           "genericScaffold": false
         }
@@ -8309,6 +8712,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 8,
           "practicable": false,
           "genericScaffold": false
         }
@@ -8329,7 +8733,8 @@
           "limitsDecision": false
         },
         "classification": {
-          "practicable": false,
+          "rubricScore": 15,
+          "practicable": true,
           "genericScaffold": false
         }
       },
@@ -8349,6 +8754,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 4,
           "practicable": false,
           "genericScaffold": false
         }
@@ -8363,12 +8769,13 @@
           "filePath": false,
           "runCommand": true,
           "expectedResult": false,
-          "practice": false,
+          "practice": true,
           "project": false,
           "modelMental": true,
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 8,
           "practicable": false,
           "genericScaffold": false
         }
@@ -8383,12 +8790,13 @@
           "filePath": false,
           "runCommand": true,
           "expectedResult": true,
-          "practice": false,
+          "practice": true,
           "project": false,
           "modelMental": true,
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 9,
           "practicable": false,
           "genericScaffold": false
         }
@@ -8403,12 +8811,13 @@
           "filePath": false,
           "runCommand": false,
           "expectedResult": true,
-          "practice": false,
+          "practice": true,
           "project": false,
           "modelMental": true,
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 7,
           "practicable": false,
           "genericScaffold": false
         }
@@ -8429,6 +8838,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 5,
           "practicable": false,
           "genericScaffold": false
         }
@@ -8449,6 +8859,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 8,
           "practicable": false,
           "genericScaffold": false
         }
@@ -8461,17 +8872,18 @@
         "criteria": {
           "explanation": true,
           "code": true,
-          "visual": false,
+          "visual": true,
           "filePath": true,
           "runCommand": true,
           "expectedResult": false,
-          "practice": false,
-          "project": false,
+          "practice": true,
+          "project": true,
           "modelMental": true,
           "limitsDecision": false
         },
         "classification": {
-          "practicable": false,
+          "rubricScore": 13,
+          "practicable": true,
           "genericScaffold": false
         }
       },
@@ -8484,14 +8896,15 @@
           "visual": true,
           "filePath": true,
           "runCommand": true,
-          "expectedResult": false,
-          "practice": false,
-          "project": false,
+          "expectedResult": true,
+          "practice": true,
+          "project": true,
           "modelMental": true,
           "limitsDecision": false
         },
         "classification": {
-          "practicable": false,
+          "rubricScore": 15,
+          "practicable": true,
           "genericScaffold": false
         }
       },
@@ -8506,12 +8919,13 @@
           "runCommand": true,
           "expectedResult": true,
           "practice": true,
-          "project": false,
+          "project": true,
           "modelMental": true,
           "limitsDecision": false
         },
         "classification": {
-          "practicable": false,
+          "rubricScore": 15,
+          "practicable": true,
           "genericScaffold": false
         }
       },
@@ -8521,17 +8935,18 @@
         "criteria": {
           "explanation": true,
           "code": true,
-          "visual": false,
+          "visual": true,
           "filePath": true,
           "runCommand": true,
-          "expectedResult": false,
-          "practice": false,
-          "project": false,
+          "expectedResult": true,
+          "practice": true,
+          "project": true,
           "modelMental": true,
           "limitsDecision": false
         },
         "classification": {
-          "practicable": false,
+          "rubricScore": 15,
+          "practicable": true,
           "genericScaffold": false
         }
       },
@@ -8551,6 +8966,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 6,
           "practicable": false,
           "genericScaffold": false
         }
@@ -8571,6 +8987,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 7,
           "practicable": false,
           "genericScaffold": false
         }
@@ -8591,6 +9008,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 9,
           "practicable": false,
           "genericScaffold": false
         }
@@ -8611,6 +9029,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 5,
           "practicable": false,
           "genericScaffold": false
         }
@@ -8631,6 +9050,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 6,
           "practicable": false,
           "genericScaffold": false
         }
@@ -8651,6 +9071,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 3,
           "practicable": false,
           "genericScaffold": false
         }
@@ -8671,6 +9092,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 3,
           "practicable": false,
           "genericScaffold": false
         }
@@ -8691,6 +9113,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 7,
           "practicable": false,
           "genericScaffold": false
         }
@@ -8711,6 +9134,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 14,
           "practicable": true,
           "genericScaffold": false
         }
@@ -8731,6 +9155,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 14,
           "practicable": true,
           "genericScaffold": false
         }
@@ -8751,6 +9176,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 14,
           "practicable": true,
           "genericScaffold": false
         }
@@ -8771,6 +9197,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 14,
           "practicable": true,
           "genericScaffold": false
         }
@@ -8791,6 +9218,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 14,
           "practicable": true,
           "genericScaffold": false
         }
@@ -8811,6 +9239,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 14,
           "practicable": true,
           "genericScaffold": false
         }
@@ -8831,6 +9260,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 7,
           "practicable": false,
           "genericScaffold": false
         }
@@ -8851,6 +9281,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 7,
           "practicable": false,
           "genericScaffold": false
         }
@@ -8871,6 +9302,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 5,
           "practicable": false,
           "genericScaffold": false
         }
@@ -8891,6 +9323,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 5,
           "practicable": false,
           "genericScaffold": false
         }
@@ -8911,6 +9344,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 5,
           "practicable": false,
           "genericScaffold": false
         }
@@ -8931,6 +9365,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 7,
           "practicable": false,
           "genericScaffold": false
         }
@@ -8951,6 +9386,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 7,
           "practicable": false,
           "genericScaffold": false
         }
@@ -8971,6 +9407,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 5,
           "practicable": false,
           "genericScaffold": false
         }
@@ -8991,6 +9428,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 7,
           "practicable": false,
           "genericScaffold": false
         }
@@ -9011,6 +9449,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 7,
           "practicable": false,
           "genericScaffold": false
         }
@@ -9031,6 +9470,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 6,
           "practicable": false,
           "genericScaffold": false
         }
@@ -9051,6 +9491,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 7,
           "practicable": false,
           "genericScaffold": false
         }
@@ -9071,6 +9512,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 5,
           "practicable": false,
           "genericScaffold": false
         }
@@ -9091,6 +9533,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 8,
           "practicable": false,
           "genericScaffold": false
         }
@@ -9111,6 +9554,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 9,
           "practicable": false,
           "genericScaffold": false
         }
@@ -9131,6 +9575,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 6,
           "practicable": false,
           "genericScaffold": false
         }
@@ -9151,6 +9596,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 8,
           "practicable": false,
           "genericScaffold": false
         }
@@ -9171,6 +9617,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 7,
           "practicable": false,
           "genericScaffold": false
         }
@@ -9191,6 +9638,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 7,
           "practicable": false,
           "genericScaffold": false
         }
@@ -9211,6 +9659,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 5,
           "practicable": false,
           "genericScaffold": false
         }
@@ -9231,6 +9680,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 5,
           "practicable": false,
           "genericScaffold": false
         }
@@ -9251,6 +9701,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 6,
           "practicable": false,
           "genericScaffold": false
         }
@@ -9271,6 +9722,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 6,
           "practicable": false,
           "genericScaffold": false
         }
@@ -9279,7 +9731,7 @@
         "module": 7,
         "topic": "Tema 4: Decisiones, documentación, deuda y evolución",
         "criteria": {
-          "explanation": false,
+          "explanation": true,
           "code": true,
           "visual": false,
           "filePath": false,
@@ -9288,9 +9740,10 @@
           "practice": false,
           "project": false,
           "modelMental": true,
-          "limitsDecision": false
+          "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 4,
           "practicable": false,
           "genericScaffold": false
         }
@@ -9311,6 +9764,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 7,
           "practicable": false,
           "genericScaffold": false
         }
@@ -9331,6 +9785,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 5,
           "practicable": false,
           "genericScaffold": false
         }
@@ -9351,6 +9806,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 3,
           "practicable": false,
           "genericScaffold": false
         }
@@ -9371,6 +9827,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 6,
           "practicable": false,
           "genericScaffold": false
         }
@@ -9391,6 +9848,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 7,
           "practicable": false,
           "genericScaffold": false
         }
@@ -9411,6 +9869,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 8,
           "practicable": false,
           "genericScaffold": false
         }
@@ -9431,6 +9890,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 5,
           "practicable": false,
           "genericScaffold": false
         }
@@ -9451,6 +9911,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 7,
           "practicable": false,
           "genericScaffold": false
         }
@@ -9473,6 +9934,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 9,
           "practicable": false,
           "genericScaffold": false
         }
@@ -9493,6 +9955,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 7,
           "practicable": false,
           "genericScaffold": false
         }
@@ -9513,6 +9976,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 10,
           "practicable": false,
           "genericScaffold": false
         }
@@ -9533,6 +9997,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 16,
           "practicable": true,
           "genericScaffold": false
         }
@@ -9553,6 +10018,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 8,
           "practicable": false,
           "genericScaffold": false
         }
@@ -9573,6 +10039,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 8,
           "practicable": false,
           "genericScaffold": false
         }
@@ -9593,6 +10060,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 7,
           "practicable": false,
           "genericScaffold": false
         }
@@ -9613,6 +10081,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 3,
           "practicable": false,
           "genericScaffold": false
         }
@@ -9633,6 +10102,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 7,
           "practicable": false,
           "genericScaffold": false
         }
@@ -9653,6 +10123,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 5,
           "practicable": false,
           "genericScaffold": false
         }
@@ -9673,6 +10144,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 16,
           "practicable": true,
           "genericScaffold": false
         }
@@ -9693,6 +10165,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 4,
           "practicable": false,
           "genericScaffold": false
         }
@@ -9713,6 +10186,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 4,
           "practicable": false,
           "genericScaffold": false
         }
@@ -9733,6 +10207,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 3,
           "practicable": false,
           "genericScaffold": false
         }
@@ -9753,6 +10228,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 7,
           "practicable": false,
           "genericScaffold": false
         }
@@ -9773,6 +10249,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 5,
           "practicable": false,
           "genericScaffold": false
         }
@@ -9793,6 +10270,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 10,
           "practicable": false,
           "genericScaffold": false
         }
@@ -9813,6 +10291,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 7,
           "practicable": false,
           "genericScaffold": false
         }
@@ -9833,6 +10312,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 7,
           "practicable": false,
           "genericScaffold": false
         }
@@ -9853,6 +10333,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 6,
           "practicable": false,
           "genericScaffold": false
         }
@@ -9873,6 +10354,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 5,
           "practicable": false,
           "genericScaffold": false
         }
@@ -9893,6 +10375,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 10,
           "practicable": false,
           "genericScaffold": false
         }
@@ -9913,6 +10396,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 10,
           "practicable": false,
           "genericScaffold": false
         }
@@ -9933,6 +10417,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 10,
           "practicable": false,
           "genericScaffold": false
         }
@@ -9953,6 +10438,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 10,
           "practicable": false,
           "genericScaffold": false
         }
@@ -9973,6 +10459,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 10,
           "practicable": false,
           "genericScaffold": false
         }
@@ -9993,6 +10480,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 10,
           "practicable": false,
           "genericScaffold": false
         }
@@ -10013,6 +10501,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 7,
           "practicable": false,
           "genericScaffold": false
         }
@@ -10033,6 +10522,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 5,
           "practicable": false,
           "genericScaffold": false
         }
@@ -10053,6 +10543,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 5,
           "practicable": false,
           "genericScaffold": false
         }
@@ -10073,6 +10564,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 5,
           "practicable": false,
           "genericScaffold": false
         }
@@ -10093,6 +10585,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 7,
           "practicable": false,
           "genericScaffold": false
         }
@@ -10113,6 +10606,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 5,
           "practicable": false,
           "genericScaffold": false
         }
@@ -10133,6 +10627,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 7,
           "practicable": false,
           "genericScaffold": false
         }
@@ -10153,6 +10648,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 9,
           "practicable": false,
           "genericScaffold": false
         }
@@ -10173,6 +10669,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 9,
           "practicable": false,
           "genericScaffold": false
         }
@@ -10193,6 +10690,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 7,
           "practicable": false,
           "genericScaffold": false
         }
@@ -10213,6 +10711,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 8,
           "practicable": false,
           "genericScaffold": false
         }
@@ -10233,6 +10732,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 6,
           "practicable": false,
           "genericScaffold": false
         }
@@ -10247,12 +10747,13 @@
           "filePath": false,
           "runCommand": true,
           "expectedResult": false,
-          "practice": false,
+          "practice": true,
           "project": false,
           "modelMental": true,
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 8,
           "practicable": false,
           "genericScaffold": false
         }
@@ -10273,6 +10774,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 5,
           "practicable": false,
           "genericScaffold": false
         }
@@ -10293,6 +10795,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 6,
           "practicable": false,
           "genericScaffold": false
         }
@@ -10313,6 +10816,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 6,
           "practicable": false,
           "genericScaffold": false
         }
@@ -10333,6 +10837,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 7,
           "practicable": false,
           "genericScaffold": false
         }
@@ -10353,6 +10858,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 4,
           "practicable": false,
           "genericScaffold": false
         }
@@ -10373,6 +10879,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 5,
           "practicable": false,
           "genericScaffold": false
         }
@@ -10393,6 +10900,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 6,
           "practicable": false,
           "genericScaffold": false
         }
@@ -10413,6 +10921,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 4,
           "practicable": false,
           "genericScaffold": false
         }
@@ -10433,6 +10942,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 7,
           "practicable": false,
           "genericScaffold": false
         }
@@ -10453,6 +10963,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 6,
           "practicable": false,
           "genericScaffold": false
         }
@@ -10473,6 +10984,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 9,
           "practicable": false,
           "genericScaffold": false
         }
@@ -10495,6 +11007,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 7,
           "practicable": false,
           "genericScaffold": false
         }
@@ -10515,6 +11028,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 6,
           "practicable": false,
           "genericScaffold": false
         }
@@ -10535,6 +11049,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 8,
           "practicable": false,
           "genericScaffold": false
         }
@@ -10555,6 +11070,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 6,
           "practicable": false,
           "genericScaffold": false
         }
@@ -10575,6 +11091,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 9,
           "practicable": false,
           "genericScaffold": false
         }
@@ -10595,6 +11112,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 8,
           "practicable": false,
           "genericScaffold": false
         }
@@ -10615,6 +11133,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 6,
           "practicable": false,
           "genericScaffold": false
         }
@@ -10635,6 +11154,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 9,
           "practicable": false,
           "genericScaffold": false
         }
@@ -10655,6 +11175,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 9,
           "practicable": false,
           "genericScaffold": false
         }
@@ -10675,6 +11196,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 7,
           "practicable": false,
           "genericScaffold": false
         }
@@ -10695,6 +11217,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 6,
           "practicable": false,
           "genericScaffold": false
         }
@@ -10715,6 +11238,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 8,
           "practicable": false,
           "genericScaffold": false
         }
@@ -10735,6 +11259,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 9,
           "practicable": false,
           "genericScaffold": false
         }
@@ -10755,6 +11280,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 10,
           "practicable": false,
           "genericScaffold": false
         }
@@ -10775,6 +11301,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 5,
           "practicable": false,
           "genericScaffold": false
         }
@@ -10795,6 +11322,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 6,
           "practicable": false,
           "genericScaffold": false
         }
@@ -10815,6 +11343,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 5,
           "practicable": false,
           "genericScaffold": false
         }
@@ -10835,6 +11364,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 4,
           "practicable": false,
           "genericScaffold": false
         }
@@ -10855,6 +11385,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 6,
           "practicable": false,
           "genericScaffold": false
         }
@@ -10875,6 +11406,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 7,
           "practicable": false,
           "genericScaffold": false
         }
@@ -10895,6 +11427,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 6,
           "practicable": false,
           "genericScaffold": false
         }
@@ -10915,6 +11448,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 7,
           "practicable": false,
           "genericScaffold": false
         }
@@ -10935,6 +11469,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 7,
           "practicable": false,
           "genericScaffold": false
         }
@@ -10955,6 +11490,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 8,
           "practicable": false,
           "genericScaffold": false
         }
@@ -10975,6 +11511,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 5,
           "practicable": false,
           "genericScaffold": false
         }
@@ -10995,6 +11532,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 5,
           "practicable": false,
           "genericScaffold": false
         }
@@ -11009,12 +11547,13 @@
           "filePath": false,
           "runCommand": true,
           "expectedResult": true,
-          "practice": false,
+          "practice": true,
           "project": false,
           "modelMental": true,
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 10,
           "practicable": false,
           "genericScaffold": false
         }
@@ -11035,6 +11574,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 6,
           "practicable": false,
           "genericScaffold": false
         }
@@ -11055,6 +11595,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 10,
           "practicable": false,
           "genericScaffold": false
         }
@@ -11075,6 +11616,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 12,
           "practicable": false,
           "genericScaffold": false
         }
@@ -11095,6 +11637,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 10,
           "practicable": false,
           "genericScaffold": false
         }
@@ -11115,6 +11658,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 10,
           "practicable": false,
           "genericScaffold": false
         }
@@ -11135,6 +11679,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 10,
           "practicable": false,
           "genericScaffold": false
         }
@@ -11155,6 +11700,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 10,
           "practicable": false,
           "genericScaffold": false
         }
@@ -11175,6 +11721,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 8,
           "practicable": false,
           "genericScaffold": false
         }
@@ -11195,6 +11742,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 8,
           "practicable": false,
           "genericScaffold": false
         }
@@ -11215,6 +11763,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 8,
           "practicable": false,
           "genericScaffold": false
         }
@@ -11235,6 +11784,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 7,
           "practicable": false,
           "genericScaffold": false
         }
@@ -11255,6 +11805,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 7,
           "practicable": false,
           "genericScaffold": false
         }
@@ -11275,6 +11826,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 8,
           "practicable": false,
           "genericScaffold": false
         }
@@ -11295,6 +11847,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 5,
           "practicable": false,
           "genericScaffold": false
         }
@@ -11315,6 +11868,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 10,
           "practicable": false,
           "genericScaffold": false
         }
@@ -11335,6 +11889,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 8,
           "practicable": false,
           "genericScaffold": false
         }
@@ -11355,6 +11910,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 6,
           "practicable": false,
           "genericScaffold": false
         }
@@ -11375,6 +11931,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 6,
           "practicable": false,
           "genericScaffold": false
         }
@@ -11395,6 +11952,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 6,
           "practicable": false,
           "genericScaffold": false
         }
@@ -11415,6 +11973,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 10,
           "practicable": false,
           "genericScaffold": false
         }
@@ -11435,6 +11994,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 8,
           "practicable": false,
           "genericScaffold": false
         }
@@ -11455,6 +12015,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 5,
           "practicable": false,
           "genericScaffold": false
         }
@@ -11475,6 +12036,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 8,
           "practicable": false,
           "genericScaffold": false
         }
@@ -11495,6 +12057,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 7,
           "practicable": false,
           "genericScaffold": false
         }
@@ -11515,6 +12078,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 8,
           "practicable": false,
           "genericScaffold": false
         }
@@ -11535,6 +12099,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 7,
           "practicable": false,
           "genericScaffold": false
         }
@@ -11555,6 +12120,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 8,
           "practicable": false,
           "genericScaffold": false
         }
@@ -11575,6 +12141,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 5,
           "practicable": false,
           "genericScaffold": false
         }
@@ -11595,6 +12162,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 10,
           "practicable": false,
           "genericScaffold": false
         }
@@ -11615,6 +12183,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 10,
           "practicable": false,
           "genericScaffold": false
         }
@@ -11635,6 +12204,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 7,
           "practicable": false,
           "genericScaffold": false
         }
@@ -11655,6 +12225,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 7,
           "practicable": false,
           "genericScaffold": false
         }
@@ -11668,16 +12239,17 @@
           "explanation": true,
           "code": true,
           "visual": false,
-          "filePath": false,
-          "runCommand": false,
-          "expectedResult": false,
+          "filePath": true,
+          "runCommand": true,
+          "expectedResult": true,
           "practice": true,
-          "project": false,
+          "project": true,
           "modelMental": true,
           "limitsDecision": true
         },
         "classification": {
-          "practicable": false,
+          "rubricScore": 14,
+          "practicable": true,
           "genericScaffold": false
         }
       },
@@ -11688,16 +12260,17 @@
           "explanation": true,
           "code": true,
           "visual": false,
-          "filePath": false,
-          "runCommand": false,
+          "filePath": true,
+          "runCommand": true,
           "expectedResult": false,
           "practice": true,
-          "project": false,
+          "project": true,
           "modelMental": true,
           "limitsDecision": true
         },
         "classification": {
-          "practicable": false,
+          "rubricScore": 12,
+          "practicable": true,
           "genericScaffold": false
         }
       },
@@ -11708,16 +12281,17 @@
           "explanation": true,
           "code": true,
           "visual": false,
-          "filePath": false,
-          "runCommand": false,
+          "filePath": true,
+          "runCommand": true,
           "expectedResult": true,
           "practice": true,
-          "project": false,
+          "project": true,
           "modelMental": true,
           "limitsDecision": true
         },
         "classification": {
-          "practicable": false,
+          "rubricScore": 14,
+          "practicable": true,
           "genericScaffold": false
         }
       },
@@ -11728,16 +12302,17 @@
           "explanation": true,
           "code": true,
           "visual": false,
-          "filePath": false,
-          "runCommand": false,
-          "expectedResult": false,
+          "filePath": true,
+          "runCommand": true,
+          "expectedResult": true,
           "practice": true,
-          "project": false,
+          "project": true,
           "modelMental": true,
           "limitsDecision": false
         },
         "classification": {
-          "practicable": false,
+          "rubricScore": 13,
+          "practicable": true,
           "genericScaffold": false
         }
       },
@@ -11752,12 +12327,13 @@
           "runCommand": true,
           "expectedResult": false,
           "practice": true,
-          "project": false,
+          "project": true,
           "modelMental": true,
           "limitsDecision": true
         },
         "classification": {
-          "practicable": false,
+          "rubricScore": 14,
+          "practicable": true,
           "genericScaffold": false
         }
       },
@@ -11777,6 +12353,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 6,
           "practicable": false,
           "genericScaffold": false
         }
@@ -11797,6 +12374,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 10,
           "practicable": false,
           "genericScaffold": false
         }
@@ -11817,6 +12395,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 5,
           "practicable": false,
           "genericScaffold": false
         }
@@ -11837,6 +12416,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 6,
           "practicable": false,
           "genericScaffold": false
         }
@@ -11857,6 +12437,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 6,
           "practicable": false,
           "genericScaffold": false
         }
@@ -11877,6 +12458,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 8,
           "practicable": false,
           "genericScaffold": false
         }
@@ -11897,6 +12479,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 4,
           "practicable": false,
           "genericScaffold": false
         }
@@ -11917,6 +12500,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 8,
           "practicable": false,
           "genericScaffold": false
         }
@@ -11937,6 +12521,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 9,
           "practicable": false,
           "genericScaffold": false
         }
@@ -11957,6 +12542,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 6,
           "practicable": false,
           "genericScaffold": false
         }
@@ -11977,6 +12563,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 8,
           "practicable": false,
           "genericScaffold": false
         }
@@ -11997,6 +12584,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 5,
           "practicable": false,
           "genericScaffold": false
         }
@@ -12017,6 +12605,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 5,
           "practicable": false,
           "genericScaffold": false
         }
@@ -12037,6 +12626,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 10,
           "practicable": false,
           "genericScaffold": false
         }
@@ -12057,6 +12647,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 5,
           "practicable": false,
           "genericScaffold": false
         }
@@ -12077,6 +12668,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 5,
           "practicable": false,
           "genericScaffold": false
         }
@@ -12097,6 +12689,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 8,
           "practicable": false,
           "genericScaffold": false
         }
@@ -12117,6 +12710,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 7,
           "practicable": false,
           "genericScaffold": false
         }
@@ -12137,6 +12731,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 5,
           "practicable": false,
           "genericScaffold": false
         }
@@ -12157,6 +12752,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 4,
           "practicable": false,
           "genericScaffold": false
         }
@@ -12177,6 +12773,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 5,
           "practicable": false,
           "genericScaffold": false
         }
@@ -12197,6 +12794,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 3,
           "practicable": false,
           "genericScaffold": false
         }
@@ -12217,6 +12815,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 16,
           "practicable": true,
           "genericScaffold": false
         }
@@ -12237,6 +12836,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 16,
           "practicable": true,
           "genericScaffold": false
         }
@@ -12257,6 +12857,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 16,
           "practicable": true,
           "genericScaffold": false
         }
@@ -12277,6 +12878,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 16,
           "practicable": true,
           "genericScaffold": false
         }
@@ -12297,6 +12899,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 16,
           "practicable": true,
           "genericScaffold": false
         }
@@ -12317,6 +12920,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 16,
           "practicable": true,
           "genericScaffold": false
         }
@@ -12337,6 +12941,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 5,
           "practicable": false,
           "genericScaffold": false
         }
@@ -12357,6 +12962,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 5,
           "practicable": false,
           "genericScaffold": false
         }
@@ -12377,6 +12983,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 6,
           "practicable": false,
           "genericScaffold": false
         }
@@ -12397,6 +13004,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 4,
           "practicable": false,
           "genericScaffold": false
         }
@@ -12417,6 +13025,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 6,
           "practicable": false,
           "genericScaffold": false
         }
@@ -12437,6 +13046,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 7,
           "practicable": false,
           "genericScaffold": false
         }
@@ -12457,6 +13067,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 8,
           "practicable": false,
           "genericScaffold": false
         }
@@ -12477,6 +13088,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 8,
           "practicable": false,
           "genericScaffold": false
         }
@@ -12497,6 +13109,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 5,
           "practicable": false,
           "genericScaffold": false
         }
@@ -12517,6 +13130,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 8,
           "practicable": false,
           "genericScaffold": false
         }
@@ -12537,6 +13151,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 4,
           "practicable": false,
           "genericScaffold": false
         }
@@ -12557,6 +13172,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 4,
           "practicable": false,
           "genericScaffold": false
         }
@@ -12577,6 +13193,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 5,
           "practicable": false,
           "genericScaffold": false
         }
@@ -12597,6 +13214,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 6,
           "practicable": false,
           "genericScaffold": false
         }
@@ -12617,6 +13235,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 5,
           "practicable": false,
           "genericScaffold": false
         }
@@ -12637,6 +13256,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 8,
           "practicable": false,
           "genericScaffold": false
         }
@@ -12657,6 +13277,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 9,
           "practicable": false,
           "genericScaffold": false
         }
@@ -12677,6 +13298,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 6,
           "practicable": false,
           "genericScaffold": false
         }
@@ -12697,6 +13319,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 11,
           "practicable": false,
           "genericScaffold": false
         }
@@ -12717,6 +13340,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 4,
           "practicable": false,
           "genericScaffold": false
         }
@@ -12737,6 +13361,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 6,
           "practicable": false,
           "genericScaffold": false
         }
@@ -12757,6 +13382,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 8,
           "practicable": false,
           "genericScaffold": false
         }
@@ -12777,6 +13403,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 5,
           "practicable": false,
           "genericScaffold": false
         }
@@ -12797,6 +13424,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 8,
           "practicable": false,
           "genericScaffold": false
         }
@@ -12817,6 +13445,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 4,
           "practicable": false,
           "genericScaffold": false
         }
@@ -12837,6 +13466,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 10,
           "practicable": false,
           "genericScaffold": false
         }
@@ -12857,7 +13487,8 @@
           "limitsDecision": true
         },
         "classification": {
-          "practicable": false,
+          "rubricScore": 12,
+          "practicable": true,
           "genericScaffold": false
         }
       },
@@ -12877,6 +13508,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 8,
           "practicable": false,
           "genericScaffold": false
         }
@@ -12897,6 +13529,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 8,
           "practicable": false,
           "genericScaffold": false
         }
@@ -12917,6 +13550,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 7,
           "practicable": false,
           "genericScaffold": false
         }
@@ -12937,6 +13571,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 6,
           "practicable": false,
           "genericScaffold": false
         }
@@ -12957,6 +13592,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 8,
           "practicable": false,
           "genericScaffold": false
         }
@@ -12977,6 +13613,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 5,
           "practicable": false,
           "genericScaffold": false
         }
@@ -12997,6 +13634,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 5,
           "practicable": false,
           "genericScaffold": false
         }
@@ -13017,6 +13655,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 6,
           "practicable": false,
           "genericScaffold": false
         }
@@ -13037,6 +13676,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 4,
           "practicable": false,
           "genericScaffold": false
         }
@@ -13057,6 +13697,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 8,
           "practicable": false,
           "genericScaffold": false
         }
@@ -13077,6 +13718,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 4,
           "practicable": false,
           "genericScaffold": false
         }
@@ -13097,6 +13739,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 7,
           "practicable": false,
           "genericScaffold": false
         }
@@ -13117,6 +13760,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 7,
           "practicable": false,
           "genericScaffold": false
         }
@@ -13137,6 +13781,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 6,
           "practicable": false,
           "genericScaffold": false
         }
@@ -13157,6 +13802,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 10,
           "practicable": false,
           "genericScaffold": false
         }
@@ -13179,6 +13825,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 7,
           "practicable": false,
           "genericScaffold": false
         }
@@ -13199,6 +13846,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 7,
           "practicable": false,
           "genericScaffold": false
         }
@@ -13219,6 +13867,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 7,
           "practicable": false,
           "genericScaffold": false
         }
@@ -13233,12 +13882,13 @@
           "filePath": false,
           "runCommand": false,
           "expectedResult": true,
-          "practice": false,
+          "practice": true,
           "project": false,
           "modelMental": true,
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 7,
           "practicable": false,
           "genericScaffold": false
         }
@@ -13259,6 +13909,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 8,
           "practicable": false,
           "genericScaffold": false
         }
@@ -13273,12 +13924,13 @@
           "filePath": false,
           "runCommand": true,
           "expectedResult": true,
-          "practice": false,
+          "practice": true,
           "project": false,
           "modelMental": true,
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 9,
           "practicable": false,
           "genericScaffold": false
         }
@@ -13299,6 +13951,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 8,
           "practicable": false,
           "genericScaffold": false
         }
@@ -13319,6 +13972,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 3,
           "practicable": false,
           "genericScaffold": false
         }
@@ -13339,6 +13993,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 3,
           "practicable": false,
           "genericScaffold": false
         }
@@ -13359,6 +14014,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 8,
           "practicable": false,
           "genericScaffold": false
         }
@@ -13379,6 +14035,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 3,
           "practicable": false,
           "genericScaffold": false
         }
@@ -13399,6 +14056,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 4,
           "practicable": false,
           "genericScaffold": false
         }
@@ -13419,6 +14077,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 5,
           "practicable": false,
           "genericScaffold": false
         }
@@ -13439,6 +14098,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 6,
           "practicable": false,
           "genericScaffold": false
         }
@@ -13459,6 +14119,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 5,
           "practicable": false,
           "genericScaffold": false
         }
@@ -13479,6 +14140,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 8,
           "practicable": false,
           "genericScaffold": false
         }
@@ -13499,6 +14161,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 10,
           "practicable": false,
           "genericScaffold": false
         }
@@ -13519,6 +14182,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 10,
           "practicable": false,
           "genericScaffold": false
         }
@@ -13539,6 +14203,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 12,
           "practicable": false,
           "genericScaffold": false
         }
@@ -13559,6 +14224,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 10,
           "practicable": false,
           "genericScaffold": false
         }
@@ -13579,6 +14245,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 10,
           "practicable": false,
           "genericScaffold": false
         }
@@ -13599,6 +14266,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 10,
           "practicable": false,
           "genericScaffold": false
         }
@@ -13619,6 +14287,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 7,
           "practicable": false,
           "genericScaffold": false
         }
@@ -13639,6 +14308,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 4,
           "practicable": false,
           "genericScaffold": false
         }
@@ -13659,6 +14329,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 8,
           "practicable": false,
           "genericScaffold": false
         }
@@ -13679,6 +14350,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 6,
           "practicable": false,
           "genericScaffold": false
         }
@@ -13699,6 +14371,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 3,
           "practicable": false,
           "genericScaffold": false
         }
@@ -13719,6 +14392,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 9,
           "practicable": false,
           "genericScaffold": false
         }
@@ -13739,6 +14413,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 3,
           "practicable": false,
           "genericScaffold": false
         }
@@ -13759,6 +14434,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 6,
           "practicable": false,
           "genericScaffold": false
         }
@@ -13779,6 +14455,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 4,
           "practicable": false,
           "genericScaffold": false
         }
@@ -13799,6 +14476,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 4,
           "practicable": false,
           "genericScaffold": false
         }
@@ -13819,6 +14497,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 4,
           "practicable": false,
           "genericScaffold": false
         }
@@ -13839,6 +14518,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 3,
           "practicable": false,
           "genericScaffold": false
         }
@@ -13859,6 +14539,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 6,
           "practicable": false,
           "genericScaffold": false
         }
@@ -13879,6 +14560,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 3,
           "practicable": false,
           "genericScaffold": false
         }
@@ -13899,6 +14581,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 3,
           "practicable": false,
           "genericScaffold": false
         }
@@ -13913,12 +14596,13 @@
           "filePath": false,
           "runCommand": false,
           "expectedResult": false,
-          "practice": false,
+          "practice": true,
           "project": false,
           "modelMental": true,
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 5,
           "practicable": false,
           "genericScaffold": false
         }
@@ -13939,6 +14623,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 3,
           "practicable": false,
           "genericScaffold": false
         }
@@ -13959,6 +14644,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 4,
           "practicable": false,
           "genericScaffold": false
         }
@@ -13979,6 +14665,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 7,
           "practicable": false,
           "genericScaffold": false
         }
@@ -13999,6 +14686,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 7,
           "practicable": false,
           "genericScaffold": false
         }
@@ -14019,6 +14707,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 6,
           "practicable": false,
           "genericScaffold": false
         }
@@ -14039,6 +14728,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 5,
           "practicable": false,
           "genericScaffold": false
         }
@@ -14059,6 +14749,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 8,
           "practicable": false,
           "genericScaffold": false
         }
@@ -14079,6 +14770,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 5,
           "practicable": false,
           "genericScaffold": false
         }
@@ -14101,6 +14793,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 10,
           "practicable": false,
           "genericScaffold": false
         }
@@ -14121,6 +14814,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 6,
           "practicable": false,
           "genericScaffold": false
         }
@@ -14141,6 +14835,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 5,
           "practicable": false,
           "genericScaffold": false
         }
@@ -14161,6 +14856,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 8,
           "practicable": false,
           "genericScaffold": false
         }
@@ -14181,6 +14877,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 10,
           "practicable": false,
           "genericScaffold": false
         }
@@ -14201,6 +14898,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 10,
           "practicable": false,
           "genericScaffold": false
         }
@@ -14221,6 +14919,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 8,
           "practicable": false,
           "genericScaffold": false
         }
@@ -14241,6 +14940,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 10,
           "practicable": false,
           "genericScaffold": false
         }
@@ -14261,6 +14961,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 7,
           "practicable": false,
           "genericScaffold": false
         }
@@ -14281,6 +14982,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 6,
           "practicable": false,
           "genericScaffold": false
         }
@@ -14301,6 +15003,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 4,
           "practicable": false,
           "genericScaffold": false
         }
@@ -14321,6 +15024,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 9,
           "practicable": false,
           "genericScaffold": false
         }
@@ -14335,13 +15039,14 @@
           "filePath": true,
           "runCommand": true,
           "expectedResult": true,
-          "practice": false,
+          "practice": true,
           "project": false,
           "modelMental": true,
           "limitsDecision": true
         },
         "classification": {
-          "practicable": false,
+          "rubricScore": 12,
+          "practicable": true,
           "genericScaffold": false
         }
       },
@@ -14361,6 +15066,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 10,
           "practicable": false,
           "genericScaffold": false
         }
@@ -14381,6 +15087,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 7,
           "practicable": false,
           "genericScaffold": false
         }
@@ -14401,6 +15108,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 7,
           "practicable": false,
           "genericScaffold": false
         }
@@ -14421,6 +15129,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 5,
           "practicable": false,
           "genericScaffold": false
         }
@@ -14441,6 +15150,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 7,
           "practicable": false,
           "genericScaffold": false
         }
@@ -14461,6 +15171,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 6,
           "practicable": false,
           "genericScaffold": false
         }
@@ -14481,6 +15192,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 11,
           "practicable": false,
           "genericScaffold": false
         }
@@ -14501,6 +15213,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 9,
           "practicable": false,
           "genericScaffold": false
         }
@@ -14521,6 +15234,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 8,
           "practicable": false,
           "genericScaffold": false
         }
@@ -14541,6 +15255,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 3,
           "practicable": false,
           "genericScaffold": false
         }
@@ -14561,6 +15276,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 5,
           "practicable": false,
           "genericScaffold": false
         }
@@ -14581,6 +15297,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 3,
           "practicable": false,
           "genericScaffold": false
         }
@@ -14601,6 +15318,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 7,
           "practicable": false,
           "genericScaffold": false
         }
@@ -14621,7 +15339,8 @@
           "limitsDecision": true
         },
         "classification": {
-          "practicable": false,
+          "rubricScore": 14,
+          "practicable": true,
           "genericScaffold": false
         }
       },
@@ -14641,6 +15360,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 10,
           "practicable": false,
           "genericScaffold": false
         }
@@ -14661,6 +15381,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 10,
           "practicable": false,
           "genericScaffold": false
         }
@@ -14681,6 +15402,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 10,
           "practicable": false,
           "genericScaffold": false
         }
@@ -14701,6 +15423,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 12,
           "practicable": false,
           "genericScaffold": false
         }
@@ -14721,6 +15444,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 10,
           "practicable": false,
           "genericScaffold": false
         }
@@ -14741,7 +15465,8 @@
           "limitsDecision": true
         },
         "classification": {
-          "practicable": false,
+          "rubricScore": 12,
+          "practicable": true,
           "genericScaffold": false
         }
       },
@@ -14761,6 +15486,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 6,
           "practicable": false,
           "genericScaffold": false
         }
@@ -14781,6 +15507,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 10,
           "practicable": false,
           "genericScaffold": false
         }
@@ -14801,6 +15528,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 10,
           "practicable": false,
           "genericScaffold": false
         }
@@ -14815,12 +15543,13 @@
           "filePath": true,
           "runCommand": true,
           "expectedResult": false,
-          "practice": false,
+          "practice": true,
           "project": false,
           "modelMental": true,
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 9,
           "practicable": false,
           "genericScaffold": false
         }
@@ -14841,6 +15570,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 7,
           "practicable": false,
           "genericScaffold": false
         }
@@ -14861,6 +15591,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 9,
           "practicable": false,
           "genericScaffold": false
         }
@@ -14875,12 +15606,13 @@
           "filePath": false,
           "runCommand": false,
           "expectedResult": true,
-          "practice": false,
+          "practice": true,
           "project": false,
           "modelMental": true,
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 7,
           "practicable": false,
           "genericScaffold": false
         }
@@ -14901,6 +15633,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 7,
           "practicable": false,
           "genericScaffold": false
         }
@@ -14921,6 +15654,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 7,
           "practicable": false,
           "genericScaffold": false
         }
@@ -14941,6 +15675,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 5,
           "practicable": false,
           "genericScaffold": false
         }
@@ -14961,6 +15696,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 6,
           "practicable": false,
           "genericScaffold": false
         }
@@ -14981,6 +15717,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 5,
           "practicable": false,
           "genericScaffold": false
         }
@@ -15001,6 +15738,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 10,
           "practicable": false,
           "genericScaffold": false
         }
@@ -15021,6 +15759,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 8,
           "practicable": false,
           "genericScaffold": false
         }
@@ -15041,6 +15780,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 10,
           "practicable": false,
           "genericScaffold": false
         }
@@ -15061,6 +15801,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 8,
           "practicable": false,
           "genericScaffold": false
         }
@@ -15081,6 +15822,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 7,
           "practicable": false,
           "genericScaffold": false
         }
@@ -15101,6 +15843,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 5,
           "practicable": false,
           "genericScaffold": false
         }
@@ -15121,6 +15864,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 12,
           "practicable": false,
           "genericScaffold": false
         }
@@ -15141,6 +15885,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 9,
           "practicable": false,
           "genericScaffold": false
         }
@@ -15161,6 +15906,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 7,
           "practicable": false,
           "genericScaffold": false
         }
@@ -15181,7 +15927,8 @@
           "limitsDecision": true
         },
         "classification": {
-          "practicable": false,
+          "rubricScore": 12,
+          "practicable": true,
           "genericScaffold": false
         }
       },
@@ -15201,6 +15948,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 8,
           "practicable": false,
           "genericScaffold": false
         }
@@ -15221,6 +15969,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 8,
           "practicable": false,
           "genericScaffold": false
         }
@@ -15241,6 +15990,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 6,
           "practicable": false,
           "genericScaffold": false
         }
@@ -15261,6 +16011,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 5,
           "practicable": false,
           "genericScaffold": false
         }
@@ -15281,6 +16032,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 8,
           "practicable": false,
           "genericScaffold": false
         }
@@ -15301,6 +16053,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 8,
           "practicable": false,
           "genericScaffold": false
         }
@@ -15321,6 +16074,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 3,
           "practicable": false,
           "genericScaffold": false
         }
@@ -15341,6 +16095,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 7,
           "practicable": false,
           "genericScaffold": false
         }
@@ -15361,6 +16116,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 5,
           "practicable": false,
           "genericScaffold": false
         }
@@ -15383,6 +16139,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 3,
           "practicable": false,
           "genericScaffold": false
         }
@@ -15403,6 +16160,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 5,
           "practicable": false,
           "genericScaffold": false
         }
@@ -15423,6 +16181,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 4,
           "practicable": false,
           "genericScaffold": false
         }
@@ -15443,6 +16202,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 4,
           "practicable": false,
           "genericScaffold": false
         }
@@ -15463,6 +16223,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 3,
           "practicable": false,
           "genericScaffold": false
         }
@@ -15477,12 +16238,13 @@
           "filePath": false,
           "runCommand": false,
           "expectedResult": false,
-          "practice": false,
+          "practice": true,
           "project": false,
           "modelMental": true,
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 6,
           "practicable": false,
           "genericScaffold": false
         }
@@ -15503,6 +16265,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 7,
           "practicable": false,
           "genericScaffold": false
         }
@@ -15523,6 +16286,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 3,
           "practicable": false,
           "genericScaffold": false
         }
@@ -15543,6 +16307,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 5,
           "practicable": false,
           "genericScaffold": false
         }
@@ -15563,6 +16328,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 6,
           "practicable": false,
           "genericScaffold": false
         }
@@ -15583,6 +16349,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 5,
           "practicable": false,
           "genericScaffold": false
         }
@@ -15603,6 +16370,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 5,
           "practicable": false,
           "genericScaffold": false
         }
@@ -15623,6 +16391,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 5,
           "practicable": false,
           "genericScaffold": false
         }
@@ -15643,6 +16412,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 3,
           "practicable": false,
           "genericScaffold": false
         }
@@ -15663,6 +16433,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 3,
           "practicable": false,
           "genericScaffold": false
         }
@@ -15683,6 +16454,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 5,
           "practicable": false,
           "genericScaffold": false
         }
@@ -15703,6 +16475,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 9,
           "practicable": false,
           "genericScaffold": false
         }
@@ -15723,6 +16496,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 7,
           "practicable": false,
           "genericScaffold": false
         }
@@ -15743,6 +16517,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 5,
           "practicable": false,
           "genericScaffold": false
         }
@@ -15763,6 +16538,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 3,
           "practicable": false,
           "genericScaffold": false
         }
@@ -15783,6 +16559,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 5,
           "practicable": false,
           "genericScaffold": false
         }
@@ -15803,6 +16580,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 4,
           "practicable": false,
           "genericScaffold": false
         }
@@ -15823,6 +16601,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 10,
           "practicable": false,
           "genericScaffold": false
         }
@@ -15843,6 +16622,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 10,
           "practicable": false,
           "genericScaffold": false
         }
@@ -15863,6 +16643,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 12,
           "practicable": false,
           "genericScaffold": false
         }
@@ -15883,6 +16664,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 10,
           "practicable": false,
           "genericScaffold": false
         }
@@ -15903,6 +16685,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 10,
           "practicable": false,
           "genericScaffold": false
         }
@@ -15923,6 +16706,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 10,
           "practicable": false,
           "genericScaffold": false
         }
@@ -15943,6 +16727,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 4,
           "practicable": false,
           "genericScaffold": false
         }
@@ -15963,6 +16748,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 6,
           "practicable": false,
           "genericScaffold": false
         }
@@ -15983,6 +16769,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 4,
           "practicable": false,
           "genericScaffold": false
         }
@@ -16003,6 +16790,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 3,
           "practicable": false,
           "genericScaffold": false
         }
@@ -16023,6 +16811,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 3,
           "practicable": false,
           "genericScaffold": false
         }
@@ -16043,6 +16832,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 7,
           "practicable": false,
           "genericScaffold": false
         }
@@ -16063,6 +16853,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 3,
           "practicable": false,
           "genericScaffold": false
         }
@@ -16083,6 +16874,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 5,
           "practicable": false,
           "genericScaffold": false
         }
@@ -16103,6 +16895,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 6,
           "practicable": false,
           "genericScaffold": false
         }
@@ -16123,6 +16916,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 3,
           "practicable": false,
           "genericScaffold": false
         }
@@ -16143,6 +16937,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 3,
           "practicable": false,
           "genericScaffold": false
         }
@@ -16163,6 +16958,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 4,
           "practicable": false,
           "genericScaffold": false
         }
@@ -16183,6 +16979,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 5,
           "practicable": false,
           "genericScaffold": false
         }
@@ -16203,6 +17000,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 5,
           "practicable": false,
           "genericScaffold": false
         }
@@ -16223,6 +17021,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 8,
           "practicable": false,
           "genericScaffold": false
         }
@@ -16243,6 +17042,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 5,
           "practicable": false,
           "genericScaffold": false
         }
@@ -16263,6 +17063,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 4,
           "practicable": false,
           "genericScaffold": false
         }
@@ -16283,6 +17084,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 4,
           "practicable": false,
           "genericScaffold": false
         }
@@ -16303,6 +17105,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 4,
           "practicable": false,
           "genericScaffold": false
         }
@@ -16323,6 +17126,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 4,
           "practicable": false,
           "genericScaffold": false
         }
@@ -16343,6 +17147,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 3,
           "practicable": false,
           "genericScaffold": false
         }
@@ -16363,6 +17168,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 7,
           "practicable": false,
           "genericScaffold": false
         }
@@ -16383,6 +17189,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 5,
           "practicable": false,
           "genericScaffold": false
         }
@@ -16403,6 +17210,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 3,
           "practicable": false,
           "genericScaffold": false
         }
@@ -16423,6 +17231,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 6,
           "practicable": false,
           "genericScaffold": false
         }
@@ -16443,6 +17252,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 3,
           "practicable": false,
           "genericScaffold": false
         }
@@ -16463,6 +17273,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 3,
           "practicable": false,
           "genericScaffold": false
         }
@@ -16485,6 +17296,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 8,
           "practicable": false,
           "genericScaffold": false
         }
@@ -16505,6 +17317,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 12,
           "practicable": false,
           "genericScaffold": false
         }
@@ -16525,6 +17338,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 8,
           "practicable": false,
           "genericScaffold": false
         }
@@ -16545,6 +17359,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 7,
           "practicable": false,
           "genericScaffold": false
         }
@@ -16565,6 +17380,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 7,
           "practicable": false,
           "genericScaffold": false
         }
@@ -16585,6 +17401,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 7,
           "practicable": false,
           "genericScaffold": false
         }
@@ -16605,6 +17422,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 9,
           "practicable": false,
           "genericScaffold": false
         }
@@ -16625,6 +17443,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 7,
           "practicable": false,
           "genericScaffold": false
         }
@@ -16645,6 +17464,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 7,
           "practicable": false,
           "genericScaffold": false
         }
@@ -16665,6 +17485,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 7,
           "practicable": false,
           "genericScaffold": false
         }
@@ -16685,6 +17506,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 9,
           "practicable": false,
           "genericScaffold": false
         }
@@ -16705,6 +17527,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 7,
           "practicable": false,
           "genericScaffold": false
         }
@@ -16725,6 +17548,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 11,
           "practicable": false,
           "genericScaffold": false
         }
@@ -16745,6 +17569,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 8,
           "practicable": false,
           "genericScaffold": false
         }
@@ -16765,6 +17590,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 7,
           "practicable": false,
           "genericScaffold": false
         }
@@ -16785,6 +17611,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 7,
           "practicable": false,
           "genericScaffold": false
         }
@@ -16805,6 +17632,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 7,
           "practicable": false,
           "genericScaffold": false
         }
@@ -16825,6 +17653,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 7,
           "practicable": false,
           "genericScaffold": false
         }
@@ -16845,6 +17674,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 7,
           "practicable": false,
           "genericScaffold": false
         }
@@ -16865,6 +17695,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 8,
           "practicable": false,
           "genericScaffold": false
         }
@@ -16885,6 +17716,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 7,
           "practicable": false,
           "genericScaffold": false
         }
@@ -16905,6 +17737,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 11,
           "practicable": false,
           "genericScaffold": false
         }
@@ -16925,6 +17758,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 7,
           "practicable": false,
           "genericScaffold": false
         }
@@ -16945,6 +17779,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 9,
           "practicable": false,
           "genericScaffold": false
         }
@@ -16967,6 +17802,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 7,
           "practicable": false,
           "genericScaffold": false
         }
@@ -16987,6 +17823,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 10,
           "practicable": false,
           "genericScaffold": false
         }
@@ -17007,6 +17844,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 4,
           "practicable": false,
           "genericScaffold": false
         }
@@ -17027,6 +17865,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 5,
           "practicable": false,
           "genericScaffold": false
         }
@@ -17047,6 +17886,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 8,
           "practicable": false,
           "genericScaffold": false
         }
@@ -17067,6 +17907,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 9,
           "practicable": false,
           "genericScaffold": false
         }
@@ -17087,6 +17928,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 9,
           "practicable": false,
           "genericScaffold": false
         }
@@ -17107,6 +17949,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 5,
           "practicable": false,
           "genericScaffold": false
         }
@@ -17127,6 +17970,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 6,
           "practicable": false,
           "genericScaffold": false
         }
@@ -17147,6 +17991,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 9,
           "practicable": false,
           "genericScaffold": false
         }
@@ -17167,6 +18012,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 9,
           "practicable": false,
           "genericScaffold": false
         }
@@ -17187,6 +18033,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 16,
           "practicable": true,
           "genericScaffold": false
         }
@@ -17207,6 +18054,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 7,
           "practicable": false,
           "genericScaffold": false
         }
@@ -17227,6 +18075,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 5,
           "practicable": false,
           "genericScaffold": false
         }
@@ -17247,6 +18096,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 4,
           "practicable": false,
           "genericScaffold": false
         }
@@ -17267,6 +18117,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 7,
           "practicable": false,
           "genericScaffold": false
         }
@@ -17287,6 +18138,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 7,
           "practicable": false,
           "genericScaffold": false
         }
@@ -17307,6 +18159,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 8,
           "practicable": false,
           "genericScaffold": false
         }
@@ -17327,6 +18180,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 6,
           "practicable": false,
           "genericScaffold": false
         }
@@ -17347,6 +18201,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 6,
           "practicable": false,
           "genericScaffold": false
         }
@@ -17367,6 +18222,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 5,
           "practicable": false,
           "genericScaffold": false
         }
@@ -17387,6 +18243,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 7,
           "practicable": false,
           "genericScaffold": false
         }
@@ -17407,6 +18264,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 9,
           "practicable": false,
           "genericScaffold": false
         }
@@ -17427,6 +18285,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 9,
           "practicable": false,
           "genericScaffold": false
         }
@@ -17447,6 +18306,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 9,
           "practicable": false,
           "genericScaffold": false
         }
@@ -17467,6 +18327,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 9,
           "practicable": false,
           "genericScaffold": false
         }
@@ -17487,6 +18348,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 9,
           "practicable": false,
           "genericScaffold": false
         }
@@ -17507,6 +18369,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 9,
           "practicable": false,
           "genericScaffold": false
         }
@@ -17527,6 +18390,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 10,
           "practicable": false,
           "genericScaffold": false
         }
@@ -17547,6 +18411,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 10,
           "practicable": false,
           "genericScaffold": false
         }
@@ -17567,6 +18432,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 10,
           "practicable": false,
           "genericScaffold": false
         }
@@ -17587,6 +18453,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 10,
           "practicable": false,
           "genericScaffold": false
         }
@@ -17607,6 +18474,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 10,
           "practicable": false,
           "genericScaffold": false
         }
@@ -17627,6 +18495,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 10,
           "practicable": false,
           "genericScaffold": false
         }
@@ -17647,6 +18516,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 7,
           "practicable": false,
           "genericScaffold": false
         }
@@ -17667,6 +18537,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 9,
           "practicable": false,
           "genericScaffold": false
         }
@@ -17687,6 +18558,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 5,
           "practicable": false,
           "genericScaffold": false
         }
@@ -17707,6 +18579,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 5,
           "practicable": false,
           "genericScaffold": false
         }
@@ -17727,6 +18600,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 5,
           "practicable": false,
           "genericScaffold": false
         }
@@ -17747,6 +18621,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 3,
           "practicable": false,
           "genericScaffold": false
         }
@@ -17767,6 +18642,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 7,
           "practicable": false,
           "genericScaffold": false
         }
@@ -17787,6 +18663,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 7,
           "practicable": false,
           "genericScaffold": false
         }
@@ -17807,6 +18684,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 7,
           "practicable": false,
           "genericScaffold": false
         }
@@ -17827,6 +18705,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 10,
           "practicable": false,
           "genericScaffold": false
         }
@@ -17847,6 +18726,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 3,
           "practicable": false,
           "genericScaffold": false
         }
@@ -17867,6 +18747,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 3,
           "practicable": false,
           "genericScaffold": false
         }
@@ -17887,6 +18768,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 7,
           "practicable": false,
           "genericScaffold": false
         }
@@ -17907,6 +18789,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 6,
           "practicable": false,
           "genericScaffold": false
         }
@@ -17927,6 +18810,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 8,
           "practicable": false,
           "genericScaffold": false
         }
@@ -17947,6 +18831,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 7,
           "practicable": false,
           "genericScaffold": false
         }
@@ -17967,6 +18852,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 5,
           "practicable": false,
           "genericScaffold": false
         }
@@ -17987,6 +18873,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 5,
           "practicable": false,
           "genericScaffold": false
         }
@@ -18007,6 +18894,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 7,
           "practicable": false,
           "genericScaffold": false
         }
@@ -18027,6 +18915,7 @@
           "limitsDecision": false
         },
         "classification": {
+          "rubricScore": 5,
           "practicable": false,
           "genericScaffold": false
         }
@@ -18047,6 +18936,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 6,
           "practicable": false,
           "genericScaffold": false
         }
@@ -18067,6 +18957,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 6,
           "practicable": false,
           "genericScaffold": false
         }
@@ -18087,6 +18978,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 6,
           "practicable": false,
           "genericScaffold": false
         }
@@ -18107,6 +18999,7 @@
           "limitsDecision": true
         },
         "classification": {
+          "rubricScore": 6,
           "practicable": false,
           "genericScaffold": false
         }

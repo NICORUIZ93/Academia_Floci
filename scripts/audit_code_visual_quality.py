@@ -30,12 +30,23 @@ def student_visible_content(text: str) -> str:
     return text
 
 
+def structural_text(text: str) -> str:
+    return re.sub(
+        r"^```[^\n]*\n[\s\S]*?^```[ \t]*$",
+        lambda match: re.sub(r"[^\n]", " ", match.group()),
+        text,
+        flags=re.MULTILINE,
+    )
+
+
 def blocks(text: str):
-    headings = list(re.finditer(r"^###\s+(Tema(?:[^:]*)?:\s*.+)$", text, re.MULTILINE))
+    structure = structural_text(text)
+    headings = list(re.finditer(r"^###\s+(Tema(?:[^:]*)?:\s*.+)$", structure, re.MULTILINE))
     for index, heading in enumerate(headings):
         end = headings[index + 1].start() if index + 1 < len(headings) else len(text)
         block = text[heading.start():end]
-        next_h2 = re.search(r"^##\s+", block[heading.end() - heading.start():], re.MULTILINE)
+        block_structure = structure[heading.start():end]
+        next_h2 = re.search(r"^##\s+", block_structure[heading.end() - heading.start():], re.MULTILINE)
         if next_h2:
             block = block[:heading.end() - heading.start() + next_h2.start()]
         yield heading.group(1), block

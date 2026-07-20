@@ -28,47 +28,27 @@
         "installRecovery": true
       },
       "topics": 50,
-      "labs": 11,
-      "verifiableLabs": 11,
+      "labs": 10,
+      "verifiableLabs": 10,
       "states": {
-        "explained": 49,
-        "listed": 1
+        "explained": 50
       },
       "criteria": {
         "goal": 10,
         "prerequisites": 2,
-        "terms": 49,
+        "terms": 50,
         "code": 50,
         "location": 12,
         "execution": 37,
-        "expected": 19,
+        "expected": 21,
         "failure": 6,
-        "diagnosis": 11,
-        "practice": 24,
-        "project": 6,
-        "proof": 19,
+        "diagnosis": 12,
+        "practice": 25,
+        "project": 10,
+        "proof": 22,
         "transition": 0
       },
       "blockers": [
-        {
-          "module": 7,
-          "title": "Tema 4: Decisiones, documentación, deuda y evolución",
-          "state": "listed",
-          "score": 2,
-          "missing": [
-            "goal",
-            "prerequisites",
-            "terms",
-            "location",
-            "execution",
-            "expected",
-            "diagnosis",
-            "practice",
-            "project",
-            "proof",
-            "transition"
-          ]
-        },
         {
           "module": 10,
           "title": "Tema 2: Replicación, consistencia y decisiones explícitas",
@@ -197,23 +177,6 @@
           ]
         },
         {
-          "module": 0,
-          "title": "Tema 2: Archivos, carpetas y rutas sin perderse",
-          "state": "explained",
-          "score": 4,
-          "missing": [
-            "goal",
-            "prerequisites",
-            "expected",
-            "failure",
-            "diagnosis",
-            "practice",
-            "project",
-            "proof",
-            "transition"
-          ]
-        },
-        {
           "module": 1,
           "title": "Tema 1: Del problema al algoritmo y a los casos de prueba",
           "state": "explained",
@@ -310,6 +273,40 @@
             "expected",
             "failure",
             "practice",
+            "project",
+            "proof",
+            "transition"
+          ]
+        },
+        {
+          "module": 3,
+          "title": "Tema 2: HTTP como contrato observable",
+          "state": "explained",
+          "score": 4,
+          "missing": [
+            "goal",
+            "prerequisites",
+            "location",
+            "expected",
+            "failure",
+            "diagnosis",
+            "project",
+            "proof",
+            "transition"
+          ]
+        },
+        {
+          "module": 3,
+          "title": "Tema 4: CSS, layout responsive y accesibilidad verificable",
+          "state": "explained",
+          "score": 4,
+          "missing": [
+            "goal",
+            "prerequisites",
+            "location",
+            "execution",
+            "failure",
+            "diagnosis",
             "project",
             "proof",
             "transition"
@@ -968,8 +965,8 @@
         "installRecovery": true
       },
       "topics": 75,
-      "labs": 14,
-      "verifiableLabs": 14,
+      "labs": 13,
+      "verifiableLabs": 13,
       "states": {
         "explained": 75
       },
@@ -978,13 +975,13 @@
         "prerequisites": 1,
         "terms": 75,
         "code": 75,
-        "location": 24,
-        "execution": 18,
-        "expected": 27,
+        "location": 28,
+        "execution": 22,
+        "expected": 29,
         "failure": 2,
-        "diagnosis": 11,
+        "diagnosis": 13,
         "practice": 56,
-        "project": 7,
+        "project": 12,
         "proof": 8,
         "transition": 1
       },
@@ -1079,60 +1076,6 @@
             "failure",
             "diagnosis",
             "practice",
-            "project",
-            "proof",
-            "transition"
-          ]
-        },
-        {
-          "module": 0,
-          "title": "Tema 1: Variables — let, const y var",
-          "state": "explained",
-          "score": 3,
-          "missing": [
-            "goal",
-            "prerequisites",
-            "location",
-            "execution",
-            "expected",
-            "failure",
-            "diagnosis",
-            "project",
-            "proof",
-            "transition"
-          ]
-        },
-        {
-          "module": 0,
-          "title": "Tema 2: Tipos primitivos y typeof",
-          "state": "explained",
-          "score": 3,
-          "missing": [
-            "goal",
-            "prerequisites",
-            "location",
-            "execution",
-            "expected",
-            "failure",
-            "diagnosis",
-            "project",
-            "proof",
-            "transition"
-          ]
-        },
-        {
-          "module": 0,
-          "title": "Tema 4: Template literals",
-          "state": "explained",
-          "score": 3,
-          "missing": [
-            "goal",
-            "prerequisites",
-            "location",
-            "execution",
-            "expected",
-            "failure",
-            "diagnosis",
             "project",
             "proof",
             "transition"
@@ -1249,6 +1192,60 @@
         {
           "module": 2,
           "title": "Tema 5: Module pattern y factory functions",
+          "state": "explained",
+          "score": 3,
+          "missing": [
+            "goal",
+            "prerequisites",
+            "location",
+            "execution",
+            "expected",
+            "failure",
+            "diagnosis",
+            "project",
+            "proof",
+            "transition"
+          ]
+        },
+        {
+          "module": 3,
+          "title": "Tema 3: Getters, setters y propiedades computadas",
+          "state": "explained",
+          "score": 3,
+          "missing": [
+            "goal",
+            "prerequisites",
+            "location",
+            "execution",
+            "expected",
+            "failure",
+            "diagnosis",
+            "project",
+            "proof",
+            "transition"
+          ]
+        },
+        {
+          "module": 4,
+          "title": "Tema 1: map, filter, reduce, find, some/every",
+          "state": "explained",
+          "score": 3,
+          "missing": [
+            "goal",
+            "prerequisites",
+            "location",
+            "execution",
+            "expected",
+            "failure",
+            "diagnosis",
+            "project",
+            "proof",
+            "transition"
+          ]
+        },
+        {
+          "module": 4,
+          "title": "Tema 3: Inmutabilidad y actualización de estructuras anidadas",
           "state": "explained",
           "score": 3,
           "missing": [

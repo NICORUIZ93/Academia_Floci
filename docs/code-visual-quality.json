@@ -2,10 +2,10 @@
   "tracks": {
     "foundations": {
       "topics": 50,
-      "code": 49,
-      "commentedCode": 4,
-      "mermaid": 0,
-      "asciiVisual": 42,
+      "code": 50,
+      "commentedCode": 6,
+      "mermaid": 4,
+      "asciiVisual": 40,
       "misleadingDiagramLabel": 0,
       "filePath": 12,
       "runCommand": 37,
@@ -40,8 +40,8 @@
       "mermaid": 6,
       "asciiVisual": 43,
       "misleadingDiagramLabel": 0,
-      "filePath": 24,
-      "runCommand": 18,
+      "filePath": 28,
+      "runCommand": 22,
       "officialSource": 0
     },
     "node": {
@@ -174,13 +174,6 @@
       "track": "foundations",
       "module": 0,
       "topic": "Tema 3: Cómo leer un comando antes de ejecutarlo",
-      "missingCode": false,
-      "missingComments": true
-    },
-    {
-      "track": "foundations",
-      "module": 0,
-      "topic": "Tema 4: Primer programa, primer error y primera evidencia",
       "missingCode": false,
       "missingComments": true
     },
@@ -414,13 +407,6 @@
       "topic": "Tema 3: Diseño modular, principios, patrones y refactoring",
       "missingCode": false,
       "missingComments": true
-    },
-    {
-      "track": "foundations",
-      "module": 7,
-      "topic": "Tema 4: Decisiones, documentación, deuda y evolución",
-      "missingCode": true,
-      "missingComments": false
     },
     {
       "track": "foundations",

@@ -26,12 +26,24 @@ def student_visible_content(text: str) -> str:
     return text
 
 
+def structural_text(text: str) -> str:
+    """Oculta el contenido de fences conservando offsets y saltos de línea."""
+    return re.sub(
+        r"^```[^\n]*\n[\s\S]*?^```[ \t]*$",
+        lambda match: re.sub(r"[^\n]", " ", match.group()),
+        text,
+        flags=re.MULTILINE,
+    )
+
+
 def topic_blocks(text: str):
-    headings = list(re.finditer(r"^###\s+(Tema(?:[^:]*)?:\s*.+)$", text, re.MULTILINE))
+    structure = structural_text(text)
+    headings = list(re.finditer(r"^###\s+(Tema(?:[^:]*)?:\s*.+)$", structure, re.MULTILINE))
     for index, match in enumerate(headings):
         end = headings[index + 1].start() if index + 1 < len(headings) else len(text)
         block = text[match.start():end]
-        next_h2 = re.search(r"^##\s+", block[match.end() - match.start():], re.MULTILINE)
+        block_structure = structure[match.start():end]
+        next_h2 = re.search(r"^##\s+", block_structure[match.end() - match.start():], re.MULTILINE)
         if next_h2:
             block = block[:match.end() - match.start() + next_h2.start()]
         yield match.group(1), block
@@ -45,19 +57,26 @@ def evaluate(block: str) -> dict[str, bool]:
         "filePath": bool(re.search(r"(?:src/|lib/|app/|\.github/|[\w-]+\.(?:ts|tsx|js|java|kt|swift|dart|py|tf|ya?ml|json))", block)),
         "runCommand": bool(re.search(r"\b(npm|npx|node|python|java|gradle|mvn|flutter|swift|docker|kubectl|terraform|aws)\b", block, re.IGNORECASE)),
         "expectedResult": bool(re.search(r"(resultado esperado|salida esperada|debe mostrar|verifica)", block, re.IGNORECASE)),
-        "practice": bool(re.search(r"(práctica|ejercicio|laboratorio|predice|modifica)", block, re.IGNORECASE)),
+        "practice": bool(re.search(r"(práctica|ejercicio|laboratorio|construcci[oó]n|predice|modifica)", block, re.IGNORECASE)),
         "project": "RutaFlow" in block,
         "modelMental": bool(re.search(r"(analogía|modelo mental|por qué es importante)", block, re.IGNORECASE)),
         "limitsDecision": bool(re.search(r"(cuándo|límite|limitación|no usar|no conviene|diferencia|frente a|trade.?off)", block, re.IGNORECASE)),
     }
 
 
-def classify(criteria: dict[str, bool], block: str) -> dict[str, bool]:
+def classify(criteria: dict[str, bool], block: str) -> dict[str, bool | int]:
     """Distingue presencia editorial de una lección realmente practicable."""
-    required = (
-        "explanation", "code", "filePath", "runCommand", "expectedResult",
-        "practice", "project", "modelMental", "limitsDecision",
-    )
+    rubric = {
+        "explanation": 2 if criteria["modelMental"] and criteria["limitsDecision"] else int(criteria["explanation"]),
+        "example": 2 if criteria["code"] else 0,
+        "location": 2 if criteria["filePath"] else 0,
+        "execution": 2 if criteria["runCommand"] else 0,
+        "result": 2 if criteria["expectedResult"] else 0,
+        "visual": 2 if criteria["visual"] else 0,
+        "practice": 2 if criteria["practice"] else 0,
+        "project": 2 if criteria["project"] else 0,
+    }
+    score = sum(rubric.values())
     generic_markers = (
         "Este tema se incorpora de forma explícita porque no aparecía",
         "Este tema se estudia identificando el problema, sus prerrequisitos",
@@ -66,7 +85,8 @@ def classify(criteria: dict[str, bool], block: str) -> dict[str, bool]:
         "passed: true",
     )
     return {
-        "practicable": all(criteria[name] for name in required),
+        "rubricScore": score,
+        "practicable": score >= 12 and all(criteria[name] for name in ("code", "filePath", "runCommand", "practice")),
         "genericScaffold": any(marker in block for marker in generic_markers),
     }
 

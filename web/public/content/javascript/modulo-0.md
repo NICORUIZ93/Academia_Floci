@@ -55,6 +55,10 @@ function f() {                    function f() {
 }                                  }
 ```
 
+#### Construcción RutaFlow
+
+Crea `academia-javascript/src/envio.js` y modela `const guia = 'RF-001'`, `let estado = 'creado'` y un objeto `envio` cuyo peso pueda cambiar sin reasignar el objeto. Ejecuta `node src/envio.js`. Debe mostrar `RF-001 creado`; intenta reasignar `guia` y diagnostica el `TypeError`. Después modifica solo `estado` a `en-ruta` y explica por qué `const` sigue siendo la opción correcta para `envio`.
+
 ### Tema 2: Tipos primitivos y typeof
 
 **Conceptos clave:** los 7 tipos primitivos, `typeof`, el caso especial de `null`.
@@ -86,6 +90,10 @@ typeof []          → "object"
 typeof function(){} → "function" (conveniencia del operador)
 ```
 
+#### Construcción RutaFlow
+
+Amplía `src/envio.js` con `pesoKg`, `entregado`, `conductor`, `fechaEntrega`, un `Symbol` interno y un contador `bigint`. Imprime `typeof` de cada valor con `node src/envio.js`; la salida debe incluir los siete tipos primitivos y el caso histórico `typeof null === 'object'`. Cambia `fechaEntrega` de `null` a una cadena y predice qué validación del dominio debe actualizarse.
+
 ### Tema 3: Coerción implícita — == frente a ===
 
 **Conceptos clave:** coerción de tipos, igualdad estricta, reglas impredecibles de `==`.
@@ -113,6 +121,10 @@ null === undefined → false  (tipos distintos)
 "" == "0"       → false  (ambos strings, sin conversión, distintos)
 ```
 
+#### Construcción RutaFlow
+
+Simula que el identificador llega desde HTTP como texto: `const idSolicitado = '101'`, mientras el registro conserva `id: 101`. En `src/envio.js` compara con `==` y `===`, ejecuta `node src/envio.js` y documenta ambos resultados. **Modifica** la frontera para convertir con `Number(idSolicitado)` y mantener `===`; provoca `Number('RF-101')`, verifica `NaN` y recházalo con `Number.isNaN`.
+
 ### Tema 4: Template literals
 
 **Conceptos clave:** interpolación de expresiones, strings multilínea, backticks.
@@ -136,6 +148,10 @@ Concatenación clásica:                Template literal:
 "Hola " + nombre + ", tienes " +      `Hola ${nombre}, tienes
   edad + " años"                       ${edad} años`
 ```
+
+#### Construcción RutaFlow
+
+Crea una función `resumenEnvio(envio)` dentro de `src/envio.js` que devuelva ``Guía ${envio.guia}: ${envio.estado} (${envio.pesoKg} kg)``. Ejecuta `node src/envio.js`. **Resultado esperado:** `Guía RF-001: en-ruta (2 kg)`. **Modifica** el modelo agregando una dirección opcional con `?? 'sin dirección'` y comprueba que el valor numérico `0` no sea reemplazado accidentalmente como ocurriría con `||`.
 
 ### Tema 5: Entorno — navegador frente a Node.js
 
@@ -167,6 +183,10 @@ Node.js fue, históricamente, lo que permitió a JavaScript salir del navegador 
 
 ---
 
+#### Construcción RutaFlow
+
+Importa `resumenEnvio` desde `src/envio.js` en `src/cli.js` y ejecútalo con Node. Luego crea `web/index.html` y `web/app.js` para mostrar el mismo resumen en un elemento `<output id="estado">`. `node src/cli.js` debe funcionar; abrir `web/index.html` debe actualizar el DOM. Intenta usar `document` desde Node y diagnostica `ReferenceError`: el lenguaje es el mismo, pero las APIs disponibles dependen del entorno.
+
 ## Ruta de proyecto progresivo desde carpeta vacía
 
 No crees un proyecto desechable por módulo. Conserva un único repositorio que evoluciona durante todo el track y etiqueta cada hito (`git tag modulo-N`). Empieza con `mkdir academia-javascript && cd academia-javascript && git init && npm init -y`. Ejecuta el comando paso a paso, inspecciona los archivos generados y registra versiones y precondiciones en el README.
@@ -181,7 +201,7 @@ No crees un proyecto desechable por módulo. Conserva un único repositorio que 
 Al iniciar cada laboratorio crea una rama `modulo-N`, implementa el incremento, verifica el criterio de éxito y fusiona solo con pruebas verdes. Si un módulo necesita un experimento aislado, colócalo en `experiments/modulo-N/`; el producto acumulativo permanece ejecutable. Al terminar, otra persona debe poder clonar el repositorio y reproducir el último hito siguiendo únicamente el README.
 
 
-## Laboratorio práctico
+## Construcción guiada del capítulo
 
 **Objetivo del laboratorio:** ejecutar el mismo código base en el navegador y en Node.js, demostrando dominio de variables, tipos, coerción, template literals y scope.
 

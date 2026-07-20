@@ -6,33 +6,33 @@ Este inventario se genera desde el Markdown real. Las ayudas visuales, el glosar
 
 | Criterio | Cubierto | Pendiente |
 |---|---:|---:|
-| Explicación | 891 | 2 |
+| Explicación | 892 | 1 |
 | Código | 843 | 50 |
-| Ruta | 157 | 736 |
-| Ejecución | 423 | 470 |
-| Resultado | 254 | 639 |
-| Modificación | 387 | 506 |
-| Rutaflow | 120 | 773 |
+| Ruta | 161 | 732 |
+| Ejecución | 427 | 466 |
+| Resultado | 258 | 635 |
+| Modificación | 412 | 481 |
+| Rutaflow | 129 | 764 |
 | Modelo mental | 893 | 0 |
-| Límites | 430 | 463 |
-| **Tema practicable completo** | **17** | **876** |
+| Límites | 431 | 462 |
+| **Tema practicable completo** | **44** | **849** |
 
 ## Prioridad por track
 
 | Track | Temas | Sin código | Sin ruta | Sin ejecución | Sin resultado | Sin modificación | Sin límites |
 |---|---:|---:|---:|---:|---:|---:|---:|
-| android | 49 | 0 | 45 | 44 | 38 | 27 | 29 |
+| android | 49 | 0 | 45 | 44 | 38 | 25 | 29 |
 | angular | 61 | 0 | 47 | 57 | 44 | 29 | 31 |
-| cloud | 153 | 50 | 130 | 51 | 122 | 83 | 76 |
-| devops | 91 | 0 | 73 | 47 | 69 | 32 | 41 |
-| flutter | 57 | 0 | 49 | 28 | 37 | 42 | 38 |
-| foundations | 50 | 0 | 38 | 15 | 31 | 34 | 34 |
-| ios | 51 | 0 | 49 | 12 | 35 | 31 | 27 |
-| java | 59 | 0 | 50 | 7 | 40 | 37 | 22 |
-| javascript | 75 | 0 | 51 | 57 | 48 | 27 | 25 |
-| kotlin-multiplatform | 46 | 0 | 41 | 29 | 35 | 33 | 23 |
-| node | 64 | 0 | 43 | 25 | 39 | 32 | 29 |
-| react | 55 | 0 | 44 | 54 | 47 | 38 | 33 |
+| cloud | 153 | 50 | 130 | 51 | 122 | 82 | 76 |
+| devops | 91 | 0 | 73 | 47 | 69 | 28 | 41 |
+| flutter | 57 | 0 | 49 | 28 | 37 | 36 | 38 |
+| foundations | 50 | 0 | 38 | 15 | 29 | 31 | 33 |
+| ios | 51 | 0 | 49 | 12 | 35 | 30 | 27 |
+| java | 59 | 0 | 50 | 7 | 40 | 36 | 22 |
+| javascript | 75 | 0 | 47 | 53 | 46 | 27 | 25 |
+| kotlin-multiplatform | 46 | 0 | 41 | 29 | 35 | 30 | 23 |
+| node | 64 | 0 | 43 | 25 | 39 | 29 | 29 |
+| react | 55 | 0 | 44 | 54 | 47 | 37 | 33 |
 | rutaflow | 24 | 0 | 24 | 21 | 21 | 21 | 19 |
 | spring-boot | 58 | 0 | 52 | 23 | 33 | 40 | 36 |
 

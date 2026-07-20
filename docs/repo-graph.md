@@ -1,6 +1,6 @@
 # Academia Floci Repo Graph
 
-Generated: 2026-07-20 04:57 UTC
+Generated: 2026-07-20 05:03 UTC
 Root: `Academia_Floci`
 Indexed files: 776
 Import edges: 33
@@ -157,9 +157,9 @@ For automated lookups, use `docs/repo-graph.json`.
 
 ### automation-script
 
-- `scripts/audit_code_visual_quality.py` (117 lines) - symbols: student_visible_content, blocks, evaluate, build, render, main; imports: __future__, argparse, json, re, collections, pathlib
-- `scripts/audit_student_journey.py` (146 lines) - symbols: topic_blocks, has, build_report, render, main; imports: __future__, json, re, collections, pathlib
-- `scripts/audit_topic_learning_quality.py` (135 lines) - symbols: student_visible_content, topic_blocks, evaluate, classify, build, render_markdown, main; imports: __future__, argparse, json, re, collections, pathlib
+- `scripts/audit_code_visual_quality.py` (128 lines) - symbols: student_visible_content, structural_text, blocks, evaluate, build, render, main; imports: __future__, argparse, json, re, collections, pathlib
+- `scripts/audit_student_journey.py` (157 lines) - symbols: structural_text, topic_blocks, has, build_report, render, main; imports: __future__, json, re, collections, pathlib
+- `scripts/audit_topic_learning_quality.py` (155 lines) - symbols: student_visible_content, structural_text, topic_blocks, evaluate, classify, build, render_markdown, main; imports: __future__, argparse, json, re, collections, pathlib
 - `scripts/build_editorial_backlog.py` (101 lines) - symbols: render, main; imports: __future__, argparse, collections, pathlib, audit_topic_learning_quality
 - `scripts/build_prerequisite_graph.py` (114 lines) - symbols: topics_for, build, render, main; imports: __future__, argparse, json, re, pathlib
 - `scripts/build_repo_graph.py` (464 lines) - symbols: FileNode, repo_files, read_text, classify, parse_ts_symbols, parse_ts_imports, parse_python_symbols, parse_python_imports; imports: __future__, argparse, ast, json, re, subprocess, collections, dataclasses
@@ -252,7 +252,7 @@ For automated lookups, use `docs/repo-graph.json`.
 - `.env.example` (8 lines)
 - `.github/workflows/ci.yml` (55 lines)
 - `.gitignore` (25 lines)
-- `docs/code-visual-quality.json` (5544 lines)
+- `docs/code-visual-quality.json` (5530 lines)
 - `docs/curriculum-matrix.json` (155 lines)
 - `docs/floci-official-curriculum.json` (14 lines)
 - `docs/official-learning-guides.json` (22 lines)
@@ -261,8 +261,8 @@ For automated lookups, use `docs/repo-graph.json`.
 - `docs/prerequisite-graph.json` (9831 lines)
 - `docs/requested-master-topics.json` (189 lines)
 - `docs/specialization-outcomes.json` (116 lines)
-- `docs/student-journey-audit.json` (4393 lines)
-- `docs/topic-learning-quality.json` (18117 lines)
+- `docs/student-journey-audit.json` (4390 lines)
+- `docs/topic-learning-quality.json` (19010 lines)
 - `install.sh` (99 lines)
 - `web/.gitignore` (48 lines)
 - `web/.vscode/extensions.json` (5 lines)

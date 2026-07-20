@@ -34,13 +34,15 @@ La primera línea pide una entrada y guarda el texto en `nombre`. La segunda con
 
 **¿Por qué es importante?** Depurar exige saber si el problema pertenece al archivo, al programa que lo interpreta, al proceso en ejecución o al entorno. “Mi código no funciona” es demasiado ambiguo; “Python no encuentra el archivo” o “el proceso termina con un error en la línea 2” ya son diagnósticos útiles.
 
-**Diagrama:**
-
-```text
-archivo hola.py (SSD) → intérprete Python → proceso en RAM → CPU ejecuta
-                                                     ↓
-                                           salida en la terminal
+```mermaid
+flowchart LR
+  File["hola.py en almacenamiento"] --> Interpreter["Intérprete Python"]
+  Interpreter --> Process["Proceso en memoria RAM"]
+  Process --> CPU["CPU ejecuta instrucciones"]
+  Process --> Output["Salida en la terminal"]
 ```
+
+**Construcción RutaFlow:** crea `academia-fundamentos/rutaflow-cero/saludo.py`, copia el ejemplo y cambia la salida para mostrar `Operador <nombre> inició RutaFlow`. Desde `rutaflow-cero/` ejecuta `python3 saludo.py` (`py saludo.py` en Windows). Debes observar primero la pregunta y luego el mensaje con el nombre ingresado. Elimina una comilla, predice el tipo de error y restáurala después de localizar archivo y línea.
 
 ### Tema 2: Archivos, carpetas y rutas sin perderse
 
@@ -66,14 +68,15 @@ Las extensiones como `.py`, `.java`, `.js` o `.md` son parte del nombre y ayudan
 
 **¿Por qué es importante?** Gran parte de los errores iniciales no son de programación: la terminal está en otra carpeta, el archivo fue guardado con doble extensión o el comando usa una ruta equivocada. Orientarse evita ejecutar instalaciones o eliminaciones en el lugar incorrecto.
 
-**Diagrama:**
-
-```text
-academia/
-└── primer-programa/      ← carpeta actual
-    ├── hola.py           ← ./hola.py
-    └── README.md         ← ./README.md
+```mermaid
+flowchart TB
+  Academia["academia-fundamentos/"] --> Project["rutaflow-cero/"]
+  Project --> Source["saludo.py"]
+  Project --> Readme["README.md"]
+  Project --> Evidence["evidencias/"]
 ```
+
+**Construcción RutaFlow:** crea exactamente la estructura del diagrama con `mkdir -p academia-fundamentos/rutaflow-cero/evidencias` en macOS/Linux. En PowerShell usa `New-Item -ItemType Directory -Force academia-fundamentos/rutaflow-cero/evidencias`. Entra en `rutaflow-cero`, ejecuta `pwd` y lista el contenido. La evidencia es una captura textual de la ruta y el árbol; desde una carpeta equivocada, `python3 saludo.py` debe fallar y enseñarte a verificar ubicación antes de editar código.
 
 ### Tema 3: Cómo leer un comando antes de ejecutarlo
 
@@ -106,16 +109,14 @@ El error no es un castigo: contiene el nombre buscado y explica que no existe. E
 
 **¿Por qué es importante?** Un profesional no evalúa un comando por si “parece funcionar”, sino por su intención, salida y código de terminación. Esta disciplina es esencial en automatización y CI/CD, donde nadie observa manualmente la pantalla.
 
-**Diagrama:**
-
-```text
-git status --short
-│   │      └─ opción
-│   └──────── subcomando
-└──────────── programa
-        ↓
- salida + código de terminación
+```mermaid
+flowchart LR
+  Program["git: programa"] --> Subcommand["status: subcomando"]
+  Subcommand --> Option["--short: opción"]
+  Option --> Result["salida + código de terminación"]
 ```
+
+**Construcción RutaFlow:** dentro de `academia-fundamentos/rutaflow-cero/`, ejecuta `git init`, `git status --short` y consulta el código de salida. Crea `README.md` y repite el estado: ahora debe aparecer `?? README.md`. Predice qué ocurrirá con `git status --opcion-inexistente`, ejecútalo y registra mensaje y código en `evidencias/comandos.md`. No continúes hasta explicar programa, subcomando, opción y resultado.
 
 ### Tema 4: Primer programa, primer error y primera evidencia
 
@@ -159,16 +160,20 @@ Un README permite que otra persona reproduzca el resultado. Esta es la primera f
 
 **¿Por qué es importante?** La programación profesional consiste tanto en comprender fallos como en escribir código correcto. Documentar comandos, entorno y resultados transforma una demostración personal en evidencia reproducible.
 
-**Diagrama:**
-
-```text
-observar error → localizar → formular hipótesis → cambiar una cosa → ejecutar
-       ↑                                                           │
-       └────────────────── si falla, repetir con evidencia ─────────┘
+```mermaid
+flowchart LR
+  Observe["Observar el error"] --> Locate["Localizar archivo y línea"]
+  Locate --> Hypothesis["Formular una hipótesis"]
+  Hypothesis --> Change["Cambiar una sola cosa"]
+  Change --> Run["Ejecutar de nuevo"]
+  Run -->|"todavía falla"| Observe
+  Run -->|"funciona"| Evidence["Guardar evidencia"]
 ```
 
+**Construcción RutaFlow:** guarda la versión correcta de `saludo.py`, una versión rota temporal y la explicación del diagnóstico en `evidencias/primer-error.md`. Ejecuta desde una terminal nueva siguiendo únicamente el README. El capítulo queda terminado cuando otra persona reproduce el saludo, provoca el mismo `SyntaxError` y lo corrige sin preguntarte qué carpeta abrir.
 
-## Laboratorio práctico
+
+## Construcción guiada del capítulo
 
 **Proyecto cero: evidencia reproducible desde una carpeta vacía**
 
