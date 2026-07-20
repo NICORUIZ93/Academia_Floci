@@ -38,6 +38,36 @@ En PowerShell puedes ejecutar `iwr https://floci.io/install.ps1 | iex`. La alter
 
 `floci-cli` administra procesos; `floci`, `floci-az` y `floci-gcp` implementan APIs locales; `floci-ui` permite observar recursos; los SDK y CLI oficiales siguen siendo los clientes. Esa separación evita aprender comandos inventados: cambia el endpoint, no la forma de programar.
 
+#### Simulación de API frente a motor real
+
+Floci no ejecuta todos los servicios de la misma manera. En servicios de plano de control puede conservar estado y responder con el protocolo compatible; en servicios de datos complejos levanta motores reales dentro de Docker. Esta diferencia determina qué conclusión puedes extraer de una prueba. Un `CreateCluster` exitoso demuestra compatibilidad del contrato de control; una consulta Redis, SQL, Kafka u OpenSearch exitosa también recorre el protocolo de datos real.
+
+| Servicio local | Motor o ejecución | Qué puedes comprobar | Qué debes volver a validar en AWS |
+|---|---|---|---|
+| Lambda | Runtime oficial aislado en Docker | Variables, payload, errores, warm pool e integraciones | Cuotas, red regional y concurrencia a escala |
+| RDS | PostgreSQL, MySQL o MariaDB reales | SQL, JDBC, migraciones y autenticación compatible | Multi-AZ, backups administrados y rendimiento |
+| ElastiCache | Redis/Valkey real tras proxy SigV4 | RESP, comandos, cliente y fallos de autenticación | Topología, failover y latencia de red |
+| ECS y EC2 | Contenedores Docker reales | Ciclo de vida, imágenes, UserData, SSH e IMDS | Hipervisor, tipos de instancia y red VPC real |
+| MSK | Redpanda compatible con Kafka | Productores, consumidores, grupos y offsets | Operación multi-broker y disponibilidad regional |
+| OpenSearch | Nodos OpenSearch reales | Índices, consultas y clientes del protocolo | Dimensionamiento, snapshots y upgrades |
+| ECR | Registry OCI real | `docker push`, `docker pull` e imágenes Lambda | Replicación, escaneo y políticas regionales |
+| Athena | DuckDB como motor local | SQL, archivos y errores de esquema | Coste por bytes, catálogo distribuido y límites |
+
+```mermaid
+flowchart LR
+  Client["AWS CLI o SDK"] -->|"SigV4 + protocolo AWS"| Floci["Floci :4566"]
+  Floci --> Control["Estado del plano de control"]
+  Floci --> Runtime["Runtime Lambda"]
+  Floci --> SQL["PostgreSQL / MySQL"]
+  Floci --> Redis["Redis / Valkey"]
+  Floci --> Kafka["Redpanda / Kafka"]
+  Floci --> Search["OpenSearch"]
+```
+
+**Compruébalo sin aceptar la explicación a ciegas:** ejecuta `docker ps --format 'table {{.Names}}\t{{.Image}}'` antes y después de crear un recurso respaldado por un motor real. Debe aparecer un contenedor adicional para servicios como RDS, ElastiCache u OpenSearch. Luego elimina el recurso y observa su ciclo de vida. Si solo verificas la respuesta del comando `create-*`, todavía no has demostrado que el plano de datos funciona.
+
+**Fallo deliberado:** detén manualmente el contenedor del motor y repite una operación de datos. La petición debe fallar aunque el recurso siga apareciendo en el plano de control. Diagnostica comparando `aws ... describe-*`, `docker ps -a` y `floci logs --follow`. Esta separación es la base para entender incidentes reales donde la API de administración responde, pero el motor de datos no está disponible.
+
 ```mermaid
 flowchart LR
   U[CLI, SDK, Terraform o tests] --> C[floci-cli]

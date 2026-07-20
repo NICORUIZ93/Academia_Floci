@@ -49,11 +49,11 @@
       "visual": 57,
       "filePath": 21,
       "runCommand": 102,
-      "expectedResult": 29,
+      "expectedResult": 30,
       "practice": 67,
       "project": 6,
       "modelMental": 153,
-      "limitsDecision": 75,
+      "limitsDecision": 76,
       "practicable": 0,
       "genericScaffold": 0
     },
@@ -4718,11 +4718,11 @@
           "visual": true,
           "filePath": false,
           "runCommand": true,
-          "expectedResult": false,
+          "expectedResult": true,
           "practice": false,
           "project": false,
           "modelMental": true,
-          "limitsDecision": false
+          "limitsDecision": true
         },
         "classification": {
           "practicable": false,

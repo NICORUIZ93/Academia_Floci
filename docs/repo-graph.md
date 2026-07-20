@@ -1,6 +1,6 @@
 # Academia Floci Repo Graph
 
-Generated: 2026-07-20 04:33 UTC
+Generated: 2026-07-20 04:40 UTC
 Root: `Academia_Floci`
 Indexed files: 771
 Import edges: 33
@@ -260,7 +260,7 @@ For automated lookups, use `docs/repo-graph.json`.
 - `docs/official-topic-atlas.json` (175 lines)
 - `docs/requested-master-topics.json` (189 lines)
 - `docs/specialization-outcomes.json` (116 lines)
-- `docs/student-journey-audit.json` (4390 lines)
+- `docs/student-journey-audit.json` (4394 lines)
 - `docs/topic-learning-quality.json` (18117 lines)
 - `install.sh` (99 lines)
 - `web/.gitignore` (48 lines)

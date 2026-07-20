@@ -13,7 +13,7 @@
     },
     "cloud": {
       "topics": 153,
-      "code": 90,
+      "code": 91,
       "commentedCode": 5,
       "mermaid": 12,
       "asciiVisual": 78,
@@ -1245,8 +1245,8 @@
       "track": "cloud",
       "module": 34,
       "topic": "Tema 2: Modelo mental de la plataforma",
-      "missingCode": true,
-      "missingComments": false
+      "missingCode": false,
+      "missingComments": true
     },
     {
       "track": "cloud",

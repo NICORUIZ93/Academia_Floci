@@ -27,34 +27,34 @@
         "firstRun": true,
         "installRecovery": true
       },
-      "topics": 67,
-      "labs": 12,
-      "verifiableLabs": 12,
+      "topics": 50,
+      "labs": 11,
+      "verifiableLabs": 11,
       "states": {
-        "explained": 66,
+        "explained": 49,
         "listed": 1
       },
       "criteria": {
-        "goal": 4,
+        "goal": 10,
         "prerequisites": 2,
-        "terms": 66,
-        "code": 44,
-        "location": 6,
-        "execution": 32,
-        "expected": 36,
-        "failure": 5,
+        "terms": 49,
+        "code": 50,
+        "location": 12,
+        "execution": 37,
+        "expected": 19,
+        "failure": 6,
         "diagnosis": 11,
-        "practice": 41,
-        "project": 23,
-        "proof": 39,
-        "transition": 23
+        "practice": 24,
+        "project": 6,
+        "proof": 19,
+        "transition": 0
       },
       "blockers": [
         {
           "module": 7,
           "title": "Tema 4: Decisiones, documentación, deuda y evolución",
           "state": "listed",
-          "score": 1,
+          "score": 2,
           "missing": [
             "goal",
             "prerequisites",
@@ -62,7 +62,6 @@
             "location",
             "execution",
             "expected",
-            "failure",
             "diagnosis",
             "practice",
             "project",
@@ -330,28 +329,50 @@
         "firstRun": true,
         "installRecovery": true
       },
-      "topics": 170,
-      "labs": 35,
-      "verifiableLabs": 35,
+      "topics": 153,
+      "labs": 33,
+      "verifiableLabs": 33,
       "states": {
-        "explained": 170
+        "explained": 144,
+        "listed": 9
       },
       "criteria": {
-        "goal": 29,
+        "goal": 31,
         "prerequisites": 29,
-        "terms": 170,
-        "code": 99,
-        "location": 20,
-        "execution": 95,
-        "expected": 52,
+        "terms": 144,
+        "code": 100,
+        "location": 22,
+        "execution": 103,
+        "expected": 30,
         "failure": 10,
-        "diagnosis": 12,
-        "practice": 114,
-        "project": 34,
-        "proof": 39,
-        "transition": 28
+        "diagnosis": 14,
+        "practice": 91,
+        "project": 7,
+        "proof": 16,
+        "transition": 1
       },
       "blockers": [
+        {
+          "module": 34,
+          "title": "Tema 10: Límites y transferencia a producción",
+          "state": "listed",
+          "score": 0,
+          "missing": [
+            "goal",
+            "prerequisites",
+            "terms",
+            "code",
+            "location",
+            "execution",
+            "expected",
+            "failure",
+            "diagnosis",
+            "practice",
+            "project",
+            "proof",
+            "transition"
+          ]
+        },
         {
           "module": 24,
           "title": "Tema 4: Despliegue Blue/Green de Lambda — cambio de tráfico por alias",
@@ -380,6 +401,46 @@
           "missing": [
             "goal",
             "prerequisites",
+            "code",
+            "location",
+            "execution",
+            "expected",
+            "failure",
+            "diagnosis",
+            "practice",
+            "project",
+            "proof",
+            "transition"
+          ]
+        },
+        {
+          "module": 34,
+          "title": "Tema 3: AWS CLI y SDK, Azure CLI y SDK, GCP CLI y SDK",
+          "state": "listed",
+          "score": 1,
+          "missing": [
+            "goal",
+            "prerequisites",
+            "terms",
+            "code",
+            "location",
+            "expected",
+            "failure",
+            "diagnosis",
+            "practice",
+            "project",
+            "proof",
+            "transition"
+          ]
+        },
+        {
+          "module": 34,
+          "title": "Tema 8: Servicios GCP que completan el recorrido",
+          "state": "listed",
+          "score": 1,
+          "missing": [
+            "prerequisites",
+            "terms",
             "code",
             "location",
             "execution",
@@ -581,63 +642,6 @@
             "proof",
             "transition"
           ]
-        },
-        {
-          "module": 26,
-          "title": "Tema 2: Firehose vs Kinesis Data Streams — quién consume los datos",
-          "state": "explained",
-          "score": 2,
-          "missing": [
-            "goal",
-            "code",
-            "location",
-            "execution",
-            "expected",
-            "failure",
-            "diagnosis",
-            "practice",
-            "project",
-            "proof",
-            "transition"
-          ]
-        },
-        {
-          "module": 27,
-          "title": "Tema 4: El simulador de buzones y el punto de inspección local",
-          "state": "explained",
-          "score": 2,
-          "missing": [
-            "goal",
-            "prerequisites",
-            "code",
-            "location",
-            "expected",
-            "failure",
-            "diagnosis",
-            "practice",
-            "project",
-            "proof",
-            "transition"
-          ]
-        },
-        {
-          "module": 28,
-          "title": "Tema 1: Bases de datos de grafos — cuando las relaciones son el dato",
-          "state": "explained",
-          "score": 2,
-          "missing": [
-            "goal",
-            "code",
-            "location",
-            "execution",
-            "expected",
-            "failure",
-            "diagnosis",
-            "practice",
-            "project",
-            "proof",
-            "transition"
-          ]
         }
       ]
     },
@@ -653,26 +657,26 @@
         "firstRun": true,
         "installRecovery": true
       },
-      "topics": 111,
-      "labs": 16,
-      "verifiableLabs": 16,
+      "topics": 91,
+      "labs": 15,
+      "verifiableLabs": 15,
       "states": {
-        "explained": 111
+        "explained": 91
       },
       "criteria": {
         "goal": 17,
         "prerequisites": 16,
-        "terms": 111,
+        "terms": 91,
         "code": 91,
         "location": 19,
-        "execution": 46,
-        "expected": 42,
+        "execution": 44,
+        "expected": 22,
         "failure": 1,
         "diagnosis": 23,
-        "practice": 84,
-        "project": 31,
-        "proof": 30,
-        "transition": 22
+        "practice": 64,
+        "project": 11,
+        "proof": 10,
+        "transition": 2
       },
       "blockers": [
         {
@@ -964,26 +968,26 @@
         "firstRun": true,
         "installRecovery": true
       },
-      "topics": 104,
-      "labs": 15,
-      "verifiableLabs": 15,
+      "topics": 75,
+      "labs": 14,
+      "verifiableLabs": 14,
       "states": {
-        "explained": 104
+        "explained": 75
       },
       "criteria": {
-        "goal": 8,
+        "goal": 9,
         "prerequisites": 1,
-        "terms": 104,
+        "terms": 75,
         "code": 75,
-        "location": 20,
-        "execution": 12,
-        "expected": 50,
+        "location": 24,
+        "execution": 18,
+        "expected": 27,
         "failure": 2,
         "diagnosis": 11,
-        "practice": 85,
-        "project": 36,
-        "proof": 37,
-        "transition": 30
+        "practice": 56,
+        "project": 7,
+        "proof": 8,
+        "transition": 1
       },
       "blockers": [
         {
@@ -1275,26 +1279,26 @@
         "firstRun": true,
         "installRecovery": true
       },
-      "topics": 85,
-      "labs": 15,
-      "verifiableLabs": 15,
+      "topics": 64,
+      "labs": 14,
+      "verifiableLabs": 14,
       "states": {
-        "explained": 85
+        "explained": 64
       },
       "criteria": {
         "goal": 1,
         "prerequisites": 0,
-        "terms": 85,
+        "terms": 64,
         "code": 64,
-        "location": 28,
-        "execution": 45,
-        "expected": 46,
+        "location": 21,
+        "execution": 41,
+        "expected": 25,
         "failure": 3,
-        "diagnosis": 11,
-        "practice": 58,
-        "project": 30,
-        "proof": 31,
-        "transition": 23
+        "diagnosis": 10,
+        "practice": 37,
+        "project": 9,
+        "proof": 10,
+        "transition": 2
       },
       "blockers": [
         {
@@ -1582,26 +1586,26 @@
         "firstRun": true,
         "installRecovery": true
       },
-      "topics": 89,
-      "labs": 16,
-      "verifiableLabs": 16,
+      "topics": 61,
+      "labs": 15,
+      "verifiableLabs": 15,
       "states": {
-        "explained": 89
+        "explained": 61
       },
       "criteria": {
         "goal": 3,
         "prerequisites": 3,
-        "terms": 89,
+        "terms": 61,
         "code": 61,
         "location": 14,
         "execution": 4,
-        "expected": 45,
+        "expected": 17,
         "failure": 3,
         "diagnosis": 4,
-        "practice": 67,
-        "project": 37,
-        "proof": 36,
-        "transition": 28
+        "practice": 39,
+        "project": 9,
+        "proof": 8,
+        "transition": 0
       },
       "blockers": [
         {
@@ -1898,26 +1902,26 @@
         "firstRun": true,
         "installRecovery": true
       },
-      "topics": 80,
-      "labs": 15,
-      "verifiableLabs": 15,
+      "topics": 55,
+      "labs": 14,
+      "verifiableLabs": 14,
       "states": {
-        "explained": 80
+        "explained": 55
       },
       "criteria": {
         "goal": 3,
         "prerequisites": 1,
-        "terms": 80,
+        "terms": 55,
         "code": 55,
-        "location": 12,
+        "location": 11,
         "execution": 1,
-        "expected": 33,
+        "expected": 8,
         "failure": 2,
         "diagnosis": 3,
-        "practice": 50,
-        "project": 32,
-        "proof": 34,
-        "transition": 25
+        "practice": 25,
+        "project": 7,
+        "proof": 9,
+        "transition": 0
       },
       "blockers": [
         {
@@ -2219,26 +2223,26 @@
         "firstRun": true,
         "installRecovery": true
       },
-      "topics": 95,
-      "labs": 16,
-      "verifiableLabs": 16,
+      "topics": 59,
+      "labs": 15,
+      "verifiableLabs": 15,
       "states": {
-        "explained": 95
+        "explained": 59
       },
       "criteria": {
         "goal": 3,
         "prerequisites": 1,
-        "terms": 95,
+        "terms": 59,
         "code": 59,
-        "location": 10,
-        "execution": 64,
-        "expected": 55,
+        "location": 9,
+        "execution": 52,
+        "expected": 19,
         "failure": 1,
         "diagnosis": 5,
-        "practice": 67,
-        "project": 44,
-        "proof": 44,
-        "transition": 36
+        "practice": 31,
+        "project": 8,
+        "proof": 8,
+        "transition": 0
       },
       "blockers": [
         {
@@ -2525,26 +2529,26 @@
         "firstRun": true,
         "installRecovery": true
       },
-      "topics": 83,
-      "labs": 16,
-      "verifiableLabs": 16,
+      "topics": 58,
+      "labs": 14,
+      "verifiableLabs": 14,
       "states": {
-        "explained": 83
+        "explained": 58
       },
       "criteria": {
         "goal": 4,
         "prerequisites": 1,
-        "terms": 83,
+        "terms": 58,
         "code": 58,
         "location": 7,
         "execution": 35,
-        "expected": 50,
+        "expected": 25,
         "failure": 3,
         "diagnosis": 3,
-        "practice": 48,
-        "project": 40,
-        "proof": 42,
-        "transition": 26
+        "practice": 23,
+        "project": 15,
+        "proof": 17,
+        "transition": 1
       },
       "blockers": [
         {
@@ -2834,26 +2838,26 @@
         "firstRun": true,
         "installRecovery": true
       },
-      "topics": 66,
-      "labs": 14,
-      "verifiableLabs": 14,
+      "topics": 46,
+      "labs": 13,
+      "verifiableLabs": 13,
       "states": {
-        "explained": 66
+        "explained": 46
       },
       "criteria": {
         "goal": 2,
         "prerequisites": 0,
-        "terms": 66,
+        "terms": 46,
         "code": 46,
         "location": 5,
-        "execution": 21,
-        "expected": 31,
+        "execution": 17,
+        "expected": 11,
         "failure": 4,
         "diagnosis": 3,
-        "practice": 36,
-        "project": 27,
-        "proof": 33,
-        "transition": 20
+        "practice": 16,
+        "project": 7,
+        "proof": 13,
+        "transition": 0
       },
       "blockers": [
         {
@@ -3152,26 +3156,26 @@
         "firstRun": true,
         "installRecovery": true
       },
-      "topics": 83,
-      "labs": 15,
-      "verifiableLabs": 15,
+      "topics": 49,
+      "labs": 14,
+      "verifiableLabs": 14,
       "states": {
-        "explained": 83
+        "explained": 49
       },
       "criteria": {
         "goal": 2,
         "prerequisites": 0,
-        "terms": 83,
+        "terms": 49,
         "code": 49,
         "location": 5,
-        "execution": 7,
-        "expected": 45,
+        "execution": 5,
+        "expected": 11,
         "failure": 2,
         "diagnosis": 4,
-        "practice": 60,
-        "project": 42,
-        "proof": 41,
-        "transition": 35
+        "practice": 26,
+        "project": 8,
+        "proof": 7,
+        "transition": 1
       },
       "blockers": [
         {
@@ -3472,26 +3476,26 @@
         "firstRun": true,
         "installRecovery": true
       },
-      "topics": 76,
-      "labs": 15,
-      "verifiableLabs": 15,
+      "topics": 51,
+      "labs": 14,
+      "verifiableLabs": 14,
       "states": {
-        "explained": 76
+        "explained": 51
       },
       "criteria": {
         "goal": 3,
         "prerequisites": 2,
-        "terms": 76,
+        "terms": 51,
         "code": 51,
         "location": 3,
-        "execution": 40,
-        "expected": 41,
+        "execution": 39,
+        "expected": 16,
         "failure": 2,
-        "diagnosis": 3,
-        "practice": 50,
-        "project": 35,
-        "proof": 35,
-        "transition": 25
+        "diagnosis": 2,
+        "practice": 25,
+        "project": 10,
+        "proof": 10,
+        "transition": 0
       },
       "blockers": [
         {
@@ -3782,26 +3786,26 @@
         "firstRun": true,
         "installRecovery": true
       },
-      "topics": 84,
-      "labs": 16,
-      "verifiableLabs": 16,
+      "topics": 57,
+      "labs": 14,
+      "verifiableLabs": 14,
       "states": {
-        "explained": 84
+        "explained": 57
       },
       "criteria": {
         "goal": 2,
         "prerequisites": 2,
-        "terms": 84,
+        "terms": 57,
         "code": 57,
         "location": 8,
-        "execution": 31,
-        "expected": 47,
+        "execution": 29,
+        "expected": 20,
         "failure": 0,
         "diagnosis": 5,
-        "practice": 46,
-        "project": 39,
-        "proof": 40,
-        "transition": 28
+        "practice": 19,
+        "project": 12,
+        "proof": 13,
+        "transition": 1
       },
       "blockers": [
         {
@@ -4096,8 +4100,8 @@
         "installRecovery": true
       },
       "topics": 24,
-      "labs": 8,
-      "verifiableLabs": 8,
+      "labs": 0,
+      "verifiableLabs": 0,
       "states": {
         "explained": 24
       },

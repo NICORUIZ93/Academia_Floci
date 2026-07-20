@@ -213,7 +213,7 @@
     },
     {
       "path": "docs/student-journey-audit.json",
-      "lines": 4390,
+      "lines": 4394,
       "kind": "project-file",
       "symbols": [],
       "imports": [],
@@ -3730,7 +3730,7 @@
     },
     {
       "path": "web/public/content/cloud/modulo-34.md",
-      "lines": 201,
+      "lines": 231,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -3744,9 +3744,9 @@
         "#### Instalaci\u00f3n en Linux",
         "#### Instalaci\u00f3n en Windows",
         "### Tema 2: Modelo mental de la plataforma",
+        "#### Simulaci\u00f3n de API frente a motor real",
         "### Tema 3: AWS CLI y SDK, Azure CLI y SDK, GCP CLI y SDK",
-        "### Tema 4: Configuraci\u00f3n avanzada y ciclo de vida",
-        "#### Puertos, Docker Compose y application.yml"
+        "### Tema 4: Configuraci\u00f3n avanzada y ciclo de vida"
       ]
     },
     {

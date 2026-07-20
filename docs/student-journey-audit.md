@@ -4,20 +4,20 @@ Esta auditoría simula el recorrido desde la instalación hasta la evidencia fin
 
 | Track | Módulos | Secuencia | Temas | Listados | Explicados | Practicables | Labs verificables | Error provocado | Diagnóstico | Transición |
 |---|---:|:---:|---:|---:|---:|---:|---:|---:|---:|---:|
-| foundations | 12 | Sí | 67 | 1 | 66 | 0 | 12/12 | 5 | 11 | 23 |
-| cloud | 35 | Sí | 170 | 0 | 170 | 0 | 35/35 | 10 | 12 | 28 |
-| devops | 16 | Sí | 111 | 0 | 111 | 0 | 16/16 | 1 | 23 | 22 |
-| javascript | 15 | Sí | 104 | 0 | 104 | 0 | 15/15 | 2 | 11 | 30 |
-| node | 15 | Sí | 85 | 0 | 85 | 0 | 15/15 | 3 | 11 | 23 |
-| angular | 16 | Sí | 89 | 0 | 89 | 0 | 16/16 | 3 | 4 | 28 |
-| react | 15 | Sí | 80 | 0 | 80 | 0 | 15/15 | 2 | 3 | 25 |
-| java | 16 | Sí | 95 | 0 | 95 | 0 | 16/16 | 1 | 5 | 36 |
-| spring-boot | 16 | Sí | 83 | 0 | 83 | 0 | 16/16 | 3 | 3 | 26 |
-| kotlin-multiplatform | 14 | Sí | 66 | 0 | 66 | 0 | 14/14 | 4 | 3 | 20 |
-| android | 15 | Sí | 83 | 0 | 83 | 0 | 15/15 | 2 | 4 | 35 |
-| ios | 15 | Sí | 76 | 0 | 76 | 0 | 15/15 | 2 | 3 | 25 |
-| flutter | 16 | Sí | 84 | 0 | 84 | 0 | 16/16 | 0 | 5 | 28 |
-| rutaflow | 8 | Sí | 24 | 0 | 24 | 0 | 8/8 | 0 | 5 | 0 |
+| foundations | 12 | Sí | 50 | 1 | 49 | 0 | 11/11 | 6 | 11 | 0 |
+| cloud | 35 | Sí | 153 | 9 | 144 | 0 | 33/33 | 10 | 14 | 1 |
+| devops | 16 | Sí | 91 | 0 | 91 | 0 | 15/15 | 1 | 23 | 2 |
+| javascript | 15 | Sí | 75 | 0 | 75 | 0 | 14/14 | 2 | 11 | 1 |
+| node | 15 | Sí | 64 | 0 | 64 | 0 | 14/14 | 3 | 10 | 2 |
+| angular | 16 | Sí | 61 | 0 | 61 | 0 | 15/15 | 3 | 4 | 0 |
+| react | 15 | Sí | 55 | 0 | 55 | 0 | 14/14 | 2 | 3 | 0 |
+| java | 16 | Sí | 59 | 0 | 59 | 0 | 15/15 | 1 | 5 | 0 |
+| spring-boot | 16 | Sí | 58 | 0 | 58 | 0 | 14/14 | 3 | 3 | 1 |
+| kotlin-multiplatform | 14 | Sí | 46 | 0 | 46 | 0 | 13/13 | 4 | 3 | 0 |
+| android | 15 | Sí | 49 | 0 | 49 | 0 | 14/14 | 2 | 4 | 1 |
+| ios | 15 | Sí | 51 | 0 | 51 | 0 | 14/14 | 2 | 2 | 0 |
+| flutter | 16 | Sí | 57 | 0 | 57 | 0 | 14/14 | 0 | 5 | 1 |
+| rutaflow | 8 | Sí | 24 | 0 | 24 | 0 | 0/0 | 0 | 5 | 0 |
 
 ## Instalación y primera ejecución
 
@@ -42,7 +42,7 @@ Esta auditoría simula el recorrido desde la instalación hasta la evidencia fin
 
 ### foundations
 
-- Módulo 7 · Tema 4: Decisiones, documentación, deuda y evolución — 1/13; falta: goal, prerequisites, terms, location, execution, expected, failure, diagnosis, practice, project, proof, transition
+- Módulo 7 · Tema 4: Decisiones, documentación, deuda y evolución — 2/13; falta: goal, prerequisites, terms, location, execution, expected, diagnosis, practice, project, proof, transition
 - Módulo 10 · Tema 2: Replicación, consistencia y decisiones explícitas — 2/13; falta: goal, prerequisites, location, execution, expected, failure, diagnosis, practice, project, proof, transition
 - Módulo 4 · Tema 1: Del mundo real al modelo relacional — 3/13; falta: goal, prerequisites, location, execution, failure, diagnosis, practice, project, proof, transition
 - Módulo 4 · Tema 4: Transacciones, concurrencia y elección SQL/NoSQL — 3/13; falta: goal, prerequisites, location, expected, failure, diagnosis, practice, project, proof, transition
@@ -50,11 +50,11 @@ Esta auditoría simula el recorrido desde la instalación hasta la evidencia fin
 
 ### cloud
 
+- Módulo 34 · Tema 10: Límites y transferencia a producción — 0/13; falta: goal, prerequisites, terms, code, location, execution, expected, failure, diagnosis, practice, project, proof, transition
 - Módulo 24 · Tema 4: Despliegue Blue/Green de Lambda — cambio de tráfico por alias — 1/13; falta: goal, prerequisites, code, location, execution, expected, failure, diagnosis, practice, project, proof, transition
 - Módulo 29 · Tema 4: Resource Groups Tagging API — descubrimiento centralizado por etiqueta — 1/13; falta: goal, prerequisites, code, location, execution, expected, failure, diagnosis, practice, project, proof, transition
-- Módulo 5 · Tema 5: Versionado y alias — 2/13; falta: goal, prerequisites, location, execution, expected, failure, diagnosis, practice, project, proof, transition
-- Módulo 7 · Tema 2: Modelo de responsabilidad compartida — 2/13; falta: goal, prerequisites, location, execution, expected, failure, diagnosis, practice, project, proof, transition
-- Módulo 11 · Tema 3: SNS + SQS juntos, y Azure Event Hubs — 2/13; falta: goal, prerequisites, location, execution, expected, failure, diagnosis, practice, project, proof, transition
+- Módulo 34 · Tema 3: AWS CLI y SDK, Azure CLI y SDK, GCP CLI y SDK — 1/13; falta: goal, prerequisites, terms, code, location, expected, failure, diagnosis, practice, project, proof, transition
+- Módulo 34 · Tema 8: Servicios GCP que completan el recorrido — 1/13; falta: prerequisites, terms, code, location, execution, expected, failure, diagnosis, practice, project, proof, transition
 
 ### devops
 
