@@ -247,7 +247,7 @@
     },
     {
       "path": "docs/student-journey-audit.json",
-      "lines": 4333,
+      "lines": 4328,
       "kind": "project-file",
       "symbols": [],
       "imports": [],
@@ -4743,7 +4743,7 @@
     },
     {
       "path": "web/public/content/foundations/modulo-4.md",
-      "lines": 213,
+      "lines": 249,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -4751,13 +4751,15 @@
         "# M\u00f3dulo 4: Modelado de datos, SQL y persistencia",
         "## Aprende construyendo",
         "### Tema 1: Del mundo real al modelo relacional",
+        "#### Construcci\u00f3n RutaFlow: modelo que protege hechos",
         "### Tema 2: SQL para definir, escribir, consultar y relacionar",
         "# Incorrecto: permite alterar la consulta",
         "# Correcto: el driver separa c\u00f3digo y dato",
+        "#### Construcci\u00f3n RutaFlow: consultar sin concatenar entrada",
         "### Tema 3: \u00cdndices, restricciones y planes de consulta",
+        "#### Construcci\u00f3n RutaFlow: \u00edndice justificado por plan",
         "### Tema 4: Transacciones, concurrencia y elecci\u00f3n SQL/NoSQL",
-        "## Laboratorio pr\u00e1ctico",
-        "### Proyecto 4: migrar el inventario JSON a SQLite"
+        "#### Construcci\u00f3n RutaFlow: traslado at\u00f3mico"
       ]
     },
     {
