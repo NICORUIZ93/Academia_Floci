@@ -79,12 +79,12 @@
     },
     "java": {
       "topics": 59,
-      "code": 51,
+      "code": 50,
       "commentedCode": 10,
-      "mermaid": 9,
-      "asciiVisual": 9,
+      "mermaid": 10,
+      "asciiVisual": 8,
       "misleadingDiagramLabel": 0,
-      "filePath": 31,
+      "filePath": 37,
       "runCommand": 52,
       "officialSource": 0
     },
@@ -3793,8 +3793,8 @@
       "track": "java",
       "module": 8,
       "topic": "Tema 3: Proyectos multi-módulo",
-      "missingCode": false,
-      "missingComments": true
+      "missingCode": true,
+      "missingComments": false
     },
     {
       "track": "java",

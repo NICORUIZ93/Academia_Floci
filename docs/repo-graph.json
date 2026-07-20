@@ -247,7 +247,7 @@
     },
     {
       "path": "docs/student-journey-audit.json",
-      "lines": 4383,
+      "lines": 4375,
       "kind": "project-file",
       "symbols": [],
       "imports": [],
@@ -5304,7 +5304,7 @@
     },
     {
       "path": "web/public/content/java/modulo-6.md",
-      "lines": 101,
+      "lines": 119,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5312,14 +5312,17 @@
         "# M\u00f3dulo 6: I/O, NIO.2 y serializaci\u00f3n",
         "## Aprende construyendo",
         "### Tema 1: NIO.2 \u2014 Path y Files",
+        "#### Construcci\u00f3n RutaFlow: bandeja de importaci\u00f3n segura",
         "### Tema 2: Serializaci\u00f3n con Jackson",
+        "#### Construcci\u00f3n RutaFlow: contrato JSON verificable",
         "### Tema 3: Archivos grandes y recursos del classpath",
-        "## Laboratorio pr\u00e1ctico"
+        "#### Construcci\u00f3n RutaFlow: procesar un mill\u00f3n sin cargarlo",
+        "## Construcci\u00f3n guiada del cap\u00edtulo"
       ]
     },
     {
       "path": "web/public/content/java/modulo-7.md",
-      "lines": 102,
+      "lines": 120,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5327,14 +5330,17 @@
         "# M\u00f3dulo 7: Records, sealed classes y pattern matching",
         "## Aprende construyendo",
         "### Tema 1: record \u2014 modelos inmutables sin boilerplate",
+        "#### Construcci\u00f3n RutaFlow: eventos inmutables",
         "### Tema 2: sealed \u2014 jerarqu\u00edas cerradas y exhaustividad",
+        "#### Construcci\u00f3n RutaFlow: resultados cerrados de una entrega",
         "### Tema 3: Pattern matching exhaustivo y para instanceof",
-        "## Laboratorio pr\u00e1ctico"
+        "#### Construcci\u00f3n RutaFlow: presentar todos los resultados",
+        "## Construcci\u00f3n guiada del cap\u00edtulo"
       ]
     },
     {
       "path": "web/public/content/java/modulo-8.md",
-      "lines": 101,
+      "lines": 120,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5342,9 +5348,12 @@
         "# M\u00f3dulo 8: Build tools \u2014 Maven y Gradle",
         "## Aprende construyendo",
         "### Tema 1: pom.xml vs build.gradle.kts",
+        "#### Construcci\u00f3n RutaFlow: elegir y fijar una herramienta",
         "### Tema 2: Ciclo de vida de build y scopes",
+        "#### Construcci\u00f3n RutaFlow: comprobar el artefacto real",
         "### Tema 3: Proyectos multi-m\u00f3dulo",
-        "## Laboratorio pr\u00e1ctico"
+        "#### Construcci\u00f3n RutaFlow: l\u00edmites compilables",
+        "## Construcci\u00f3n guiada del cap\u00edtulo"
       ]
     },
     {

@@ -25,6 +25,12 @@ Punto p = new Punto(3, 4);
 p.x(); // 3
 ```
 
+#### Construcción RutaFlow: eventos inmutables
+
+Crea `src/main/java/academia/entregas/EventoEntrega.java` como `record EventoEntrega(String guia, Instant ocurridoEn, String tipo)`. Usa un constructor compacto para rechazar texto vacío y fechas futuras. En `EventoDemo.java`, crea dos instancias iguales y verifica `equals=true`; compila y ejecuta el demo.
+
+Intenta asignar `evento.tipo = "OTRO"`: el compilador impide mutar el componente. Después introduce una `List<String>` mutable como componente y demuestra que el record no vuelve inmutable el objeto contenido; corrige con `List.copyOf` en el constructor. Como modificación, implementa `conTipo(String nuevo)` devolviendo otra instancia. RutaFlow usa eventos como valores históricos: cambiar el pasado destruiría auditoría y reproducibilidad.
+
 ### Tema 2: sealed — jerarquías cerradas y exhaustividad
 
 **Conceptos clave:** `permits`, lista explícita de implementaciones válidas, verificación de exhaustividad.
@@ -44,6 +50,12 @@ sealed interface Forma permits Circulo, Cuadrado {}
 record Circulo(double radio) implements Forma {}
 record Cuadrado(double lado) implements Forma {}
 ```
+
+#### Construcción RutaFlow: resultados cerrados de una entrega
+
+Crea `ResultadoEntrega.java` como `sealed interface` que permita `Entregada`, `Rechazada` y `Reprogramada`, todas records en archivos del mismo paquete. Crea `ResultadoDemo.java` y compila con `javac -d out src/main/java/academia/entregas/*.java`; las tres variantes deben construirse sin `null` ni códigos mágicos.
+
+Declara `ResultadoDesconocido implements ResultadoEntrega` sin añadirlo a `permits`: el compilador debe rechazarlo. Luego agrega una cuarta variante autorizada y conserva el fallo hasta actualizar quienes procesan la jerarquía. Como modificación, decide qué datos mínimos necesita cada caso, evitando campos opcionales que solo aplican a otra variante. RutaFlow mantiene cerrado este conjunto porque controla todos los resultados internos; una interfaz extensible de plugins no debería ser `sealed`.
 
 ### Tema 3: Pattern matching exhaustivo y para instanceof
 
@@ -73,10 +85,16 @@ if (obj instanceof Circulo c) {
 }
 ```
 
+#### Construcción RutaFlow: presentar todos los resultados
+
+En `PresentadorResultado.java`, implementa `String presentar(ResultadoEntrega resultado)` mediante un `switch` con patrón para cada record, sin `default`. Ejecuta `ResultadoDemo` y verifica mensajes distintos para entregada, rechazada y reprogramada. La extracción de componentes debe ocurrir en el patrón o mediante sus accesores, sin cast manual.
+
+Añade una nueva variante a `permits` y no actualices el switch: el error de exhaustividad es el feedback esperado. Corrige agregando un caso con significado de negocio, no un `default` que silencie futuras evoluciones. Como modificación, usa una guarda cuando dos rechazos requieran mensajes diferentes y prueba ambos. Esta presentación vive en el borde de RutaFlow; la jerarquía de dominio no conoce consola ni HTTP.
+
 ---
 
 
-## Laboratorio práctico
+## Construcción guiada del capítulo
 
 **Objetivo del laboratorio:** modelar un dominio inmutable con records y sealed interfaces, con pattern matching exhaustivo.
 

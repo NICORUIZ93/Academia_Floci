@@ -2220,8 +2220,8 @@
         "installRecovery": true
       },
       "topics": 59,
-      "labs": 9,
-      "verifiableLabs": 9,
+      "labs": 6,
+      "verifiableLabs": 6,
       "states": {
         "explained": 59
       },
@@ -2230,14 +2230,14 @@
         "prerequisites": 1,
         "terms": 59,
         "code": 59,
-        "location": 31,
+        "location": 37,
         "execution": 52,
-        "expected": 30,
+        "expected": 35,
         "failure": 2,
-        "diagnosis": 14,
-        "practice": 39,
-        "project": 33,
-        "proof": 12,
+        "diagnosis": 18,
+        "practice": 47,
+        "project": 42,
+        "proof": 14,
         "transition": 1
       },
       "blockers": [
@@ -2251,42 +2251,6 @@
             "prerequisites",
             "location",
             "execution",
-            "expected",
-            "failure",
-            "diagnosis",
-            "practice",
-            "project",
-            "proof",
-            "transition"
-          ]
-        },
-        {
-          "module": 6,
-          "title": "Tema 2: Serialización con Jackson",
-          "state": "explained",
-          "score": 3,
-          "missing": [
-            "goal",
-            "prerequisites",
-            "location",
-            "expected",
-            "failure",
-            "diagnosis",
-            "practice",
-            "project",
-            "proof",
-            "transition"
-          ]
-        },
-        {
-          "module": 8,
-          "title": "Tema 2: Ciclo de vida de build y scopes",
-          "state": "explained",
-          "score": 3,
-          "missing": [
-            "goal",
-            "prerequisites",
-            "location",
             "expected",
             "failure",
             "diagnosis",
@@ -2369,91 +2333,6 @@
           ]
         },
         {
-          "module": 6,
-          "title": "Tema 1: NIO.2 — Path y Files",
-          "state": "explained",
-          "score": 4,
-          "missing": [
-            "goal",
-            "prerequisites",
-            "location",
-            "failure",
-            "diagnosis",
-            "practice",
-            "project",
-            "proof",
-            "transition"
-          ]
-        },
-        {
-          "module": 6,
-          "title": "Tema 3: Archivos grandes y recursos del classpath",
-          "state": "explained",
-          "score": 4,
-          "missing": [
-            "goal",
-            "prerequisites",
-            "expected",
-            "failure",
-            "diagnosis",
-            "practice",
-            "project",
-            "proof",
-            "transition"
-          ]
-        },
-        {
-          "module": 7,
-          "title": "Tema 2: sealed — jerarquías cerradas y exhaustividad",
-          "state": "explained",
-          "score": 4,
-          "missing": [
-            "goal",
-            "prerequisites",
-            "location",
-            "failure",
-            "diagnosis",
-            "practice",
-            "project",
-            "proof",
-            "transition"
-          ]
-        },
-        {
-          "module": 7,
-          "title": "Tema 3: Pattern matching exhaustivo y para instanceof",
-          "state": "explained",
-          "score": 4,
-          "missing": [
-            "goal",
-            "prerequisites",
-            "location",
-            "failure",
-            "diagnosis",
-            "practice",
-            "project",
-            "proof",
-            "transition"
-          ]
-        },
-        {
-          "module": 8,
-          "title": "Tema 1: pom.xml vs build.gradle.kts",
-          "state": "explained",
-          "score": 4,
-          "missing": [
-            "goal",
-            "prerequisites",
-            "expected",
-            "failure",
-            "diagnosis",
-            "practice",
-            "project",
-            "proof",
-            "transition"
-          ]
-        },
-        {
           "module": 9,
           "title": "Tema 3: Tests parametrizados y cobertura",
           "state": "explained",
@@ -2501,6 +2380,119 @@
             "diagnosis",
             "project",
             "proof",
+            "transition"
+          ]
+        },
+        {
+          "module": 13,
+          "title": "Tema 3: Build reproducible y cierre del track",
+          "state": "explained",
+          "score": 4,
+          "missing": [
+            "goal",
+            "prerequisites",
+            "location",
+            "failure",
+            "diagnosis",
+            "practice",
+            "project",
+            "proof",
+            "transition"
+          ]
+        },
+        {
+          "module": 9,
+          "title": "Tema 1: JUnit 5 — anotaciones y ciclo de vida",
+          "state": "explained",
+          "score": 5,
+          "missing": [
+            "goal",
+            "prerequisites",
+            "location",
+            "failure",
+            "diagnosis",
+            "project",
+            "proof",
+            "transition"
+          ]
+        },
+        {
+          "module": 9,
+          "title": "Tema 2: Mockito — aislar dependencias",
+          "state": "explained",
+          "score": 5,
+          "missing": [
+            "goal",
+            "prerequisites",
+            "location",
+            "failure",
+            "diagnosis",
+            "project",
+            "proof",
+            "transition"
+          ]
+        },
+        {
+          "module": 10,
+          "title": "Tema 1: module-info.java y encapsulación fuerte",
+          "state": "explained",
+          "score": 5,
+          "missing": [
+            "goal",
+            "prerequisites",
+            "expected",
+            "failure",
+            "diagnosis",
+            "project",
+            "proof",
+            "transition"
+          ]
+        },
+        {
+          "module": 10,
+          "title": "Tema 2: Migración incremental y cuándo JPMS aporta valor",
+          "state": "explained",
+          "score": 5,
+          "missing": [
+            "goal",
+            "prerequisites",
+            "failure",
+            "diagnosis",
+            "practice",
+            "project",
+            "proof",
+            "transition"
+          ]
+        },
+        {
+          "module": 11,
+          "title": "Tema 2: Java Flight Recorder y JIT compilation",
+          "state": "explained",
+          "score": 5,
+          "missing": [
+            "goal",
+            "prerequisites",
+            "location",
+            "expected",
+            "failure",
+            "practice",
+            "project",
+            "transition"
+          ]
+        },
+        {
+          "module": 14,
+          "title": "Tema 1: Compartir memoria requiere orden y visibilidad",
+          "state": "explained",
+          "score": 5,
+          "missing": [
+            "goal",
+            "prerequisites",
+            "location",
+            "expected",
+            "failure",
+            "diagnosis",
+            "project",
             "transition"
           ]
         }

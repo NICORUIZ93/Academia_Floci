@@ -23,6 +23,12 @@ String contenido = Files.readString(ruta);
 Files.writeString(ruta, "nuevo contenido");
 ```
 
+#### Construcción RutaFlow: bandeja de importación segura
+
+Crea `src/main/java/academia/entregas/BandejaImportacion.java`. Recibe un directorio `datos/entrada`, créalo con `Files.createDirectories`, escribe `guias.csv` y muévelo a `datos/procesados/guias.csv` con `Files.move`. Compila y ejecuta la clase desde la raíz; el resultado esperado es que el archivo deje de existir en entrada y aparezca en procesados.
+
+Ejecuta una segunda vez sin política de reemplazo y diagnostica `FileAlreadyExistsException`. Decide explícitamente si rechazar duplicados, versionarlos o usar `REPLACE_EXISTING`; no lo añadas por reflejo. Como modificación, recorre solo archivos `.csv` con `Files.list` dentro de try-with-resources y evita seguir enlaces simbólicos sin necesidad. Esta bandeja será la entrada por lotes de RutaFlow y debe impedir sobrescrituras silenciosas.
+
 ### Tema 2: Serialización con Jackson
 
 **Conceptos clave:** `ObjectMapper`, serializar/deserializar, records como modelos de datos.
@@ -44,6 +50,12 @@ ObjectMapper mapper = new ObjectMapper();
 String json = mapper.writeValueAsString(new Persona("Ana", 28));
 Persona persona = mapper.readValue(json, Persona.class);
 ```
+
+#### Construcción RutaFlow: contrato JSON verificable
+
+Añade Jackson al `build.gradle.kts` y crea `src/main/java/academia/entregas/GuiaJson.java` con un `record GuiaDto(String numero, BigDecimal pesoKg)`. Serializa una instancia, deserialízala y compara con `equals`. Ejecuta `./gradlew run`; la salida esperada muestra el JSON y `roundTrip=true`.
+
+Elimina `pesoKg` del JSON y decide si es obligatorio: configura validación después de deserializar o un constructor compacto que rechace `null`. Añade un campo desconocido y observa la política configurada; documenta si RutaFlow debe ser tolerante al recibir versiones futuras. Como modificación, separa `GuiaDto` de `Guia` y crea un mapper explícito para que el formato externo no controle las invariantes del dominio. No deserialices tipos polimórficos arbitrarios provenientes de usuarios.
 
 ### Tema 3: Archivos grandes y recursos del classpath
 
@@ -72,10 +84,16 @@ try (InputStream in = getClass().getResourceAsStream("/config.json")) {
 }
 ```
 
+#### Construcción RutaFlow: procesar un millón sin cargarlo
+
+Crea `src/main/java/academia/entregas/ProcesadorCsv.java` y procesa `datos/guias-grande.csv` línea por línea, contando registros válidos e inválidos. Ejecuta `java -Xmx64m -cp out academia.entregas.ProcesadorCsv datos/guias-grande.csv`; el resultado debe mostrar ambos contadores sin depender del tamaño total en memoria.
+
+Sustituye temporalmente el bucle por `Files.readAllLines` con un archivo suficientemente grande y observa `OutOfMemoryError` bajo el límite de memoria; vuelve al procesamiento incremental. Para el recurso `src/main/resources/reglas.json`, valida que `getResourceAsStream` no devuelva `null` antes de leer; un recurso empaquetado no es una ruta de disco modificable. Como modificación, informa número de línea en cada error. RutaFlow podrá reanudar y diagnosticar lotes sin ocultar cuál registro falló.
+
 ---
 
 
-## Laboratorio práctico
+## Construcción guiada del capítulo
 
 **Objetivo del laboratorio:** construir una utilidad que lea/escriba JSON desde y hacia disco con manejo robusto de errores.
 

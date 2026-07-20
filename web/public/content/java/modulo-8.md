@@ -33,6 +33,12 @@ dependencies {
 }
 ```
 
+#### Construcción RutaFlow: elegir y fijar una herramienta
+
+En la raíz del proyecto acumulativo conserva Gradle con `settings.gradle.kts`, `build.gradle.kts` y el wrapper. Declara Java 21 mediante toolchain, Jackson como `implementation` y JUnit como `testImplementation`. Ejecuta `./gradlew clean build`; el resultado esperado es `BUILD SUCCESSFUL` y un JAR bajo `build/libs/`.
+
+Quita la versión de una dependencia y observa el error de resolución; restáurala o usa un catálogo de versiones controlado. Ejecuta `./gradlew dependencies` para entender qué llega transitivamente y añade bloqueo/verificación de dependencias. Como modificación, reproduce el build desde una clonación limpia usando solo el wrapper. RutaFlow no mantiene Maven y Gradle simultáneamente: se comparan para aprender, pero el producto elige uno para evitar dos fuentes de verdad.
+
 ### Tema 2: Ciclo de vida de build y scopes
 
 **Conceptos clave:** fases secuenciales, `mvn clean compile test package`, dependencias por scope.
@@ -51,6 +57,12 @@ Las dependencias declaradas para un proyecto pueden restringirse a un scope espe
 mvn clean compile test package   # ciclo de vida: limpia, compila, prueba, empaqueta
 ```
 
+#### Construcción RutaFlow: comprobar el artefacto real
+
+En `academia-java/build.gradle.kts` conserva JUnit bajo `dependencies { testImplementation(...) }`. Ejecuta `./gradlew clean test jar` y abre el JAR con `jar tf build/libs/*.jar`. Verifica que contiene clases de producción y no `GuiaTest.class` ni JUnit. Ejecuta después las pruebas con `./gradlew test --info` y consulta el reporte `build/reports/tests/test/index.html`.
+
+Mueve JUnit de `testImplementation` a `implementation`, vuelve a inspeccionar dependencias y explica por qué amplía innecesariamente el classpath de producción. Restáuralo y provoca una prueba fallida: el build debe detener el empaquetado publicable. Como modificación, añade una tarea `check` a CI y conserva reportes como evidencia. El artefacto RutaFlow solo se publica si compilación, pruebas y empaquetado representan el mismo commit; un build exitoso no garantiza por sí solo compatibilidad ni seguridad, que requieren pruebas y análisis separados.
+
 ### Tema 3: Proyectos multi-módulo
 
 **Conceptos clave:** separación de responsabilidades entre módulos, dependencias explícitas entre ellos.
@@ -65,17 +77,24 @@ Esta estructura refleja a nivel de proyecto completo el mismo principio de lími
 
 **Diagrama:**
 
+```mermaid
+flowchart LR
+    API["rutaflow-api"] --> APP["rutaflow-application"]
+    APP --> CORE["rutaflow-domain"]
+    INFRA["rutaflow-infrastructure"] --> APP
+    API --> INFRA
 ```
-proyecto/
-  core/        (lógica de dominio)
-  api/         (depende de core, expone HTTP)
-  build.gradle.kts (raíz, configuración compartida)
-```
+
+#### Construcción RutaFlow: límites compilables
+
+Edita `settings.gradle.kts` para incluir `rutaflow-domain`, `rutaflow-application`, `rutaflow-infrastructure` y `rutaflow-api`. En cada carpeta crea su `build.gradle.kts`; `application` depende de `domain`, `infrastructure` de `application`, y `api` ensambla ambas. Mueve `Guia` a domain y un caso de uso a application. Ejecuta `./gradlew build`; todos los módulos deben quedar verdes.
+
+Declara accidentalmente que `domain` depende de `api` y observa el ciclo o la violación arquitectónica que debe impedir una prueba de arquitectura. Elimina esa dependencia y expón un puerto en application para que infraestructura lo implemente. Como modificación, ejecuta `./gradlew projects` y dibuja las dependencias reales, comparándolas con Mermaid. Estos límites permiten que RutaFlow sustituya consola, base de datos o framework sin reescribir reglas centrales.
 
 ---
 
 
-## Laboratorio práctico
+## Construcción guiada del capítulo
 
 **Objetivo del laboratorio:** construir un proyecto multi-módulo con Gradle (o Maven) con dependencias bien acotadas.
 
