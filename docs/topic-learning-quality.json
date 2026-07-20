@@ -45,15 +45,15 @@
     "cloud": {
       "topics": 153,
       "explanation": 152,
-      "code": 100,
-      "visual": 57,
+      "code": 101,
+      "visual": 58,
       "filePath": 21,
       "runCommand": 102,
       "expectedResult": 30,
-      "practice": 67,
+      "practice": 68,
       "project": 6,
       "modelMental": 153,
-      "limitsDecision": 76,
+      "limitsDecision": 77,
       "practicable": 0,
       "genericScaffold": 0
     },
@@ -4774,15 +4774,15 @@
         "topic": "Tema 5: Automatización, UI y agentes",
         "criteria": {
           "explanation": true,
-          "code": false,
-          "visual": false,
+          "code": true,
+          "visual": true,
           "filePath": true,
           "runCommand": true,
           "expectedResult": true,
-          "practice": false,
+          "practice": true,
           "project": false,
           "modelMental": true,
-          "limitsDecision": false
+          "limitsDecision": true
         },
         "classification": {
           "practicable": false,

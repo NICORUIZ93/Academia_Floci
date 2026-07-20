@@ -1,8 +1,8 @@
 # Academia Floci Repo Graph
 
-Generated: 2026-07-20 04:43 UTC
+Generated: 2026-07-20 04:46 UTC
 Root: `Academia_Floci`
-Indexed files: 771
+Indexed files: 772
 Import edges: 33
 
 Use this file as the first, compact context for AI assistants. Refresh it with:
@@ -19,7 +19,7 @@ For automated lookups, use `docs/repo-graph.json`.
 - `automation-script`: 26 files
 - `course-content`: 347 files
 - `documentation`: 100 files
-- `example`: 215 files
+- `example`: 216 files
 - `local-infra`: 1 files
 - `project-file`: 29 files
 
@@ -44,10 +44,10 @@ For automated lookups, use `docs/repo-graph.json`.
 - `.yaml`: 4
 - `.tf`: 4
 - `.txt`: 4
+- `.example`: 2
 - `.gitignore`: 2
 - `.mjs`: 2
 - `.css`: 2
-- `.example`: 1
 - `Dockerfile`: 1
 
 ## High Signal Files
@@ -241,7 +241,7 @@ For automated lookups, use `docs/repo-graph.json`.
 - `examples/go/lambda_update.go` (76 lines)
 - `examples/go/s3_create_bucket.go` (44 lines)
 - `examples/go/s3_delete.go` (50 lines)
-- ... 197 more files
+- ... 198 more files
 
 ### local-infra
 

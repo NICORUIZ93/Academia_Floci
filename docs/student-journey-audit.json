@@ -333,20 +333,20 @@
       "labs": 33,
       "verifiableLabs": 33,
       "states": {
-        "explained": 144,
-        "listed": 9
+        "explained": 145,
+        "listed": 8
       },
       "criteria": {
-        "goal": 31,
+        "goal": 32,
         "prerequisites": 29,
-        "terms": 144,
-        "code": 100,
+        "terms": 145,
+        "code": 101,
         "location": 22,
         "execution": 103,
         "expected": 30,
         "failure": 10,
         "diagnosis": 14,
-        "practice": 91,
+        "practice": 92,
         "project": 7,
         "proof": 16,
         "transition": 1

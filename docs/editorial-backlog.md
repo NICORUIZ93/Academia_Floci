@@ -7,14 +7,14 @@ Este inventario se genera desde el Markdown real. Las ayudas visuales, el glosar
 | Criterio | Cubierto | Pendiente |
 |---|---:|---:|
 | Explicación | 891 | 2 |
-| Código | 840 | 53 |
+| Código | 841 | 52 |
 | Ruta | 155 | 738 |
 | Ejecución | 423 | 470 |
 | Resultado | 253 | 640 |
-| Modificación | 384 | 509 |
+| Modificación | 385 | 508 |
 | Rutaflow | 118 | 775 |
 | Modelo mental | 893 | 0 |
-| Límites | 429 | 464 |
+| Límites | 430 | 463 |
 | **Tema practicable completo** | **17** | **876** |
 
 ## Prioridad por track
@@ -23,7 +23,7 @@ Este inventario se genera desde el Markdown real. Las ayudas visuales, el glosar
 |---|---:|---:|---:|---:|---:|---:|---:|
 | android | 49 | 0 | 45 | 44 | 38 | 27 | 29 |
 | angular | 61 | 0 | 47 | 57 | 44 | 29 | 31 |
-| cloud | 153 | 53 | 132 | 51 | 123 | 86 | 77 |
+| cloud | 153 | 52 | 132 | 51 | 123 | 85 | 76 |
 | devops | 91 | 0 | 73 | 47 | 69 | 32 | 41 |
 | flutter | 57 | 0 | 49 | 28 | 37 | 42 | 38 |
 | foundations | 50 | 0 | 38 | 15 | 31 | 34 | 34 |
@@ -50,7 +50,7 @@ Este inventario se genera desde el Markdown real. Las ayudas visuales, el glosar
 - Módulo 28: Bases de datos de grafos — cuando las relaciones son el dato; Neptune en Floci — un servidor Gremlin real, no una simulación; OpenSearch — modo simulado y modo real; Eligiendo entre Neptune, OpenSearch y DynamoDB
 - Módulo 29: Cost Explorer — costos sintetizados a partir de tu estado real; Pricing — catálogo de tarifas de referencia; BCM Data Exports — reportes de costo en formato estándar; Resource Groups Tagging API — descubrimiento centralizado por etiqueta; STS en profundidad — identidad temporal y aislamiento multi-cuenta
 - Módulo 30: Qué resuelve Transfer Family; Ciclo de vida del servidor y modelo de usuarios; Claves públicas SSH y autenticación de usuarios; Los límites de la Fase 1 — plano de gestión completo, plano de datos pendiente
-- Módulo 34: Instalación en macOS, Linux y Windows; AWS CLI y SDK, Azure CLI y SDK, GCP CLI y SDK; Configuración avanzada y ciclo de vida; Automatización, UI y agentes; Servicios AWS incorporados en la documentación actual; Servicios Azure que completan el recorrido; Servicios GCP que completan el recorrido; Laboratorios oficiales reconstruidos en español; Límites y transferencia a producción
+- Módulo 34: Instalación en macOS, Linux y Windows; AWS CLI y SDK, Azure CLI y SDK, GCP CLI y SDK; Configuración avanzada y ciclo de vida; Servicios AWS incorporados en la documentación actual; Servicios Azure que completan el recorrido; Servicios GCP que completan el recorrido; Laboratorios oficiales reconstruidos en español; Límites y transferencia a producción
 
 ## Regla de cierre
 

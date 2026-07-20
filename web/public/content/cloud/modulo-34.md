@@ -4,7 +4,7 @@
 
 Crearás un laboratorio local multi-nube reproducible. Al terminar podrás instalar Floci desde cero, iniciar los tres proveedores, inspeccionarlos visualmente, conservar o aislar estado, ejecutar pruebas automatizadas y explicar con precisión qué valida el emulador y qué todavía debe comprobarse en una cuenta real.
 
-La fuente principal es [floci.io](https://floci.io/) y las documentaciones mantenidas por los proyectos `floci`, `floci-az`, `floci-gcp`, `floci-cli`, `floci-ui` y `floci-labs`. Esta lección no copia sus textos: reorganiza y explica sus capacidades en español con un recorrido educativo propio.
+Las fuentes principales son la [portada multi-nube](https://floci.io/), [Floci AWS](https://floci.io/aws/), [Floci Azure](https://floci.io/az/), [Floci GCP](https://floci.io/gcp/) y los [laboratorios 101](https://floci.io/labs/). También se consultan los repositorios mantenidos por `floci`, `floci-az`, `floci-gcp`, `floci-cli` y `floci-ui`. Esta lección no copia sus textos: reorganiza y explica sus capacidades en español con un recorrido educativo propio.
 
 
 ## Antes de empezar
@@ -121,6 +121,47 @@ Testcontainers inicia un Floci aislado alrededor de la suite. Hay integraciones 
 `floci-ui` es la consola visual para recorrer buckets, tablas, colas, funciones y recursos de los tres proveedores. Úsala como instrumento de observación, no como sustituto de la automatización: cada acción importante debe poder repetirse mediante código, CLI o infraestructura como código.
 
 Para CI efímero, inicia Floci dentro del job, ejecuta migraciones y pruebas, captura logs cuando algo falle y destruye todo al finalizar. Los agentes de IA sin credenciales reales pueden usar este mismo entorno: el radio de impacto queda limitado al contenedor local y no existe una factura cloud accidental. Aun así, revisa el código generado y restringe el acceso al socket Docker.
+
+#### Construcción guiada: un entorno seguro para un agente de programación
+
+El objetivo no es permitir que un agente “haga cualquier cosa”, sino darle un contrato verificable y un destino local. Crea `examples/tracks/cloud/agente-local/.env.example` con valores desechables; el archivo real `.env` no debe contener credenciales cloud ni publicarse en Git.
+
+```dotenv
+AWS_ENDPOINT_URL=http://localhost:4566
+AWS_DEFAULT_REGION=us-east-1
+AWS_ACCESS_KEY_ID=test
+AWS_SECRET_ACCESS_KEY=test
+```
+
+El agente puede usar AWS CLI, un SDK, Terraform u OpenTofu sin una integración especial porque el contrato cambia mediante el endpoint. Antes de autorizar código generado, ejecuta esta comprobación desde una terminal nueva:
+
+```bash
+floci start
+eval "$(floci env)"
+test "$AWS_ENDPOINT_URL" = "http://localhost:4566"
+aws s3 mb s3://agente-seguro
+aws s3api head-bucket --bucket agente-seguro
+```
+
+La salida de `head-bucket` es vacía cuando termina correctamente; comprueba el código de salida con `echo $?`, que debe ser `0` en macOS o Linux. En PowerShell usa `floci env | Invoke-Expression`, ejecuta el mismo comando AWS y revisa `$LASTEXITCODE`. Esta evidencia vale más que una respuesta textual del agente porque demuestra que el recurso existe en el runtime.
+
+```mermaid
+sequenceDiagram
+  actor Persona as "Estudiante"
+  participant Agent as "Agente de programación"
+  participant Repo as "Código y pruebas"
+  participant Floci as "Floci local"
+  Persona->>Agent: Objetivo + límites + criterio verificable
+  Agent->>Repo: Modifica código
+  Agent->>Floci: Ejecuta CLI, SDK o IaC con claves test
+  Floci-->>Agent: Estado y errores reales del contrato
+  Agent->>Repo: Ejecuta pruebas y guarda evidencia
+  Persona->>Repo: Revisa diff, seguridad y resultado
+```
+
+**Fallo deliberado:** elimina `AWS_ENDPOINT_URL` en una terminal aislada y ejecuta `aws s3 ls` sin credenciales reales. Debe fallar; cancela si el cliente intenta contactar AWS. La solución no es proporcionar una clave productiva, sino restaurar el endpoint local con `eval "$(floci env)"`. Añade a tu instrucción para el agente una regla comprobable: “detente si el endpoint no contiene `localhost`”.
+
+**Límite profesional:** las claves desechables reducen filtraciones y costes, pero montar `/var/run/docker.sock` entrega control significativo sobre Docker. En CI utiliza un runner aislado y efímero; no expongas el socket a código no confiable en una estación que ejecute cargas sensibles. Antes de producción repite pruebas de IAM, cuotas, latencia, regiones, disponibilidad y facturación en una cuenta real controlada.
 
 ### Tema 6: Servicios AWS incorporados en la documentación actual
 

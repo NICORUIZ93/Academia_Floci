@@ -13,9 +13,9 @@
     },
     "cloud": {
       "topics": 153,
-      "code": 91,
+      "code": 92,
       "commentedCode": 5,
-      "mermaid": 12,
+      "mermaid": 13,
       "asciiVisual": 78,
       "misleadingDiagramLabel": 0,
       "filePath": 22,
@@ -1266,8 +1266,8 @@
       "track": "cloud",
       "module": 34,
       "topic": "Tema 5: Automatización, UI y agentes",
-      "missingCode": true,
-      "missingComments": false
+      "missingCode": false,
+      "missingComments": true
     },
     {
       "track": "cloud",

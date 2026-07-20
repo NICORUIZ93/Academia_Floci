@@ -1889,6 +1889,14 @@
       "headings": []
     },
     {
+      "path": "examples/tracks/cloud/agente-local/.env.example",
+      "lines": 6,
+      "kind": "example",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
       "path": "examples/tracks/devops/Dockerfile",
       "lines": 37,
       "kind": "example",
@@ -3730,7 +3738,7 @@
     },
     {
       "path": "web/public/content/cloud/modulo-34.md",
-      "lines": 231,
+      "lines": 272,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
