@@ -247,7 +247,7 @@
     },
     {
       "path": "docs/student-journey-audit.json",
-      "lines": 4328,
+      "lines": 4327,
       "kind": "project-file",
       "symbols": [],
       "imports": [],
@@ -4764,7 +4764,7 @@
     },
     {
       "path": "web/public/content/foundations/modulo-5.md",
-      "lines": 197,
+      "lines": 229,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -4772,12 +4772,15 @@
         "# M\u00f3dulo 5: Testing, depuraci\u00f3n, Git y CI",
         "## Aprende construyendo",
         "### Tema 1: Depurar con evidencia, no con cambios aleatorios",
+        "#### Construcci\u00f3n RutaFlow: corregir con una hip\u00f3tesis falsable",
         "### Tema 2: Pruebas con prop\u00f3sito y niveles adecuados",
+        "#### Construcci\u00f3n RutaFlow: una prueba por frontera",
         "### Tema 3: Git como historial de decisiones y colaboraci\u00f3n",
         "# editar y probar",
+        "#### Construcci\u00f3n RutaFlow: historial que explica el arreglo",
         "### Tema 4: Calidad est\u00e1tica, revisi\u00f3n e integraci\u00f3n continua",
-        "## Laboratorio pr\u00e1ctico",
-        "### Proyecto 5: convertir el inventario en un repositorio confiable"
+        "#### Construcci\u00f3n RutaFlow: pipeline reproducible",
+        "## Construcci\u00f3n guiada del cap\u00edtulo"
       ]
     },
     {

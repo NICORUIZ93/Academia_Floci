@@ -28,8 +28,8 @@
         "installRecovery": true
       },
       "topics": 50,
-      "labs": 6,
-      "verifiableLabs": 6,
+      "labs": 5,
+      "verifiableLabs": 5,
       "states": {
         "explained": 49,
         "practicable": 1
@@ -39,13 +39,13 @@
         "prerequisites": 2,
         "terms": 50,
         "code": 50,
-        "location": 28,
-        "execution": 42,
-        "expected": 30,
+        "location": 31,
+        "execution": 43,
+        "expected": 32,
         "failure": 7,
-        "diagnosis": 15,
-        "practice": 31,
-        "project": 26,
+        "diagnosis": 16,
+        "practice": 33,
+        "project": 30,
         "proof": 22,
         "transition": 0
       },
@@ -138,23 +138,6 @@
             "practice",
             "project",
             "proof",
-            "transition"
-          ]
-        },
-        {
-          "module": 5,
-          "title": "Tema 4: Calidad estática, revisión e integración continua",
-          "state": "explained",
-          "score": 4,
-          "missing": [
-            "goal",
-            "prerequisites",
-            "location",
-            "expected",
-            "failure",
-            "diagnosis",
-            "practice",
-            "project",
             "transition"
           ]
         },
@@ -261,30 +244,30 @@
           ]
         },
         {
-          "module": 5,
-          "title": "Tema 1: Depurar con evidencia, no con cambios aleatorios",
+          "module": 6,
+          "title": "Tema 3: Criptografía aplicada, TLS, claves y secretos",
           "state": "explained",
           "score": 5,
           "missing": [
             "goal",
             "prerequisites",
             "location",
-            "expected",
             "failure",
             "diagnosis",
             "project",
+            "proof",
             "transition"
           ]
         },
         {
-          "module": 5,
-          "title": "Tema 2: Pruebas con propósito y niveles adecuados",
+          "module": 6,
+          "title": "Tema 4: Validación, vulnerabilidades web, privacidad y respuesta",
           "state": "explained",
           "score": 5,
           "missing": [
             "goal",
-            "prerequisites",
             "location",
+            "execution",
             "failure",
             "diagnosis",
             "practice",
@@ -293,17 +276,33 @@
           ]
         },
         {
-          "module": 5,
-          "title": "Tema 3: Git como historial de decisiones y colaboración",
+          "module": 7,
+          "title": "Tema 1: Requisitos, stakeholders y criterios verificables",
+          "state": "explained",
+          "score": 5,
+          "missing": [
+            "prerequisites",
+            "location",
+            "execution",
+            "failure",
+            "diagnosis",
+            "practice",
+            "project",
+            "transition"
+          ]
+        },
+        {
+          "module": 7,
+          "title": "Tema 2: Arquitectura guiada por atributos de calidad",
           "state": "explained",
           "score": 5,
           "missing": [
             "goal",
             "prerequisites",
+            "location",
             "execution",
             "expected",
-            "failure",
-            "diagnosis",
+            "practice",
             "project",
             "transition"
           ]
