@@ -4,7 +4,7 @@ Esta auditoría simula el recorrido desde la instalación hasta la evidencia fin
 
 | Track | Módulos | Secuencia | Temas | Listados | Explicados | Practicables | Labs verificables | Error provocado | Diagnóstico | Transición |
 |---|---:|:---:|---:|---:|---:|---:|---:|---:|---:|---:|
-| foundations | 12 | Sí | 50 | 0 | 49 | 1 | 3/3 | 7 | 18 | 0 |
+| foundations | 12 | Sí | 50 | 0 | 49 | 1 | 2/2 | 7 | 21 | 0 |
 | cloud | 35 | Sí | 153 | 8 | 145 | 0 | 32/32 | 10 | 14 | 1 |
 | devops | 16 | Sí | 91 | 0 | 91 | 0 | 15/15 | 1 | 23 | 2 |
 | javascript | 15 | Sí | 75 | 0 | 75 | 0 | 13/13 | 2 | 13 | 1 |
@@ -43,10 +43,10 @@ Esta auditoría simula el recorrido desde la instalación hasta la evidencia fin
 ### foundations
 
 - Módulo 10 · Tema 2: Replicación, consistencia y decisiones explícitas — 2/13; falta: goal, prerequisites, location, execution, expected, failure, diagnosis, practice, project, proof, transition
-- Módulo 8 · Tema 2: Memoria y concurrencia sin magia — 3/13; falta: goal, prerequisites, location, expected, failure, diagnosis, practice, project, proof, transition
 - Módulo 9 · Tema 3: Conteo, grafos y estructuras conectadas — 3/13; falta: goal, prerequisites, location, expected, failure, diagnosis, practice, project, proof, transition
 - Módulo 10 · Tema 1: La red convierte el resultado en una incertidumbre — 3/13; falta: goal, prerequisites, location, expected, failure, diagnosis, practice, project, proof, transition
 - Módulo 10 · Tema 3: Mensajes que se procesan con efectos exactamente una vez — 3/13; falta: goal, prerequisites, location, execution, expected, diagnosis, practice, project, proof, transition
+- Módulo 9 · Tema 1: Lógica para especificar antes de programar — 4/13; falta: goal, prerequisites, location, expected, diagnosis, practice, project, proof, transition
 
 ### cloud
 

@@ -28,8 +28,8 @@
         "installRecovery": true
       },
       "topics": 50,
-      "labs": 3,
-      "verifiableLabs": 3,
+      "labs": 2,
+      "verifiableLabs": 2,
       "states": {
         "explained": 49,
         "practicable": 1
@@ -39,13 +39,13 @@
         "prerequisites": 2,
         "terms": 50,
         "code": 50,
-        "location": 39,
+        "location": 42,
         "execution": 48,
-        "expected": 35,
+        "expected": 37,
         "failure": 7,
-        "diagnosis": 18,
-        "practice": 39,
-        "project": 38,
+        "diagnosis": 21,
+        "practice": 41,
+        "project": 42,
         "proof": 23,
         "transition": 0
       },
@@ -60,24 +60,6 @@
             "prerequisites",
             "location",
             "execution",
-            "expected",
-            "failure",
-            "diagnosis",
-            "practice",
-            "project",
-            "proof",
-            "transition"
-          ]
-        },
-        {
-          "module": 8,
-          "title": "Tema 2: Memoria y concurrencia sin magia",
-          "state": "explained",
-          "score": 3,
-          "missing": [
-            "goal",
-            "prerequisites",
-            "location",
             "expected",
             "failure",
             "diagnosis",
@@ -142,23 +124,6 @@
           ]
         },
         {
-          "module": 8,
-          "title": "Tema 4: Contenedores: aislamiento reproducible",
-          "state": "explained",
-          "score": 4,
-          "missing": [
-            "goal",
-            "prerequisites",
-            "location",
-            "expected",
-            "failure",
-            "diagnosis",
-            "project",
-            "proof",
-            "transition"
-          ]
-        },
-        {
           "module": 9,
           "title": "Tema 1: Lógica para especificar antes de programar",
           "state": "explained",
@@ -172,22 +137,6 @@
             "practice",
             "project",
             "proof",
-            "transition"
-          ]
-        },
-        {
-          "module": 8,
-          "title": "Tema 3: Linux como entorno observable",
-          "state": "explained",
-          "score": 5,
-          "missing": [
-            "goal",
-            "prerequisites",
-            "location",
-            "expected",
-            "failure",
-            "diagnosis",
-            "project",
             "transition"
           ]
         },
@@ -238,21 +187,6 @@
           ]
         },
         {
-          "module": 8,
-          "title": "Tema 1: El sistema operativo como administrador y frontera",
-          "state": "explained",
-          "score": 6,
-          "missing": [
-            "goal",
-            "prerequisites",
-            "expected",
-            "failure",
-            "practice",
-            "project",
-            "transition"
-          ]
-        },
-        {
           "module": 9,
           "title": "Tema 4: Probabilidad y evidencia para decisiones técnicas",
           "state": "explained",
@@ -292,6 +226,62 @@
             "prerequisites",
             "expected",
             "failure",
+            "proof",
+            "transition"
+          ]
+        },
+        {
+          "module": 0,
+          "title": "Tema 2: Archivos, carpetas y rutas sin perderse",
+          "state": "explained",
+          "score": 7,
+          "missing": [
+            "goal",
+            "prerequisites",
+            "failure",
+            "diagnosis",
+            "practice",
+            "transition"
+          ]
+        },
+        {
+          "module": 3,
+          "title": "Tema 2: HTTP como contrato observable",
+          "state": "explained",
+          "score": 7,
+          "missing": [
+            "goal",
+            "prerequisites",
+            "failure",
+            "diagnosis",
+            "proof",
+            "transition"
+          ]
+        },
+        {
+          "module": 3,
+          "title": "Tema 4: CSS, layout responsive y accesibilidad verificable",
+          "state": "explained",
+          "score": 7,
+          "missing": [
+            "goal",
+            "prerequisites",
+            "failure",
+            "diagnosis",
+            "proof",
+            "transition"
+          ]
+        },
+        {
+          "module": 4,
+          "title": "Tema 1: Del mundo real al modelo relacional",
+          "state": "explained",
+          "score": 7,
+          "missing": [
+            "goal",
+            "prerequisites",
+            "failure",
+            "diagnosis",
             "proof",
             "transition"
           ]

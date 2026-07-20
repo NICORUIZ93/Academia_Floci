@@ -247,7 +247,7 @@
     },
     {
       "path": "docs/student-journey-audit.json",
-      "lines": 4316,
+      "lines": 4306,
       "kind": "project-file",
       "symbols": [],
       "imports": [],
@@ -4827,7 +4827,7 @@
     },
     {
       "path": "web/public/content/foundations/modulo-8.md",
-      "lines": 198,
+      "lines": 233,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -4835,10 +4835,14 @@
         "# Sistemas operativos, concurrencia, Linux y contenedores",
         "## Aprende construyendo",
         "### Tema 1: El sistema operativo como administrador y frontera",
+        "#### Construcci\u00f3n RutaFlow: proceso que termina correctamente",
         "### Tema 2: Memoria y concurrencia sin magia",
+        "#### Construcci\u00f3n RutaFlow: carrera reproducible y correcci\u00f3n m\u00ednima",
         "### Tema 3: Linux como entorno observable",
+        "#### Construcci\u00f3n RutaFlow: runbook basado en preguntas",
         "### Tema 4: Contenedores: aislamiento reproducible",
-        "## Laboratorio pr\u00e1ctico",
+        "#### Construcci\u00f3n RutaFlow: imagen reemplazable, datos durables",
+        "## Construcci\u00f3n guiada del cap\u00edtulo",
         "### Proyecto 8 \u2014 Inventario operable en un contenedor"
       ]
     },
