@@ -11,6 +11,24 @@
           <span class="level">{{ m.level }}</span>
           <a *ngIf="officialSource() as source" [href]="source.url" target="_blank" rel="noopener noreferrer">{{ source.label }}</a>
         </div>
+        <details class="chapter-map">
+          <summary><span>Mapa del capítulo</span><small>Prerrequisito, conceptos y resultado</small></summary>
+          <div class="chapter-map-grid">
+            <section>
+              <small>Antes de empezar</small>
+              <strong *ngIf="chapterPrerequisite() as prerequisite; else firstChapter">{{ prerequisite.shortTitle }}</strong>
+              <ng-template #firstChapter><strong>Sin capítulos previos</strong></ng-template>
+            </section>
+            <section>
+              <small>Conceptos que conectarás</small>
+              <ul><li *ngFor="let concept of m.concepts.slice(0, 5)">{{ concept }}</li></ul>
+            </section>
+            <section>
+              <small>Resultado del capítulo</small>
+              <strong>{{ m.deliverable }}</strong>
+            </section>
+          </div>
+        </details>
       </header>
 
       <section class="floci-overview" *ngIf="isCloudIntroduction()" aria-labelledby="floci-overview-title">

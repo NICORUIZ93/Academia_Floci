@@ -19,6 +19,15 @@
 .lesson-meta span { display:flex; align-items:center; gap:6px; }
 .lesson-meta lucide-icon { width:15px; height:15px; }
 .lesson-meta .level { margin-left:auto; padding:5px 9px; border-radius:99px; background:$pl; color:$ph; font-weight:800; }
+.chapter-map { position:relative; margin-top:18px; border:1px solid $bd; border-radius:12px; background:$bg2; }
+.chapter-map summary { min-height:46px; display:flex; align-items:center; gap:9px; padding:0 14px; color:$ink; cursor:pointer; font:750 12px/1.2 Inter,sans-serif; }
+.chapter-map summary small { color:$mu; font-weight:500; }
+.chapter-map-grid { display:grid; grid-template-columns:.8fr 1.2fr 1fr; gap:1px; border-top:1px solid $bd; background:$bd; }
+.chapter-map-grid section { min-width:0; padding:14px; background:$wh; }
+.chapter-map-grid small { display:block; margin-bottom:7px; color:var(--track-color); font:800 9px/1.2 Inter,sans-serif; letter-spacing:.06em; text-transform:uppercase; }
+.chapter-map-grid strong { display:block; color:$i3; font:650 11.5px/1.55 Inter,sans-serif; }
+.chapter-map-grid ul { margin:0; padding-left:16px; color:$i3; font:550 11px/1.45 Inter,sans-serif; }
+.chapter-map-grid li { margin:3px 0; }
 
 .floci-overview { margin:-18px 0 52px; overflow:hidden; border:1px solid color-mix(in srgb,var(--track-color) 24%,#{$bd}); border-radius:24px; background:$wh; box-shadow:$shm; }
 .floci-overview-intro { padding:42px; color:#dbeafe; background:radial-gradient(circle at 85% 10%,rgba(56,189,248,.23),transparent 30%),linear-gradient(145deg,#071426,#0b2940 60%,#104e55); }
@@ -255,6 +264,8 @@
   .lesson h1 { font-size:31px; }
   .lesson-description { font-size:16px; line-height:1.65; }
   .lesson-meta .level { margin-left:0; }
+  .chapter-map summary { align-items:flex-start; flex-direction:column; justify-content:center; gap:3px; padding-block:9px; }
+  .chapter-map-grid { grid-template-columns:1fr; }
   .floci-overview { margin:-8px 0 38px; border-radius:17px; }
   .floci-overview-intro { padding:28px 22px; }
   .floci-metrics { grid-template-columns:repeat(2,minmax(0,1fr)); }

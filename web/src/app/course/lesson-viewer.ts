@@ -134,6 +134,11 @@ export class LessonViewerComponent implements OnDestroy {
     return Boolean(this.trackProject()) && this.moduleIndex() === (track?.modules.length ?? 0) - 1;
   });
   readonly moduleIndex = computed(() => this.track()?.modules.findIndex(m => m.id === this.moduleId()) ?? -1);
+  readonly chapterPrerequisite = computed(() => {
+    const track = this.track();
+    const index = this.moduleIndex();
+    return track && index > 0 ? track.modules[index - 1] : null;
+  });
   readonly isCloudIntroduction = computed(() => this.trackId() === 'cloud' && this.moduleId() === 0);
   readonly flociMetrics = [
     { value: '24 ms', label: 'Arranque de referencia', detail: 'Binario nativo' },
