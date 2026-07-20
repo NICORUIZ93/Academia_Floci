@@ -4,7 +4,7 @@ Esta auditoría simula el recorrido desde la instalación hasta la evidencia fin
 
 | Track | Módulos | Secuencia | Temas | Listados | Explicados | Practicables | Labs verificables | Error provocado | Diagnóstico | Transición |
 |---|---:|:---:|---:|---:|---:|---:|---:|---:|---:|---:|
-| foundations | 12 | Sí | 50 | 0 | 50 | 0 | 10/10 | 6 | 12 | 0 |
+| foundations | 12 | Sí | 50 | 0 | 50 | 0 | 9/9 | 6 | 13 | 0 |
 | cloud | 35 | Sí | 153 | 8 | 145 | 0 | 32/32 | 10 | 14 | 1 |
 | devops | 16 | Sí | 91 | 0 | 91 | 0 | 15/15 | 1 | 23 | 2 |
 | javascript | 15 | Sí | 75 | 0 | 75 | 0 | 13/13 | 2 | 13 | 1 |

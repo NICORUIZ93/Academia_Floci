@@ -34,9 +34,24 @@ Este pseudocódigo no pertenece a un lenguaje específico. Permite discutir la l
 
 **Diagrama:**
 
-```text
-necesidad → requisitos → entradas/salidas → algoritmo → casos → código
+```mermaid
+flowchart LR
+    NEED["necesidad"] --> REQ["requisitos"] --> IO["entradas y salidas"]
+    IO --> ALG["algoritmo"] --> CASES["casos"] --> CODE["código"]
 ```
+
+#### Construcción RutaFlow: especificar antes de programar
+
+Crea `rutaflow-fundamentos/01-tarifa/casos.md` con una tabla `distancia`, `peso`, `resultado` y `motivo`; incluye normal, cero, límites y negativo. Luego crea `rutaflow-fundamentos/01-tarifa/tarifa.py` implementando únicamente esos acuerdos. Desde esa carpeta ejecuta:
+
+```bash
+python3 tarifa.py
+# En Windows, si el instalador registró este comando: python tarifa.py
+```
+
+La salida esperada muestra cada caso como `OK` o detalla la diferencia.
+
+Cambia “al menos 10 km” de `>=` a `>` y comprueba que el caso de frontera falla. Corrige la condición y añade sin copiar una regla de recargo nocturno con tres casos nuevos. Este incremento será la primera regla de tarifas de RutaFlow; todavía no usa interfaz gráfica ni base de datos porque primero debe existir un contrato verificable.
 
 ### Tema 2: Variables, tipos, expresiones y cambios de estado
 
@@ -72,9 +87,17 @@ Haz un trazado manual con columnas `línea`, `precio`, `cantidad`, `subtotal`. A
 
 **Diagrama:**
 
-```text
-entrada "3" → int("3") → cantidad = 3 → precio * cantidad → subtotal
+```mermaid
+flowchart LR
+    TEXT["entrada: '3'"] --> CONVERT["int('3')"] --> VALUE["cantidad = 3"]
+    VALUE --> CALC["precio × cantidad"] --> TOTAL["subtotal"]
 ```
+
+#### Construcción RutaFlow: estado visible
+
+Guarda `rutaflow-fundamentos/02-paquete/paquete.py`. Pide cantidad y peso unitario, convierte los textos y calcula el peso total; imprime nombres y unidades: `3 unidades · 2.5 kg = 7.5 kg`. Ejecuta `python3 paquete.py`, primero con `3` y `2.5`, y después con `tres` para observar `ValueError`.
+
+Captura solo el error de conversión en la frontera y muestra qué formato se espera. Antes de ejecutar, completa `trazado.md` con el valor de cada variable por línea. Como modificación, agrega `peso_maximo` y un booleano `requiere_division`; predice el resultado para 49.9, 50 y 50.1 kg. RutaFlow conservará cantidades como números y unidades explícitas, no textos ambiguos.
 
 ### Tema 3: Decisiones, repeticiones y trazado de ejecución
 
@@ -112,15 +135,20 @@ El orden importa. Primero se rechaza lo inválido; luego se evalúa descuento; f
 
 **Diagrama:**
 
-```text
-valor → ¿inválido? —sí→ error
-          │ no
-          ↓
-       ¿>=100? —sí→ descuento
-          │ no
-          ↓
-       total original
+```mermaid
+flowchart TD
+    VALUE["subtotal"] --> INVALID{"¿negativo?"}
+    INVALID -->|"sí"| ERROR["error"]
+    INVALID -->|"no"| LIMIT{"¿>= 100?"}
+    LIMIT -->|"sí"| DISCOUNT["aplicar descuento"]
+    LIMIT -->|"no"| ORIGINAL["conservar subtotal"]
 ```
+
+#### Construcción RutaFlow: procesar varias guías
+
+Crea `rutaflow-fundamentos/03-lote/lote.py` con una lista de pesos `[12, 8, -1, 50, 50.1]`. Recorre la lista, rechaza negativos, cuenta aceptados y acumula peso sin sumar el inválido. Ejecuta `python3 lote.py`; el resultado esperado informa cuatro aceptados, uno rechazado y `120.1 kg`.
+
+Mueve por error el acumulador dentro del bucle y usa el trazado para explicar por qué se pierde el estado. Restáuralo y cambia `<= 50` por `< 50` para que el caso límite detecte la regresión. Como modificación, agrega una parada anticipada cuando el vehículo alcance capacidad y muestra qué guías quedaron pendientes. Este flujo prepara el procesamiento de rutas sin introducir aún concurrencia.
 
 ### Tema 4: Funciones y descomposición de problemas
 
@@ -161,13 +189,19 @@ Ahora entrada, negocio y presentación están separadas. `calcular_total` no con
 
 **Diagrama:**
 
-```text
-leer_subtotal() → calcular_total(subtotal) → mostrar_total(total)
-   entrada              negocio                  salida
+```mermaid
+flowchart LR
+    INPUT["leer_subtotal()"] --> RULE["calcular_total(subtotal)"] --> OUTPUT["mostrar_total(total)"]
 ```
 
+#### Construcción RutaFlow: separar entrada, regla y salida
 
-## Laboratorio práctico
+Crea `rutaflow-fundamentos/04-cotizador/cotizador.py` con `leer_envio`, `calcular_tarifa` y `mostrar_resumen`, y `test_cotizador.py` con llamadas directas a la función pura. Ejecuta `python3 test_cotizador.py` y después `python3 cotizador.py`; debes ver casos verdes sin escribir en terminal durante las pruebas de negocio.
+
+Introduce un `input()` dentro de `calcular_tarifa` y observa que la prueba deja de ser automática; devuelve esa responsabilidad a `leer_envio`. Como modificación, añade una función `recargo_por_zona` y compón el total sin usar variables globales. RutaFlow podrá reemplazar la terminal por HTTP o Flutter porque su regla recibe datos y devuelve un resultado, sin conocer la interfaz.
+
+
+## Construcción guiada del capítulo
 
 ### Proyecto 1: calculadora de presupuesto desde carpeta vacía
 

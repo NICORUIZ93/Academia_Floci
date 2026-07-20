@@ -28,8 +28,8 @@
         "installRecovery": true
       },
       "topics": 50,
-      "labs": 10,
-      "verifiableLabs": 10,
+      "labs": 9,
+      "verifiableLabs": 9,
       "states": {
         "explained": 50
       },
@@ -38,13 +38,13 @@
         "prerequisites": 2,
         "terms": 50,
         "code": 50,
-        "location": 12,
-        "execution": 37,
-        "expected": 21,
+        "location": 16,
+        "execution": 38,
+        "expected": 22,
         "failure": 6,
-        "diagnosis": 12,
+        "diagnosis": 13,
         "practice": 25,
-        "project": 10,
+        "project": 14,
         "proof": 22,
         "transition": 0
       },
@@ -177,57 +177,6 @@
           ]
         },
         {
-          "module": 1,
-          "title": "Tema 1: Del problema al algoritmo y a los casos de prueba",
-          "state": "explained",
-          "score": 4,
-          "missing": [
-            "goal",
-            "prerequisites",
-            "location",
-            "execution",
-            "failure",
-            "diagnosis",
-            "practice",
-            "project",
-            "transition"
-          ]
-        },
-        {
-          "module": 1,
-          "title": "Tema 2: Variables, tipos, expresiones y cambios de estado",
-          "state": "explained",
-          "score": 4,
-          "missing": [
-            "goal",
-            "prerequisites",
-            "location",
-            "expected",
-            "failure",
-            "diagnosis",
-            "project",
-            "proof",
-            "transition"
-          ]
-        },
-        {
-          "module": 1,
-          "title": "Tema 4: Funciones y descomposición de problemas",
-          "state": "explained",
-          "score": 4,
-          "missing": [
-            "goal",
-            "prerequisites",
-            "location",
-            "expected",
-            "failure",
-            "diagnosis",
-            "project",
-            "proof",
-            "transition"
-          ]
-        },
-        {
           "module": 2,
           "title": "Tema 2: Pilas, colas y abstracciones de comportamiento",
           "state": "explained",
@@ -307,6 +256,57 @@
             "execution",
             "failure",
             "diagnosis",
+            "project",
+            "proof",
+            "transition"
+          ]
+        },
+        {
+          "module": 4,
+          "title": "Tema 2: SQL para definir, escribir, consultar y relacionar",
+          "state": "explained",
+          "score": 4,
+          "missing": [
+            "goal",
+            "prerequisites",
+            "location",
+            "expected",
+            "failure",
+            "diagnosis",
+            "project",
+            "proof",
+            "transition"
+          ]
+        },
+        {
+          "module": 5,
+          "title": "Tema 4: Calidad estática, revisión e integración continua",
+          "state": "explained",
+          "score": 4,
+          "missing": [
+            "goal",
+            "prerequisites",
+            "location",
+            "expected",
+            "failure",
+            "diagnosis",
+            "practice",
+            "project",
+            "transition"
+          ]
+        },
+        {
+          "module": 6,
+          "title": "Tema 1: Activos, amenazas, riesgos y límites de confianza",
+          "state": "explained",
+          "score": 4,
+          "missing": [
+            "goal",
+            "prerequisites",
+            "location",
+            "execution",
+            "expected",
+            "failure",
             "project",
             "proof",
             "transition"

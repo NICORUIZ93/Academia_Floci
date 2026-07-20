@@ -3,12 +3,12 @@
     "foundations": {
       "topics": 50,
       "code": 50,
-      "commentedCode": 6,
-      "mermaid": 4,
-      "asciiVisual": 40,
+      "commentedCode": 7,
+      "mermaid": 8,
+      "asciiVisual": 36,
       "misleadingDiagramLabel": 0,
-      "filePath": 12,
-      "runCommand": 37,
+      "filePath": 16,
+      "runCommand": 38,
       "officialSource": 0
     },
     "cloud": {
@@ -174,13 +174,6 @@
       "track": "foundations",
       "module": 0,
       "topic": "Tema 3: Cómo leer un comando antes de ejecutarlo",
-      "missingCode": false,
-      "missingComments": true
-    },
-    {
-      "track": "foundations",
-      "module": 1,
-      "topic": "Tema 1: Del problema al algoritmo y a los casos de prueba",
       "missingCode": false,
       "missingComments": true
     },

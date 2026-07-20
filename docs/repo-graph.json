@@ -123,7 +123,7 @@
     },
     {
       "path": "docs/code-visual-quality.json",
-      "lines": 5530,
+      "lines": 5523,
       "kind": "project-file",
       "symbols": [],
       "imports": [],
@@ -4640,7 +4640,7 @@
     },
     {
       "path": "web/public/content/foundations/modulo-1.md",
-      "lines": 193,
+      "lines": 227,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -4648,11 +4648,15 @@
         "# M\u00f3dulo 1: Pensamiento computacional y programaci\u00f3n",
         "## Aprende construyendo",
         "### Tema 1: Del problema al algoritmo y a los casos de prueba",
+        "#### Construcci\u00f3n RutaFlow: especificar antes de programar",
+        "# En Windows, si el instalador registr\u00f3 este comando: python tarifa.py",
         "### Tema 2: Variables, tipos, expresiones y cambios de estado",
+        "#### Construcci\u00f3n RutaFlow: estado visible",
         "### Tema 3: Decisiones, repeticiones y trazado de ejecuci\u00f3n",
+        "#### Construcci\u00f3n RutaFlow: procesar varias gu\u00edas",
         "### Tema 4: Funciones y descomposici\u00f3n de problemas",
-        "## Laboratorio pr\u00e1ctico",
-        "### Proyecto 1: calculadora de presupuesto desde carpeta vac\u00eda"
+        "#### Construcci\u00f3n RutaFlow: separar entrada, regla y salida",
+        "## Construcci\u00f3n guiada del cap\u00edtulo"
       ]
     },
     {
