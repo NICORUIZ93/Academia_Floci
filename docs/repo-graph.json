@@ -247,7 +247,7 @@
     },
     {
       "path": "docs/student-journey-audit.json",
-      "lines": 4323,
+      "lines": 4316,
       "kind": "project-file",
       "symbols": [],
       "imports": [],
@@ -4806,7 +4806,7 @@
     },
     {
       "path": "web/public/content/foundations/modulo-7.md",
-      "lines": 193,
+      "lines": 225,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -4814,15 +4814,15 @@
         "# M\u00f3dulo 7: Requisitos, dise\u00f1o, arquitectura y mantenimiento",
         "## Aprende construyendo",
         "### Tema 1: Requisitos, stakeholders y criterios verificables",
+        "#### Construcci\u00f3n RutaFlow: requisito que puede fallar",
         "### Tema 2: Arquitectura guiada por atributos de calidad",
+        "#### Construcci\u00f3n RutaFlow: arquitectura comprobable",
         "### Tema 3: Dise\u00f1o modular, principios, patrones y refactoring",
+        "#### Construcci\u00f3n RutaFlow: refactor sin reescritura",
         "### Tema 4: Decisiones, documentaci\u00f3n, deuda y evoluci\u00f3n",
         "# ADR-003: SQLite como persistencia inicial",
         "## Contexto",
-        "## Decisi\u00f3n",
-        "## Consecuencias",
-        "## Laboratorio pr\u00e1ctico",
-        "### Proyecto 7: redise\u00f1ar el inventario como producto mantenible"
+        "## Decisi\u00f3n"
       ]
     },
     {

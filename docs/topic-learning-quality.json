@@ -91,15 +91,15 @@
       "topics": 50,
       "explanation": 50,
       "code": 50,
-      "visual": 30,
-      "filePath": 35,
-      "runCommand": 44,
-      "expectedResult": 32,
-      "practice": 35,
-      "project": 34,
+      "visual": 33,
+      "filePath": 39,
+      "runCommand": 47,
+      "expectedResult": 34,
+      "practice": 39,
+      "project": 38,
       "modelMental": 50,
       "limitsDecision": 23,
-      "practicable": 34,
+      "practicable": 38,
       "genericScaffold": 0
     },
     "ios": {
@@ -9670,18 +9670,18 @@
         "criteria": {
           "explanation": true,
           "code": true,
-          "visual": false,
-          "filePath": false,
-          "runCommand": false,
+          "visual": true,
+          "filePath": true,
+          "runCommand": true,
           "expectedResult": true,
-          "practice": false,
-          "project": false,
+          "practice": true,
+          "project": true,
           "modelMental": true,
           "limitsDecision": false
         },
         "classification": {
-          "rubricScore": 5,
-          "practicable": false,
+          "rubricScore": 15,
+          "practicable": true,
           "genericScaffold": false
         }
       },
@@ -9692,17 +9692,17 @@
           "explanation": true,
           "code": true,
           "visual": true,
-          "filePath": false,
-          "runCommand": false,
-          "expectedResult": false,
-          "practice": false,
-          "project": false,
+          "filePath": true,
+          "runCommand": true,
+          "expectedResult": true,
+          "practice": true,
+          "project": true,
           "modelMental": true,
           "limitsDecision": true
         },
         "classification": {
-          "rubricScore": 6,
-          "practicable": false,
+          "rubricScore": 16,
+          "practicable": true,
           "genericScaffold": false
         }
       },
@@ -9712,18 +9712,18 @@
         "criteria": {
           "explanation": true,
           "code": true,
-          "visual": false,
-          "filePath": false,
+          "visual": true,
+          "filePath": true,
           "runCommand": true,
           "expectedResult": false,
-          "practice": false,
-          "project": false,
+          "practice": true,
+          "project": true,
           "modelMental": true,
           "limitsDecision": true
         },
         "classification": {
-          "rubricScore": 6,
-          "practicable": false,
+          "rubricScore": 14,
+          "practicable": true,
           "genericScaffold": false
         }
       },
@@ -9733,18 +9733,18 @@
         "criteria": {
           "explanation": true,
           "code": true,
-          "visual": false,
-          "filePath": false,
-          "runCommand": false,
-          "expectedResult": false,
-          "practice": false,
-          "project": false,
+          "visual": true,
+          "filePath": true,
+          "runCommand": true,
+          "expectedResult": true,
+          "practice": true,
+          "project": true,
           "modelMental": true,
           "limitsDecision": true
         },
         "classification": {
-          "rubricScore": 4,
-          "practicable": false,
+          "rubricScore": 16,
+          "practicable": true,
           "genericScaffold": false
         }
       },

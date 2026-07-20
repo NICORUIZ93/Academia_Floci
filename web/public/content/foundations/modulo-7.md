@@ -36,9 +36,17 @@ Prioriza por valor, riesgo, dependencia y coste de retraso. “Todo es prioridad
 
 **Diagrama:**
 
-```text
-stakeholder → necesidad → requisito → criterio → diseño → prueba → evidencia
+```mermaid
+flowchart LR
+    ST["stakeholder"] --> NEED["necesidad"] --> REQ["requisito"] --> CRITERIA["criterio"]
+    CRITERIA --> DESIGN["diseño"] --> TEST["prueba"] --> EVIDENCE["evidencia"]
 ```
+
+#### Construcción RutaFlow: requisito que puede fallar
+
+Crea `rutaflow-fundamentos/25-requisitos/requirements/retirar-guia.md` con stakeholder, necesidad, alcance, supuestos y criterios Given/When/Then. Implementa el criterio central en `src/retirar.py` y su evidencia en `tests/test_retirar.py`. Ejecuta `python -m pytest -q`; deben pasar retiro normal, cantidad superior y rol lector.
+
+Cambia “menos de 200 ms” por “rápido” y explica por qué dejó de ser aceptable; restituye operación, percentil, umbral, carga y entorno. Como modificación, agrega un stakeholder de soporte con una necesidad que tensione privacidad y diagnóstico. RutaFlow mantiene trazabilidad requisito → prueba → evidencia; una historia breve no sustituye reglas ni atributos de calidad.
 
 ### Tema 2: Arquitectura guiada por atributos de calidad
 
@@ -50,18 +58,18 @@ Un escenario de calidad tiene fuente, estímulo, artefacto, entorno, respuesta y
 
 C4 comunica niveles:
 
-```text
-Contexto: persona → Sistema de Inventario → servicio de identidad
-Contenedores: CLI/Web → aplicación → SQLite
-Componentes: comandos → casos de uso → repositorios
-Código: clases/funciones cuando aporta valor
+```mermaid
+flowchart LR
+    PERSON["Operador"] --> WEB["RutaFlow Web"] --> APP["Aplicación"] --> DB["Base de datos"]
+    APP --> ID["Servicio de identidad"]
 ```
 
 Una arquitectura por capas puede dirigir dependencias hacia el dominio:
 
-```text
-presentación → aplicación → dominio
-infraestructura ────────────┘ (implementa puertos)
+```mermaid
+flowchart LR
+    UI["presentación"] --> APP2["aplicación"] --> DOMAIN["dominio"]
+    INFRA["infraestructura"] -->|"implementa puertos"| APP2
 ```
 
 El dominio no debería importar SQLite ni HTTP. Define una interfaz/puerto `RepositorioProductos`; infraestructura la implementa. Esto facilita pruebas y cambio de mecanismo, pero añadir abstracciones sin alternativa ni beneficio puede ser sobreingeniería.
@@ -76,9 +84,17 @@ Fitness functions automatizan propiedades: reglas de dependencia, presupuesto de
 
 **Diagrama:**
 
-```text
-atributos + restricciones → alternativas → trade-offs → decisión → medición
+```mermaid
+flowchart LR
+    QUALITY["atributos + restricciones"] --> OPTIONS["alternativas"] --> TRADE["trade-offs"]
+    TRADE --> DECISION["decisión"] --> MEASURE["fitness function"]
 ```
+
+#### Construcción RutaFlow: arquitectura comprobable
+
+Crea `rutaflow-fundamentos/26-arquitectura/docs/c4.md` y `src/domain`, `src/application`, `src/infrastructure`, `src/interfaces`. Implementa un caso de uso con puerto de repositorio y añade `tests/test_dependencies.py` que falle si domain importa infrastructure. Ejecuta `python -m pytest -q`; el resultado esperado permite cambiar SQLite por memoria sin tocar dominio.
+
+Introduce el import prohibido y conserva el fallo como fitness function; corrige invirtiendo la dependencia. Como modificación, escribe dos escenarios medibles —disponibilidad y mantenibilidad— y un ADR con alternativa descartada. RutaFlow no adopta microservicios ni una interfaz por clase sin una fuerza real: cada límite debe justificar coste, operación y cambio esperado.
 
 ### Tema 3: Diseño modular, principios, patrones y refactoring
 
@@ -117,9 +133,17 @@ Refactoring cambia estructura preservando comportamiento. Antes de código hered
 
 **Diagrama:**
 
-```text
-smell → prueba de comportamiento → refactor pequeño → suite verde → repetir
+```mermaid
+flowchart LR
+    SMELL["smell"] --> CHARACTERIZE["prueba caracterizadora"] --> REFACTOR["refactor pequeño"]
+    REFACTOR --> GREEN["suite verde"] --> SMELL
 ```
+
+#### Construcción RutaFlow: refactor sin reescritura
+
+Copia una función grande a `rutaflow-fundamentos/27-diseno/src/legacy.py` y crea `tests/test_legacy.py` que capture comportamiento normal, límite y extraño existente. Ejecuta `python -m pytest -q`; después extrae validación, tarifa y persistencia en pasos separados, ejecutando la suite tras cada cambio.
+
+Añade una `Strategy` cuando existan dos políticas reales y prueba intercambiarlas; luego crea una interfaz sin segunda implementación ni frontera y elimínala al comprobar que solo agrega saltos. Como modificación, registra cada paso en commits separados de cualquier cambio funcional. RutaFlow usa cohesión, composición y puertos con propósito; SOLID no significa maximizar archivos.
 
 ### Tema 4: Decisiones, documentación, deuda y evolución
 
@@ -160,12 +184,20 @@ La ética atraviesa decisiones: accesibilidad, privacidad, sesgo, sostenibilidad
 
 **Diagrama:**
 
-```text
-decisión → ADR → implementación → métricas → nueva evidencia → mantener/revisar
+```mermaid
+flowchart LR
+    DEC["decisión"] --> ADR["ADR"] --> IMPL["implementación"] --> METRICS["métricas"]
+    METRICS --> EVIDENCE2["nueva evidencia"] --> REVIEW["mantener o revisar"]
 ```
 
+#### Construcción RutaFlow: decisión con fecha de revisión
 
-## Laboratorio práctico
+Crea `rutaflow-fundamentos/28-evolucion/docs/adr/003-sqlite.md`, `README.md` y `docs/debt-register.md`. Incluye contexto, alternativas, consecuencias, propietario y disparador multi-instancia. Ejecuta `python src/validate_docs.py` desde un validador pequeño que compruebe secciones y enlaces; el resultado esperado identifica ADRs incompletos antes de CI.
+
+Elimina “Consecuencias” y observa el fallo; restaura también límites negativos, no solo ventajas. Como modificación, diseña la deprecación de un campo de exportación con telemetría, periodo, migración y rollback. RutaFlow trata documentación como producto vivo: una deuda sin propietario/criterio de pago es una queja y un breaking change sin transición traslada costo al usuario.
+
+
+## Construcción guiada del capítulo
 
 ### Proyecto 7: rediseñar el inventario como producto mantenible
 

@@ -28,8 +28,8 @@
         "installRecovery": true
       },
       "topics": 50,
-      "labs": 4,
-      "verifiableLabs": 4,
+      "labs": 3,
+      "verifiableLabs": 3,
       "states": {
         "explained": 49,
         "practicable": 1
@@ -39,13 +39,13 @@
         "prerequisites": 2,
         "terms": 50,
         "code": 50,
-        "location": 35,
-        "execution": 45,
-        "expected": 33,
+        "location": 39,
+        "execution": 48,
+        "expected": 35,
         "failure": 7,
-        "diagnosis": 17,
-        "practice": 35,
-        "project": 34,
+        "diagnosis": 18,
+        "practice": 39,
+        "project": 38,
         "proof": 23,
         "transition": 0
       },
@@ -142,40 +142,6 @@
           ]
         },
         {
-          "module": 7,
-          "title": "Tema 3: Diseño modular, principios, patrones y refactoring",
-          "state": "explained",
-          "score": 4,
-          "missing": [
-            "goal",
-            "prerequisites",
-            "location",
-            "expected",
-            "failure",
-            "diagnosis",
-            "practice",
-            "project",
-            "transition"
-          ]
-        },
-        {
-          "module": 7,
-          "title": "Tema 4: Decisiones, documentación, deuda y evolución",
-          "state": "explained",
-          "score": 4,
-          "missing": [
-            "goal",
-            "prerequisites",
-            "location",
-            "execution",
-            "expected",
-            "diagnosis",
-            "practice",
-            "project",
-            "transition"
-          ]
-        },
-        {
           "module": 8,
           "title": "Tema 4: Contenedores: aislamiento reproducible",
           "state": "explained",
@@ -206,38 +172,6 @@
             "practice",
             "project",
             "proof",
-            "transition"
-          ]
-        },
-        {
-          "module": 7,
-          "title": "Tema 1: Requisitos, stakeholders y criterios verificables",
-          "state": "explained",
-          "score": 5,
-          "missing": [
-            "prerequisites",
-            "location",
-            "execution",
-            "failure",
-            "diagnosis",
-            "practice",
-            "project",
-            "transition"
-          ]
-        },
-        {
-          "module": 7,
-          "title": "Tema 2: Arquitectura guiada por atributos de calidad",
-          "state": "explained",
-          "score": 5,
-          "missing": [
-            "goal",
-            "prerequisites",
-            "location",
-            "execution",
-            "expected",
-            "practice",
-            "project",
             "transition"
           ]
         },
@@ -299,6 +233,65 @@
             "expected",
             "failure",
             "diagnosis",
+            "proof",
+            "transition"
+          ]
+        },
+        {
+          "module": 8,
+          "title": "Tema 1: El sistema operativo como administrador y frontera",
+          "state": "explained",
+          "score": 6,
+          "missing": [
+            "goal",
+            "prerequisites",
+            "expected",
+            "failure",
+            "practice",
+            "project",
+            "transition"
+          ]
+        },
+        {
+          "module": 9,
+          "title": "Tema 4: Probabilidad y evidencia para decisiones técnicas",
+          "state": "explained",
+          "score": 6,
+          "missing": [
+            "goal",
+            "prerequisites",
+            "location",
+            "expected",
+            "failure",
+            "project",
+            "transition"
+          ]
+        },
+        {
+          "module": 10,
+          "title": "Tema 4: Resiliencia y observabilidad orientadas a objetivos",
+          "state": "explained",
+          "score": 6,
+          "missing": [
+            "prerequisites",
+            "location",
+            "failure",
+            "diagnosis",
+            "project",
+            "proof",
+            "transition"
+          ]
+        },
+        {
+          "module": 0,
+          "title": "Tema 1: Del hardware al programa en ejecución",
+          "state": "explained",
+          "score": 7,
+          "missing": [
+            "goal",
+            "prerequisites",
+            "expected",
+            "failure",
             "proof",
             "transition"
           ]
