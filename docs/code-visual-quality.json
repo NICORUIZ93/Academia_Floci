@@ -79,12 +79,12 @@
     },
     "java": {
       "topics": 59,
-      "code": 53,
+      "code": 51,
       "commentedCode": 10,
-      "mermaid": 6,
-      "asciiVisual": 11,
+      "mermaid": 9,
+      "asciiVisual": 9,
       "misleadingDiagramLabel": 0,
-      "filePath": 9,
+      "filePath": 18,
       "runCommand": 52,
       "officialSource": 0
     },
@@ -3485,15 +3485,15 @@
       "track": "java",
       "module": 0,
       "topic": "Tema 2: public static void main — qué significa cada palabra",
-      "missingCode": false,
-      "missingComments": true
+      "missingCode": true,
+      "missingComments": false
     },
     {
       "track": "java",
       "module": 0,
       "topic": "Tema 3: JDK, JRE y JVM",
-      "missingCode": false,
-      "missingComments": true
+      "missingCode": true,
+      "missingComments": false
     },
     {
       "track": "java",

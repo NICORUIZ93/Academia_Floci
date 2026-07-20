@@ -247,7 +247,7 @@
     },
     {
       "path": "docs/student-journey-audit.json",
-      "lines": 4390,
+      "lines": 4387,
       "kind": "project-file",
       "symbols": [],
       "imports": [],
@@ -5084,7 +5084,7 @@
     },
     {
       "path": "web/public/content/java/modulo-0.md",
-      "lines": 284,
+      "lines": 341,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5093,19 +5093,19 @@
         "## Antes de comenzar: instala Java correctamente",
         "## Aprende construyendo",
         "### Tema 1: Del c\u00f3digo fuente a la JVM",
+        "#### Construcci\u00f3n RutaFlow: primer ejecutable",
         "### Tema 2: public static void main \u2014 qu\u00e9 significa cada palabra",
+        "#### Construcci\u00f3n RutaFlow: argumentos de inicio",
         "### Tema 3: JDK, JRE y JVM",
+        "#### Construcci\u00f3n RutaFlow: diagn\u00f3stico del entorno",
         "### Tema 4: Tipos primitivos vs referencias",
-        "### Tema 5: Variables, conversiones y `String`",
-        "### Tema 6: Operadores, precedencia y control de flujo",
-        "### Tema 7: Arreglos, wrappers y paso de argumentos",
-        "### Tema 8: Entrada y APIs est\u00e1ndar sin aprender APIs obsoletas como modelo principal",
-        "## Ruta de proyecto progresivo desde carpeta vac\u00eda"
+        "#### Construcci\u00f3n RutaFlow: modelo de un paquete",
+        "### Tema 5: Variables, conversiones y `String`"
       ]
     },
     {
       "path": "web/public/content/java/modulo-1.md",
-      "lines": 180,
+      "lines": 216,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5113,11 +5113,15 @@
         "# M\u00f3dulo 1: Programaci\u00f3n orientada a objetos",
         "## Aprende construyendo",
         "### Tema 1: Clases, objetos, constructores y encapsulaci\u00f3n",
+        "#### Construcci\u00f3n RutaFlow: una gu\u00eda siempre v\u00e1lida",
         "### Tema 2: Herencia y sobreescritura",
         "#### Enfoque t\u00e9cnico: qu\u00e9 significa `@` en Java",
+        "#### Construcci\u00f3n RutaFlow: comportamiento polim\u00f3rfico y anotaciones reales",
         "### Tema 3: Interfaces, clases abstractas y cu\u00e1ndo usar cada una",
+        "#### Construcci\u00f3n RutaFlow: intercambiar proveedores sin cambiar el caso de uso",
         "### Tema 4: Sobrecarga vs sobreescritura, y modificadores de acceso",
-        "## Laboratorio pr\u00e1ctico"
+        "#### Construcci\u00f3n RutaFlow: una API peque\u00f1a y deliberada",
+        "## Construcci\u00f3n guiada del cap\u00edtulo"
       ]
     },
     {

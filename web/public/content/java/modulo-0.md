@@ -51,6 +51,19 @@ javac Hola.java   # compila a bytecode: genera Hola.class
 java Hola          # la JVM interpreta/compila el bytecode y lo ejecuta
 ```
 
+#### Construcción RutaFlow: primer ejecutable
+
+Crea `academia-java/src/main/java/com/rutaflow/app/Inicio.java`; la carpeta debe coincidir con el paquete `com.rutaflow.app`. Copia el ejemplo anterior, añade `package com.rutaflow.app;` como primera línea y cambia el mensaje por `RutaFlow iniciado`. Desde `academia-java/` ejecuta:
+
+```bash
+mkdir -p src/main/java/com/rutaflow/app out
+javac -d out src/main/java/com/rutaflow/app/Inicio.java
+java -cp out com.rutaflow.app.Inicio
+javap -classpath out -c com.rutaflow.app.Inicio
+```
+
+**Resultado esperado:** la consola muestra `RutaFlow iniciado`; `javap` presenta instrucciones como `getstatic`, `ldc` e `invokevirtual`. Borra temporalmente `static` de `main`: el código compila, pero la JVM informa que no encuentra un método principal válido. Restáuralo y cambia el programa para que reciba el nombre de una sede mediante `args[0]`, mostrando un mensaje seguro cuando no haya argumentos. Este archivo será el punto de arranque del proyecto integrador de entregas. El bytecode aporta portabilidad, pero no garantiza que una aplicación use correctamente rutas, codificaciones o bibliotecas nativas; esas dependencias también deben probarse en la plataforma objetivo.
+
 ### Tema 2: public static void main — qué significa cada palabra
 
 **Conceptos clave:** punto de entrada, pertenencia a la clase frente a instancia.
@@ -65,13 +78,20 @@ java Hola          # la JVM interpreta/compila el bytecode y lo ejecuta
 
 **Diagrama:**
 
+```mermaid
+flowchart LR
+    JVM["JVM"] -->|"busca e invoca"| MAIN["public static void main(String[] args)"]
+    MAIN --> PUBLIC["public: accesible"]
+    MAIN --> STATIC["static: sin instancia"]
+    MAIN --> VOID["void: sin retorno"]
+    MAIN --> ARGS["args: entrada externa"]
 ```
-public: accesible desde cualquier lugar (la JVM necesita invocarlo desde fuera)
-static: pertenece a la clase, no requiere una instancia previa
-void: no devuelve ningún valor
-main: nombre exacto buscado por convención
-String[] args: argumentos de línea de comandos
-```
+
+#### Construcción RutaFlow: argumentos de inicio
+
+Edita `src/main/java/com/rutaflow/app/Inicio.java` para aceptar `java -cp out com.rutaflow.app.Inicio BOGOTA` y producir `Centro operativo: BOGOTA`. Antes de acceder a `args[0]`, comprueba `args.length == 0`; en ese caso imprime `Uso: Inicio <CENTRO>` y termina con `return`. Compila con `javac -d out src/main/java/com/rutaflow/app/Inicio.java` y ejecuta una vez sin argumento y otra con `MEDELLIN`.
+
+Provoca `ArrayIndexOutOfBoundsException` quitando la comprobación y ejecutando sin argumentos; identifica en el *stack trace* el archivo y la línea. Luego restaura la protección y modifica el programa para normalizar el centro con `toUpperCase()`. La evidencia es capturar ambas salidas en el README del proyecto; así demuestras que entiendes la firma y no solo que la memorizaste.
 
 ### Tema 3: JDK, JRE y JVM
 
@@ -87,11 +107,18 @@ Para escribir y compilar código Java se necesita el JDK completo, dado que incl
 
 **Diagrama:**
 
+```mermaid
+flowchart TB
+    JDK["JDK: desarrollar"] --> JRE["Runtime y bibliotecas"]
+    JDK --> TOOLS["javac · javap · javadoc · jdb"]
+    JRE --> JVM["JVM: cargar y ejecutar bytecode"]
 ```
-JVM: ejecuta bytecode (el mínimo necesario)
-JRE: JVM + librerías estándar (para EJECUTAR programas)
-JDK: JRE + herramientas de desarrollo, javac incluido (para DESARROLLAR programas)
-```
+
+#### Construcción RutaFlow: diagnóstico del entorno
+
+En la raíz `academia-java/` crea `docs/entorno.md` y registra el sistema operativo, arquitectura, proveedor y versión del JDK. Obtén evidencia con `java --version`, `javac --version` y `java -XshowSettings:properties -version`. Confirma que `java.home` pertenece al JDK esperado y vuelve a compilar `Inicio.java`.
+
+El fallo que debes provocar es abrir otra terminal con un `PATH` que no contenga el JDK y observar `javac: command not found` o “no se reconoce como un comando”. La corrección no consiste en reinstalar a ciegas: localiza el JDK y configura `JAVA_HOME` y `PATH`. Añade al documento una tabla “síntoma → causa → comprobación → solución”; será el manual de incorporación para cualquier desarrollador que clone RutaFlow.
 
 ### Tema 4: Tipos primitivos vs referencias
 
@@ -112,6 +139,12 @@ int edad = 30;              // primitivo: valor directo en la pila
 String nombre = "Ana";       // referencia: variable apunta a un objeto en el heap
 Integer edadObjeto = 30;     // wrapper: versión objeto del primitivo int
 ```
+
+#### Construcción RutaFlow: modelo de un paquete
+
+Guarda este incremento en `src/main/java/com/rutaflow/domain/PaqueteDemo.java`. Declara `int unidades = 3`, `double pesoKg = 2.5`, `boolean fragil = true` y `String destinatario = "Ana"`; imprime cada valor y su significado, no solo números sueltos. Compila todo con `javac -d out src/main/java/com/rutaflow/domain/PaqueteDemo.java` y ejecuta `java -cp out com.rutaflow.domain.PaqueteDemo`.
+
+Después declara `Integer intentos = null` y provoca el fallo al evaluar `int siguiente = intentos + 1`; el `NullPointerException` ocurre durante el *unboxing*. Corrige validando la ausencia antes de calcular. Como modificación, reemplaza variables aisladas por un `record Paquete(String destinatario, double pesoKg, boolean fragil)` y verifica que la salida conserve los datos. Este será el primer objeto del dominio de RutaFlow; todavía no uses base de datos ni framework.
 
 ### Tema 5: Variables, conversiones y `String`
 
@@ -149,6 +182,12 @@ public final class Conversiones {
 
 **¿Por qué es importante?** Tipos, conversiones e igualdad determinan si el programa conserva el dato real o toma una decisión silenciosamente equivocada.
 
+#### Construcción RutaFlow: calcular una tarifa sin perder dinero
+
+Conserva `Conversiones.java` en la ruta indicada y ejecútalo con los comandos anteriores. La salida esperada es `false`, `true` y `238.80`: las dos primeras líneas prueban identidad frente a contenido y la tercera prueba el cálculo decimal. Si el paquete no coincide con `academia.fundamentos`, Java responderá `Could not find or load main class`; corrige la carpeta o el `package`, no elimines el paquete.
+
+Integra el aprendizaje en `src/main/java/com/rutaflow/domain/CalculadoraTarifa.java`: crea `BigDecimal calcular(BigDecimal tarifaUnidad, int unidades)` y rechaza unidades menores que uno con `IllegalArgumentException`. Ejecuta un `main` pequeño desde esa misma clase. Modifica la tarifa y predice el total antes de correrlo; luego documenta por qué `new BigDecimal(0.1)` no es equivalente a `new BigDecimal("0.1")`. RutaFlow reutilizará este cálculo cuando se incorpore persistencia.
+
 ### Tema 6: Operadores, precedencia y control de flujo
 
 **Conceptos clave:** agrupación explícita, cortocircuito, ramas exhaustivas y ciclos terminables.
@@ -180,6 +219,12 @@ static boolean pesoValido(Paquete paquete) {
 
 **¿Por qué es importante?** Una condición correcta no solo produce `true` o `false`; también controla qué operaciones llegan a ejecutarse y qué fallos quedan imposibilitados.
 
+#### Construcción RutaFlow: decidir el siguiente estado
+
+Crea `src/main/java/com/rutaflow/domain/EstadoEnvio.java` para el `enum` y `src/main/java/com/rutaflow/domain/PoliticaEstado.java` para `mensaje`. Añade un `main` que recorra `EstadoEnvio.values()` e imprima `ESTADO -> mensaje`. Compila ambos con `javac -d out src/main/java/com/rutaflow/domain/EstadoEnvio.java src/main/java/com/rutaflow/domain/PoliticaEstado.java` y ejecuta `java -cp out com.rutaflow.domain.PoliticaEstado`.
+
+Agrega `EN_BODEGA` al `enum` sin modificar el `switch`: el error de compilación esperado indica que la expresión no cubre todos los valores. No lo ocultes con `default`; añade una regla explícita. Como modificación, implementa `puedeEntregarse(EstadoEnvio estado, boolean tieneFirma)` y predice cuatro combinaciones antes de ejecutarlas. Esta política será usada más adelante por la API, por lo que permanece en dominio y no en el controlador.
+
 ### Tema 7: Arreglos, wrappers y paso de argumentos
 
 **Conceptos clave:** tamaño fijo, autoboxing, aliasing y Java siempre pasa por valor.
@@ -206,6 +251,12 @@ System.out.println(java.util.Arrays.toString(paradas)); // [99, 2, 3]
 **Analogía:** copiar una referencia es entregar una segunda dirección de la misma bodega, no construir otra bodega; cambiar mercancía se observa desde ambas direcciones, pero sustituir el papel con la dirección no mueve la bodega original.
 
 **¿Por qué es importante?** Entender qué se copia permite anticipar mutaciones, aliasing y errores de límites antes de ejecutar el programa.
+
+#### Construcción RutaFlow: secuencia de paradas
+
+Guarda el ejemplo en `src/main/java/com/rutaflow/domain/RutaDemo.java`, dentro de una clase con `main`. Ejecuta `javac -d out src/main/java/com/rutaflow/domain/RutaDemo.java` y `java -cp out com.rutaflow.domain.RutaDemo`; debes obtener `[99, 2, 3]`. Antes de ejecutar, escribe tu predicción en un comentario y después explica por qué reasignar `copiaReferencia` no sustituye `paradas`.
+
+Provoca `ArrayIndexOutOfBoundsException` recorriendo hasta `i <= paradas.length`; usa el mensaje para localizar el índice inválido. Corrige el límite y modifica el ejemplo para calcular la suma de identificadores sin alterar el arreglo. En RutaFlow esta secuencia representa paradas ordenadas; cuando necesite crecer, el siguiente módulo la migrará a una colección, evitando adelantar una solución que aún no se ha explicado.
 
 ### Tema 8: Entrada y APIs estándar sin aprender APIs obsoletas como modelo principal
 
@@ -235,6 +286,12 @@ System.out.printf("edad=%d, demora=%d min%n", edad, demoraMinutos);
 
 **¿Por qué es importante?** Elegir el tipo y la API según la semántica evita pruebas inestables, fechas ambiguas, secretos expuestos y números supuestamente aleatorios que no cumplen su propósito.
 
+#### Construcción RutaFlow: promesa de entrega reproducible
+
+Crea `src/main/java/com/rutaflow/domain/PromesaEntrega.java`. Recibe por argumento una fecha ISO como `2026-07-20`, conviértela con `LocalDate.parse` y suma dos días hábiles con un ciclo que ignore sábado y domingo. Compila con `javac -d out src/main/java/com/rutaflow/domain/PromesaEntrega.java` y ejecuta `java -cp out com.rutaflow.domain.PromesaEntrega 2026-07-20`; la salida debe incluir la fecha de entrada y la promesa calculada.
+
+Ejecuta después con `20/07/2026` para observar `DateTimeParseException`. Captura esa excepción en la frontera, muestra `Formato requerido: AAAA-MM-DD` y conserva el método de dominio trabajando con `LocalDate`. Como modificación, inyecta la fecha base en vez de consultar `now()` dentro del cálculo y prueba un viernes. Este diseño permitirá que RutaFlow reproduzca reglas temporales sin depender del reloj real.
+
 ---
 
 ## Ruta de proyecto progresivo desde carpeta vacía
@@ -251,7 +308,7 @@ No crees un proyecto desechable por módulo. Conserva un único repositorio que 
 Al iniciar cada laboratorio crea una rama `modulo-N`, implementa el incremento, verifica el criterio de éxito y fusiona solo con pruebas verdes. Si un módulo necesita un experimento aislado, colócalo en `experiments/modulo-N/`; el producto acumulativo permanece ejecutable. Al terminar, otra persona debe poder clonar el repositorio y reproducir el último hito siguiendo únicamente el README.
 
 
-## Laboratorio práctico
+## Construcción guiada del capítulo
 
 **Objetivo del laboratorio:** compilar y ejecutar un programa Java que procese entrada del usuario con validación de tipos, inspeccionando el bytecode generado.
 

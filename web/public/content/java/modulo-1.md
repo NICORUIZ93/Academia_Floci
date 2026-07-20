@@ -46,6 +46,12 @@ Guarda esta clase en `src/main/java/academia/entregas/Guia.java`. Crea `src/test
 
 **¿Por qué es importante?** Si una clase protege sus invariantes, el resto del sistema puede confiar en sus objetos y deja de repetir validaciones defensivas después de cada operación.
 
+#### Construcción RutaFlow: una guía siempre válida
+
+Añade `Guia.java` al proyecto acumulativo del módulo anterior y crea `src/main/java/academia/entregas/GuiaDemo.java`. En su `main`, construye `new Guia("RF-1001", 12.5)` e imprime número, peso y si requiere manejo especial. Ejecuta `javac -d out src/main/java/academia/entregas/Guia.java src/main/java/academia/entregas/GuiaDemo.java` y `java -cp out academia.entregas.GuiaDemo`; el resultado esperado contiene `RF-1001`, `12.5` y `false`.
+
+Provoca dos fallos: número vacío y peso `0`. Debes ver `IllegalArgumentException` con el mensaje de la invariante incumplida. Modifica después el límite de manejo especial mediante una constante con nombre y crea una segunda guía de 30 kg para comprobar `true`. No agregues un setter de peso: si el negocio permite corregirlo, diseña una operación que vuelva a validar el nuevo valor. RutaFlow usará `Guia` como raíz inicial del dominio.
+
 ### Tema 2: Herencia y sobreescritura
 
 **Conceptos clave:** `extends`, `@Override`, polimorfismo de subtipo.
@@ -101,6 +107,12 @@ class Perro extends Animal {
 }
 ```
 
+#### Construcción RutaFlow: comportamiento polimórfico y anotaciones reales
+
+En vez de animales, crea `src/main/java/academia/entregas/Notificador.java`, `NotificadorCorreo.java` y `NotificadorConsola.java`. Define `String enviar(String guia)` en la clase base y sobrescríbelo con `@Override`. En `NotificacionDemo.java`, guarda ambas implementaciones en un arreglo `Notificador[]` y recórrelo. Compila con `javac -d out src/main/java/academia/entregas/*.java` y ejecuta `java -cp out academia.entregas.NotificacionDemo`; la salida debe cambiar según el objeto real aunque la variable sea del tipo padre.
+
+Escribe mal la firma como `enviar(int guia)` manteniendo `@Override`: el compilador debe indicar que el método no sobrescribe ninguno. Corrige la firma y añade `Auditable.java` en el mismo paquete con retención `RUNTIME`; verifica desde `NotificacionDemo` con `getDeclaredMethod(...).isAnnotationPresent(Auditable.class)`. Cambia la retención a `SOURCE`, predice `false` y compruébalo. Así separas el polimorfismo del mecanismo que interpreta metadatos y evitas creer que `@` ejecuta magia por sí solo.
+
 ### Tema 3: Interfaces, clases abstractas y cuándo usar cada una
 
 **Conceptos clave:** contrato sin implementación, comportamiento compartido parcial, múltiple implementación de interfaces.
@@ -129,6 +141,24 @@ abstract class Forma {
 }
 ```
 
+#### Construcción RutaFlow: intercambiar proveedores sin cambiar el caso de uso
+
+Crea `src/main/java/academia/entregas/CalculadorRuta.java` como interfaz con `int estimarMinutos(String origen, String destino)`. Implementa `CalculadorRutaLocal` con un valor determinista y crea `PlanificadorEntrega`, que recibe la interfaz en su constructor. Este flujo expresa la dependencia correcta:
+
+```mermaid
+classDiagram
+    class PlanificadorEntrega
+    class CalculadorRuta {
+      <<interface>>
+      +estimarMinutos(origen, destino) int
+    }
+    class CalculadorRutaLocal
+    PlanificadorEntrega --> CalculadorRuta
+    CalculadorRutaLocal ..|> CalculadorRuta
+```
+
+Compila los tres archivos y un `PlanificadorDemo.java` con `javac -d out src/main/java/academia/entregas/*.java`; ejecuta `java -cp out academia.entregas.PlanificadorDemo` y verifica `Tiempo estimado: 25 min`. Elimina temporalmente la implementación de `estimarMinutos`: el compilador exige implementar el contrato o declarar abstracta la clase. Como modificación, añade una implementación de prueba que devuelva 5 sin tocar `PlanificadorEntrega`. Este incremento prepara RutaFlow para sustituir el cálculo local por un proveedor de mapas sin acoplar el dominio a su SDK.
+
 ### Tema 4: Sobrecarga vs sobreescritura, y modificadores de acceso
 
 **Conceptos clave:** misma firma vs distintas firmas, niveles de visibilidad.
@@ -150,10 +180,16 @@ double sumar(double a, double b) { return a + b; } // sobrecarga: mismo nombre, 
 // private (solo la clase) < package-private (mismo paquete) < protected (+ subclases) < public (todos)
 ```
 
+#### Construcción RutaFlow: una API pequeña y deliberada
+
+Crea `src/main/java/academia/entregas/Cotizador.java` con dos sobrecargas: `cotizar(Guia guia)` y `cotizar(Guia guia, BigDecimal descuento)`. Mantén privado `validarDescuento`, deja los métodos de negocio públicos y evita `protected` mientras no exista una extensión legítima. En `CotizadorDemo.java`, invoca ambas firmas. Ejecuta `javac -d out src/main/java/academia/entregas/*.java` y `java -cp out academia.entregas.CotizadorDemo`; la salida esperada muestra una tarifa completa y otra descontada.
+
+Provoca un error de compilación intentando llamar `validarDescuento` desde el demo; el mensaje confirma la frontera de encapsulación. Después crea por accidente dos métodos que solo difieran en el tipo de retorno: Java informa que la firma ya está definida, porque el retorno no participa en la sobrecarga. Elimina esa variante y modifica la API para que un descuento inválido produzca un mensaje de dominio claro. Este diseño mantiene mínima la superficie pública que otros módulos de RutaFlow deberán conservar.
+
 ---
 
 
-## Laboratorio práctico
+## Construcción guiada del capítulo
 
 **Objetivo del laboratorio:** construir una jerarquía de clases con herencia, una interfaz y una clase abstracta.
 
