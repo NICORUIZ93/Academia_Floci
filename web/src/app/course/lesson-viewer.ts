@@ -11,6 +11,7 @@ import { ProgressService } from '../progress.service';
 import { ThemeService } from '../theme.service';
 import { findProjectBootstrap } from '../project-bootstrap';
 import { projectFor } from '../learning-activities';
+import { glossaryFor } from '../technical-glossary';
 
 let mermaidInitialized = false;
 
@@ -212,6 +213,7 @@ export class LessonViewerComponent implements OnDestroy {
 
     this.enhanceEducationalContent(container);
     this.buildTableOfContents(container);
+    this.addTopicNavigation(Array.from(container.querySelectorAll<HTMLHeadingElement>('h3.topic-heading')));
     const fragment = this.requestedFragment();
     if (fragment) this.scrollToRequestedFragment(container, fragment);
     window.removeEventListener('scroll', this.updateReadingProgress);
@@ -285,6 +287,7 @@ export class LessonViewerComponent implements OnDestroy {
     });
 
     this.groupTopics(container);
+    this.annotateTechnicalTerms(container);
   }
 
   private addSectionGuides(container: HTMLElement): void {
@@ -350,6 +353,49 @@ export class LessonViewerComponent implements OnDestroy {
     });
   }
 
+  private addTopicNavigation(headings: HTMLHeadingElement[]): void {
+    headings.forEach((heading, index) => {
+      const card = heading.closest<HTMLElement>('.topic-card');
+      const body = card?.querySelector<HTMLElement>(':scope > .topic-body');
+      if (!body || body.querySelector('.topic-step-navigation')) return;
+      const navigation = document.createElement('nav');
+      navigation.className = 'topic-step-navigation';
+      navigation.setAttribute('aria-label', `Navegación del tema ${index + 1}`);
+      const previous = index > 0 ? headings[index - 1] : null;
+      const next = index < headings.length - 1 ? headings[index + 1] : null;
+      navigation.innerHTML = `
+        ${previous ? `<a href="#${escapeHtml(previous.id)}" data-topic-destination="${escapeHtml(previous.id)}"><span>← Anterior</span><small>${escapeHtml(this.topicTitle(previous))}</small></a>` : '<span></span>'}
+        <strong>Tema ${index + 1} de ${headings.length}</strong>
+        ${next ? `<a href="#${escapeHtml(next.id)}" data-topic-destination="${escapeHtml(next.id)}"><span>Siguiente →</span><small>${escapeHtml(this.topicTitle(next))}</small></a>` : '<span></span>'}`;
+      body.appendChild(navigation);
+    });
+  }
+
+  private topicTitle(heading: HTMLElement): string {
+    const copy = heading.cloneNode(true) as HTMLElement;
+    copy.querySelectorAll('button').forEach(button => button.remove());
+    return copy.textContent?.replace(/^Tema(?:\s+\d+)?\s*:\s*/i, '').trim() || 'Tema';
+  }
+
+  private annotateTechnicalTerms(container: HTMLElement): void {
+    const terms = glossaryFor(this.trackId()).sort((a, b) => b.term.length - a.term.length);
+    const inlineCode = Array.from(container.querySelectorAll<HTMLElement>('.topic-body code:not(pre code)'));
+    inlineCode.forEach(code => {
+      const value = code.textContent?.trim();
+      if (!value || code.closest('.technical-term')) return;
+      const match = terms.find(item => item.term.toLocaleLowerCase() === value.toLocaleLowerCase());
+      if (!match) return;
+      const definition = document.createElement('span');
+      definition.className = 'technical-term';
+      definition.tabIndex = 0;
+      definition.setAttribute('role', 'definition');
+      definition.setAttribute('aria-label', `${match.term}: ${match.definition}`);
+      definition.dataset['definition'] = match.definition;
+      code.parentNode?.insertBefore(definition, code);
+      definition.appendChild(code);
+    });
+  }
+
   private addTopicLearningSupport(body: HTMLElement, heading: HTMLElement): void {
     const topic = heading.cloneNode(true) as HTMLElement;
     topic.querySelectorAll('button').forEach(button => button.remove());
@@ -402,6 +448,24 @@ export class LessonViewerComponent implements OnDestroy {
   }
 
   async copyCode(event: Event): Promise<void> {
+    const topicDestination = (event.target as HTMLElement).closest<HTMLAnchorElement>('[data-topic-destination]');
+    if (topicDestination) {
+      event.preventDefault();
+      const id = topicDestination.dataset['topicDestination'];
+      const destination = id ? document.getElementById(id) : null;
+      const card = destination?.closest<HTMLElement>('.topic-card');
+      if (destination && card) {
+        card.classList.add('expanded');
+        const toggle = card.querySelector<HTMLButtonElement>('[data-topic-toggle]');
+        toggle?.setAttribute('aria-expanded', 'true');
+        const label = toggle?.querySelector('span');
+        if (label) label.textContent = 'Ocultar tema';
+        const reduceMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches ?? false;
+        destination.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block: 'start' });
+        history.replaceState(null, '', `#${id}`);
+      }
+      return;
+    }
     const topicToggle = (event.target as HTMLElement).closest<HTMLButtonElement>('[data-topic-toggle]');
     if (topicToggle) {
       const card = topicToggle.closest<HTMLElement>('.topic-card');

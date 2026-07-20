@@ -52,4 +52,13 @@ test('aprendizaje: presenta el proyecto integrador sin evaluación generada', as
   await expect(page.locator('body')).not.toContainText('XP');
   await expect(page.locator('.track-project')).toContainText('Centro de control logístico');
   await expect(page.locator('.topic-troubleshooting').first()).toBeAttached();
+  await expect(page.locator('.topic-step-navigation')).toHaveCount(6);
+});
+
+test('lector: avanza entre temas y explica términos técnicos', async ({ page }) => {
+  await page.goto('/curso/angular/0');
+  const navigation = page.locator('.topic-step-navigation');
+  await expect(navigation).toHaveCount(4);
+  await expect(navigation.locator('[data-topic-destination]').first()).toContainText('Siguiente');
+  await expect(page.locator('.technical-term').first()).toHaveAttribute('aria-label', /.+: .+/);
 });

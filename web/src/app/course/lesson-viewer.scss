@@ -123,6 +123,18 @@
 .lesson-markdown ::ng-deep .topic-troubleshooting summary { min-height:44px; display:flex; align-items:center; padding:11px 14px; color:$ink; font:750 12px Inter,sans-serif; cursor:pointer; }
 .lesson-markdown ::ng-deep .topic-troubleshooting ol { margin:0; padding:2px 34px 10px; color:$i3; font:500 11.5px/1.55 Inter,sans-serif; }
 .lesson-markdown ::ng-deep .topic-troubleshooting p { margin:0; padding:11px 14px; border-top:1px solid color-mix(in srgb,var(--warning) 22%,transparent); color:$mu; font:550 11px/1.5 Inter,sans-serif; }
+.lesson-markdown ::ng-deep .topic-step-navigation { display:grid; grid-template-columns:minmax(0,1fr) auto minmax(0,1fr); align-items:center; gap:12px; margin:30px -24px 0; padding:16px 24px; border-top:1px solid $bd; font-family:Inter,sans-serif; }
+.lesson-markdown ::ng-deep .topic-step-navigation > strong { color:$mu; font:700 10px/1.3 Inter,sans-serif; letter-spacing:.05em; text-transform:uppercase; white-space:nowrap; }
+.lesson-markdown ::ng-deep .topic-step-navigation a { min-height:48px; display:flex; flex-direction:column; justify-content:center; gap:3px; padding:8px 11px; border:1px solid transparent; border-radius:10px; color:$i3; text-decoration:none; }
+.lesson-markdown ::ng-deep .topic-step-navigation a:last-child { align-items:flex-end; text-align:right; }
+.lesson-markdown ::ng-deep .topic-step-navigation a span { color:var(--track-color); font:750 11px/1.2 Inter,sans-serif; }
+.lesson-markdown ::ng-deep .topic-step-navigation a small { max-width:240px; overflow:hidden; color:$i3; font:650 11px/1.35 Inter,sans-serif; text-overflow:ellipsis; white-space:nowrap; }
+.lesson-markdown ::ng-deep .topic-step-navigation a:hover { border-color:color-mix(in srgb,var(--track-color) 28%,#{$bd}); background:color-mix(in srgb,var(--track-color) 5%,#{$wh}); }
+.lesson-markdown ::ng-deep .technical-term { position:relative; display:inline-block; border-bottom:1px dotted var(--track-color); cursor:help; }
+.lesson-markdown ::ng-deep .technical-term::after { content:attr(data-definition); position:absolute; z-index:8; left:50%; bottom:calc(100% + 9px); width:min(300px,75vw); padding:11px 13px; border:1px solid $bd2; border-radius:10px; background:$ink; color:$wh; box-shadow:$shm; font:500 11.5px/1.5 Inter,sans-serif; opacity:0; pointer-events:none; transform:translate(-50%,5px); transition:opacity .16s ease,transform .16s ease; }
+.lesson-markdown ::ng-deep .technical-term:hover::after,
+.lesson-markdown ::ng-deep .technical-term:focus-visible::after { opacity:1; transform:translate(-50%,0); }
+.lesson-markdown ::ng-deep .technical-term:focus-visible { outline:2px solid var(--track-color); outline-offset:3px; border-radius:3px; }
 .lesson-markdown ::ng-deep .learning-contract { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:1px; margin:0 0 26px; overflow:hidden; border:1px solid $bd; border-radius:12px; background:$bd; }
 .lesson-markdown ::ng-deep .learning-contract div { display:grid; align-content:start; gap:5px; padding:13px; background:$bg2; }
 .lesson-markdown ::ng-deep .learning-contract small { color:$p; font:800 9px Inter,sans-serif; letter-spacing:.06em; text-transform:uppercase; }
@@ -262,6 +274,10 @@
   .lesson-markdown ::ng-deep .topic-card > .topic-heading { margin:0 -16px 20px; }
   .lesson-markdown ::ng-deep .topic-card:not(.expanded) > .topic-heading { margin-bottom:0; }
   .lesson-markdown ::ng-deep .topic-body { padding-bottom:18px; }
+  .lesson-markdown ::ng-deep .topic-step-navigation { grid-template-columns:1fr 1fr; margin:26px -16px 0; padding:14px 16px; }
+  .lesson-markdown ::ng-deep .topic-step-navigation > strong { grid-column:1/-1; grid-row:1; text-align:center; }
+  .lesson-markdown ::ng-deep .topic-step-navigation a { grid-row:2; }
+  .lesson-markdown ::ng-deep .topic-step-navigation a small { max-width:132px; }
   .track-project-body { grid-template-columns:1fr; padding:16px; }
   .lesson-markdown ::ng-deep .section-guide { align-items:flex-start; flex-direction:column; gap:4px; }
   .lesson-markdown ::ng-deep .learning-contract { grid-template-columns:1fr; }

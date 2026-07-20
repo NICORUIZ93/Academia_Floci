@@ -150,6 +150,11 @@ diagramas Mermaid se renderizan como figuras accesibles con contexto y guía de
 lectura. Los visuales ASCII restantes se conservan como deuda explícita hasta
 que puedan redibujarse sin alterar su significado.
 
+`docs/editorial-backlog.md` convierte esas mediciones en una lista accionable
+por track y módulo. El lector ofrece navegación anterior/siguiente entre temas
+y un glosario contextual accesible para términos técnicos; estas ayudas no se
+contabilizan como sustituto del contenido editorial específico.
+
 | Track | Modulos | Enfoque |
 |---|---|---|
 | Fundamentos | 12 | Computador, programación, web, datos e ingeniería de software |

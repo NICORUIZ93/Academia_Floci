@@ -1,8 +1,8 @@
 # Academia Floci Repo Graph
 
-Generated: 2026-07-20 04:06 UTC
+Generated: 2026-07-20 04:16 UTC
 Root: `Academia_Floci`
-Indexed files: 769
+Indexed files: 772
 Import edges: 33
 
 Use this file as the first, compact context for AI assistants. Refresh it with:
@@ -15,19 +15,19 @@ For automated lookups, use `docs/repo-graph.json`.
 
 ## Project Shape
 
-- `angular-app`: 52 files
-- `automation-script`: 25 files
+- `angular-app`: 53 files
+- `automation-script`: 26 files
 - `course-content`: 347 files
-- `documentation`: 99 files
+- `documentation`: 100 files
 - `example`: 215 files
 - `local-infra`: 1 files
 - `project-file`: 30 files
 
 ## File Types
 
-- `.md`: 437
-- `.py`: 55
-- `.ts`: 47
+- `.md`: 438
+- `.py`: 56
+- `.ts`: 48
 - `.js`: 42
 - `.java`: 40
 - `.json`: 26
@@ -52,9 +52,9 @@ For automated lookups, use `docs/repo-graph.json`.
 
 ## High Signal Files
 
-- `README.md` (252 lines, documentation)
+- `README.md` (257 lines, documentation)
   - headings: # Academia_Floci, ## Como empezar, ## Levantar Floci, # 1. Levantar todos los servicios, # 2. Verificar Floci AWS
-- `scripts/validate.sh` (124 lines, automation-script)
+- `scripts/validate.sh` (125 lines, automation-script)
 - `scripts/build_repo_graph.py` (445 lines, automation-script)
   - symbols: FileNode, repo_files, read_text, classify, parse_ts_symbols, parse_ts_imports, parse_python_symbols, parse_python_imports, parse_markdown_headings, unique
 - `web/src/app/app.ts` (11 lines, angular-app)
@@ -65,7 +65,7 @@ For automated lookups, use `docs/repo-graph.json`.
   - symbols: CourseCatalogComponent, cards, featuredTracks, foundationTracks, mobileTracks, totalModules
 - `web/src/app/course/course-shell.ts` (46 lines, angular-app)
   - symbols: CourseShellComponent, track, officialPath, sidebarOpen, trackLogo, percent
-- `web/src/app/course/lesson-viewer.ts` (507 lines, angular-app)
+- `web/src/app/course/lesson-viewer.ts` (571 lines, angular-app)
   - symbols: LessonViewerComponent, TocItem, track, module, projectBootstrap, trackProject, showProjectBootstrap, showTrackProject, moduleIndex, isCloudIntroduction
 - `web/public/content/manifest.json` (819 lines, course-content)
 - `web/public/content/es/pasos.md` (1122 lines, course-content)
@@ -138,7 +138,7 @@ For automated lookups, use `docs/repo-graph.json`.
 - `web/src/app/app.config.ts` (12 lines) - imports: @angular/core, @angular/router, ./app.routes
 - `web/src/app/app.html` (4 lines)
 - `web/src/app/app.routes.ts` (27 lines) - imports: @angular/router, ./catalog/course-catalog, ./course/course-shell, ./course/lesson-viewer
-- `web/src/app/app.spec.ts` (139 lines) - imports: @angular/core/testing, @angular/router, @angular/router/testing, ./app, ./app.routes, ./catalog/course-catalog, ./course-data
+- `web/src/app/app.spec.ts` (141 lines) - imports: @angular/core/testing, @angular/router, @angular/router/testing, ./app, ./app.routes, ./catalog/course-catalog, ./course-data
 - `web/src/app/app.ts` (11 lines) - symbols: App; imports: @angular/core, @angular/router, ./command-palette
 - `web/src/app/catalog/course-catalog.html` (91 lines) - symbols: main-content, catalog-title, tracks-title, official-title
 - `web/src/app/catalog/course-catalog.scss` (198 lines)
@@ -153,13 +153,14 @@ For automated lookups, use `docs/repo-graph.json`.
 - `web/src/app/course/course-shell.html` (53 lines) - symbols: official-path-title, main-content
 - `web/src/app/course/course-shell.scss` (80 lines)
 - `web/src/app/course/course-shell.ts` (46 lines) - symbols: CourseShellComponent, track, officialPath, sidebarOpen, trackLogo, percent; imports: @angular/common, @angular/core, @angular/core/rxjs-interop, @angular/router, lucide-angular, rxjs, ../course-data, ../command-palette.service
-- ... 34 more files
+- ... 35 more files
 
 ### automation-script
 
 - `scripts/audit_code_visual_quality.py` (117 lines) - symbols: student_visible_content, blocks, evaluate, build, render, main; imports: __future__, argparse, json, re, collections, pathlib
 - `scripts/audit_student_journey.py` (146 lines) - symbols: topic_blocks, has, build_report, render, main; imports: __future__, json, re, collections, pathlib
 - `scripts/audit_topic_learning_quality.py` (135 lines) - symbols: student_visible_content, topic_blocks, evaluate, classify, build, render_markdown, main; imports: __future__, argparse, json, re, collections, pathlib
+- `scripts/build_editorial_backlog.py` (101 lines) - symbols: render, main; imports: __future__, argparse, collections, pathlib, audit_topic_learning_quality
 - `scripts/build_repo_graph.py` (445 lines) - symbols: FileNode, repo_files, read_text, classify, parse_ts_symbols, parse_ts_imports, parse_python_symbols, parse_python_imports; imports: __future__, argparse, ast, json, re, collections, dataclasses, datetime
 - `scripts/build_web_topic_index.py` (75 lines) - symbols: slugify, clean_topic_title, main; imports: __future__, json, re, sys, unicodedata, collections, pathlib
 - `scripts/create_delivery_modules.py` (61 lines) - symbols: render; imports: pathlib
@@ -172,10 +173,9 @@ For automated lookups, use `docs/repo-graph.json`.
 - `scripts/fix_misleading_diagram_labels.py` (43 lines) - symbols: replace, main; imports: __future__, re, pathlib
 - `scripts/start.sh` (10 lines)
 - `scripts/validate-floci.sh` (43 lines)
-- `scripts/validate.sh` (124 lines)
+- `scripts/validate.sh` (125 lines)
 - `scripts/validate_code_quality.py` (38 lines) - imports: pathlib
-- `scripts/validate_curriculum.py` (162 lines) - imports: json, pathlib, re
-- ... 7 more files
+- ... 8 more files
 
 ### course-content
 
@@ -201,12 +201,13 @@ For automated lookups, use `docs/repo-graph.json`.
 
 ### documentation
 
-- `README.md` (252 lines) - headings: # Academia_Floci, ## Como empezar, ## Levantar Floci, # 1. Levantar todos los servicios
+- `README.md` (257 lines) - headings: # Academia_Floci, ## Como empezar, ## Levantar Floci, # 1. Levantar todos los servicios
 - `docs/ESTANDAR-DE-CODIGO.md` (56 lines) - headings: # Estándar transversal de código y diseño, ## Prioridades, ## Clean Code con criterio, ## SOLID cuando aporta valor
 - `docs/MATRIZ-CURRICULAR.md` (71 lines) - headings: # Matriz curricular auditable, ## Progresión de competencia, ## Cobertura por módulo, ## Método de evaluación
 - `docs/METODOLOGIA-DE-APRENDIZAJE.md` (57 lines) - headings: # Metodología Aprende construyendo, ## Ciclo de cada capítulo, ## Tamaño de las experiencias, ## Regla para mostrar soluciones
 - `docs/PLANTILLA-LECCION.md` (105 lines) - headings: # Plantilla de Lección — Prompt Maestro para Claude / Codex, ## PROMPT MAESTRO (copiar desde aquí), ## DATOS DE LA LECCIÓN, ## REGLAS DE ESTILO
 - `docs/code-visual-quality.md` (26 lines) - headings: # Auditoría de código y visuales, ## Regla editorial
+- `docs/editorial-backlog.md` (58 lines) - headings: # Deuda editorial verificable, ## Estado global, ## Prioridad por track, ## Temas sin código editorial
 - `docs/student-journey-audit.md` (155 lines) - headings: # Auditoría del recorrido del estudiante, ## Instalación y primera ejecución, ## Bloqueos prioritarios por track, ### foundations
 - `docs/topic-learning-quality.md` (26 lines) - headings: # Auditoría pedagógica tema por tema, ## Regla editorial
 - `web/README.md` (39 lines) - headings: # Web, ## Abrir la academia, ## Que contiene, ## Archivos principales
@@ -218,8 +219,7 @@ For automated lookups, use `docs/repo-graph.json`.
 - `web/scripts/source-docs-en/configuration/environment-variables.md` (439 lines) - headings: # Environment Variables Reference, ## Global, ## Authentication, ## Browser CORS
 - `web/scripts/source-docs-en/configuration/initialization-hooks.md` (186 lines) - headings: # Initialization Hooks, ## Lifecycle Phases, ## Hook Directories, ## Script Types
 - `web/scripts/source-docs-en/configuration/multi-account.md` (176 lines) - headings: # Multi-Account Isolation, ## How It Works, ## Temporary Credentials (AssumeRole), ## Default Behavior (Single Account)
-- `web/scripts/source-docs-en/configuration/ports.md` (165 lines) - headings: # Ports Reference, ## Port Overview, ## Why some ports don't need docker-compose mapping, ### Proxy-in-Floci (ElastiCache, RDS)
-- ... 81 more files
+- ... 82 more files
 
 ### example
 
