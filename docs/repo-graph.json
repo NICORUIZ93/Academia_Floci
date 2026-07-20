@@ -164,6 +164,20 @@
       ]
     },
     {
+      "path": "docs/editorial-contract.md",
+      "lines": 44,
+      "kind": "documentation",
+      "symbols": [],
+      "imports": [],
+      "headings": [
+        "# Contrato editorial de Academia Floci",
+        "## Unidad m\u00ednima: un tema explicado y practicable",
+        "## Progresi\u00f3n de libro",
+        "## C\u00f3digo y recursos visuales",
+        "## Regla de aceptaci\u00f3n"
+      ]
+    },
+    {
       "path": "docs/floci-official-curriculum.json",
       "lines": 14,
       "kind": "project-file",
@@ -194,6 +208,26 @@
       "symbols": [],
       "imports": [],
       "headings": []
+    },
+    {
+      "path": "docs/prerequisite-graph.json",
+      "lines": 9831,
+      "kind": "project-file",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "docs/prerequisite-graph.md",
+      "lines": 40,
+      "kind": "documentation",
+      "symbols": [],
+      "imports": [],
+      "headings": [
+        "# Grafo de prerrequisitos",
+        "## Dependencias entre libros",
+        "## Cobertura"
+      ]
     },
     {
       "path": "docs/requested-master-topics.json",
@@ -2331,6 +2365,25 @@
       "headings": []
     },
     {
+      "path": "scripts/build_prerequisite_graph.py",
+      "lines": 114,
+      "kind": "automation-script",
+      "symbols": [
+        "topics_for",
+        "build",
+        "render",
+        "main"
+      ],
+      "imports": [
+        "__future__",
+        "argparse",
+        "json",
+        "re",
+        "pathlib"
+      ],
+      "headings": []
+    },
+    {
       "path": "scripts/build_repo_graph.py",
       "lines": 464,
       "kind": "automation-script",
@@ -2512,7 +2565,7 @@
     },
     {
       "path": "scripts/validate.sh",
-      "lines": 125,
+      "lines": 126,
       "kind": "automation-script",
       "symbols": [],
       "imports": [],

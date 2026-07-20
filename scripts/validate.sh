@@ -121,4 +121,5 @@ python3 scripts/audit_code_visual_quality.py --check
 python3 scripts/build_editorial_backlog.py --check
 python3 scripts/validate_learning_priorities.py
 python3 scripts/build_web_topic_index.py --check
+python3 scripts/build_prerequisite_graph.py --check
 python3 scripts/build_repo_graph.py --check
