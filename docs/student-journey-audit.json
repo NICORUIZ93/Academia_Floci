@@ -2220,8 +2220,8 @@
         "installRecovery": true
       },
       "topics": 59,
-      "labs": 13,
-      "verifiableLabs": 13,
+      "labs": 12,
+      "verifiableLabs": 12,
       "states": {
         "explained": 59
       },
@@ -2230,13 +2230,13 @@
         "prerequisites": 1,
         "terms": 59,
         "code": 59,
-        "location": 18,
+        "location": 21,
         "execution": 52,
-        "expected": 25,
+        "expected": 27,
         "failure": 2,
-        "diagnosis": 8,
+        "diagnosis": 10,
         "practice": 34,
-        "project": 20,
+        "project": 23,
         "proof": 10,
         "transition": 1
       },
@@ -2441,40 +2441,6 @@
           ]
         },
         {
-          "module": 2,
-          "title": "Tema 1: List, Set, Map y sus implementaciones",
-          "state": "explained",
-          "score": 4,
-          "missing": [
-            "goal",
-            "prerequisites",
-            "location",
-            "expected",
-            "failure",
-            "diagnosis",
-            "project",
-            "proof",
-            "transition"
-          ]
-        },
-        {
-          "module": 2,
-          "title": "Tema 3: Comparable vs Comparator, e iteración",
-          "state": "explained",
-          "score": 4,
-          "missing": [
-            "goal",
-            "prerequisites",
-            "location",
-            "expected",
-            "failure",
-            "diagnosis",
-            "project",
-            "proof",
-            "transition"
-          ]
-        },
-        {
           "module": 3,
           "title": "Tema 1: Checked vs unchecked exceptions",
           "state": "explained",
@@ -2494,6 +2460,40 @@
         {
           "module": 3,
           "title": "Tema 2: try-with-resources",
+          "state": "explained",
+          "score": 4,
+          "missing": [
+            "goal",
+            "prerequisites",
+            "location",
+            "failure",
+            "diagnosis",
+            "practice",
+            "project",
+            "proof",
+            "transition"
+          ]
+        },
+        {
+          "module": 4,
+          "title": "Tema 3: Streams paralelos y referencias a métodos",
+          "state": "explained",
+          "score": 4,
+          "missing": [
+            "goal",
+            "prerequisites",
+            "location",
+            "expected",
+            "failure",
+            "diagnosis",
+            "project",
+            "proof",
+            "transition"
+          ]
+        },
+        {
+          "module": 6,
+          "title": "Tema 1: NIO.2 — Path y Files",
           "state": "explained",
           "score": 4,
           "missing": [

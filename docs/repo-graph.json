@@ -5230,7 +5230,7 @@
     },
     {
       "path": "web/public/content/java/modulo-2.md",
-      "lines": 108,
+      "lines": 126,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5238,9 +5238,12 @@
         "# M\u00f3dulo 2: Colecciones y gen\u00e9ricos",
         "## Aprende construyendo",
         "### Tema 1: List, Set, Map y sus implementaciones",
+        "#### Construcci\u00f3n RutaFlow: paradas, unicidad y b\u00fasqueda",
         "### Tema 2: Gen\u00e9ricos, wildcards y type erasure",
+        "#### Construcci\u00f3n RutaFlow: repositorio tipado",
         "### Tema 3: Comparable vs Comparator, e iteraci\u00f3n",
-        "## Laboratorio pr\u00e1ctico"
+        "#### Construcci\u00f3n RutaFlow: ordenar entregas sin alterar el dominio",
+        "## Construcci\u00f3n guiada del cap\u00edtulo"
       ]
     },
     {

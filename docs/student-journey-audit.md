@@ -11,7 +11,7 @@ Esta auditoría simula el recorrido desde la instalación hasta la evidencia fin
 | node | 15 | Sí | 64 | 0 | 64 | 0 | 14/14 | 3 | 10 | 2 |
 | angular | 16 | Sí | 61 | 0 | 61 | 0 | 15/15 | 3 | 4 | 0 |
 | react | 15 | Sí | 55 | 0 | 55 | 0 | 14/14 | 2 | 3 | 0 |
-| java | 16 | Sí | 59 | 0 | 59 | 0 | 13/13 | 2 | 8 | 1 |
+| java | 16 | Sí | 59 | 0 | 59 | 0 | 12/12 | 2 | 10 | 1 |
 | spring-boot | 16 | Sí | 58 | 0 | 58 | 0 | 14/14 | 3 | 3 | 1 |
 | kotlin-multiplatform | 14 | Sí | 46 | 0 | 46 | 0 | 13/13 | 4 | 3 | 0 |
 | android | 15 | Sí | 49 | 0 | 49 | 0 | 14/14 | 2 | 4 | 1 |

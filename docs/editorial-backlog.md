@@ -8,14 +8,14 @@ Este inventario se genera desde el Markdown real. Las ayudas visuales, el glosar
 |---|---:|---:|
 | Explicación | 892 | 1 |
 | Código | 843 | 50 |
-| Ruta | 170 | 723 |
+| Ruta | 173 | 720 |
 | Ejecución | 427 | 466 |
-| Resultado | 264 | 629 |
-| Modificación | 419 | 474 |
-| Rutaflow | 141 | 752 |
+| Resultado | 266 | 627 |
+| Modificación | 420 | 473 |
+| Rutaflow | 144 | 749 |
 | Modelo mental | 893 | 0 |
 | Límites | 433 | 460 |
-| **Tema practicable completo** | **56** | **837** |
+| **Tema practicable completo** | **59** | **834** |
 
 ## Prioridad por track
 
@@ -28,7 +28,7 @@ Este inventario se genera desde el Markdown real. Las ayudas visuales, el glosar
 | flutter | 57 | 0 | 49 | 28 | 37 | 36 | 38 |
 | foundations | 50 | 0 | 38 | 15 | 29 | 31 | 33 |
 | ios | 51 | 0 | 49 | 12 | 35 | 30 | 27 |
-| java | 59 | 0 | 41 | 7 | 34 | 29 | 20 |
+| java | 59 | 0 | 38 | 7 | 32 | 28 | 20 |
 | javascript | 75 | 0 | 47 | 53 | 46 | 27 | 25 |
 | kotlin-multiplatform | 46 | 0 | 41 | 29 | 35 | 30 | 23 |
 | node | 64 | 0 | 43 | 25 | 39 | 29 | 29 |
