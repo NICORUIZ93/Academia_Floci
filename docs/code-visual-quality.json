@@ -13,12 +13,12 @@
     },
     "cloud": {
       "topics": 153,
-      "code": 92,
+      "code": 94,
       "commentedCode": 5,
-      "mermaid": 13,
+      "mermaid": 14,
       "asciiVisual": 78,
       "misleadingDiagramLabel": 0,
-      "filePath": 22,
+      "filePath": 24,
       "runCommand": 103,
       "officialSource": 1
     },
@@ -1280,15 +1280,15 @@
       "track": "cloud",
       "module": 34,
       "topic": "Tema 7: Servicios Azure que completan el recorrido",
-      "missingCode": true,
-      "missingComments": false
+      "missingCode": false,
+      "missingComments": true
     },
     {
       "track": "cloud",
       "module": 34,
       "topic": "Tema 8: Servicios GCP que completan el recorrido",
-      "missingCode": true,
-      "missingComments": false
+      "missingCode": false,
+      "missingComments": true
     },
     {
       "track": "cloud",

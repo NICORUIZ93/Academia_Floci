@@ -208,6 +208,24 @@ El inventario completo también incluye S3, AWS Backup, Transfer Family, DynamoD
 
 Estos se suman a Blob Storage, Queue Storage, Table Storage, Azure Functions, App Configuration, Key Vault, Event Hubs, Service Bus, Cosmos DB, API Management, Azure Cache for Redis, Event Grid y Azure Monitor.
 
+#### Construcción Azure: conserva una evidencia en Blob Storage
+
+Inicia el proveedor con `floci az start` y carga las variables con `eval "$(floci az env)"`. En PowerShell usa `floci az env | Invoke-Expression`. La variable esencial es `AZURE_STORAGE_CONNECTION_STRING`: reúne cuenta, clave local y endpoints de Blob, Queue y Table. No la reemplaces con una cadena de producción.
+
+```bash
+mkdir -p examples/tracks/cloud/azure-blob
+cd examples/tracks/cloud/azure-blob
+printf '{"envio":"RF-101","estado":"recibido"}\n' > evidencia.json
+az storage container create --name evidencias --connection-string "$AZURE_STORAGE_CONNECTION_STRING"
+az storage blob upload --container-name evidencias --name RF-101.json --file evidencia.json --connection-string "$AZURE_STORAGE_CONNECTION_STRING"
+az storage blob download --container-name evidencias --name RF-101.json --file recuperada.json --connection-string "$AZURE_STORAGE_CONNECTION_STRING"
+cmp evidencia.json recuperada.json
+```
+
+`container create` debe devolver JSON con `created: true`; la carga debe informar que terminó y `cmp` no imprime nada cuando ambos archivos son idénticos. Comprueba además el blob en Floci UI. Si aparece `Connection refused`, ejecuta `floci az status` y `floci az doctor`; si el cliente intenta autenticar contra Azure remoto, imprime la cadena y confirma que contiene `localhost:4577`.
+
+**Modificación:** añade metadatos `tipo=evidencia` y `guia=RF-101`, vuelve a cargar el blob y recupéralos con `az storage blob metadata show`. Esto conecta el ejercicio con RutaFlow: el objeto guarda el archivo; la base de datos conserva el estado transaccional de la entrega.
+
 ### Tema 8: Servicios GCP que completan el recorrido
 
 **¿Por qué es importante?** Los hosts de emulador y proyectos explícitos impiden enviar pruebas por accidente a recursos remotos.
@@ -224,6 +242,33 @@ Estos se suman a Blob Storage, Queue Storage, Table Storage, Azure Functions, Ap
 | Eventarc | Enrutar eventos hacia destinos mediante filtros y contratos explícitos. |
 
 También forman parte del catálogo Cloud Storage, Pub/Sub, Firestore, Datastore, Secret Manager, IAM, Managed Kafka, GKE, Cloud Run, Cloud Functions, Cloud Tasks, Cloud Monitoring, Firebase Auth y BigQuery.
+
+#### Construcción GCP: archivo y evento con un proyecto local explícito
+
+Ejecuta `floci gcp start` y después `eval "$(floci gcp env)"`; en PowerShell canaliza la salida a `Invoke-Expression`. Los SDK de GCP no comparten una única variable: Storage, Pub/Sub, Firestore y otros clientes leen hosts de emulador diferentes. `CLOUDSDK_CORE_PROJECT=floci-local` identifica el espacio local; no necesitas descargar un JSON de cuenta de servicio.
+
+```bash
+mkdir -p examples/tracks/cloud/gcp-storage
+cd examples/tracks/cloud/gcp-storage
+printf '{"envio":"RF-102","estado":"en-ruta"}\n' > evento.json
+gcloud storage buckets create gs://rutaflow-local
+gcloud storage cp evento.json gs://rutaflow-local/eventos/RF-102.json
+gcloud storage ls gs://rutaflow-local/eventos/
+gcloud storage cp gs://rutaflow-local/eventos/RF-102.json recuperado.json
+cmp evento.json recuperado.json
+```
+
+El listado debe mostrar `gs://rutaflow-local/eventos/RF-102.json` y `cmp` debe terminar con código `0`. Si `gcloud` solicita iniciar sesión, detente: faltan los overrides locales. Ejecuta `floci gcp env --service gcs,pubsub`, aplica la salida y confirma que el endpoint de Storage contiene `localhost:4588`.
+
+**Modificación:** publica un mensaje Pub/Sub que contenga solamente la URI del objeto, no el archivo completo. Un consumidor debe descargar la evidencia usando esa URI y confirmar el mismo contenido. Así practicas un patrón real: almacenamiento para cargas grandes y mensajería para notificar que están disponibles.
+
+```mermaid
+flowchart LR
+  Mobile["Aplicación del repartidor"] -->|"evidencia.json"| Storage["Blob Storage o Cloud Storage"]
+  Storage -->|"URI + id del envío"| Event["Service Bus o Pub/Sub"]
+  Event --> Worker["Procesador RutaFlow"]
+  Worker --> Verify["Hash, metadatos y estado"]
+```
 
 ### Tema 9: Laboratorios oficiales reconstruidos en español
 
@@ -252,7 +297,7 @@ Inicia una instancia local, abre y cierra puertos mientras corre y observa los s
 Compatibilidad de API significa que clientes y formatos se comportan como espera el SDK; no significa que latencia regional, cuotas, IAM organizacional, facturación, hardware administrado, disponibilidad multi-zona y fallos del proveedor estén reproducidos completamente. Antes de producción ejecuta un conjunto pequeño de pruebas contractuales en la nube real, revisa seguridad y costes, y documenta cualquier diferencia.
 
 
-## Laboratorio práctico
+## Construcción final multi-nube
 
 1. Levanta los tres proveedores y registra sus health checks.
 2. Demuestra persistencia, snapshot y restauración.

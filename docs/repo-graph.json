@@ -213,7 +213,7 @@
     },
     {
       "path": "docs/student-journey-audit.json",
-      "lines": 4394,
+      "lines": 4393,
       "kind": "project-file",
       "symbols": [],
       "imports": [],
@@ -3738,7 +3738,7 @@
     },
     {
       "path": "web/public/content/cloud/modulo-34.md",
-      "lines": 272,
+      "lines": 317,
       "kind": "course-content",
       "symbols": [],
       "imports": [],

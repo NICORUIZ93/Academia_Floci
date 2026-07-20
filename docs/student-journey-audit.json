@@ -330,25 +330,25 @@
         "installRecovery": true
       },
       "topics": 153,
-      "labs": 33,
-      "verifiableLabs": 33,
+      "labs": 32,
+      "verifiableLabs": 32,
       "states": {
         "explained": 145,
         "listed": 8
       },
       "criteria": {
         "goal": 32,
-        "prerequisites": 29,
+        "prerequisites": 30,
         "terms": 145,
-        "code": 101,
-        "location": 22,
+        "code": 103,
+        "location": 24,
         "execution": 103,
-        "expected": 30,
+        "expected": 31,
         "failure": 10,
         "diagnosis": 14,
-        "practice": 92,
-        "project": 7,
-        "proof": 16,
+        "practice": 93,
+        "project": 9,
+        "proof": 18,
         "transition": 1
       },
       "blockers": [
@@ -424,26 +424,6 @@
             "terms",
             "code",
             "location",
-            "expected",
-            "failure",
-            "diagnosis",
-            "practice",
-            "project",
-            "proof",
-            "transition"
-          ]
-        },
-        {
-          "module": 34,
-          "title": "Tema 8: Servicios GCP que completan el recorrido",
-          "state": "listed",
-          "score": 1,
-          "missing": [
-            "prerequisites",
-            "terms",
-            "code",
-            "location",
-            "execution",
             "expected",
             "failure",
             "diagnosis",
@@ -627,6 +607,25 @@
         {
           "module": 26,
           "title": "Tema 1: Amazon Data Firehose — entrega gestionada sin consumidores propios",
+          "state": "explained",
+          "score": 2,
+          "missing": [
+            "goal",
+            "code",
+            "location",
+            "execution",
+            "expected",
+            "failure",
+            "diagnosis",
+            "practice",
+            "project",
+            "proof",
+            "transition"
+          ]
+        },
+        {
+          "module": 26,
+          "title": "Tema 2: Firehose vs Kinesis Data Streams — quién consume los datos",
           "state": "explained",
           "score": 2,
           "missing": [
