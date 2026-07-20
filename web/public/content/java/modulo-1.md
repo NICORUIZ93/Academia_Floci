@@ -1,32 +1,5 @@
 # Módulo 1: Programación orientada a objetos
 
-## Sílabo
-
-**Objetivo general**
-
-Aplicar las cuatro bases de la programación orientada a objetos (encapsulación, herencia, polimorfismo, abstracción) con la sintaxis y convenciones reales de Java.
-
-**Objetivos específicos**
-
-1. Crear jerarquías de clases con herencia y sobreescritura de métodos.
-2. Definir e implementar interfaces.
-3. Diferenciar sobrecarga de sobreescritura.
-4. Elegir entre una clase abstracta y una interfaz según el caso.
-5. Aplicar correctamente los modificadores de acceso.
-6. Modelar una clase con invariantes, constructor y responsabilidades explícitas.
-
-**Contenido**
-
-- Clases, herencia e interfaces.
-- Polimorfismo y sobrecarga vs sobreescritura.
-- Modificadores de acceso.
-- Clases abstractas vs interfaces.
-
-**Evaluación**
-
-Jerarquía de clases con al menos una interfaz y una clase abstracta, más tres ejercicios de evaluación.
-
----
 
 ## Aprende construyendo
 
@@ -179,21 +152,6 @@ double sumar(double a, double b) { return a + b; } // sobrecarga: mismo nombre, 
 
 ---
 
-## Criterio transversal de calidad del código
-
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
 
 ## Laboratorio práctico
 
@@ -219,39 +177,3 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 - **Olvidar `@Override` al sobreescribir un método.** Sin ella, el compilador no verifica que efectivamente estás sobreescribiendo un método existente con la firma correcta.
 
 ---
-
-
-
-## Bibliografía y fundamento académico
-
-Estas fuentes sustentan los conceptos y deben consultarse para verificar detalles que cambian entre versiones:
-
-- Oracle, *Java Language Specification* y *Java Virtual Machine Specification*.
-- OpenJDK, documentación de Java SE, JFR y JMH.
-- Bloch, J., *Effective Java*.
-- ACM/IEEE-CS/AAAI, *Computer Science Curricula 2023*.
-- IEEE Computer Society, *SWEBOK Guide V4.0*.
-
-## Resumen del módulo
-
-**Puntos clave**
-
-- La herencia con `@Override` habilita polimorfismo de subtipo, resuelto según el tipo real del objeto en tiempo de ejecución.
-- Una interfaz define un contrato puro implementable por clases no relacionadas; una clase abstracta centraliza comportamiento compartido real.
-- Sobrecarga (distintas firmas, misma clase) y sobreescritura (misma firma, subclase) resuelven problemas distintos.
-- Los modificadores de acceso controlan visibilidad en niveles concéntricos crecientes.
-
-**Conceptos aprendidos**
-
-- Herencia, `@Override` y polimorfismo de subtipo.
-- Interfaces y clases abstractas.
-- Sobrecarga vs sobreescritura.
-- Modificadores de acceso.
-
-**Próximos pasos**
-
-En el Módulo 2 aprenderás colecciones y genéricos: List, Set, Map, `<T>`, Comparable vs Comparator.
-
-**Recursos adicionales**
-
-- Documentación oficial de Java (docs.oracle.com/en/java): "Interfaces and Inheritance".

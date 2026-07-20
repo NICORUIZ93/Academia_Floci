@@ -1,31 +1,5 @@
 # Módulo 3: Servidores HTTP nativos
 
-## Sílabo
-
-**Objetivo general**
-
-Construir un servidor HTTP usando exclusivamente el módulo `http` nativo de Node, entendiendo con precisión qué automatiza un framework como Express antes de depender de él.
-
-**Objetivos específicos**
-
-1. Implementar el modelo request/response del módulo `http` nativo.
-2. Implementar routing manual basado en método y URL.
-3. Parsear el body de una petición POST acumulando chunks de un stream.
-4. Responder con los códigos de estado HTTP apropiados según cada situación.
-5. Implementar content negotiation básica según el header `Accept`.
-
-**Contenido**
-
-- Modelo request/response.
-- Routing manual.
-- Parsing de body y headers.
-- Códigos de estado y content negotiation.
-
-**Evaluación**
-
-Un servidor HTTP nativo con 3 rutas y manejo de errores, sin frameworks, más tres ejercicios de evaluación.
-
----
 
 ## Aprende construyendo
 
@@ -143,21 +117,6 @@ res.end(aceptaJson ? JSON.stringify(dato) : String(dato));
 
 ---
 
-## Criterio transversal de calidad del código
-
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
 
 ## Laboratorio práctico
 
@@ -183,40 +142,3 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 - **Olvidar manejar el caso de ruta no reconocida.** Sin un `else` final explícito, una petición a una ruta inexistente podría quedar sin ninguna respuesta.
 
 ---
-
-
-
-## Bibliografía y fundamento académico
-
-Estas fuentes sustentan los conceptos y deben consultarse para verificar detalles que cambian entre versiones:
-
-- OpenJS Foundation, *Node.js Documentation*.
-- IETF, especificaciones HTTP Semantics, OAuth 2.0 y JSON.
-- OWASP Foundation, *Application Security Verification Standard*.
-- ACM/IEEE-CS/AAAI, *Computer Science Curricula 2023*.
-- IEEE Computer Society, *SWEBOK Guide V4.0*.
-
-## Resumen del módulo
-
-**Puntos clave**
-
-- `http.createServer` expone `req` (un stream legible con method/url/headers) y `res` (construida con `writeHead`/`write`/`end`).
-- El routing manual requiere comparar explícitamente método y URL para cada ruta soportada, revelando el trabajo que un router de framework automatiza.
-- El body de una petición debe acumularse manualmente de un stream de chunks antes de poder parsearse como JSON.
-- Elegir el código de estado HTTP correcto y practicar content negotiation son decisiones de diseño de API con consecuencias reales de interoperabilidad.
-
-**Conceptos aprendidos**
-
-- El modelo request/response del módulo `http` nativo de Node.
-- Routing manual sin framework.
-- Parsing manual del body de una petición HTTP.
-- Códigos de estado HTTP apropiados y content negotiation básica.
-
-**Próximos pasos**
-
-En el Módulo 4 aprenderás Express y Fastify, dos frameworks que automatizan gran parte de lo construido manualmente en este módulo mediante el patrón de middleware.
-
-**Recursos adicionales**
-
-- Documentación oficial de Node.js: "HTTP" (módulo `node:http`).
-- MDN Web Docs: "HTTP response status codes".

@@ -1,33 +1,5 @@
 # Módulo 2: Coroutines y Flow
 
-## Sílabo
-
-**Objetivo general**
-
-Dominar la concurrencia estructurada de Kotlin como reemplazo de callbacks y threads manuales, incluyendo `suspend` functions, `Flow`/`StateFlow`/`SharedFlow`, y manejo de errores en coroutines.
-
-**Objetivos específicos**
-
-1. Escribir funciones `suspend` que no bloqueen el hilo.
-2. Ejecutar coroutines en paralelo con `async`/`await` y combinar sus resultados.
-3. Manejar errores dentro de una coroutine con `try`/`catch`.
-4. Crear y recolectar un `Flow`.
-5. Diferenciar `StateFlow` de un `Flow` normal para representar estado de UI.
-
-**Contenido**
-
-- `suspend` functions y `CoroutineScope`.
-- Structured concurrency.
-- Flow vs StateFlow vs SharedFlow.
-- Manejo de errores en coroutines.
-- `Mutex` para exclusión mutua en corrutinas.
-- `kotlinx.atomicfu` para estado atómico multiplataforma.
-
-**Evaluación**
-
-Función suspendida que combina dos fuentes de datos con manejo de errores estructurado, más tres ejercicios de evaluación.
-
----
 
 ## Aprende construyendo
 
@@ -114,21 +86,6 @@ try {
 
 ---
 
-## Criterio transversal de calidad del código
-
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
 
 ## Laboratorio práctico
 
@@ -153,40 +110,3 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 - **Usar `synchronized` dentro de una coroutine para exclusión mutua.** Usa `Mutex`, compatible con el modelo de suspensión de coroutines.
 
 ---
-
-
-
-## Bibliografía y fundamento académico
-
-Estas fuentes sustentan los conceptos y deben consultarse para verificar detalles que cambian entre versiones:
-
-- JetBrains, documentación oficial de *Kotlin Multiplatform* y Kotlin Coroutines.
-- Google, *Android Developers Documentation*; Apple, *Developer Documentation*.
-- Kotlin Foundation, especificación y pautas de compatibilidad de Kotlin.
-- ACM/IEEE-CS/AAAI, *Computer Science Curricula 2023*.
-- IEEE Computer Society, *SWEBOK Guide V4.0*.
-
-
-## Resumen del módulo
-
-**Puntos clave**
-
-- Las funciones `suspend` pueden pausarse sin bloquear el hilo físico, reanudando exactamente donde quedaron.
-- La concurrencia estructurada garantiza cancelación en cascada de coroutines hijas al cancelar el scope padre.
-- `StateFlow` mantiene siempre un valor actual, ideal para estado de UI; `SharedFlow` es apropiado para eventos puntuales.
-- `Mutex` proporciona exclusión mutua compatible con la suspensión de coroutines, a diferencia de `synchronized`.
-
-**Conceptos aprendidos**
-
-- `suspend` functions y `CoroutineScope`.
-- Concurrencia estructurada.
-- Flow, StateFlow y SharedFlow.
-- Manejo de errores y `Mutex`.
-
-**Próximos pasos**
-
-En el Módulo 3 aprenderás la arquitectura de un proyecto KMP: source sets, `expect`/`actual`, y Gradle multiplataforma.
-
-**Recursos adicionales**
-
-- Documentación oficial de Kotlin Coroutines (kotlinlang.org/docs/coroutines-overview.html).

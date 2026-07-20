@@ -1,31 +1,5 @@
 # Módulo 0: Kotlin aplicado a Android
 
-## Sílabo
-
-**Objetivo general**
-
-Arrancar un proyecto Android moderno y entender su estructura (módulos Gradle, manifiesto, recursos) antes de escribir cualquier línea de UI, estableciendo las bases sobre las que se construirán los 12 módulos siguientes.
-
-**Objetivos específicos**
-
-1. Crear un proyecto Android Studio y ejecutarlo en un emulador.
-2. Recorrer la estructura generada: código fuente, manifiesto, recursos.
-3. Externalizar un texto a `strings.xml` y consumirlo desde un composable.
-4. Modificar el `AndroidManifest.xml` (ícono, nombre visible).
-5. Agregar un módulo Gradle nuevo y establecer una dependencia entre módulos.
-
-**Contenido**
-
-- Estructura de un proyecto Android Studio.
-- Gradle y módulos de app.
-- `AndroidManifest.xml`.
-- Recursos (strings, dimens, drawables).
-
-**Evaluación**
-
-Proyecto Android nuevo corriendo en un emulador con un recurso propio, más tres ejercicios de evaluación.
-
----
 
 ## Antes de comenzar: instala Android Studio y un dispositivo de prueba
 
@@ -168,21 +142,6 @@ No crees un proyecto desechable por módulo. Conserva un único repositorio que 
 
 Al iniciar cada laboratorio crea una rama `modulo-N`, implementa el incremento, verifica el criterio de éxito y fusiona solo con pruebas verdes. Si un módulo necesita un experimento aislado, colócalo en `experiments/modulo-N/`; el producto acumulativo permanece ejecutable. Al terminar, otra persona debe poder clonar el repositorio y reproducir el último hito siguiendo únicamente el README.
 
-## Criterio transversal de calidad del código
-
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
 
 ## Laboratorio práctico
 
@@ -207,40 +166,3 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 - **No declarar el `intent-filter` de `MAIN`/`LAUNCHER`.** Sin él, la Activity no aparece como punto de entrada en el launcher del dispositivo.
 
 ---
-
-
-
-## Bibliografía y fundamento académico
-
-Estas fuentes sustentan los conceptos y deben consultarse para verificar detalles que cambian entre versiones:
-
-- Google, *Android Developers Documentation* y guías de arquitectura de aplicaciones.
-- JetBrains, *Kotlin Language Documentation*.
-- OWASP Foundation, *Mobile Application Security Verification Standard*.
-- ACM/IEEE-CS/AAAI, *Computer Science Curricula 2023*.
-- IEEE Computer Society, *SWEBOK Guide V4.0*.
-
-## Resumen del módulo
-
-**Puntos clave**
-
-- Un proyecto Android separa código, recursos y configuración de build en carpetas y archivos distintos.
-- Externalizar recursos (strings, drawables) centraliza el contenido y habilita traducción/adaptación automática.
-- El `AndroidManifest.xml` es el contrato que el sistema operativo lee antes de instalar o ejecutar la app.
-- Los módulos Gradle establecen límites explícitos de compilación, valiosos a medida que el proyecto crece.
-
-**Conceptos aprendidos**
-
-- Estructura de un proyecto Android Studio.
-- Gradle y módulos de app.
-- `AndroidManifest.xml`.
-- Recursos (strings, dimens, drawables).
-
-**Próximos pasos**
-
-En el Módulo 1 aprenderás el ciclo de vida de Activities y cómo `ViewModel` y `SavedStateHandle` sobreviven a la rotación de pantalla y a la muerte del proceso.
-
-**Recursos adicionales**
-
-- Documentación oficial de Android sobre recursos de la app (developer.android.com/guide/topics/resources).
-- Ejemplos de código ejecutables de este track, en Kotlin: carpeta [`examples/tracks/android/`](https://github.com/NICORUIZ93/Academia_Floci/tree/main/examples/tracks/android) del repositorio — `compose-ui.kt` (Módulo 2), `navigation-compose.kt` (Módulo 3), `stateflow-viewmodel.kt` (Módulo 4), `retrofit-networking.kt` (Módulo 5), `room-persistence.kt` (Módulo 6).

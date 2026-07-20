@@ -1,31 +1,5 @@
 # Módulo 1: Estado local y el ciclo de render
 
-## Sílabo
-
-**Objetivo general**
-
-Entender exactamente cuándo y por qué React vuelve a renderizar un componente, dominando `useState`, las actualizaciones funcionales, la diferencia entre render y commit, y el batching de actualizaciones.
-
-**Objetivos específicos**
-
-1. Explicar por qué `setCount(count + 1)` repetido no acumula correctamente el valor.
-2. Usar actualizaciones funcionales de estado (`setCount(c => c + 1)`) de forma correcta.
-3. Diferenciar la fase de render de la fase de commit.
-4. Explicar el batching de múltiples actualizaciones de estado.
-5. Construir componentes controlados con `value` + `onChange`.
-
-**Contenido**
-
-- `useState` y actualizaciones funcionales.
-- Render vs commit.
-- Batching de actualizaciones.
-- Listas controladas vs no controladas.
-
-**Evaluación**
-
-Formulario controlado con validación en tiempo real basada en `useState`, más tres ejercicios de evaluación.
-
----
 
 ## Aprende construyendo
 
@@ -139,21 +113,6 @@ const [valor, setValor] = useState('');
 
 ---
 
-## Criterio transversal de calidad del código
-
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
 
 ## Laboratorio práctico
 
@@ -178,39 +137,3 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 - **Mezclar un input controlado con actualización directa del DOM.** No mezcles `value` controlado con manipulación directa del elemento vía referencia.
 
 ---
-
-
-
-## Bibliografía y fundamento académico
-
-Estas fuentes sustentan los conceptos y deben consultarse para verificar detalles que cambian entre versiones:
-
-- Meta Open Source, *React Documentation*.
-- WHATWG, estándares de DOM, HTML y Fetch.
-- W3C, *Web Content Accessibility Guidelines (WCAG)*.
-- ACM/IEEE-CS/AAAI, *Computer Science Curricula 2023*.
-- IEEE Computer Society, *SWEBOK Guide V4.0*.
-
-## Resumen del módulo
-
-**Puntos clave**
-
-- La forma funcional del setter de estado evita el bug de actualizaciones basadas en un valor capturado obsoleto.
-- Render (calcular) y commit (aplicar al DOM) son fases distintas del ciclo de actualización de React.
-- React agrupa (batchea) múltiples actualizaciones de estado en el mismo manejador de evento en un único render.
-- Un componente controlado hace del estado de React la única fuente de verdad del valor de un input.
-
-**Conceptos aprendidos**
-
-- `useState` y actualizaciones funcionales.
-- Diferencia entre render y commit.
-- Batching de actualizaciones de estado.
-- Componentes controlados frente a no controlados.
-
-**Próximos pasos**
-
-En el Módulo 2 aprenderás los hooks esenciales: `useEffect`, `useRef`, `useMemo`/`useCallback`, las reglas de los hooks, `useReducer` y `useImperativeHandle`.
-
-**Recursos adicionales**
-
-- Documentación oficial de React (react.dev): "State: A Component's Memory" y "Render and Commit".

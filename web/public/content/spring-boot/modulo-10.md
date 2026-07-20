@@ -1,39 +1,5 @@
 # Módulo 10: Microservicios con Spring Cloud
 
-## Sílabo
-
-**Objetivo general**
-
-Coordinar múltiples servicios Spring Boot con configuración centralizada, descubrimiento de servicios, un gateway como punto de entrada único, y resiliencia con circuit breakers.
-
-**Objetivos específicos**
-
-1. Registrar y descubrir microservicios por nombre con Eureka.
-2. Configurar Spring Cloud Gateway como punto de entrada único.
-3. Explicar qué problema resuelve un Config Server centralizado.
-4. Implementar un circuit breaker con Resilience4j y observar el fallback en acción.
-5. Explicar el propósito de `@RefreshScope` para configuración dinámica.
-6. Configurar gateway y servicios como Resource Servers con límites de confianza explícitos.
-7. Elegir entre Eureka y descubrimiento nativo de Kubernetes sin duplicar infraestructura.
-8. Diseñar límites de servicio con DDD y propiedad exclusiva de datos antes de distribuir el sistema.
-
-**Contenido**
-
-- Config Server.
-- Service discovery (Eureka).
-- Spring Cloud Gateway.
-- Resiliencia con Resilience4j (circuit breaker).
-- `@Retry`, `@RateLimiter`, `@Bulkhead` y `@TimeLimiter`.
-- Spring Cloud Bus y `@RefreshScope`.
-- OAuth2/OIDC con Keycloak, JWT, Token Relay y autorización en profundidad.
-- HTTP Interfaces, deadlines y descubrimiento nativo en Kubernetes.
-- DDD aplicado: capacidades de negocio, contexto delimitado, agregado y base de datos por servicio.
-
-**Evaluación**
-
-Dos microservicios Spring Boot comunicándose vía gateway con circuit breaker, más cuatro ejercicios de evaluación.
-
----
 
 ## Aprende construyendo
 
@@ -245,21 +211,6 @@ flowchart LR
 
 ---
 
-## Criterio transversal de calidad del código
-
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
 
 ## Laboratorio práctico
 
@@ -289,40 +240,3 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 - **Dividir servicios por entidades o compartir su base de datos.** Separa por capacidades y reglas; un único servicio es dueño de cada dato y publica contratos.
 
 ---
-
-
-
-## Bibliografía y fundamento académico
-
-Estas fuentes sustentan los conceptos y deben consultarse para verificar detalles que cambian entre versiones:
-
-- VMware/Broadcom, documentación de *Spring Framework* y *Spring Boot*.
-- IETF, especificaciones HTTP y OAuth 2.0.
-- OWASP Foundation, *Application Security Verification Standard*.
-- ACM/IEEE-CS/AAAI, *Computer Science Curricula 2023*.
-- IEEE Computer Society, *SWEBOK Guide V4.0*.
-
-## Resumen del módulo
-
-**Puntos clave**
-
-- Un Config Server centralizado evita redespliegues individuales ante cambios de configuración compartida.
-- El service discovery con Eureka resuelve servicios por nombre lógico, tolerando cambios de ubicación o escalado.
-- Spring Cloud Gateway centraliza el enrutamiento y responsabilidades transversales como autenticación y rate limiting.
-- Un circuit breaker con Resilience4j previene que un servicio caído arrastre en cascada a sus dependientes.
-- DDD permite definir límites y dueños; Spring Cloud coordina servicios ya bien delimitados.
-
-**Conceptos aprendidos**
-
-- Config Server y service discovery con Eureka.
-- Spring Cloud Gateway.
-- Circuit breaker y primitivas de resiliencia de Resilience4j.
-- Contextos delimitados, agregados, invariantes y propiedad de datos.
-
-**Próximos pasos**
-
-En el Módulo 11 aprenderás empaquetado y despliegue: fat JAR frente a capas de Docker, GraalVM native image, y health checks para Kubernetes.
-
-**Recursos adicionales**
-
-- Documentación oficial de Spring Cloud (spring.io/projects/spring-cloud) y Resilience4j (resilience4j.readme.io).

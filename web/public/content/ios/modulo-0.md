@@ -1,35 +1,5 @@
 # Módulo 0: Fundamentos de Swift
 
-## Sílabo
-
-**Objetivo general**
-
-Dominar los fundamentos de Swift que lo distinguen de la mayoría de los lenguajes mainstream: seguridad ante `nil` incorporada desde el diseño del sistema de tipos, la distinción entre value types y reference types, protocolos con extensiones, y enums con valores asociados como herramienta de modelado de estado.
-
-**Objetivos específicos**
-
-1. Declarar una variable opcional y manejar el caso `nil` explícitamente.
-2. Desenvolver un optional de forma segura con `if let`, `guard let` y `??`.
-3. Distinguir `struct` (value type) de `class` (reference type) mediante un experimento de copia.
-4. Definir un protocolo y hacer que dos tipos distintos lo implementen.
-5. Modelar un estado con un enum con valores asociados.
-6. Usar closures y transformaciones de colecciones sin ocultar efectos ni errores.
-7. Crear una función genérica con restricciones que preserve seguridad de tipos.
-
-**Contenido**
-
-- Optionals y unwrapping seguro.
-- `struct` vs `class`: value types vs reference types.
-- Protocolos y extensiones.
-- Enums con valores asociados.
-- Closures, captura de valores y funciones de orden superior.
-- Genéricos, restricciones y algoritmos de colecciones.
-
-**Evaluación**
-
-Modelo de dominio seguro y transformación genérica de una ruta, más cuatro ejercicios de evaluación.
-
----
 
 ## Antes de comenzar: qué equipo necesitas realmente
 
@@ -272,21 +242,6 @@ No crees un proyecto desechable por módulo. Conserva un único repositorio que 
 
 Al iniciar cada laboratorio crea una rama `modulo-N`, implementa el incremento, verifica el criterio de éxito y fusiona solo con pruebas verdes. Si un módulo necesita un experimento aislado, colócalo en `experiments/modulo-N/`; el producto acumulativo permanece ejecutable. Al terminar, otra persona debe poder clonar el repositorio y reproducir el último hito siguiendo únicamente el README.
 
-## Criterio transversal de calidad del código
-
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
 
 ## Laboratorio práctico
 
@@ -315,42 +270,3 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 - **Borrar duplicados o inválidos silenciosamente.** Decide si descartar es parte explícita del contrato o si debes devolver un error.
 
 ---
-
-
-
-## Bibliografía y fundamento académico
-
-Estas fuentes sustentan los conceptos y deben consultarse para verificar detalles que cambian entre versiones:
-
-- Apple, *Swift Language Guide* y *Apple Developer Documentation*.
-- Apple, *Human Interface Guidelines* y documentación de accesibilidad.
-- OWASP Foundation, *Mobile Application Security Verification Standard*.
-- ACM/IEEE-CS/AAAI, *Computer Science Curricula 2023*.
-- IEEE Computer Society, *SWEBOK Guide V4.0*.
-
-## Resumen del módulo
-
-**Puntos clave**
-
-- Los optionals incorporan la ausencia de valor al sistema de tipos, previniendo errores de acceso a valores ausentes en tiempo de compilación.
-- `struct` (value type, copia independiente) se prefiere para modelos de datos; `class` (reference type, instancia compartida) para identidad y mutación compartida intencional.
-- Los protocolos permiten composición de comportamiento entre tipos no relacionados, incluso tipos ya definidos por Swift.
-- Los enums con valores asociados modelan estado de forma exhaustiva, verificada por el compilador en cada `switch`.
-- Closures expresan políticas y transformaciones; genéricos las reutilizan sin perder seguridad de tipos.
-
-**Conceptos aprendidos**
-
-- Optionals y unwrapping seguro.
-- `struct` vs `class`.
-- Protocolos y extensiones.
-- Enums con valores asociados.
-- Closures, captura, transformaciones de colecciones y genéricos.
-
-**Próximos pasos**
-
-En el Módulo 1 aprenderás SwiftUI: describir la UI como una función del estado, con la sintaxis declarativa nativa de Apple.
-
-**Recursos adicionales**
-
-- Documentación oficial de Swift (docs.swift.org/swift-book).
-- Ejemplos de código ejecutables de este track, en Swift: carpeta [`examples/tracks/ios/`](https://github.com/NICORUIZ93/Academia_Floci/tree/main/examples/tracks/ios) del repositorio — `swiftui-view.swift` (Módulo 1), `state-binding.swift` (Módulo 2), `async-await.swift` (Módulo 4), `urlsession-networking.swift` (Módulo 5), `swiftdata-persistence.swift` (Módulo 6).

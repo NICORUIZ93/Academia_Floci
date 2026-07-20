@@ -1,30 +1,5 @@
 # Módulo 11: Proyecto integrador — app KMP completa
 
-## Sílabo
-
-**Objetivo general**
-
-Unir lógica de negocio, networking, persistencia y UI compartida en una app real para Android e iOS, con CI que valida ambas plataformas.
-
-**Objetivos específicos**
-
-1. Diseñar la arquitectura compartida completa: dominio, casos de uso, repositorios con Ktor + SQLDelight.
-2. Implementar la UI consumiendo el módulo compartido, en Compose Multiplatform o nativa por plataforma.
-3. Sincronizar datos remotos con caché local en el repositorio compartido.
-4. Configurar CI que compile y testee ambos targets en cada push.
-
-**Contenido**
-
-- Arquitectura compartida por capas.
-- Networking y persistencia comunes.
-- UI nativa o Compose Multiplatform.
-- CI que valida ambas plataformas.
-
-**Evaluación**
-
-App con lógica de negocio, networking y persistencia compartidos, funcionando en Android e iOS, más tres ejercicios de evaluación de cierre.
-
----
 
 ## Aprende construyendo
 
@@ -149,21 +124,6 @@ Crea fakes contractuales para Android/iOS y prueba orden, duplicación, cancelac
 
 El capítulo se completa cuando la evidencia permite a otra persona reproducir el flujo y explicar qué garantías ofrece y cuáles todavía no.
 
-## Criterio transversal de calidad del código
-
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
 
 ## Laboratorio práctico
 
@@ -187,37 +147,3 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 - **Decidir compartir o no compartir UI sin evaluar las prioridades reales del equipo.** Evalúa fidelidad nativa frente a velocidad de desarrollo compartido según el contexto específico del proyecto.
 
 ---
-
-
-
-## Bibliografía y fundamento académico
-
-Estas fuentes sustentan los conceptos y deben consultarse para verificar detalles que cambian entre versiones:
-
-- JetBrains, documentación oficial de *Kotlin Multiplatform* y Kotlin Coroutines.
-- Google, *Android Developers Documentation*; Apple, *Developer Documentation*.
-- Kotlin Foundation, especificación y pautas de compatibilidad de Kotlin.
-- ACM/IEEE-CS/AAAI, *Computer Science Curricula 2023*.
-- IEEE Computer Society, *SWEBOK Guide V4.0*.
-
-## Resumen del módulo
-
-**Puntos clave**
-
-- El proyecto integrador combina dominio, casos de uso, Ktor y SQLDelight en `commonMain`, con UI nativa o compartida según la decisión de arquitectura.
-- El repositorio compartido combina datos remotos y caché local con fallback offline, beneficiando a ambas plataformas por igual.
-- La promesa realista de KMP es compartir lógica, networking y persistencia (pura redundancia si se duplicara), dejando la UI como decisión deliberada del equipo.
-
-**Conceptos aprendidos**
-
-- Arquitectura completa de un proyecto KMP real.
-- Sincronización de datos remotos con caché local y fallback offline.
-- La promesa realista de Kotlin Multiplatform.
-
-**Próximos pasos**
-
-Con el track de Kotlin Multiplatform completo, estás preparado para diseñar, construir y probar aplicaciones que comparten lógica de negocio, networking y persistencia entre Android e iOS, tomando decisiones informadas sobre UI nativa frente a compartida.
-
-**Recursos adicionales**
-
-- Documentación oficial de Kotlin Multiplatform (kotlinlang.org/docs/multiplatform.html) como referencia continua para profundizar en cualquiera de los temas de este track.

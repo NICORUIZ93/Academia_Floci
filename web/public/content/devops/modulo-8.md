@@ -1,35 +1,5 @@
 # Módulo 8: Infraestructura como código con Terraform
 
-## Sílabo
-
-**Objetivo general**
-
-Describir infraestructura completa en archivos versionables, entendiendo el ciclo `plan`/`apply`, el estado remoto con locking, módulos reutilizables, workspaces para múltiples entornos, y las alternativas Ansible y Pulumi.
-
-**Objetivos específicos**
-
-1. Escribir un archivo `.tf` que provisione un recurso y entender el flujo `init`/`plan`/`apply`.
-2. Explicar por qué el archivo de estado nunca debe editarse manualmente.
-3. Configurar un backend remoto con locking para trabajo en equipo.
-4. Extraer una definición en un módulo reutilizable con variables de entrada.
-5. Usar workspaces para mantener estados separados de múltiples entornos con el mismo código.
-6. Diferenciar el enfoque declarativo de Terraform del enfoque imperativo de Ansible, y situar Pulumi como alternativa con lenguajes de programación reales.
-
-**Contenido**
-
-- Providers, resources y data sources.
-- State remoto y locking.
-- Módulos reutilizables.
-- `terraform plan` vs `apply`.
-- Workspaces para múltiples entornos.
-- Ansible: playbooks, roles, inventory y módulos.
-- Pulumi como alternativa a HCL.
-
-**Evaluación**
-
-Un laboratorio que provisiona, modifica y modulariza infraestructura con Terraform, y tres ejercicios de evaluación sobre riesgo de editar el estado manualmente, diseño de módulos, y elección entre Terraform, Ansible y Pulumi.
-
----
 
 ## Aprende construyendo
 
@@ -235,21 +205,6 @@ Terraform (HCL)                        Pulumi (TypeScript, Python, Go...)
 
 ---
 
-## Criterio transversal de calidad del código
-
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
 
 ## Laboratorio práctico
 
@@ -277,48 +232,3 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 - **El plan de un compañero muestra cambios que tú no hiciste.** Esto normalmente indica que el estado no está compartido correctamente entre ambos (cada uno tiene su propia copia local desactualizada); confirma que el backend remoto está correctamente configurado y que ambos están usando efectivamente el mismo estado compartido.
 
 ---
-
-
-
-## Bibliografía y fundamento académico
-
-Estas fuentes sustentan los conceptos y deben consultarse para verificar detalles que cambian entre versiones:
-
-- CNCF, documentación oficial de Kubernetes, Prometheus y OpenTelemetry.
-- HashiCorp, *Terraform Documentation*.
-- Beyer et al., *Site Reliability Engineering*; Forsgren et al., *Accelerate*.
-- ACM/IEEE-CS/AAAI, *Computer Science Curricula 2023*.
-- IEEE Computer Society, *SWEBOK Guide V4.0*.
-
-
-## Resumen del módulo
-
-**Puntos clave**
-
-- Los providers traducen configuración HCL declarativa a llamadas de API de una plataforma específica; los resources declaran qué debe existir; los data sources solo consultan información existente sin gestionarla.
-- El archivo de estado nunca debe editarse manualmente; un backend remoto con locking es indispensable para trabajo en equipo seguro.
-- Los módulos encapsulan infraestructura reutilizable con una interfaz explícita de variables de entrada y outputs, evitando duplicación entre proyectos.
-- `terraform plan` muestra el impacto de un cambio antes de aplicarlo; `terraform apply` lo ejecuta, típicamente tras confirmación explícita.
-- Los workspaces mantienen estados separados para el mismo código entre entornos que comparten esencialmente la misma estructura.
-- Ansible complementa a Terraform configurando software dentro de máquinas ya aprovisionadas, con un enfoque procedural pero módulos idempotentes.
-- Pulumi ofrece el mismo concepto de IaC declarativa usando lenguajes de programación reales en vez de HCL, a costa de una dependencia adicional del runtime del lenguaje elegido.
-
-**Conceptos aprendidos**
-
-- Providers, resources y data sources en Terraform.
-- El archivo de estado, backends remotos y locking.
-- Módulos reutilizables con variables de entrada y outputs.
-- El flujo `plan`/`apply` y su valor como revisión previa a cualquier cambio.
-- Workspaces para múltiples entornos con el mismo código.
-- Ansible: playbooks, roles, inventory y módulos, como complemento de Terraform.
-- Pulumi como alternativa a HCL con lenguajes de programación reales.
-
-**Próximos pasos**
-
-En el Módulo 9 vas a centralizar observabilidad con Prometheus y Grafana, aprendiendo el modelo de métricas de series temporales y cómo alertar antes de que un incidente afecte a los usuarios.
-
-**Recursos adicionales**
-
-- Documentación oficial de Terraform: providers, módulos, backends remotos y workspaces.
-- Documentación oficial de Ansible: playbooks, roles e inventory.
-- Documentación oficial de Pulumi como referencia de infraestructura como código con lenguajes de programación reales.

@@ -1,30 +1,5 @@
 # Módulo 5: Networking con Retrofit/Ktor
 
-## Sílabo
-
-**Objetivo general**
-
-Consumir APIs REST reales desde Android con manejo de errores y estados de carga explícitos, usando Retrofit sobre coroutines y OkHttp como capa de transporte configurable.
-
-**Objetivos específicos**
-
-1. Definir una interfaz Retrofit con un método `suspend` que consuma un endpoint GET real.
-2. Actualizar el `StateFlow` de un `ViewModel` a partir del resultado de esa llamada.
-3. Modelar explícitamente los estados de carga, éxito y error.
-4. Agregar interceptores de OkHttp para logging y autenticación.
-
-**Contenido**
-
-- Retrofit + OkHttp.
-- Coroutines para llamadas suspendidas.
-- Manejo de errores HTTP.
-- Interceptores (logging, auth).
-
-**Evaluación**
-
-App que consume una API real con estados loading/error/success explícitos, más tres ejercicios de evaluación.
-
----
 
 ## Aprende construyendo
 
@@ -142,21 +117,6 @@ OkHttpClient.Builder()
 
 ---
 
-## Criterio transversal de calidad del código
-
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
 
 ## Laboratorio práctico
 
@@ -181,39 +141,3 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 - **No modelar el estado de error explícitamente.** Sin él, la app no puede comunicar al usuario qué salió mal.
 
 ---
-
-
-
-## Bibliografía y fundamento académico
-
-Estas fuentes sustentan los conceptos y deben consultarse para verificar detalles que cambian entre versiones:
-
-- Google, *Android Developers Documentation* y guías de arquitectura de aplicaciones.
-- JetBrains, *Kotlin Language Documentation*.
-- OWASP Foundation, *Mobile Application Security Verification Standard*.
-- ACM/IEEE-CS/AAAI, *Computer Science Curricula 2023*.
-- IEEE Computer Society, *SWEBOK Guide V4.0*.
-
-## Resumen del módulo
-
-**Puntos clave**
-
-- Retrofit con funciones `suspend` permite leer código de red de forma lineal, sin el anidamiento de callbacks del Retrofit clásico.
-- Distinguir `HttpException` de `IOException` permite mensajes de error específicos y decisiones informadas sobre reintentar.
-- Los interceptores de OkHttp centralizan transformaciones transversales (logging, autenticación) sin duplicar lógica por llamada.
-- El orden de registro de interceptores afecta qué ve cada uno de la petición/respuesta.
-
-**Conceptos aprendidos**
-
-- Retrofit + OkHttp.
-- Coroutines para llamadas suspendidas.
-- Manejo de errores HTTP.
-- Interceptores (logging, auth).
-
-**Próximos pasos**
-
-En el Módulo 6 aprenderás a persistir datos localmente con Room, implementando una estrategia offline-first sobre la capa de red ya construida aquí.
-
-**Recursos adicionales**
-
-- Documentación oficial de Retrofit (square.github.io/retrofit).

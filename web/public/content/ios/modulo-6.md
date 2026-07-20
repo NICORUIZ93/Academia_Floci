@@ -1,30 +1,5 @@
 # Módulo 6: Persistencia con SwiftData
 
-## Sílabo
-
-**Objetivo general**
-
-Persistir datos localmente con SwiftData, el framework moderno de Apple construido sobre el mismo motor de Core Data, con sintaxis declarativa (`@Model`, `@Query`) que reduce drásticamente la configuración manual antes necesaria.
-
-**Objetivos específicos**
-
-1. Definir un modelo con `@Model` y configurar el `ModelContainer`.
-2. Usar `@Query` para observar automáticamente cambios en los datos.
-3. Insertar, actualizar y eliminar registros a través del `ModelContext`.
-4. Documentar cómo SwiftData maneja la migración de esquema.
-
-**Contenido**
-
-- `@Model` y el esquema de SwiftData.
-- Queries con `@Query`.
-- Migraciones de esquema.
-- Relación con Core Data (cuándo usar cada uno).
-
-**Evaluación**
-
-App con persistencia local en SwiftData y una vista que reacciona a cambios, más tres ejercicios de evaluación.
-
----
 
 ## Aprende construyendo
 
@@ -122,21 +97,6 @@ SwiftData (@Model, @Query — capa declarativa moderna sobre el mismo motor)
 
 ---
 
-## Criterio transversal de calidad del código
-
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
 
 ## Laboratorio práctico
 
@@ -160,39 +120,3 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 - **Modificar un objeto `@Model` fuera de un `ModelContext` válido.** Los objetos `@Model` son referencias vivas gestionadas por su contexto correspondiente.
 
 ---
-
-
-
-## Bibliografía y fundamento académico
-
-Estas fuentes sustentan los conceptos y deben consultarse para verificar detalles que cambian entre versiones:
-
-- Apple, *Swift Language Guide* y *Apple Developer Documentation*.
-- Apple, *Human Interface Guidelines* y documentación de accesibilidad.
-- OWASP Foundation, *Mobile Application Security Verification Standard*.
-- ACM/IEEE-CS/AAAI, *Computer Science Curricula 2023*.
-- IEEE Computer Society, *SWEBOK Guide V4.0*.
-
-## Resumen del módulo
-
-**Puntos clave**
-
-- `@Model` genera automáticamente la infraestructura de persistencia necesaria mediante una macro declarativa, sin configuración manual de Core Data.
-- `@Query` mantiene la vista sincronizada automáticamente con los datos persistidos; `ModelContext` centraliza las operaciones de escritura.
-- SwiftData es una capa moderna sobre el mismo motor de Core Data, recomendada para proyectos nuevos por su simplicidad.
-- Core Data directo sigue siendo relevante para apps existentes o casos que requieren control muy fino no expuesto por SwiftData.
-
-**Conceptos aprendidos**
-
-- `@Model` y el esquema de SwiftData.
-- `@Query`.
-- Migraciones de esquema.
-- Relación con Core Data.
-
-**Próximos pasos**
-
-En el Módulo 7 aprenderás Combine, el modelo de programación reactiva que precedió a `async`/`await` en el ecosistema Apple y que sigue presente en mucho código real.
-
-**Recursos adicionales**
-
-- Documentación oficial de SwiftData (developer.apple.com/documentation/swiftdata).

@@ -1,30 +1,5 @@
 # Módulo 9: Gestión de estado
 
-## Sílabo
-
-**Objetivo general**
-
-Construir stores de estado compartido usando signals, y entender cuándo la complejidad adicional de NgRx está genuinamente justificada frente a una solución más simple.
-
-**Objetivos específicos**
-
-1. Construir un store propio combinando `signal` y `computed`.
-2. Explicar cómo un store inyectable comparte estado entre componentes sin pasar props manualmente.
-3. Escribir actions, reducers y selectors de NgRx.
-4. Evaluar cuándo la ceremonia de NgRx está justificada frente a un store de signals.
-5. Explicar el rol de los effects de NgRx para side-effects asíncronos.
-
-**Contenido**
-
-- Store propio con signals (`CarritoStore`).
-- Actions, reducers y selectors de NgRx.
-- Cuándo NgRx justifica su complejidad.
-
-**Evaluación**
-
-Construcción de un store de carrito de compras con signals, y comparación con una implementación equivalente en NgRx, más tres ejercicios de evaluación.
-
----
 
 ## Aprende construyendo
 
@@ -108,21 +83,6 @@ NgRx: más ceremonia, justificado cuando se necesita historial inspeccionable,
 
 ---
 
-## Criterio transversal de calidad del código
-
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
 
 ## Laboratorio práctico
 
@@ -146,38 +106,3 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 - **Adoptar NgRx sin una razón concreta.** Evalúa primero si un store de signals cubre la necesidad real.
 
 ---
-
-
-
-## Bibliografía y fundamento académico
-
-Estas fuentes sustentan los conceptos y deben consultarse para verificar detalles que cambian entre versiones:
-
-- Google, *Angular Documentation* y guías oficiales de accesibilidad, seguridad y rendimiento.
-- ReactiveX, *RxJS Documentation*.
-- W3C, *Web Content Accessibility Guidelines (WCAG)*.
-- ACM/IEEE-CS/AAAI, *Computer Science Curricula 2023*.
-- IEEE Computer Society, *SWEBOK Guide V4.0*.
-
-## Resumen del módulo
-
-**Puntos clave**
-
-- Un store de signals encapsula estado con `providedIn: 'root'`, exponiendo solo lectura y métodos explícitos de modificación.
-- NgRx impone flujo unidireccional estricto con actions, reducers puros y selectors memoizados.
-- NgRx justifica su ceremonia adicional con historial inspeccionable, patrones únicos en equipos grandes, y side-effects asíncronos complejos.
-- Para la mayoría de features, un store de signals bien diseñado es más simple y suficiente.
-
-**Conceptos aprendidos**
-
-- Construcción de stores propios con signals.
-- Actions, reducers y selectors de NgRx.
-- Criterios para elegir entre un store de signals y NgRx.
-
-**Próximos pasos**
-
-En el Módulo 10 aprenderás testing en Angular: TestBed, Angular Testing Library, y mocking de HttpClient.
-
-**Recursos adicionales**
-
-- Documentación oficial de NgRx (ngrx.io) y de Angular: "Signals" para patrones de store propios.

@@ -1,30 +1,5 @@
 # Módulo 12: Apéndice: qué cambió entre versiones mayores
 
-## Sílabo
-
-**Objetivo general**
-
-Entender la evolución histórica de Angular a través de sus versiones mayores más significativas, y saber interpretar y aplicar una guía oficial de actualización entre versiones.
-
-**Objetivos específicos**
-
-1. Ubicar cronológicamente los saltos de versión más importantes de Angular.
-2. Explicar qué cambió en cada salto mayor y por qué importó.
-3. Usar update.angular.io para planificar una actualización concreta.
-4. Ejecutar `ng update` para automatizar migraciones entre versiones.
-5. Justificar por qué se recomienda migrar una versión mayor a la vez.
-
-**Contenido**
-
-- Los saltos de versión que importan (AngularJS→2, Ivy, standalone, Signals).
-- Cómo leer un Angular Update Guide.
-- Por qué migrar una versión mayor a la vez.
-
-**Evaluación**
-
-Planificación de una migración concreta usando update.angular.io, más tres ejercicios de evaluación.
-
----
 
 ## Aprende construyendo
 
@@ -96,21 +71,6 @@ NO soportado de forma confiable: Angular 12 → 17 directamente
 
 ---
 
-## Criterio transversal de calidad del código
-
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
 
 ## Laboratorio práctico
 
@@ -135,38 +95,3 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 - **No verificar la aplicación tras cada paso de migración.** Verifica exhaustivamente antes de continuar a la siguiente versión.
 
 ---
-
-
-
-## Bibliografía y fundamento académico
-
-Estas fuentes sustentan los conceptos y deben consultarse para verificar detalles que cambian entre versiones:
-
-- Google, *Angular Documentation* y guías oficiales de accesibilidad, seguridad y rendimiento.
-- ReactiveX, *RxJS Documentation*.
-- W3C, *Web Content Accessibility Guidelines (WCAG)*.
-- ACM/IEEE-CS/AAAI, *Computer Science Curricula 2023*.
-- IEEE Computer Society, *SWEBOK Guide V4.0*.
-
-## Resumen del módulo
-
-**Puntos clave**
-
-- El salto de AngularJS a Angular 2 fue una reescritura completa sin compatibilidad hacia atrás.
-- Ivy, standalone components y Signals fueron los saltos mayores más significativos posteriores.
-- update.angular.io genera checklists específicas según versión de origen y destino.
-- Migrar una versión mayor a la vez acota el riesgo y facilita el diagnóstico de problemas.
-
-**Conceptos aprendidos**
-
-- Historia de los saltos de versión mayores de Angular.
-- Uso de update.angular.io y `ng update`.
-- Justificación de migrar una versión mayor a la vez.
-
-**Próximos pasos**
-
-En el Módulo 13, el proyecto integrador final, combinarás routing, signals, HttpClient, formularios reactivos y testing en una única aplicación completa.
-
-**Recursos adicionales**
-
-- update.angular.io y el blog oficial de Angular (blog.angular.dev) para anuncios de nuevas versiones.

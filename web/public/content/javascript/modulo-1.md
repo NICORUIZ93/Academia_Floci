@@ -1,33 +1,5 @@
 # Módulo 1: Operadores, control de flujo y funciones
 
-## Sílabo
-
-**Objetivo general**
-
-Dominar las funciones como ciudadanos de primera clase en JavaScript: sus tres formas de declaración, los mecanismos de parámetros modernos (por defecto, rest, spread), y las funciones de orden superior como patrón fundamental para componer comportamiento reutilizable.
-
-**Objetivos específicos**
-
-1. Distinguir function declarations, function expressions y arrow functions, y explicar cuándo cada una es apropiada.
-2. Usar parámetros por defecto y los operadores rest/spread correctamente.
-3. Escribir funciones de orden superior que reciban o devuelvan otras funciones.
-4. Reemplazar estructuras de control de flujo verbosas por alternativas más legibles cuando sea apropiado.
-5. Explicar por qué las arrow functions no tienen su propio `this`.
-
-**Contenido**
-
-- Funciones declaradas, expresiones y arrow functions.
-- Parámetros por defecto y rest/spread.
-- Funciones de orden superior.
-- Control de flujo: if/switch/loops.
-- IIFE y el objeto `arguments`.
-- `for...of`, `for...in` y `for await...of`.
-
-**Evaluación**
-
-Una biblioteca de funciones utilitarias (debounce, pipe, curry) sin dependencias externas, más tres ejercicios de evaluación sobre las tres formas de función, orden superior y control de flujo.
-
----
 
 ## Aprende construyendo
 
@@ -165,21 +137,6 @@ IIFE:                              arguments (dentro de function):
 
 ---
 
-## Criterio transversal de calidad del código
-
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
 
 ## Laboratorio práctico
 
@@ -205,43 +162,3 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 - **`pipe` compuesto en el orden equivocado.** Verifica que `pipe(f, g)(x)` aplica primero `f` y luego `g` sobre el resultado, no al revés (eso sería `compose`, el orden inverso).
 
 ---
-
-
-
-## Bibliografía y fundamento académico
-
-Estas fuentes sustentan los conceptos y deben consultarse para verificar detalles que cambian entre versiones:
-
-- ECMA International, *ECMAScript Language Specification*.
-- MDN Web Docs, guías de JavaScript y Web APIs.
-- WHATWG, *HTML Living Standard* y *Fetch Standard*.
-- ACM/IEEE-CS/AAAI, *Computer Science Curricula 2023*.
-- IEEE Computer Society, *SWEBOK Guide V4.0*.
-
-## Resumen del módulo
-
-**Puntos clave**
-
-- Las tres formas de función (declaración, expresión, arrow) difieren en hoisting y en si tienen `this` propio.
-- Los parámetros por defecto reemplazan el patrón antiguo y con bugs de `param || valorPorDefecto`.
-- Rest recolecta argumentos variables en un array; spread expande un iterable en elementos individuales.
-- Las funciones de orden superior (`debounce`, `pipe`) son la base de composición reutilizable en JavaScript.
-- Un objeto de mapeo suele ser más legible y extensible que un `switch` con muchos casos.
-- `arguments` es el mecanismo legado para argumentos variables; rest es su reemplazo moderno y preferido.
-
-**Conceptos aprendidos**
-
-- Diferencias de hoisting y de `this` entre las tres formas de función.
-- Parámetros por defecto, rest y spread.
-- Diseño de funciones de orden superior (`debounce`, `pipe`, `once`).
-- Alternativas a `switch` extensos mediante objetos de mapeo.
-- IIFE y el objeto `arguments` como mecanismos legados.
-
-**Próximos pasos**
-
-En el Módulo 2 profundizarás en el modelo de ejecución de JavaScript: scope léxico, closures, hoisting en detalle, el call stack, y cómo `this` se determina según la forma de invocación.
-
-**Recursos adicionales**
-
-- MDN Web Docs: "Functions" y "Rest parameters" / "Spread syntax".
-- El libro "You Don't Know JS: Scope & Closures" (Kyle Simpson) para profundizar en el modelo de ejecución de funciones.

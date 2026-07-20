@@ -1,33 +1,5 @@
 # Módulo 3: Servicios e inyección de dependencias
 
-## Sílabo
-
-**Objetivo general**
-
-Compartir lógica y estado entre componentes sin acoplarlos directamente, dominando la función `inject()`, la jerarquía de inyectores de Angular, y tokens de inyección personalizados.
-
-**Objetivos específicos**
-
-1. Definir un servicio con `@Injectable({providedIn: "root"})` como singleton de aplicación.
-2. Consumir servicios con la función `inject()` en vez de inyección por constructor.
-3. Explicar la jerarquía de inyectores y cómo determina si un servicio es singleton o se instancia por ruta/componente.
-4. Crear un `InjectionToken` personalizado para inyectar configuración.
-5. Explicar el propósito de `@Optional`, `@SkipSelf`, `@Self` y `@Host`.
-
-**Contenido**
-
-- `@Injectable` y `providedIn: root`.
-- La función `inject()` frente a la inyección por constructor.
-- Jerarquía de inyectores.
-- Tokens de inyección personalizados.
-- `providedIn: platform/any` y diferencias prácticas.
-- `@Optional`, `@SkipSelf`, `@Self`, `@Host`.
-
-**Evaluación**
-
-Un servicio compartido de estado consumido por al menos tres componentes distintos, más tres ejercicios de evaluación.
-
----
 
 ## Aprende construyendo
 
@@ -139,21 +111,6 @@ private apiUrl = inject(API_URL);
 
 ---
 
-## Criterio transversal de calidad del código
-
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
 
 ## Laboratorio práctico
 
@@ -178,39 +135,3 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 - **Usar `inject()` fuera de un contexto de inyección válido.** `inject()` solo funciona dentro del constructor, la inicialización de campos de clase, o dentro de funciones ejecutadas explícitamente dentro de un contexto de inyección (como guards e interceptores funcionales).
 
 ---
-
-
-
-## Bibliografía y fundamento académico
-
-Estas fuentes sustentan los conceptos y deben consultarse para verificar detalles que cambian entre versiones:
-
-- Google, *Angular Documentation* y guías oficiales de accesibilidad, seguridad y rendimiento.
-- ReactiveX, *RxJS Documentation*.
-- W3C, *Web Content Accessibility Guidelines (WCAG)*.
-- ACM/IEEE-CS/AAAI, *Computer Science Curricula 2023*.
-- IEEE Computer Society, *SWEBOK Guide V4.0*.
-
-## Resumen del módulo
-
-**Puntos clave**
-
-- `@Injectable({providedIn: "root"})` registra un servicio como singleton de aplicación, con beneficios de tree-shaking.
-- `inject()` es la forma moderna y más flexible de obtener dependencias, funcionando en contextos donde la inyección por constructor no es viable.
-- La jerarquía de inyectores (root → ruta → componente) determina el alcance de una instancia de servicio, resolviendo siempre desde el nivel más cercano al punto de solicitud.
-- Los `InjectionToken` inyectan valores de configuración no basados en clases; `@Optional`/`@SkipSelf`/`@Self`/`@Host` dan control preciso sobre la resolución jerárquica.
-
-**Conceptos aprendidos**
-
-- Registro de servicios como singleton con `providedIn: root`.
-- La función `inject()` y sus ventajas sobre la inyección por constructor.
-- La jerarquía de inyectores y su efecto sobre el alcance de las instancias.
-- Tokens de inyección personalizados y decoradores de resolución avanzados.
-
-**Próximos pasos**
-
-En el Módulo 4 aprenderás routing y navegación: rutas standalone, guards funcionales, lazy loading, y parámetros de ruta.
-
-**Recursos adicionales**
-
-- Documentación oficial de Angular: "Dependency injection" y "Hierarchical injectors".

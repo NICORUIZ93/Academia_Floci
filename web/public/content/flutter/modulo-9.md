@@ -1,31 +1,5 @@
 # Módulo 9: Testing en Flutter
 
-## Sílabo
-
-**Objetivo general**
-
-Probar widgets, lógica e interacción completa de extremo a extremo, distinguiendo unit tests de lógica pura, widget tests en un entorno simulado rápido, e integration tests contra un dispositivo real, con mocking de dependencias mediante `mocktail`.
-
-**Objetivos específicos**
-
-1. Escribir un unit test de una función pura con `flutter_test`.
-2. Escribir un widget test que monte un widget y verifique su contenido.
-3. Simular un tap y verificar el cambio de estado resultante.
-4. Mockear una dependencia con `mocktail`.
-5. Escribir un integration test end-to-end.
-
-**Contenido**
-
-- Unit tests de lógica pura.
-- Widget tests con `WidgetTester`.
-- Integration tests end-to-end.
-- Mocking de dependencias (`mocktail`).
-
-**Evaluación**
-
-Suite de widget tests sobre una feature completa de la app, más tres ejercicios de evaluación.
-
----
 
 ## Aprende construyendo
 
@@ -134,21 +108,6 @@ Integration tests   → dispositivo/emulador real, lentos, flujos completos crí
 
 ---
 
-## Criterio transversal de calidad del código
-
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
 
 ## Laboratorio práctico
 
@@ -173,39 +132,3 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 - **Confiar únicamente en widget tests sin ningún integration test.** No cubre la validación completa de la integración real de la app en un dispositivo.
 
 ---
-
-
-
-## Bibliografía y fundamento académico
-
-Estas fuentes sustentan los conceptos y deben consultarse para verificar detalles que cambian entre versiones:
-
-- Google, *Flutter Documentation* y guías de arquitectura y rendimiento.
-- Google, *Dart Language Documentation* y *Effective Dart*.
-- OWASP Foundation, *Mobile Application Security Verification Standard*.
-- ACM/IEEE-CS/AAAI, *Computer Science Curricula 2023*.
-- IEEE Computer Society, *SWEBOK Guide V4.0*.
-
-## Resumen del módulo
-
-**Puntos clave**
-
-- Los unit tests verifican lógica pura sin UI; los widget tests renderizan en un entorno simulado rápido, sin dispositivo real.
-- `mocktail` aísla dependencias externas, haciendo los tests más rápidos y confiables.
-- Los integration tests corren contra un dispositivo real, validando la integración completa a costa de mayor lentitud.
-- La mayoría de la suite debería ser widget tests rápidos, reservando integration tests para flujos críticos completos.
-
-**Conceptos aprendidos**
-
-- Unit tests de lógica pura.
-- Widget tests con `WidgetTester`.
-- Integration tests end-to-end.
-- Mocking con `mocktail`.
-
-**Próximos pasos**
-
-En el Módulo 10 aprenderás theming con Material 3, adaptación Material vs Cupertino según plataforma, y accesibilidad con `Semantics`.
-
-**Recursos adicionales**
-
-- Documentación oficial de testing en Flutter (docs.flutter.dev/testing).

@@ -1,32 +1,5 @@
 # Módulo 13: Bases de datos relacionales con RDS (PostgreSQL real)
 
-## Sílabo
-
-**Objetivo general**
-
-Aprender a gestionar una base de datos relacional gestionada con RDS, entendiendo cuándo el modelo relacional (SQL) es la elección correcta frente a NoSQL, y dominando el ciclo de vida completo de una instancia: creación, conexión, snapshots y restauración.
-
-**Objetivos específicos**
-
-1. Crear una instancia RDS PostgreSQL y esperar su disponibilidad.
-2. Conectarse con `psql` y ejecutar operaciones SQL básicas.
-3. Tomar un snapshot y restaurar una instancia a partir de él.
-4. Conectarse a la instancia desde una aplicación Python.
-
-**Contenido**
-
-- RDS Instance.
-- Parameter group.
-- Snapshot y restore.
-- IAM Authentication.
-- Connection string.
-- Migrations.
-
-**Evaluación**
-
-API que usa RDS PostgreSQL como backend, con migraciones de esquema ejecutadas automáticamente, más tres ejercicios de evaluación.
-
----
 
 ## Aprende construyendo
 
@@ -105,21 +78,6 @@ V2__agregar_columna_prioridad.sql → aplicado consistentemente después de V1 e
 
 ---
 
-## Criterio transversal de calidad del código
-
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
 
 ## Laboratorio práctico
 
@@ -146,41 +104,3 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 - **Restaurar un snapshot sobrescribiendo la instancia original en vez de crear una nueva.** RDS restaura hacia una instancia nueva e independiente por diseño; aprovecha esa seguridad.
 
 ---
-
-
-
-## Bibliografía y fundamento académico
-
-Estas fuentes sustentan los conceptos y deben consultarse para verificar detalles que cambian entre versiones:
-
-- AWS, Microsoft Azure y Google Cloud, marcos oficiales de arquitectura bien diseñada.
-- NIST, *Cloud Computing Standards Roadmap* y *Secure Software Development Framework*.
-- Beyer et al., *Site Reliability Engineering*.
-- ACM/IEEE-CS/AAAI, *Computer Science Curricula 2023*.
-- IEEE Computer Society, *SWEBOK Guide V4.0*.
-
-## Resumen del módulo
-
-**Puntos clave**
-
-- RDS gestiona un motor de base de datos relacional real como servicio administrado, con la misma fidelidad de emulación en cloud local que en producción.
-- Elegir RDS sobre DynamoDB depende de la necesidad de relaciones complejas, transacciones ACID multi-fila, y consultas ad hoc flexibles.
-- Los snapshots permiten recuperación ante desastres y clonación de entornos hacia instancias nuevas e independientes.
-- Las migrations versionan la evolución del esquema de forma consistente y rastreable entre entornos, evitando cambios manuales ad hoc.
-
-**Conceptos aprendidos**
-
-- RDS Instance.
-- Parameter group.
-- Snapshot y restore.
-- IAM Authentication.
-- Connection string.
-- Migrations.
-
-**Próximos pasos**
-
-En el Módulo 14 aprenderás contenedores con ECR y ECS, empaquetando tu aplicación en una imagen Docker real y ejecutándola en un cluster gestionado.
-
-**Recursos adicionales**
-
-- Documentación oficial de Amazon RDS (docs.aws.amazon.com/rds).

@@ -1,38 +1,5 @@
 # Módulo 0: Linux y shell scripting para DevOps
 
-## Sílabo
-
-**Objetivo general**
-
-Dominar la terminal de Linux como herramienta principal de trabajo: navegación, permisos, procesos, automatización con scripts bash robustos, y los fundamentos de redes y hardening que sostienen cualquier pipeline DevOps posterior.
-
-**Objetivos específicos**
-
-1. Operar el sistema de archivos y gestionar permisos con `chmod`/`chown`.
-2. Gestionar procesos, señales y tareas en segundo plano desde la shell.
-3. Combinar `grep`, `awk` y `sed` en pipes para procesar texto y logs.
-4. Escribir scripts bash robustos con `set -euo pipefail` y variables de entorno.
-5. Programar tareas con `cron` y aplicar hardening básico (SSH, firewall).
-6. Explicar el modelo OSI/TCP-IP a un nivel práctico y situar la cultura DevOps en el ciclo completo de entrega de software.
-7. Configurar NGINX como proxy inverso, preservar identidad de petición y diagnosticar un `502` desde logs.
-
-**Contenido**
-
-- Sistema de archivos y permisos (`chmod`/`chown`).
-- Procesos, señales y jobs en segundo plano.
-- Pipes, redirección y filtros (`grep`, `awk`, `sed`).
-- Variables de entorno y scripts bash robustos (`set -euo pipefail`).
-- Cron y tareas programadas.
-- Hardening: SSH sin contraseña, firewalls (`ufw`/`iptables`), SELinux/AppArmor.
-- Redes: modelo OSI, TCP/IP, DNS y balanceadores de carga.
-- Cultura DevOps y el ciclo Plan→Code→Build→Test→Release→Deploy→Operate→Monitor.
-- Servidor frontal con NGINX: proxy inverso, cabeceras, logs y fallos upstream.
-
-**Evaluación**
-
-Un laboratorio de Linux más un proxy inverso reproducible, y cuatro ejercicios de evaluación.
-
----
 
 ## Antes de comenzar: construye un laboratorio seguro
 
@@ -411,21 +378,6 @@ No crees un proyecto desechable por módulo. Conserva un único repositorio que 
 
 Al iniciar cada laboratorio crea una rama `modulo-N`, implementa el incremento, verifica el criterio de éxito y fusiona solo con pruebas verdes. Si un módulo necesita un experimento aislado, colócalo en `experiments/modulo-N/`; el producto acumulativo permanece ejecutable. Al terminar, otra persona debe poder clonar el repositorio y reproducir el último hito siguiendo únicamente el README.
 
-## Criterio transversal de calidad del código
-
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
 
 ## Laboratorio práctico
 
@@ -457,49 +409,3 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 - **Aceptar `X-Forwarded-For` de cualquier origen.** Configura proxies confiables; una cabecera enviada directamente por el cliente no prueba identidad.
 
 ---
-
-
-
-## Bibliografía y fundamento académico
-
-Estas fuentes sustentan los conceptos y deben consultarse para verificar detalles que cambian entre versiones:
-
-- CNCF, documentación oficial de Kubernetes, Prometheus y OpenTelemetry.
-- HashiCorp, *Terraform Documentation*.
-- Beyer et al., *Site Reliability Engineering*; Forsgren et al., *Accelerate*.
-- ACM/IEEE-CS/AAAI, *Computer Science Curricula 2023*.
-- IEEE Computer Society, *SWEBOK Guide V4.0*.
-
-## Resumen del módulo
-
-**Puntos clave**
-
-- Los permisos de Linux (propietario/grupo/otros × lectura/escritura/ejecución) son la base de la seguridad de archivos y una fuente común de fallos de despliegue si se configuran mal.
-- `SIGTERM` permite un cierre ordenado de un proceso; `SIGKILL` lo termina sin darle oportunidad de limpieza.
-- `grep`, `awk` y `sed` combinados por pipes son la herramienta de diagnóstico más rápida sobre logs de texto plano.
-- `set -euo pipefail` convierte un script bash frágil en uno que se detiene inmediatamente ante el primer error, en vez de continuar silenciosamente sobre un estado incorrecto.
-- `cron` programa tareas periódicas, pero corre con un entorno mínimo que exige rutas absolutas y buen manejo de logs.
-- El hardening básico (SSH por clave, firewall con denegación por defecto, SELinux/AppArmor) es la base mínima de seguridad de cualquier servidor.
-- La cultura DevOps entiende Plan→Code→Build→Test→Release→Deploy→Operate→Monitor como un ciclo continuo, no un proceso lineal de una sola pasada.
-
-**Conceptos aprendidos**
-
-- Permisos de archivo y su notación octal.
-- Procesos, señales, y jobs en segundo plano.
-- Procesamiento de texto con `grep`, `awk`, `sed` y pipes.
-- Scripts bash robustos con `set -euo pipefail`.
-- Programación de tareas con `cron`.
-- Hardening básico: SSH por clave, firewalls, control de acceso obligatorio.
-- Fundamentos prácticos de redes: modelo OSI, DNS, balanceadores de carga.
-- La cultura y el ciclo de vida DevOps.
-
-**Próximos pasos**
-
-En el Módulo 1 vas a profundizar en Git más allá de los comandos básicos: estrategias de branching a escala de equipo, rebase interactivo, y las herramientas que te permiten navegar y corregir el historial de un repositorio con confianza.
-
-**Recursos adicionales**
-
-- Documentación del manual de Linux (`man bash`, `man chmod`, `man cron`) como referencia primaria y siempre disponible sin conexión.
-- Guía oficial de `ufw` y documentación de `iptables` para hardening de firewall.
-- Introducción oficial a DevOps y su ciclo de vida, publicada por las principales plataformas de CI/CD del mercado.
-- Ejemplos ejecutables de este track: carpeta [`examples/tracks/devops/`](https://github.com/NICORUIZ93/Academia_Floci/tree/main/examples/tracks/devops) del repositorio — `Dockerfile` (Módulo 2), `docker-compose.yml` (Módulo 3), `ci-pipeline.yml` (Módulo 4), `deployment.yaml` (Módulo 6), `main.tf` (Módulo 8).

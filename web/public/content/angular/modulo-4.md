@@ -1,33 +1,5 @@
 # Módulo 4: Routing y navegación
 
-## Sílabo
-
-**Objetivo general**
-
-Estructurar una aplicación Angular con múltiples vistas, carga perezosa de rutas y protección de acceso mediante guards funcionales, usando la configuración de rutas standalone moderna.
-
-**Objetivos específicos**
-
-1. Configurar rutas standalone con `Routes` y `provideRouter`.
-2. Implementar guards funcionales (`CanActivateFn`) para proteger rutas.
-3. Implementar lazy loading de componentes con `loadComponent`.
-4. Leer parámetros de ruta y query params, integrándolos con signals.
-5. Explicar el propósito de `CanDeactivateFn`, `CanMatchFn`, `canActivateChild` y `ResolveFn`.
-
-**Contenido**
-
-- Router config con rutas standalone.
-- Guards funcionales (`CanActivate`).
-- Lazy loading con `loadComponent`.
-- Parámetros de ruta y query params.
-- `CanDeactivateFn`, `CanMatchFn`, `canActivateChild` y `ResolveFn`.
-- `ActivatedRouteSnapshot`, `RouterStateSnapshot` y `fragment`.
-
-**Evaluación**
-
-Una aplicación con al menos 4 rutas, una protegida por guard y una cargada de forma perezosa, más tres ejercicios de evaluación.
-
----
 
 ## Aprende construyendo
 
@@ -127,21 +99,6 @@ export class Detalle {
 
 ---
 
-## Criterio transversal de calidad del código
-
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
 
 ## Laboratorio práctico
 
@@ -166,39 +123,3 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 - **Confundir parámetros de ruta con query params.** Los parámetros de ruta identifican qué recurso se muestra; los query params modifican cómo se muestra, sin cambiar qué componente se activa.
 
 ---
-
-
-
-## Bibliografía y fundamento académico
-
-Estas fuentes sustentan los conceptos y deben consultarse para verificar detalles que cambian entre versiones:
-
-- Google, *Angular Documentation* y guías oficiales de accesibilidad, seguridad y rendimiento.
-- ReactiveX, *RxJS Documentation*.
-- W3C, *Web Content Accessibility Guidelines (WCAG)*.
-- ACM/IEEE-CS/AAAI, *Computer Science Curricula 2023*.
-- IEEE Computer Society, *SWEBOK Guide V4.0*.
-
-## Resumen del módulo
-
-**Puntos clave**
-
-- Las rutas standalone se declaran como un array `Routes` registrado con `provideRouter`, reemplazando el patrón `RouterModule.forRoot` basado en NgModules.
-- Los guards funcionales son simples funciones, considerablemente más fáciles de testear que las clases guard clásicas, y pueden redirigir con una `UrlTree` en vez de solo bloquear.
-- `loadComponent` habilita lazy loading de rutas, reduciendo el bundle inicial y mejorando el tiempo de carga percibido.
-- El input binding de rutas simplifica la lectura de parámetros; `CanDeactivateFn`, `CanMatchFn`, `canActivateChild` y `ResolveFn` cubren escenarios avanzados de navegación.
-
-**Conceptos aprendidos**
-
-- Configuración declarativa de rutas standalone.
-- Guards funcionales y su ventaja de testabilidad.
-- Lazy loading de componentes con `loadComponent`.
-- Parámetros de ruta, query params, y mecanismos avanzados de routing.
-
-**Próximos pasos**
-
-En el Módulo 5 aprenderás formularios reactivos y template-driven, con validadores síncronos y asíncronos, y formularios anidados y dinámicos con `FormArray`.
-
-**Recursos adicionales**
-
-- Documentación oficial de Angular: "Routing" y "Router reference".

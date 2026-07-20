@@ -8,19 +8,6 @@ Necesitas Python 3 y una terminal. Crea `academia-labs/foundations/specializatio
 
 Este capítulo no intenta resumir toda la disciplina. Construirás seis experimentos pequeños para distinguir sus áreas, reconocer los fundamentos que comparten y elegir qué estudiar después con evidencia. Trabaja dentro de `academia-labs/foundations/specializations/` y guarda cada resultado en `evidence/`.
 
-## Criterio transversal de calidad del código
-
-Usa nombres que expresen intención, conserva errores con contexto y prueba tanto éxito como fallo. Aplica SOLID cuando separes una responsabilidad o una dependencia que realmente cambia; decide no abstraer cuando una función directa siga siendo más clara y verificable.
-
-```mermaid
-flowchart LR
-  A["Problema"] --> B["Modelo"]
-  B --> C["Programa"]
-  C --> D["Medición"]
-  D --> E["Conclusión con límites"]
-  E --> F["Siguiente prerrequisito"]
-```
-
 ### Tema 1: Sistemas, arquitectura y sistemas operativos
 
 **¿Por qué es importante?** Permite entender por qué una aplicación compite por CPU, memoria y entrada/salida antes de intentar optimizarla.

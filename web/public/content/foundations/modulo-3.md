@@ -1,14 +1,5 @@
 # Módulo 3: Fundamentos de web, redes y accesibilidad
 
-## Sílabo
-
-**Objetivo general**
-
-Explicar el recorrido de una petición web y construir una interfaz HTML/CSS semántica, responsive y operable por teclado, usando herramientas del navegador para observar evidencia en lugar de tratar Internet como una caja negra.
-
-**Resultados observables:** descomponer una URL, distinguir DNS/IP/puerto, leer una petición y respuesta HTTP, interpretar estados y headers, crear HTML semántico, aplicar cascada y box model, diseñar responsive y verificar accesibilidad básica.
-
-**Prerrequisitos:** módulos 0–2; manejo de terminal, archivos, funciones y lectura de estructuras.
 
 ## Aprende construyendo
 
@@ -181,21 +172,6 @@ Accesibilidad no es una fase final. Verifica estructura de encabezados, nombres 
 contenido semántico → box model → layout flexible → responsive → teclado/AT
 ```
 
-## Criterio transversal de calidad del código
-
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
 
 ## Laboratorio práctico
 
@@ -223,15 +199,3 @@ Fases:
 - Usar div como botón: emplea semántica nativa.
 - Eliminar focus outline: crea un estilo visible.
 - Diseñar con tamaños fijos: usa restricciones y prueba extremos.
-
-
-
-## Bibliografía y fundamento académico
-
-- ACM/IEEE/AAAI CS2023: Networking and Communication, Human-Computer Interaction y Specialized Platform Development.
-- WHATWG, *HTML Living Standard*; W3C, *Web Content Accessibility Guidelines*.
-- MDN Web Docs: HTTP, HTML, CSS y accesibilidad.
-
-## Resumen del módulo
-
-Una URL se resuelve hacia un host, conecta a un puerto y produce mensajes HTTP. HTML comunica estructura; CSS controla presentación mediante cascada y layout. Responsive y accesibilidad son propiedades verificables. El proyecto une red, protocolo, semántica, diseño y evidencia antes de introducir frameworks.

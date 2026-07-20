@@ -1,31 +1,5 @@
 # Módulo 5: Networking
 
-## Sílabo
-
-**Objetivo general**
-
-Consumir APIs REST reales con manejo de errores y estados de carga explícitos, comparando el paquete `http` básico con `dio` (con interceptores, cancelación y timeouts configurables), y generando modelos tipados de forma segura con `json_serializable`.
-
-**Objetivos específicos**
-
-1. Hacer una petición GET con el paquete `http`.
-2. Repetir el ejercicio con `dio` y comparar la ergonomía.
-3. Generar clases de modelo con `json_serializable`.
-4. Modelar explícitamente los 3 estados de una pantalla de datos.
-5. Agregar un interceptor de autenticación con `dio`.
-
-**Contenido**
-
-- `http` vs `dio`.
-- Serialización con `json_serializable`.
-- Interceptores (auth, logging).
-- Manejo de errores y estados de carga.
-
-**Evaluación**
-
-App que consume una API real con estados loading/error/success explícitos, más tres ejercicios de evaluación.
-
----
 
 ## Aprende construyendo
 
@@ -131,21 +105,6 @@ class Error extends EstadoTareas { final String mensaje; Error(this.mensaje); }
 
 ---
 
-## Criterio transversal de calidad del código
-
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
 
 ## Laboratorio práctico
 
@@ -170,39 +129,3 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 - **Omitir el manejo explícito del estado de error en la UI.** Modélalo con una `sealed class` verificada exhaustivamente por el compilador.
 
 ---
-
-
-
-## Bibliografía y fundamento académico
-
-Estas fuentes sustentan los conceptos y deben consultarse para verificar detalles que cambian entre versiones:
-
-- Google, *Flutter Documentation* y guías de arquitectura y rendimiento.
-- Google, *Dart Language Documentation* y *Effective Dart*.
-- OWASP Foundation, *Mobile Application Security Verification Standard*.
-- ACM/IEEE-CS/AAAI, *Computer Science Curricula 2023*.
-- IEEE Computer Society, *SWEBOK Guide V4.0*.
-
-## Resumen del módulo
-
-**Puntos clave**
-
-- `dio` ofrece interceptores, cancelación y timeouts configurables nativamente, capacidades que `http` básico no incluye.
-- `json_serializable` genera parsing tipado y verificado, detectando campos faltantes o mal tipados con errores claros en vez de fallos silenciosos.
-- Los interceptores de `dio` centralizan transformaciones transversales (auth, logging) sin duplicar lógica en cada petición.
-- Modelar estados explícitos con `sealed class` previene omitir el manejo de algún estado, especialmente el de error.
-
-**Conceptos aprendidos**
-
-- `http` vs `dio`.
-- Serialización con `json_serializable`.
-- Interceptores.
-- Manejo de errores y estados de carga.
-
-**Próximos pasos**
-
-En el Módulo 6 aprenderás persistencia local: `shared_preferences`, `sqflite`, Hive, y una estrategia offline-first.
-
-**Recursos adicionales**
-
-- Documentación oficial de dio (pub.dev/packages/dio).

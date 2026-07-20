@@ -1,32 +1,5 @@
 # Módulo 9: Proyecto final — Sistema de Gestión de Tareas
 
-## Sílabo
-
-**Objetivo general**
-
-Integrar todo lo aprendido en los ocho módulos anteriores —S3, SQS, DynamoDB, Lambda, API Gateway e IAM— en un único sistema funcional de extremo a extremo: un Sistema de Gestión de Tareas con CRUD completo, archivos adjuntos, procesamiento en segundo plano, y una API documentada protegida con permisos de mínimo privilegio.
-
-**Objetivos específicos**
-
-1. Diseñar la arquitectura completa del sistema antes de escribir código.
-2. Implementar el CRUD de tareas sobre DynamoDB, expuesto a través de Lambda.
-3. Añadir subida de archivos adjuntos a S3 desde el mismo API.
-4. Añadir una cola SQS para procesar tareas en segundo plano.
-5. Exponer todo con API Gateway, protegido con una política IAM de mínimo privilegio.
-6. Documentar la API y escribir una guía de despliegue.
-
-**Contenido**
-
-- Arquitectura de la aplicación: frontend, backend y base de datos.
-- Integración de S3, SQS, DynamoDB, Lambda, API Gateway e IAM.
-- Despliegue y pruebas de integración.
-- Documentación de la API y guía de despliegue.
-
-**Evaluación**
-
-El proyecto final completo (descrito abajo con requisitos funcionales, técnicos, entregables y rúbrica), más los apéndices de referencia rápida, glosario y bibliografía que cierran el curso.
-
----
 
 ## Aprende construyendo
 
@@ -189,21 +162,6 @@ Documentación esperada del proyecto:
 
 ---
 
-## Criterio transversal de calidad del código
-
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
 
 ## Laboratorio práctico
 
@@ -237,44 +195,7 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 
 
 
-## Bibliografía y fundamento académico
 
-Estas fuentes sustentan los conceptos y deben consultarse para verificar detalles que cambian entre versiones:
-
-- AWS, Microsoft Azure y Google Cloud, marcos oficiales de arquitectura bien diseñada.
-- NIST, *Cloud Computing Standards Roadmap* y *Secure Software Development Framework*.
-- Beyer et al., *Site Reliability Engineering*.
-- ACM/IEEE-CS/AAAI, *Computer Science Curricula 2023*.
-- IEEE Computer Society, *SWEBOK Guide V4.0*.
-
-## Resumen del módulo
-
-**Puntos clave**
-
-- El proyecto final integra los ocho módulos anteriores en un único sistema: DynamoDB y S3 como capa de datos, Lambda y API Gateway como backend, SQS para desacoplar trabajo en segundo plano, e IAM protegiendo cada pieza con mínimo privilegio.
-- Diseñar la arquitectura antes de escribir código evita descubrir sobre la marcha decisiones que deberían haberse tomado desde el principio (esquema de clave, colas necesarias, permisos exactos).
-- Separar lo que el usuario necesita saber inmediatamente de lo que puede procesarse después de forma asíncrona es el patrón central que conecta SQS con el resto del sistema.
-- La documentación de la API y la guía de despliegue son entregables tan importantes como el código funcional en sí.
-
-**Conceptos aprendidos**
-
-- Cómo combinar los ocho servicios estudiados en una arquitectura coherente de tres capas.
-- El patrón de referencia cruzada entre DynamoDB (metadatos) y S3 (contenido binario).
-- Cómo desacoplar procesamiento en segundo plano con SQS en un caso de uso real completo.
-- Cómo aplicar IAM de mínimo privilegio por componente, no como una política única y genérica.
-- Cómo documentar una API y un proceso de despliegue de forma reproducible.
-
-**Próximos pasos**
-
-Con el proyecto final completo, tienes una base sólida de los servicios fundamentales de AWS (y sus equivalentes en Azure y GCP) para continuar, si lo deseas, con los módulos avanzados del track Cloud Local, que cubren Secrets Manager, SNS/EventBridge, CloudWatch, RDS, ECR/ECS, CloudFormation, Step Functions, Kinesis/MSK, Cognito, Athena/Glue, Bedrock, y un proyecto integrador multi-nube adicional.
-
-**Recursos adicionales**
-
-Consulta los apéndices que cierran este módulo: la Guía de referencia rápida (comandos más usados de todo el curso), el Glosario de términos técnicos, y la Bibliografía y enlaces útiles, pensados como material de consulta permanente más allá de la finalización del curso.
-
-Implementación de referencia completa de este mismo proyecto (Lambdas, Terraform, CloudFormation y CI/CD con GitHub Actions) — consúltala **después** de intentarlo tú mismo, no como punto de partida: [`examples/project-final/`](https://github.com/NICORUIZ93/Academia_Floci/tree/main/examples/project-final).
-
----
 
 ## Apéndice A: Guía de referencia rápida
 

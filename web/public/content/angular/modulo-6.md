@@ -1,33 +1,5 @@
 # Módulo 6: RxJS esencial para Angular
 
-## Sílabo
-
-**Objetivo general**
-
-Dominar lo esencial de RxJS que Angular sigue requiriendo para flujos asíncronos complejos: operadores clave, manejo correcto de suscripciones sin fugas de memoria, y el puente entre Observables y signals.
-
-**Objetivos específicos**
-
-1. Diferenciar Observable de Promise en cuanto a cancelación y múltiples emisiones.
-2. Usar `debounceTime`, `distinctUntilChanged`, `switchMap` y `combineLatest` correctamente.
-3. Usar el `async` pipe y `takeUntilDestroyed` para evitar fugas de memoria por suscripciones.
-4. Convertir entre Observables y signals con `toSignal`/`toObservable`.
-5. Diferenciar `mergeMap`, `concatMap` y `exhaustMap`.
-
-**Contenido**
-
-- Observable frente a Promise.
-- Operadores clave: `map`, `switchMap`, `debounceTime`, `combineLatest`.
-- Manejo de suscripciones (`async` pipe, `takeUntilDestroyed`).
-- `toSignal`/`toObservable` como puente con Signals.
-- `Subject`, `BehaviorSubject`, `ReplaySubject` y `AsyncSubject`.
-- `mergeMap`, `concatMap`, `exhaustMap` y `shareReplay`.
-
-**Evaluación**
-
-Un buscador con debounce y cancelación de peticiones previas usando `switchMap`, más tres ejercicios de evaluación.
-
----
 
 ## Aprende construyendo
 
@@ -130,21 +102,6 @@ exhaustMap: ignora nuevas emisiones mientras una sigue en curso (prevenir doble 
 
 ---
 
-## Criterio transversal de calidad del código
-
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
 
 ## Laboratorio práctico
 
@@ -169,39 +126,3 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 - **Olvidar `distinctUntilChanged()` tras `debounceTime`.** Sin él, valores idénticos consecutivos disparan búsquedas redundantes innecesarias.
 
 ---
-
-
-
-## Bibliografía y fundamento académico
-
-Estas fuentes sustentan los conceptos y deben consultarse para verificar detalles que cambian entre versiones:
-
-- Google, *Angular Documentation* y guías oficiales de accesibilidad, seguridad y rendimiento.
-- ReactiveX, *RxJS Documentation*.
-- W3C, *Web Content Accessibility Guidelines (WCAG)*.
-- ACM/IEEE-CS/AAAI, *Computer Science Curricula 2023*.
-- IEEE Computer Society, *SWEBOK Guide V4.0*.
-
-## Resumen del módulo
-
-**Puntos clave**
-
-- Los Observables modelan flujos de múltiples valores cancelables y de evaluación perezosa, a diferencia de las Promesas de un único valor.
-- `debounceTime`, `distinctUntilChanged` y `switchMap` son la combinación estándar para buscadores en vivo con cancelación automática.
-- El `async` pipe y `takeUntilDestroyed` evitan fugas de memoria por suscripciones sin desuscribir automáticamente.
-- `mergeMap`, `concatMap` y `exhaustMap` ofrecen estrategias distintas ante emisiones superpuestas; `shareReplay` comparte una única ejecución entre múltiples suscriptores.
-
-**Conceptos aprendidos**
-
-- Diferencias fundamentales entre Observable y Promise.
-- Operadores clave de transformación y combinación de flujos.
-- Manejo correcto de suscripciones sin fugas de memoria.
-- Subjects y operadores avanzados de aplanamiento.
-
-**Próximos pasos**
-
-En el Módulo 7 aprenderás HttpClient e interceptores: consumo tipado de APIs reales, interceptores funcionales para autenticación, y manejo centralizado de errores HTTP.
-
-**Recursos adicionales**
-
-- Documentación oficial de RxJS (rxjs.dev) y de Angular: "RxJS interop" (`toSignal`/`toObservable`).

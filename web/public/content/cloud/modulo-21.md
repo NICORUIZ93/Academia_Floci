@@ -1,32 +1,5 @@
 # Módulo 21: Cómputo elástico con EC2 y Auto Scaling
 
-## Sílabo
-
-**Objetivo general**
-
-Entender el modelo de ejecución de instancias EC2 en Floci —contenedores Docker reales, no simulaciones—, dominar el ciclo de vida completo de una instancia (lanzar, detener, reiniciar, terminar), el servicio de metadatos (IMDS) y la inyección de claves SSH y UserData, y usar Auto Scaling para mantener automáticamente una capacidad deseada de instancias sin intervención manual.
-
-**Objetivos específicos**
-
-1. Lanzar una instancia EC2 con `RunInstances` y explicar en qué contenedor Docker real se traduce.
-2. Inyectar una clave SSH con `ImportKeyPair` y conectarte a la instancia por SSH.
-3. Consultar el servicio de metadatos de instancia (IMDS) desde dentro del contenedor, incluyendo credenciales IAM temporales.
-4. Crear un Auto Scaling Group con capacidad mínima, máxima y deseada, y observar cómo el reconciliador de Floci lanza y termina instancias para mantenerla.
-
-**Contenido**
-
-- Modelo de ejecución EC2: `RunInstances` como `docker run` real, mapeo de estados.
-- AMIs soportadas y su traducción a imágenes Docker.
-- Grupos de seguridad, pares de claves e inyección SSH.
-- UserData y el servicio de metadatos de instancia (IMDS v1/v2).
-- Launch configurations y Auto Scaling Groups.
-- El reconciliador de capacidad y las políticas de escalado.
-
-**Evaluación**
-
-Dos laboratorios prácticos (lanzar una instancia real con acceso SSH y crear un Auto Scaling Group que se autorregula) y tres ejercicios de evaluación.
-
----
 
 ## Aprende construyendo
 
@@ -106,21 +79,6 @@ Los lifecycle hooks (`PutLifecycleHook`) te permiten insertar una pausa controla
 
 ---
 
-## Criterio transversal de calidad del código
-
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
 
 ## Laboratorio práctico
 
@@ -160,19 +118,3 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 - **Las instancias no se registran en el grupo objetivo del balanceador.** Confirma que usaste `attach-load-balancer-target-groups` con el ARN correcto del Módulo 22, y que el grupo objetivo existe antes de adjuntarlo.
 
 ---
-
-
-
-## Bibliografía y fundamento académico
-
-Estas fuentes sustentan los conceptos y deben consultarse para verificar detalles que cambian entre versiones:
-
-- AWS, Microsoft Azure y Google Cloud, marcos oficiales de arquitectura bien diseñada.
-- NIST, *Cloud Computing Standards Roadmap* y *Secure Software Development Framework*.
-- Beyer et al., *Site Reliability Engineering*.
-- ACM/IEEE-CS/AAAI, *Computer Science Curricula 2023*.
-- IEEE Computer Society, *SWEBOK Guide V4.0*.
-
-## Resumen del módulo
-
-En este módulo aprendiste que las instancias EC2 en Floci son contenedores Docker reales, no simulaciones: `RunInstances` ejecuta un `docker run` de verdad, con un ciclo de vida que se mapea directamente a operaciones de Docker. Practicaste la inyección de claves SSH reales, el consumo del servicio de metadatos IMDS (incluyendo el flujo seguro IMDSv2 con token), y UserData para arranque automatizado. Con Auto Scaling, viste cómo un reconciliador que corre cada 10 segundos mantiene la capacidad deseada de un grupo sin intervención manual, lanzando y terminando instancias, y registrándolas automáticamente en los grupos objetivo de un balanceador de carga — el mismo patrón de reconciliación continua que sustenta la infraestructura declarativa moderna.

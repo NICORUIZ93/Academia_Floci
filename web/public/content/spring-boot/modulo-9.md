@@ -1,31 +1,5 @@
 # Módulo 9: Programación reactiva con WebFlux
 
-## Sílabo
-
-**Objetivo general**
-
-Entender el modelo no bloqueante de Spring WebFlux para alta concurrencia con recursos limitados, dominando Mono/Flux, WebClient reactivo, y cuándo esta complejidad adicional realmente se justifica frente a Spring MVC tradicional.
-
-**Objetivos específicos**
-
-1. Crear endpoints reactivos que devuelvan `Mono` y `Flux`.
-2. Componer llamadas HTTP externas de forma no bloqueante con `WebClient` y `flatMap`.
-3. Comparar el modelo reactivo con el equivalente bloqueante de Spring MVC.
-4. Explicar qué ocurre al mezclar código bloqueante dentro de un flujo reactivo.
-5. Conectar a una base de datos con R2DBC.
-
-**Contenido**
-
-- Mono y Flux.
-- WebClient reactivo.
-- Cuándo WebFlux vale la complejidad frente a MVC.
-- R2DBC para acceso reactivo a datos.
-
-**Evaluación**
-
-Endpoint reactivo que compone múltiples llamadas no bloqueantes con WebClient, más tres ejercicios de evaluación.
-
----
 
 ## Comienza desde cero: crea una API WebFlux ejecutable
 
@@ -303,21 +277,6 @@ Spring MVC / virtual threads: más simple, suficiente para CRUDs de concurrencia
 
 ---
 
-## Criterio transversal de calidad del código
-
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
 
 ## Laboratorio práctico
 
@@ -341,39 +300,3 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 - **Usar `RestTemplate` en vez de `WebClient` para llamadas reactivas.** `RestTemplate` es bloqueante y está considerado legado; usa `WebClient`.
 
 ---
-
-
-
-## Bibliografía y fundamento académico
-
-Estas fuentes sustentan los conceptos y deben consultarse para verificar detalles que cambian entre versiones:
-
-- VMware/Broadcom, documentación de *Spring Framework* y *Spring Boot*.
-- IETF, especificaciones HTTP y OAuth 2.0.
-- OWASP Foundation, *Application Security Verification Standard*.
-- ACM/IEEE-CS/AAAI, *Computer Science Curricula 2023*.
-- IEEE Computer Society, *SWEBOK Guide V4.0*.
-
-## Resumen del módulo
-
-**Puntos clave**
-
-- `Mono` (0 o 1) y `Flux` (0 a N) modelan explícitamente la cardinalidad de un resultado asíncrono, con evaluación perezosa.
-- `WebClient` realiza llamadas HTTP sin bloquear threads, componibles con `flatMap` de forma similar a `CompletableFuture`.
-- WebFlux se justifica para alta concurrencia de I/O con recursos limitados, no para CRUDs simples.
-- Mezclar código bloqueante en un pipeline reactivo puede agotar el pool de threads reactivos compartido; R2DBC es la alternativa reactiva a JDBC.
-
-**Conceptos aprendidos**
-
-- Mono y Flux.
-- WebClient reactivo y composición no bloqueante.
-- Criterios para elegir WebFlux frente a Spring MVC.
-- R2DBC.
-
-**Próximos pasos**
-
-En el Módulo 10 aprenderás microservicios con Spring Cloud: Config Server, service discovery, gateway, y circuit breakers.
-
-**Recursos adicionales**
-
-- Documentación oficial de Spring WebFlux (docs.spring.io/spring-framework) y R2DBC (r2dbc.io).

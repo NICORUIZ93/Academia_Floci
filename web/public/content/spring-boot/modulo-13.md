@@ -2,13 +2,6 @@
 
 Anotar un método con `@Transactional`, publicar en Kafka y exponer Actuator no demuestra que un microservicio preserve datos bajo fallos. Spring automatiza infraestructura mediante proxies y convenciones; para usarla con rigor debes conocer la frontera exacta de cada garantía. Este módulo convierte supuestos en pruebas de integración e incidentes controlados.
 
-## Sílabo
-
-1. Proxies transaccionales, propagación, aislamiento y rollback.
-2. Idempotencia, outbox, Kafka y efectos repetidos.
-3. OpenAPI, Problem Details y contratos de consumidor/proveedor.
-4. Observabilidad, resiliencia, SLO e incidentes.
-5. Proyecto: microservicio verificable bajo fallos parciales.
 
 ## Aprende construyendo
 
@@ -189,21 +182,6 @@ deadline -> timeout -> retry limitado -> breaker/bulkhead
 
 **Aplicación al proyecto:** migra una rama, añade una prueba que bloquee loopback/metadatos cloud mediante InetAddressFilter, instrumenta una llamada gRPC y compara trazas HTTP/gRPC antes de promover el cambio.
 
-## Criterio transversal de calidad del código
-
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
 
 ## Laboratorio práctico
 
@@ -237,19 +215,7 @@ Evoluciona el proyecto 12 mediante una vertical de “crear pedido y proyectar r
 
 
 
-## Bibliografía y fundamento académico
 
-- Spring Framework Reference: declarative transaction management, proxies, propagation y rollback.
-- Spring for Apache Kafka Reference: transactions, exactly-once semantics, retries y recovery.
-- Spring Boot Reference: Actuator, Micrometer Observation, tracing y OpenTelemetry.
-- Spring Cloud Contract Reference: pruebas dirigidas por consumidor/proveedor.
-- Kleppmann, *Designing Data-Intensive Applications*; Beyer et al., *Site Reliability Engineering*.
-- CS2023: Software Engineering, Data Management, PDC, Security y Systems Fundamentals.
-- SWEBOK V4: Architecture, Construction, Testing, Quality, Security y Operations.
-
-Los resultados observables son demostrar límites transaccionales, preservar efecto ante duplicados/caídas, detener cambios incompatibles y recuperar una degradación usando trazas, SLO y runbook.
-
-<!-- OFFICIAL-TOPIC-ATLAS:START -->
 ## Atlas completo de temas oficiales
 
 Derivado de la [documentación oficial](https://docs.spring.io/spring-boot/reference/), sus referencias, migraciones y guías de operación. Inventariar no equivale a dominar: cada selección se demuestra con código, prueba, medición y explicación. **Cobertura: 54 temas.**
@@ -267,13 +233,3 @@ Derivado de la [documentación oficial](https://docs.spring.io/spring-boot/refer
 
 Para cada tema responde qué problema resuelve, cuál es su modelo mental, cómo falla, cómo se verifica y cuándo no conviene. Elige uno por área e intégralos en una vertical RutaFlow. Entrega diagrama, ADR, pruebas de éxito y fallo, una medición, una amenaza y el enlace oficial con versión y fecha. Una API preview se aísla en laboratorio y nunca se presenta como base estable.
 <!-- OFFICIAL-TOPIC-ATLAS:END -->
-
-## Resumen del módulo
-
-- `@Transactional` suele operar mediante proxy; self-invocation y rollback rules cambian la garantía real.
-- Propagación e aislamiento se eligen por invariante y coste, no por anotación máxima.
-- Idempotencia reconoce intención; outbox y dedupe vuelven recuperable la doble escritura.
-- Kafka exactly-once tiene una frontera; no incluye automáticamente bases o HTTP externos.
-- OpenAPI y contratos protegen superficies y expectativas diferentes.
-- Observation conecta métricas/trazas; baja cardinalidad y privacidad son parte del diseño.
-- SLO, deadlines y patrones de resiliencia convierten fallos parciales en decisiones operables.

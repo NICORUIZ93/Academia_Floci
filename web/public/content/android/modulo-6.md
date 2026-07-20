@@ -1,30 +1,5 @@
 # Módulo 6: Persistencia local con Room
 
-## Sílabo
-
-**Objetivo general**
-
-Persistir datos localmente con SQL tipado y Flow reactivo sobre la base de datos, implementando una estrategia offline-first donde la UI siempre lee de la base de datos local mientras un repositorio sincroniza en segundo plano con la API remota.
-
-**Objetivos específicos**
-
-1. Definir una `@Entity` y un `@Dao` con métodos CRUD y una query reactiva con `Flow`.
-2. Observar ese `Flow` desde el `ViewModel` y confirmar actualización automática de la UI.
-3. Agregar una migración de esquema que añada una columna sin perder datos.
-4. Implementar una estrategia offline-first básica.
-
-**Contenido**
-
-- Entities, DAOs y Database.
-- Migraciones de esquema.
-- Room + Flow para datos reactivos.
-- Estrategia offline-first básica.
-
-**Evaluación**
-
-App con caché local en Room que funciona sin conexión a internet, más tres ejercicios de evaluación.
-
----
 
 ## Aprende construyendo
 
@@ -148,21 +123,6 @@ UI ← siempre lee de → Room (Flow reactivo)
 
 ---
 
-## Criterio transversal de calidad del código
-
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
 
 ## Laboratorio práctico
 
@@ -186,39 +146,3 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 - **Devolver `List<Tarea>` en vez de `Flow<List<Tarea>>` desde el DAO.** Pierde la actualización automática reactiva de la UI ante cambios en los datos.
 
 ---
-
-
-
-## Bibliografía y fundamento académico
-
-Estas fuentes sustentan los conceptos y deben consultarse para verificar detalles que cambian entre versiones:
-
-- Google, *Android Developers Documentation* y guías de arquitectura de aplicaciones.
-- JetBrains, *Kotlin Language Documentation*.
-- OWASP Foundation, *Mobile Application Security Verification Standard*.
-- ACM/IEEE-CS/AAAI, *Computer Science Curricula 2023*.
-- IEEE Computer Society, *SWEBOK Guide V4.0*.
-
-## Resumen del módulo
-
-**Puntos clave**
-
-- Room verifica las queries SQL en tiempo de compilación, detectando errores antes de ejecutar la app.
-- Un DAO que devuelve `Flow` mantiene la UI sincronizada automáticamente con los cambios en la base de datos.
-- Las migraciones evolucionan el esquema sin perder los datos ya almacenados en el dispositivo del usuario.
-- Offline-first hace que la UI lea siempre del caché local mientras un repositorio sincroniza en segundo plano, mejorando la experiencia con y sin conexión.
-
-**Conceptos aprendidos**
-
-- Entities, DAOs y Database.
-- Migraciones de esquema.
-- Room + Flow para datos reactivos.
-- Estrategia offline-first básica.
-
-**Próximos pasos**
-
-En el Módulo 7 aprenderás a desacoplar dependencias con Hilt, inyectando el repositorio construido aquí en tu `ViewModel` sin instanciación manual.
-
-**Recursos adicionales**
-
-- Documentación oficial de Room (developer.android.com/training/data-storage/room).

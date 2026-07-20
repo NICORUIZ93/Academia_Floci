@@ -1,31 +1,5 @@
 # Módulo 12: Buenas prácticas y patrones de diseño
 
-## Sílabo
-
-**Objetivo general**
-
-Aplicar patrones de diseño clásicos (Builder, Factory, Strategy) con criterio en código Java moderno e idiomático, junto con principios SOLID, reconociendo también cuándo NO aplicar un patrón.
-
-**Objetivos específicos**
-
-1. Implementar el patrón Builder para objetos con muchos campos opcionales.
-2. Implementar una Factory que devuelva distintas implementaciones según un parámetro.
-3. Implementar Strategy para intercambiar algoritmos sin modificar el código que los usa.
-4. Aplicar el principio de responsabilidad única refactorizando una clase que lo viola.
-5. Reconocer cuándo aplicar un patrón sería sobre-ingeniería.
-
-**Contenido**
-
-- Builder, Factory, Strategy.
-- Inyección de dependencias manual.
-- Principios SOLID aplicados.
-- Cuándo NO aplicar un patrón.
-
-**Evaluación**
-
-Refactor de un módulo propio aplicando al menos dos patrones de diseño justificados, más tres ejercicios de evaluación.
-
----
 
 ## Aprende construyendo
 
@@ -107,21 +81,6 @@ Factory con un único caso, Strategy sin alternativa real → patrón innecesari
 
 ---
 
-## Criterio transversal de calidad del código
-
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
 
 ## Laboratorio práctico
 
@@ -146,38 +105,3 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 - **Confundir Factory con Strategy.** Factory decide qué crear; Strategy encapsula un algoritmo intercambiable ya creado.
 
 ---
-
-
-
-## Bibliografía y fundamento académico
-
-Estas fuentes sustentan los conceptos y deben consultarse para verificar detalles que cambian entre versiones:
-
-- Oracle, *Java Language Specification* y *Java Virtual Machine Specification*.
-- OpenJDK, documentación de Java SE, JFR y JMH.
-- Bloch, J., *Effective Java*.
-- ACM/IEEE-CS/AAAI, *Computer Science Curricula 2023*.
-- IEEE Computer Society, *SWEBOK Guide V4.0*.
-
-## Resumen del módulo
-
-**Puntos clave**
-
-- Builder evita la confusión de orden de argumentos posicionales en constructores con muchos parámetros opcionales.
-- Factory centraliza la lógica de creación según un criterio; Strategy encapsula algoritmos intercambiables sin lógica condicional en el consumidor.
-- El principio de responsabilidad única es el más fácil de violar gradualmente, acumulando razones de cambio no relacionadas en una misma clase.
-- Reconocer cuándo NO aplicar un patrón evita indirección innecesaria sin beneficio real.
-
-**Conceptos aprendidos**
-
-- Builder, Factory y Strategy.
-- Principios SOLID aplicados, especialmente responsabilidad única.
-- Criterios para reconocer sobre-ingeniería evitable.
-
-**Próximos pasos**
-
-En el Módulo 13, el proyecto integrador final, unirás POO, concurrencia, testing y build reproducible en una aplicación real.
-
-**Recursos adicionales**
-
-- "Design Patterns: Elements of Reusable Object-Oriented Software" (Gang of Four) como referencia clásica de patrones de diseño.

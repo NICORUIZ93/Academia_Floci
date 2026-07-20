@@ -1,30 +1,5 @@
 # Módulo 28: Bases de datos de grafos y búsqueda — Neptune y OpenSearch
 
-## Sílabo
-
-**Objetivo general**
-
-Ampliar tu criterio de selección de bases de datos más allá de relacional (RDS) y NoSQL clave-valor/documento (DynamoDB) con dos motores especializados: Neptune para datos altamente conectados donde las relaciones importan tanto como los datos mismos, y OpenSearch para búsqueda de texto completo y agregaciones sobre grandes volúmenes de documentos.
-
-**Objetivos específicos**
-
-1. Explicar qué tipo de problema resuelve mejor una base de datos de grafos que una relacional o de documentos.
-2. Crear un clúster Neptune respaldado por un servidor Gremlin real y ejecutar consultas de grafo básicas.
-3. Crear un dominio OpenSearch y explicar la diferencia entre modo simulado y modo real.
-4. Decidir correctamente cuándo usar Neptune, OpenSearch o DynamoDB para un mismo conjunto de datos, según el tipo de consulta.
-
-**Contenido**
-
-- Bases de datos de grafos: vértices, aristas y cuándo superan a lo relacional.
-- Neptune en Floci: contenedor Gremlin Server real y consultas de grafo.
-- OpenSearch: modo simulado vs modo real, dominios y versiones de motor.
-- Criterio de selección entre Neptune, OpenSearch y DynamoDB.
-
-**Evaluación**
-
-Dos laboratorios prácticos (un grafo de relaciones con Neptune, y un dominio OpenSearch en modo real) y tres ejercicios de evaluación.
-
----
 
 ## Aprende construyendo
 
@@ -78,21 +53,6 @@ En sistemas reales, es común usar los tres simultáneamente para distintas part
 
 ---
 
-## Criterio transversal de calidad del código
-
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
 
 ## Laboratorio práctico
 
@@ -130,29 +90,3 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 - **Confundir cuándo usar Neptune vs simplemente relaciones en DynamoDB.** Si tu "relación" es siempre de un solo salto y conocido de antemano (por ejemplo, "el autor de este artículo"), una clave foránea simple en DynamoDB es suficiente; reserva Neptune para cuando realmente necesites recorrer cadenas de relaciones de profundidad variable.
 
 ---
-
-
-
-## Bibliografía y fundamento académico
-
-Estas fuentes sustentan los conceptos y deben consultarse para verificar detalles que cambian entre versiones:
-
-- AWS, Microsoft Azure y Google Cloud, marcos oficiales de arquitectura bien diseñada.
-- NIST, *Cloud Computing Standards Roadmap* y *Secure Software Development Framework*.
-- Beyer et al., *Site Reliability Engineering*.
-- ACM/IEEE-CS/AAAI, *Computer Science Curricula 2023*.
-- IEEE Computer Society, *SWEBOK Guide V4.0*.
-
-## Resumen del módulo
-
-```json
-POST deliveries/_search
-{
-  "query": {"match": {"address": "Bogotá centro"}},
-  "sort": [{"createdAt": "desc"}]
-}
-```
-
-Compara búsqueda textual con consulta por identificador y explica por qué OpenSearch no sustituye automáticamente la base transaccional.
-
-En este módulo ampliaste tu criterio de selección de bases de datos con dos motores especializados: Neptune, respaldado por un servidor Gremlin real en Floci, para datos donde las relaciones entre entidades son el patrón de consulta dominante; y OpenSearch, con sus modos simulado y real, para búsqueda de texto completo y agregaciones. Más que memorizar comandos, el valor central de este módulo es reconocer que "¿cuál es la mejor base de datos?" es la pregunta equivocada — la pregunta correcta es "¿cuál es el patrón de acceso dominante de esta parte de mi sistema?", y que sistemas reales con frecuencia combinan varias bases de datos especializadas sobre la misma fuente de verdad.

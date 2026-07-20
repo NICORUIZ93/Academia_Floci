@@ -1,33 +1,5 @@
 # Módulo 12: Proyecto integrador: app Flutter completa
 
-## Sílabo
-
-**Objetivo general**
-
-Unir widgets, estado, networking y persistencia en una app real multiplataforma, organizando el proyecto por features con Clean Architecture (Domain, Data, Presentation), gestión de estado completa con Riverpod o Bloc, persistencia offline-first, tests de widgets clave, e internacionalización.
-
-**Objetivos específicos**
-
-1. Organizar el proyecto por features en vez de por tipo de archivo.
-2. Implementar gestión de estado completa con Riverpod o Bloc, sin `setState` disperso.
-3. Implementar persistencia offline-first sincronizada con una API real.
-4. Escribir widget tests de las pantallas más críticas.
-5. Generar los builds de release para Android e iOS.
-
-**Contenido**
-
-- Arquitectura por features.
-- Gestión de estado con Riverpod/Bloc.
-- Persistencia offline-first.
-- Tests de widgets clave.
-- Clean Architecture: capas Domain, Data y Presentation.
-- Internacionalización con `intl` y `flutter_localizations`.
-
-**Evaluación**
-
-App Flutter con datos reales, persistencia offline y tests, corriendo en Android e iOS, más tres ejercicios de evaluación.
-
----
 
 ## Aprende construyendo
 
@@ -150,21 +122,6 @@ Implementa persistencia SQLite, indicador pendiente/error y sincronización al a
 
 El capítulo se completa cuando la evidencia permite a otra persona reproducir el flujo y explicar qué garantías ofrece y cuáles todavía no.
 
-## Criterio transversal de calidad del código
-
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
 
 ## Laboratorio práctico
 
@@ -189,41 +146,3 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 - **Omitir tests de las pantallas más críticas confiando solo en pruebas manuales.** Los widget tests dan confianza repetible antes de cada release.
 
 ---
-
-
-
-## Bibliografía y fundamento académico
-
-Estas fuentes sustentan los conceptos y deben consultarse para verificar detalles que cambian entre versiones:
-
-- Google, *Flutter Documentation* y guías de arquitectura y rendimiento.
-- Google, *Dart Language Documentation* y *Effective Dart*.
-- OWASP Foundation, *Mobile Application Security Verification Standard*.
-- ACM/IEEE-CS/AAAI, *Computer Science Curricula 2023*.
-- IEEE Computer Society, *SWEBOK Guide V4.0*.
-
-## Resumen del módulo
-
-**Puntos clave**
-
-- Organizar por feature con Clean Architecture (Domain, Data, Presentation) agrupa código por propósito de negocio, manteniendo la lógica central aislada y testeable.
-- El proyecto integrador combina navegación, estado, networking, persistencia y testing en un único sistema coherente.
-- Flutter logra apariencia y rendimiento consistentes renderizando con su propio motor gráfico, en vez de envolver componentes nativos.
-- El costo de esa consistencia es aprender un ecosistema de widgets propio, distinto de la web y de cada plataforma nativa.
-
-**Conceptos aprendidos**
-
-- Arquitectura por features.
-- Gestión de estado con Riverpod/Bloc.
-- Persistencia offline-first.
-- Tests de widgets clave.
-- Clean Architecture.
-- Internacionalización con `intl` y `flutter_localizations`.
-
-**Próximos pasos**
-
-Con el track de Flutter completo, los mismos principios de arquitectura (estado predecible, offline-first, testing en capas) reaparecerán en cualquier framework de UI declarativa que explores en el futuro, ya sea nativo o multiplataforma.
-
-**Recursos adicionales**
-
-- Guía oficial de arquitectura de apps en Flutter (docs.flutter.dev/app-architecture).

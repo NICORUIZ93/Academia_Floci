@@ -1,30 +1,5 @@
 # Módulo 6: Persistencia compartida con SQLDelight
 
-## Sílabo
-
-**Objetivo general**
-
-Persistir datos localmente con SQL tipado y verificado en tiempo de compilación usando SQLDelight, incluyendo drivers específicos por plataforma y migraciones de esquema.
-
-**Objetivos específicos**
-
-1. Definir un esquema `.sq` con una tabla y queries básicas.
-2. Generar y usar el código Kotlin tipado a partir del esquema.
-3. Configurar drivers de SQLDelight específicos por plataforma con `expect`/`actual`.
-4. Agregar una migración de esquema sin perder datos existentes.
-
-**Contenido**
-
-- Esquemas SQLDelight y generación de código.
-- Queries tipadas.
-- Migraciones de base de datos.
-- Drivers por plataforma.
-
-**Evaluación**
-
-Capa de persistencia compartida con al menos una migración de esquema, más tres ejercicios de evaluación.
-
----
 
 ## Aprende construyendo
 
@@ -126,21 +101,6 @@ ALTER TABLE Tarea ADD COLUMN prioridad INTEGER NOT NULL DEFAULT 0;
 
 ---
 
-## Criterio transversal de calidad del código
-
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
 
 ## Laboratorio práctico
 
@@ -164,37 +124,3 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 - **Modificar el esquema directamente sin una migración versionada.** Usa archivos `.sqm` para cambios incrementales sin perder datos existentes.
 
 ---
-
-
-
-## Bibliografía y fundamento académico
-
-Estas fuentes sustentan los conceptos y deben consultarse para verificar detalles que cambian entre versiones:
-
-- JetBrains, documentación oficial de *Kotlin Multiplatform* y Kotlin Coroutines.
-- Google, *Android Developers Documentation*; Apple, *Developer Documentation*.
-- Kotlin Foundation, especificación y pautas de compatibilidad de Kotlin.
-- ACM/IEEE-CS/AAAI, *Computer Science Curricula 2023*.
-- IEEE Computer Society, *SWEBOK Guide V4.0*.
-
-## Resumen del módulo
-
-**Puntos clave**
-
-- SQLDelight genera código Kotlin tipado a partir de esquemas SQL reales, verificados en tiempo de compilación.
-- Las queries son compartidas en `commonMain`, pero el driver que las ejecuta es específico por plataforma vía `expect`/`actual`.
-- Las migraciones versionadas evolucionan el esquema local sin perder datos existentes en dispositivos ya instalados.
-
-**Conceptos aprendidos**
-
-- Esquemas SQLDelight y queries tipadas.
-- Drivers por plataforma.
-- Migraciones de base de datos.
-
-**Próximos pasos**
-
-En el Módulo 7 aprenderás Compose Multiplatform: UI compartida entre Android, iOS y desktop.
-
-**Recursos adicionales**
-
-- Documentación oficial de SQLDelight (cashapp.github.io/sqldelight).

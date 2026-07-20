@@ -2,12 +2,6 @@
 
 Compartir código no comparte automáticamente garantías. Flutter entrega una interfaz común sobre sistemas con permisos, almacenamiento y ciclos de vida diferentes. Este módulo endurece el proyecto integrador: examina fronteras nativas, elimina bloqueos del isolate de UI, modela sincronización y prepara releases que puedan observarse y contenerse.
 
-## Sílabo
-
-1. Fronteras nativas, plugins, enlaces y permisos.
-2. Secretos, almacenamiento y privacidad por plataforma.
-3. Isolates, frame budget, memoria y rendimiento medible.
-4. Sincronización, observabilidad y releases seguros.
 
 ## Aprende construyendo
 
@@ -155,21 +149,6 @@ La documentación estable revisada refleja **Flutter 3.44** y **Dart 3.11**. Dar
 
 **Aplicación al proyecto:** ejecuta `flutter analyze`, pruebas y builds antes/después, migra un caso legible a dot shorthand, revisa breaking changes desde la versión origen y conserva rollback del lockfile y artefactos firmados.
 
-## Criterio transversal de calidad del código
-
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
 
 ## Laboratorio práctico
 
@@ -183,16 +162,7 @@ Entrega código, tests, captura de DevTools, tabla antes/después, threat model 
 
 
 
-## Bibliografía y fundamento académico
 
-- Flutter Documentation, *Performance best practices*, *Concurrency and isolates* y *Security*.
-- Dart Documentation, *Concurrency in Dart* y *Effective Dart*.
-- Android Developers, *App security best practices*; Apple Developer, *Security and Privacy*.
-- OWASP, *Mobile Application Security Verification Standard*.
-- Kleppmann, M., *Designing Data-Intensive Applications*.
-- Beyer et al., *Site Reliability Engineering*.
-
-<!-- OFFICIAL-TOPIC-ATLAS:START -->
 ## Atlas completo de temas oficiales
 
 Derivado de la [documentación oficial](https://docs.flutter.dev/), sus referencias, migraciones y guías de operación. Inventariar no equivale a dominar: cada selección se demuestra con código, prueba, medición y explicación. **Cobertura: 53 temas.**
@@ -210,7 +180,3 @@ Derivado de la [documentación oficial](https://docs.flutter.dev/), sus referenc
 
 Para cada tema responde qué problema resuelve, cuál es su modelo mental, cómo falla, cómo se verifica y cuándo no conviene. Elige uno por área e intégralos en una vertical RutaFlow. Entrega diagrama, ADR, pruebas de éxito y fallo, una medición, una amenaza y el enlace oficial con versión y fecha. Una API preview se aísla en laboratorio y nunca se presenta como base estable.
 <!-- OFFICIAL-TOPIC-ATLAS:END -->
-
-## Resumen del módulo
-
-Flutter reduce duplicación de interfaz, no elimina fronteras nativas. Una entrega experta audita plugins y permisos, protege todas las copias, mantiene el isolate de UI libre, sincroniza mediante contratos idempotentes y publica con telemetría, migraciones y contención verificables.

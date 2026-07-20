@@ -1,33 +1,5 @@
 # Módulo 5: Serverless con Lambda
 
-## Sílabo
-
-**Objetivo general**
-
-Entender el modelo de computación serverless, escribir y desplegar tu primera función Lambda, invocarla, actualizarla, y comprender cómo se integra con los servicios que ya conoces (S3, DynamoDB, API Gateway).
-
-**Objetivos específicos**
-
-1. Explicar qué significa "serverless" y qué ventajas y desventajas tiene frente a servidores tradicionales.
-2. Describir la estructura mínima de una función Lambda y su contrato de entrada/salida.
-3. Desplegar, invocar y actualizar una función Lambda usando la AWS CLI.
-4. Explicar el propósito del versionado y los alias en Lambda.
-5. Describir cómo Lambda se integra con S3, DynamoDB Streams y API Gateway.
-
-**Contenido**
-
-- Qué es serverless: ventajas y desventajas.
-- Estructura de una función Lambda.
-- Runtimes: Node.js, Python, Java, Go.
-- Payload de entrada y respuesta.
-- Versionado y alias.
-- Integración con S3, DynamoDB Streams y API Gateway.
-
-**Evaluación**
-
-Dos laboratorios (desplegar/invocar una función, y actualizar su código y configuración) y tres ejercicios de evaluación sobre el contrato de una función, statelessness, y triggers.
-
----
 
 ## Aprende construyendo
 
@@ -215,21 +187,6 @@ Trigger S3 (asíncrono)          DynamoDB Streams (asíncrono)     API Gateway (
 
 ---
 
-## Criterio transversal de calidad del código
-
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
 
 ## Laboratorio práctico
 
@@ -271,46 +228,3 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 - **Los cambios de código no parecen reflejarse tras `update-function-code`.** Confirma que realmente volviste a comprimir el archivo `.zip` después de editar `index.js` (es fácil olvidar este paso y volver a subir el zip antiguo sin darte cuenta).
 
 ---
-
-
-
-## Bibliografía y fundamento académico
-
-Estas fuentes sustentan los conceptos y deben consultarse para verificar detalles que cambian entre versiones:
-
-- AWS, Microsoft Azure y Google Cloud, marcos oficiales de arquitectura bien diseñada.
-- NIST, *Cloud Computing Standards Roadmap* y *Secure Software Development Framework*.
-- Beyer et al., *Site Reliability Engineering*.
-- ACM/IEEE-CS/AAAI, *Computer Science Curricula 2023*.
-- IEEE Computer Society, *SWEBOK Guide V4.0*.
-
-## Resumen del módulo
-
-**Puntos clave**
-
-- Serverless elimina la gestión manual de servidores, cobrando por invocación y tiempo de ejecución real en vez de por capacidad reservada, a costa del cold start y un tiempo máximo de ejecución.
-- Toda función Lambda tiene un handler que recibe `event` (datos de negocio) y `context` (metadatos de la ejecución), y debe diseñarse sin estado entre invocaciones.
-- El runtime elegido (Node.js, Python, Java, Go, entre otros) afecta el empaquetado de dependencias y el tiempo de cold start.
-- La respuesta de una Lambda conectada a API Gateway debe seguir el formato `statusCode`/`headers`/`body`.
-- Las versiones son instantáneas inmutables del código; los alias son punteros móviles a versiones, y juntos habilitan despliegues graduales y reversibles.
-- Lambda se integra de forma asíncrona con triggers de S3 y DynamoDB Streams, y de forma síncrona con API Gateway.
-
-**Conceptos aprendidos**
-
-- Qué es serverless y sus ventajas/desventajas frente a servidores tradicionales.
-- Estructura de una función Lambda: handler, event, context, y el requisito de statelessness.
-- Runtimes disponibles y sus implicaciones prácticas.
-- El contrato de payload de entrada y salida, incluyendo el formato exigido por API Gateway.
-- Versionado y alias como mecanismo de despliegue seguro.
-- Integración de Lambda con S3, DynamoDB Streams y API Gateway, síncrona vs asíncrona.
-
-**Próximos pasos**
-
-En el Módulo 6 vas a exponer esta misma función Lambda como un endpoint HTTP real usando API Gateway, aplicando exactamente el formato de respuesta que viste en el Tema 4.
-
-**Recursos adicionales**
-
-- Documentación oficial de AWS Lambda: modelo de programación y ciclo de vida del entorno de ejecución.
-- Documentación oficial sobre versiones y alias de Lambda.
-- Documentación oficial sobre triggers de S3 y DynamoDB Streams para Lambda.
-- Código ejecutable de cada operación (crear función, invocar, actualizar código, eliminar) en Node.js, Python, Java, Go y Rust: carpeta [`examples/`](https://github.com/NICORUIZ93/Academia_Floci/tree/main/examples) del repositorio, archivos que empiezan por `lambda-`/`lambda_`/`Lambda` (ver [`examples/README.md`](https://github.com/NICORUIZ93/Academia_Floci/blob/main/examples/README.md) para la lista completa).

@@ -46,7 +46,7 @@ test('búsqueda: encuentra un tema real y navega a su fragmento', async ({ page 
 });
 
 test('aprendizaje: presenta el proyecto integrador sin evaluación generada', async ({ page }) => {
-  await page.goto('/curso/angular/0');
+  await page.goto('/curso/angular/15');
   await expect(page.locator('.module-practice')).toHaveCount(0);
   await expect(page.locator('.module-quiz')).toHaveCount(0);
   await expect(page.locator('body')).not.toContainText('XP');

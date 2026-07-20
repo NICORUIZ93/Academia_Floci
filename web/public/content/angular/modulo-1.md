@@ -1,36 +1,5 @@
 # Módulo 1: Componentes, plantillas y data binding
 
-## Sílabo
-
-**Objetivo general**
-
-Dominar el componente como unidad básica de Angular: inputs y outputs basados en signals, la sintaxis de control de flujo nativa, content projection, y el ciclo de vida completo de un componente.
-
-**Objetivos específicos**
-
-1. Definir inputs y outputs con `input()`/`output()` basados en signals.
-2. Reemplazar `*ngIf`/`*ngFor` por la sintaxis nativa `@if`/`@for`/`@switch`, usando `track` correctamente.
-3. Implementar content projection con `<ng-content>`.
-4. Explicar el ciclo de vida completo de un componente y cuándo se invoca cada hook.
-5. Usar pipes integrados y crear un pipe personalizado.
-6. Consultar elementos con `viewChild()` y medir el DOM en una fase de render segura.
-
-**Contenido**
-
-- `@Input`/`@Output` e `input()`/`output()` basados en signals.
-- Control de flujo nativo (`@if`/`@for`/`@switch`).
-- Content projection (`ng-content`).
-- Ciclo de vida de un componente.
-- Hooks completos: `ngOnChanges`, `ngDoCheck`, `ngAfterContentInit/Checked`, `ngAfterViewInit/Checked`.
-- Pipes integrados (Date, Currency, Async, Json) y pipes personalizados con `@Pipe`.
-- `ngClass`, `ngStyle` y directivas personalizadas.
-- Consultas signal (`viewChild`/`contentChild`) y callbacks `afterNextRender`.
-
-**Evaluación**
-
-Un componente reutilizable con consultas signal y medición posterior al render, más cuatro ejercicios de evaluación.
-
----
 
 ## Aprende construyendo
 
@@ -229,21 +198,6 @@ sequenceDiagram
 
 ---
 
-## Criterio transversal de calidad del código
-
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
 
 ## Laboratorio práctico
 
@@ -272,42 +226,3 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 - **Depender de una medición del DOM para el HTML SSR.** Define un estado inicial correcto porque esos callbacks solo existen en el navegador.
 
 ---
-
-
-
-## Bibliografía y fundamento académico
-
-Estas fuentes sustentan los conceptos y deben consultarse para verificar detalles que cambian entre versiones:
-
-- Google, *Angular Documentation* y guías oficiales de accesibilidad, seguridad y rendimiento.
-- ReactiveX, *RxJS Documentation*.
-- W3C, *Web Content Accessibility Guidelines (WCAG)*.
-- ACM/IEEE-CS/AAAI, *Computer Science Curricula 2023*.
-- IEEE Computer Society, *SWEBOK Guide V4.0*.
-
-## Resumen del módulo
-
-**Puntos clave**
-
-- `input()`/`output()` basados en signals integran nativamente los inputs y outputs con el grafo de reactividad de Angular.
-- La sintaxis de control de flujo nativa (`@if`/`@for`/`@switch`) es más legible y permite mejores optimizaciones que las directivas estructurales clásicas.
-- `track` en `@for` es esencial para el rendimiento de listas que cambian, evitando recreaciones innecesarias del DOM.
-- Content projection (`ng-content`) permite construir componentes de layout genéricos cuyo contenido lo determina quien los consume.
-- El ciclo de vida completo de un componente tiene hooks específicos para cada momento; `ngOnDestroy` es indispensable para prevenir fugas de memoria.
-- Las consultas signal y callbacks de render permiten integrar el DOM sin convertirlo en fuente de verdad del negocio.
-
-**Conceptos aprendidos**
-
-- Inputs y outputs basados en signals.
-- Control de flujo nativo y la importancia de `track`.
-- Content projection con `ng-content`.
-- El ciclo de vida completo de un componente y el propósito de cada hook.
-- `viewChild`, `contentChild`, `afterNextRender` y fases de render.
-
-**Próximos pasos**
-
-En el Módulo 2 profundizarás en signals como el nuevo modelo de reactividad de Angular: `signal()`, `computed()`, `effect()`, y el camino hacia una detección de cambios completamente zoneless.
-
-**Recursos adicionales**
-
-- Documentación oficial de Angular: "Inputs", "Outputs", "Control flow", "Lifecycle hooks".

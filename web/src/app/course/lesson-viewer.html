@@ -8,7 +8,6 @@
         <p class="lesson-description">{{ m.description }}</p>
         <div class="lesson-meta">
           <span><lucide-icon [img]="icons.Clock3" /> {{ m.duration }}</span>
-          <span><lucide-icon [img]="icons.ListTree" /> {{ tocItems().length || '—' }} secciones</span>
           <span class="level">{{ m.level }}</span>
         </div>
       </header>
@@ -68,7 +67,7 @@
         </div>
       </section>
 
-      <details class="track-project" *ngIf="trackProject() as project">
+      <details class="track-project" *ngIf="showTrackProject() && trackProject() as project">
         <summary><lucide-icon [img]="icons.Trophy" /><span><small>Proyecto integrador del track</small><strong>{{ project.title }}</strong></span></summary>
         <div class="track-project-body">
           <p><strong>Problema:</strong> {{ project.problem }}</p>

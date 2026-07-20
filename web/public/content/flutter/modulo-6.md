@@ -1,31 +1,5 @@
 # Módulo 6: Persistencia local
 
-## Sílabo
-
-**Objetivo general**
-
-Guardar datos localmente según la necesidad específica: `shared_preferences` para configuración simple, `sqflite` para datos relacionales, o Hive como base NoSQL ligera embebida, implementando una estrategia offline-first y entendiendo cuándo Firebase entra en juego como backend completo.
-
-**Objetivos específicos**
-
-1. Guardar una preferencia simple con `shared_preferences`.
-2. Definir una tabla con `sqflite` y realizar operaciones CRUD.
-3. Repetir el mismo modelo con Hive y comparar la ergonomía.
-4. Implementar una estrategia offline-first simple.
-
-**Contenido**
-
-- `shared_preferences` para configuración simple.
-- `sqflite` para datos relacionales.
-- Hive como base NoSQL ligera embebida.
-- Estrategia offline-first.
-- Firebase: Authentication, Firestore, Cloud Functions y FCM.
-
-**Evaluación**
-
-App con caché local que funciona sin conexión a internet, más tres ejercicios de evaluación.
-
----
 
 ## Aprende construyendo
 
@@ -126,21 +100,6 @@ UI ← siempre lee de → Hive/sqflite (caché local reactiva)
 
 ---
 
-## Criterio transversal de calidad del código
-
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
 
 ## Laboratorio práctico
 
@@ -164,40 +123,3 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 - **Hacer que la UI dependa directamente de la API en vez de la caché local.** Rompe offline-first; la UI debe leer siempre del caché.
 
 ---
-
-
-
-## Bibliografía y fundamento académico
-
-Estas fuentes sustentan los conceptos y deben consultarse para verificar detalles que cambian entre versiones:
-
-- Google, *Flutter Documentation* y guías de arquitectura y rendimiento.
-- Google, *Dart Language Documentation* y *Effective Dart*.
-- OWASP Foundation, *Mobile Application Security Verification Standard*.
-- ACM/IEEE-CS/AAAI, *Computer Science Curricula 2023*.
-- IEEE Computer Society, *SWEBOK Guide V4.0*.
-
-## Resumen del módulo
-
-**Puntos clave**
-
-- `shared_preferences` es apropiado solo para configuración pequeña, no para listas grandes de objetos estructurados.
-- `sqflite` ofrece SQL relacional real; Hive es más simple para objetos directos sin relaciones complejas.
-- Offline-first mantiene la UI leyendo siempre de la caché local, sincronizada en background con la API.
-- Firebase ofrece un backend completo con integración de primera clase en Flutter, reduciendo el esfuerzo de construir infraestructura propia.
-
-**Conceptos aprendidos**
-
-- `shared_preferences`.
-- `sqflite`.
-- Hive.
-- Estrategia offline-first.
-- Firebase.
-
-**Próximos pasos**
-
-En el Módulo 7 aprenderás integración con plataformas nativas usando `MethodChannel` cuando un plugin existente no cubre tu necesidad.
-
-**Recursos adicionales**
-
-- Documentación oficial de persistencia de datos en Flutter (docs.flutter.dev/cookbook/persistence).

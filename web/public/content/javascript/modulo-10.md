@@ -1,35 +1,5 @@
 # Módulo 10: Patrones avanzados y rendimiento
 
-## Sílabo
-
-**Objetivo general**
-
-Diagnosticar y resolver problemas reales de rendimiento en JavaScript basándose en evidencia medible (profiling), en vez de optimizar a ciegas, dominando debounce/throttle, memoización, Web Workers y las métricas Core Web Vitals.
-
-**Objetivos específicos**
-
-1. Implementar `throttle` y diferenciarlo claramente de `debounce`.
-2. Implementar memoización genérica y explicar cuándo es contraproducente.
-3. Mover trabajo pesado a un Web Worker sin bloquear la UI principal.
-4. Usar la pestaña Performance de las DevTools para identificar cuellos de botella reales.
-5. Explicar las métricas Core Web Vitals (LCP, CLS, INP) y su relevancia.
-6. Explicar los conceptos básicos de seguridad web: XSS, CSRF, CSP y CORS.
-
-**Contenido**
-
-- Debounce y throttle.
-- Memoización.
-- Web Workers para trabajo pesado.
-- Profiling con DevTools Performance tab.
-- Core Web Vitals: LCP, CLS, INP.
-- `preload`, `prefetch`, `preconnect` y carga async/defer de scripts.
-- Seguridad básica: XSS, CSRF, CSP y CORS.
-
-**Evaluación**
-
-Una optimización medible (antes/después con métricas reales) de una función costosa, más tres ejercicios de evaluación.
-
----
 
 ## Aprende construyendo
 
@@ -170,21 +140,6 @@ INP (Interaction to Next Paint): ¿qué tan rápido responde la interfaz a cada 
 
 ---
 
-## Criterio transversal de calidad del código
-
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
 
 ## Laboratorio práctico
 
@@ -210,44 +165,3 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 - **Intentar acceder al DOM desde dentro de un Web Worker.** Los Workers no tienen acceso al DOM; realiza cualquier actualización visual en el hilo principal tras recibir el resultado mediante `postMessage`.
 
 ---
-
-
-
-## Bibliografía y fundamento académico
-
-Estas fuentes sustentan los conceptos y deben consultarse para verificar detalles que cambian entre versiones:
-
-- ECMA International, *ECMAScript Language Specification*.
-- MDN Web Docs, guías de JavaScript y Web APIs.
-- WHATWG, *HTML Living Standard* y *Fetch Standard*.
-- ACM/IEEE-CS/AAAI, *Computer Science Curricula 2023*.
-- IEEE Computer Society, *SWEBOK Guide V4.0*.
-
-
-## Resumen del módulo
-
-**Puntos clave**
-
-- `debounce` espera una pausa en la actividad; `throttle` limita a una ejecución máxima por intervalo periódico.
-- La memoización solo es válida para funciones puras, y solo beneficiosa cuando los mismos argumentos se repiten con suficiente frecuencia.
-- Los Web Workers ejecutan cómputo pesado en un hilo separado, sin acceso al DOM, comunicándose mediante `postMessage`.
-- El profiling con DevTools convierte la optimización en un proceso basado en evidencia medible, no en intuición o convención.
-- Core Web Vitals (LCP, CLS, INP) cuantifican la experiencia de carga e interactividad percibida por usuarios reales.
-
-**Conceptos aprendidos**
-
-- Implementación y elección correcta entre `debounce` y `throttle`.
-- Memoización genérica y sus condiciones de aplicabilidad.
-- Uso de Web Workers para cómputo pesado sin bloquear la UI.
-- Flujo de trabajo de profiling basado en evidencia.
-- Las métricas Core Web Vitals y su relevancia práctica y de negocio.
-
-**Próximos pasos**
-
-En el Módulo 11 aprenderás TypeScript esencial, el puente hacia Angular, React con tipos y Node tipado, cubriendo lo justo para ser productivo desde el primer día.
-
-**Recursos adicionales**
-
-- web.dev (Google): documentación oficial de Core Web Vitals.
-- MDN Web Docs: "Web Workers API".
-- Chrome DevTools documentation: "Performance panel".

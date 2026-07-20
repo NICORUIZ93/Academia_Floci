@@ -1,33 +1,5 @@
 # Módulo 2: Hooks esenciales
 
-## Sílabo
-
-**Objetivo general**
-
-Dominar los hooks fundamentales de React más allá de `useState`: `useEffect` con su ciclo de dependencias y limpieza, `useRef` para valores mutables sin re-render, `useMemo`/`useCallback` con criterio real, las reglas de los hooks, `useReducer` y `useImperativeHandle`.
-
-**Objetivos específicos**
-
-1. Configurar correctamente el array de dependencias de `useEffect`, incluyendo su función de limpieza.
-2. Usar `useRef` para valores mutables que no deben disparar un re-render.
-3. Determinar cuándo `useMemo`/`useCallback` realmente mejoran el rendimiento.
-4. Explicar y respetar las reglas de los hooks.
-5. Modelar estado complejo con `useReducer`.
-
-**Contenido**
-
-- `useEffect`: dependencias y limpieza.
-- `useRef` para valores mutables sin re-render.
-- `useMemo` y `useCallback`: cuándo realmente ayudan.
-- Reglas de los hooks.
-- `useReducer`: reducers, dispatch y action types.
-- `useImperativeHandle` y `forwardRef`.
-
-**Evaluación**
-
-Componente con un efecto de suscripción externa correctamente limpiado al desmontar, más tres ejercicios de evaluación.
-
----
 
 ## Aprende construyendo
 
@@ -119,21 +91,6 @@ useImperativeHandle: expone SOLO la API imperativa explícitamente decidida, no 
 
 ---
 
-## Criterio transversal de calidad del código
-
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
 
 ## Laboratorio práctico
 
@@ -158,39 +115,3 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 - **Usar `useMemo`/`useCallback` en todo sin medir.** Verifica primero con el Profiler (Módulo 9) que el problema de rendimiento existe realmente.
 
 ---
-
-
-
-## Bibliografía y fundamento académico
-
-Estas fuentes sustentan los conceptos y deben consultarse para verificar detalles que cambian entre versiones:
-
-- Meta Open Source, *React Documentation*.
-- WHATWG, estándares de DOM, HTML y Fetch.
-- W3C, *Web Content Accessibility Guidelines (WCAG)*.
-- ACM/IEEE-CS/AAAI, *Computer Science Curricula 2023*.
-- IEEE Computer Society, *SWEBOK Guide V4.0*.
-
-## Resumen del módulo
-
-**Puntos clave**
-
-- El array de dependencias de `useEffect` controla exactamente cuándo se re-ejecuta; su función de limpieza evita fugas de recursos externos.
-- `useRef` persiste valores mutables entre renders sin disparar un nuevo render.
-- `useMemo`/`useCallback` solo valen la pena con un cálculo genuinamente costoso o para prevenir re-renders de hijos memoizados.
-- Las reglas de los hooks exigen orden consistente; `useReducer` modela transiciones de estado complejas; `useImperativeHandle` preserva la encapsulación al exponer una API imperativa.
-
-**Conceptos aprendidos**
-
-- `useEffect`, dependencias y limpieza.
-- `useRef` para valores mutables sin re-render.
-- `useMemo` y `useCallback` con criterio.
-- Reglas de los hooks, `useReducer` y `useImperativeHandle`.
-
-**Próximos pasos**
-
-En el Módulo 3 aprenderás formularios y eventos: componentes controlados avanzados, React Hook Form, validación con zod, y formularios multi-paso.
-
-**Recursos adicionales**
-
-- Documentación oficial de React (react.dev): "Synchronizing with Effects", "Referencing Values with Refs" y "Rules of Hooks".

@@ -1,31 +1,5 @@
 # Módulo 11: Publicación en Google Play
 
-## Sílabo
-
-**Objetivo general**
-
-Llevar la app del emulador a usuarios reales: firmarla correctamente, generar un App Bundle, subirla a un track de pruebas en Play Console, y entender el versionado semántico y las políticas relevantes de la plataforma.
-
-**Objetivos específicos**
-
-1. Generar una keystore y configurar la firma de release.
-2. Generar un Android App Bundle (`.aab`) firmado.
-3. Subir el `.aab` a un track de pruebas internas en Play Console.
-4. Definir `versionCode` y `versionName` con versionado semántico.
-5. Revisar políticas relevantes de Google Play para la app.
-
-**Contenido**
-
-- Firma de la app y App Bundles.
-- Play Console: tracks de release.
-- Versionado semántico de la app.
-- Políticas de Google Play.
-
-**Evaluación**
-
-App Bundle firmado, listo para subir a un track de pruebas internas en Play Console, más tres ejercicios de evaluación.
-
----
 
 ## Aprende construyendo
 
@@ -140,21 +114,6 @@ versionName: "1.2.0" → "1.3.0" ... (string semver, visible al usuario)
 
 ---
 
-## Criterio transversal de calidad del código
-
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
 
 ## Laboratorio práctico
 
@@ -179,39 +138,3 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 - **Ignorar la sección de Data Safety antes de publicar.** Puede causar rechazo o suspensión de la app en revisión.
 
 ---
-
-
-
-## Bibliografía y fundamento académico
-
-Estas fuentes sustentan los conceptos y deben consultarse para verificar detalles que cambian entre versiones:
-
-- Google, *Android Developers Documentation* y guías de arquitectura de aplicaciones.
-- JetBrains, *Kotlin Language Documentation*.
-- OWASP Foundation, *Mobile Application Security Verification Standard*.
-- ACM/IEEE-CS/AAAI, *Computer Science Curricula 2023*.
-- IEEE Computer Society, *SWEBOK Guide V4.0*.
-
-## Resumen del módulo
-
-**Puntos clave**
-
-- La firma de la app establece su identidad criptográfica; perder la keystore original es en gran medida irreversible.
-- Un App Bundle permite a Play generar APKs optimizados por dispositivo, reduciendo el tamaño de descarga real.
-- `versionCode` (incremental, uso interno) y `versionName` (semver, visible al usuario) cumplen roles distintos y complementarios.
-- Los tracks de Play Console permiten validación progresiva antes del lanzamiento completo; las políticas de Play pueden causar rechazo o suspensión.
-
-**Conceptos aprendidos**
-
-- Firma de la app y App Bundles.
-- Play Console: tracks de release.
-- Versionado semántico de la app.
-- Políticas de Google Play.
-
-**Próximos pasos**
-
-En el Módulo 12, el proyecto integrador final, unirás Compose, Room, Retrofit, Hilt y testing en una app Android real y completa.
-
-**Recursos adicionales**
-
-- Documentación oficial de Play Console (support.google.com/googleplay/android-developer).

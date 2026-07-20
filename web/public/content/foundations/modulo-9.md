@@ -2,13 +2,6 @@
 
 Las matemáticas de este módulo no son una colección de fórmulas para memorizar. Son un lenguaje para decir exactamente qué debe ocurrir, detectar contradicciones, justificar algoritmos y distinguir una mejora real de una coincidencia. Trabajarás sobre el inventario acumulativo y convertirás afirmaciones vagas en propiedades verificables.
 
-## Sílabo
-
-1. Lógica proposicional, predicados, cuantificadores e invariantes.
-2. Conjuntos, funciones, relaciones, inducción y corrección.
-3. Combinatoria, grafos, árboles y dependencias.
-4. Probabilidad, estadística descriptiva, muestreo e inferencia responsable.
-5. Proyecto 9: cuaderno reproducible de razonamiento y evidencia.
 
 ## Aprende construyendo
 
@@ -177,21 +170,6 @@ población -> diseño de muestreo -> muestra -> estadístico
 sesgo de selección no se corrige aumentando n
 ```
 
-## Criterio transversal de calidad del código
-
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
 
 ## Laboratorio práctico
 
@@ -218,24 +196,3 @@ Crea `analysis/fundamentos-matematicos.ipynb` o un documento ejecutable equivale
 - Comparar promedios aislados: muestra distribución, percentiles y tamaño muestral.
 - Concluir causalidad por correlación: identifica variables de confusión y diseña control o experimento.
 - Ejecutar celdas fuera de orden: reinicia y ejecuta todo automáticamente antes de entregar.
-
-
-
-## Bibliografía y fundamento académico
-
-- Rosen, *Discrete Mathematics and Its Applications*: lógica, relaciones, conteo, inducción y grafos.
-- Lehman, Leighton y Meyer, *Mathematics for Computer Science* (MIT): pruebas y estructuras discretas.
-- Downey, *Think Stats*: probabilidad y estadística computacional reproducible.
-- ACM/IEEE-CS CS2023: Mathematical and Statistical Foundations, Algorithmic Foundations y Society, Ethics and the Profession.
-- SWEBOK v4: fundamentos matemáticos, testing, calidad, medición y métodos de ingeniería.
-
-Los resultados observables son formalizar una regla, generar un contraejemplo, justificar una propiedad, detectar un ciclo y diseñar un experimento reproducible que comunique incertidumbre y límites.
-
-## Resumen del módulo
-
-- La lógica convierte reglas ambiguas en condiciones y propiedades evaluables.
-- Conjuntos, funciones y relaciones modelan permisos, datos y dependencias.
-- La inducción justifica propiedades de estructuras y algoritmos construidos por pasos.
-- Grafos hacen visibles caminos, ciclos y órdenes de ejecución.
-- Probabilidad y estadística permiten decidir con incertidumbre, siempre que el muestreo y el experimento sean honestos.
-- El software experto no solo funciona: declara qué garantiza y presenta evidencia reproducible de sus límites.

@@ -1,38 +1,5 @@
 # Módulo 0: Sintaxis, tipos y el modelo de la JVM
 
-## Sílabo
-
-**Objetivo general**
-
-Entender que Java compila a bytecode y se ejecuta sobre una máquina virtual, dominar los tipos primitivos frente a las referencias, y comprender qué significa cada palabra de `public static void main`.
-
-**Objetivos específicos**
-
-1. Compilar y ejecutar un programa Java, observando el `.class` generado.
-2. Declarar variables de los 8 tipos primitivos y de tipo referencia.
-3. Leer entrada del usuario con `Scanner` y validar tipos.
-4. Diferenciar JDK, JRE y JVM.
-5. Inspeccionar el bytecode generado con `javap`.
-6. Convertir datos sin perder información de forma accidental.
-7. Razonar sobre precedencia, cortocircuito y control de flujo.
-8. Explicar la diferencia entre copiar un valor y copiar una referencia.
-
-**Contenido**
-
-- Del código fuente a la JVM: compilación y ejecución.
-- `public static void main`: qué significa cada palabra.
-- JDK vs JRE vs JVM.
-- Tipos primitivos vs referencias.
-- Variables, conversiones, `String` e inmutabilidad.
-- Operadores, precedencia y control de flujo.
-- Arreglos, wrappers y paso de argumentos por valor.
-- Entrada, fechas, entorno y aleatoriedad con APIs estándar modernas.
-
-**Evaluación**
-
-Programa de consola que procesa entrada del usuario con validación de tipos, más tres ejercicios de evaluación.
-
----
 
 ## Antes de comenzar: instala Java correctamente
 
@@ -283,21 +250,6 @@ No crees un proyecto desechable por módulo. Conserva un único repositorio que 
 
 Al iniciar cada laboratorio crea una rama `modulo-N`, implementa el incremento, verifica el criterio de éxito y fusiona solo con pruebas verdes. Si un módulo necesita un experimento aislado, colócalo en `experiments/modulo-N/`; el producto acumulativo permanece ejecutable. Al terminar, otra persona debe poder clonar el repositorio y reproducir el último hito siguiendo únicamente el README.
 
-## Criterio transversal de calidad del código
-
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
 
 ## Laboratorio práctico
 
@@ -329,47 +281,3 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 - **Usar `double` para una tarifa monetaria.** Usa `BigDecimal` desde una representación decimal textual y define la política de redondeo.
 
 ---
-
-
-
-## Bibliografía y fundamento académico
-
-Estas fuentes sustentan los conceptos y deben consultarse para verificar detalles que cambian entre versiones:
-
-- Oracle, *Java Language Specification* y *Java Virtual Machine Specification*.
-- OpenJDK, documentación de Java SE, JFR y JMH.
-- Bloch, J., *Effective Java*.
-- ACM/IEEE-CS/AAAI, *Computer Science Curricula 2023*.
-- IEEE Computer Society, *SWEBOK Guide V4.0*.
-
-## Resumen del módulo
-
-**Puntos clave**
-
-- Java compila a bytecode, ejecutado por la JVM, lo que permite portabilidad entre plataformas sin recompilar.
-- Cada palabra de `public static void main(String[] args)` cumple un propósito necesario para que la JVM lo reconozca como punto de entrada.
-- El JDK incluye herramientas de desarrollo (como `javac`) que el JRE, y este a su vez la JVM, no incluyen por sí solos.
-- Los tipos primitivos almacenan su valor directamente; los tipos referencia apuntan a objetos en el heap.
-- `String` es inmutable y su contenido se compara con `equals`; una conversión reductora puede perder información.
-- El cortocircuito, la exhaustividad de `switch` y los límites de un arreglo convierten errores frecuentes en decisiones verificables.
-- Java siempre pasa argumentos por valor, incluso cuando el valor copiado es una referencia.
-- `java.time` es el punto de partida moderno para fechas; la aleatoriedad y la configuración se eligen según su propósito.
-
-**Conceptos aprendidos**
-
-- Compilación a bytecode y ejecución en la JVM.
-- Significado de cada parte de `main`.
-- Diferencias entre JDK, JRE y JVM.
-- Tipos primitivos frente a referencias y wrappers.
-- Variables, conversiones, cadenas y precisión decimal.
-- Operadores, control de flujo, arreglos y paso de argumentos.
-- Entrada validada y APIs estándar de fecha, entorno y aleatoriedad.
-
-**Próximos pasos**
-
-En el Módulo 1 aprenderás programación orientada a objetos: clases, herencia, interfaces, polimorfismo y modificadores de acceso.
-
-**Recursos adicionales**
-
-- Documentación oficial de Java (docs.oracle.com/en/java) y la especificación de la JVM.
-- Ejemplos de código ejecutables de este track, en Java: carpeta [`examples/tracks/java/`](https://github.com/NICORUIZ93/Academia_Floci/tree/main/examples/tracks/java) del repositorio — `OopBasics.java` (Módulo 1), `CollectionsGenerics.java` (Módulo 2), `StreamsFunctional.java` (Módulo 4), `VirtualThreads.java` (Módulo 5), `RecordsPatternMatching.java` (Módulo 7).

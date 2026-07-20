@@ -1,33 +1,5 @@
 # Módulo 11: Seguridad DevSecOps
 
-## Sílabo
-
-**Objetivo general**
-
-Integrar la seguridad en cada etapa del pipeline en vez de tratarla como un paso final, mediante escaneo automatizado de imágenes y dependencias, gestión adecuada de secretos, menor privilegio en credenciales de CI/CD, y trazabilidad de dependencias con SBOM.
-
-**Objetivos específicos**
-
-1. Escanear una imagen Docker propia con Trivy e interpretar el reporte de vulnerabilidades.
-2. Integrar ese escaneo como un paso obligatorio del pipeline de CI que bloquee el merge ante vulnerabilidades críticas.
-3. Configurar secretos de pipeline usando los mecanismos nativos de la plataforma de CI, nunca hardcodeados.
-4. Aplicar el principio de menor privilegio a los tokens y permisos usados por un pipeline de CI/CD.
-5. Generar y explicar el propósito de un SBOM.
-6. Diferenciar SAST, DAST y SCA como categorías de análisis de seguridad.
-
-**Contenido**
-
-- Gestión de secretos (Vault, SOPS).
-- Escaneo de imágenes y dependencias (Trivy, Snyk).
-- Principio de menor privilegio en CI/CD.
-- SBOM y supply chain security.
-- SAST, DAST y SCA: diferencias y herramientas (OWASP ZAP, Burp Suite).
-
-**Evaluación**
-
-Un laboratorio que escanea una imagen propia, la integra al pipeline como gate obligatorio, y configura secretos correctamente; tres ejercicios de evaluación sobre interpretar un reporte de Trivy, diseñar permisos mínimos de un token de CI, y elegir entre SAST/DAST/SCA.
-
----
 
 ## Aprende construyendo
 
@@ -216,21 +188,6 @@ potencialmente inseguro         comportamiento real              conocidas en
 
 ---
 
-## Criterio transversal de calidad del código
-
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
 
 ## Laboratorio práctico
 
@@ -258,47 +215,3 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 - **Reducir los permisos del `GITHUB_TOKEN` rompe un step que sí necesitaba un permiso específico.** Revisa cuidadosamente qué permisos usa realmente cada step de tu workflow (por ejemplo, si algún step necesita escribir comentarios en el PR, necesita permiso de escritura sobre pull requests específicamente) antes de reducir permisos de forma demasiado agresiva sin verificar el impacto real.
 
 ---
-
-
-
-## Bibliografía y fundamento académico
-
-Estas fuentes sustentan los conceptos y deben consultarse para verificar detalles que cambian entre versiones:
-
-- CNCF, documentación oficial de Kubernetes, Prometheus y OpenTelemetry.
-- HashiCorp, *Terraform Documentation*.
-- Beyer et al., *Site Reliability Engineering*; Forsgren et al., *Accelerate*.
-- ACM/IEEE-CS/AAAI, *Computer Science Curricula 2023*.
-- IEEE Computer Society, *SWEBOK Guide V4.0*.
-
-
-## Resumen del módulo
-
-**Puntos clave**
-
-- El escaneo de imágenes y dependencias (Trivy, Snyk) detecta vulnerabilidades conocidas (CVEs) tanto en el sistema operativo base como en las dependencias de aplicación, priorizadas por severidad.
-- Integrar ese escaneo como gate obligatorio del pipeline (con `--exit-code`) convierte la seguridad en una regla técnica, no una práctica opcional dependiente de memoria individual.
-- Los secretos nunca deben hardcodearse en el código; deben inyectarse en runtime desde un gestor dedicado (Vault, SOPS) o los mecanismos nativos de secretos de la plataforma de CI.
-- El mínimo privilegio aplicado a tokens de CI/CD acota el daño potencial ante una filtración, exactamente el mismo principio que IAM y RBAC aplican en otros contextos.
-- Un SBOM inventaría con precisión las dependencias exactas de una aplicación, permitiendo responder rápidamente ante vulnerabilidades reportadas en el ecosistema más amplio.
-- SAST, DAST y SCA son categorías complementarias de análisis de seguridad, cada una detectando un tipo de problema que las otras dos no pueden detectar por su propio diseño y alcance.
-
-**Conceptos aprendidos**
-
-- CVEs y el escaneo de imágenes/dependencias con Trivy y Snyk.
-- Integración del escaneo de seguridad como gate obligatorio del pipeline de CI.
-- Gestión de secretos con Vault y SOPS, frente al antipatrón de hardcodearlos.
-- Mínimo privilegio aplicado a credenciales de CI/CD.
-- SBOM y seguridad de la cadena de suministro de software.
-- SAST, DAST y SCA como categorías complementarias de análisis de seguridad.
-
-**Próximos pasos**
-
-En el Módulo 12 vas a conectar todo lo aprendido en este track con el track Cloud Local, documentando cómo el mismo pipeline despliega a un proveedor cloud real, y aplicando GitOps y Platform Engineering como conceptos avanzados adicionales.
-
-**Recursos adicionales**
-
-- Documentación oficial de Trivy y de Snyk como herramientas de escaneo de imágenes y dependencias.
-- Documentación oficial de HashiCorp Vault y del proyecto SOPS de Mozilla.
-- Documentación oficial de OWASP ZAP y del proyecto OWASP en general como referencia de buenas prácticas de seguridad de aplicaciones.
-- Especificación estándar de SBOM: CycloneDX y SPDX.

@@ -1,31 +1,5 @@
 # Módulo 3: Formularios y eventos
 
-## Sílabo
-
-**Objetivo general**
-
-Manejar entradas de usuario complejas sin perder el control del estado, usando React Hook Form para formularios de tamaño real, validación con zod, formularios multi-paso, y comprendiendo los eventos sintéticos de React.
-
-**Objetivos específicos**
-
-1. Construir un formulario con React Hook Form (`register`, `handleSubmit`, `errors`).
-2. Conectar un schema de validación de zod mediante un resolver.
-3. Implementar un formulario multi-paso que conserve datos entre pasos.
-4. Manejar eventos sintéticos, incluyendo `preventDefault`.
-5. Explicar qué problema de rendimiento resuelve React Hook Form frente a `useState` por campo.
-
-**Contenido**
-
-- React Hook Form: `register`, `handleSubmit`, `errors`.
-- Validación con un schema de zod y `resolver`.
-- Formularios multi-paso.
-- Eventos sintéticos.
-
-**Evaluación**
-
-Formulario multi-paso con validación y persistencia de datos entre pasos, más tres ejercicios de evaluación.
-
----
 
 ## Aprende construyendo
 
@@ -103,21 +77,6 @@ function manejarSubmit(e) {
 
 ---
 
-## Criterio transversal de calidad del código
-
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
 
 ## Laboratorio práctico
 
@@ -141,39 +100,3 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 - **Perder los datos de pasos anteriores al retroceder.** Fusiona siempre los datos del paso actual con el estado acumulado antes de avanzar.
 
 ---
-
-
-
-## Bibliografía y fundamento académico
-
-Estas fuentes sustentan los conceptos y deben consultarse para verificar detalles que cambian entre versiones:
-
-- Meta Open Source, *React Documentation*.
-- WHATWG, estándares de DOM, HTML y Fetch.
-- W3C, *Web Content Accessibility Guidelines (WCAG)*.
-- ACM/IEEE-CS/AAAI, *Computer Science Curricula 2023*.
-- IEEE Computer Society, *SWEBOK Guide V4.0*.
-
-## Resumen del módulo
-
-**Puntos clave**
-
-- React Hook Form evita re-renders innecesarios en cada tecla mediante registro no controlado por debajo.
-- Un schema de zod centraliza y hace reutilizable la lógica de validación.
-- Un formulario multi-paso conserva el estado combinado en un componente padre compartido.
-- Los eventos sintéticos garantizan una API consistente entre distintos navegadores.
-
-**Conceptos aprendidos**
-
-- React Hook Form: `register`, `handleSubmit`, `errors`.
-- Validación con zod y `zodResolver`.
-- Formularios multi-paso con estado compartido.
-- Eventos sintéticos.
-
-**Próximos pasos**
-
-En el Módulo 4 aprenderás Context API y composición: compartir estado entre componentes lejanos sin prop drilling.
-
-**Recursos adicionales**
-
-- Documentación de React Hook Form (react-hook-form.com) y de zod (zod.dev).

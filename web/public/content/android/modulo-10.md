@@ -1,34 +1,5 @@
 # Módulo 10: Performance, Material 3 y accesibilidad
 
-## Sílabo
-
-**Objetivo general**
-
-Aplicar Material 3 theming, detectar y corregir recomposiciones innecesarias, generar Baseline Profiles, y hacer que la app sea accesible mediante semántica de Compose, entendiendo que ninguno de estos aspectos es opcional en una app profesional.
-
-**Objetivos específicos**
-
-1. Aplicar un `MaterialTheme` 3 completo a la app.
-2. Detectar recomposiciones innecesarias con el Layout Inspector.
-3. Corregir al menos una causa de recomposición innecesaria.
-4. Agregar `contentDescription` para soporte de TalkBack.
-5. Generar un Baseline Profile y documentar qué optimiza.
-
-**Contenido**
-
-- Material 3 theming.
-- Recomposición innecesaria: cómo detectarla.
-- Baseline profiles.
-- Accesibilidad en Compose (semantics).
-- `@Stable`, `@Immutable` y `derivedStateOf`.
-- `SideEffect`, `DisposableEffect` y `rememberUpdatedState`.
-- Interop con Views: `AndroidView` y `ComposeView`.
-
-**Evaluación**
-
-Auditoría de performance de una pantalla con el Layout Inspector y al menos una mejora aplicada, más tres ejercicios de evaluación.
-
----
 
 ## Aprende construyendo
 
@@ -118,21 +89,6 @@ ComposeView   → embebe Compose DENTRO de una jerarquía de Views clásica (tí
 
 ---
 
-## Criterio transversal de calidad del código
-
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
 
 ## Laboratorio práctico
 
@@ -157,42 +113,3 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 - **Asumir que la accesibilidad es un paso final opcional.** Intégrala desde el desarrollo inicial, no como una auditoría de último momento.
 
 ---
-
-
-
-## Bibliografía y fundamento académico
-
-Estas fuentes sustentan los conceptos y deben consultarse para verificar detalles que cambian entre versiones:
-
-- Google, *Android Developers Documentation* y guías de arquitectura de aplicaciones.
-- JetBrains, *Kotlin Language Documentation*.
-- OWASP Foundation, *Mobile Application Security Verification Standard*.
-- ACM/IEEE-CS/AAAI, *Computer Science Curricula 2023*.
-- IEEE Computer Society, *SWEBOK Guide V4.0*.
-
-## Resumen del módulo
-
-**Puntos clave**
-
-- Lambdas recreadas en cada recomposición del padre son una causa común de recomposición innecesaria, corregible con referencias estables.
-- `@Stable`, `@Immutable` y `derivedStateOf` comunican garantías de estabilidad que habilitan optimizaciones adicionales de Compose.
-- Un Baseline Profile precompila rutas críticas de arranque, mejorando el tiempo percibido de inicio de la app.
-- La accesibilidad (contentDescription, TalkBack) es parte del estándar profesional, no un extra opcional.
-
-**Conceptos aprendidos**
-
-- Material 3 theming.
-- Recomposición innecesaria y cómo detectarla.
-- Baseline profiles.
-- Accesibilidad en Compose.
-- `@Stable`, `@Immutable`, `derivedStateOf`.
-- `SideEffect`, `DisposableEffect`, `rememberUpdatedState`.
-- Interop con Views.
-
-**Próximos pasos**
-
-En el Módulo 11 aprenderás a publicar tu app en Google Play: firma, App Bundles, tracks de release y políticas relevantes.
-
-**Recursos adicionales**
-
-- Documentación oficial de performance en Compose (developer.android.com/jetpack/compose/performance).

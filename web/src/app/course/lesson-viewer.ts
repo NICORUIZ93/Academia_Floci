@@ -76,7 +76,11 @@ export class LessonViewerComponent implements OnDestroy {
   readonly module = computed(() => this.track()?.modules.find(m => m.id === this.moduleId()));
   readonly projectBootstrap = computed(() => findProjectBootstrap(this.trackId()));
   readonly trackProject = computed(() => projectFor(this.trackId()));
-  readonly showProjectBootstrap = computed(() => Boolean(this.projectBootstrap()));
+  readonly showProjectBootstrap = computed(() => this.moduleId() === 0 && Boolean(this.projectBootstrap()));
+  readonly showTrackProject = computed(() => {
+    const track = this.track();
+    return Boolean(this.trackProject()) && this.moduleIndex() === (track?.modules.length ?? 0) - 1;
+  });
   readonly moduleIndex = computed(() => this.track()?.modules.findIndex(m => m.id === this.moduleId()) ?? -1);
   readonly isCloudIntroduction = computed(() => this.trackId() === 'cloud' && this.moduleId() === 0);
   readonly flociMetrics = [
@@ -238,8 +242,6 @@ export class LessonViewerComponent implements OnDestroy {
 
   private enhanceEducationalContent(container: HTMLElement): void {
     this.groupLessonSections(container);
-    this.consolidateReferenceSections(container);
-    this.collapseSecondarySections(container);
     this.addSectionGuides(container);
 
     container.querySelectorAll('h3').forEach(heading => {
@@ -283,54 +285,6 @@ export class LessonViewerComponent implements OnDestroy {
     });
 
     this.groupTopics(container);
-  }
-
-  private collapseSecondarySections(container: HTMLElement): void {
-    const secondarySelectors = [
-      '.section-silabo',
-    ].join(',');
-
-    container.querySelectorAll<HTMLElement>(secondarySelectors).forEach((section, index) => {
-      if (section.querySelector(':scope > .secondary-section-body')) return;
-      const heading = section.querySelector<HTMLHeadingElement>(':scope > h2');
-      if (!heading) return;
-      const body = document.createElement('div');
-      body.className = 'secondary-section-body';
-      let node = heading.nextSibling;
-      while (node) {
-        const next = node.nextSibling;
-        body.appendChild(node);
-        node = next;
-      }
-      const toggle = document.createElement('button');
-      toggle.type = 'button';
-      toggle.className = 'secondary-section-toggle';
-      toggle.dataset['secondaryToggle'] = String(index);
-      toggle.setAttribute('aria-expanded', 'false');
-      toggle.innerHTML = '<span>Mostrar</span><span aria-hidden="true">⌄</span>';
-      heading.appendChild(toggle);
-      section.appendChild(body);
-    });
-  }
-
-  private consolidateReferenceSections(container: HTMLElement): void {
-    container.querySelector<HTMLElement>(':scope > .section-rubrica-del-proyecto')?.remove();
-    container.querySelector<HTMLElement>(':scope > .section-criterio-transversal-de-calidad-del-codigo')?.remove();
-    const sections = [
-      container.querySelector<HTMLElement>(':scope > .section-bibliografia-y-fundamento-academico'),
-      container.querySelector<HTMLElement>(':scope > .section-resumen-del-modulo'),
-    ].filter((section): section is HTMLElement => Boolean(section));
-    if (!sections.length) return;
-
-    const details = document.createElement('details');
-    details.className = 'lesson-resources';
-    const summary = document.createElement('summary');
-    summary.innerHTML = '<span>Material complementario</span><small>Fuentes y resumen del capítulo</small>';
-    const body = document.createElement('div');
-    body.className = 'lesson-resources-body';
-    sections.forEach(section => body.appendChild(section));
-    details.append(summary, body);
-    container.appendChild(details);
   }
 
   private addSectionGuides(container: HTMLElement): void {
@@ -448,15 +402,6 @@ export class LessonViewerComponent implements OnDestroy {
   }
 
   async copyCode(event: Event): Promise<void> {
-    const secondaryToggle = (event.target as HTMLElement).closest<HTMLButtonElement>('[data-secondary-toggle]');
-    if (secondaryToggle) {
-      const section = secondaryToggle.closest<HTMLElement>('.lesson-section');
-      const expanded = section?.classList.toggle('secondary-expanded') ?? false;
-      secondaryToggle.setAttribute('aria-expanded', String(expanded));
-      const label = secondaryToggle.querySelector('span');
-      if (label) label.textContent = expanded ? 'Ocultar' : 'Mostrar';
-      return;
-    }
     const topicToggle = (event.target as HTMLElement).closest<HTMLButtonElement>('[data-topic-toggle]');
     if (topicToggle) {
       const card = topicToggle.closest<HTMLElement>('.topic-card');

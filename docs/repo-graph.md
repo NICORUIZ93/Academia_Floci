@@ -1,8 +1,8 @@
 # Academia Floci Repo Graph
 
-Generated: 2026-07-18 07:12 UTC
+Generated: 2026-07-20 04:06 UTC
 Root: `Academia_Floci`
-Indexed files: 771
+Indexed files: 769
 Import edges: 33
 
 Use this file as the first, compact context for AI assistants. Refresh it with:
@@ -16,7 +16,7 @@ For automated lookups, use `docs/repo-graph.json`.
 ## Project Shape
 
 - `angular-app`: 52 files
-- `automation-script`: 27 files
+- `automation-script`: 25 files
 - `course-content`: 347 files
 - `documentation`: 99 files
 - `example`: 215 files
@@ -26,7 +26,7 @@ For automated lookups, use `docs/repo-graph.json`.
 ## File Types
 
 - `.md`: 437
-- `.py`: 57
+- `.py`: 55
 - `.ts`: 47
 - `.js`: 42
 - `.java`: 40
@@ -65,8 +65,8 @@ For automated lookups, use `docs/repo-graph.json`.
   - symbols: CourseCatalogComponent, cards, featuredTracks, foundationTracks, mobileTracks, totalModules
 - `web/src/app/course/course-shell.ts` (46 lines, angular-app)
   - symbols: CourseShellComponent, track, officialPath, sidebarOpen, trackLogo, percent
-- `web/src/app/course/lesson-viewer.ts` (562 lines, angular-app)
-  - symbols: LessonViewerComponent, TocItem, track, module, projectBootstrap, trackProject, showProjectBootstrap, moduleIndex, isCloudIntroduction, previousModule
+- `web/src/app/course/lesson-viewer.ts` (507 lines, angular-app)
+  - symbols: LessonViewerComponent, TocItem, track, module, projectBootstrap, trackProject, showProjectBootstrap, showTrackProject, moduleIndex, isCloudIntroduction
 - `web/public/content/manifest.json` (819 lines, course-content)
 - `web/public/content/es/pasos.md` (1122 lines, course-content)
   - headings: # 45 pasos de Academia Floci, ## Cursos, ## Paso 1: ¿Qué es Docker?, ## Paso 2: Instalar Docker, ## Paso 3: Verificar Docker
@@ -138,7 +138,7 @@ For automated lookups, use `docs/repo-graph.json`.
 - `web/src/app/app.config.ts` (12 lines) - imports: @angular/core, @angular/router, ./app.routes
 - `web/src/app/app.html` (4 lines)
 - `web/src/app/app.routes.ts` (27 lines) - imports: @angular/router, ./catalog/course-catalog, ./course/course-shell, ./course/lesson-viewer
-- `web/src/app/app.spec.ts` (166 lines) - imports: @angular/core/testing, @angular/router, @angular/router/testing, ./app, ./app.routes, ./catalog/course-catalog, ./course-data
+- `web/src/app/app.spec.ts` (139 lines) - imports: @angular/core/testing, @angular/router, @angular/router/testing, ./app, ./app.routes, ./catalog/course-catalog, ./course-data
 - `web/src/app/app.ts` (11 lines) - symbols: App; imports: @angular/core, @angular/router, ./command-palette
 - `web/src/app/catalog/course-catalog.html` (91 lines) - symbols: main-content, catalog-title, tracks-title, official-title
 - `web/src/app/catalog/course-catalog.scss` (198 lines)
@@ -151,7 +151,7 @@ For automated lookups, use `docs/repo-graph.json`.
 - `web/src/app/course-data.ts` (883 lines) - symbols: ServiceGroup, CloudComparison, AltCloudGroup; imports: ./course-module.model, ./tracks/devops.track, ./tracks/javascript.track, ./tracks/node.track, ./tracks/angular.track, ./tracks/react.track, ./tracks/java.track, ./tracks/spring-boot.track
 - `web/src/app/course-module.model.ts` (34 lines) - symbols: CourseModule, Track
 - `web/src/app/course/course-shell.html` (53 lines) - symbols: official-path-title, main-content
-- `web/src/app/course/course-shell.scss` (79 lines)
+- `web/src/app/course/course-shell.scss` (80 lines)
 - `web/src/app/course/course-shell.ts` (46 lines) - symbols: CourseShellComponent, track, officialPath, sidebarOpen, trackLogo, percent; imports: @angular/common, @angular/core, @angular/core/rxjs-interop, @angular/router, lucide-angular, rxjs, ../course-data, ../command-palette.service
 - ... 34 more files
 
@@ -162,11 +162,9 @@ For automated lookups, use `docs/repo-graph.json`.
 - `scripts/audit_topic_learning_quality.py` (135 lines) - symbols: student_visible_content, topic_blocks, evaluate, classify, build, render_markdown, main; imports: __future__, argparse, json, re, collections, pathlib
 - `scripts/build_repo_graph.py` (445 lines) - symbols: FileNode, repo_files, read_text, classify, parse_ts_symbols, parse_ts_imports, parse_python_symbols, parse_python_imports; imports: __future__, argparse, ast, json, re, collections, dataclasses, datetime
 - `scripts/build_web_topic_index.py` (75 lines) - symbols: slugify, clean_topic_title, main; imports: __future__, json, re, sys, unicodedata, collections, pathlib
-- `scripts/create_delivery_modules.py` (87 lines) - symbols: render; imports: pathlib
-- `scripts/create_master_gap_modules.py` (110 lines) - symbols: render; imports: pathlib, json
-- `scripts/create_rutaflow_content.py` (135 lines) - symbols: render; imports: pathlib
-- `scripts/enrich_code_quality.py` (44 lines) - imports: pathlib
-- `scripts/enrich_curriculum_sections.py` (154 lines) - symbols: bibliography, project_path; imports: pathlib
+- `scripts/create_delivery_modules.py` (61 lines) - symbols: render; imports: pathlib
+- `scripts/create_master_gap_modules.py` (84 lines) - symbols: render; imports: pathlib, json
+- `scripts/create_rutaflow_content.py` (104 lines) - symbols: render; imports: pathlib
 - `scripts/enrich_official_topic_atlas.py` (127 lines) - symbols: block; imports: pathlib, json
 - `scripts/enrich_official_updates.py` (97 lines) - imports: pathlib
 - `scripts/enrich_rutaflow_projects.py` (61 lines) - imports: pathlib
@@ -175,28 +173,30 @@ For automated lookups, use `docs/repo-graph.json`.
 - `scripts/start.sh` (10 lines)
 - `scripts/validate-floci.sh` (43 lines)
 - `scripts/validate.sh` (124 lines)
-- ... 9 more files
+- `scripts/validate_code_quality.py` (38 lines) - imports: pathlib
+- `scripts/validate_curriculum.py` (162 lines) - imports: json, pathlib, re
+- ... 7 more files
 
 ### course-content
 
 - `web/public/content/ATRIBUCION.md` (20 lines) - headings: # Atribucion y licencia
 - `web/public/content/LICENSE-FLOCI.txt` (21 lines)
-- `web/public/content/android/modulo-0.md` (247 lines) - headings: # Módulo 0: Kotlin aplicado a Android, ## Sílabo, ## Antes de comenzar: instala Android Studio y un dispositivo de prueba, ## Aprende construyendo
-- `web/public/content/android/modulo-1.md` (203 lines) - headings: # Módulo 1: Ciclo de vida: Activities y ViewModel, ## Sílabo, ## Aprende construyendo, ### Tema 1: Ciclo de vida de una Activity
-- `web/public/content/android/modulo-10.md` (199 lines) - headings: # Módulo 10: Performance, Material 3 y accesibilidad, ## Sílabo, ## Aprende construyendo, ### Tema 1: Detectar y corregir recomposición innecesaria
-- `web/public/content/android/modulo-11.md` (218 lines) - headings: # Módulo 11: Publicación en Google Play, ## Sílabo, ## Aprende construyendo, ### Tema 1: Firma de la app
-- `web/public/content/android/modulo-12.md` (236 lines) - headings: # Módulo 12: Proyecto integrador: app Android completa, ## Sílabo, ## Aprende construyendo, ### Tema 1: Arquitectura MVVM completa con UDF
-- `web/public/content/android/modulo-13.md` (290 lines) - headings: # Módulo 13: Android en producción — seguridad, sincronización y calidad, ## Sílabo, ## Aprende construyendo, ### Tema 1: El sistema operativo conecta tu app con entradas externas
-- `web/public/content/android/modulo-14.md` (184 lines) - headings: # Módulo 14: Compose Master: pruebas, accesibilidad y animación, ## Sílabo, ## Aprende construyendo, ### Tema 1: ComposeTestRule
-- `web/public/content/android/modulo-2.md` (220 lines) - headings: # Módulo 2: Jetpack Compose: UI declarativa, ## Sílabo, ## Aprende construyendo, ### Tema 1: Composables y recomposición
-- `web/public/content/android/modulo-3.md` (222 lines) - headings: # Módulo 3: Navegación con Navigation Compose, ## Sílabo, ## Aprende construyendo, ### Tema 1: NavHost y NavController
-- `web/public/content/android/modulo-4.md` (220 lines) - headings: # Módulo 4: Estado con StateFlow y Compose, ## Sílabo, ## Aprende construyendo, ### Tema 1: StateFlow en el ViewModel
-- `web/public/content/android/modulo-5.md` (220 lines) - headings: # Módulo 5: Networking con Retrofit/Ktor, ## Sílabo, ## Aprende construyendo, ### Tema 1: Retrofit con coroutines
-- `web/public/content/android/modulo-6.md` (225 lines) - headings: # Módulo 6: Persistencia local con Room, ## Sílabo, ## Aprende construyendo, ### Tema 1: Entities, DAOs y Database
-- `web/public/content/android/modulo-7.md` (221 lines) - headings: # Módulo 7: Inyección de dependencias con Hilt, ## Sílabo, ## Aprende construyendo, ### Tema 1: Configuración básica de Hilt
-- `web/public/content/android/modulo-8.md` (218 lines) - headings: # Módulo 8: Trabajo en segundo plano, ## Sílabo, ## Aprende construyendo, ### Tema 1: CoroutineWorker y garantía de ejecución
-- `web/public/content/android/modulo-9.md` (224 lines) - headings: # Módulo 9: Testing en Android, ## Sílabo, ## Aprende construyendo, ### Tema 1: Testing de ViewModels con fakes y runTest
-- `web/public/content/angular/modulo-0.md` (255 lines) - headings: # Módulo 0: Fundamentos y Angular CLI, ## Sílabo, ## Antes de comenzar: prepara tu equipo desde cero, ### Windows
+- `web/public/content/android/modulo-0.md` (169 lines) - headings: # Módulo 0: Kotlin aplicado a Android, ## Antes de comenzar: instala Android Studio y un dispositivo de prueba, ## Aprende construyendo, ### Tema 1: Estructura de un proyecto Android Studio
+- `web/public/content/android/modulo-1.md` (126 lines) - headings: # Módulo 1: Ciclo de vida: Activities y ViewModel, ## Aprende construyendo, ### Tema 1: Ciclo de vida de una Activity, ### Tema 2: ViewModel sobrevive a la rotación
+- `web/public/content/android/modulo-10.md` (116 lines) - headings: # Módulo 10: Performance, Material 3 y accesibilidad, ## Aprende construyendo, ### Tema 1: Detectar y corregir recomposición innecesaria, ### Tema 2: Baseline Profiles y ciclo de efectos
+- `web/public/content/android/modulo-11.md` (141 lines) - headings: # Módulo 11: Publicación en Google Play, ## Aprende construyendo, ### Tema 1: Firma de la app, ### Tema 2: App Bundle vs APK
+- `web/public/content/android/modulo-12.md` (159 lines) - headings: # Módulo 12: Proyecto integrador: app Android completa, ## Aprende construyendo, ### Tema 1: Arquitectura MVVM completa con UDF, ### Tema 2: Inyección de dependencias en toda la app
+- `web/public/content/android/modulo-13.md` (247 lines) - headings: # Módulo 13: Android en producción — seguridad, sincronización y calidad, ## Aprende construyendo, ### Tema 1: El sistema operativo conecta tu app con entradas externas, ### Tema 2: Proteger datos exige conocer copias y ciclo de vida
+- `web/public/content/android/modulo-14.md` (157 lines) - headings: # Módulo 14: Compose Master: pruebas, accesibilidad y animación, ## Aprende construyendo, ### Tema 1: ComposeTestRule, ### Tema 2: Finders, assertions y actions
+- `web/public/content/android/modulo-2.md` (141 lines) - headings: # Módulo 2: Jetpack Compose: UI declarativa, ## Aprende construyendo, ### Tema 1: Composables y recomposición, #### Qué hace realmente `@Composable`
+- `web/public/content/android/modulo-3.md` (146 lines) - headings: # Módulo 3: Navegación con Navigation Compose, ## Aprende construyendo, ### Tema 1: NavHost y NavController, ### Tema 2: Argumentos tipados y deep links
+- `web/public/content/android/modulo-4.md` (144 lines) - headings: # Módulo 4: Estado con StateFlow y Compose, ## Aprende construyendo, ### Tema 1: StateFlow en el ViewModel, ### Tema 2: collectAsStateWithLifecycle y UDF
+- `web/public/content/android/modulo-5.md` (144 lines) - headings: # Módulo 5: Networking con Retrofit/Ktor, ## Aprende construyendo, ### Tema 1: Retrofit con coroutines, ### Tema 2: Manejo de errores HTTP
+- `web/public/content/android/modulo-6.md` (149 lines) - headings: # Módulo 6: Persistencia local con Room, ## Aprende construyendo, ### Tema 1: Entities, DAOs y Database, ### Tema 2: Room + Flow reactivo, y migraciones
+- `web/public/content/android/modulo-7.md` (142 lines) - headings: # Módulo 7: Inyección de dependencias con Hilt, ## Aprende construyendo, ### Tema 1: Configuración básica de Hilt, ### Tema 2: @Provides y @Binds
+- `web/public/content/android/modulo-8.md` (140 lines) - headings: # Módulo 8: Trabajo en segundo plano, ## Aprende construyendo, ### Tema 1: CoroutineWorker y garantía de ejecución, ### Tema 2: Constraints y trabajo periódico
+- `web/public/content/android/modulo-9.md` (147 lines) - headings: # Módulo 9: Testing en Android, ## Aprende construyendo, ### Tema 1: Testing de ViewModels con fakes y runTest, ### Tema 2: Compose UI Testing
+- `web/public/content/angular/modulo-0.md` (173 lines) - headings: # Módulo 0: Fundamentos y Angular CLI, ## Antes de comenzar: prepara tu equipo desde cero, ### Windows, ### macOS
 - ... 329 more files
 
 ### documentation

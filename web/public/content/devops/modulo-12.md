@@ -1,33 +1,5 @@
 # Módulo 12: DevOps y este curso — del laboratorio a la nube
 
-## Sílabo
-
-**Objetivo general**
-
-Conectar explícitamente todo lo aprendido en este track con el track Cloud Local, entendiendo qué cambia realmente al pasar de Floci a un proveedor cloud real, cómo gestionar secretos de forma nativa a la nube, y qué debe verificar una checklist de salida a producción seria.
-
-**Objetivos específicos**
-
-1. Explicar qué cambia (y qué no) al pasar de Terraform contra Floci a Terraform contra un proveedor cloud real.
-2. Comparar la gestión de secretos local (`.env`) con los servicios de secretos cloud-native del track Cloud.
-3. Construir una checklist de salida a producción propia, cubriendo observabilidad, seguridad, resiliencia, costos y documentación.
-4. Explicar el modelo GitOps y diferenciarlo del CD tradicional basado en push.
-5. Describir a nivel conceptual qué resuelve una Internal Developer Platform (IDP).
-
-**Contenido**
-
-- De cloud local a un proveedor cloud real.
-- Gestión de secretos cloud-native (Secrets Manager/Key Vault).
-- IaC multi-nube.
-- Checklist de salida a producción.
-- GitOps con ArgoCD y FluxCD.
-- Platform Engineering: Internal Developer Platforms (IDPs).
-
-**Evaluación**
-
-Un laboratorio que documenta la migración de un módulo Terraform de Floci a un proveedor real y construye una checklist de producción propia, más tres ejercicios de evaluación sobre qué cambia al ir a producción real, GitOps frente a CD tradicional, y diseño de una checklist para un proyecto propio.
-
----
 
 ## Aprende construyendo
 
@@ -211,21 +183,6 @@ Equipo C construye el suyo,                observabilidad, seguridad ya
 
 ---
 
-## Criterio transversal de calidad del código
-
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
 
 ## Laboratorio práctico
 
@@ -250,46 +207,3 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 - **Aplicar la checklist al proyecto propio resulta en que "todo cumple perfectamente".** Revisa con más escepticismo cada ítem, especialmente resiliencia (¿el rollback fue realmente PROBADO, no solo documentado teóricamente?) y documentación (¿existe realmente un runbook, o solo la intención de escribirlo algún día?).
 
 ---
-
-
-
-## Bibliografía y fundamento académico
-
-Estas fuentes sustentan los conceptos y deben consultarse para verificar detalles que cambian entre versiones:
-
-- CNCF, documentación oficial de Kubernetes, Prometheus y OpenTelemetry.
-- HashiCorp, *Terraform Documentation*.
-- Beyer et al., *Site Reliability Engineering*; Forsgren et al., *Accelerate*.
-- ACM/IEEE-CS/AAAI, *Computer Science Curricula 2023*.
-- IEEE Computer Society, *SWEBOK Guide V4.0*.
-
-
-## Resumen del módulo
-
-**Puntos clave**
-
-- La transición técnica de Floci a un proveedor cloud real se reduce, en esencia, a cambiar el endpoint y las credenciales; toda la lógica de comandos, APIs y buenas prácticas practicadas se transfiere directamente.
-- Los gestores de secretos cloud-native (Secrets Manager, Key Vault) son la evolución natural del `.env` local en un entorno de producción real, integrados directamente con el pipeline de despliegue.
-- Terraform soporta técnicamente múltiples proveedores, pero la portabilidad real multi-nube requiere un esfuerzo deliberado de diseño de módulos, que solo se justifica en contextos específicos.
-- Una checklist de salida a producción, cubriendo observabilidad, seguridad, resiliencia, costos y documentación, formaliza en verificaciones explícitas todo lo que este track completo enseñó módulo a módulo.
-- GitOps invierte el modelo de despliegue de push a pull, con un agente dentro del clúster reconciliando continuamente contra Git, reduciendo la exposición de credenciales de escritura sobre el clúster.
-- Platform Engineering y las Internal Developer Platforms escalan las buenas prácticas de este track a través de toda una organización, mediante una capa de autoservicio que encapsula esas prácticas como comportamiento por defecto.
-
-**Conceptos aprendidos**
-
-- Qué cambia (endpoint, credenciales) y qué no cambia (lógica, comandos, APIs) al pasar de Floci a un proveedor real.
-- Gestión de secretos cloud-native integrada con el pipeline de despliegue.
-- El coste real de diseñar infraestructura verdaderamente portable multi-nube.
-- Las cinco categorías de una checklist de salida a producción.
-- GitOps: reconciliación continua desde Git, y su ventaja de seguridad frente al modelo push tradicional.
-- Platform Engineering e Internal Developer Platforms como respuesta a escala organizacional.
-
-**Próximos pasos**
-
-En el Módulo 13, el proyecto final de este track, vas a construir un pipeline CI/CD completo de punta a punta: commit, build, test, escaneo de seguridad, despliegue a Kubernetes con Helm, y observabilidad con rollback documentado.
-
-**Recursos adicionales**
-
-- Documentación oficial de AWS Secrets Manager, Azure Key Vault y GCP Secret Manager.
-- Documentación oficial de ArgoCD y FluxCD como implementaciones de GitOps.
-- Recursos de la comunidad de Platform Engineering (platformengineering.org) y el concepto de Internal Developer Platform.

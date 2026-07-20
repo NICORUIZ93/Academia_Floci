@@ -1,31 +1,5 @@
 # Módulo 22: Balanceo de carga, CDN y DNS — ELB, CloudFront, Route53 y ACM
 
-## Sílabo
-
-**Objetivo general**
-
-Dominar los cuatro servicios que forman la capa de borde de una arquitectura AWS real: Elastic Load Balancing v2 para distribuir tráfico entre instancias, CloudFront para servir contenido cerca del usuario, Route53 para resolución de nombres, y ACM para certificados TLS — entendiendo en cada caso qué parte es plano de gestión (lo que Floci emula por completo) y qué parte es plano de datos (tráfico real, todavía en desarrollo en Floci).
-
-**Objetivos específicos**
-
-1. Crear un Application Load Balancer con un grupo objetivo y una regla de enrutamiento por ruta.
-2. Solicitar un certificado TLS real con ACM y explicar su ciclo de vida de emisión.
-3. Crear una distribución CloudFront con origen S3 y una política de caché.
-4. Crear una zona alojada en Route53 con registros de recursos y una comprobación de estado.
-
-**Contenido**
-
-- ELB v2: balanceadores, grupos objetivo, listeners y reglas.
-- ACM: solicitud, emisión automática y exportación de certificados.
-- CloudFront: distribuciones, políticas de caché y control de acceso al origen.
-- Route53: zonas alojadas, registros de recursos y comprobaciones de estado.
-- Cómo se integran los cuatro servicios en una arquitectura de borde real.
-
-**Evaluación**
-
-Dos laboratorios prácticos (balanceador con grupo objetivo, y certificado + distribución + zona DNS) y tres ejercicios de evaluación.
-
----
 
 ## Aprende construyendo
 
@@ -91,21 +65,6 @@ Reconocer esta cadena de dependencias —certificado, punto de entrada de tráfi
 
 ---
 
-## Criterio transversal de calidad del código
-
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
 
 ## Laboratorio práctico
 
@@ -145,26 +104,3 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 - **`RequestCertificate` con `CertificateAuthorityArn` falla al exportar.** Solo los certificados de tipo `PRIVATE` se pueden exportar con `ExportCertificate`; los `AMAZON_ISSUED` no admiten exportación de clave privada, igual que en AWS real.
 
 ---
-
-
-
-## Bibliografía y fundamento académico
-
-Estas fuentes sustentan los conceptos y deben consultarse para verificar detalles que cambian entre versiones:
-
-- AWS, Microsoft Azure y Google Cloud, marcos oficiales de arquitectura bien diseñada.
-- NIST, *Cloud Computing Standards Roadmap* y *Secure Software Development Framework*.
-- Beyer et al., *Site Reliability Engineering*.
-- ACM/IEEE-CS/AAAI, *Computer Science Curricula 2023*.
-- IEEE Computer Society, *SWEBOK Guide V4.0*.
-
-## Resumen del módulo
-
-```bash
-aws elbv2 describe-load-balancers --endpoint-url http://localhost:4566 \
-  --query 'LoadBalancers[].{name:LoadBalancerName,state:State.Code,dns:DNSName}'
-```
-
-La consulta proyecta únicamente la evidencia necesaria para verificar nombre, estado y DNS del balanceador local.
-
-En este módulo trabajaste con la capa de borde de una arquitectura AWS: ELB v2 para balanceo de carga (plano de gestión completo, plano de datos pendiente), ACM para certificados TLS con criptografía real y emisión instantánea, CloudFront para distribución de contenido con políticas de caché configurables, y Route53 para gestión de DNS. Más importante que cada servicio por separado, viste cómo se encadenan en una arquitectura real: un certificado ACM protege la conexión, un ALB o CloudFront recibe el tráfico, y Route53 resuelve el nombre de dominio hacia ese punto de entrada — el mismo patrón que sostiene prácticamente cualquier aplicación web moderna en la nube.

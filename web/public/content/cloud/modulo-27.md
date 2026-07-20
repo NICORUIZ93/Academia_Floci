@@ -1,30 +1,5 @@
 # Módulo 27: APIs GraphQL con AppSync y correo transaccional con SES
 
-## Sílabo
-
-**Objetivo general**
-
-Sumar dos superficies de comunicación distintas a tu caja de herramientas: AppSync para exponer una API GraphQL gestionada con resolvers conectados a tus propios datos, y SES para enviar y probar correo transaccional de forma determinista, incluyendo el simulador de eventos de entrega, rebote y queja que AWS provee para pruebas sin enviar correo real.
-
-**Objetivos específicos**
-
-1. Crear una API GraphQL con AppSync, definir un esquema y un resolver básico.
-2. Explicar el modelo de eliminación en cascada de AppSync y por qué existe.
-3. Verificar una identidad de correo en SES y enviar un email de prueba.
-4. Usar las direcciones del simulador de buzones de correo para probar de forma determinista los flujos de entrega, rebote y queja de tu aplicación.
-
-**Contenido**
-
-- AppSync: APIs GraphQL, esquemas, fuentes de datos y resolvers.
-- Claves API y control de acceso en AppSync.
-- SES: identidades, envío de correo, plantillas.
-- El simulador de buzones de correo y el punto de inspección local.
-
-**Evaluación**
-
-Dos laboratorios prácticos (una API GraphQL básica con AppSync, y pruebas de entrega/rebote con el simulador de SES) y tres ejercicios de evaluación.
-
----
 
 ## Aprende construyendo
 
@@ -78,21 +53,6 @@ Además, cada correo enviado —simulador o no— queda almacenado en un buzón 
 
 ---
 
-## Criterio transversal de calidad del código
-
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
 
 ## Laboratorio práctico
 
@@ -132,31 +92,3 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 - **El buzón de inspección parece acumular correos de pruebas anteriores.** Usa `DELETE /_aws/ses` al inicio de tu suite de pruebas para partir de un estado limpio y evitar falsos positivos por mensajes de ejecuciones previas.
 
 ---
-
-
-
-## Bibliografía y fundamento académico
-
-Estas fuentes sustentan los conceptos y deben consultarse para verificar detalles que cambian entre versiones:
-
-- AWS, Microsoft Azure y Google Cloud, marcos oficiales de arquitectura bien diseñada.
-- NIST, *Cloud Computing Standards Roadmap* y *Secure Software Development Framework*.
-- Beyer et al., *Site Reliability Engineering*.
-- ACM/IEEE-CS/AAAI, *Computer Science Curricula 2023*.
-- IEEE Computer Society, *SWEBOK Guide V4.0*.
-
-## Resumen del módulo
-
-```graphql
-query DeliveryStatus($id: ID!) {
-  delivery(id: $id) {
-    id
-    status
-    estimatedArrival
-  }
-}
-```
-
-Prueba una entrega existente, una inexistente y una consulta sin autorización; registra el error GraphQL completo.
-
-En este módulo sumaste dos superficies de comunicación al curso: AppSync para APIs GraphQL gestionadas, donde practicaste el desacoplamiento entre esquema y resolvers —incluyendo el tipo especial `NONE` para prototipar sin backend real— y el comportamiento de eliminación en cascada; y SES para correo transaccional, donde el punto más valioso fue el simulador de buzones de correo: direcciones deterministas que te permiten probar automáticamente cómo reacciona tu aplicación ante entregas, rebotes y quejas sin depender de infraestructura de correo real ni de comportamiento impredecible.

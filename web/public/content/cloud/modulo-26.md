@@ -1,30 +1,5 @@
 # Módulo 26: Streaming e integración avanzada — Firehose y EventBridge Pipes
 
-## Sílabo
-
-**Objetivo general**
-
-Completar el panorama de mensajería y streaming del curso con dos servicios de "conectar A con B sin escribir código intermedio": Amazon Data Firehose, que entrega streams de datos automáticamente a un destino como S3 sin que tengas que gestionar consumidores, y EventBridge Pipes, que conecta un origen (cola, stream) directamente a un destino (Lambda, otra cola, una máquina de estados) con enriquecimiento y filtrado opcional.
-
-**Objetivos específicos**
-
-1. Explicar la diferencia entre Kinesis Data Streams (Módulo 17) y Firehose: quién consume los datos y qué esfuerzo de código requiere cada uno.
-2. Crear un stream de entrega Firehose y observar cómo los registros llegan automáticamente a S3.
-3. Crear un pipe de EventBridge que conecte una cola SQS con una función Lambda sin código de polling intermedio.
-4. Decidir correctamente cuándo usar Pipes frente a una regla EventBridge simple (Módulo 11) o una Step Function (Módulo 16).
-
-**Contenido**
-
-- Amazon Data Firehose: buffering, entrega automática y formato de salida.
-- Firehose vs Kinesis Data Streams: quién consume los datos.
-- EventBridge Pipes: fuentes, destinos y enriquecimiento opcional.
-- Cuándo usar Pipes frente a reglas EventBridge o Step Functions.
-
-**Evaluación**
-
-Dos laboratorios prácticos (un stream Firehose que entrega a S3 automáticamente, y un pipe que conecta SQS con Lambda) y tres ejercicios de evaluación.
-
----
 
 ## Aprende construyendo
 
@@ -78,21 +53,6 @@ La pregunta práctica para elegir es: si tienes UN origen conocido que necesita 
 
 ---
 
-## Criterio transversal de calidad del código
-
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
 
 ## Laboratorio práctico
 
@@ -129,29 +89,3 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 - **Confusión entre Firehose y Kinesis Data Streams.** Si necesitas leer y procesar cada registro con lógica personalizada antes de que llegue a destino, el servicio correcto es Kinesis Data Streams (Módulo 17), no Firehose — Firehose no expone un mecanismo de lectura intermedia.
 
 ---
-
-
-
-## Bibliografía y fundamento académico
-
-Estas fuentes sustentan los conceptos y deben consultarse para verificar detalles que cambian entre versiones:
-
-- AWS, Microsoft Azure y Google Cloud, marcos oficiales de arquitectura bien diseñada.
-- NIST, *Cloud Computing Standards Roadmap* y *Secure Software Development Framework*.
-- Beyer et al., *Site Reliability Engineering*.
-- ACM/IEEE-CS/AAAI, *Computer Science Curricula 2023*.
-- IEEE Computer Society, *SWEBOK Guide V4.0*.
-
-## Resumen del módulo
-
-```json
-{
-  "source": "rutaflow.tracking",
-  "detail-type": "LocationUpdated",
-  "detail": {"deliveryId": "pkg-42", "lat": 4.711, "lng": -74.0721}
-}
-```
-
-Usa este evento para probar filtrado, reintentos e idempotencia antes de conectar Firehose o EventBridge Pipes.
-
-En este módulo completaste el panorama de mensajería y streaming del curso con dos servicios de integración de bajo código: Amazon Data Firehose, que entrega streams de datos automáticamente a S3 sin que operes un consumidor propio, y EventBridge Pipes, que conecta un origen y un destino directamente sin código de pegamento intermedio. Más allá de los comandos específicos, el valor de este módulo es afinar tu criterio de diseño: reconocer cuándo un problema de integración es lo suficientemente simple para resolverse declarativamente con Firehose o Pipes, y cuándo realmente necesitas el poder de Kinesis Data Streams, una regla EventBridge con enrutamiento por patrones, o una Step Function con orquestación de estado.

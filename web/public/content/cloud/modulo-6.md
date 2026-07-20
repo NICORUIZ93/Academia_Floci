@@ -1,32 +1,5 @@
 # Módulo 6: APIs con API Gateway
 
-## Sílabo
-
-**Objetivo general**
-
-Exponer una función Lambda como un endpoint HTTP real: entender los tipos de API disponibles, la estructura de recursos y métodos, la integración proxy con Lambda, y el modelo de despliegue por stages.
-
-**Objetivos específicos**
-
-1. Diferenciar los tipos de API que ofrece API Gateway: REST, HTTP y WebSocket.
-2. Crear recursos y métodos sobre una API REST.
-3. Conectar un método de API Gateway a una función Lambda mediante integración proxy.
-4. Explicar qué es un modelo de validación y para qué sirve el mapeo de entrada/salida.
-5. Desplegar una API a un stage y entender por qué los cambios no son visibles hasta un nuevo despliegue.
-
-**Contenido**
-
-- Qué es API Gateway y tipos de API: REST, HTTP, WebSocket.
-- Recursos, métodos y stages.
-- Integración con Lambda (proxy).
-- Mapeo de entrada/salida y validación con modelos.
-- Despliegue y variables de stage.
-
-**Evaluación**
-
-Un laboratorio completo que construye un endpoint HTTP funcional conectado a la Lambda del Módulo 5, y tres ejercicios de evaluación sobre integración proxy, despliegue por stages y elección de tipo de API.
-
----
 
 ## Aprende construyendo
 
@@ -203,21 +176,6 @@ Configuración actual (recursos, métodos, integraciones)
 
 ---
 
-## Criterio transversal de calidad del código
-
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
 
 ## Laboratorio práctico
 
@@ -252,44 +210,3 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 - **Olvidar reemplazar `<api-id>` o los IDs de recurso en cada comando.** Cada comando de este laboratorio depende del `id` devuelto por un paso anterior; es buena práctica guardar esos valores en variables de shell (`API_ID=$(aws apigateway create-rest-api ... --query id --output text ...)`) para no tener que copiarlos manualmente cada vez.
 
 ---
-
-
-
-## Bibliografía y fundamento académico
-
-Estas fuentes sustentan los conceptos y deben consultarse para verificar detalles que cambian entre versiones:
-
-- AWS, Microsoft Azure y Google Cloud, marcos oficiales de arquitectura bien diseñada.
-- NIST, *Cloud Computing Standards Roadmap* y *Secure Software Development Framework*.
-- Beyer et al., *Site Reliability Engineering*.
-- ACM/IEEE-CS/AAAI, *Computer Science Curricula 2023*.
-- IEEE Computer Society, *SWEBOK Guide V4.0*.
-
-## Resumen del módulo
-
-**Puntos clave**
-
-- API Gateway actúa como puerta de entrada entre clientes HTTP y tu backend, con tres tipos disponibles: REST (más completo), HTTP (más simple, recomendado para la mayoría de casos nuevos) y WebSocket (comunicación bidireccional persistente).
-- Los recursos representan segmentos de ruta, los métodos representan operaciones HTTP sobre esos recursos, y los stages son entornos de despliegue independientes con su propia URL.
-- La integración proxy reenvía la petición completa a Lambda sin transformación, delegando esa responsabilidad al código; la función debe devolver `statusCode`/`headers`/`body`.
-- Los modelos permiten validar la estructura de una petición antes de invocar Lambda, ahorrando invocaciones innecesarias sobre datos malformados.
-- La configuración y el despliegue son pasos separados: ningún cambio de configuración es visible en un stage hasta que se ejecuta explícitamente un nuevo despliegue a ese stage.
-
-**Conceptos aprendidos**
-
-- Los tres tipos de API de API Gateway y cuándo elegir cada uno.
-- Recursos, métodos y stages como los bloques de construcción de una API REST.
-- Integración proxy con Lambda y el contrato de respuesta que exige.
-- Validación de peticiones con modelos JSON Schema.
-- El modelo de despliegue explícito y las variables de stage.
-
-**Próximos pasos**
-
-En el Módulo 7 vas a estudiar IAM en profundidad: usuarios, grupos, roles y políticas, aplicando el principio de mínimo privilegio a los servicios que ya usaste en los módulos anteriores.
-
-**Recursos adicionales**
-
-- Documentación oficial de Amazon API Gateway: conceptos de API REST, HTTP y WebSocket.
-- Documentación oficial sobre integración Lambda proxy en API Gateway.
-- Documentación oficial sobre despliegues y stages de API Gateway.
-- Código ejecutable de cada operación (crear API, crear recurso, crear método, desplegar) en Node.js, Python, Java, Go y Rust: carpeta [`examples/`](https://github.com/NICORUIZ93/Academia_Floci/tree/main/examples) del repositorio, archivos que empiezan por `apigateway-`/`apigateway_`/`ApiGateway` (ver [`examples/README.md`](https://github.com/NICORUIZ93/Academia_Floci/blob/main/examples/README.md) para la lista completa).

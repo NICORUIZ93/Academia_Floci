@@ -1,32 +1,5 @@
 # Módulo 6: Autenticación y autorización
 
-## Sílabo
-
-**Objetivo general**
-
-Implementar login seguro en una API Node sin reinventar criptografía desde cero, dominando hashing de contraseñas, JWT con access y refresh tokens, y control de acceso basado en roles.
-
-**Objetivos específicos**
-
-1. Implementar hashing seguro de contraseñas con bcrypt.
-2. Explicar la diferencia entre un access token y un refresh token, e implementar ambos con JWT.
-3. Construir un middleware de autenticación que valide JWT y rechace peticiones no autorizadas.
-4. Implementar control de acceso basado en roles.
-5. Explicar por qué nunca se debe construir un algoritmo propio de hashing de contraseñas.
-
-**Contenido**
-
-- Hashing de contraseñas (bcrypt/argon2).
-- JWT: access y refresh tokens.
-- Sesiones frente a tokens.
-- OAuth 2.0 con un proveedor externo.
-- Passport.js y sus estrategias de autenticación.
-
-**Evaluación**
-
-Una API protegida con JWT, refresh tokens y rutas con control de roles, más tres ejercicios de evaluación.
-
----
 
 ## Aprende construyendo
 
@@ -129,21 +102,6 @@ Aplicación consulta perfil autorizado del usuario con ese token
 
 ---
 
-## Criterio transversal de calidad del código
-
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
 
 ## Laboratorio práctico
 
@@ -169,41 +127,3 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 - **Confundir 401 (no autenticado) con 403 (autenticado pero sin permiso).** Usa 401 cuando el JWT es inválido o falta; usa 403 cuando el usuario es válido pero no tiene el rol requerido.
 
 ---
-
-
-
-## Bibliografía y fundamento académico
-
-Estas fuentes sustentan los conceptos y deben consultarse para verificar detalles que cambian entre versiones:
-
-- OpenJS Foundation, *Node.js Documentation*.
-- IETF, especificaciones HTTP Semantics, OAuth 2.0 y JSON.
-- OWASP Foundation, *Application Security Verification Standard*.
-- ACM/IEEE-CS/AAAI, *Computer Science Curricula 2023*.
-- IEEE Computer Society, *SWEBOK Guide V4.0*.
-
-## Resumen del módulo
-
-**Puntos clave**
-
-- Las contraseñas deben hashearse (nunca cifrarse ni almacenarse en texto plano) con bcrypt/argon2, algoritmos deliberadamente lentos.
-- El patrón access/refresh token equilibra seguridad (tokens de corta duración) con experiencia de usuario (sin reautenticación constante).
-- Un middleware de autenticación centraliza la verificación de JWT; un middleware de roles añade control de acceso granular por encima.
-- OAuth 2.0 delega la gestión de credenciales a proveedores externos confiables; Passport.js abstrae múltiples estrategias de autenticación.
-
-**Conceptos aprendidos**
-
-- Hashing seguro de contraseñas y por qué nunca construir criptografía propia.
-- El patrón access/refresh token con JWT.
-- Middleware de autenticación y control de acceso basado en roles.
-- OAuth 2.0 y el rol de Passport.js.
-
-**Próximos pasos**
-
-En el Módulo 7 aprenderás a probar endpoints HTTP reales con Vitest y Supertest, incluyendo bases de datos de prueba efímeras con Testcontainers.
-
-**Recursos adicionales**
-
-- Documentación oficial de jsonwebtoken y de bcrypt en npm.
-- OWASP Cheat Sheet Series: "Password Storage" y "Authentication".
-- Documentación oficial de Passport.js (passportjs.org).

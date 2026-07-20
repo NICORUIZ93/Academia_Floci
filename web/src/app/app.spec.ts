@@ -64,25 +64,7 @@ const answer = 42;
 
 ## Laboratorio práctico
 
-Construye y verifica el ejemplo.
-
-## Criterio transversal de calidad del código
-
-Este texto editorial no debe repetirse dentro del lector.
-
-## Rúbrica del proyecto
-
-| Criterio | Peso |
-|---|---:|
-| Verificación | 100% |
-
-## Bibliografía y fundamento académico
-
-- Fuente primaria.
-
-## Resumen del módulo
-
-La evidencia demuestra el aprendizaje.`;
+Construye y verifica el ejemplo.`;
     const fetchSpy = vi.spyOn(globalThis, 'fetch').mockImplementation(input => {
       const url = String(input);
       return Promise.resolve(url.includes('topic-index.json')
@@ -103,8 +85,6 @@ La evidencia demuestra el aprendizaje.`;
       expect(fetchSpy).toHaveBeenCalled();
       expect(text).not.toContain('XP');
       expect(text).not.toContain('Racha');
-      expect(text).not.toContain('Rúbrica del proyecto');
-      expect(text).toContain('Bibliografía y fundamento académico');
       expect(page.querySelector('.lesson-markdown')).toBeTruthy();
       expect(page.querySelector('.build-method')).toBeFalsy();
       expect(page.querySelectorAll('.implementation-guide')).toHaveLength(0);
@@ -150,14 +130,7 @@ La evidencia demuestra el aprendizaje.`;
       expect(text).toContain('Prepara el proyecto para Cómo funciona tu entorno de desarrollo');
       expect(page.querySelector('.project-bootstrap')).toBeTruthy();
       expect(page.querySelector<HTMLDetailsElement>('.project-bootstrap')?.open).toBe(true);
-      const secondarySections = page.querySelectorAll('.secondary-section-body');
-      expect(secondarySections).toHaveLength(0);
-      expect(page.querySelector('.lesson-resources')).toBeTruthy();
-      expect(page.textContent).not.toContain('Rúbrica del proyecto');
-      expect(page.textContent).not.toContain('Criterio transversal de calidad del código');
-      expect(page.querySelector('.lesson-resources')?.textContent).toContain('Bibliografía y fundamento académico');
-      expect(page.querySelector('.lesson-resources')?.textContent).toContain('Resumen del módulo');
-      expect(page.querySelectorAll('.lesson-resources .secondary-section-toggle')).toHaveLength(0);
+      expect(page.querySelector('.lesson-resources')).toBeFalsy();
     } finally {
       fetchSpy.mockRestore();
     }

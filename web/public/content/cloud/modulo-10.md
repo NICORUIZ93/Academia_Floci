@@ -1,31 +1,5 @@
 # Módulo 10: Secretos y configuración: Secrets Manager, Key Vault y Secret Manager
 
-## Sílabo
-
-**Objetivo general**
-
-Gestionar secretos, contraseñas y configuración externalizada de forma segura, entendiendo que ningún secreto debe vivir jamás en el código fuente ni en variables de entorno hardcodeadas, y dominando la diferencia entre almacenamiento simple de configuración y almacenamiento cifrado de secretos sensibles.
-
-**Objetivos específicos**
-
-1. Crear y leer un secreto con AWS Secrets Manager desde la CLI y desde Python.
-2. Cifrar y descifrar un valor con AWS KMS, entendiendo envelope encryption.
-3. Guardar configuración no sensible con SSM Parameter Store.
-4. Repetir el mismo patrón de secretos en GCP Secret Manager y Azure Key Vault.
-
-**Contenido**
-
-- Least privilege.
-- KMS / envelope encryption.
-- Rotación de secretos.
-- SSM Parameter Store vs Secrets Manager.
-- AWS Config.
-
-**Evaluación**
-
-Aplicación que lee todos sus secretos y configuración desde la nube, sin nada hardcodeado, más tres ejercicios de evaluación.
-
----
 
 ## Aprende construyendo
 
@@ -106,21 +80,6 @@ Secrets Manager       → secretos sensibles, rotación automática programada, 
 
 ---
 
-## Criterio transversal de calidad del código
-
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
 
 ## Laboratorio práctico
 
@@ -147,40 +106,3 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 - **Cifrar directamente volúmenes grandes de datos con la clave maestra de KMS.** Usa envelope encryption con una clave de datos efímera para eficiencia.
 
 ---
-
-
-
-## Bibliografía y fundamento académico
-
-Estas fuentes sustentan los conceptos y deben consultarse para verificar detalles que cambian entre versiones:
-
-- AWS, Microsoft Azure y Google Cloud, marcos oficiales de arquitectura bien diseñada.
-- NIST, *Cloud Computing Standards Roadmap* y *Secure Software Development Framework*.
-- Beyer et al., *Site Reliability Engineering*.
-- ACM/IEEE-CS/AAAI, *Computer Science Curricula 2023*.
-- IEEE Computer Society, *SWEBOK Guide V4.0*.
-
-## Resumen del módulo
-
-**Puntos clave**
-
-- Guardar secretos en variables de entorno hardcodeadas los expone en el historial de versiones sin auditoría ni control de acceso granular.
-- Envelope encryption combina eficiencia (clave de datos local) con seguridad centralizada (clave maestra en KMS).
-- SSM Parameter Store es apropiado para configuración general; Secrets Manager para secretos sensibles con rotación automática.
-- El mismo patrón de gestión de secretos se replica en GCP Secret Manager y Azure Key Vault.
-
-**Conceptos aprendidos**
-
-- Least privilege.
-- KMS / envelope encryption.
-- Rotación de secretos.
-- SSM Parameter Store vs Secrets Manager.
-- AWS Config.
-
-**Próximos pasos**
-
-En el Módulo 11 aprenderás mensajería Pub/Sub con SNS y EventBridge, distribuyendo eventos a múltiples consumidores con el patrón fan-out.
-
-**Recursos adicionales**
-
-- Documentación oficial de AWS Secrets Manager (docs.aws.amazon.com/secretsmanager).

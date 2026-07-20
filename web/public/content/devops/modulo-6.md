@@ -1,35 +1,5 @@
 # Módulo 6: Kubernetes — fundamentos
 
-## Sílabo
-
-**Objetivo general**
-
-Entender Kubernetes, el orquestador de contenedores estándar de la industria, dominando sus objetos fundamentales —Pod, ReplicaSet, Deployment, Service— y el conjunto esencial de comandos de `kubectl` para operar un clúster local.
-
-**Objetivos específicos**
-
-1. Explicar la relación jerárquica entre Pod, ReplicaSet y Deployment.
-2. Desplegar una aplicación propia con un Deployment de múltiples réplicas.
-3. Exponer un Deployment con un Service y entender los tipos ClusterIP, NodePort y LoadBalancer.
-4. Inyectar configuración y secretos mediante ConfigMaps y Secrets.
-5. Usar los comandos esenciales de `kubectl` para operar y diagnosticar un clúster.
-6. Explicar StatefulSets, DaemonSets, Jobs, CronJobs y almacenamiento persistente a nivel conceptual.
-
-**Contenido**
-
-- Pod, ReplicaSet, Deployment.
-- Service (ClusterIP, NodePort, LoadBalancer).
-- ConfigMaps y Secrets.
-- `kubectl` esencial.
-- Namespaces.
-- StatefulSets, DaemonSets, Jobs y CronJobs.
-- Persistent Volumes, PVCs y StorageClasses.
-
-**Evaluación**
-
-Un laboratorio que despliega una aplicación propia en un clúster local con Deployment, Service, ConfigMap y Secret, y tres ejercicios de evaluación sobre la jerarquía Pod/ReplicaSet/Deployment, tipos de Service, y ConfigMap vs Secret.
-
----
 
 ## Aprende construyendo
 
@@ -228,21 +198,6 @@ StatefulSet "mi-base" (3 réplicas)
 
 ---
 
-## Criterio transversal de calidad del código
-
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
 
 ## Laboratorio práctico
 
@@ -271,47 +226,3 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 - **El Pod nuevo tras `kubectl delete pod` no aparece, o el conteo de réplicas queda en menos de 3 permanentemente.** Ejecuta `kubectl describe deployment mi-api` y revisa la sección de eventos; frecuentemente indica un problema de recursos insuficientes en el clúster local, o un error persistente en la imagen que impide que el Pod de reemplazo llegue a estado `Running`.
 
 ---
-
-
-
-## Bibliografía y fundamento académico
-
-Estas fuentes sustentan los conceptos y deben consultarse para verificar detalles que cambian entre versiones:
-
-- CNCF, documentación oficial de Kubernetes, Prometheus y OpenTelemetry.
-- HashiCorp, *Terraform Documentation*.
-- Beyer et al., *Site Reliability Engineering*; Forsgren et al., *Accelerate*.
-- ACM/IEEE-CS/AAAI, *Computer Science Curricula 2023*.
-- IEEE Computer Society, *SWEBOK Guide V4.0*.
-
-## Resumen del módulo
-
-**Puntos clave**
-
-- Un Pod es la unidad mínima desplegable; un ReplicaSet garantiza un número exacto de réplicas; un Deployment gestiona ReplicaSets para habilitar actualizaciones controladas y rollback.
-- Un Service da una dirección estable de acceso a un conjunto de Pods mediante selectores de etiquetas, independiente de la identidad efímera de cada Pod individual; ClusterIP, NodePort y LoadBalancer ofrecen distintos alcances de acceso.
-- Los ConfigMaps externalizan configuración no sensible; los Secrets están pensados para datos sensibles, pero solo están codificados en base64 por defecto, no cifrados.
-- `kubectl get`, `describe`, `logs` y `exec` cubren la mayoría del diagnóstico diario de un clúster.
-- Los namespaces dividen lógicamente un clúster físico, útiles para separar entornos o equipos, aunque no implican aislamiento de red fuerte por sí solos.
-- StatefulSets, DaemonSets, Jobs y CronJobs cubren patrones de carga de trabajo distintos a los de un Deployment sin estado tradicional.
-- Persistent Volumes, PVCs y StorageClasses proveen almacenamiento persistente de forma portable y desacoplada de la infraestructura física subyacente.
-
-**Conceptos aprendidos**
-
-- La jerarquía Pod/ReplicaSet/Deployment y la reconciliación continua.
-- Tipos de Service y su alcance de acceso.
-- ConfigMaps y Secrets, y la limitación real de seguridad de estos últimos.
-- Comandos esenciales de `kubectl` para operar y diagnosticar un clúster.
-- Namespaces como mecanismo de organización lógica.
-- StatefulSets, DaemonSets, Jobs y CronJobs.
-- Persistent Volumes, PVCs y StorageClasses.
-
-**Próximos pasos**
-
-En el Módulo 7 vas a empaquetar tus manifiestos como Helm charts reutilizables, exponer tu clúster a internet con un Ingress Controller, y configurar autoscaling y control de acceso basado en roles (RBAC).
-
-**Recursos adicionales**
-
-- Documentación oficial de Kubernetes: conceptos de Pods, ReplicaSets, Deployments y Services.
-- Documentación oficial sobre ConfigMaps, Secrets, y cifrado en reposo de Secrets.
-- Documentación oficial de `kind` y `minikube` para clústeres locales de desarrollo.

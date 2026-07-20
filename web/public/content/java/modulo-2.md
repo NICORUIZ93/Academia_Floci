@@ -1,33 +1,5 @@
 # Módulo 2: Colecciones y genéricos
 
-## Sílabo
-
-**Objetivo general**
-
-Dominar el Java Collections Framework como base de cualquier programa real, eligiendo la estructura de datos correcta para cada caso, y usar genéricos para escribir código reutilizable con seguridad de tipos.
-
-**Objetivos específicos**
-
-1. Elegir entre `ArrayList` y `LinkedList` según el patrón de acceso.
-2. Usar `HashSet` y `TreeSet` según se necesite o no orden.
-3. Crear una clase genérica propia con `<T>`.
-4. Diferenciar `Comparable` de `Comparator`.
-5. Recorrer un `Map` con for-each usando `entrySet()`.
-
-**Contenido**
-
-- List, Set, Map y sus implementaciones.
-- Genéricos: `<T>` y wildcards.
-- Comparable vs Comparator.
-- Iteradores y for-each.
-- Queue, Deque y ConcurrentHashMap.
-- Type erasure y `@SafeVarargs`.
-
-**Evaluación**
-
-Estructura de datos propia genérica (ej. cola de prioridad) con tests, más tres ejercicios de evaluación.
-
----
 
 ## Aprende construyendo
 
@@ -109,21 +81,6 @@ for (Map.Entry<String, Integer> entrada : edades.entrySet()) {
 
 ---
 
-## Criterio transversal de calidad del código
-
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
 
 ## Laboratorio práctico
 
@@ -148,39 +105,3 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 - **Confundir cuándo usar `Comparable` frente a `Comparator`.** Usa `Comparable` para el único orden natural de la clase; `Comparator` para órdenes alternativos externos.
 
 ---
-
-
-
-## Bibliografía y fundamento académico
-
-Estas fuentes sustentan los conceptos y deben consultarse para verificar detalles que cambian entre versiones:
-
-- Oracle, *Java Language Specification* y *Java Virtual Machine Specification*.
-- OpenJDK, documentación de Java SE, JFR y JMH.
-- Bloch, J., *Effective Java*.
-- ACM/IEEE-CS/AAAI, *Computer Science Curricula 2023*.
-- IEEE Computer Society, *SWEBOK Guide V4.0*.
-
-## Resumen del módulo
-
-**Puntos clave**
-
-- `ArrayList`/`LinkedList` y `HashSet`/`TreeSet` ofrecen distintos balances de rendimiento según el patrón de acceso o la necesidad de orden.
-- Los genéricos (`<T>`) proporcionan seguridad de tipos en compilación, borrada del bytecode final por el type erasure.
-- `Comparable` define el único orden natural de una clase; `Comparator` permite órdenes alternativos externos.
-- `entrySet()` permite recorrer un `Map` accediendo eficientemente a clave y valor en una única iteración.
-
-**Conceptos aprendidos**
-
-- List, Set, Map y sus implementaciones principales.
-- Genéricos, wildcards y type erasure.
-- Comparable vs Comparator.
-- Iteración sobre Maps con entrySet.
-
-**Próximos pasos**
-
-En el Módulo 3 aprenderás excepciones y manejo de recursos: checked vs unchecked, try-with-resources, y excepciones personalizadas.
-
-**Recursos adicionales**
-
-- Documentación oficial de Java (docs.oracle.com/en/java): "Java Collections Framework" y "Generics".

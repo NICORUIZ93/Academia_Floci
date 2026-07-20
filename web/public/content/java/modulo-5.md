@@ -1,33 +1,5 @@
 # Módulo 5: Concurrencia — hilos y virtual threads
 
-## Sílabo
-
-**Objetivo general**
-
-Dominar la concurrencia en Java moderno: desde `Thread`/`ExecutorService` tradicionales hasta los virtual threads de Java 21, entendiendo condiciones de carrera, sincronización, y composición asíncrona con `CompletableFuture`.
-
-**Objetivos específicos**
-
-1. Crear y lanzar hilos manualmente y con `ExecutorService`.
-2. Provocar y corregir una condición de carrera con `synchronized`.
-3. Componer llamadas asíncronas con `CompletableFuture`.
-4. Explicar por qué los virtual threads son considerablemente más baratos que los threads de plataforma.
-5. Medir la diferencia de latencia entre threads de plataforma y virtual threads en cargas con I/O bloqueante.
-
-**Contenido**
-
-- Thread, Runnable y ExecutorService.
-- CompletableFuture.
-- Virtual threads (Project Loom, Java 21).
-- Condiciones de carrera y sincronización.
-- ReentrantLock, Semaphore, CountDownLatch y CyclicBarrier.
-- ScheduledExecutorService e invokeAll().
-
-**Evaluación**
-
-Servicio concurrente que procesa N tareas en paralelo usando virtual threads, más tres ejercicios de evaluación.
-
----
 
 ## Aprende construyendo
 
@@ -114,21 +86,6 @@ synchronized void incrementar() { contador++; } // garantiza acceso exclusivo a 
 
 ---
 
-## Criterio transversal de calidad del código
-
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
 
 ## Laboratorio práctico
 
@@ -153,39 +110,3 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 - **Usar virtual threads para código CPU-intensivo puro sin I/O.** Los virtual threads no aceleran cálculo puro; su beneficio es específico para I/O bloqueante.
 
 ---
-
-
-
-## Bibliografía y fundamento académico
-
-Estas fuentes sustentan los conceptos y deben consultarse para verificar detalles que cambian entre versiones:
-
-- Oracle, *Java Language Specification* y *Java Virtual Machine Specification*.
-- OpenJDK, documentación de Java SE, JFR y JMH.
-- Bloch, J., *Effective Java*.
-- ACM/IEEE-CS/AAAI, *Computer Science Curricula 2023*.
-- IEEE Computer Society, *SWEBOK Guide V4.0*.
-
-## Resumen del módulo
-
-**Puntos clave**
-
-- `ExecutorService` reutiliza un pool de hilos, evitando el costo de crear y destruir hilos individuales por tarea.
-- `CompletableFuture` compone operaciones asíncronas dependientes de forma legible, con manejo de errores centralizado.
-- Los virtual threads consumen una fracción de la memoria de los threads de plataforma, ideales para cargas dominadas por I/O bloqueante.
-- Una condición de carrera produce resultados incorrectos silenciosos; `synchronized` y otras primitivas garantizan coordinación explícita.
-
-**Conceptos aprendidos**
-
-- Thread, Runnable y ExecutorService.
-- CompletableFuture.
-- Virtual threads (Project Loom, Java 21).
-- Condiciones de carrera y primitivas de sincronización.
-
-**Próximos pasos**
-
-En el Módulo 6 aprenderás I/O, NIO.2 y serialización: `Path`/`Files`, Jackson, y lectura eficiente de archivos grandes.
-
-**Recursos adicionales**
-
-- Documentación oficial de Java (docs.oracle.com/en/java): "Concurrency" y "JEP 444: Virtual Threads".

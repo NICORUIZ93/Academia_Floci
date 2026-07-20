@@ -1,31 +1,5 @@
 # Módulo 10: Testing en Angular
 
-## Sílabo
-
-**Objetivo general**
-
-Escribir pruebas unitarias efectivas para componentes y servicios Angular usando `TestBed`, Angular Testing Library y mocking de `HttpClient`.
-
-**Objetivos específicos**
-
-1. Configurar y usar `TestBed` para probar componentes standalone.
-2. Usar `fixture.componentRef.setInput()` para probar componentes con signals de entrada.
-3. Escribir pruebas orientadas al usuario con Angular Testing Library.
-4. Mockear peticiones HTTP con `HttpTestingController`.
-5. Explicar la migración de Karma/Jasmine hacia Vitest.
-
-**Contenido**
-
-- `TestBed` básico y `componentRef.setInput`.
-- Angular Testing Library: `render`, `screen`, `userEvent`.
-- `HttpTestingController` para mockear HTTP.
-- El nuevo builder de pruebas basado en Vitest.
-
-**Evaluación**
-
-Suite de pruebas para un componente con input signal y un servicio que consume HTTP, más tres ejercicios de evaluación.
-
----
 
 ## Aprende construyendo
 
@@ -108,21 +82,6 @@ req.flush([{ id: 1, nombre: 'Ana' }]);
 
 ---
 
-## Criterio transversal de calidad del código
-
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
 
 ## Laboratorio práctico
 
@@ -147,39 +106,3 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 - **Consultar por selector CSS interno en vez de por rol/texto.** Esto hace que la prueba se rompa ante refactors cosméticos sin relación con el comportamiento real.
 
 ---
-
-
-
-## Bibliografía y fundamento académico
-
-Estas fuentes sustentan los conceptos y deben consultarse para verificar detalles que cambian entre versiones:
-
-- Google, *Angular Documentation* y guías oficiales de accesibilidad, seguridad y rendimiento.
-- ReactiveX, *RxJS Documentation*.
-- W3C, *Web Content Accessibility Guidelines (WCAG)*.
-- ACM/IEEE-CS/AAAI, *Computer Science Curricula 2023*.
-- IEEE Computer Society, *SWEBOK Guide V4.0*.
-
-## Resumen del módulo
-
-**Puntos clave**
-
-- `TestBed` y `setInput` prueban componentes standalone respetando el mecanismo real de inputs signal.
-- Angular Testing Library promueve consultas orientadas al usuario, resilientes a refactors internos.
-- `HttpTestingController` aísla las pruebas de un backend real de forma determinista.
-- El builder basado en Vitest reemplaza a Karma/Jasmine con arranque e iteración más rápidos.
-
-**Conceptos aprendidos**
-
-- `TestBed`, `fixture` y `componentRef.setInput`.
-- Angular Testing Library: `render`, `screen`, `userEvent`.
-- Mocking de HTTP con `HttpTestingController`.
-- Migración de Karma/Jasmine a Vitest.
-
-**Próximos pasos**
-
-En el Módulo 11 aprenderás performance, SSR y zoneless: renderizado del lado del servidor, hidratación, `@defer` y ejecución sin Zone.js.
-
-**Recursos adicionales**
-
-- Documentación oficial de Angular: "Testing" y Testing Library Angular (testing-library.com/docs/angular-testing-library/intro).

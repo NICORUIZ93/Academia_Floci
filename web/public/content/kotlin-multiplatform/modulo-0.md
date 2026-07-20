@@ -1,31 +1,5 @@
 # Módulo 0: Fundamentos de Kotlin
 
-## Sílabo
-
-**Objetivo general**
-
-Dominar la sintaxis concisa y null-safe de Kotlin como base reutilizable en Android, backend y desarrollo multiplataforma.
-
-**Objetivos específicos**
-
-1. Declarar variables con `val`/`var` y entender cuándo el compilador exige cada una.
-2. Manejar valores nulos explícitamente con `?`, `!!` y el operador Elvis.
-3. Usar `data class` para modelos concisos con igualdad estructural.
-4. Escribir funciones de extensión.
-5. Usar `when` como expresión que devuelve un valor.
-
-**Contenido**
-
-- `val`/`var`, null safety (`?`, `!!`, `?:`).
-- `data class` y sintaxis concisa.
-- Funciones de extensión.
-- `when` como expresión.
-
-**Evaluación**
-
-Programa de consola sin un solo `NullPointerException` posible (null safety real), más tres ejercicios de evaluación.
-
----
 
 ## Antes de comenzar: entorno Kotlin Multiplatform
 
@@ -146,21 +120,6 @@ No crees un proyecto desechable por módulo. Conserva un único repositorio que 
 
 Al iniciar cada laboratorio crea una rama `modulo-N`, implementa el incremento, verifica el criterio de éxito y fusiona solo con pruebas verdes. Si un módulo necesita un experimento aislado, colócalo en `experiments/modulo-N/`; el producto acumulativo permanece ejecutable. Al terminar, otra persona debe poder clonar el repositorio y reproducir el último hito siguiendo únicamente el README.
 
-## Criterio transversal de calidad del código
-
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
 
 ## Laboratorio práctico
 
@@ -186,39 +145,3 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 - **Olvidar que `data class` genera `equals` por valor, no por referencia.** Aprovecha esa igualdad estructural en vez de comparar manualmente campo por campo.
 
 ---
-
-
-
-## Bibliografía y fundamento académico
-
-Estas fuentes sustentan los conceptos y deben consultarse para verificar detalles que cambian entre versiones:
-
-- JetBrains, documentación oficial de *Kotlin Multiplatform* y Kotlin Coroutines.
-- Google, *Android Developers Documentation*; Apple, *Developer Documentation*.
-- Kotlin Foundation, especificación y pautas de compatibilidad de Kotlin.
-- ACM/IEEE-CS/AAAI, *Computer Science Curricula 2023*.
-- IEEE Computer Society, *SWEBOK Guide V4.0*.
-
-## Resumen del módulo
-
-**Puntos clave**
-
-- Kotlin distingue tipos nullable de no-nullable en el sistema de tipos, verificado en tiempo de compilación.
-- `data class` genera automáticamente `equals`, `hashCode`, `toString` y `copy()`.
-- Las funciones de extensión agregan comportamiento a clases existentes sin herencia.
-- `when` como expresión devuelve directamente un valor, más conciso que una cadena de if/else.
-
-**Conceptos aprendidos**
-
-- Null safety con `?`, `!!` y `?:`.
-- `data class` y funciones de extensión.
-- `when` como expresión.
-
-**Próximos pasos**
-
-En el Módulo 1 aprenderás programación funcional en Kotlin: lambdas, scope functions, sealed classes, y colecciones funcionales.
-
-**Recursos adicionales**
-
-- Documentación oficial de Kotlin (kotlinlang.org/docs): "Null Safety" y "Data Classes".
-- Ejemplos de código ejecutables de este track, en Kotlin: carpeta [`examples/tracks/kotlin-multiplatform/`](https://github.com/NICORUIZ93/Academia_Floci/tree/main/examples/tracks/kotlin-multiplatform) del repositorio — `coroutines-flow.kt` (Módulo 2), `expect-actual.kt` (Módulos 3-4), `ktor-client.kt` (Módulo 5), `sqldelight-persistence.kt` (Módulo 6).

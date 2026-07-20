@@ -1,31 +1,5 @@
 # Módulo 8: Standalone components y arquitectura sin NgModules
 
-## Sílabo
-
-**Objetivo general**
-
-Comprender el bootstrap de una aplicación Angular completamente standalone, organizar el código por feature en vez de por tipo, y migrar un proyecto existente basado en NgModules.
-
-**Objetivos específicos**
-
-1. Explicar `bootstrapApplication` y `app.config.ts`.
-2. Organizar carpetas por feature en vez de por tipo de archivo.
-3. Migrar un componente declarado en un NgModule a standalone.
-4. Usar `ng generate @angular/core:standalone` para automatizar la migración.
-5. Explicar por qué la arquitectura standalone simplifica el árbol de dependencias de una aplicación.
-
-**Contenido**
-
-- Bootstrap sin NgModules.
-- `app.config.ts` y el arreglo de `providers`.
-- Organización por feature.
-- Migración paso a paso desde NgModules.
-
-**Evaluación**
-
-Migración de un componente NgModule a standalone y reorganización por feature, más tres ejercicios de evaluación.
-
----
 
 ## Aprende construyendo
 
@@ -106,21 +80,6 @@ Automatización: ng generate @angular/core:standalone
 
 ---
 
-## Criterio transversal de calidad del código
-
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
 
 ## Laboratorio práctico
 
@@ -145,38 +104,3 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 - **Dejar un NgModule vacío sin eliminar.** Elimínalo una vez que ya no declare ningún componente real.
 
 ---
-
-
-
-## Bibliografía y fundamento académico
-
-Estas fuentes sustentan los conceptos y deben consultarse para verificar detalles que cambian entre versiones:
-
-- Google, *Angular Documentation* y guías oficiales de accesibilidad, seguridad y rendimiento.
-- ReactiveX, *RxJS Documentation*.
-- W3C, *Web Content Accessibility Guidelines (WCAG)*.
-- ACM/IEEE-CS/AAAI, *Computer Science Curricula 2023*.
-- IEEE Computer Society, *SWEBOK Guide V4.0*.
-
-## Resumen del módulo
-
-**Puntos clave**
-
-- `bootstrapApplication` y `ApplicationConfig` reemplazan completamente al `AppModule` tradicional.
-- Organizar por feature mantiene junto todo lo que cambia junto, maximizando cohesión.
-- La migración de NgModules a standalone es incremental, componente por componente.
-- `ng generate @angular/core:standalone` automatiza gran parte de la migración.
-
-**Conceptos aprendidos**
-
-- Bootstrap sin NgModules.
-- Organización de carpetas por feature.
-- Migración incremental desde NgModules.
-
-**Próximos pasos**
-
-En el Módulo 9 aprenderás gestión de estado: stores propios con signals, y cuándo la complejidad de NgRx está justificada.
-
-**Recursos adicionales**
-
-- Documentación oficial de Angular: "Standalone components" y "Migrating to standalone".

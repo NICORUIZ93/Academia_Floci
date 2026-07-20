@@ -1,30 +1,5 @@
 # Módulo 30: Transferencia de archivos gestionada con Transfer Family
 
-## Sílabo
-
-**Objetivo general**
-
-Entender el problema que resuelve AWS Transfer Family —ofrecer transferencia de archivos SFTP/FTP gestionada sin operar servidores propios— y dominar su plano de gestión en Floci: ciclo de vida del servidor, gestión de usuarios y claves SSH públicas, entendiendo con claridad qué parte está emulada (la gestión) y qué parte todavía no (la transferencia real de archivos).
-
-**Objetivos específicos**
-
-1. Explicar por qué una empresa elegiría Transfer Family en vez de operar su propio servidor SFTP.
-2. Crear un servidor de transferencia gestionado y controlar su ciclo de vida (`OFFLINE`/`ONLINE`).
-3. Crear un usuario asociado al servidor e importarle una clave pública SSH.
-4. Reconocer los límites de la Fase 1 de esta emulación y qué validarías contra AWS real antes de producción.
-
-**Contenido**
-
-- Qué resuelve Transfer Family frente a un servidor SFTP autogestionado.
-- Ciclo de vida del servidor: `CreateServer`, `StartServer`, `StopServer`.
-- Usuarios y claves públicas SSH.
-- Límites actuales: plano de gestión completo, plano de datos pendiente.
-
-**Evaluación**
-
-Un laboratorio práctico (crear un servidor, un usuario y una clave SSH, y controlar el ciclo de vida del servidor) y tres ejercicios de evaluación.
-
----
 
 ## Aprende construyendo
 
@@ -78,21 +53,6 @@ Reconocer explícitamente esta frontera —qué es plano de gestión emulado vs 
 
 ---
 
-## Criterio transversal de calidad del código
-
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
 
 ## Laboratorio práctico
 
@@ -121,27 +81,3 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 - **`create-user` falla sin un rol IAM válido.** Aunque Floci no valida el rol contra un servicio real de forma estricta, sigue siendo buena práctica usar un ARN de rol bien formado del Módulo 7 para que tu infraestructura como código sea consistente con lo que necesitarías contra AWS real.
 
 ---
-
-
-
-## Bibliografía y fundamento académico
-
-Estas fuentes sustentan los conceptos y deben consultarse para verificar detalles que cambian entre versiones:
-
-- AWS, Microsoft Azure y Google Cloud, marcos oficiales de arquitectura bien diseñada.
-- NIST, *Cloud Computing Standards Roadmap* y *Secure Software Development Framework*.
-- Beyer et al., *Site Reliability Engineering*.
-- ACM/IEEE-CS/AAAI, *Computer Science Curricula 2023*.
-- IEEE Computer Society, *SWEBOK Guide V4.0*.
-
-## Resumen del módulo
-
-```bash
-aws transfer create-server --endpoint-url http://localhost:4566 \
-  --protocols SFTP --identity-provider-type SERVICE_MANAGED
-aws transfer list-servers --endpoint-url http://localhost:4566
-```
-
-La prueba verifica el plano de gestión. Documenta explícitamente que crear el servidor no demuestra una transferencia SFTP real.
-
-En este módulo entendiste el problema que resuelve AWS Transfer Family —transferencia de archivos SFTP/FTP gestionada, conectada a almacenamiento moderno como S3, sin operar servidores propios— y practicaste su plano de gestión completo en Floci: ciclo de vida del servidor, usuarios con directorios de inicio aislados, y autenticación por clave pública SSH. Reconociste también, con claridad, la frontera de la Fase 1 actual: gestión completamente emulada, transferencia real de archivos todavía pendiente — el mismo ejercicio de "saber qué esperar de cada servicio" que aplicaste con ELB, CloudFront y Route53 en el Módulo 22.

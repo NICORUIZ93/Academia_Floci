@@ -1,30 +1,5 @@
 # Módulo 2: REST APIs con Spring Web
 
-## Sílabo
-
-**Objetivo general**
-
-Exponer endpoints HTTP con `@RestController`, validación de entrada con Bean Validation, códigos de estado apropiados con `ResponseEntity`, y manejo centralizado de errores con `@ControllerAdvice`.
-
-**Objetivos específicos**
-
-1. Crear endpoints con `@RestController` que reciban y devuelvan DTOs, no entidades directamente.
-2. Validar entrada con `@Valid` y anotaciones de Bean Validation.
-3. Devolver `ResponseEntity` con el código de estado correcto según el caso.
-4. Centralizar el manejo de errores con `@ControllerAdvice`.
-
-**Contenido**
-
-- `@RestController` y mapeo de rutas.
-- DTOs y validación con Bean Validation.
-- `ResponseEntity` y códigos de estado.
-- `@ControllerAdvice` para errores centralizados.
-
-**Evaluación**
-
-API REST con validación de entrada y manejo centralizado de errores, más tres ejercicios de evaluación.
-
----
 
 ## Aprende construyendo
 
@@ -105,21 +80,6 @@ public class GlobalExceptionHandler {
 
 ---
 
-## Criterio transversal de calidad del código
-
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
 
 ## Laboratorio práctico
 
@@ -144,39 +104,3 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 - **Repetir try/catch en cada controller para el mismo tipo de error.** Centraliza ese manejo en un `@ControllerAdvice`.
 
 ---
-
-
-
-## Bibliografía y fundamento académico
-
-Estas fuentes sustentan los conceptos y deben consultarse para verificar detalles que cambian entre versiones:
-
-- VMware/Broadcom, documentación de *Spring Framework* y *Spring Boot*.
-- IETF, especificaciones HTTP y OAuth 2.0.
-- OWASP Foundation, *Application Security Verification Standard*.
-- ACM/IEEE-CS/AAAI, *Computer Science Curricula 2023*.
-- IEEE Computer Society, *SWEBOK Guide V4.0*.
-
-## Resumen del módulo
-
-**Puntos clave**
-
-- Los DTOs desacoplan el contrato público de la API del modelo interno de persistencia.
-- Bean Validation automatiza la verificación de restricciones de entrada declarativamente.
-- `ResponseEntity` permite devolver el código de estado HTTP correcto según el resultado real de cada operación.
-- `@ControllerAdvice` centraliza el manejo de errores, garantizando un formato de respuesta consistente en toda la API.
-
-**Conceptos aprendidos**
-
-- `@RestController` y DTOs.
-- Bean Validation con `@Valid`.
-- `ResponseEntity` y códigos de estado.
-- `@ControllerAdvice` y `@ExceptionHandler`.
-
-**Próximos pasos**
-
-En el Módulo 3 aprenderás persistencia con Spring Data JPA: entidades, repositorios, relaciones, el problema N+1, y migraciones con Flyway.
-
-**Recursos adicionales**
-
-- Documentación oficial de Spring Web (docs.spring.io/spring-framework) y Bean Validation (jakarta.ee/specifications/bean-validation).

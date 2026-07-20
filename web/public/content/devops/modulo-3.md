@@ -1,31 +1,5 @@
 # Módulo 3: Docker Compose y orquestación local
 
-## Sílabo
-
-**Objetivo general**
-
-Levantar arquitecturas completas de múltiples servicios con un solo comando, usando healthchecks para coordinar dependencias reales de disponibilidad, variables de entorno externalizadas, y perfiles para distintos escenarios de uso.
-
-**Objetivos específicos**
-
-1. Escribir un `docker-compose.yml` con una aplicación, una base de datos y una caché.
-2. Configurar healthchecks y usarlos con `depends_on: condition: service_healthy`.
-3. Externalizar configuración sensible en un archivo `.env`.
-4. Verificar el descubrimiento de servicios por nombre dentro de la red de Compose.
-5. Configurar perfiles para levantar subconjuntos de servicios según el entorno.
-
-**Contenido**
-
-- Servicios, dependencias y healthchecks.
-- Variables de entorno y `.env`.
-- Redes y descubrimiento por nombre de servicio.
-- Perfiles para distintos entornos.
-
-**Evaluación**
-
-Un laboratorio que construye una arquitectura de tres servicios con healthchecks y perfiles, y tres ejercicios de evaluación sobre `depends_on` sin healthcheck, gestión de secretos en `.env`, y diseño de perfiles.
-
----
 
 ## Aprende construyendo
 
@@ -143,21 +117,6 @@ docker compose --profile seed up     → app, db, generador
 
 ---
 
-## Criterio transversal de calidad del código
-
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
 
 ## Laboratorio práctico
 
@@ -187,40 +146,3 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 - **`docker compose exec app sh` falla porque no hay un shell disponible.** Si tu imagen de aplicación usa una base distroless (Módulo 2, Tema 3), no tendrá shell disponible; usa una imagen con Alpine o completa para este paso específico de depuración, o verifica la conectividad por otros medios (como logs de la propia aplicación).
 
 ---
-
-
-
-## Bibliografía y fundamento académico
-
-Estas fuentes sustentan los conceptos y deben consultarse para verificar detalles que cambian entre versiones:
-
-- CNCF, documentación oficial de Kubernetes, Prometheus y OpenTelemetry.
-- HashiCorp, *Terraform Documentation*.
-- Beyer et al., *Site Reliability Engineering*; Forsgren et al., *Accelerate*.
-- ACM/IEEE-CS/AAAI, *Computer Science Curricula 2023*.
-- IEEE Computer Society, *SWEBOK Guide V4.0*.
-
-## Resumen del módulo
-
-**Puntos clave**
-
-- Un healthcheck combinado con `condition: service_healthy` convierte una dependencia de simple orden de arranque en una dependencia real de disponibilidad funcional.
-- Un archivo `.env` (nunca versionado) externaliza configuración sensible, con `.env.example` como plantilla compartida sin valores reales.
-- Docker Compose crea automáticamente una red por proyecto con descubrimiento de nombres de servicio, aislada de otros proyectos Compose.
-- Los perfiles permiten activar selectivamente servicios opcionales sin duplicar archivos Compose para distintos escenarios de uso.
-
-**Conceptos aprendidos**
-
-- Healthchecks y su combinación con `depends_on: condition: service_healthy`.
-- Externalización de configuración con `.env`/`.env.example`.
-- Redes de Compose y descubrimiento de nombres de servicio.
-- Perfiles para activación selectiva de servicios según el escenario.
-
-**Próximos pasos**
-
-En el Módulo 4 vas a automatizar la construcción y prueba de cada cambio de código con pipelines de integración continua (CI), aplicando cache de dependencias y matrices de build.
-
-**Recursos adicionales**
-
-- Documentación oficial de Docker Compose: referencia completa de `healthcheck`, `depends_on`, `.env` y `profiles`.
-- Guía oficial de Docker sobre redes en Compose y resolución de nombres de servicio.

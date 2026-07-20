@@ -1,33 +1,5 @@
 # Módulo 11: Despliegue y contenedores
 
-## Sílabo
-
-**Objetivo general**
-
-Empaquetar y desplegar una API Node de forma reproducible usando Docker multi-stage, conectando directamente con las prácticas del track DevOps, y entender las alternativas de despliegue disponibles según el contexto.
-
-**Objetivos específicos**
-
-1. Escribir un Dockerfile multi-stage optimizado para una aplicación Node.
-2. Configurar variables de entorno diferenciadas por ambiente.
-3. Configurar un healthcheck a nivel de Docker.
-4. Explicar qué se necesita para lograr un despliegue sin downtime.
-5. Comparar PM2, contenedores y plataformas serverless para gestión de procesos Node.
-
-**Contenido**
-
-- Dockerfile para Node (multi-stage).
-- Variables de entorno por ambiente.
-- PM2 frente a contenedores para gestión de procesos.
-- Zero-downtime deploys.
-- Nginx como reverse proxy y balanceador.
-- Serverless: AWS Lambda, Vercel y Azure Functions.
-
-**Evaluación**
-
-Una imagen Docker de producción de la API, optimizada y sin dependencias de desarrollo, más tres ejercicios de evaluación.
-
----
 
 ## Aprende construyendo
 
@@ -140,21 +112,6 @@ Serverless: código empaquetado → la plataforma lo ejecuta bajo demanda,
 
 ---
 
-## Criterio transversal de calidad del código
-
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
 
 ## Laboratorio práctico
 
@@ -180,43 +137,3 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 - **Desplegar una actualización sin verificar el healthcheck antes de retirar tráfico de la instancia anterior.** Esto puede causar downtime real si la nueva instancia no está genuinamente lista; siempre espera el healthcheck confirmado antes de continuar el rolling update.
 
 ---
-
-
-
-## Bibliografía y fundamento académico
-
-Estas fuentes sustentan los conceptos y deben consultarse para verificar detalles que cambian entre versiones:
-
-- OpenJS Foundation, *Node.js Documentation*.
-- IETF, especificaciones HTTP Semantics, OAuth 2.0 y JSON.
-- OWASP Foundation, *Application Security Verification Standard*.
-- ACM/IEEE-CS/AAAI, *Computer Science Curricula 2023*.
-- IEEE Computer Society, *SWEBOK Guide V4.0*.
-
-## Resumen del módulo
-
-**Puntos clave**
-
-- Un Dockerfile multi-stage separa la construcción (con devDependencies y herramientas de build) de la etapa final de producción, ligera y con menor superficie de ataque.
-- La configuración debe externalizarse por variables de entorno, manteniendo la misma imagen idéntica en todos los ambientes.
-- Un `HEALTHCHECK` a nivel de aplicación detecta fallos internos que un simple chequeo de "proceso vivo" no captura.
-- Un despliegue sin downtime requiere múltiples instancias y un healthcheck confiable, combinados en un rolling update.
-- Nginx centraliza TLS y balanceo delante de instancias de aplicación; serverless ofrece un modelo alternativo de escalado automático y pago por uso real.
-
-**Conceptos aprendidos**
-
-- Dockerfiles multi-stage optimizados para Node.
-- Configuración externalizada por ambiente y healthchecks a nivel de Docker.
-- El desplazamiento de responsabilidades de PM2 hacia un orquestador de contenedores.
-- Condiciones para zero-downtime deploys.
-- Nginx como reverse proxy y el panorama de plataformas serverless.
-
-**Próximos pasos**
-
-En el Módulo 12, el proyecto final de este track, unirás todo lo aprendido en una API productiva completa: arquitectura por capas, autenticación, persistencia, testing y un contenedor listo para desplegar.
-
-**Recursos adicionales**
-
-- Documentación oficial de Docker: "Multi-stage builds".
-- Documentación oficial de Nginx como reverse proxy.
-- Documentación de AWS Lambda, Vercel Functions y Azure Functions para el panorama serverless.

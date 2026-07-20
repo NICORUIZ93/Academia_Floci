@@ -61,12 +61,6 @@ Valida una herramienta a la vez: `git --version`, `docker version`, `node --vers
 Cada módulo agrega una vertical ejecutable al mismo repositorio: primero dominio; luego persistencia; API; web; móvil; optimización y tiempo real; finanzas; finalmente despliegue y operación. Cada entrega conserva README, ADR, prueba automatizada, comandos de ejecución y una demostración breve. No se copia una solución final: se avanza con commits pequeños y se registra por qué cambió el diseño.
 """
 
-QUALITY = """
-## Criterio transversal de calidad del código
-
-Usa nombres del dominio (`confirmDelivery`, no `processData`), funciones pequeñas con una responsabilidad observable y errores tipados que conserven causa y contexto sin revelar secretos. Primero escribe una prueba del comportamiento o del fallo que quieres controlar; luego implementa la solución más simple. Aplica SOLID cuando existe presión real de cambio: separa políticas de infraestructura, invierte dependencias en límites externos y evita interfaces enormes. No abstraer antes de encontrar repetición con el mismo significado. Revisa corrección, claridad, cohesión, seguridad, complejidad y capacidad de operación; Clean Code no justifica ocultar costes ni crear capas ceremoniales.
-"""
-
 def render(index, module):
     title, objective, topics = module
     theory = []
@@ -96,36 +90,11 @@ flowchart LR
     before = INSTALL if index == 0 else ""
     return f"""# Módulo {index}: {title}
 
-## Sílabo
-
-**Objetivo general:** {objective}
-
-Al terminar, podrás explicar las decisiones con vocabulario técnico sencillo, implementar una vertical funcional, provocar al menos un fallo y demostrar su recuperación. El producto de estudio es ficticio: evita copiar marcas, identidades o datos de una empresa real.
-
-**Evaluación:** 20 % modelo y explicación, 40 % laboratorio ejecutable, 25 % pruebas y manejo de fallos, 15 % documentación y demostración.
-
 {before}
 
 ## Aprende construyendo
 
 {''.join(theory)}
-{QUALITY}
-
-
-## Bibliografía y fundamento académico
-
-- Documentación oficial de las tecnologías enlazadas desde el panel **Actualizaciones oficiales** de la Academia; verifica versión y fecha antes de aplicar una API.
-- Eric Evans, *Domain-Driven Design*, para lenguaje ubicuo, agregados e invariantes.
-- Martin Kleppmann, *Designing Data-Intensive Applications*, para datos, replicación, streams y fallos.
-- NIST Secure Software Development Framework y OWASP ASVS/MASVS, para ciclo de desarrollo y controles verificables.
-- Google SRE Book y SRE Workbook, para SLI, SLO, presupuesto de error e incidentes.
-- W3C WCAG, RFC de HTTP y OpenTelemetry Specification cuando la decisión afecte accesibilidad, contratos u observabilidad.
-
-Las fuentes son punto de partida, no autoridad incuestionable: registra versión, distingue norma de recomendación y valida cada afirmación con un experimento reproducible.
-
-## Resumen del módulo
-
-Este capítulo conecta fundamento, implementación y operación. Debes poder contar qué problema resolviste, qué invariante protegiste, cómo comprobaste el comportamiento y qué límite conserva la solución. La evidencia final incluye código, pruebas, diagrama, ADR y demostración; completar una lista de temas sin poder explicar los fallos no representa dominio profesional.
 """
 
 OUT.mkdir(parents=True, exist_ok=True)

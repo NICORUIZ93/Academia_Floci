@@ -1,33 +1,5 @@
 # Módulo 1: Fundamentos de Docker y contenedores
 
-## Sílabo
-
-**Objetivo general**
-
-Entender qué es un contenedor, por qué se volvió el estándar para empaquetar software, dominar los comandos esenciales de Docker y Docker Compose, y levantar Floci por primera vez, dejándolo verificado y listo para los ocho módulos siguientes.
-
-**Objetivos específicos**
-
-1. Explicar la diferencia entre virtualización tradicional y contenedores.
-2. Describir qué es una imagen Docker, cómo se compone en capas, y de dónde se descargan.
-3. Ejecutar los comandos esenciales de Docker: `pull`, `run`, `ps`, `stop`, `rm`, `images`, `exec`, `logs`.
-4. Escribir y levantar un `docker-compose.yml` con al menos un servicio.
-5. Levantar Floci con Docker y verificar que responde correctamente en su endpoint de salud.
-
-**Contenido**
-
-- Virtualización vs contenedores.
-- Imágenes y capas.
-- Registros de contenedores (Docker Hub).
-- Comandos esenciales: `docker pull/run/ps/stop/rm/images/exec/logs`.
-- Docker Compose: servicios, redes y volúmenes.
-- Levantar Floci con Docker (AWS, Azure y GCP).
-
-**Evaluación**
-
-Dos laboratorios prácticos (levantar Floci y configurar la AWS CLI contra él) y tres ejercicios de evaluación que comprueban que entiendes la diferencia entre imagen y contenedor, que sabes leer el estado de contenedores en ejecución, y que puedes levantar y destruir el entorno de Floci sin ayuda.
-
----
 
 ## Aprende construyendo
 
@@ -188,21 +160,6 @@ docker-compose.yml
 
 ---
 
-## Criterio transversal de calidad del código
-
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
 
 ## Laboratorio práctico
 
@@ -300,46 +257,3 @@ Repite la comprobación visual primero en StackPort y después en Floci UI, o en
 - **`floci doctor` reporta el socket de Docker inaccesible en Podman o un daemon remoto.** Exporta `DOCKER_HOST` apuntando a tu socket o daemon (`unix:///run/user/1000/podman/podman.sock` para Podman rootless, por ejemplo); `floci start` lo detecta automáticamente sin flags adicionales.
 
 ---
-
-
-
-## Bibliografía y fundamento académico
-
-Estas fuentes sustentan los conceptos y deben consultarse para verificar detalles que cambian entre versiones:
-
-- AWS, Microsoft Azure y Google Cloud, marcos oficiales de arquitectura bien diseñada.
-- NIST, *Cloud Computing Standards Roadmap* y *Secure Software Development Framework*.
-- Beyer et al., *Site Reliability Engineering*.
-- ACM/IEEE-CS/AAAI, *Computer Science Curricula 2023*.
-- IEEE Computer Society, *SWEBOK Guide V4.0*.
-
-
-## Resumen del módulo
-
-**Puntos clave**
-
-- Los contenedores comparten el kernel del sistema anfitrión, lo que los hace mucho más ligeros y rápidos de arrancar que las máquinas virtuales tradicionales.
-- Una imagen es una plantilla inmutable construida en capas; un contenedor es una instancia en ejecución de esa imagen.
-- Docker Hub (y otros registros) permiten descargar y distribuir imágenes ya construidas, como la de Floci.
-- Los ocho comandos esenciales de Docker (`pull`, `run`, `ps`, `stop`, `rm`, `images`, `exec`, `logs`) cubren el ciclo de vida completo de un contenedor.
-- Docker Compose describe uno o varios servicios en un archivo de texto, y crea automáticamente una red compartida entre ellos; los volúmenes son necesarios si quieres que el estado sobreviva a la destrucción del contenedor.
-- Floci corre como un contenedor Docker normal, expuesto en el puerto 4566, y se verifica con su endpoint de salud compatible con LocalStack.
-
-**Conceptos aprendidos**
-
-- Virtualización vs contenedores y por qué los contenedores son más eficientes.
-- Imágenes, capas y su reutilización como caché.
-- Registros de contenedores y el flujo `pull`/`push`.
-- Los ocho comandos esenciales de Docker.
-- Docker Compose: servicios, red compartida y volúmenes.
-- Cómo levantar y verificar Floci con Docker Compose y la AWS CLI.
-
-**Próximos pasos**
-
-Con Floci corriendo y verificado, en el Módulo 2 vas a usar tu primer servicio real: S3, empezando por el concepto de objeto, bucket, y las operaciones básicas de subir, listar, descargar y eliminar archivos.
-
-**Recursos adicionales**
-
-- Documentación oficial de Docker: "Get Started" y referencia de comandos de la CLI.
-- Documentación oficial de Docker Compose: referencia del formato `docker-compose.yml`.
-- Documentación de LocalStack sobre el endpoint `/_localstack/health`, en el que se basa el de Floci.

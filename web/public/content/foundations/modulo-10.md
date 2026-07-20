@@ -2,13 +2,6 @@
 
 Una aplicación local puede asumir que una llamada termina o falla de forma visible. Cuando dos procesos se comunican por red aparece una tercera posibilidad: el resultado es **desconocido**. La respuesta puede perderse después de que el servidor confirmó un pedido; un mensaje puede llegar dos veces; dos réplicas pueden observar órdenes diferentes. Este módulo enseña a razonar bajo esa incertidumbre sin prometer garantías que el sistema no puede cumplir.
 
-## Sílabo
-
-1. Fallos parciales, latencia, tiempo y causalidad.
-2. Replicación, particiones, consistencia y consenso.
-3. Mensajería, idempotencia, reintentos, outbox y sagas.
-4. Resiliencia, observabilidad, SLI, SLO e incidentes.
-5. Proyecto 10: inventario distribuido mínimo con fallos controlados.
 
 ## Aprende construyendo
 
@@ -184,21 +177,6 @@ Prueba cada transición válida e inválida, un conjunto donde la heurística no
 
 El capítulo se completa cuando la evidencia permite a otra persona reproducir el flujo y explicar qué garantías ofrece y cuáles todavía no.
 
-## Criterio transversal de calidad del código
-
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
 
 ## Laboratorio práctico
 
@@ -229,25 +207,3 @@ No dividas el sistema en muchos microservicios. Conserva el núcleo modular y a�
 - Crear una métrica por usuario: controla cardinalidad y privacidad.
 - SLO basado en CPU: vincúlalo con resultado y latencia percibidos por usuario.
 - Postmortem “el operador falló”: investiga por qué una acción humana podía causar impacto sin barreras.
-
-
-
-## Bibliografía y fundamento académico
-
-- Kleppmann, *Designing Data-Intensive Applications*: replicación, particiones, transacciones y sistemas derivados.
-- Tanenbaum y Van Steen, *Distributed Systems*: modelos, tiempo, coordinación y tolerancia a fallos.
-- Ongaro y Ousterhout, *In Search of an Understandable Consensus Algorithm (Raft)*.
-- Beyer et al., *Site Reliability Engineering* y *The Site Reliability Workbook*.
-- OpenTelemetry: especificaciones oficiales de trazas, métricas y logs.
-- ACM/IEEE-CS CS2023, Parallel and Distributed Computing; SWEBOK v4, arquitectura, construcción, calidad, operaciones y mantenimiento.
-
-Los resultados observables son explicar un resultado ambiguo, elegir consistencia por invariante, demostrar idempotencia ante duplicados, recuperar outbox tras caída y operar un SLO con telemetría correlacionada.
-
-## Resumen del módulo
-
-- Una llamada remota puede terminar con resultado desconocido; timeout no significa “no ocurrió”.
-- Replicar obliga a decidir consistencia, disponibilidad, latencia y reparación por operación.
-- Entrega repetida es normal; identidad, transacción local y deduplicación protegen el efecto.
-- Outbox resuelve la separación entre cambio local y publicación aceptando reentrega segura.
-- Resiliencia limita impacto; observabilidad conecta señales con experiencia de usuario.
-- SLI, SLO, error budget, runbook y postmortem convierten confiabilidad en práctica medible.

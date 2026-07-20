@@ -1,31 +1,5 @@
 # Módulo 10: Logging centralizado
 
-## Sílabo
-
-**Objetivo general**
-
-Centralizar logs de múltiples servicios para poder buscarlos y correlacionarlos en segundos, en vez de horas, mediante logging estructurado, un pipeline de recolección centralizada, y propagación de un correlation ID a través de servicios distintos.
-
-**Objetivos específicos**
-
-1. Configurar una aplicación para loguear en formato JSON estructurado en vez de texto libre.
-2. Levantar un pipeline de logging centralizado (Loki + Grafana, o ELK/EFK) con Docker Compose.
-3. Buscar y filtrar logs centralizados por campo estructurado específico.
-4. Propagar un correlation ID entre servicios que se comunican entre sí, y usarlo para reconstruir el flujo completo de una petición.
-5. Explicar la diferencia de arquitectura entre Loki y Elasticsearch, y cuándo preferir cada uno.
-
-**Contenido**
-
-- Logging estructurado (JSON).
-- Pipeline ELK/EFK.
-- Loki + Grafana como alternativa ligera.
-- Correlation ID a través de servicios.
-
-**Evaluación**
-
-Un laboratorio que centraliza logs de al menos dos servicios y los correlaciona con un ID compartido, y tres ejercicios de evaluación sobre logging estructurado, elección entre Loki y Elasticsearch, y diseño de correlation ID.
-
----
 
 ## Aprende construyendo
 
@@ -151,21 +125,6 @@ Buscar "abc-123" en el sistema centralizado
 
 ---
 
-## Criterio transversal de calidad del código
-
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
 
 ## Laboratorio práctico
 
@@ -193,42 +152,3 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 - **Las consultas LogQL de texto libre son muy lentas.** Recuerda el compromiso del Tema 3: siempre filtra primero por labels específicos (`{service="api"}`) antes de añadir un filtro de texto libre adicional, en vez de intentar una búsqueda de texto libre sin ningún filtro de labels sobre el volumen completo de logs almacenados.
 
 ---
-
-
-
-## Bibliografía y fundamento académico
-
-Estas fuentes sustentan los conceptos y deben consultarse para verificar detalles que cambian entre versiones:
-
-- CNCF, documentación oficial de Kubernetes, Prometheus y OpenTelemetry.
-- HashiCorp, *Terraform Documentation*.
-- Beyer et al., *Site Reliability Engineering*; Forsgren et al., *Accelerate*.
-- ACM/IEEE-CS/AAAI, *Computer Science Curricula 2023*.
-- IEEE Computer Society, *SWEBOK Guide V4.0*.
-
-
-## Resumen del módulo
-
-**Puntos clave**
-
-- El logging estructurado (JSON) hace que cada campo sea independientemente filtrable y consultable, a diferencia del texto libre que solo permite búsqueda por coincidencia de subcadena.
-- Un pipeline ELK/EFK sigue una arquitectura de tres etapas: recolección (Filebeat/Fluentd), almacenamiento e indexación (Elasticsearch), y visualización (Kibana).
-- Loki indexa solo metadata (labels), no el contenido completo, siendo significativamente más barato de operar que Elasticsearch a costa de búsquedas de texto libre algo más lentas; se integra nativamente con Grafana.
-- Un correlation ID propagado consistentemente entre servicios convierte la reconstrucción del flujo completo de una petición distribuida en una búsqueda de segundos, en vez de una correlación manual lenta y propensa a error por proximidad de marca de tiempo.
-
-**Conceptos aprendidos**
-
-- Logging estructurado (JSON) frente a logging de texto libre.
-- La arquitectura en tres etapas de un pipeline ELK/EFK.
-- Loki como alternativa ligera a Elasticsearch, y su integración nativa con Grafana.
-- Correlation ID y su propagación consistente a través de servicios distintos.
-
-**Próximos pasos**
-
-En el Módulo 11 vas a integrar seguridad en cada etapa del pipeline (DevSecOps): gestión de secretos, escaneo de imágenes y dependencias, y el principio de menor privilegio aplicado a CI/CD.
-
-**Recursos adicionales**
-
-- Documentación oficial de Grafana Loki: arquitectura, LogQL, y su integración con Promtail.
-- Documentación oficial del stack Elastic (Elasticsearch, Logstash, Kibana) como referencia del enfoque de indexación completa.
-- Guías de la industria sobre propagación de contexto de trazado (correlation ID, trace context) en sistemas distribuidos.

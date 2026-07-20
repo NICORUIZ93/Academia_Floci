@@ -1,33 +1,5 @@
 # Módulo 1: SwiftUI: vistas y layout declarativo
 
-## Sílabo
-
-**Objetivo general**
-
-Describir la UI como una función del estado usando la sintaxis declarativa nativa de Apple, dominando composición de vistas, el orden de los modificadores, los contenedores de layout fundamentales, y el sistema de Previews para iterar rápidamente.
-
-**Objetivos específicos**
-
-1. Crear una vista que reciba datos como parámetros y componerla dentro de otra.
-2. Observar cómo el orden de los modificadores cambia el resultado visual.
-3. Construir un layout combinando `VStack`, `HStack` y `ZStack`.
-4. Usar el sistema de Previews para iterar sin recompilar la app completa.
-5. Extraer una sub-vista reutilizable a partir de código repetido.
-
-**Contenido**
-
-- `View` protocol y composición de vistas.
-- Modificadores y orden de aplicación.
-- Layout con `VStack`/`HStack`/`ZStack`.
-- Previews para iterar rápido.
-- `didSet`/`willSet` y `@propertyWrapper` personalizados.
-- `LazyVGrid` y `ScrollView`.
-
-**Evaluación**
-
-Pantalla SwiftUI compuesta a partir de al menos 3 vistas reutilizables propias, más tres ejercicios de evaluación.
-
----
 
 ## Aprende construyendo
 
@@ -118,21 +90,6 @@ El sistema de Previews de Xcode renderiza una vista directamente en el canvas de
 
 ---
 
-## Criterio transversal de calidad del código
-
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
 
 ## Laboratorio práctico
 
@@ -157,41 +114,3 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 - **Usar `VStack`/`HStack` regulares para listas potencialmente largas.** Prefiere `LazyVGrid`/`ScrollView` con carga perezosa para eficiencia.
 
 ---
-
-
-
-## Bibliografía y fundamento académico
-
-Estas fuentes sustentan los conceptos y deben consultarse para verificar detalles que cambian entre versiones:
-
-- Apple, *Swift Language Guide* y *Apple Developer Documentation*.
-- Apple, *Human Interface Guidelines* y documentación de accesibilidad.
-- OWASP Foundation, *Mobile Application Security Verification Standard*.
-- ACM/IEEE-CS/AAAI, *Computer Science Curricula 2023*.
-- IEEE Computer Society, *SWEBOK Guide V4.0*.
-
-## Resumen del módulo
-
-**Puntos clave**
-
-- El protocolo `View` unifica vistas nativas y propias bajo el mismo mecanismo de composición.
-- Cada modificador envuelve la vista anterior en una nueva capa; el orden de aplicación determina el resultado visual final.
-- `VStack`, `HStack` y `ZStack` son los contenedores de layout fundamentales, combinables para cualquier estructura visual.
-- El sistema de Previews acelera drásticamente la iteración de diseño sin recompilar la app completa.
-
-**Conceptos aprendidos**
-
-- `View` protocol y composición de vistas.
-- Modificadores y orden de aplicación.
-- Layout con `VStack`/`HStack`/`ZStack`.
-- Previews.
-- `didSet`/`willSet` y property wrappers personalizados.
-- `LazyVGrid` y `ScrollView`.
-
-**Próximos pasos**
-
-En el Módulo 2 aprenderás cómo SwiftUI reacciona a cambios de estado con `@State`, `@Binding`, `@Observable` y `@Environment`.
-
-**Recursos adicionales**
-
-- Documentación oficial de SwiftUI (developer.apple.com/documentation/swiftui).

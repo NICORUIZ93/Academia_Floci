@@ -1,33 +1,5 @@
 # Módulo 20: IA y servicios especializados: Bedrock, Textract y Transcribe
 
-## Sílabo
-
-**Objetivo general**
-
-Integrar modelos de IA generativa y procesamiento automático de documentos y audio en una aplicación, entendiendo que cloud local emula Bedrock con stubs deterministas, y aprendiendo a distinguir qué aspectos de un sistema de IA se pueden probar localmente con confianza y cuáles requieren validación contra el modelo real.
-
-**Objetivos específicos**
-
-1. Invocar un modelo de Bedrock Runtime y observar la respuesta stub determinista.
-2. Extraer texto y estructura de un documento con Textract.
-3. Transcribir un archivo de audio con Transcribe.
-4. Escribir una prueba de contrato para el stub de Bedrock.
-
-**Contenido**
-
-- Bedrock Runtime.
-- InvokeModel API.
-- Textract (OCR).
-- Transcribe (STT).
-- Stub vs Mock.
-- Prompt engineering.
-- Token limits.
-
-**Evaluación**
-
-API que procesa documentos con Textract, guarda el texto en DynamoDB y genera un resumen con Bedrock, más tres ejercicios de evaluación.
-
----
 
 ## Aprende construyendo
 
@@ -103,21 +75,6 @@ Bedrock real (AWS)           → verifica: calidad del contenido generado, compo
 
 ---
 
-## Criterio transversal de calidad del código
-
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
 
 ## Laboratorio práctico
 
@@ -144,42 +101,3 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 - **Confundir un stub simple con un mock que verifica invocaciones.** Distingue el propósito de cada uno según lo que necesitas verificar.
 
 ---
-
-
-
-## Bibliografía y fundamento académico
-
-Estas fuentes sustentan los conceptos y deben consultarse para verificar detalles que cambian entre versiones:
-
-- AWS, Microsoft Azure y Google Cloud, marcos oficiales de arquitectura bien diseñada.
-- NIST, *Cloud Computing Standards Roadmap* y *Secure Software Development Framework*.
-- Beyer et al., *Site Reliability Engineering*.
-- ACM/IEEE-CS/AAAI, *Computer Science Curricula 2023*.
-- IEEE Computer Society, *SWEBOK Guide V4.0*.
-
-## Resumen del módulo
-
-**Puntos clave**
-
-- cloud local emula Bedrock con respuestas stub deterministas, permitiendo pruebas automatizadas confiables sobre la estructura de integración.
-- Textract y Transcribe extraen información estructurada de imágenes y audio automáticamente, evitando transcripción manual humana.
-- Un stub devuelve respuestas fijas sin verificar la invocación; un mock más estricto también verifica la forma de la invocación.
-- Documentar qué contratos se prueban localmente frente a lo que requiere el modelo real evita falsa confianza de cobertura completa.
-
-**Conceptos aprendidos**
-
-- Bedrock Runtime.
-- InvokeModel API.
-- Textract (OCR).
-- Transcribe (STT).
-- Stub vs Mock.
-- Prompt engineering.
-- Token limits.
-
-**Próximos pasos**
-
-En el Módulo 21, el proyecto integrador final, construirás la misma API en AWS, Azure y GCP local, demostrando portabilidad de conocimiento entre proveedores.
-
-**Recursos adicionales**
-
-- Documentación oficial de Amazon Bedrock (docs.aws.amazon.com/bedrock).

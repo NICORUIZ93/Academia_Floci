@@ -1,30 +1,5 @@
 # Módulo 10: CI/CD para KMP
 
-## Sílabo
-
-**Objetivo general**
-
-Automatizar el build y la distribución de un proyecto que compila a múltiples plataformas, con pipelines Gradle multiplataforma, distribución a TestFlight/Play Console, y Fastlane.
-
-**Objetivos específicos**
-
-1. Configurar un pipeline de CI que compile el módulo compartido para ambos targets en cada push.
-2. Agregar la ejecución de tests de `commonTest` como parte obligatoria del pipeline.
-3. Configurar Fastlane para automatizar build y firma.
-4. Documentar cómo extender el pipeline para distribución automática a TestFlight y Play Console.
-
-**Contenido**
-
-- Pipeline Gradle multiplataforma en CI.
-- Distribución a TestFlight/Play Console.
-- Fastlane para automatizar releases.
-- Versionado compartido entre apps.
-
-**Evaluación**
-
-Pipeline CI que compila el módulo compartido para Android e iOS en cada push, más tres ejercicios de evaluación.
-
----
 
 ## Aprende construyendo
 
@@ -133,21 +108,6 @@ Evita: "¿qué versión del módulo compartido corre esta versión específica d
 
 ---
 
-## Criterio transversal de calidad del código
-
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
 
 ## Laboratorio práctico
 
@@ -171,39 +131,3 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 - **Desincronizar el número de versión entre las apps Android e iOS.** Centraliza el versionado en un archivo compartido leído por ambos pipelines.
 
 ---
-
-
-
-## Bibliografía y fundamento académico
-
-Estas fuentes sustentan los conceptos y deben consultarse para verificar detalles que cambian entre versiones:
-
-- JetBrains, documentación oficial de *Kotlin Multiplatform* y Kotlin Coroutines.
-- Google, *Android Developers Documentation*; Apple, *Developer Documentation*.
-- Kotlin Foundation, especificación y pautas de compatibilidad de Kotlin.
-- ACM/IEEE-CS/AAAI, *Computer Science Curricula 2023*.
-- IEEE Computer Society, *SWEBOK Guide V4.0*.
-
-## Resumen del módulo
-
-**Puntos clave**
-
-- Un pipeline CI para KMP debe validar explícitamente ambos targets (Android e iOS) en cada push, no asumir éxito en uno a partir del otro.
-- Los builds de iOS requieren específicamente un runner macOS por el toolchain de Xcode.
-- Fastlane automatiza firma, versionado y subida a las plataformas de distribución en un único comando.
-- El versionado compartido entre apps evita confusión sobre qué versión del módulo compartido corre cada plataforma.
-
-**Conceptos aprendidos**
-
-- Pipeline Gradle multiplataforma en CI.
-- Distribución a TestFlight/Play Console.
-- Fastlane.
-- Versionado compartido.
-
-**Próximos pasos**
-
-En el Módulo 11, el proyecto integrador final, unirás lógica, networking, persistencia y UI compartida en una app real para Android e iOS.
-
-**Recursos adicionales**
-
-- Documentación oficial de Fastlane (docs.fastlane.tools).

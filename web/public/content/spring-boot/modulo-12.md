@@ -1,32 +1,5 @@
 # Módulo 12: Proyecto integrador — microservicio productivo
 
-## Sílabo
-
-**Objetivo general**
-
-Unir persistencia real con migraciones, seguridad con JWT, observabilidad expuesta desde el inicio, y tests de integración con Testcontainers en un microservicio Spring Boot productivo.
-
-**Objetivos específicos**
-
-1. Diseñar la arquitectura por capas del microservicio completo.
-2. Implementar persistencia real con Spring Data JPA y migraciones versionadas.
-3. Proteger endpoints sensibles con Spring Security y JWT.
-4. Exponer Actuator con al menos una métrica de negocio custom.
-5. Escribir tests de integración con Testcontainers cubriendo el flujo crítico.
-
-**Contenido**
-
-- Arquitectura por capas.
-- Seguridad con JWT.
-- Persistencia con migraciones.
-- Tests de integración con Testcontainers.
-- Qué sigue: Arquitectura Hexagonal/DDD, CQRS y Event Sourcing, OIDC/Keycloak.
-
-**Evaluación**
-
-Microservicio Spring Boot con auth, persistencia real, Actuator y tests de integración, más tres ejercicios de evaluación de cierre.
-
----
 
 ## Aprende construyendo
 
@@ -126,21 +99,6 @@ Implementa repositorios JPA y migraciones con índices/constraints. Prueba repet
 
 El capítulo se completa cuando la evidencia permite a otra persona reproducir el flujo y explicar qué garantías ofrece y cuáles todavía no.
 
-## Criterio transversal de calidad del código
-
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
 
 ## Laboratorio práctico
 
@@ -165,37 +123,3 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 - **Omitir tests de integración del flujo crítico.** Prioriza cubrir con Testcontainers el camino principal completo de la aplicación.
 
 ---
-
-
-
-## Bibliografía y fundamento académico
-
-Estas fuentes sustentan los conceptos y deben consultarse para verificar detalles que cambian entre versiones:
-
-- VMware/Broadcom, documentación de *Spring Framework* y *Spring Boot*.
-- IETF, especificaciones HTTP y OAuth 2.0.
-- OWASP Foundation, *Application Security Verification Standard*.
-- ACM/IEEE-CS/AAAI, *Computer Science Curricula 2023*.
-- IEEE Computer Society, *SWEBOK Guide V4.0*.
-
-## Resumen del módulo
-
-**Puntos clave**
-
-- El proyecto integrador combina todas las capas del track (controller, service, repository, security, config) en una arquitectura coherente.
-- Un endpoint real integra seguridad, validación, lógica de negocio y persistencia colaborando en una única operación.
-- Un microservicio productivo se distingue por seguridad declarativa, persistencia versionada, observabilidad desde el inicio, y tests de integración reales.
-
-**Conceptos aprendidos**
-
-- Arquitectura por capas de un microservicio real completo.
-- Integración de seguridad, persistencia y observabilidad.
-- Criterios que distinguen un microservicio productivo de un CRUD simple.
-
-**Próximos pasos**
-
-Con el track de Spring Boot completo, estás preparado para construir, asegurar, observar y probar microservicios Spring Boot productivos, con una base sólida para profundizar en Arquitectura Hexagonal/DDD, CQRS/Event Sourcing, y autenticación federada con OIDC/Keycloak.
-
-**Recursos adicionales**
-
-- Documentación oficial de Spring (spring.io/projects) como referencia continua para profundizar en cualquiera de los temas de este track.

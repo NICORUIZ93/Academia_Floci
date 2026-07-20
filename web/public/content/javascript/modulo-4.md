@@ -1,33 +1,5 @@
 # Módulo 4: Arrays y estructuras de datos funcionales
 
-## Sílabo
-
-**Objetivo general**
-
-Transformar colecciones de datos usando el estilo funcional de JavaScript (`map`, `filter`, `reduce`) en vez de loops manuales, y elegir la estructura de datos correcta (`Array`, `Object`, `Set`, `Map`) según el problema.
-
-**Objetivos específicos**
-
-1. Usar `map`, `filter`, `reduce`, `find`, `some`/`every` para transformar y consultar colecciones.
-2. Elegir entre `Set`/`Map` y `Array`/`Object` según el caso de uso.
-3. Actualizar estructuras anidadas sin mutar el original.
-4. Usar `WeakMap`/`WeakSet` para prevenir fugas de memoria.
-5. Aplicar los métodos inmutables modernos (`toSorted`, `toReversed`, `with`).
-
-**Contenido**
-
-- `map`, `filter`, `reduce`, `find`, `some`/`every`.
-- `Set` y `Map` frente a `Array` y `Object`.
-- Inmutabilidad y spread para actualizar datos.
-- Estructuras anidadas y normalización.
-- `WeakMap` y `WeakSet`.
-- Métodos inmutables modernos.
-
-**Evaluación**
-
-Un pipeline de transformación de datos (CSV a JSON agregado) usando solo métodos funcionales, más tres ejercicios de evaluación.
-
----
 
 ## Aprende construyendo
 
@@ -159,21 +131,6 @@ arr.with(2, "x")  → NO muta arr, devuelve un array NUEVO con esa posición ree
 
 ---
 
-## Criterio transversal de calidad del código
-
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
 
 ## Laboratorio práctico
 
@@ -199,42 +156,3 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 - **Usar un objeto plano para contar ocurrencias dinámicas y toparse con colisiones de nombres con métodos heredados.** Usa `Map` en su lugar para claves verdaderamente dinámicas y arbitrarias.
 
 ---
-
-
-
-## Bibliografía y fundamento académico
-
-Estas fuentes sustentan los conceptos y deben consultarse para verificar detalles que cambian entre versiones:
-
-- ECMA International, *ECMAScript Language Specification*.
-- MDN Web Docs, guías de JavaScript y Web APIs.
-- WHATWG, *HTML Living Standard* y *Fetch Standard*.
-- ACM/IEEE-CS/AAAI, *Computer Science Curricula 2023*.
-- IEEE Computer Society, *SWEBOK Guide V4.0*.
-
-## Resumen del módulo
-
-**Puntos clave**
-
-- `map`, `filter` y `reduce` cubren transformación, selección y acumulación respectivamente; `find`/`some`/`every` cubren búsqueda y comprobación booleana.
-- `Set` garantiza unicidad; `Map` permite claves de cualquier tipo con orden de inserción garantizado y sin riesgo de colisión con el prototipo.
-- Actualizar estructuras anidadas sin mutar requiere spread en cada nivel de anidamiento relevante.
-- `WeakMap`/`WeakSet` previenen fugas de memoria al asociar metadatos a objetos que deben poder liberarse.
-- Los métodos modernos (`toSorted`, `with`) ofrecen alternativas inmutables explícitas a operaciones tradicionalmente mutables.
-
-**Conceptos aprendidos**
-
-- Los métodos funcionales fundamentales de array y cuándo usar cada uno.
-- Elección informada entre `Array`/`Object` y `Set`/`Map`.
-- Actualización inmutable de estructuras anidadas.
-- Referencias débiles y prevención de fugas de memoria.
-- Métodos inmutables modernos de array.
-
-**Próximos pasos**
-
-En el Módulo 5 profundizarás en el modelo de concurrencia de JavaScript: el Event Loop, microtasks frente a macrotasks, y las Promesas como mecanismo central de asincronía.
-
-**Recursos adicionales**
-
-- MDN Web Docs: "Array", "Map", "Set", "WeakMap".
-- Documentación de TC39 sobre los métodos de array inmutables recientes (`Array.prototype.with`, `toSorted`).

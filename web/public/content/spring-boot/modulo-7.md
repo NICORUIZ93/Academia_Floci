@@ -1,31 +1,5 @@
 # Módulo 7: Observabilidad con Actuator
 
-## Sílabo
-
-**Objetivo general**
-
-Exponer métricas y health checks listos para cualquier sistema de monitoreo usando Spring Boot Actuator, incluyendo métricas de negocio personalizadas con Micrometer.
-
-**Objetivos específicos**
-
-1. Exponer los endpoints clave de Actuator (`/health`, `/metrics`).
-2. Crear un health indicator personalizado.
-3. Definir una métrica de negocio custom con Micrometer.
-4. Diferenciar liveness y readiness en el contexto de Kubernetes.
-5. Configurar logging estructurado.
-
-**Contenido**
-
-- Spring Boot Actuator: endpoints clave.
-- Micrometer y métricas custom.
-- Health checks personalizados.
-- Logging estructurado.
-
-**Evaluación**
-
-API con Actuator expuesto y al menos una métrica de negocio custom, más tres ejercicios de evaluación.
-
----
 
 ## Aprende construyendo
 
@@ -108,21 +82,6 @@ readiness: ¿debe el pod RECIBIR TRÁFICO ahora mismo?
 
 ---
 
-## Criterio transversal de calidad del código
-
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
 
 ## Laboratorio práctico
 
@@ -147,39 +106,3 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 - **Usar un único endpoint de salud genérico en Kubernetes.** Separa liveness de readiness para evitar reinicios innecesarios.
 
 ---
-
-
-
-## Bibliografía y fundamento académico
-
-Estas fuentes sustentan los conceptos y deben consultarse para verificar detalles que cambian entre versiones:
-
-- VMware/Broadcom, documentación de *Spring Framework* y *Spring Boot*.
-- IETF, especificaciones HTTP y OAuth 2.0.
-- OWASP Foundation, *Application Security Verification Standard*.
-- ACM/IEEE-CS/AAAI, *Computer Science Curricula 2023*.
-- IEEE Computer Society, *SWEBOK Guide V4.0*.
-
-## Resumen del módulo
-
-**Puntos clave**
-
-- Actuator expone endpoints estándar de observabilidad (`/health`, `/metrics`) listos para cualquier sistema de monitoreo.
-- Un `HealthIndicator` personalizado extiende la verificación de salud hacia dependencias externas críticas.
-- Micrometer permite definir métricas de negocio custom, dando valor directo al equipo de producto.
-- Liveness y readiness responden preguntas distintas: reiniciar el pod frente a recibir tráfico ahora mismo.
-
-**Conceptos aprendidos**
-
-- Spring Boot Actuator y sus endpoints clave.
-- Health checks personalizados.
-- Métricas custom con Micrometer.
-- Liveness vs readiness.
-
-**Próximos pasos**
-
-En el Módulo 8 aprenderás mensajería con Kafka/RabbitMQ: producers, consumers, y manejo de errores con dead-letter queues.
-
-**Recursos adicionales**
-
-- Documentación oficial de Spring Boot Actuator (docs.spring.io/spring-boot) y Micrometer (micrometer.io/docs).

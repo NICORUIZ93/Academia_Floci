@@ -1,34 +1,5 @@
 # Módulo 3: Persistencia con Spring Data JPA
 
-## Sílabo
-
-**Objetivo general**
-
-Persistir entidades sin escribir SQL repetitivo mediante Spring Data JPA, sin perder de vista qué genera Hibernate por debajo, incluyendo el problema N+1 y migraciones versionadas con Flyway.
-
-**Objetivos específicos**
-
-1. Definir entidades JPA y repositorios derivados.
-2. Comparar métodos derivados con `@Query` explícito.
-3. Modelar relaciones y diagnosticar el problema N+1.
-4. Corregir el problema N+1 con `JOIN FETCH` o `@EntityGraph`.
-5. Configurar migraciones versionadas con Flyway en vez de `ddl-auto`.
-
-**Contenido**
-
-- Entidades y mapeo JPA.
-- Repositorios derivados y `@Query`.
-- Relaciones (OneToMany, ManyToMany) y N+1.
-- Migraciones con Flyway/Liquibase.
-- JPQL, Native Queries, Criteria API y QueryDSL.
-- Paginación con Pageable y Page.
-- `@Valid`, `@Validated` y Bean Validation.
-
-**Evaluación**
-
-API con persistencia real en PostgreSQL y migraciones versionadas con Flyway, más tres ejercicios de evaluación.
-
----
 
 ## Aprende construyendo
 
@@ -104,21 +75,6 @@ CREATE TABLE tarea (id BIGSERIAL PRIMARY KEY, titulo VARCHAR(255), completada BO
 
 ---
 
-## Criterio transversal de calidad del código
-
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
 
 ## Laboratorio práctico
 
@@ -143,37 +99,3 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 - **Sobreusar `@Query` para casos que un método derivado simple resolvería.** Usa métodos derivados para consultas simples y directas.
 
 ---
-
-
-
-## Bibliografía y fundamento académico
-
-Estas fuentes sustentan los conceptos y deben consultarse para verificar detalles que cambian entre versiones:
-
-- VMware/Broadcom, documentación de *Spring Framework* y *Spring Boot*.
-- IETF, especificaciones HTTP y OAuth 2.0.
-- OWASP Foundation, *Application Security Verification Standard*.
-- ACM/IEEE-CS/AAAI, *Computer Science Curricula 2023*.
-- IEEE Computer Society, *SWEBOK Guide V4.0*.
-
-## Resumen del módulo
-
-**Puntos clave**
-
-- Spring Data JPA genera automáticamente queries a partir del nombre del método para casos simples; `@Query` da control explícito para casos complejos.
-- El problema N+1 multiplica queries proporcionalmente al tamaño de una colección iterada con carga perezosa; `JOIN FETCH`/`@EntityGraph` lo corrigen.
-- Las migraciones versionadas de Flyway son explícitas, revisables y predecibles, a diferencia de `ddl-auto=update` en producción.
-
-**Conceptos aprendidos**
-
-- Entidades y repositorios derivados.
-- El problema N+1 y su corrección.
-- Migraciones versionadas con Flyway.
-
-**Próximos pasos**
-
-En el Módulo 4 aprenderás Spring Security: `SecurityFilterChain`, JWT, autorización por roles, y CORS/CSRF.
-
-**Recursos adicionales**
-
-- Documentación oficial de Spring Data JPA (docs.spring.io/spring-data/jpa) y Flyway (flywaydb.org/documentation).

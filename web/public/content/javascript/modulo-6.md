@@ -1,34 +1,5 @@
 # Módulo 6: Asincronía II — async/await y fetch
 
-## Sílabo
-
-**Objetivo general**
-
-Escribir código asíncrono que se lee como código síncrono usando `async`/`await`, con manejo explícito de errores, cancelación de peticiones y patrones robustos de reintento y timeout.
-
-**Objetivos específicos**
-
-1. Reescribir cadenas de `.then()` como funciones `async` con `try/catch` equivalente.
-2. Consumir una API pública con `fetch`, manejando errores de red y de estado HTTP.
-3. Implementar cancelación de peticiones con `AbortController`.
-4. Diseñar una función de reintentos con backoff.
-5. Implementar un timeout manual combinando `Promise.race`.
-6. Explicar generadores (`function*`, `yield`) y Proxies a nivel introductorio.
-
-**Contenido**
-
-- `async`/`await` sobre promesas.
-- `try`/`catch` en flujos asíncronos.
-- `fetch` API y `AbortController`.
-- Reintentos y timeouts manuales.
-- Generadores: `function*`, `yield` y `yield*`.
-- Proxies y Reflect: traps `get`/`set`/`has`.
-
-**Evaluación**
-
-Un cliente que consume una API pública con reintentos, timeout y cancelación, más tres ejercicios de evaluación.
-
----
 
 ## Aprende construyendo
 
@@ -218,21 +189,6 @@ configuracion.puerto = "8080"; // TypeError, interceptado transparentemente
 
 ---
 
-## Criterio transversal de calidad del código
-
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
 
 ## Laboratorio práctico
 
@@ -258,43 +214,3 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 - **Olvidar distinguir un `AbortError` de otros tipos de error en el `catch`.** Verifica `error.name === "AbortError"` para no tratar una cancelación intencional como un fallo real que deba mostrarse al usuario.
 
 ---
-
-
-
-## Bibliografía y fundamento académico
-
-Estas fuentes sustentan los conceptos y deben consultarse para verificar detalles que cambian entre versiones:
-
-- ECMA International, *ECMAScript Language Specification*.
-- MDN Web Docs, guías de JavaScript y Web APIs.
-- WHATWG, *HTML Living Standard* y *Fetch Standard*.
-- ACM/IEEE-CS/AAAI, *Computer Science Curricula 2023*.
-- IEEE Computer Society, *SWEBOK Guide V4.0*.
-
-## Resumen del módulo
-
-**Puntos clave**
-
-- `async`/`await` es sintaxis sobre Promesas que permite código asíncrono legible como síncrono, sin bloquear el hilo único de JavaScript.
-- `try/catch` alrededor de un `await` captura rechazos de Promesa como excepciones síncronas normales.
-- `fetch` no rechaza ante errores HTTP (404/500); hay que verificar `respuesta.ok` explícitamente.
-- `AbortController` permite cancelar peticiones en curso, evitando condiciones de carrera con respuestas desactualizadas.
-- Reintentos con backoff y timeouts manuales (`Promise.race`) son prácticas de robustez estándar en clientes de API.
-- Los generadores permiten pausar y reanudar ejecución; los Proxies permiten interceptar operaciones sobre objetos de forma transparente.
-
-**Conceptos aprendidos**
-
-- `async`/`await` y su relación exacta con las Promesas del Módulo 5.
-- Manejo robusto de errores en flujos asíncronos.
-- `fetch`, `AbortController` y cancelación de peticiones.
-- Patrones de reintento con backoff y timeout manual.
-- Generadores (`function*`, `yield`) y Proxies/Reflect a nivel introductorio.
-
-**Próximos pasos**
-
-En el Módulo 7 aprenderás sobre módulos modernos (ESM frente a CommonJS) y herramientas de build como Vite, entendiendo qué hace realmente un bundler antes de usarlo sin comprenderlo.
-
-**Recursos adicionales**
-
-- MDN Web Docs: "async function", "AbortController", "Iterators and generators", "Proxy".
-- Documentación oficial de la Fetch API en MDN.

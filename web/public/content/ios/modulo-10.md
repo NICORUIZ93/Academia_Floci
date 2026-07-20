@@ -1,35 +1,5 @@
 # Módulo 10: Performance, accesibilidad y HIG
 
-## Sílabo
-
-**Objetivo general**
-
-Construir una app rápida, accesible y que respeta las Human Interface Guidelines, usando Instruments para medir performance real, VoiceOver para verificar accesibilidad, y entendiendo por qué seguir las convenciones de Apple hace que una app "se sienta" genuinamente nativa.
-
-**Objetivos específicos**
-
-1. Grabar una sesión con Instruments sobre una interacción lenta.
-2. Activar VoiceOver y navegar la app solo con gestos de accesibilidad.
-3. Agregar `.accessibilityLabel` a elementos sin texto visible.
-4. Verificar la app con Dynamic Type en su tamaño más grande y en modo oscuro.
-5. Construir una pantalla UIKit programática con ciclo de vida, Auto Layout, tabla reutilizable y memoria segura.
-
-**Contenido**
-
-- Instruments para medir performance.
-- Accesibilidad con VoiceOver.
-- Human Interface Guidelines esenciales.
-- Dynamic Type y dark mode.
-- `@ViewBuilder` y `.matchedGeometryEffect()`.
-- Interop con UIKit: `UIViewRepresentable` y `UIViewControllerRepresentable`.
-- Novedades recientes: Liquid Glass, layouts volumétricos y WebView nativo.
-- UIKit profesional: `UIViewController`, Auto Layout, `UITableView` y ARC.
-
-**Evaluación**
-
-Auditoría de accesibilidad y pantalla UIKit verificable, más cuatro ejercicios de evaluación.
-
----
 
 ## Aprende construyendo
 
@@ -235,21 +205,6 @@ flowchart LR
 
 ---
 
-## Criterio transversal de calidad del código
-
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
 
 ## Laboratorio práctico
 
@@ -277,44 +232,3 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 - **Capturar `self` fuertemente en un callback retenido.** Dibuja el grafo de referencias y usa captura débil cuando el callback no sea propietario.
 
 ---
-
-
-
-## Bibliografía y fundamento académico
-
-Estas fuentes sustentan los conceptos y deben consultarse para verificar detalles que cambian entre versiones:
-
-- Apple, *Swift Language Guide* y *Apple Developer Documentation*.
-- Apple, *Human Interface Guidelines* y documentación de accesibilidad.
-- OWASP Foundation, *Mobile Application Security Verification Standard*.
-- ACM/IEEE-CS/AAAI, *Computer Science Curricula 2023*.
-- IEEE Computer Society, *SWEBOK Guide V4.0*.
-
-
-## Resumen del módulo
-
-**Puntos clave**
-
-- Instruments mide rendimiento real (CPU, memoria, frames) de forma objetiva, revelando problemas que la percepción subjetiva no detecta.
-- Navegar activamente con VoiceOver expone huecos de accesibilidad que una inspección visual no puede revelar.
-- Seguir las Human Interface Guidelines hace que una app se sienta genuinamente nativa, más allá de simplemente usar SwiftUI.
-- Dynamic Type y dark mode requieren verificación activa en sus configuraciones extremas para detectar layouts rotos.
-- UIKit exige comprender ciclo de vida, Auto Layout, reutilización e identidad, además de sintaxis visual.
-
-**Conceptos aprendidos**
-
-- Instruments para medir performance.
-- Accesibilidad con VoiceOver.
-- Human Interface Guidelines esenciales.
-- Dynamic Type y dark mode.
-- `@ViewBuilder` y `.matchedGeometryEffect()`.
-- Interop con UIKit.
-- `UIViewController`, `UITableViewDiffableDataSource`, Auto Layout y ARC.
-
-**Próximos pasos**
-
-En el Módulo 11 aprenderás a publicar tu app en la App Store: certificados, TestFlight, y la metadata de App Store Connect.
-
-**Recursos adicionales**
-
-- Human Interface Guidelines de Apple (developer.apple.com/design/human-interface-guidelines).

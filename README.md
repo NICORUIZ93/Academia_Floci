@@ -129,14 +129,14 @@ El contrato editorial que debe alcanzar cada tema es:
 
 La version Angular tiene su propio contenido, mas amplio, en formato Markdown
 (`web/public/content/<track>/modulo-N.md`), organizado en 14 tracks, 224
-módulos y 877 temas editoriales visibles. Cada módulo prioriza una secuencia de
-temas prácticos. Sílabo, bibliografía o resumen solo aparecen cuando aportan
-contexto que no esté explicado en el recorrido principal. No existen rutas
-separadas de cuestionarios, rúbricas o laboratorios repetidos.
+módulos y 893 temas editoriales visibles. Cada módulo prioriza una secuencia de
+temas prácticos. El sílabo y el estándar de calidad viven en documentos
+centrales; las fuentes específicas permanecen junto al tema que sustentan. No
+existen rutas separadas de cuestionarios, rúbricas o laboratorios repetidos.
 
-La preparación completa se abre por defecto en el módulo inicial y permanece
-disponible, de forma plegable, en todos los capítulos para quien llegue desde un
-enlace directo. WebFlux es uno de los temas que ya alcanza el recorrido manual
+La preparación completa se muestra únicamente en el módulo inicial. La ruta
+oficial permanece disponible de forma plegable en el índice y el proyecto
+integrador aparece en el capítulo final. WebFlux es uno de los temas que ya alcanza el recorrido manual
 esperado; no se usa para ocultar la deuda editorial de los demás.
 La auditoría editorial de `docs/topic-learning-quality.md` sigue midiendo el
 Markdown real por separado: una ayuda generada en la interfaz no convierte una

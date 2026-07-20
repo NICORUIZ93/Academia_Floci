@@ -1,32 +1,5 @@
 # Módulo 4: Spring Security
 
-## Sílabo
-
-**Objetivo general**
-
-Proteger endpoints con autenticación y autorización declarativa usando la configuración moderna de Spring Security, JWT, y entender cuándo CORS y CSRF son relevantes.
-
-**Objetivos específicos**
-
-1. Configurar un `SecurityFilterChain` moderno sin `WebSecurityConfigurerAdapter`.
-2. Implementar un filtro JWT que valide tokens en cada request.
-3. Aplicar autorización basada en roles con `@PreAuthorize`.
-4. Configurar CORS apropiadamente.
-5. Explicar cuándo CSRF es relevante y por qué se deshabilita en APIs stateless con JWT.
-
-**Contenido**
-
-- `SecurityFilterChain` y configuración moderna.
-- JWT con Spring Security.
-- Autorización basada en roles/permisos.
-- CORS y CSRF.
-- Versionado de APIs.
-
-**Evaluación**
-
-API protegida con JWT y rutas con autorización por rol, más tres ejercicios de evaluación.
-
----
 
 ## Aprende construyendo
 
@@ -112,21 +85,6 @@ CorsConfigurationSource corsConfig() {
 
 ---
 
-## Criterio transversal de calidad del código
-
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
 
 ## Laboratorio práctico
 
@@ -151,38 +109,3 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 - **Olvidar `OncePerRequestFilter` para el filtro JWT.** Sin él, el filtro podría ejecutarse más de una vez por petición en ciertas configuraciones de servlets anidados.
 
 ---
-
-
-
-## Bibliografía y fundamento académico
-
-Estas fuentes sustentan los conceptos y deben consultarse para verificar detalles que cambian entre versiones:
-
-- VMware/Broadcom, documentación de *Spring Framework* y *Spring Boot*.
-- IETF, especificaciones HTTP y OAuth 2.0.
-- OWASP Foundation, *Application Security Verification Standard*.
-- ACM/IEEE-CS/AAAI, *Computer Science Curricula 2023*.
-- IEEE Computer Society, *SWEBOK Guide V4.0*.
-
-## Resumen del módulo
-
-**Puntos clave**
-
-- La configuración moderna de Spring Security declara el `SecurityFilterChain` vía `@Bean`, reemplazando la herencia de `WebSecurityConfigurerAdapter`.
-- Un filtro JWT valida el token y establece la identidad autenticada en `SecurityContextHolder`; `@PreAuthorize` expresa autorización declarativamente.
-- CORS restringe qué orígenes de navegador pueden consumir la API; CSRF es relevante para sesiones basadas en cookies, generalmente innecesario en APIs stateless con JWT.
-
-**Conceptos aprendidos**
-
-- `SecurityFilterChain` moderno.
-- Filtro JWT y `SecurityContextHolder`.
-- Autorización con `@PreAuthorize`.
-- CORS y CSRF.
-
-**Próximos pasos**
-
-En el Módulo 5 aprenderás configuración tipada con `@ConfigurationProperties`, perfiles, y manejo global de excepciones.
-
-**Recursos adicionales**
-
-- Documentación oficial de Spring Security (docs.spring.io/spring-security).

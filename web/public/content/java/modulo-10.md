@@ -1,32 +1,5 @@
 # Módulo 10: Módulos (JPMS) y proyectos grandes
 
-## Sílabo
-
-**Objetivo general**
-
-Organizar aplicaciones grandes con límites explícitos entre módulos usando el Java Platform Module System (JPMS), entendiendo su encapsulación fuerte y cuándo realmente aporta valor.
-
-**Objetivos específicos**
-
-1. Crear módulos JPMS con sus respectivos `module-info.java`.
-2. Declarar `exports` para exponer selectivamente paquetes específicos.
-3. Declarar `requires` para dependencias explícitas entre módulos.
-4. Explicar cómo migrar incrementalmente un proyecto legacy sin módulos.
-5. Evaluar cuándo JPMS aporta valor frente a cuándo es complejidad innecesaria.
-
-**Contenido**
-
-- `module-info.java`.
-- Encapsulación fuerte entre módulos.
-- Migración de proyectos legacy sin módulos.
-- Cuándo JPMS realmente aporta valor.
-- `opens` para acceso reflexivo controlado de frameworks.
-
-**Evaluación**
-
-Proyecto dividido en al menos dos módulos JPMS con dependencias explícitas, más tres ejercicios de evaluación.
-
----
 
 ## Aprende construyendo
 
@@ -98,21 +71,6 @@ module com.miapp.dominio {
 
 ---
 
-## Criterio transversal de calidad del código
-
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
 
 ## Laboratorio práctico
 
@@ -137,41 +95,3 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 - **`InaccessibleObjectException` en tiempo de ejecución con un framework (Jackson, Hibernate, Spring) aunque el proyecto compile bien.** Al paquete le falta una declaración `opens` (además de `exports`): la reflexión que usan estos frameworks internamente necesita ese permiso adicional, independiente del acceso normal de compilación.
 
 ---
-
-
-
-## Bibliografía y fundamento académico
-
-Estas fuentes sustentan los conceptos y deben consultarse para verificar detalles que cambian entre versiones:
-
-- Oracle, *Java Language Specification* y *Java Virtual Machine Specification*.
-- OpenJDK, documentación de Java SE, JFR y JMH.
-- Bloch, J., *Effective Java*.
-- ACM/IEEE-CS/AAAI, *Computer Science Curricula 2023*.
-- IEEE Computer Society, *SWEBOK Guide V4.0*.
-
-## Resumen del módulo
-
-**Puntos clave**
-
-- `module-info.java` declara la identidad de un módulo y sus relaciones (`exports`, `requires`) con otros módulos.
-- JPMS agrega encapsulación fuerte a nivel de módulo, más allá de los modificadores de acceso tradicionales.
-- La migración incremental comienza por los módulos "hoja" y sube progresivamente en el árbol de dependencias.
-- JPMS aporta valor real en proyectos grandes de larga vida, y suele ser complejidad innecesaria en proyectos pequeños.
-- `opens` concede acceso reflexivo a frameworks, independiente y adicional al acceso de compilación que da `exports`.
-
-**Conceptos aprendidos**
-
-- `module-info.java`, `exports` y `requires`.
-- Encapsulación fuerte entre módulos.
-- Migración incremental de proyectos legacy.
-- `opens` para acceso reflexivo de frameworks (Jackson, Hibernate, Spring).
-- Criterios para decidir cuándo JPMS aporta valor.
-
-**Próximos pasos**
-
-En el Módulo 11 aprenderás la JVM interna: recolectores de basura, profiling con JFR, y JIT compilation.
-
-**Recursos adicionales**
-
-- Documentación oficial de Java (docs.oracle.com/en/java): "The Java Platform Module System".

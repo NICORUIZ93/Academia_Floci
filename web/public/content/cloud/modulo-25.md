@@ -1,30 +1,5 @@
 # Módulo 25: Gobierno, configuración y continuidad — AWS Config, AppConfig y Backup
 
-## Sílabo
-
-**Objetivo general**
-
-Dominar tres servicios que sostienen la operación responsable de una cuenta AWS a escala: AWS Config para rastrear el cumplimiento de reglas sobre tus recursos, AppConfig para desplegar cambios de configuración de aplicación de forma controlada y sin redeployar código, y AWS Backup para centralizar la política de copias de seguridad de múltiples servicios bajo un mismo plan.
-
-**Objetivos específicos**
-
-1. Crear una regla de AWS Config y un grabador de configuración, y explicar qué rastrean realmente.
-2. Desplegar un cambio de configuración de aplicación con AppConfig sin modificar ni redeployar código.
-3. Recuperar configuración dinámica desde el plano de datos de AppConfigData.
-4. Crear un plan de respaldo en AWS Backup, asignarle recursos, y ejecutar un trabajo de respaldo bajo demanda.
-
-**Contenido**
-
-- AWS Config: reglas, grabadores de configuración, paquetes de conformidad.
-- AppConfig: aplicaciones, entornos, perfiles de configuración y estrategias de despliegue.
-- AppConfigData: sesiones de configuración y recuperación dinámica desde la aplicación.
-- AWS Backup: bóvedas, planes, selecciones y el ciclo de vida de un trabajo de respaldo.
-
-**Evaluación**
-
-Dos laboratorios prácticos (desplegar configuración dinámica con AppConfig, y crear un plan de respaldo con AWS Backup) y tres ejercicios de evaluación.
-
----
 
 ## Aprende construyendo
 
@@ -90,21 +65,6 @@ Restricciones importantes a tener en cuenta: no puedes eliminar una bóveda que 
 
 ---
 
-## Criterio transversal de calidad del código
-
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
 
 ## Laboratorio práctico
 
@@ -144,28 +104,3 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 - **El estado de cumplimiento en Config siempre es `INSUFFICIENT_DATA`.** Es el comportamiento documentado de Floci: la evaluación real de cumplimiento no está implementada; usa este servicio para practicar el flujo de gestión de reglas, no para validar cumplimiento real.
 
 ---
-
-
-
-## Bibliografía y fundamento académico
-
-Estas fuentes sustentan los conceptos y deben consultarse para verificar detalles que cambian entre versiones:
-
-- AWS, Microsoft Azure y Google Cloud, marcos oficiales de arquitectura bien diseñada.
-- NIST, *Cloud Computing Standards Roadmap* y *Secure Software Development Framework*.
-- Beyer et al., *Site Reliability Engineering*.
-- ACM/IEEE-CS/AAAI, *Computer Science Curricula 2023*.
-- IEEE Computer Society, *SWEBOK Guide V4.0*.
-
-## Resumen del módulo
-
-```json
-{
-  "Rules": [{"RuleName": "encrypted-volumes", "Status": "ACTIVE"}],
-  "BackupPlan": {"schedule": "cron(0 3 * * ? *)", "retentionDays": 30}
-}
-```
-
-Valida por separado cumplimiento, ejecución de la copia y restauración; una política declarada no demuestra que los datos puedan recuperarse.
-
-En este módulo trabajaste con tres servicios de gobierno y continuidad operativa: AWS Config para gestionar reglas y grabadores de configuración (con la limitación explícita de que la evaluación real de cumplimiento no está implementada en Floci), AppConfig y AppConfigData para desplegar y consumir configuración dinámica sin redeployar código, y AWS Backup para centralizar la política de respaldo de múltiples tipos de recursos bajo planes y bóvedas unificadas. El hilo conductor de los tres servicios es la misma idea: separar decisiones operativas —qué reglas cumplir, qué configuración usar, cuándo respaldar— del ciclo de despliegue de código, permitiendo reaccionar más rápido y con menos riesgo.

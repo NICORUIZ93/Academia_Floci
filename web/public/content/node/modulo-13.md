@@ -2,13 +2,6 @@
 
 Una API puede compilar, pasar pruebas y aun romper consumidores o duplicar cobros. La red entrega bytes, no objetos TypeScript; los clientes reintentan cuando desconocen el resultado; una publicación puede separarse accidentalmente del cambio en base. Este módulo convierte esas incertidumbres en contratos e invariantes comprobables.
 
-## Sílabo
-
-1. TypeScript estricto y validación en fronteras.
-2. OpenAPI, compatibilidad y pruebas de contrato.
-3. Idempotencia, concurrencia y transactional outbox.
-4. Webhooks firmados, entrega repetida y reconciliación.
-5. Proyecto: evolución confiable de la API integradora.
 
 ## Aprende construyendo
 
@@ -208,21 +201,6 @@ Producción debe partir de **Node.js 24 LTS** mientras **Node.js 26** se evalúa
 
 **Aplicación al proyecto:** ejecuta contratos y benchmarks en una matriz 24/26, prueba fechas con Temporal, convierte deprecaciones en fallo controlado de CI y conserva Node 24 como runtime de despliegue hasta aprobar la evidencia.
 
-## Criterio transversal de calidad del código
-
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
 
 ## Laboratorio práctico
 
@@ -257,19 +235,7 @@ Evoluciona una vertical del proyecto final —crear tarea y notificarla— sin r
 
 
 
-## Bibliografía y fundamento académico
 
-- TypeScript Handbook y Node.js Documentation, fuentes oficiales del lenguaje y runtime.
-- OpenAPI Specification y RFC 9457, *Problem Details for HTTP APIs*.
-- Kleppmann, *Designing Data-Intensive Applications*: transacciones, entrega y sistemas derivados.
-- Richardson, *Microservices Patterns*: transactional outbox, consumidores idempotentes y sagas.
-- OWASP REST Security y Webhook Security Guidelines aplicables; documentación criptográfica de Node.
-- CS2023: Software Development Fundamentals, Software Engineering, Security y Parallel and Distributed Computing.
-- SWEBOK V4: Construction, Architecture, Testing, Security, Quality y Engineering Operations.
-
-Los resultados observables son rechazar datos malformados antes del dominio, detectar divergencia de contrato, conservar un efecto ante duplicación concurrente y recuperar una entrega firmada después de una caída.
-
-<!-- OFFICIAL-TOPIC-ATLAS:START -->
 ## Atlas completo de temas oficiales
 
 Derivado de la [documentación oficial](https://nodejs.org/api/), sus referencias, migraciones y guías de operación. Inventariar no equivale a dominar: cada selección se demuestra con código, prueba, medición y explicación. **Cobertura: 46 temas.**
@@ -287,12 +253,3 @@ Derivado de la [documentación oficial](https://nodejs.org/api/), sus referencia
 
 Para cada tema responde qué problema resuelve, cuál es su modelo mental, cómo falla, cómo se verifica y cuándo no conviene. Elige uno por área e intégralos en una vertical RutaFlow. Entrega diagrama, ADR, pruebas de éxito y fallo, una medición, una amenaza y el enlace oficial con versión y fecha. Una API preview se aísla en laboratorio y nunca se presenta como base estable.
 <!-- OFFICIAL-TOPIC-ATLAS:END -->
-
-## Resumen del módulo
-
-- TypeScript protege código compilado; datos externos siguen siendo `unknown` hasta validarse.
-- OpenAPI aporta valor cuando se contrasta con proveedor y expectativas de consumidores.
-- Una clave de idempotencia conserva identidad a través de un resultado remoto ambiguo.
-- Restricciones y transacciones evitan carreras que un `SELECT` previo no evita.
-- Outbox convierte doble escritura en publicación recuperable con duplicados seguros.
-- Webhooks requieren firma sobre bytes, deduplicación, reintentos limitados y reconciliación.

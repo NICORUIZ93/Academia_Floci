@@ -1,35 +1,5 @@
 # Módulo 0: Fundamentos del lenguaje y el entorno
 
-## Sílabo
-
-**Objetivo general**
-
-Adquirir una base sólida y sin lagunas sobre los fundamentos de JavaScript: variables, tipos primitivos, coerción y el entorno de ejecución, distinguiendo con precisión qué pertenece al lenguaje y qué pertenece al entorno (navegador o Node.js) en el que corre.
-
-**Objetivos específicos**
-
-1. Diferenciar `let`, `const` y `var` en términos de scope y reasignación.
-2. Enumerar los 7 tipos primitivos de JavaScript y usar `typeof` correctamente sobre cada uno.
-3. Explicar la coerción implícita y justificar por qué `===` es preferible a `==` en código nuevo.
-4. Usar template literals para interpolar variables y expresiones.
-5. Distinguir qué expone el navegador frente a qué expone Node.js, entendiendo que el lenguaje subyacente es el mismo.
-6. Demostrar el scope de bloque frente al scope de función con ejemplos propios.
-
-**Contenido**
-
-- Variables: `let`, `const`, `var`.
-- Tipos primitivos y `typeof`.
-- Coerción implícita: `==` frente a `===`.
-- Template literals.
-- Entorno: navegador frente a Node.js.
-- Truthy/falsy y operadores lógicos (`&&`, `||`, `??`).
-- Scope global, de función y de bloque; shadowing.
-
-**Evaluación**
-
-Un script ejecutado tanto en el navegador como en Node que produce el mismo resultado, más tres ejercicios de evaluación sobre tipos, coerción y scope.
-
----
 
 ## Antes de comenzar: tu primer entorno de programación
 
@@ -210,21 +180,6 @@ No crees un proyecto desechable por módulo. Conserva un único repositorio que 
 
 Al iniciar cada laboratorio crea una rama `modulo-N`, implementa el incremento, verifica el criterio de éxito y fusiona solo con pruebas verdes. Si un módulo necesita un experimento aislado, colócalo en `experiments/modulo-N/`; el producto acumulativo permanece ejecutable. Al terminar, otra persona debe poder clonar el repositorio y reproducir el último hito siguiendo únicamente el README.
 
-## Criterio transversal de calidad del código
-
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
 
 ## Laboratorio práctico
 
@@ -251,43 +206,3 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 - **Usar `==` sin darse cuenta y obtener un resultado "raro".** Si una comparación da un resultado inesperado, la primera pregunta a hacerse es si se usó `==` en vez de `===`; reemplázalo y observa si el resultado cambia.
 
 ---
-
-
-
-## Bibliografía y fundamento académico
-
-Estas fuentes sustentan los conceptos y deben consultarse para verificar detalles que cambian entre versiones:
-
-- ECMA International, *ECMAScript Language Specification*.
-- MDN Web Docs, guías de JavaScript y Web APIs.
-- WHATWG, *HTML Living Standard* y *Fetch Standard*.
-- ACM/IEEE-CS/AAAI, *Computer Science Curricula 2023*.
-- IEEE Computer Society, *SWEBOK Guide V4.0*.
-
-## Resumen del módulo
-
-**Puntos clave**
-
-- `let` y `const` tienen scope de bloque y viven en la Temporal Dead Zone hasta su declaración; `var` tiene scope de función y se hoistea con `undefined`.
-- JavaScript tiene 7 tipos primitivos; todo lo demás es `object`. `typeof null` es `"object"` por un bug histórico nunca corregido.
-- `===` compara sin coerción y es la opción recomendada por defecto; `==` convierte tipos con reglas que conviene evitar depender de ellas.
-- Los template literals permiten interpolar expresiones y escribir strings multilínea sin concatenación manual.
-- El lenguaje JavaScript es idéntico en el navegador y en Node.js; lo que cambia son las APIs adicionales expuestas por cada entorno (`window`/`document` frente a `process`/`fs`).
-
-**Conceptos aprendidos**
-
-- Scope de bloque frente a scope de función, hoisting y Temporal Dead Zone.
-- Los 7 tipos primitivos y el uso correcto de `typeof`.
-- Coerción implícita frente a igualdad estricta.
-- Interpolación con template literals.
-- La distinción entre lenguaje y entorno de ejecución.
-
-**Próximos pasos**
-
-En el Módulo 1 profundizarás en funciones como ciudadanos de primera clase: las tres formas de declararlas, parámetros por defecto, rest/spread, y funciones de orden superior como `debounce` y `pipe`.
-
-**Recursos adicionales**
-
-- MDN Web Docs: sección "JavaScript basics" y "Equality comparisons and sameness".
-- ECMAScript specification (TC39) para quien quiera profundizar en el detalle formal de la coerción de tipos.
-- Ejemplos de código ejecutables de este track, en JavaScript: carpeta [`examples/tracks/javascript/`](https://github.com/NICORUIZ93/Academia_Floci/tree/main/examples/tracks/javascript) del repositorio — `closures-scope.js` (Módulo 2), `prototypes-classes.js` (Módulo 3), `event-loop-promises.js` (Módulo 5), `dom-events.js` (Módulo 8).

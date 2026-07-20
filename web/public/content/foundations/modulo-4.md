@@ -1,14 +1,5 @@
 # Módulo 4: Modelado de datos, SQL y persistencia
 
-## Sílabo
-
-**Objetivo general**
-
-Diseñar y operar una base de datos relacional pequeña, preservando integridad y trazabilidad, y justificar cuándo una alternativa NoSQL responde mejor al patrón de acceso.
-
-**Resultados observables:** convertir requisitos en entidades y relaciones; crear un esquema; consultar con SQL; usar parámetros; interpretar un plan; ejecutar una transacción con rollback; documentar una decisión SQL/NoSQL.
-
-**Prerrequisitos:** módulos 0–3; estructuras de datos, archivos JSON, funciones y terminal.
 
 ## Aprende construyendo
 
@@ -192,21 +183,6 @@ BEGIN → restar origen → sumar destino → COMMIT
              cualquier fallo ────────→ ROLLBACK
 ```
 
-## Criterio transversal de calidad del código
-
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
 
 ## Laboratorio práctico
 
@@ -234,16 +210,3 @@ Copia el Proyecto 2 a una rama nueva. Conserva el JSON como fuente de migración
 - Suponer foreign keys activas: habilita y prueba.
 - Abrir una conexión por cada fila: agrupa trabajo en transacciones.
 - Elegir NoSQL por evitar modelado: empieza por patrones y garantías.
-
-
-
-## Bibliografía y fundamento académico
-
-- ACM/IEEE/AAAI CS2023: Data Management, Security y Software Development Fundamentals.
-- C. J. Date, *An Introduction to Database Systems*.
-- SQLite, documentación oficial de SQL, transacciones, foreign keys y query planner.
-- Martin Kleppmann, *Designing Data-Intensive Applications*, modelos y garantías.
-
-## Resumen del módulo
-
-El modelo relacional representa hechos, claves y relaciones con restricciones. SQL define y consulta declarativamente. Índices aceleran patrones específicos a cambio de espacio y escrituras. Las transacciones protegen operaciones múltiples frente a fallos parciales. SQL y NoSQL se eligen por patrones de acceso, consistencia y operación, no por moda. El proyecto demuestra estas decisiones con migraciones, integridad y evidencia.

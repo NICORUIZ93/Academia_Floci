@@ -1,31 +1,5 @@
 # Módulo 8: Testing en React
 
-## Sílabo
-
-**Objetivo general**
-
-Probar componentes React desde la perspectiva de un usuario real, no de los detalles internos de implementación, usando React Testing Library, Mock Service Worker para interceptar peticiones HTTP, y testing de hooks personalizados.
-
-**Objetivos específicos**
-
-1. Consultar el DOM por rol/texto en vez de por clase CSS con React Testing Library.
-2. Simular interacciones de usuario con `userEvent`.
-3. Interceptar peticiones HTTP en pruebas con MSW.
-4. Escribir un test de un flujo completo (formulario + fetching).
-5. Probar hooks personalizados con `renderHook`.
-
-**Contenido**
-
-- React Testing Library: queries por rol/texto.
-- Mocking de requests HTTP con MSW.
-- Testing de hooks personalizados.
-- Vitest como runner.
-
-**Evaluación**
-
-Suite de pruebas de un flujo completo (formulario + fetching) con MSW, más tres ejercicios de evaluación.
-
----
 
 ## Aprende construyendo
 
@@ -96,21 +70,6 @@ expect(result.current.valor).toBe(1);
 
 ---
 
-## Criterio transversal de calidad del código
-
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
 
 ## Laboratorio práctico
 
@@ -135,37 +94,3 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 - **No envolver actualizaciones de estado del hook en `act`.** Sin `act`, la aserción puede ejecutarse antes de que React procese la actualización.
 
 ---
-
-
-
-## Bibliografía y fundamento académico
-
-Estas fuentes sustentan los conceptos y deben consultarse para verificar detalles que cambian entre versiones:
-
-- Meta Open Source, *React Documentation*.
-- WHATWG, estándares de DOM, HTML y Fetch.
-- W3C, *Web Content Accessibility Guidelines (WCAG)*.
-- ACM/IEEE-CS/AAAI, *Computer Science Curricula 2023*.
-- IEEE Computer Society, *SWEBOK Guide V4.0*.
-
-## Resumen del módulo
-
-**Puntos clave**
-
-- React Testing Library consulta por rol/texto, produciendo pruebas resilientes a refactors internos cosméticos.
-- MSW intercepta peticiones HTTP a nivel de red, sin requerir modificar el código de producción bajo prueba.
-- `renderHook` prueba hooks personalizados de forma aislada, sin un componente visual innecesario.
-
-**Conceptos aprendidos**
-
-- Queries de React Testing Library por rol/texto.
-- Mock Service Worker para interceptar peticiones HTTP.
-- Testing de hooks personalizados con `renderHook` y `act`.
-
-**Próximos pasos**
-
-En el Módulo 9 aprenderás performance en React: React DevTools Profiler, `memo`/`useMemo`/`useCallback` con criterio, virtualización y `useTransition`.
-
-**Recursos adicionales**
-
-- Documentación de React Testing Library (testing-library.com) y Mock Service Worker (mswjs.io).

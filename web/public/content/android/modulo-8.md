@@ -1,31 +1,5 @@
 # Módulo 8: Trabajo en segundo plano
 
-## Sílabo
-
-**Objetivo general**
-
-Ejecutar tareas diferidas o periódicas que sobreviven incluso si la app se cierra, usando WorkManager con constraints de red y batería, entendiendo por qué este mecanismo garantiza ejecución donde un coroutine lanzado desde la UI no lo hace.
-
-**Objetivos específicos**
-
-1. Crear un `CoroutineWorker` que sincronice datos con un servidor remoto.
-2. Encolarlo como trabajo periódico con WorkManager.
-3. Agregar constraints de red y batería.
-4. Disparar una notificación local al completar la sincronización.
-5. Verificar que el trabajo persiste incluso tras cerrar la app.
-
-**Contenido**
-
-- WorkManager: tareas únicas y periódicas.
-- Constraints (red, batería).
-- Coroutines en background con scopes correctos.
-- Notificaciones desde background work.
-
-**Evaluación**
-
-Tarea periódica con WorkManager que sincroniza datos con constraints de red, más tres ejercicios de evaluación.
-
----
 
 ## Aprende construyendo
 
@@ -139,21 +113,6 @@ NotificationManagerCompat.notify(...) → el usuario ve la notificación sin hab
 
 ---
 
-## Criterio transversal de calidad del código
-
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
 
 ## Laboratorio práctico
 
@@ -178,40 +137,3 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 - **No manejar `Result.retry()` ante un fallo transitorio.** Sin él, un fallo temporal (ej. sin conexión momentánea) no se reintenta automáticamente.
 
 ---
-
-
-
-## Bibliografía y fundamento académico
-
-Estas fuentes sustentan los conceptos y deben consultarse para verificar detalles que cambian entre versiones:
-
-- Google, *Android Developers Documentation* y guías de arquitectura de aplicaciones.
-- JetBrains, *Kotlin Language Documentation*.
-- OWASP Foundation, *Mobile Application Security Verification Standard*.
-- ACM/IEEE-CS/AAAI, *Computer Science Curricula 2023*.
-- IEEE Computer Society, *SWEBOK Guide V4.0*.
-
-
-## Resumen del módulo
-
-**Puntos clave**
-
-- `CoroutineWorker` permite escribir trabajo en background con coroutines, con reintentos automáticos vía `Result.retry()`.
-- WorkManager garantiza persistencia de la solicitud de trabajo independiente del ciclo de vida del proceso de la app.
-- Las constraints retrasan la ejecución hasta que se cumplan condiciones del sistema (red, batería), priorizando salud del dispositivo.
-- Quince minutos es el intervalo mínimo para trabajo periódico, sin garantía de exactitud absoluta.
-
-**Conceptos aprendidos**
-
-- WorkManager: tareas únicas y periódicas.
-- Constraints (red, batería).
-- Coroutines en background con scopes correctos.
-- Notificaciones desde background work.
-
-**Próximos pasos**
-
-En el Módulo 9 aprenderás a testear ViewModels, Compose UI y flujos completos con las herramientas estándar del ecosistema Android.
-
-**Recursos adicionales**
-
-- Documentación oficial de WorkManager (developer.android.com/topic/libraries/architecture/workmanager).

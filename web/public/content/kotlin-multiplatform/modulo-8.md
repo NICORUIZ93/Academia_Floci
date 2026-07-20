@@ -1,30 +1,5 @@
 # Módulo 8: Interoperabilidad con iOS
 
-## Sílabo
-
-**Objetivo general**
-
-Conectar el módulo Kotlin compartido con una app SwiftUI real, entendiendo el framework generado por Kotlin/Native, el mapeo de tipos entre ambos lenguajes, y el manejo de coroutines desde Swift.
-
-**Objetivos específicos**
-
-1. Generar el framework `.framework` del módulo compartido para Xcode.
-2. Llamar a una función Kotlin desde Swift y verificar el tipo resultante.
-3. Llamar a una función `suspend` de Kotlin desde Swift.
-4. Comparar CocoaPods con Swift Package Manager para distribuir el framework.
-
-**Contenido**
-
-- Kotlin/Native y el framework generado para iOS.
-- Mapeo de tipos Kotlin ↔ Swift.
-- Manejo de coroutines desde Swift.
-- CocoaPods vs Swift Package Manager.
-
-**Evaluación**
-
-App SwiftUI consumiendo el módulo compartido KMP a través del framework generado, más tres ejercicios de evaluación.
-
----
 
 ## Aprende construyendo
 
@@ -112,21 +87,6 @@ sharedRepository.obtenerTareas { tareas, error in
 
 ---
 
-## Criterio transversal de calidad del código
-
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
 
 ## Laboratorio práctico
 
@@ -150,39 +110,3 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 - **Esperar verificación de exhaustividad idéntica en Swift para una sealed class de Kotlin.** Swift la trata como una jerarquía de clases regular, sin esa garantía estricta.
 
 ---
-
-
-
-## Bibliografía y fundamento académico
-
-Estas fuentes sustentan los conceptos y deben consultarse para verificar detalles que cambian entre versiones:
-
-- JetBrains, documentación oficial de *Kotlin Multiplatform* y Kotlin Coroutines.
-- Google, *Android Developers Documentation*; Apple, *Developer Documentation*.
-- Kotlin Foundation, especificación y pautas de compatibilidad de Kotlin.
-- ACM/IEEE-CS/AAAI, *Computer Science Curricula 2023*.
-- IEEE Computer Society, *SWEBOK Guide V4.0*.
-
-## Resumen del módulo
-
-**Puntos clave**
-
-- Kotlin/Native compila el módulo compartido a un framework nativo real, importable directamente en Xcode.
-- Los tipos básicos se mapean directamente entre Kotlin y Swift; las sealed classes se exponen como jerarquías de clases manejables con switch.
-- Las funciones suspend se exponen hacia Swift mediante callbacks o async/await nativo, según la versión de las librerías.
-- Swift Package Manager es la alternativa moderna recomendada frente a CocoaPods para distribuir el framework.
-
-**Conceptos aprendidos**
-
-- El framework generado por Kotlin/Native para iOS.
-- Mapeo de tipos Kotlin ↔ Swift.
-- Coroutines desde Swift.
-- CocoaPods vs Swift Package Manager.
-
-**Próximos pasos**
-
-En el Módulo 9 aprenderás testing multiplataforma: `kotlin.test`, fakes para dependencias de plataforma, y `runTest` para coroutines.
-
-**Recursos adicionales**
-
-- Documentación oficial de Kotlin/Native (kotlinlang.org/docs/native-overview.html): "Objective-C/Swift Interop".

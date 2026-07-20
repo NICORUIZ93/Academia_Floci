@@ -1,31 +1,5 @@
 # Módulo 13: Proyecto integrador — pipeline CI/CD completo
 
-## Sílabo
-
-**Objetivo general**
-
-Integrar en un único proyecto end-to-end todo lo aprendido en el track DevOps: desde un commit de código hasta un despliegue verificado en Kubernetes, pasando por CI con escaneo de seguridad, construcción y publicación de imagen, despliegue con Helm, observabilidad activa, y un procedimiento de rollback documentado y probado.
-
-**Objetivos específicos**
-
-1. Diseñar un pipeline CI/CD completo que encadene todas las etapas: commit, CI (test + escaneo), build, push, despliegue, verificación.
-2. Integrar el escaneo de vulnerabilidades (Módulo 11) como un gate bloqueante dentro del pipeline de CI (Módulo 4).
-3. Desplegar la aplicación a Kubernetes usando Helm (Módulo 7) con autoscaling configurado.
-4. Conectar el despliegue con observabilidad activa: métricas en Grafana y al menos una alerta real (Módulo 9).
-5. Documentar y probar un procedimiento de rollback (Módulo 5) ante un despliegue fallido simulado.
-6. Producir un runbook de incidentes que cierre la checklist de producción del Módulo 12.
-
-**Contenido**
-
-- El pipeline completo: de commit a producción verificada.
-- Uniendo cada módulo del track en un solo flujo.
-- Cierre del track: checklist final y reflexión.
-
-**Evaluación**
-
-Un proyecto integrador que implementa (o documenta con evidencia detallada de diseño) el pipeline completo descrito, más tres ejercicios de evaluación sobre diseño de pipeline, diagnóstico de fallos, y diseño de rollback.
-
----
 
 ## Aprende construyendo
 
@@ -149,21 +123,6 @@ Añade Service, PodDisruptionBudget, topology spread, NetworkPolicy y autoscalin
 
 El capítulo se completa cuando la evidencia permite a otra persona reproducir el flujo y explicar qué garantías ofrece y cuáles todavía no.
 
-## Criterio transversal de calidad del código
-
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
 
 ## Laboratorio práctico
 
@@ -189,43 +148,3 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 - **Las imágenes se etiquetan con `latest`, perdiendo trazabilidad.** Etiqueta siempre con el hash del commit (o un número de versión semántico), reservando `latest` únicamente como una etiqueta adicional de conveniencia, nunca como la única referencia usada para el despliegue.
 
 ---
-
-
-
-## Bibliografía y fundamento académico
-
-Estas fuentes sustentan los conceptos y deben consultarse para verificar detalles que cambian entre versiones:
-
-- CNCF, documentación oficial de Kubernetes, Prometheus y OpenTelemetry.
-- HashiCorp, *Terraform Documentation*.
-- Beyer et al., *Site Reliability Engineering*; Forsgren et al., *Accelerate*.
-- ACM/IEEE-CS/AAAI, *Computer Science Curricula 2023*.
-- IEEE Computer Society, *SWEBOK Guide V4.0*.
-
-## Resumen del módulo
-
-**Puntos clave**
-
-- El pipeline completo encadena commit, CI con gate de seguridad bloqueante, build/push, despliegue con Helm, y verificación post-despliegue con posible rollback automático.
-- La integración real entre etapas —no solo su ejecución secuencial— es donde reside la mayor parte del valor de protección de un pipeline maduro.
-- La trazabilidad end-to-end (etiquetado por commit, logs correlacionables) permite reconstruir la cadena completa ante cualquier incidente.
-- Este proyecto integrador conecta los catorce módulos del track DevOps en un único sistema coherente y operativo.
-- El track DevOps completo conecta directamente con el track Cloud: uno enseña a construir infraestructura cloud, el otro enseña a operarla con disciplina de ingeniería.
-
-**Conceptos aprendidos**
-
-- Diseño end-to-end de un pipeline CI/CD con gates de seguridad reales.
-- Trazabilidad completa desde un commit hasta un despliegue en producción.
-- Verificación post-despliegue basada en métricas reales, con rollback probado (no solo documentado).
-- Runbooks de incidentes accionables para quien responde sin contexto previo.
-- Consolidación reflexiva de los catorce módulos del track DevOps como un cuerpo de conocimiento coherente.
-
-**Próximos pasos**
-
-Con el track DevOps completo, el siguiente paso natural es aplicar este pipeline a un proyecto personal real, o profundizar en el track Cloud (fundamentos o avanzado) para fortalecer el conocimiento de la infraestructura que este pipeline despliega y opera.
-
-**Recursos adicionales**
-
-- Documentación oficial de GitHub Actions, Trivy, Helm y Prometheus/Alertmanager (ya referenciadas en los módulos anteriores).
-- El libro "Accelerate" (Forsgren, Humble, Kim) sobre las métricas DORA y la relación entre prácticas DevOps y desempeño organizacional.
-- El sitio web de la Cloud Native Computing Foundation (cncf.io) como mapa de referencia del ecosistema completo cubierto en este track.

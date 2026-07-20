@@ -1,31 +1,5 @@
 # Módulo 13: Proyecto integrador — aplicación standalone completa
 
-## Sílabo
-
-**Objetivo general**
-
-Construir una aplicación Angular standalone completa que integre routing con guards, un store de estado con signals, HttpClient con interceptores, formularios reactivos y una suite básica de pruebas, demostrando el conjunto combinado de habilidades del track.
-
-**Objetivos específicos**
-
-1. Estructurar el proyecto organizando el código por feature.
-2. Implementar rutas protegidas con un guard funcional y carga perezosa.
-3. Construir un store de tareas con signals que consuma HttpClient.
-4. Implementar un formulario reactivo para crear y editar tareas.
-5. Escribir pruebas para los componentes más críticos de la aplicación.
-
-**Contenido**
-
-- Estructura del proyecto integrador.
-- Integración de routing, store, HttpClient y formularios.
-- `TareasStore`: signals + computed + HttpClient.
-- Cierre del track: el conjunto de habilidades combinadas.
-
-**Evaluación**
-
-Construcción completa de la aplicación de gestión de tareas descrita, más tres ejercicios de evaluación de cierre.
-
----
 
 ## Aprende construyendo
 
@@ -136,21 +110,6 @@ Construye lista y mapa sincronizados, filtro por centro y panel de retrasos. Pru
 
 El capítulo se completa cuando la evidencia permite a otra persona reproducir el flujo y explicar qué garantías ofrece y cuáles todavía no.
 
-## Criterio transversal de calidad del código
-
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
 
 ## Laboratorio práctico
 
@@ -175,38 +134,3 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 - **Omitir pruebas de los componentes críticos.** Prioriza probar el guard, el store y el formulario, que concentran la lógica más importante de la aplicación.
 
 ---
-
-
-
-## Bibliografía y fundamento académico
-
-Estas fuentes sustentan los conceptos y deben consultarse para verificar detalles que cambian entre versiones:
-
-- Google, *Angular Documentation* y guías oficiales de accesibilidad, seguridad y rendimiento.
-- ReactiveX, *RxJS Documentation*.
-- W3C, *Web Content Accessibility Guidelines (WCAG)*.
-- ACM/IEEE-CS/AAAI, *Computer Science Curricula 2023*.
-- IEEE Computer Society, *SWEBOK Guide V4.0*.
-
-## Resumen del módulo
-
-**Puntos clave**
-
-- El proyecto integrador organiza el código en features claramente separadas (`tareas/`, `auth/`).
-- Combina routing con guards funcionales y carga perezosa, un store de signals con HttpClient, y formularios reactivos.
-- `TareasStore` ejemplifica el patrón central de gestión de estado con signals, `computed` y HttpClient.
-- El proyecto demuestra la integración natural de todo el conjunto de habilidades estudiadas a lo largo del track.
-
-**Conceptos aprendidos**
-
-- Estructura de un proyecto real organizado por feature.
-- Integración de routing, estado y formularios en una aplicación completa.
-- Aplicación práctica de los criterios de decisión estudiados (signals frente a NgRx, `switchMap` frente a otros operadores, SSR y `@defer`).
-
-**Próximos pasos**
-
-Con el track de Angular completo, estás preparado para construir, mantener y escalar aplicaciones Angular modernas de nivel productivo, combinando signals, arquitectura standalone, routing, formularios, HttpClient y testing.
-
-**Recursos adicionales**
-
-- Documentación oficial de Angular (angular.dev) como referencia continua para profundizar en cualquiera de los temas de este track.

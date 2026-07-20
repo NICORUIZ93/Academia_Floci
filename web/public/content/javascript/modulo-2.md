@@ -1,34 +1,5 @@
 # Módulo 2: Scope, closures y el modelo de ejecución
 
-## Sílabo
-
-**Objetivo general**
-
-Entender qué ocurre "por dentro" cuando se ejecuta código JavaScript: el call stack, el hoisting, la Temporal Dead Zone, y por qué un closure es capaz de "recordar" variables de un entorno que, en apariencia, ya debería haber terminado de existir.
-
-**Objetivos específicos**
-
-1. Explicar el scope léxico y demostrar un closure funcional propio.
-2. Diferenciar hoisting de declaraciones de funciones frente a hoisting de variables con TDZ.
-3. Razonar sobre el call stack y diagnosticar un stack overflow.
-4. Determinar el valor de `this` según la forma de invocación de una función.
-5. Usar `call`, `apply` y `bind` para fijar `this` explícitamente.
-6. Implementar el module pattern y factory functions usando closures.
-
-**Contenido**
-
-- Scope léxico y closures.
-- Hoisting y Temporal Dead Zone.
-- Call stack y contexto de ejecución.
-- `this` según el modo de invocación.
-- Module pattern y factory functions.
-- Execution Context, Scope Chain y Lexical Environment.
-
-**Evaluación**
-
-Implementación de un contador privado y un módulo con estado usando closures, más tres ejercicios de evaluación sobre closures, TDZ y `this`.
-
----
 
 ## Aprende construyendo
 
@@ -208,21 +179,6 @@ Execution Context de funciónInterna (su Lexical Environment)
 
 ---
 
-## Criterio transversal de calidad del código
-
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
 
 ## Laboratorio práctico
 
@@ -248,45 +204,3 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 - **Confundir la Scope Chain con el Call Stack.** Recuerda: la Scope Chain resuelve variables según dónde está escrito el código; el Call Stack gestiona el orden de invocación y retorno de funciones en tiempo de ejecución. Son mecanismos distintos.
 
 ---
-
-
-
-## Bibliografía y fundamento académico
-
-Estas fuentes sustentan los conceptos y deben consultarse para verificar detalles que cambian entre versiones:
-
-- ECMA International, *ECMAScript Language Specification*.
-- MDN Web Docs, guías de JavaScript y Web APIs.
-- WHATWG, *HTML Living Standard* y *Fetch Standard*.
-- ACM/IEEE-CS/AAAI, *Computer Science Curricula 2023*.
-- IEEE Computer Society, *SWEBOK Guide V4.0*.
-
-## Resumen del módulo
-
-**Puntos clave**
-
-- El scope léxico determina el alcance de una variable según dónde está escrita en el código, no según dónde se invoca la función.
-- Un closure permite que una función "recuerde" el entorno de su creación, incluso después de que ese entorno terminó de ejecutarse.
-- La TDZ convierte errores de orden con `let`/`const` en errores explícitos, a diferencia del comportamiento silencioso de `var`.
-- El call stack gestiona el orden de invocación y retorno de funciones; una recursión sin caso base lo desborda (stack overflow).
-- `this` se determina dinámicamente por cómo se invoca una función normal; las arrow functions capturan `this` léxicamente en su lugar.
-- `call`, `apply` y `bind` permiten fijar `this` explícitamente; factory functions basadas en closures son una alternativa a las clases.
-
-**Conceptos aprendidos**
-
-- Closures y su aplicación en variables privadas y módulos con estado.
-- Hoisting detallado y la Temporal Dead Zone.
-- Call stack, recursión y diagnóstico de stack overflow.
-- Determinación dinámica de `this` y las herramientas `call`/`apply`/`bind`.
-- Module pattern y factory functions como alternativa a clases.
-- Execution Context, Lexical Environment y Scope Chain como modelo formal subyacente.
-
-**Próximos pasos**
-
-En el Módulo 3 aplicarás estos conceptos al sistema de objetos y clases de JavaScript: prototipos, `class`/`extends`/`super`, y encapsulación real con campos privados.
-
-**Recursos adicionales**
-
-- MDN Web Docs: "Closures" y "this".
-- El libro "You Don't Know JS: Scope & Closures" (Kyle Simpson).
-- ECMA-262 (especificación del lenguaje) sección sobre Execution Contexts, para quien quiera el detalle formal completo.

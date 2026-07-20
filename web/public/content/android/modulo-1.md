@@ -1,31 +1,5 @@
 # Módulo 1: Ciclo de vida: Activities y ViewModel
 
-## Sílabo
-
-**Objetivo general**
-
-Dominar el ciclo de vida de Android, la fuente más común de bugs para desarrolladores nuevos, y entender cómo `ViewModel` y `SavedStateHandle` ofrecen dos niveles distintos de supervivencia frente a rotación de pantalla y muerte de proceso.
-
-**Objetivos específicos**
-
-1. Observar el orden de los callbacks del ciclo de vida de una Activity.
-2. Confirmar experimentalmente que el estado en un composable simple se pierde al rotar.
-3. Mover ese estado a un `ViewModel` y confirmar que sobrevive a la rotación.
-4. Usar `SavedStateHandle` para sobrevivir incluso a la muerte del proceso.
-5. Identificar el evento del ciclo de vida correcto para liberar recursos costosos.
-
-**Contenido**
-
-- Ciclo de vida de Activity/Fragment.
-- `ViewModel` y supervivencia a rotación.
-- `SavedStateHandle`.
-- Lifecycle-aware components.
-
-**Evaluación**
-
-Pantalla que sobrevive a rotación de pantalla sin perder estado, usando `ViewModel`, más tres ejercicios de evaluación.
-
----
 
 ## Aprende construyendo
 
@@ -125,21 +99,6 @@ ViewModel + SavedStateHandle: sobrevive rotación,   SÍ sobrevive muerte de pro
 
 ---
 
-## Criterio transversal de calidad del código
-
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
 
 ## Laboratorio práctico
 
@@ -164,39 +123,3 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 - **Iniciar recursos costosos (cámara, sensores) en `onCreate` en vez de `onResume`.** Deja el recurso activo innecesariamente en background.
 
 ---
-
-
-
-## Bibliografía y fundamento académico
-
-Estas fuentes sustentan los conceptos y deben consultarse para verificar detalles que cambian entre versiones:
-
-- Google, *Android Developers Documentation* y guías de arquitectura de aplicaciones.
-- JetBrains, *Kotlin Language Documentation*.
-- OWASP Foundation, *Mobile Application Security Verification Standard*.
-- ACM/IEEE-CS/AAAI, *Computer Science Curricula 2023*.
-- IEEE Computer Society, *SWEBOK Guide V4.0*.
-
-## Resumen del módulo
-
-**Puntos clave**
-
-- El ciclo de vida de una Activity sigue un orden predecible de callbacks, cada uno apropiado para operaciones específicas.
-- Una rotación destruye y recrea la Activity por defecto, perdiendo cualquier estado que viva solo en memoria simple.
-- `ViewModel` sobrevive a rotación porque su `ViewModelStore` se preserva deliberadamente, pero no sobrevive a la muerte completa del proceso.
-- `SavedStateHandle` ofrece un nivel adicional de persistencia que sí sobrevive a la muerte del proceso, apropiado para datos pequeños que afectan la continuidad percibida por el usuario.
-
-**Conceptos aprendidos**
-
-- Ciclo de vida de Activity/Fragment.
-- `ViewModel` y supervivencia a rotación.
-- `SavedStateHandle`.
-- Lifecycle-aware components.
-
-**Próximos pasos**
-
-En el Módulo 2 aprenderás Jetpack Compose: UI declarativa, recomposición, y el patrón de state hoisting que ya usaste implícitamente al mover el contador al `ViewModel`.
-
-**Recursos adicionales**
-
-- Documentación oficial de Android sobre el ciclo de vida de Activity (developer.android.com/guide/components/activities/activity-lifecycle).

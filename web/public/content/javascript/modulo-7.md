@@ -1,34 +1,5 @@
 # Módulo 7: Módulos modernos y herramientas de build
 
-## Sílabo
-
-**Objetivo general**
-
-Organizar código JavaScript en módulos reales usando ESM, y entender conceptualmente qué hace un bundler moderno (Vite) antes de usarlo como una caja negra.
-
-**Objetivos específicos**
-
-1. Diferenciar ESM (`import`/`export`) de CommonJS (`require`/`module.exports`) en sintaxis y momento de resolución.
-2. Explicar tree-shaking y code-splitting, y por qué ESM los habilita mejor que CommonJS.
-3. Usar Vite para desarrollo y build de producción, entendiendo la diferencia entre ambos modos.
-4. Configurar correctamente `package.json` (`exports`, `type`, `scripts`).
-5. Usar `import()` dinámico e `import.meta`.
-6. Comparar Webpack, Rollup y Babel/SWC y cuándo cada herramienta es relevante.
-
-**Contenido**
-
-- ESM frente a CommonJS.
-- Tree-shaking y code-splitting.
-- Vite/esbuild: dev server y build de producción.
-- `package.json`: `exports`, `type`, `scripts`.
-- `import()` dinámico e `import.meta`.
-- Webpack, Rollup y Babel/SWC.
-
-**Evaluación**
-
-Un proyecto multi-módulo construido con Vite, con el bundle final auditado, más tres ejercicios de evaluación.
-
----
 
 ## Aprende construyendo
 
@@ -193,21 +164,6 @@ Vite = esbuild (desarrollo) + Rollup (producción), preconfigurado sensatamente
 
 ---
 
-## Criterio transversal de calidad del código
-
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
 
 ## Laboratorio práctico
 
@@ -233,45 +189,3 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 - **Confundir el comportamiento del servidor de desarrollo con el del build de producción.** Siempre verifica el comportamiento real con `npm run build` antes de asumir que el rendimiento de desarrollo representa el de producción.
 
 ---
-
-
-
-## Bibliografía y fundamento académico
-
-Estas fuentes sustentan los conceptos y deben consultarse para verificar detalles que cambian entre versiones:
-
-- ECMA International, *ECMAScript Language Specification*.
-- MDN Web Docs, guías de JavaScript y Web APIs.
-- WHATWG, *HTML Living Standard* y *Fetch Standard*.
-- ACM/IEEE-CS/AAAI, *Computer Science Curricula 2023*.
-- IEEE Computer Society, *SWEBOK Guide V4.0*.
-
-## Resumen del módulo
-
-**Puntos clave**
-
-- ESM es estático y analizable sin ejecutar código; CommonJS es dinámico y se resuelve en tiempo de ejecución.
-- El tree-shaking depende del análisis estático que ESM habilita; code-splitting divide el bundle en chunks cargados bajo demanda.
-- Vite sirve ESM nativo sin empaquetar en desarrollo (usando esbuild), y usa Rollup para el build de producción optimizado.
-- `package.json` (`type`, `exports`, `scripts`) configura cómo se interpreta y se opera un proyecto o paquete.
-- `import()` dinámico habilita code-splitting basado en puntos específicos del código, típicamente para lazy loading de rutas.
-- Webpack, Rollup, Babel y SWC/esbuild cubren distintas necesidades del panorama de herramientas de build, aunque Vite preconfigura una combinación sensata para la mayoría de proyectos nuevos.
-
-**Conceptos aprendidos**
-
-- Diferencias estructurales entre ESM y CommonJS.
-- Tree-shaking y code-splitting como técnicas de optimización de bundle.
-- El modelo de Vite: ESM nativo en desarrollo, Rollup en producción.
-- Configuración esencial de `package.json`.
-- `import()` dinámico e `import.meta`.
-- Panorama comparativo de Webpack, Rollup, Babel y SWC/esbuild.
-
-**Próximos pasos**
-
-En el Módulo 8 aprenderás a manipular el DOM y gestionar eventos del navegador directamente, antes de cualquier framework, entendiendo cómo JavaScript interactúa con una página real.
-
-**Recursos adicionales**
-
-- Documentación oficial de Vite (vitejs.dev).
-- Node.js documentation: "Modules: ECMAScript modules" y "Modules: CommonJS modules".
-- Documentación de Rollup sobre tree-shaking (rollupjs.org).

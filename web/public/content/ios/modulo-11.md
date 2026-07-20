@@ -1,31 +1,5 @@
 # Módulo 11: Publicación en App Store
 
-## Sílabo
-
-**Objetivo general**
-
-Llevar la app del simulador a usuarios reales a través de TestFlight y la App Store, entendiendo certificados y provisioning profiles, el proceso de archivado y subida, la configuración de metadata en App Store Connect, y el versionado de builds.
-
-**Objetivos específicos**
-
-1. Configurar un certificado de distribución y un provisioning profile.
-2. Archivar la app en Xcode y subirla a App Store Connect.
-3. Configurar un grupo de pruebas en TestFlight.
-4. Completar la metadata básica en App Store Connect.
-5. Incrementar el número de build con una convención clara.
-
-**Contenido**
-
-- Certificados y provisioning profiles.
-- TestFlight para pruebas beta.
-- App Store Connect: metadata y revisión.
-- Versionado y builds.
-
-**Evaluación**
-
-Build subido a TestFlight listo para pruebas internas, más tres ejercicios de evaluación.
-
----
 
 ## Aprende construyendo
 
@@ -97,21 +71,6 @@ CFBundleVersion: "42"                  → SIEMPRE incremental, uso interno de A
 
 ---
 
-## Criterio transversal de calidad del código
-
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
 
 ## Laboratorio práctico
 
@@ -136,39 +95,3 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 - **Omitir la política de privacidad o el cuestionario de privacidad.** Son requisitos obligatorios antes de que la revisión pueda proceder.
 
 ---
-
-
-
-## Bibliografía y fundamento académico
-
-Estas fuentes sustentan los conceptos y deben consultarse para verificar detalles que cambian entre versiones:
-
-- Apple, *Swift Language Guide* y *Apple Developer Documentation*.
-- Apple, *Human Interface Guidelines* y documentación de accesibilidad.
-- OWASP Foundation, *Mobile Application Security Verification Standard*.
-- ACM/IEEE-CS/AAAI, *Computer Science Curricula 2023*.
-- IEEE Computer Society, *SWEBOK Guide V4.0*.
-
-## Resumen del módulo
-
-**Puntos clave**
-
-- Un certificado de desarrollo autoriza dispositivos registrados manualmente; uno de distribución autoriza TestFlight y App Store.
-- TestFlight permite validar la app con un grupo controlado (interno sin revisión, externo con revisión beta ligera) antes de la revisión completa.
-- App Store Connect requiere metadata obligatoria (descripción, capturas, política de privacidad) antes de la revisión.
-- `CFBundleVersion` (incremental, interno) y `CFBundleShortVersionString` (semver, visible) cumplen roles distintos, igual que en Android.
-
-**Conceptos aprendidos**
-
-- Certificados y provisioning profiles.
-- TestFlight para pruebas beta.
-- App Store Connect: metadata y revisión.
-- Versionado y builds.
-
-**Próximos pasos**
-
-En el Módulo 12, el proyecto integrador final, unirás SwiftUI, concurrencia moderna, networking y persistencia en una app real completa.
-
-**Recursos adicionales**
-
-- Documentación oficial de App Store Connect (developer.apple.com/app-store-connect).

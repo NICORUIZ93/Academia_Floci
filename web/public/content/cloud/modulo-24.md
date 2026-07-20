@@ -1,31 +1,5 @@
 # Módulo 24: CI/CD nativo de AWS con CodeBuild y CodeDeploy
 
-## Sílabo
-
-**Objetivo general**
-
-Dominar los dos servicios que AWS ofrece para compilar y desplegar código sin salir de su ecosistema: CodeBuild, que ejecuta compilaciones reales dentro de contenedores Docker, y CodeDeploy, que orquesta despliegues Blue/Green reales de Lambda y ECS con cambio de tráfico gradual y reversión automática ante fallos.
-
-**Objetivos específicos**
-
-1. Crear un proyecto CodeBuild y ejecutar una compilación real a partir de un `buildspec.yml`.
-2. Recolectar artefactos de una compilación y subirlos automáticamente a S3.
-3. Configurar un despliegue Blue/Green de Lambda con CodeDeploy usando una estrategia canary.
-4. Explicar el rol de los lifecycle hooks en un despliegue y cómo provocan una reversión automática.
-
-**Contenido**
-
-- CodeBuild: modelo de ejecución real en Docker, fases de `buildspec.yml`, artefactos.
-- CodeDeploy: aplicaciones, grupos de despliegue y configuraciones predefinidas.
-- Despliegue Blue/Green de Lambda: cambio de tráfico por alias.
-- Despliegue Blue/Green de ECS: cambio de tráfico por reglas de listener ELB.
-- Lifecycle hooks y reversión automática ante fallos.
-
-**Evaluación**
-
-Dos laboratorios prácticos (una compilación real con CodeBuild, y un despliegue canary de Lambda con CodeDeploy) y tres ejercicios de evaluación.
-
----
 
 ## Aprende construyendo
 
@@ -91,21 +65,6 @@ Este flujo asume que tu servicio ECS fue creado con `deploymentController.type: 
 
 ---
 
-## Criterio transversal de calidad del código
-
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
 
 ## Laboratorio práctico
 
@@ -144,32 +103,3 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 - **`CreateDeploymentGroup` para ECS falla sin `loadBalancerInfo`.** Un grupo de implementación Blue/Green para ECS requiere `ecsServices` y `loadBalancerInfo` con los grupos objetivo azul/verde del Módulo 22 ya creados.
 
 ---
-
-
-
-## Bibliografía y fundamento académico
-
-Estas fuentes sustentan los conceptos y deben consultarse para verificar detalles que cambian entre versiones:
-
-- AWS, Microsoft Azure y Google Cloud, marcos oficiales de arquitectura bien diseñada.
-- NIST, *Cloud Computing Standards Roadmap* y *Secure Software Development Framework*.
-- Beyer et al., *Site Reliability Engineering*.
-- ACM/IEEE-CS/AAAI, *Computer Science Curricula 2023*.
-- IEEE Computer Society, *SWEBOK Guide V4.0*.
-
-## Resumen del módulo
-
-```yaml
-version: 0.2
-phases:
-  install:
-    commands: ["npm ci"]
-  build:
-    commands: ["npm test", "npm run build"]
-artifacts:
-  files: ["dist/**/*"]
-```
-
-El pipeline se detiene ante una prueba fallida y publica únicamente artefactos construidos de manera reproducible.
-
-En este módulo usaste CodeBuild para ejecutar compilaciones reales dentro de contenedores Docker —no simulaciones—, entendiendo el flujo completo de fases de un `buildspec.yml` y la recolección automática de artefactos hacia S3. Con CodeDeploy, configuraste un despliegue Blue/Green real de Lambda con cambio de tráfico canary por alias, y estudiaste cómo el mismo patrón se extiende a ECS mediante conjuntos de tareas azul/verde y reglas de listener ELB. El concepto central que atraviesa ambos servicios es la reducción de riesgo en el proceso de entrega: compilaciones reproducibles y despliegues graduales con reversión automática ante fallos son las piedras angulares de un pipeline de CI/CD confiable en producción.

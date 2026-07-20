@@ -119,7 +119,7 @@ for track,(module,source,groups) in DATA.items():
     text=path.read_text(encoding="utf-8"); rendered,total=block(track,source,groups)
     if START in text:
         before,rest=text.split(START,1); _,after=rest.split(END,1); text=before.rstrip()+"\n\n"+rendered+after
-    else: text=text.replace("## Resumen del módulo",rendered+"\n## Resumen del módulo")
+    else: text=text.rstrip()+"\n\n"+rendered
     path.write_text(text,encoding="utf-8")
     inventory["tracks"].append({"id":track,"content":str(path.relative_to(ROOT)),"source":source,"topicCount":total,"areas":groups})
 (ROOT/"docs/official-topic-atlas.json").write_text(json.dumps(inventory,ensure_ascii=False,indent=2)+"\n",encoding="utf-8")

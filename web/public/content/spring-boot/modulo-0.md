@@ -1,33 +1,5 @@
 # Módulo 0: Fundamentos de Spring — IoC y DI
 
-## Sílabo
-
-**Objetivo general**
-
-Entender el contenedor de Spring como gestor del ciclo de vida de los objetos de la aplicación, dominando inversión de control, inyección de dependencias por constructor, y qué significa realmente la autoconfiguración de "Boot".
-
-**Objetivos específicos**
-
-1. Explicar qué problema resuelve la inversión de control.
-2. Aplicar inyección por constructor y explicar por qué es preferible a la inyección por campo.
-3. Diferenciar `@Component`, `@Service` y `@Repository`.
-4. Explicar qué hace realmente la autoconfiguración de Spring Boot.
-5. Usar `@Scope`, `@Qualifier` y `@Primary` apropiadamente.
-
-**Contenido**
-
-- Inversión de control y el contenedor de Spring.
-- Inyección por constructor vs por campo.
-- `@Component`, `@Service`, `@Repository`.
-- Autoconfiguración: qué hace realmente "Boot".
-- `@Scope`: singleton, prototype, request, session.
-- `@Qualifier` y `@Primary` cuando hay varias implementaciones.
-
-**Evaluación**
-
-Aplicación Spring Boot mínima con dos beans inyectados por constructor, más tres ejercicios de evaluación.
-
----
 
 ## Antes de comenzar: del equipo vacío a Spring Boot
 
@@ -130,21 +102,6 @@ No crees un proyecto desechable por módulo. Conserva un único repositorio que 
 
 Al iniciar cada laboratorio crea una rama `modulo-N`, implementa el incremento, verifica el criterio de éxito y fusiona solo con pruebas verdes. Si un módulo necesita un experimento aislado, colócalo en `experiments/modulo-N/`; el producto acumulativo permanece ejecutable. Al terminar, otra persona debe poder clonar el repositorio y reproducir el último hito siguiendo únicamente el README.
 
-## Criterio transversal de calidad del código
-
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
 
 ## Laboratorio práctico
 
@@ -169,40 +126,3 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 - **No declarar `@Primary` ni `@Qualifier` con múltiples implementaciones.** Sin ninguno de los dos, Spring falla al arrancar por ambigüedad.
 
 ---
-
-
-
-## Bibliografía y fundamento académico
-
-Estas fuentes sustentan los conceptos y deben consultarse para verificar detalles que cambian entre versiones:
-
-- VMware/Broadcom, documentación de *Spring Framework* y *Spring Boot*.
-- IETF, especificaciones HTTP y OAuth 2.0.
-- OWASP Foundation, *Application Security Verification Standard*.
-- ACM/IEEE-CS/AAAI, *Computer Science Curricula 2023*.
-- IEEE Computer Society, *SWEBOK Guide V4.0*.
-
-## Resumen del módulo
-
-**Puntos clave**
-
-- La inversión de control delega la creación y conexión de dependencias al contenedor de Spring, desacoplando a cada clase de cómo se construyen sus colaboradores.
-- La inyección por constructor permite inmutabilidad real y tests unitarios simples sin levantar el contenedor.
-- `@Service`/`@Repository` son variantes de `@Component`, con `@Repository` agregando traducción de excepciones.
-- La autoconfiguración de Boot elimina la configuración XML manual extensa del Spring clásico.
-
-**Conceptos aprendidos**
-
-- Inversión de control y el contenedor de Spring.
-- Inyección por constructor vs por campo.
-- Estereotipos de Spring y autoconfiguración.
-- `@Scope`, `@Qualifier` y `@Primary`.
-
-**Próximos pasos**
-
-En el Módulo 1 aprenderás la estructura de proyecto de Spring Boot: Spring Initializr, `application.yml`, y perfiles por entorno.
-
-**Recursos adicionales**
-
-- Documentación oficial de Spring Framework (docs.spring.io/spring-framework) y Spring Boot (docs.spring.io/spring-boot).
-- Ejemplos de código ejecutables de este track, en Java: carpeta [`examples/tracks/spring-boot/`](https://github.com/NICORUIZ93/Academia_Floci/tree/main/examples/tracks/spring-boot) del repositorio — `RestControllerExample.java` (Módulo 2), `JpaRepositoryExample.java` (Módulo 3), `SecurityConfig.java` (Módulo 4), `ActuatorMetrics.java` (Módulo 7), `WebFluxReactive.java` (Módulo 9).

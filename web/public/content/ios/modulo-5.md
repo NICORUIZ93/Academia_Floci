@@ -1,31 +1,5 @@
 # Módulo 5: Networking con URLSession
 
-## Sílabo
-
-**Objetivo general**
-
-Consumir APIs REST reales con `URLSession` sobre `async`/`await`, parsear JSON automáticamente con `Codable`, y manejar errores con tipos propios, incluyendo reintentos y cancelación de tareas en curso.
-
-**Objetivos específicos**
-
-1. Hacer una petición GET con `URLSession.shared.data(from:)` usando `async`/`await`.
-2. Definir un `struct Codable` y decodificarlo con `JSONDecoder`.
-3. Definir un enum de error propio y lanzar el caso apropiado según el código HTTP.
-4. Implementar cancelación de una `Task` en curso.
-5. Agregar reintentos con backoff simple.
-
-**Contenido**
-
-- `URLSession` con `async`/`await`.
-- `Codable` para parsear JSON.
-- Manejo de errores con tipos propios.
-- Reintentos y cancelación de tareas.
-
-**Evaluación**
-
-Cliente de red que consume una API real con manejo de errores tipado, más tres ejercicios de evaluación.
-
----
 
 ## Aprende construyendo
 
@@ -132,21 +106,6 @@ tarea.cancel() // evita procesar un resultado que ya no es relevante
 
 ---
 
-## Criterio transversal de calidad del código
-
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
 
 ## Laboratorio práctico
 
@@ -171,39 +130,3 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 - **No cancelar una Task anterior al iniciar una nueva búsqueda.** Arriesga mostrar un resultado obsoleto que llega fuera de orden.
 
 ---
-
-
-
-## Bibliografía y fundamento académico
-
-Estas fuentes sustentan los conceptos y deben consultarse para verificar detalles que cambian entre versiones:
-
-- Apple, *Swift Language Guide* y *Apple Developer Documentation*.
-- Apple, *Human Interface Guidelines* y documentación de accesibilidad.
-- OWASP Foundation, *Mobile Application Security Verification Standard*.
-- ACM/IEEE-CS/AAAI, *Computer Science Curricula 2023*.
-- IEEE Computer Society, *SWEBOK Guide V4.0*.
-
-## Resumen del módulo
-
-**Puntos clave**
-
-- `URLSession.shared.data(from:)` con `async`/`await` permite verificar explícitamente el código de estado HTTP antes de procesar la respuesta.
-- `Codable` genera automáticamente el parsing de JSON para cualquier `struct` con propiedades también `Codable`.
-- Un enum de error propio comunica categorías específicas de fallo, verificadas exhaustivamente por el compilador.
-- Reintentos con backoff mejoran la resiliencia ante fallos transitorios; cancelar tareas obsoletas evita resultados desactualizados.
-
-**Conceptos aprendidos**
-
-- `URLSession` con `async`/`await`.
-- `Codable`.
-- Manejo de errores con tipos propios.
-- Reintentos y cancelación de tareas.
-
-**Próximos pasos**
-
-En el Módulo 6 aprenderás a persistir datos localmente con SwiftData, el framework moderno de Apple construido sobre Core Data.
-
-**Recursos adicionales**
-
-- Documentación oficial de URLSession (developer.apple.com/documentation/foundation/urlsession).

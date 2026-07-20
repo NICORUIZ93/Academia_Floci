@@ -1,34 +1,5 @@
 # Módulo 0: Fundamentos y Angular CLI
 
-## Sílabo
-
-**Objetivo general**
-
-Arrancar con la versión moderna de Angular (standalone por defecto) entendiendo exactamente qué genera el CLI antes de tocar código, y reforzar el TypeScript necesario para ser productivo desde el primer módulo.
-
-**Objetivos específicos**
-
-1. Usar `ng new` y `ng generate` para crear un proyecto y sus artefactos (componentes, servicios).
-2. Explicar por qué un proyecto generado hoy no contiene ningún `NgModule`.
-3. Distinguir interpolación de property binding y elegir correctamente entre ambos.
-4. Diferenciar `unknown`, `any` y `never`, y usar utility types (`Partial`, `Pick`, `Omit`, `Record`).
-5. Explicar la diferencia entre el compilador AOT y JIT.
-
-**Contenido**
-
-- `ng new`, `ng generate` y estructura de proyecto.
-- Standalone components por defecto (desde Angular 17+).
-- Interpolación y property binding.
-- Ciclo de build y dev server.
-- TypeScript a fondo: `unknown` vs `any` vs `never`, uniones/intersecciones, utility types.
-- `ng generate component/service/directive/pipe/guard/interceptor`.
-- Compilador AOT vs JIT.
-
-**Evaluación**
-
-Un proyecto Angular nuevo con un componente propio renderizando datos dinámicos, más tres ejercicios de evaluación.
-
----
 
 ## Antes de comenzar: prepara tu equipo desde cero
 
@@ -175,21 +146,6 @@ No crees un proyecto desechable por módulo. Conserva un único repositorio que 
 
 Al iniciar cada laboratorio crea una rama `modulo-N`, implementa el incremento, verifica el criterio de éxito y fusiona solo con pruebas verdes. Si un módulo necesita un experimento aislado, colócalo en `experiments/modulo-N/`; el producto acumulativo permanece ejecutable. Al terminar, otra persona debe poder clonar el repositorio y reproducir el último hito siguiendo únicamente el README.
 
-## Criterio transversal de calidad del código
-
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
 
 ## Laboratorio práctico
 
@@ -214,41 +170,3 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 - **Usar `any` en vez de `unknown` para un valor de tipo genuinamente incierto.** Prefiere `unknown` y narrowing explícito para preservar seguridad de tipos.
 
 ---
-
-
-
-## Bibliografía y fundamento académico
-
-Estas fuentes sustentan los conceptos y deben consultarse para verificar detalles que cambian entre versiones:
-
-- Google, *Angular Documentation* y guías oficiales de accesibilidad, seguridad y rendimiento.
-- ReactiveX, *RxJS Documentation*.
-- W3C, *Web Content Accessibility Guidelines (WCAG)*.
-- ACM/IEEE-CS/AAAI, *Computer Science Curricula 2023*.
-- IEEE Computer Society, *SWEBOK Guide V4.0*.
-
-## Resumen del módulo
-
-**Puntos clave**
-
-- Los proyectos Angular modernos son standalone por defecto: no hay `NgModule`, cada componente declara sus propias dependencias.
-- La interpolación siempre produce texto; el property binding enlaza directamente con una propiedad real del DOM.
-- `unknown` preserva seguridad de tipos exigiendo narrowing explícito, a diferencia de `any`; los utility types (`Partial`, `Pick`, `Omit`, `Record`) transforman tipos existentes sin redeclararlos.
-- AOT compila las plantillas durante el build, produciendo bundles más pequeños y arranque más rápido que el históricamente usado JIT.
-
-**Conceptos aprendidos**
-
-- Estructura de un proyecto Angular moderno y los generadores del CLI.
-- Diferencia entre interpolación y property binding.
-- TypeScript avanzado: `unknown`, `never` y utility types.
-- Compilación AOT frente a JIT.
-
-**Próximos pasos**
-
-En el Módulo 1 profundizarás en componentes, plantillas y data binding: inputs/outputs basados en signals, control de flujo nativo (`@if`/`@for`), content projection y el ciclo de vida completo de un componente.
-
-**Recursos adicionales**
-
-- Documentación oficial de Angular (angular.dev), sección "Essentials".
-- TypeScript Handbook: "Utility Types".
-- Ejemplos de código ejecutables de este track, en TypeScript: carpeta [`examples/tracks/angular/`](https://github.com/NICORUIZ93/Academia_Floci/tree/main/examples/tracks/angular) del repositorio — `signals-counter.ts` (Módulo 2), `di-service.ts` (Módulo 3), `routing-guard.ts` (Módulo 4), `reactive-form.ts` (Módulo 5), `http-interceptor.ts` (Módulo 7).

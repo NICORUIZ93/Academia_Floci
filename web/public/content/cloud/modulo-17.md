@@ -1,33 +1,5 @@
 # Módulo 17: Streaming: Kinesis, MSK (Kafka) y Pub/Sub avanzado
 
-## Sílabo
-
-**Objetivo general**
-
-Procesar flujos de millones de eventos por segundo, entendiendo la diferencia fundamental entre colas (SQS, un mensaje consumido y eliminado) y streams (Kinesis/Kafka, un registro persistente que múltiples consumidores pueden leer independientemente manteniendo su propia posición).
-
-**Objetivos específicos**
-
-1. Crear un data stream de Kinesis con múltiples shards y producir/consumir registros.
-2. Crear un cluster MSK (Kafka gestionado) y producir/consumir mensajes.
-3. Comparar los períodos de retención y garantías de orden de Kinesis frente a SQS.
-4. Implementar un consumidor que mantiene su posición (offset) en Kafka.
-
-**Contenido**
-
-- Shard.
-- Partition key.
-- Consumer group.
-- Offset.
-- Retention period.
-- Compaction.
-- Backpressure.
-
-**Evaluación**
-
-Pipeline de streaming que ingiere eventos de Kinesis, los procesa con Lambda y los almacena en S3, más tres ejercicios de evaluación.
-
----
 
 ## Aprende construyendo
 
@@ -100,21 +72,6 @@ Kinesis Data Firehose → entrega automatizada gestionada hacia S3/warehouse, si
 
 ---
 
-## Criterio transversal de calidad del código
-
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
 
 ## Laboratorio práctico
 
@@ -141,42 +98,3 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 - **Escribir un consumidor personalizado cuando Kinesis Data Firehose ya resolvería la entrega automatizada necesaria.** Considera Firehose para casos de simple transporte sin procesamiento personalizado.
 
 ---
-
-
-
-## Bibliografía y fundamento académico
-
-Estas fuentes sustentan los conceptos y deben consultarse para verificar detalles que cambian entre versiones:
-
-- AWS, Microsoft Azure y Google Cloud, marcos oficiales de arquitectura bien diseñada.
-- NIST, *Cloud Computing Standards Roadmap* y *Secure Software Development Framework*.
-- Beyer et al., *Site Reliability Engineering*.
-- ACM/IEEE-CS/AAAI, *Computer Science Curricula 2023*.
-- IEEE Computer Society, *SWEBOK Guide V4.0*.
-
-## Resumen del módulo
-
-**Puntos clave**
-
-- Los streams (Kinesis/Kafka) permiten que múltiples consumidores independientes lean el mismo flujo completo, a diferencia de las colas (SQS) donde un mensaje se elimina al ser consumido.
-- El offset rastreado por consumer group permite recuperar la posición de lectura exacta tras un reinicio, sin reprocesar ni saltarse mensajes.
-- Kinesis Data Streams da control fino para procesamiento personalizado; Firehose automatiza la entrega hacia un destino final.
-- MSK y GCP Managed Kafka gestionan Kafka real como servicio administrado, reforzando que streaming de alto volumen es un patrón universal de la industria.
-
-**Conceptos aprendidos**
-
-- Shard.
-- Partition key.
-- Consumer group.
-- Offset.
-- Retention period.
-- Compaction.
-- Backpressure.
-
-**Próximos pasos**
-
-En el Módulo 18 aprenderás autenticación de usuarios con Cognito, implementando registro, login y autorización sin construir tu propio sistema de autenticación.
-
-**Recursos adicionales**
-
-- Documentación oficial de Amazon Kinesis (docs.aws.amazon.com/kinesis).

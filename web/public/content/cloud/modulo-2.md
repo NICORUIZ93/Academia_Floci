@@ -1,32 +1,5 @@
 # Módulo 2: Almacenamiento en la nube con S3
 
-## Sílabo
-
-**Objetivo general**
-
-Dominar el almacenamiento de objetos con S3: entender qué es un objeto y un bucket, operar el ciclo de vida completo de un archivo (crear, leer, actualizar, eliminar), y aplicar versionado y políticas de acceso básicas.
-
-**Objetivos específicos**
-
-1. Explicar qué identifica de forma única a un objeto dentro de un bucket.
-2. Realizar operaciones CRUD completas sobre archivos en S3 usando la AWS CLI.
-3. Activar y usar el versionado de un bucket para conservar el historial de un archivo.
-4. Distinguir entre políticas de bucket, ACL y URLs pre-firmadas, y saber cuándo usar cada una.
-5. Explicar el propósito de las transiciones de ciclo de vida entre capas de almacenamiento.
-
-**Contenido**
-
-- Objetos, buckets y su nomenclatura.
-- Claves y metadatos.
-- Versionado y ciclo de vida.
-- Transición entre capas de almacenamiento.
-- Políticas de bucket, ACL y URLs pre-firmadas.
-
-**Evaluación**
-
-Dos laboratorios (operaciones CRUD básicas y versionado) y tres ejercicios de evaluación sobre nomenclatura de buckets, versionado y control de acceso.
-
----
 
 ## Aprende construyendo
 
@@ -177,21 +150,6 @@ El hilo común entre estos tres mecanismos es el principio de mínimo privilegio
 
 ---
 
-## Criterio transversal de calidad del código
-
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
 
 ## Laboratorio práctico
 
@@ -237,44 +195,3 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 - **La AWS CLI intenta hablar con AWS real en vez de con Floci.** Olvidaste ejecutar `eval $(floci env)` en la sesión actual de terminal, o abriste una pestaña nueva donde esas variables no están exportadas — normalmente produce un error de credenciales o de conectividad. Vuelve a ejecutar `eval $(floci env)` (Módulo 1); si prefieres no depender de una variable de sesión, puedes añadir `--endpoint-url http://localhost:4566` a un comando puntual.
 
 ---
-
-
-
-## Bibliografía y fundamento académico
-
-Estas fuentes sustentan los conceptos y deben consultarse para verificar detalles que cambian entre versiones:
-
-- AWS, Microsoft Azure y Google Cloud, marcos oficiales de arquitectura bien diseñada.
-- NIST, *Cloud Computing Standards Roadmap* y *Secure Software Development Framework*.
-- Beyer et al., *Site Reliability Engineering*.
-- ACM/IEEE-CS/AAAI, *Computer Science Curricula 2023*.
-- IEEE Computer Society, *SWEBOK Guide V4.0*.
-
-## Resumen del módulo
-
-**Puntos clave**
-
-- S3 almacena objetos identificados por una clave única dentro de un bucket; no existen carpetas reales, solo claves con barras que se interpretan visualmente como tal.
-- Los metadatos del sistema los gestiona S3 automáticamente; los metadatos personalizados los defines tú, pero no son eficientemente consultables sin recorrer todo el bucket.
-- El versionado conserva cada versión histórica de una clave y convierte los borrados en marcadores reversibles, a costa de mayor consumo de almacenamiento si no se combina con reglas de ciclo de vida.
-- Las clases de almacenamiento equilibran coste por gigabyte contra coste y latencia de acceso; las reglas de ciclo de vida automatizan la transición entre ellas con el tiempo.
-- Las políticas de bucket son el mecanismo de control de acceso más flexible y auditable; las ACL son más limitadas y menos recomendadas; las URLs pre-firmadas dan acceso temporal sin compartir credenciales.
-
-**Conceptos aprendidos**
-
-- Objetos, buckets, claves y la naturaleza plana (sin jerarquía real) del almacenamiento en S3.
-- Metadatos del sistema vs metadatos personalizados.
-- Versionado, IDs de versión y marcadores de borrado.
-- Clases de almacenamiento y reglas de ciclo de vida.
-- Políticas de bucket, ACL y URLs pre-firmadas, y el principio de mínimo privilegio aplicado a S3.
-
-**Próximos pasos**
-
-En el Módulo 3 vas a desacoplar componentes de una aplicación usando colas de mensajes con SQS, entendiendo el ciclo de vida de un mensaje y por qué a veces necesitas una Dead Letter Queue.
-
-**Recursos adicionales**
-
-- Documentación oficial de Amazon S3: conceptos básicos y guía de usuario.
-- Documentación oficial de S3 sobre versionado y gestión de ciclo de vida.
-- Guía de AWS sobre buenas prácticas de seguridad en S3 (políticas de bucket vs ACL).
-- Código ejecutable de cada operación (listar, crear, subir, descargar, eliminar) en Node.js, Python, Java, Go y Rust: carpeta [`examples/`](https://github.com/NICORUIZ93/Academia_Floci/tree/main/examples) del repositorio, archivos que empiezan por `s3-`/`s3_`/`S3` (ver [`examples/README.md`](https://github.com/NICORUIZ93/Academia_Floci/blob/main/examples/README.md) para la lista completa).

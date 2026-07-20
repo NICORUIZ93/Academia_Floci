@@ -2,13 +2,6 @@
 
 Una SPA puede aprobar el flujo feliz y aun desaparecer ante un error de render, perder foco al navegar, ejecutar HTML hostil o hidratar con información distinta a la del servidor. Este módulo convierte el proyecto final en una interfaz que falla de forma contenida, recupera con intención y conserva sus garantías entre cliente y servidor.
 
-## Sílabo
-
-1. Pureza, efectos, Suspense, Error Boundaries y recuperación.
-2. Accesibilidad de componentes, rutas y formularios.
-3. Seguridad de render, Server Components y Server Actions.
-4. Hidratación, internacionalización, rendimiento y releases.
-5. Proyecto: auditoría de producción de la aplicación React.
 
 ## Aprende construyendo
 
@@ -201,21 +194,6 @@ build -> budgets -> canary -> RUM por deployment ID -> ampliar
 
 **Aplicación al proyecto:** elimina una memorización especulativa y compara Performance Tracks, modela una pantalla conservada con Activity, migra un callback de efecto a useEffectEvent y añade un gate que rechace versiones vulnerables de paquetes RSC.
 
-## Criterio transversal de calidad del código
-
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
 
 ## Laboratorio práctico
 
@@ -250,18 +228,7 @@ Parte del proyecto 12. Si migraste una vista a Next.js, ejecuta las pruebas de s
 
 
 
-## Bibliografía y fundamento académico
 
-- React, documentación oficial de render, Effects, Suspense, `use`, Error Boundaries e `hydrateRoot`.
-- Next.js, documentación oficial de App Router, internacionalización, accesibilidad y CSP.
-- W3C WCAG/WAI-ARIA; OWASP XSS Prevention y Content Security Policy.
-- Unicode CLDR e Intl de ECMA-402 para locale, tiempo y formatos.
-- CS2023: HCI, Security, Software Engineering, SEP y Specialized Platform Development.
-- SWEBOK V4: Construction, Testing, Quality, Security, Architecture y Operations.
-
-Los resultados observables son contener fallos según frontera, completar el flujo con asistencia, bloquear un sink y una acción no autorizada, hidratar sin divergencia y operar locales/releases con evidencia.
-
-<!-- OFFICIAL-TOPIC-ATLAS:START -->
 ## Atlas completo de temas oficiales
 
 Derivado de la [documentación oficial](https://react.dev/reference/react), sus referencias, migraciones y guías de operación. Inventariar no equivale a dominar: cada selección se demuestra con código, prueba, medición y explicación. **Cobertura: 45 temas.**
@@ -279,13 +246,3 @@ Derivado de la [documentación oficial](https://react.dev/reference/react), sus 
 
 Para cada tema responde qué problema resuelve, cuál es su modelo mental, cómo falla, cómo se verifica y cuándo no conviene. Elige uno por área e intégralos en una vertical RutaFlow. Entrega diagrama, ADR, pruebas de éxito y fallo, una medición, una amenaza y el enlace oficial con versión y fecha. Una API preview se aísla en laboratorio y nunca se presenta como base estable.
 <!-- OFFICIAL-TOPIC-ATLAS:END -->
-
-## Resumen del módulo
-
-- Render es puro; Effects sincronizan sistemas externos y requieren limpieza simétrica.
-- Suspense expresa espera; Error Boundaries contienen errores de render, no toda excepción.
-- La composición debe conservar HTML, identidad, foco y feedback accesibles.
-- React escapa texto, pero HTML intencional, URLs, DOM externo y acciones exigen controles.
-- Server Components serializan datos; Server Actions son endpoints que autorizan en servidor.
-- La hidratación necesita primer render determinista y la misma semántica de locale/zona.
-- Budgets, RUM, deployment IDs y rollback convierten performance y release en garantías observables.

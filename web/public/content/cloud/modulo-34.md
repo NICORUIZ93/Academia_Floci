@@ -6,14 +6,6 @@ Crearás un laboratorio local multi-nube reproducible. Al terminar podrás insta
 
 La fuente principal es [floci.io](https://floci.io/) y las documentaciones mantenidas por los proyectos `floci`, `floci-az`, `floci-gcp`, `floci-cli`, `floci-ui` y `floci-labs`. Esta lección no copia sus textos: reorganiza y explica sus capacidades en español con un recorrido educativo propio.
 
-## Sílabo
-
-- Instalación y diagnóstico en macOS, Linux y Windows.
-- Arquitectura de Floci, CLI, UI, endpoints y SDK oficiales.
-- Configuración, persistencia, aislamiento, TLS, hooks y automatización.
-- Inventario de servicios AWS, Azure y GCP con sus objetivos de práctica.
-- Cuatro laboratorios oficiales reconstruidos como experiencias guiadas.
-- Límites del entorno local y transferencia segura hacia producción.
 
 ## Antes de empezar
 
@@ -188,9 +180,6 @@ Inicia una instancia local, abre y cierra puertos mientras corre y observa los s
 
 Compatibilidad de API significa que clientes y formatos se comportan como espera el SDK; no significa que latencia regional, cuotas, IAM organizacional, facturación, hardware administrado, disponibilidad multi-zona y fallos del proveedor estén reproducidos completamente. Antes de producción ejecuta un conjunto pequeño de pruebas contractuales en la nube real, revisa seguridad y costes, y documenta cualquier diferencia.
 
-## Criterio transversal de calidad del código
-
-Usa nombres que expresen proveedor, recurso y propósito; valida entradas y convierte errores de SDK en diagnósticos que conserven causa y contexto. Cada flujo necesita al menos una prueba de éxito y una prueba de fallo. Aplica SOLID cuando exista una razón de cambio o una dependencia externa que convenga sustituir, pero decide no abstraer clientes, comandos o servicios que todavía tienen una sola implementación clara. La simplicidad verificable tiene prioridad sobre crear capas por anticipado.
 
 ## Laboratorio práctico
 
@@ -209,16 +198,3 @@ Usa nombres que expresen proveedor, recurso y propósito; valida entradas y conv
 ## Criterio para avanzar
 
 No marques este capítulo como completado hasta que otra persona pueda clonar tu carpeta, ejecutar una sola guía y obtener la misma evidencia sin preguntarte dónde colocar archivos, qué variables exportar o cómo reconocer el resultado correcto.
-
-## Resumen del módulo
-
-Floci ofrece una herramienta común para trabajar localmente con APIs compatibles de AWS, Azure y GCP. Aprendiste a instalarla, diagnosticarla, elegir entre estado persistente o efímero, observar recursos con la UI, automatizar pruebas aisladas y recorrer servicios que antes no estaban explicados. La competencia final no consiste en memorizar 115 nombres: consiste en reconocer el patrón cloud, construir evidencia reproducible y saber qué afirmaciones todavía requieren validación en el proveedor real.
-
-## Bibliografía y fundamento académico
-
-- [Portal Floci](https://floci.io/)
-- [Documentación de floci AWS](https://floci.io/floci/)
-- [Documentación de floci-az](https://floci.io/floci-az/)
-- [Documentación de floci-gcp](https://floci.io/floci-gcp/)
-- [Laboratorios oficiales](https://floci.io/labs/)
-- [Organización floci-io](https://github.com/floci-io)

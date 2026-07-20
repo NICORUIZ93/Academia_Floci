@@ -1,35 +1,5 @@
 # Módulo 4: Gestión de estado
 
-## Sílabo
-
-**Objetivo general**
-
-Entender que Flutter no impone una única solución de gestión de estado, aprendiendo cuándo `setState` es suficiente, cuándo Riverpod ofrece el balance correcto entre simplicidad y robustez verificada en compilación, y cuándo Bloc/Cubit aporta la estructura explícita basada en eventos que equipos grandes valoran.
-
-**Objetivos específicos**
-
-1. Implementar una feature simple con `setState` y documentar sus límites al crecer.
-2. Reimplementar la misma feature con Riverpod.
-3. Consumir ese estado desde 2 widgets distintos sin pasarlo manualmente.
-4. Reimplementar la misma feature con Bloc/Cubit y comparar la ceremonia.
-5. Documentar un criterio propio de elección entre los tres enfoques.
-6. Modelar un formulario complejo con entradas inmutables, validación progresiva y envío sin duplicados.
-
-**Contenido**
-
-- `setState`: cuándo es suficiente.
-- Provider: inyección y notificación simples.
-- Riverpod: providers seguros en tiempo de compilación.
-- Bloc/Cubit: estado predecible basado en eventos.
-- GetX como alternativa todo-en-uno.
-- `get_it` e `injectable` para inyección de dependencias.
-- Formularios con Formz, Riverpod y estados de envío explícitos.
-
-**Evaluación**
-
-Feature completa implementada con Riverpod (o Bloc), formulario validado y cuatro ejercicios de evaluación.
-
----
 
 ## Aprende construyendo
 
@@ -267,21 +237,6 @@ stateDiagram-v2
 
 ---
 
-## Criterio transversal de calidad del código
-
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
 
 ## Laboratorio práctico
 
@@ -310,43 +265,3 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 - **Usar la validez como confirmación remota.** Un formulario válido todavía puede estar pendiente, fallar o ser rechazado por el servidor.
 
 ---
-
-
-
-## Bibliografía y fundamento académico
-
-Estas fuentes sustentan los conceptos y deben consultarse para verificar detalles que cambian entre versiones:
-
-- Google, *Flutter Documentation* y guías de arquitectura y rendimiento.
-- Google, *Dart Language Documentation* y *Effective Dart*.
-- OWASP Foundation, *Mobile Application Security Verification Standard*.
-- ACM/IEEE-CS/AAAI, *Computer Science Curricula 2023*.
-- IEEE Computer Society, *SWEBOK Guide V4.0*.
-
-## Resumen del módulo
-
-**Puntos clave**
-
-- `setState` es suficiente para estado puramente local, pero incómodo cuando widgets distantes necesitan compartir el mismo estado.
-- Riverpod verifica providers en tiempo de compilación, resolviendo el problema de errores de runtime del Provider anterior.
-- Bloc/Cubit fuerza una separación explícita entre evento y cambio de estado, predecible y testeable, a costa de más ceremonia.
-- GetX ofrece un enfoque todo-en-uno; `get_it`/`injectable` son alternativas más ligeras de inyección de dependencias.
-- Formz modela entradas puras y modificadas; el estado de envío sigue siendo una preocupación separada.
-
-**Conceptos aprendidos**
-
-- `setState`: cuándo es suficiente.
-- Provider.
-- Riverpod.
-- Bloc/Cubit.
-- GetX.
-- `get_it` e `injectable`.
-- Formz, validación progresiva y estados de envío.
-
-**Próximos pasos**
-
-En el Módulo 5 aprenderás a consumir APIs REST reales con `http`/`dio`, serialización con `json_serializable` y manejo de errores explícito.
-
-**Recursos adicionales**
-
-- Documentación oficial de Riverpod (riverpod.dev).

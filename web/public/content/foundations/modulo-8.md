@@ -2,13 +2,6 @@
 
 Hasta ahora construiste un inventario, lo protegiste con pruebas y seguridad y separaste su arquitectura. En este capítulo aprenderás qué sucede **debajo** del código: quién entrega CPU y memoria, cómo dos tareas interfieren, cómo investigar un servicio Linux y qué hace realmente Docker. El objetivo no es memorizar comandos, sino formar un modelo mental para diagnosticar sistemas reales.
 
-## Sílabo
-
-1. Kernel, procesos, archivos, permisos y señales.
-2. Memoria, hilos, concurrencia y sincronización.
-3. Operación y diagnóstico básico de Linux.
-4. Imágenes, contenedores, redes y volúmenes.
-5. Proyecto 8: ejecutar el inventario de forma reproducible y segura.
 
 ## Aprende construyendo
 
@@ -158,21 +151,6 @@ Host Linux: kernel compartido
 `- cgroups: límites; namespaces: vistas aisladas
 ```
 
-## Criterio transversal de calidad del código
-
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
 
 ## Laboratorio práctico
 
@@ -217,23 +195,3 @@ volumes:
 - Datos desaparecen: confirma que SQLite usa la ruta montada.
 - `SIGTERM` no llega: usa `CMD` exec y evita una shell como PID 1.
 - Carrera pese al lock: un lock local no coordina varios procesos; protege en la base.
-
-
-
-## Bibliografía y fundamento académico
-
-- Bryant y O’Hallaron, *Computer Systems: A Programmer’s Perspective*.
-- Arpaci-Dusseau y Arpaci-Dusseau, *Operating Systems: Three Easy Pieces*.
-- Kerrisk, *The Linux Programming Interface*.
-- Documentación oficial de Python, SQLite, Linux man-pages y Docker.
-- ACM/IEEE-CS CS2023, Systems Fundamentals y Operating Systems; SWEBOK v4, construcción, calidad, operaciones y mantenimiento.
-
-Los resultados observables son explicar procesos e hilos, diagnosticar con comandos justificados, demostrar una carrera y su corrección, construir una imagen no root y probar persistencia, salud, límites y apagado.
-
-## Resumen del módulo
-
-- Un programa se convierte en proceso cuando el sistema le asigna identidad y recursos.
-- Los hilos comparten estado; el intercalado puede romper invariantes.
-- Linux se opera mediante hipótesis y evidencia de procesos, sockets, logs y recursos.
-- Un contenedor aísla procesos y comparte kernel; no es una máquina virtual.
-- Imágenes reemplazables, usuario no root, volúmenes, salud, señales y límites forman una base operativa verificable.

@@ -1,35 +1,5 @@
 # Módulo 9: Observabilidad con Prometheus y Grafana
 
-## Sílabo
-
-**Objetivo general**
-
-Instrumentar una aplicación con métricas de series temporales, consultarlas con PromQL, visualizarlas en dashboards, y configurar alertas que avisen antes de que un incidente afecte a los usuarios, usando SLI/SLO como lenguaje compartido de fiabilidad.
-
-**Objetivos específicos**
-
-1. Diferenciar counter, gauge e histogram, y elegir el tipo correcto para una métrica dada.
-2. Escribir consultas PromQL esenciales, incluyendo tasas y ratios de error.
-3. Construir un dashboard en Grafana que visualice métricas propias en tiempo real.
-4. Configurar una regla de alerta con Alertmanager basada en un umbral sostenido.
-5. Definir un SLO propio y diferenciarlo de un SLI y un SLA.
-6. Explicar el propósito de OpenTelemetry y de las métricas DORA.
-
-**Contenido**
-
-- Modelo de métricas de Prometheus (counter, gauge, histogram).
-- PromQL esencial.
-- Dashboards en Grafana.
-- Alertmanager y reglas de alerta.
-- SLI/SLO/SLA.
-- OpenTelemetry como estándar de instrumentación.
-- Métricas DORA: Lead Time, Deployment Frequency, MTTR, Change Failure Rate.
-
-**Evaluación**
-
-Un laboratorio que expone una métrica propia, la consulta con PromQL, la visualiza en Grafana y configura una alerta, y tres ejercicios de evaluación sobre elección de tipo de métrica, diseño de SLO, y valor de negocio de las métricas DORA.
-
----
 
 ## Aprende construyendo
 
@@ -234,21 +204,6 @@ Un hallazgo importante y contraintuitivo de la investigación original de DORA e
 
 ---
 
-## Criterio transversal de calidad del código
-
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
 
 ## Laboratorio práctico
 
@@ -277,49 +232,3 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 - **La alerta nunca se dispara aunque forzaste una tasa de error alta.** Revisa que efectivamente sostuviste la condición durante todo el periodo especificado en `for`; si el problema de prueba fue muy breve y se resolvió antes de completar esa ventana de tiempo, la alerta correctamente no se dispara, siguiendo exactamente el comportamiento esperado del mecanismo `for`.
 
 ---
-
-
-
-## Bibliografía y fundamento académico
-
-Estas fuentes sustentan los conceptos y deben consultarse para verificar detalles que cambian entre versiones:
-
-- CNCF, documentación oficial de Kubernetes, Prometheus y OpenTelemetry.
-- HashiCorp, *Terraform Documentation*.
-- Beyer et al., *Site Reliability Engineering*; Forsgren et al., *Accelerate*.
-- ACM/IEEE-CS/AAAI, *Computer Science Curricula 2023*.
-- IEEE Computer Society, *SWEBOK Guide V4.0*.
-
-
-## Resumen del módulo
-
-**Puntos clave**
-
-- Prometheus modela observaciones como series temporales de tres tipos: counter (solo sube), gauge (sube y baja), histogram (distribución en buckets).
-- `rate()` convierte un counter acumulado en una tasa interpretable; combinado con agregación y filtrado por etiquetas, permite calcular ratios como la tasa de error.
-- Un dashboard de Grafana debería organizarse en torno a preguntas operativas reales, no exponer indiscriminadamente todas las métricas disponibles.
-- Una regla de alerta combina una expresión PromQL con una duración sostenida (`for`) para evitar disparar ante fluctuaciones momentáneas normales; Alertmanager gestiona agrupación, silencios y enrutamiento de esas alertas.
-- SLI es lo medido, SLO es la meta interna, SLA es el compromiso externo con consecuencias contractuales; el presupuesto de error formaliza cuánta falla es aceptable sin incumplir el SLO.
-- OpenTelemetry desacopla la instrumentación del código de la elección específica de backend de observabilidad, y estandariza trazas distribuidas para sistemas multi-servicio.
-- Las cuatro métricas DORA (Lead Time, Deployment Frequency, MTTR, Change Failure Rate) mejoran conjuntamente en equipos de alto rendimiento, sin la tensión velocidad-vs-estabilidad que la intuición tradicional sugeriría.
-
-**Conceptos aprendidos**
-
-- Los tres tipos de métrica de Prometheus y cuándo usar cada uno.
-- PromQL esencial: `rate()`, agregación, y filtrado por etiquetas.
-- Diseño de dashboards en Grafana centrados en preguntas operativas.
-- Reglas de alerta y el rol de Alertmanager.
-- SLI, SLO, SLA y presupuesto de error.
-- OpenTelemetry como estándar de instrumentación independiente de backend.
-- Las cuatro métricas DORA y su relación con las prácticas de este track.
-
-**Próximos pasos**
-
-En el Módulo 10 vas a centralizar logs de múltiples servicios con un pipeline de logging estructurado, correlacionando peticiones a través de servicios distintos con un correlation ID.
-
-**Recursos adicionales**
-
-- Documentación oficial de Prometheus: modelo de datos, tipos de métrica y PromQL.
-- Documentación oficial de Grafana sobre construcción de dashboards y fuentes de datos.
-- El libro "Site Reliability Engineering" de Google, referencia original sobre SLI/SLO/SLA y presupuestos de error.
-- Documentación oficial de OpenTelemetry y el informe anual "State of DevOps" del equipo DORA.

@@ -1,30 +1,5 @@
 # Módulo 4: Estado con StateFlow y Compose
 
-## Sílabo
-
-**Objetivo general**
-
-Conectar la capa de datos con la UI de forma reactiva y testeable usando `StateFlow`, aplicando UDF (Unidirectional Data Flow) de forma consistente entre `ViewModel` y Compose, y distinguiendo eventos de estado continuos de eventos de un solo uso.
-
-**Objetivos específicos**
-
-1. Exponer un `StateFlow<EstadoUI>` desde un `ViewModel` y observarlo con `collectAsStateWithLifecycle`.
-2. Implementar el flujo UDF completo entre un composable y su `ViewModel`.
-3. Usar `SharedFlow` para un evento de un solo uso.
-4. Verificar que la recolección se pausa automáticamente en background.
-
-**Contenido**
-
-- `StateFlow` en el `ViewModel`.
-- `collectAsStateWithLifecycle`.
-- UDF (Unidirectional Data Flow).
-- Eventos de un solo uso (`SharedFlow`).
-
-**Evaluación**
-
-Pantalla con UDF completo: eventos de usuario → `ViewModel` → `StateFlow` → UI, más tres ejercicios de evaluación.
-
----
 
 ## Aprende construyendo
 
@@ -142,21 +117,6 @@ LaunchedEffect(Unit) { viewModel.eventos.collect { evento -> mostrarSnackbar(eve
 
 ---
 
-## Criterio transversal de calidad del código
-
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
 
 ## Laboratorio práctico
 
@@ -181,39 +141,3 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 - **Modificar el estado directamente desde la UI en vez de notificar una intención al `ViewModel`.** Rompe UDF; toda mutación de estado debe pasar por el `ViewModel`.
 
 ---
-
-
-
-## Bibliografía y fundamento académico
-
-Estas fuentes sustentan los conceptos y deben consultarse para verificar detalles que cambian entre versiones:
-
-- Google, *Android Developers Documentation* y guías de arquitectura de aplicaciones.
-- JetBrains, *Kotlin Language Documentation*.
-- OWASP Foundation, *Mobile Application Security Verification Standard*.
-- ACM/IEEE-CS/AAAI, *Computer Science Curricula 2023*.
-- IEEE Computer Society, *SWEBOK Guide V4.0*.
-
-## Resumen del módulo
-
-**Puntos clave**
-
-- `StateFlow` garantiza siempre un valor actual disponible, apropiado para representar el estado completo de una pantalla.
-- `collectAsStateWithLifecycle` pausa la recolección en background, ahorrando recursos frente a `collectAsState` simple.
-- UDF generaliza el state hoisting del Módulo 2 hacia toda la pantalla: el estado fluye del ViewModel a la UI, las intenciones de la UI al ViewModel.
-- `SharedFlow` modela correctamente eventos de un solo uso, evitando que se repitan en recomposiciones posteriores.
-
-**Conceptos aprendidos**
-
-- `StateFlow` en el `ViewModel`.
-- `collectAsStateWithLifecycle`.
-- UDF (Unidirectional Data Flow).
-- Eventos de un solo uso (`SharedFlow`).
-
-**Próximos pasos**
-
-En el Módulo 5 conectarás tu app a una API REST real con Retrofit, manejando estados de carga y error de forma explícita.
-
-**Recursos adicionales**
-
-- Documentación oficial de Android sobre `StateFlow` en Compose (developer.android.com/jetpack/compose/state).

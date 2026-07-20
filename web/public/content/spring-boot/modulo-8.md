@@ -1,31 +1,5 @@
 # Módulo 8: Mensajería — Kafka/RabbitMQ
 
-## Sílabo
-
-**Objetivo general**
-
-Desacoplar servicios mediante mensajería asíncrona desde Spring, usando Spring Kafka y Spring AMQP (RabbitMQ), con manejo robusto de errores mediante dead-letter queues.
-
-**Objetivos específicos**
-
-1. Publicar eventos con `KafkaTemplate` desde una API.
-2. Consumir eventos con `@KafkaListener`.
-3. Serializar mensajes explícitamente como JSON.
-4. Configurar una estrategia de reintentos y una dead-letter queue.
-5. Comparar el modelo de entrega de Kafka con RabbitMQ.
-
-**Contenido**
-
-- Spring Kafka: producers y consumers.
-- Spring AMQP (RabbitMQ).
-- Serialización de mensajes.
-- Manejo de errores y dead-letter.
-
-**Evaluación**
-
-Servicio que publica y consume eventos vía Kafka con manejo de errores, más tres ejercicios de evaluación.
-
----
 
 ## Aprende construyendo
 
@@ -104,21 +78,6 @@ RabbitMQ: broker de colas tradicional, más simple para patrones punto-a-punto
 
 ---
 
-## Criterio transversal de calidad del código
-
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
 
 ## Laboratorio práctico
 
@@ -143,37 +102,3 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 - **No serializar explícitamente el formato del mensaje.** Configura un serializer explícito para evitar ambigüedad de formato entre productor y consumidor.
 
 ---
-
-
-
-## Bibliografía y fundamento académico
-
-Estas fuentes sustentan los conceptos y deben consultarse para verificar detalles que cambian entre versiones:
-
-- VMware/Broadcom, documentación de *Spring Framework* y *Spring Boot*.
-- IETF, especificaciones HTTP y OAuth 2.0.
-- OWASP Foundation, *Application Security Verification Standard*.
-- ACM/IEEE-CS/AAAI, *Computer Science Curricula 2023*.
-- IEEE Computer Society, *SWEBOK Guide V4.0*.
-
-## Resumen del módulo
-
-**Puntos clave**
-
-- Publicar eventos vía Kafka/RabbitMQ desacopla completamente al publicador de sus consumidores.
-- Una dead-letter queue aísla mensajes que fallan repetidamente, evitando bloqueo o pérdida silenciosa.
-- Kafka retiene mensajes como un log distribuido para múltiples lectores; RabbitMQ es un broker de colas tradicional más simple para punto-a-punto.
-
-**Conceptos aprendidos**
-
-- Spring Kafka: producers y consumers.
-- Spring AMQP (RabbitMQ).
-- Dead-letter queues y manejo de errores.
-
-**Próximos pasos**
-
-En el Módulo 9 aprenderás programación reactiva con WebFlux: Mono/Flux, WebClient, y cuándo el modelo no bloqueante realmente vale la complejidad.
-
-**Recursos adicionales**
-
-- Documentación oficial de Spring Kafka (docs.spring.io/spring-kafka) y Spring AMQP (docs.spring.io/spring-amqp).

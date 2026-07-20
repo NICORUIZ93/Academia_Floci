@@ -1,33 +1,5 @@
 # Módulo 9: Testing con JUnit 5 y Mockito
 
-## Sílabo
-
-**Objetivo general**
-
-Probar lógica de negocio aislada de sus dependencias externas usando JUnit 5 y Mockito, incluyendo tests parametrizados y medición de cobertura con JaCoCo.
-
-**Objetivos específicos**
-
-1. Escribir un test básico con `@Test` y aserciones.
-2. Usar `@BeforeEach` para inicializar estado compartido.
-3. Mockear una dependencia externa con Mockito y verificar interacciones con `verify()`.
-4. Escribir tests parametrizados con `@ParameterizedTest`.
-5. Configurar JaCoCo y analizar un reporte de cobertura.
-
-**Contenido**
-
-- JUnit 5: anotaciones y ciclo de vida.
-- Mockito: mocks, stubs y verify.
-- Tests parametrizados.
-- Cobertura con JaCoCo.
-- `@CsvSource`, `@MethodSource` y `@TestFactory`.
-- AssertJ y Hamcrest como librerías de aserciones fluidas.
-
-**Evaluación**
-
-Suite de pruebas unitarias con mocks para un servicio con dependencias externas, más tres ejercicios de evaluación.
-
----
 
 ## Aprende construyendo
 
@@ -113,21 +85,6 @@ mvn test jacoco:report   # genera un reporte HTML con líneas/ramas cubiertas
 
 ---
 
-## Criterio transversal de calidad del código
-
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
 
 ## Laboratorio práctico
 
@@ -152,39 +109,3 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 - **Duplicar el mismo cuerpo de prueba para múltiples casos de datos.** Usa `@ParameterizedTest` para evitar esa duplicación.
 
 ---
-
-
-
-## Bibliografía y fundamento académico
-
-Estas fuentes sustentan los conceptos y deben consultarse para verificar detalles que cambian entre versiones:
-
-- Oracle, *Java Language Specification* y *Java Virtual Machine Specification*.
-- OpenJDK, documentación de Java SE, JFR y JMH.
-- Bloch, J., *Effective Java*.
-- ACM/IEEE-CS/AAAI, *Computer Science Curricula 2023*.
-- IEEE Computer Society, *SWEBOK Guide V4.0*.
-
-## Resumen del módulo
-
-**Puntos clave**
-
-- El ciclo de vida de JUnit 5 (`@BeforeEach`, etc.) garantiza aislamiento entre pruebas sucesivas.
-- Mockito permite aislar la lógica bajo prueba de sus dependencias externas mediante mocks configurables con `when` y verificables con `verify`.
-- Los tests parametrizados evitan duplicar el mismo cuerpo de prueba para múltiples conjuntos de datos.
-- JaCoCo identifica visualmente qué partes del código carecen de cobertura de pruebas.
-
-**Conceptos aprendidos**
-
-- JUnit 5: anotaciones y ciclo de vida.
-- Mockito: mocks, stubs y verify.
-- Tests parametrizados.
-- Cobertura con JaCoCo.
-
-**Próximos pasos**
-
-En el Módulo 10 aprenderás módulos (JPMS) y proyectos grandes: `module-info.java`, encapsulación fuerte, y migración incremental.
-
-**Recursos adicionales**
-
-- Documentación oficial de JUnit 5 (junit.org/junit5) y Mockito (site.mockito.org).

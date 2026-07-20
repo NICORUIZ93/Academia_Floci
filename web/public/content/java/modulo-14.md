@@ -2,13 +2,6 @@
 
 El proyecto anterior usa concurrencia y produce un artefacto reproducible. Para operarlo profesionalmente todavía debes demostrar que los hilos observan estado válido, que las optimizaciones no engañan tus mediciones, que datos hostiles no construyen objetos arbitrarios y que el runtime puede actualizarse y diagnosticarse. Este módulo trabaja esas fronteras con experimentos.
 
-## Sílabo
-
-1. Java Memory Model, happens-before y publicación segura.
-2. JMH, JIT y benchmarks que miden lo que declaran.
-3. Fronteras de datos, deserialización y cadena de suministro.
-4. Runtime mínimo, contenedores, observabilidad y actualización.
-5. Proyecto: endurecimiento del servicio concurrente.
 
 ## Aprende construyendo
 
@@ -208,21 +201,6 @@ La base de producción recomendada para el curso es **Java 25 LTS**; **JDK 26** 
 
 **Aplicación al proyecto:** compila y prueba en 25 y 26, experimenta HTTP/3 contra un servidor compatible con fallback medido, registra JEP/estado de cada función y evita publicar artefactos que necesiten preview salvo decisión explícita.
 
-## Criterio transversal de calidad del código
-
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
 
 ## Laboratorio práctico
 
@@ -256,19 +234,7 @@ Parte del proyecto 13 y conserva un tag funcional anterior.
 
 
 
-## Bibliografía y fundamento académico
 
-- Java Language Specification, capítulo 17: Threads and Locks y Java Memory Model.
-- Oracle Java Core Libraries Guide: serialization filtering, concurrency y herramientas.
-- OpenJDK Code Tools: JMH, jcstress, JOL y herramientas de medición.
-- Documentación oficial de `jlink`, JFR, unified logging y módulos.
-- Goetz et al., *Java Concurrency in Practice*; Shipilev, materiales sobre JVM y benchmarking.
-- CS2023: Systems Fundamentals, Parallel and Distributed Computing, Security y Software Engineering.
-- SWEBOK V4: Construction, Testing, Quality, Security y Engineering Operations.
-
-Los resultados observables son justificar visibilidad, reproducir/corregir una carrera de memoria, refutar un benchmark falso, rechazar grafos hostiles y desplegar/actualizar un runtime mínimo con diagnóstico.
-
-<!-- OFFICIAL-TOPIC-ATLAS:START -->
 ## Atlas completo de temas oficiales
 
 Derivado de la [documentación oficial](https://docs.oracle.com/en/java/javase/25/), sus referencias, migraciones y guías de operación. Inventariar no equivale a dominar: cada selección se demuestra con código, prueba, medición y explicación. **Cobertura: 49 temas.**
@@ -286,12 +252,3 @@ Derivado de la [documentación oficial](https://docs.oracle.com/en/java/javase/2
 
 Para cada tema responde qué problema resuelve, cuál es su modelo mental, cómo falla, cómo se verifica y cuándo no conviene. Elige uno por área e intégralos en una vertical RutaFlow. Entrega diagrama, ADR, pruebas de éxito y fallo, una medición, una amenaza y el enlace oficial con versión y fecha. Una API preview se aísla en laboratorio y nunca se presenta como base estable.
 <!-- OFFICIAL-TOPIC-ATLAS:END -->
-
-## Resumen del módulo
-
-- El Java Memory Model define visibilidad y orden; el tiempo de pared no crea happens-before.
-- `volatile` no vuelve atómicas las operaciones compuestas y un record no congela objetos mutables.
-- JMH controla warmup, forks y eliminación; la pregunta y workload siguen siendo responsabilidad humana.
-- Deserializar datos no confiables es peligroso; prefiere DTO cerrado y limita cualquier caso legacy.
-- jlink reduce el runtime y transfiere al equipo la responsabilidad de reconstruirlo y parchearlo.
-- Heap no es toda la memoria; contenedores requieren margen, señales y observabilidad del runtime real.

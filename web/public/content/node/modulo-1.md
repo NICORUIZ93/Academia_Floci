@@ -1,30 +1,5 @@
 # Módulo 1: Módulos, npm/pnpm y gestión de dependencias
 
-## Sílabo
-
-**Objetivo general**
-
-Gestionar dependencias de un proyecto Node de forma reproducible, entendiendo exactamente qué instala cada comando, cómo funcionan los lockfiles, y cómo estructurar un monorepo con workspaces.
-
-**Objetivos específicos**
-
-1. Interpretar `package.json` y las reglas de semver (`^`, `~`, versión exacta).
-2. Explicar el propósito de un lockfile y la diferencia entre `npm install` y `npm ci`.
-3. Configurar un monorepo mínimo con workspaces de npm/pnpm.
-4. Usar scripts de ciclo de vida (`postinstall`, entre otros).
-
-**Contenido**
-
-- `package.json` y semver.
-- Lockfiles e instalación reproducible.
-- Workspaces (monorepo) con npm/pnpm.
-- Scripts de ciclo de vida.
-
-**Evaluación**
-
-Un monorepo con dos paquetes propios enlazados vía workspaces, más tres ejercicios de evaluación.
-
----
 
 ## Aprende construyendo
 
@@ -135,21 +110,6 @@ Comprender qué scripts se ejecutan automáticamente y en qué momento, además 
 
 ---
 
-## Criterio transversal de calidad del código
-
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
 
 ## Laboratorio práctico
 
@@ -175,41 +135,3 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 - **Esperar que un paquete de workspace se actualice sin reinstalar tras cambios estructurales.** Tras cambios significativos (como añadir un nuevo paquete), vuelve a ejecutar `npm install` desde la raíz del monorepo.
 
 ---
-
-
-
-## Bibliografía y fundamento académico
-
-Estas fuentes sustentan los conceptos y deben consultarse para verificar detalles que cambian entre versiones:
-
-- OpenJS Foundation, *Node.js Documentation*.
-- IETF, especificaciones HTTP Semantics, OAuth 2.0 y JSON.
-- OWASP Foundation, *Application Security Verification Standard*.
-- ACM/IEEE-CS/AAAI, *Computer Science Curricula 2023*.
-- IEEE Computer Society, *SWEBOK Guide V4.0*.
-
-## Resumen del módulo
-
-**Puntos clave**
-
-- Semver estructura versiones como MAYOR.MENOR.PARCHE; `^` acepta menores y parches, `~` solo parches, sin prefijo fija la versión exacta.
-- Un lockfile congela el árbol completo de dependencias, incluyendo transitivas, garantizando instalaciones reproducibles.
-- `npm ci` instala exactamente lo que el lockfile especifica y falla ante desincronización; es la opción correcta para CI y producción.
-- Los workspaces enlazan automáticamente paquetes internos de un monorepo, sin necesidad de publicarlos a ningún registro.
-- Los scripts de ciclo de vida (`postinstall`, entre otros) automatizan pasos de configuración, pero representan un vector de seguridad real de la cadena de suministro.
-
-**Conceptos aprendidos**
-
-- Interpretación de `package.json` y rangos de semver.
-- El propósito de los lockfiles y la diferencia entre `npm install` y `npm ci`.
-- Configuración de monorepos con workspaces.
-- Scripts de ciclo de vida y sus implicaciones de seguridad.
-
-**Próximos pasos**
-
-En el Módulo 2 aprenderás a procesar archivos grandes con streams, sin cargarlos completos en memoria, el patrón que Node usa internamente para prácticamente todo su manejo de I/O.
-
-**Recursos adicionales**
-
-- Documentación oficial de npm: "About semantic versioning" y "package-lock.json".
-- Documentación de npm workspaces y de pnpm workspaces.

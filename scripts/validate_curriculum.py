@@ -62,8 +62,6 @@ for entry in entries:
             errors.append(f"módulo {module_id}: {field} requiere al menos tres elementos")
     if "## Aprende construyendo" not in content or not re.search(r"^### Tema(?:\s|:)", content, re.MULTILINE):
         errors.append(f"módulo {module_id}: falta un recorrido práctico observable")
-    if not any(heading in content for heading in ("## Bibliografía y fundamento académico", "## Fuentes para continuar")):
-        errors.append(f"módulo {module_id}: faltan fuentes académicas u oficiales")
 
 if len(covered_cs) < 14:
     errors.append(f"cobertura CS2023 insuficiente: {len(covered_cs)} áreas")

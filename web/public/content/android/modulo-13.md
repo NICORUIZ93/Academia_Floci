@@ -2,13 +2,6 @@
 
 Una app móvil se ejecuta en un dispositivo que puede perderse, restaurarse, quedarse días sin red o recibir intents de otras aplicaciones. El APK puede inspeccionarse y la versión instalada puede permanecer meses. Este módulo endurece el proyecto final considerando esas condiciones en lugar de asumir un dispositivo confiable y siempre conectado.
 
-## Sílabo
-
-1. Amenazas móviles, permisos, componentes y deep links.
-2. Keystore, datos sensibles, backups, logs y secretos.
-3. Sincronización offline, idempotencia y resolución de conflictos.
-4. ANR, crashes, rendimiento y releases graduales.
-5. Proyecto: auditoría operativa y de seguridad de la app.
 
 ## Aprende construyendo
 
@@ -199,21 +192,6 @@ ANR -> thread traces -> bloqueo main -> dueño/recurso -> reproducción -> fix
 
 **Aplicación al proyecto:** reemplaza `READ_CONTACTS` por Contact Picker cuando esté disponible, prueba ECH/fallback en la capa de red, limita el ciclo de claves y ejecuta la suite en teléfono, tablet y proceso actualizado desde una versión anterior.
 
-## Criterio transversal de calidad del código
-
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
 
 ## Laboratorio práctico
 
@@ -248,18 +226,7 @@ Trabaja sobre el proyecto 12 con backend de prueba que soporte operation ID y ve
 
 
 
-## Bibliografía y fundamento académico
 
-- Android Developers: Security Checklist, Keystore, Cryptography, Network Security Configuration y riesgos de deep links.
-- Android Developers: guía de arquitectura offline-first, WorkManager y source of truth.
-- Android Developers: Android vitals, ANR, Macrobenchmark y Baseline Profiles.
-- OWASP MASVS/MSTG como referencia complementaria de verificación móvil.
-- CS2023: Security, HCI, Software Engineering y Specialized Platform Development.
-- SWEBOK V4: Construction, Testing, Quality, Security, Architecture y Operations.
-
-Los resultados observables son bloquear una frontera móvil explotable, proteger/eliminar datos en todo su ciclo, converger cambios offline sin duplicación y diagnosticar/limitar una regresión por versión.
-
-<!-- OFFICIAL-TOPIC-ATLAS:START -->
 ## Atlas completo de temas oficiales
 
 Derivado de la [documentación oficial](https://developer.android.com/develop), sus referencias, migraciones y guías de operación. Inventariar no equivale a dominar: cada selección se demuestra con código, prueba, medición y explicación. **Cobertura: 52 temas.**
@@ -277,13 +244,3 @@ Derivado de la [documentación oficial](https://developer.android.com/develop), 
 
 Para cada tema responde qué problema resuelve, cuál es su modelo mental, cómo falla, cómo se verifica y cuándo no conviene. Elige uno por área e intégralos en una vertical RutaFlow. Entrega diagrama, ADR, pruebas de éxito y fallo, una medición, una amenaza y el enlace oficial con versión y fecha. Una API preview se aísla en laboratorio y nunca se presenta como base estable.
 <!-- OFFICIAL-TOPIC-ATLAS:END -->
-
-## Resumen del módulo
-
-- Manifest, intents y deep links son APIs externas y requieren mínimo privilegio, validación y autorización.
-- Keystore protege material de clave; no convierte API keys embebidas en secretos.
-- Privacidad incluye backups, logs, crashes, notificaciones, clipboard y logout.
-- Offline-first necesita outbox, operation ID, versiones, conflictos, tombstones y reconciliación.
-- WorkManager garantiza trabajo persistente, no efecto exactamente una vez.
-- `suspend` no garantiza main-safety; ANR requiere analizar todos los hilos.
-- Rollout gradual limita alcance, pero las instalaciones afectadas necesitan hotfix compatible.

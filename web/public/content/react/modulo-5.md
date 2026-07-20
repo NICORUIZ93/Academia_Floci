@@ -1,31 +1,5 @@
 # Módulo 5: React Router — navegación
 
-## Sílabo
-
-**Objetivo general**
-
-Estructurar una Single Page Application con múltiples vistas, rutas anidadas con layouts compartidos, carga de datos previa a la renderización, rutas protegidas y code-splitting por ruta.
-
-**Objetivos específicos**
-
-1. Definir rutas anidadas con un layout compartido.
-2. Usar un loader de React Router para cargar datos antes de renderizar.
-3. Implementar una ruta protegida que redirija según el estado de autenticación.
-4. Aplicar code-splitting por ruta con `React.lazy` y `Suspense`.
-5. Explicar la ventaja de un loader frente a un `useEffect` de fetching dentro del componente.
-
-**Contenido**
-
-- Rutas anidadas y layouts compartidos.
-- Loaders y acciones de datos.
-- Rutas protegidas.
-- Code-splitting por ruta.
-
-**Evaluación**
-
-Aplicación con rutas anidadas, una ruta protegida y carga perezosa de al menos una vista, más tres ejercicios de evaluación.
-
----
 
 ## Aprende construyendo
 
@@ -108,21 +82,6 @@ const Configuracion = lazy(() => import('./Configuracion'));
 
 ---
 
-## Criterio transversal de calidad del código
-
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
 
 ## Laboratorio práctico
 
@@ -146,39 +105,3 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 - **Olvidar envolver un componente `lazy` en `Suspense`.** Sin `Suspense`, React no sabe qué mostrar mientras el chunk se descarga.
 
 ---
-
-
-
-## Bibliografía y fundamento académico
-
-Estas fuentes sustentan los conceptos y deben consultarse para verificar detalles que cambian entre versiones:
-
-- Meta Open Source, *React Documentation*.
-- WHATWG, estándares de DOM, HTML y Fetch.
-- W3C, *Web Content Accessibility Guidelines (WCAG)*.
-- ACM/IEEE-CS/AAAI, *Computer Science Curricula 2023*.
-- IEEE Computer Society, *SWEBOK Guide V4.0*.
-
-## Resumen del módulo
-
-**Puntos clave**
-
-- Las rutas anidadas con un layout compartido centralizan ese layout evitando duplicarlo por vista.
-- Un loader evita el parpadeo de un estado intermedio "cargando" al completar la carga antes de renderizar.
-- Una ruta protegida centraliza la lógica de redirección según el estado de autenticación.
-- El code-splitting por ruta con `React.lazy` + `Suspense` reduce el bundle inicial descargado.
-
-**Conceptos aprendidos**
-
-- Rutas anidadas y layouts compartidos.
-- Loaders y `useLoaderData`.
-- Rutas protegidas.
-- Code-splitting por ruta.
-
-**Próximos pasos**
-
-En el Módulo 6 aprenderás data fetching moderno con TanStack Query: queries, mutations, cache e invalidación.
-
-**Recursos adicionales**
-
-- Documentación oficial de React Router (reactrouter.com): "Data Loading" y "Lazy Loading Routes".

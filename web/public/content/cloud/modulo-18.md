@@ -1,32 +1,5 @@
 # Módulo 18: Autenticación de usuarios con Cognito
 
-## Sílabo
-
-**Objetivo general**
-
-Implementar registro, login y autorización de usuarios sin construir un sistema de autenticación propio desde cero, entendiendo los tres tipos de JWT emitidos por Cognito, el flujo OAuth 2.0 con PKCE, y cómo proteger un API Gateway con un Cognito Authorizer.
-
-**Objetivos específicos**
-
-1. Crear un User Pool y un App Client.
-2. Registrar un usuario, confirmarlo, e iniciar sesión obteniendo tokens JWT.
-3. Decodificar un JWT y examinar sus claims.
-4. Proteger un API Gateway con un Cognito Authorizer.
-
-**Contenido**
-
-- User Pool.
-- App Client.
-- JWT (Access / ID / Refresh token).
-- OAuth 2.0.
-- PKCE.
-- Grupos y atributos.
-
-**Evaluación**
-
-API REST protegida con Cognito Authorizer donde solo usuarios autenticados pueden crear tareas, más tres ejercicios de evaluación.
-
----
 
 ## Aprende construyendo
 
@@ -100,21 +73,6 @@ Cliente presenta el código + el verificador ORIGINAL → servidor valida y emit
 
 ---
 
-## Criterio transversal de calidad del código
-
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
 
 ## Laboratorio práctico
 
@@ -141,41 +99,3 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 - **Omitir PKCE en una app móvil o SPA que no puede guardar un secreto de forma segura.** Usa PKCE específicamente para esos clientes.
 
 ---
-
-
-
-## Bibliografía y fundamento académico
-
-Estas fuentes sustentan los conceptos y deben consultarse para verificar detalles que cambian entre versiones:
-
-- AWS, Microsoft Azure y Google Cloud, marcos oficiales de arquitectura bien diseñada.
-- NIST, *Cloud Computing Standards Roadmap* y *Secure Software Development Framework*.
-- Beyer et al., *Site Reliability Engineering*.
-- ACM/IEEE-CS/AAAI, *Computer Science Curricula 2023*.
-- IEEE Computer Society, *SWEBOK Guide V4.0*.
-
-## Resumen del módulo
-
-**Puntos clave**
-
-- Construir un sistema de autenticación propio arriesga errores críticos de seguridad; Cognito encapsula esa complejidad ya auditada por expertos.
-- Access Token, ID Token y Refresh Token tienen propósitos distintos y no intercambiables: autorización, identidad, y renovación respectivamente.
-- OAuth 2.0 permite autorización delegada sin compartir contraseñas directamente entre servicios.
-- PKCE protege específicamente a clientes que no pueden guardar secretos de forma segura, como apps móviles o SPAs.
-
-**Conceptos aprendidos**
-
-- User Pool.
-- App Client.
-- JWT (Access / ID / Refresh token).
-- OAuth 2.0.
-- PKCE.
-- Grupos y atributos.
-
-**Próximos pasos**
-
-En el Módulo 19 aprenderás analítica de datos con Athena y Glue, consultando terabytes de datos en S3 con SQL sin moverlos a una base de datos.
-
-**Recursos adicionales**
-
-- Documentación oficial de Amazon Cognito (docs.aws.amazon.com/cognito).

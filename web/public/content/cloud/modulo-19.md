@@ -1,33 +1,5 @@
 # Módulo 19: Analítica de datos con Athena y Glue
 
-## Sílabo
-
-**Objetivo general**
-
-Consultar terabytes de datos almacenados en S3 con SQL directamente, sin moverlos ni cargarlos en una base de datos tradicional, entendiendo el modelo de data lake, el catálogo de esquemas de Glue, y cómo las particiones y el formato de archivo afectan drásticamente el costo y rendimiento de una consulta.
-
-**Objetivos específicos**
-
-1. Crear una base de datos y una tabla en Glue Catalog apuntando a datos en S3.
-2. Ejecutar un Glue Crawler para descubrir el esquema automáticamente.
-3. Ejecutar consultas SQL con Athena sobre esos datos.
-4. Comparar el rendimiento y costo entre JSON/CSV y Parquet, con y sin particiones.
-
-**Contenido**
-
-- Data lake.
-- Parquet vs CSV.
-- Glue Catalog.
-- Glue Crawler.
-- Athena Workgroup.
-- Partition pruning.
-- Compresión.
-
-**Evaluación**
-
-Query SQL que analiza 100k registros en S3 y devuelve el top 10 de clientes en menos de 1 segundo, más tres ejercicios de evaluación.
-
----
 
 ## Aprende construyendo
 
@@ -110,21 +82,6 @@ Con particiones + partition pruning: Athena IGNORA por completo las carpetas fue
 
 ---
 
-## Criterio transversal de calidad del código
-
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
 
 ## Laboratorio práctico
 
@@ -151,42 +108,3 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 - **Declarar manualmente el esquema de una tabla con formato de datos desconocido o cambiante.** Usa un Glue Crawler para descubrimiento automático.
 
 ---
-
-
-
-## Bibliografía y fundamento académico
-
-Estas fuentes sustentan los conceptos y deben consultarse para verificar detalles que cambian entre versiones:
-
-- AWS, Microsoft Azure y Google Cloud, marcos oficiales de arquitectura bien diseñada.
-- NIST, *Cloud Computing Standards Roadmap* y *Secure Software Development Framework*.
-- Beyer et al., *Site Reliability Engineering*.
-- ACM/IEEE-CS/AAAI, *Computer Science Curricula 2023*.
-- IEEE Computer Society, *SWEBOK Guide V4.0*.
-
-## Resumen del módulo
-
-**Puntos clave**
-
-- Un data lake almacena datos crudos en S3 con schema-on-read; Glue Catalog provee los metadatos necesarios para consultarlos estructuradamente.
-- Un Glue Crawler descubre automáticamente el esquema de los datos, especialmente valioso cuando el formato evoluciona con el tiempo.
-- Athena ejecuta SQL directamente sobre S3 sin servidor persistente, cobrando según los bytes efectivamente escaneados.
-- Parquet (columnar, comprimido) y las particiones con partition pruning reducen drásticamente el costo y latencia de las consultas analíticas.
-
-**Conceptos aprendidos**
-
-- Data lake.
-- Parquet vs CSV.
-- Glue Catalog.
-- Glue Crawler.
-- Athena Workgroup.
-- Partition pruning.
-- Compresión.
-
-**Próximos pasos**
-
-En el Módulo 20 aprenderás IA generativa y procesamiento de documentos con Bedrock, Textract y Transcribe, entendiendo cómo probar contratos de IA sin depender de un modelo real.
-
-**Recursos adicionales**
-
-- Documentación oficial de Amazon Athena (docs.aws.amazon.com/athena).

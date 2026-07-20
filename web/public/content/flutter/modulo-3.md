@@ -1,31 +1,5 @@
 # Módulo 3: Navegación y rutas
 
-## Sílabo
-
-**Objetivo general**
-
-Estructurar una app con múltiples pantallas usando enrutamiento declarativo con go_router, entendiendo la diferencia frente al modelo imperativo del Navigator 1.0, y configurando parámetros de ruta, guards de autenticación y deep linking.
-
-**Objetivos específicos**
-
-1. Navegar entre pantallas con `Navigator.push`/`pop` (imperativo clásico).
-2. Reescribir esa navegación con go_router de forma declarativa.
-3. Pasar un parámetro de ruta y leerlo en la pantalla de destino.
-4. Configurar un guard (redirect) que bloquee una ruta sin sesión activa.
-5. Configurar un deep link.
-
-**Contenido**
-
-- Navigator 1.0 (push/pop) vs 2.0 (declarativo).
-- go_router: rutas, parámetros y guards.
-- Deep linking.
-- Transiciones personalizadas.
-
-**Evaluación**
-
-App con rutas declarativas (go_router), una ruta protegida y deep linking, más tres ejercicios de evaluación.
-
----
 
 ## Aprende construyendo
 
@@ -128,21 +102,6 @@ CustomTransitionPage(
 
 ---
 
-## Criterio transversal de calidad del código
-
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
 
 ## Laboratorio práctico
 
@@ -167,39 +126,3 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 - **Aplicar transiciones personalizadas inconsistentemente en toda la app sin criterio.** Resérvalas para puntos clave donde comunican mejor la relación semántica entre pantallas.
 
 ---
-
-
-
-## Bibliografía y fundamento académico
-
-Estas fuentes sustentan los conceptos y deben consultarse para verificar detalles que cambian entre versiones:
-
-- Google, *Flutter Documentation* y guías de arquitectura y rendimiento.
-- Google, *Dart Language Documentation* y *Effective Dart*.
-- OWASP Foundation, *Mobile Application Security Verification Standard*.
-- ACM/IEEE-CS/AAAI, *Computer Science Curricula 2023*.
-- IEEE Computer Society, *SWEBOK Guide V4.0*.
-
-## Resumen del módulo
-
-**Puntos clave**
-
-- go_router trata la navegación como una función pura de la URL actual, en contraste con el modelo imperativo de push/pop del Navigator 1.0.
-- Los guards (`redirect`) centralizan la protección de rutas directamente en su definición, evitando verificaciones dispersas.
-- El deep linking es directo con go_router porque reutiliza el mismo mecanismo de navegación basado en URL, sin lógica especial adicional.
-- Las transiciones personalizadas, usadas deliberadamente, comunican mejor la relación semántica entre pantallas.
-
-**Conceptos aprendidos**
-
-- Navigator 1.0 vs 2.0.
-- go_router: rutas, parámetros y guards.
-- Deep linking.
-- Transiciones personalizadas.
-
-**Próximos pasos**
-
-En el Módulo 4 aprenderás gestión de estado: cuándo `setState` es suficiente, y cuándo pasar a Riverpod o Bloc/Cubit.
-
-**Recursos adicionales**
-
-- Documentación oficial de go_router (pub.dev/packages/go_router).

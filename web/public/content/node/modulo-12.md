@@ -1,35 +1,5 @@
 # Módulo 12: Proyecto integrador — API productiva
 
-## Sílabo
-
-**Objetivo general**
-
-Unir todo lo aprendido en este track en una API lista para producción real: arquitectura por capas, autenticación, persistencia, testing y observabilidad, empaquetada en un contenedor listo para desplegar.
-
-**Objetivos específicos**
-
-1. Diseñar una arquitectura por capas (rutas → controladores → servicios → repositorio) sin mezclar responsabilidades.
-2. Integrar autenticación JWT completa con persistencia real en base de datos.
-3. Escribir tests de integración que cubran el flujo crítico de principio a fin.
-4. Añadir logging estructurado con correlation ID y un endpoint de health.
-5. Construir el Dockerfile de producción y documentar el plan de despliegue.
-6. Persistir posiciones geográficas y distribuir eventos recuperables hacia la app Flutter.
-7. Procesar evidencia fotográfica y notificaciones sin confiar en el cliente ni acoplar la transición principal.
-
-**Contenido**
-
-- Arquitectura por capas.
-- Autenticación, persistencia y testing integrados.
-- Observabilidad básica.
-- Contenedor listo para desplegar.
-- MySQL espacial, Socket.IO, archivos y Firebase Admin integrados con límites explícitos.
-- Qué sigue: microservicios, message queues (Kafka/RabbitMQ) y TypeScript con ts-node/tsx.
-
-**Evaluación**
-
-Una API REST con autenticación, base de datos real, tests de integración y Dockerfile de producción, más tres ejercicios de evaluación.
-
----
 
 ## Aprende construyendo
 
@@ -261,21 +231,6 @@ Simula respuesta perdida y reenvía el mismo comando: ambos intentos deben devol
 
 El capítulo se completa cuando la evidencia permite a otra persona reproducir el flujo y explicar qué garantías ofrece y cuáles todavía no.
 
-## Criterio transversal de calidad del código
-
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
 
 ## Laboratorio práctico
 
@@ -303,41 +258,3 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 - **Olvidar documentar honestamente las limitaciones del proyecto para producción real.** Incluye explícitamente qué le faltaría (monitoreo activo, migraciones sin downtime, gestión de secretos, pruebas de carga).
 
 ---
-
-
-
-## Bibliografía y fundamento académico
-
-Estas fuentes sustentan los conceptos y deben consultarse para verificar detalles que cambian entre versiones:
-
-- OpenJS Foundation, *Node.js Documentation*.
-- IETF, especificaciones HTTP Semantics, OAuth 2.0 y JSON.
-- OWASP Foundation, *Application Security Verification Standard*.
-- ACM/IEEE-CS/AAAI, *Computer Science Curricula 2023*.
-- IEEE Computer Society, *SWEBOK Guide V4.0*.
-
-## Resumen del módulo
-
-**Puntos clave**
-
-- Una arquitectura por capas (rutas, controladores, servicios, repositorio) separa responsabilidades, facilitando testing aislado y cambios de implementación sin afectar el resto del sistema.
-- Este proyecto integra coherentemente Express, Prisma, JWT, Supertest/Testcontainers, Pino y Docker en un único sistema funcional, no solo ejercicios aislados de cada módulo.
-- Reconocer honestamente qué le falta a este proyecto para producción real (monitoreo activo, migraciones sin downtime, gestión de secretos, pruebas de carga) es parte esencial de la madurez profesional.
-- Microservicios, colas de mensajes (Kafka/RabbitMQ) y TypeScript en Node son los próximos pasos naturales de profundización más allá de este track.
-
-**Conceptos aprendidos**
-
-- Diseño y aplicación práctica de una arquitectura por capas.
-- Integración coherente de todos los módulos del track en un proyecto funcional único.
-- Reconocimiento honesto de las limitaciones de un proyecto educativo frente a producción real.
-- Panorama de próximos pasos: microservicios, colas de mensajes y TypeScript.
-
-**Próximos pasos**
-
-Con el track de Node.js completo, el siguiente paso natural es el track de Angular o React (para construir el frontend que consume esta API), o profundizar directamente en microservicios y colas de mensajes para escalar arquitecturas backend más complejas.
-
-**Recursos adicionales**
-
-- El libro "Node.js Design Patterns" (Mario Casciaro, Luciano Mammino) para profundizar en patrones de arquitectura backend con Node.
-- Documentación oficial de Apache Kafka y de RabbitMQ.
-- Documentación de `tsx` y `ts-node` para adoptar TypeScript en proyectos Node existentes.

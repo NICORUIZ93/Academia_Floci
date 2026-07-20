@@ -2,13 +2,6 @@
 
 La app integradora demuestra que el código común compila y funciona. Un producto multiplataforma añade otra responsabilidad: una decisión en `commonMain` se convierte en API para equipos, compiladores y runtimes diferentes. Este módulo enseña a compartir solo lo estable, mantener la frontera consumible y actualizar Android/iOS sin obligarlos a desplegar simultáneamente.
 
-## Sílabo
-
-1. Frontera compartida, API idiomática, errores y cancelación.
-2. Memoria Kotlin/Native, recursos, callbacks y retenciones.
-3. Compatibilidad binaria, schemas y publicación de artefactos.
-4. Seguridad, observabilidad y release coordinado.
-5. Proyecto: convertir el módulo compartido en SDK operable.
 
 ## Aprende construyendo
 
@@ -207,21 +200,6 @@ La línea revisada es **Kotlin 2.4**. Compose Multiplatform se considera estable
 
 **Aplicación al proyecto:** exporta una API mínima a Swift, prueba compatibilidad de fuente/binario y cancelación, compila todos los targets en CI y etiqueta cualquier uso Wasm con su nivel de estabilidad y fallback.
 
-## Criterio transversal de calidad del código
-
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
 
 ## Laboratorio práctico
 
@@ -256,18 +234,7 @@ Evoluciona el módulo `shared` del proyecto 11 como si dos equipos distintos lo 
 
 
 
-## Bibliografía y fundamento académico
 
-- Kotlin Multiplatform Documentation: source sets, platform APIs, iOS integration y publicación.
-- Kotlin/Native Documentation: memory manager, GC metrics e interoperabilidad Swift/Objective-C.
-- Kotlin API guidelines: backward compatibility y binary compatibility validation.
-- Documentación oficial de coroutines, Ktor, kotlinx.serialization y SQLDelight.
-- CS2023: Specialized Platform Development, Software Engineering, PDC y Security.
-- SWEBOK V4: Architecture, Design, Construction, Testing, Configuration Management y Operations.
-
-Los resultados observables son reducir una frontera, cancelar/liberar trabajo entre runtimes, detener ruptura ABI/schema, consumir artefactos publicados y diagnosticar un defecto common simbolizado en ambas plataformas.
-
-<!-- OFFICIAL-TOPIC-ATLAS:START -->
 ## Atlas completo de temas oficiales
 
 Derivado de la [documentación oficial](https://kotlinlang.org/docs/multiplatform/get-started.html), sus referencias, migraciones y guías de operación. Inventariar no equivale a dominar: cada selección se demuestra con código, prueba, medición y explicación. **Cobertura: 46 temas.**
@@ -285,13 +252,3 @@ Derivado de la [documentación oficial](https://kotlinlang.org/docs/multiplatfor
 
 Para cada tema responde qué problema resuelve, cuál es su modelo mental, cómo falla, cómo se verifica y cuándo no conviene. Elige uno por área e intégralos en una vertical RutaFlow. Entrega diagrama, ADR, pruebas de éxito y fallo, una medición, una amenaza y el enlace oficial con versión y fecha. Una API preview se aísla en laboratorio y nunca se presenta como base estable.
 <!-- OFFICIAL-TOPIC-ATLAS:END -->
-
-## Resumen del módulo
-
-- KMP comparte semántica estable; forzar detalles nativos a common crea abstracciones costosas.
-- Una facade pequeña y adapters Swift/Kotlin protegen ergonomía y compatibilidad.
-- El heap compartido no elimina carreras ni cierra recursos; ownership y cancelación son explícitos.
-- Source, binary y behavioral compatibility son garantías distintas.
-- Datos persistentes y mensajes requieren migración aunque la ABI permanezca estable.
-- Android e iOS despliegan independientemente; backend/SDK deben mantener ventanas compatibles.
-- Símbolos, build IDs y telemetría privada permiten reconocer una causa común con síntomas diferentes.

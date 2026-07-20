@@ -2,12 +2,6 @@
 
 Automatizar despliegues es el comienzo, no el final. Un sistema profesional define qué significa estar sano, limita el riesgo de cambio, conserva procedencia de artefactos y aprende de incidentes. Este módulo conecta DevOps, SRE, seguridad de cadena de suministro y platform engineering mediante evidencia operativa.
 
-## Sílabo
-
-1. SLI, SLO, error budgets y decisiones de producto.
-2. Alertas accionables, incidentes, game days y postmortems.
-3. SBOM, procedencia, firma y verificación de artefactos.
-4. GitOps, policy as code y golden paths de plataforma.
 
 ## Aprende construyendo
 
@@ -146,21 +140,6 @@ La revisión usa **Kubernetes 1.36** y **OpenTelemetry 1.59** como referencias, 
 
 **Aplicación al proyecto:** escanea manifiestos por APIs obsoletas, prueba skew soportado de kubectl, valida Collector/configuración y semantic conventions, y ejecuta plan más pruebas de política antes de actualizar provider o core.
 
-## Criterio transversal de calidad del código
-
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
 
 ## Laboratorio práctico
 
@@ -174,16 +153,7 @@ La entrega incluye repositorio reproducible, consultas, alertas, timeline, evide
 
 
 
-## Bibliografía y fundamento académico
 
-- Google, *Site Reliability Engineering* y *The Site Reliability Workbook*.
-- NIST SP 800-218, *Secure Software Development Framework*.
-- OpenSSF, *Supply-chain Levels for Software Artifacts (SLSA)*.
-- CNCF, documentación de Kubernetes, OpenTelemetry, Argo CD y Sigstore.
-- Forsgren, Humble y Kim, *Accelerate*.
-- Skelton y Pais, *Team Topologies*.
-
-<!-- OFFICIAL-TOPIC-ATLAS:START -->
 ## Atlas completo de temas oficiales
 
 Derivado de la [documentación oficial](https://kubernetes.io/docs/concepts/), sus referencias, migraciones y guías de operación. Inventariar no equivale a dominar: cada selección se demuestra con código, prueba, medición y explicación. **Cobertura: 60 temas.**
@@ -201,7 +171,3 @@ Derivado de la [documentación oficial](https://kubernetes.io/docs/concepts/), s
 
 Para cada tema responde qué problema resuelve, cuál es su modelo mental, cómo falla, cómo se verifica y cuándo no conviene. Elige uno por área e intégralos en una vertical RutaFlow. Entrega diagrama, ADR, pruebas de éxito y fallo, una medición, una amenaza y el enlace oficial con versión y fecha. Una API preview se aísla en laboratorio y nunca se presenta como base estable.
 <!-- OFFICIAL-TOPIC-ATLAS:END -->
-
-## Resumen del módulo
-
-Una plataforma madura cuantifica confiabilidad, alerta sobre síntomas accionables, ensaya incidentes, verifica procedencia por digest y ofrece caminos seguros como producto. El objetivo no es acumular herramientas, sino reducir riesgo y carga cognitiva con contratos observables y aprendizaje continuo.

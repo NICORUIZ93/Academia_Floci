@@ -1,34 +1,5 @@
 # Módulo 3: Objetos, prototipos y clases
 
-## Sílabo
-
-**Objetivo general**
-
-Entender que JavaScript es un lenguaje prototipal por debajo de la sintaxis de clases, dominando ambos modelos (prototipos y `class`) y sabiendo cuándo cada uno es la herramienta apropiada.
-
-**Objetivos específicos**
-
-1. Explicar la cadena de prototipos y usar `Object.create` para crear herencia sin clases.
-2. Definir clases con `class`, `extends` y `super`, incluyendo herencia de métodos.
-3. Implementar encapsulación real con campos privados (`#campo`).
-4. Usar getters, setters y propiedades computadas.
-5. Aplicar `Object.freeze`, `Object.seal` y destructuring anidado.
-6. Explicar qué es realmente `class` en términos del mecanismo prototipal subyacente.
-
-**Contenido**
-
-- Prototype chain y `Object.create`.
-- `class`, `extends` y `super`.
-- Getters/setters y propiedades computadas.
-- Encapsulación con campos privados (`#campo`).
-- `Object.freeze`, `Object.seal` y destructuring anidado.
-- `Object.groupBy` y `Object.fromEntries`.
-
-**Evaluación**
-
-Una jerarquía de clases con herencia y encapsulación real (campos privados), más tres ejercicios de evaluación sobre prototipos, herencia y encapsulación.
-
----
 
 ## Aprende construyendo
 
@@ -149,21 +120,6 @@ class CuentaBancaria {
 
 ---
 
-## Criterio transversal de calidad del código
-
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
 
 ## Laboratorio práctico
 
@@ -189,43 +145,3 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 - **Intentar usar una propiedad computada sin corchetes.** `{ clave: valor }` crea una propiedad literalmente llamada `"clave"`; se necesita `{ [clave]: valor }` para que el nombre real sea el valor de la variable `clave`.
 
 ---
-
-
-
-## Bibliografía y fundamento académico
-
-Estas fuentes sustentan los conceptos y deben consultarse para verificar detalles que cambian entre versiones:
-
-- ECMA International, *ECMAScript Language Specification*.
-- MDN Web Docs, guías de JavaScript y Web APIs.
-- WHATWG, *HTML Living Standard* y *Fetch Standard*.
-- ACM/IEEE-CS/AAAI, *Computer Science Curricula 2023*.
-- IEEE Computer Society, *SWEBOK Guide V4.0*.
-
-## Resumen del módulo
-
-**Puntos clave**
-
-- Todo objeto en JavaScript hereda por delegación a través de una cadena de prototipos, no por copia.
-- `class` es azúcar sintáctica sobre el mismo mecanismo de prototipos, no un modelo de herencia nuevo.
-- `super()` invoca el constructor padre; `super.metodo()` invoca la versión padre de un método sobreescrito.
-- Getters/setters permiten exponer propiedades calculadas o validadas de forma transparente.
-- Los campos privados (`#campo`) son encapsulación real impuesta por el motor, a diferencia de la convención `_campo`.
-- `Object.groupBy` y `Object.fromEntries` resuelven patrones comunes de agrupación y reconstrucción de objetos.
-
-**Conceptos aprendidos**
-
-- Cadena de prototipos y `Object.create`.
-- `class`, `extends`, `super` y su relación con el mecanismo de prototipos.
-- Getters, setters y propiedades computadas.
-- Encapsulación real con campos privados.
-- `Object.freeze`/`Object.seal` y destructuring anidado.
-
-**Próximos pasos**
-
-En el Módulo 4 aplicarás estos conceptos a estructuras de datos funcionales: `map`/`filter`/`reduce`, `Set`/`Map`, e inmutabilidad como práctica central de JavaScript moderno.
-
-**Recursos adicionales**
-
-- MDN Web Docs: "Object prototypes", "Classes" y "Private class features".
-- El libro "You Don't Know JS: this & Object Prototypes" (Kyle Simpson).

@@ -1,32 +1,5 @@
 # Módulo 7: Identidad y acceso con IAM
 
-## Sílabo
-
-**Objetivo general**
-
-Gestionar quién puede hacer qué dentro de tu cuenta de nube: usuarios, grupos, roles y políticas, aplicando de forma consistente el principio de mínimo privilegio a los servicios que ya usaste en los módulos anteriores.
-
-**Objetivos específicos**
-
-1. Explicar el principio de mínimo privilegio y el modelo de responsabilidad compartida.
-2. Diferenciar usuarios, grupos y roles, y cuándo usar cada uno.
-3. Escribir una política IAM que conceda exactamente el acceso necesario, ni más ni menos.
-4. Verificar permisos efectivos usando el simulador de políticas.
-5. Justificar por qué los roles son preferibles a las credenciales de usuario para servicios como Lambda.
-
-**Contenido**
-
-- Principio de mínimo privilegio.
-- Modelo de responsabilidad compartida.
-- Usuarios, grupos y roles.
-- Estructura de una política: acciones, recursos y condiciones.
-- Buenas prácticas: roles sobre usuarios, políticas restrictivas, rotación de credenciales.
-
-**Evaluación**
-
-Un laboratorio que crea un usuario con permisos mínimos verificados con el simulador de políticas, y tres ejercicios de evaluación sobre diseño de políticas, roles frente a usuarios, y diagnóstico de permisos.
-
----
 
 ## Aprende construyendo
 
@@ -190,21 +163,6 @@ Finalmente, la auditoría periódica de acceso —revisar qué permisos existen,
 
 ---
 
-## Criterio transversal de calidad del código
-
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
 
 ## Laboratorio práctico
 
@@ -238,44 +196,3 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 - **Olvidar que `simulate-principal-policy` no ejecuta la acción real.** Es una herramienta de verificación teórica basada en las políticas actuales; no sustituye una prueba funcional real si necesitas confirmar comportamiento observable, solo confirma qué decidiría el motor de evaluación de políticas para esa combinación específica de acción y recurso.
 
 ---
-
-
-
-## Bibliografía y fundamento académico
-
-Estas fuentes sustentan los conceptos y deben consultarse para verificar detalles que cambian entre versiones:
-
-- AWS, Microsoft Azure y Google Cloud, marcos oficiales de arquitectura bien diseñada.
-- NIST, *Cloud Computing Standards Roadmap* y *Secure Software Development Framework*.
-- Beyer et al., *Site Reliability Engineering*.
-- ACM/IEEE-CS/AAAI, *Computer Science Curricula 2023*.
-- IEEE Computer Society, *SWEBOK Guide V4.0*.
-
-## Resumen del módulo
-
-**Puntos clave**
-
-- El principio de mínimo privilegio parte de "todo denegado por defecto" y concede exactamente los permisos necesarios, ni más ni menos.
-- El modelo de responsabilidad compartida separa lo que el proveedor garantiza (infraestructura) de lo que el cliente debe gestionar (configuración de acceso, datos).
-- Los usuarios tienen credenciales de larga duración; los roles se asumen y dan credenciales temporales, siendo preferibles para casi cualquier caso de servicio a servicio.
-- Una política IAM se compone de `Effect`, `Action`, `Resource` y, opcionalmente, `Condition`; un `Deny` explícito siempre prevalece sobre cualquier `Allow`.
-- Buenas prácticas adicionales incluyen rotación de credenciales, políticas administradas reutilizables, MFA, y auditoría periódica de acceso.
-
-**Conceptos aprendidos**
-
-- Principio de mínimo privilegio y su justificación en términos de superficie de ataque.
-- Modelo de responsabilidad compartida entre proveedor y cliente.
-- Diferencias entre usuarios, grupos y roles, y cuándo usar cada uno.
-- Estructura de una política IAM y la jerarquía de evaluación (Deny explícito siempre gana).
-- Buenas prácticas operativas de seguridad en IAM más allá del diseño de una política individual.
-
-**Próximos pasos**
-
-En el Módulo 8 vas a repetir los patrones de almacenamiento y mensajería que ya conoces, pero en Azure y GCP con floci-az y floci-gcp, comparando los tres proveedores lado a lado.
-
-**Recursos adicionales**
-
-- Documentación oficial de AWS IAM: conceptos básicos y guía de usuario.
-- Documentación oficial sobre la evaluación de políticas IAM (lógica de Allow/Deny).
-- Documentación oficial del simulador de políticas IAM (`simulate-principal-policy`).
-- Código ejecutable de cada operación (crear usuario, crear política, asignar política) en Node.js, Python, Java, Go y Rust: carpeta [`examples/`](https://github.com/NICORUIZ93/Academia_Floci/tree/main/examples) del repositorio, archivos que empiezan por `iam-`/`iam_`/`Iam` (ver [`examples/README.md`](https://github.com/NICORUIZ93/Academia_Floci/blob/main/examples/README.md) para la lista completa).

@@ -2,12 +2,6 @@
 
 Una colección de servicios funcionales todavía puede fallar como sistema. La arquitectura experta hace explícitas las fronteras de red y gobierno, conecta disponibilidad con necesidades del negocio y demuestra recuperación mediante experimentos. El objetivo no es dibujar nubes redundantes, sino justificar y verificar qué ocurre cuando una zona, una identidad o un conjunto de datos deja de estar disponible.
 
-## Sílabo
-
-1. Redes cloud, zonas de confianza y flujos verificables.
-2. Landing zones, identidad y separación de responsabilidades.
-3. Alta disponibilidad, disaster recovery, RTO y RPO.
-4. Backups restaurables, chaos experiments y runbooks.
 
 ## Aprende construyendo
 
@@ -158,21 +152,6 @@ No existe una versión única de AWS, Azure o Google Cloud. La revisión periód
 
 **Aplicación al proyecto:** selecciona tres servicios usados, registra fecha/estado/región, identifica un retiro o cambio incompatible, ejecuta pruebas contra emulador y entorno real acotado, y abre una decisión de migración con coste y rollback.
 
-## Criterio transversal de calidad del código
-
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
 
 ## Laboratorio práctico
 
@@ -187,16 +166,7 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 
 
 
-## Bibliografía y fundamento académico
 
-- AWS, *Well-Architected Framework* y *Disaster Recovery of Workloads on AWS*.
-- Microsoft, *Azure Well-Architected Framework* y *Cloud Adoption Framework landing zones*.
-- Google Cloud, *Architecture Framework* y *Enterprise foundations blueprint*.
-- NIST SP 800-34, *Contingency Planning Guide*.
-- Beyer et al., *Site Reliability Engineering*.
-- Rosenthal y Jones, *Chaos Engineering*.
-
-<!-- OFFICIAL-TOPIC-ATLAS:START -->
 ## Atlas completo de temas oficiales
 
 Derivado de la [documentación oficial](https://docs.aws.amazon.com/wellarchitected/latest/framework/welcome.html), sus referencias, migraciones y guías de operación. Inventariar no equivale a dominar: cada selección se demuestra con código, prueba, medición y explicación. **Cobertura: 60 temas.**
@@ -214,7 +184,3 @@ Derivado de la [documentación oficial](https://docs.aws.amazon.com/wellarchitec
 
 Para cada tema responde qué problema resuelve, cuál es su modelo mental, cómo falla, cómo se verifica y cuándo no conviene. Elige uno por área e intégralos en una vertical RutaFlow. Entrega diagrama, ADR, pruebas de éxito y fallo, una medición, una amenaza y el enlace oficial con versión y fecha. Una API preview se aísla en laboratorio y nunca se presenta como base estable.
 <!-- OFFICIAL-TOPIC-ATLAS:END -->
-
-## Resumen del módulo
-
-Una arquitectura resiliente hace visibles flujos y fronteras, establece gobierno antes de las cargas, traduce impacto en RTO/RPO y demuestra recuperación. Multi-región, backups y políticas son medios; la garantía profesional proviene de pruebas negativas, restauraciones funcionales, experimentos acotados y runbooks ejecutados.

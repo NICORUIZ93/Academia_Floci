@@ -1,33 +1,5 @@
 # Módulo 11: Mensajería Pub/Sub: SNS, EventBridge y Azure Event Hubs
 
-## Sílabo
-
-**Objetivo general**
-
-Distribuir eventos a múltiples consumidores simultáneamente con el patrón fan-out, entendiendo cuándo usar SNS (notificación simple a múltiples suscriptores), EventBridge (bus de eventos con filtrado y enrutamiento declarativo), o SQS solo (un único consumidor), y cómo combinarlos para mayor robustez.
-
-**Objetivos específicos**
-
-1. Crear un topic SNS y suscribir una cola SQS.
-2. Publicar un mensaje y verificar que llega al suscriptor.
-3. Crear un Event Bus personalizado en EventBridge con una regla de filtrado.
-4. Configurar EventBridge Scheduler para ejecución periódica.
-
-**Contenido**
-
-- Fan-out pattern.
-- Topic SNS.
-- Event Bus.
-- Event Rule.
-- Filtros de contenido.
-- AMQP.
-- Scheduler.
-
-**Evaluación**
-
-Sistema de notificaciones que distribuye alertas por SNS a múltiples destinos, más tres ejercicios de evaluación.
-
----
 
 ## Aprende construyendo
 
@@ -103,21 +75,6 @@ Topic SNS → Cola SQS (Suscriptor 1) → retiene mensajes si el consumidor est�
 
 ---
 
-## Criterio transversal de calidad del código
-
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
 
 ## Laboratorio práctico
 
@@ -144,42 +101,3 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 - **No usar filtros de contenido en EventBridge, forzando a cada consumidor a filtrar manualmente.** Declara el filtrado en la regla misma.
 
 ---
-
-
-
-## Bibliografía y fundamento académico
-
-Estas fuentes sustentan los conceptos y deben consultarse para verificar detalles que cambian entre versiones:
-
-- AWS, Microsoft Azure y Google Cloud, marcos oficiales de arquitectura bien diseñada.
-- NIST, *Cloud Computing Standards Roadmap* y *Secure Software Development Framework*.
-- Beyer et al., *Site Reliability Engineering*.
-- ACM/IEEE-CS/AAAI, *Computer Science Curricula 2023*.
-- IEEE Computer Society, *SWEBOK Guide V4.0*.
-
-## Resumen del módulo
-
-**Puntos clave**
-
-- SNS distribuye un mensaje a múltiples suscriptores independientes simultáneamente (fan-out), sin que el publicador los conozca.
-- EventBridge agrega enrutamiento basado en filtros declarativos sobre el contenido del evento, centralizando múltiples orígenes en un único bus.
-- Combinar SNS con SQS agrega retención y reintentos, evitando pérdida de mensajes si un consumidor está temporalmente no disponible.
-- Azure Event Hubs cumple un rol conceptualmente similar en el ecosistema Azure, usando AMQP como protocolo.
-
-**Conceptos aprendidos**
-
-- Fan-out pattern.
-- Topic SNS.
-- Event Bus.
-- Event Rule.
-- Filtros de contenido.
-- AMQP.
-- Scheduler.
-
-**Próximos pasos**
-
-En el Módulo 12 aprenderás observabilidad con CloudWatch: centralizar logs, crear métricas desde ellos, y configurar alarmas antes de que los usuarios noten el fallo.
-
-**Recursos adicionales**
-
-- Documentación oficial de Amazon SNS (docs.aws.amazon.com/sns).

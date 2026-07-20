@@ -1,30 +1,5 @@
 # Módulo 4: Concurrencia moderna: async/await
 
-## Sílabo
-
-**Objetivo general**
-
-Reemplazar GCD y callbacks anidados con Swift Concurrency, un modelo de concurrencia estructurado y seguro ante data races, dominando `async`/`await`, actors para aislar estado mutable, `TaskGroup` para concurrencia estructurada, y `@MainActor` para actualizaciones seguras de UI.
-
-**Objetivos específicos**
-
-1. Escribir una función `async` y lanzarla desde una vista con `.task`.
-2. Crear un `actor` que encapsule estado mutable compartido.
-3. Combinar llamadas asíncronas en paralelo con un `TaskGroup`.
-4. Marcar una clase con `@MainActor` y explicar la garantía que ofrece.
-
-**Contenido**
-
-- `async`/`await` y `Task`.
-- Actors para aislar estado mutable.
-- Structured concurrency (`TaskGroup`).
-- `MainActor` y actualización segura de UI.
-
-**Evaluación**
-
-Función `async` que combina dos llamadas de red en paralelo con `TaskGroup`, más tres ejercicios de evaluación.
-
----
 
 ## Aprende construyendo
 
@@ -132,21 +107,6 @@ withThrowingTaskGroup(of: Any.self) { group in
 
 ---
 
-## Criterio transversal de calidad del código
-
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
 
 ## Laboratorio práctico
 
@@ -171,39 +131,3 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 - **Actualizar el estado de un ViewModel observado por la UI desde un contexto no aislado al hilo principal.** Marca la clase o propiedad con `@MainActor` para prevenir esto en tiempo de compilación.
 
 ---
-
-
-
-## Bibliografía y fundamento académico
-
-Estas fuentes sustentan los conceptos y deben consultarse para verificar detalles que cambian entre versiones:
-
-- Apple, *Swift Language Guide* y *Apple Developer Documentation*.
-- Apple, *Human Interface Guidelines* y documentación de accesibilidad.
-- OWASP Foundation, *Mobile Application Security Verification Standard*.
-- ACM/IEEE-CS/AAAI, *Computer Science Curricula 2023*.
-- IEEE Computer Society, *SWEBOK Guide V4.0*.
-
-## Resumen del módulo
-
-**Puntos clave**
-
-- `async`/`await` permite código asíncrono legible de forma lineal, y `.task` vincula automáticamente la cancelación al ciclo de vida de la vista.
-- Un `actor` serializa automáticamente el acceso a su estado interno, previniendo data races sin locks manuales.
-- `TaskGroup` ejecuta tareas hijas en paralelo dentro de un ámbito bien definido, garantizando que todas completen antes de retornar.
-- `@MainActor` garantiza, verificado por el compilador, que el estado marcado solo se modifica desde el hilo principal.
-
-**Conceptos aprendidos**
-
-- `async`/`await` y `Task`.
-- Actors para aislar estado mutable.
-- Structured concurrency (`TaskGroup`).
-- `MainActor`.
-
-**Próximos pasos**
-
-En el Módulo 5 aprenderás a consumir APIs REST reales con `URLSession`, `Codable` y manejo de errores tipado, construido sobre la concurrencia moderna de este módulo.
-
-**Recursos adicionales**
-
-- Documentación oficial de Swift Concurrency (developer.apple.com/documentation/swift/concurrency).

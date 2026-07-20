@@ -1,31 +1,5 @@
 # Módulo 6: I/O, NIO.2 y serialización
 
-## Sílabo
-
-**Objetivo general**
-
-Leer, escribir y serializar datos de forma eficiente usando la API moderna de archivos de Java (NIO.2), Jackson para serialización JSON, y técnicas apropiadas para archivos grandes y recursos empaquetados.
-
-**Objetivos específicos**
-
-1. Leer y escribir archivos de texto con `Files.readString`/`writeString`.
-2. Serializar y deserializar objetos Java a JSON con Jackson.
-3. Leer un archivo grande línea por línea sin cargarlo completo en memoria.
-4. Cargar un recurso desde el classpath.
-5. Manejar apropiadamente el caso de un archivo inexistente.
-
-**Contenido**
-
-- `java.nio.file`: Path y Files.
-- Serialización con Jackson/Gson.
-- Lectura de archivos grandes con buffers.
-- Recursos en el classpath.
-
-**Evaluación**
-
-Utilidad que lee/escribe JSON desde y hacia disco con manejo de errores, más tres ejercicios de evaluación.
-
----
 
 ## Aprende construyendo
 
@@ -100,21 +74,6 @@ try (InputStream in = getClass().getResourceAsStream("/config.json")) {
 
 ---
 
-## Criterio transversal de calidad del código
-
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
 
 ## Laboratorio práctico
 
@@ -139,39 +98,3 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 - **No manejar el caso de archivo inexistente con un mensaje claro.** Captura la excepción específica y proporciona contexto útil, sin un catch vacío (Módulo 3).
 
 ---
-
-
-
-## Bibliografía y fundamento académico
-
-Estas fuentes sustentan los conceptos y deben consultarse para verificar detalles que cambian entre versiones:
-
-- Oracle, *Java Language Specification* y *Java Virtual Machine Specification*.
-- OpenJDK, documentación de Java SE, JFR y JMH.
-- Bloch, J., *Effective Java*.
-- ACM/IEEE-CS/AAAI, *Computer Science Curricula 2023*.
-- IEEE Computer Society, *SWEBOK Guide V4.0*.
-
-## Resumen del módulo
-
-**Puntos clave**
-
-- NIO.2 (`Path`/`Files`) ofrece una API moderna y expresiva que reemplaza a la antigua clase `File`.
-- Jackson automatiza la conversión entre objetos Java (incluyendo records) y JSON.
-- Leer archivos grandes línea por línea con buffer evita cargar el contenido completo en memoria.
-- Los recursos del classpath viajan empaquetados con la aplicación, a diferencia de archivos del sistema de archivos real.
-
-**Conceptos aprendidos**
-
-- NIO.2: Path y Files.
-- Serialización con Jackson.
-- Lectura eficiente de archivos grandes.
-- Recursos en el classpath.
-
-**Próximos pasos**
-
-En el Módulo 7 aprenderás las features modernas de Java: records, sealed classes, y pattern matching.
-
-**Recursos adicionales**
-
-- Documentación oficial de Java (docs.oracle.com/en/java): "File I/O (NIO.2)" y documentación de Jackson (github.com/FasterXML/jackson).

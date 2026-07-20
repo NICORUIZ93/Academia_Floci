@@ -1,34 +1,5 @@
 # Módulo 5: Asincronía I — Event Loop y Promesas
 
-## Sílabo
-
-**Objetivo general**
-
-Entender con precisión el modelo de concurrencia de JavaScript: single-threaded pero no bloqueante, distinguiendo microtasks de macrotasks, y dominar las Promesas como la abstracción central para manejar operaciones asíncronas.
-
-**Objetivos específicos**
-
-1. Explicar el Event Loop y predecir el orden de ejecución de código síncrono, microtasks y macrotasks.
-2. Diferenciar microtasks (Promesas) de macrotasks (`setTimeout`, eventos de I/O).
-3. Usar `Promise.all`, `Promise.allSettled`, `Promise.race` y `Promise.any` correctamente según el caso de uso.
-4. Convertir código basado en callbacks a Promesas.
-5. Describir a nivel conceptual el motor V8 (JIT, AST) y la gestión de memoria (Stack, Heap, Garbage Collection).
-
-**Contenido**
-
-- Event Loop, call stack y task queue.
-- Microtasks (Promesas) frente a macrotasks (`setTimeout`).
-- `Promise.all`/`allSettled`/`race`.
-- De callbacks a promesas.
-- El motor V8: compilación JIT y AST.
-- Stack frente a Heap y Garbage Collection.
-- `queueMicrotask()` y `Promise.any()`.
-
-**Evaluación**
-
-Un diagrama y una demo ejecutable que predicen el orden exacto de ejecución de un script asíncrono, más tres ejercicios de evaluación.
-
----
 
 ## Aprende construyendo
 
@@ -168,21 +139,6 @@ Heap: objetos/arrays/funciones, liberación por Garbage Collection (Mark and Swe
 
 ---
 
-## Criterio transversal de calidad del código
-
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
 
 ## Laboratorio práctico
 
@@ -209,43 +165,3 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 - **Olvidar que una Promesa rechazada sin `.catch()` produce una advertencia de "unhandled rejection".** Siempre maneja el caso de rechazo, ya sea con `.catch()` o con el bloque `catch` de `async`/`await` (Módulo 6).
 
 ---
-
-
-
-## Bibliografía y fundamento académico
-
-Estas fuentes sustentan los conceptos y deben consultarse para verificar detalles que cambian entre versiones:
-
-- ECMA International, *ECMAScript Language Specification*.
-- MDN Web Docs, guías de JavaScript y Web APIs.
-- WHATWG, *HTML Living Standard* y *Fetch Standard*.
-- ACM/IEEE-CS/AAAI, *Computer Science Curricula 2023*.
-- IEEE Computer Society, *SWEBOK Guide V4.0*.
-
-## Resumen del módulo
-
-**Puntos clave**
-
-- El Event Loop procesa todo el código síncrono, luego TODAS las microtasks, luego UNA macrotask, en un ciclo continuo.
-- Una Promesa tiene tres estados (pending/fulfilled/rejected), y una vez resuelta, su estado no cambia.
-- `Promise.all` exige éxito total; `allSettled` tolera fallos parciales; `race` toma la primera en terminar; `any` toma la primera exitosa.
-- V8 compila JavaScript en dos niveles (Ignition interpretando, TurboFan optimizando funciones "calientes"), con posibilidad de deoptimización.
-- La memoria se divide en Stack (primitivos, ligado al call stack) y Heap (objetos, liberados por Garbage Collection generacional).
-
-**Conceptos aprendidos**
-
-- El modelo exacto del Event Loop y el orden de ejecución de tareas asíncronas.
-- Los tres estados de una Promesa y su composición con `.then`/`.catch`.
-- Los cuatro combinadores de Promesas y cuándo usar cada uno.
-- Compilación JIT de dos niveles en el motor V8.
-- Stack, Heap y Garbage Collection generacional.
-
-**Próximos pasos**
-
-En el Módulo 6 aprenderás `async`/`await`, la sintaxis que hace que el código asíncrono se lea como código síncrono, junto con `fetch`, `AbortController` y patrones de reintento.
-
-**Recursos adicionales**
-
-- MDN Web Docs: "Event loop", "Promise", "Concurrency model".
-- Charla "What the heck is the event loop anyway?" (Philip Roberts, JSConf).
-- Documentación del proyecto V8 (v8.dev) sobre Ignition y TurboFan.

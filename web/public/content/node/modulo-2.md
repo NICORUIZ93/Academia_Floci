@@ -1,30 +1,5 @@
 # Módulo 2: Sistema de archivos y streams
 
-## Sílabo
-
-**Objetivo general**
-
-Procesar archivos grandes sin cargarlos completos en memoria, dominando streams legibles, escribibles y de transformación, y entendiendo backpressure como el mecanismo que hace esto posible de forma segura.
-
-**Objetivos específicos**
-
-1. Comparar `fs/promises`, callbacks clásicos y las versiones síncronas de la API de archivos.
-2. Implementar un stream de transformación personalizado.
-3. Componer streams de forma segura con `pipeline()`.
-4. Explicar qué es backpressure y por qué previene el agotamiento de memoria.
-
-**Contenido**
-
-- `fs/promises` frente a callbacks.
-- Streams legibles, escribibles y transform.
-- Backpressure.
-- `pipeline()` para componer streams de forma segura.
-
-**Evaluación**
-
-Un script que transforma un archivo CSV grande a JSON usando streams, sin cargarlo completo en RAM, más tres ejercicios de evaluación.
-
----
 
 ## Aprende construyendo
 
@@ -151,21 +126,6 @@ try {
 
 ---
 
-## Criterio transversal de calidad del código
-
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
 
 ## Laboratorio práctico
 
@@ -191,40 +151,3 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 - **Olvidar invocar el `callback` dentro de `_transform` de un stream personalizado.** Sin invocarlo, el stream se queda colgado indefinidamente esperando esa señal de que el chunk terminó de procesarse.
 
 ---
-
-
-
-## Bibliografía y fundamento académico
-
-Estas fuentes sustentan los conceptos y deben consultarse para verificar detalles que cambian entre versiones:
-
-- OpenJS Foundation, *Node.js Documentation*.
-- IETF, especificaciones HTTP Semantics, OAuth 2.0 y JSON.
-- OWASP Foundation, *Application Security Verification Standard*.
-- ACM/IEEE-CS/AAAI, *Computer Science Curricula 2023*.
-- IEEE Computer Society, *SWEBOK Guide V4.0*.
-
-## Resumen del módulo
-
-**Puntos clave**
-
-- Node ofrece tres estilos de API de archivos (síncrono, callback clásico, `fs/promises`); `fs/promises` es la recomendación moderna para código nuevo.
-- Los streams (`Readable`, `Writable`, `Transform`) procesan datos en chunks, permitiendo trabajar con archivos de tamaño arbitrario sin cargarlos completos en memoria.
-- Backpressure autorregula automáticamente la velocidad de producción según la capacidad real del consumidor, previniendo el agotamiento de memoria.
-- `pipeline()` compone streams de forma segura, propagando errores y cerrando recursos correctamente, a diferencia de encadenar `.pipe()` manualmente.
-
-**Conceptos aprendidos**
-
-- Los tres estilos de la API de archivos de Node y cuándo usar cada uno.
-- Streams legibles, escribibles y de transformación personalizados.
-- Backpressure como mecanismo de autorregulación de flujo.
-- Composición segura de streams con `pipeline()`.
-
-**Próximos pasos**
-
-En el Módulo 3 construirás un servidor HTTP nativo con el módulo `http` puro, entendiendo exactamente qué automatiza un framework como Express antes de usarlo.
-
-**Recursos adicionales**
-
-- Documentación oficial de Node.js: "Stream" y "File system".
-- Guía oficial de Node.js sobre backpressure ("Backpressuring in Streams").

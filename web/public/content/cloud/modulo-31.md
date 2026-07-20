@@ -1,36 +1,5 @@
 # Módulo 31: Proyecto integrador: API multi-nube con AWS, Azure y GCP
 
-## Sílabo
-
-**Objetivo general**
-
-Construir la misma API "Gestor de Tareas" tres veces (una en AWS local, una en Azure local, una en GCP local), comparando las diferencias reales entre proveedores y demostrando que el conocimiento arquitectónico fundamental es portable, aunque las APIs y detalles operativos específicos no lo sean directamente.
-
-**Objetivos específicos**
-
-1. Implementar la API completa en AWS con Lambda, API Gateway, DynamoDB, SQS, S3, CloudWatch, Cognito y CloudFormation.
-2. Implementar la misma API en Azure con Functions, Service Bus, Cosmos DB y Blob Storage.
-3. Implementar los endpoints de solo lectura en GCP con Firestore, Cloud Storage y Pub/Sub.
-4. Documentar sistemáticamente qué fue igual y qué fue diferente entre los tres proveedores.
-
-**Contenido**
-
-- Arquitectura multi-nube.
-- Portabilidad.
-- Feature parity.
-- Interoperabilidad.
-- CI local.
-- Documentación de diferencias.
-- Arquitectura interna de cloud local: GraalVM, arranque en ~24ms, "real engines, not mocks".
-- cloud local en CI/CD: pruebas de integración sin coste, integración con Testcontainers.
-- Migración desde LocalStack, Azurite o gcloud emulators a un único endpoint cloud local.
-- Persistencia de estado entre reinicios y límites: emulador para desarrollo, no para producción.
-
-**Evaluación**
-
-API completa con los mismos endpoints funcionando en AWS local, Azure local y GCP local, más tres ejercicios de evaluación.
-
----
 
 ## Aprende construyendo
 
@@ -85,6 +54,8 @@ Lambda (cloud local) → runtime REAL en contenedor Docker
 **Conceptos clave:** un único endpoint unificado multi-servicio, apropiado para desarrollo, no para producción.
 
 Migrar desde LocalStack (el emulador de AWS más establecido históricamente), Azurite (el emulador oficial de Azure Storage), o los emuladores individuales de gcloud hacia un único endpoint de cloud local que emula los tres proveedores simplifica la configuración de un entorno de desarrollo que necesita trabajar con múltiples servicios cloud simultáneamente (por ejemplo, el proyecto multi-nube de este mismo módulo), evitando gestionar tres herramientas de emulación completamente separadas con configuraciones, puertos y comportamientos potencialmente inconsistentes entre sí.
+
+La **Migración desde LocalStack** comienza inventariando servicios, endpoints, variables, inicializadores y diferencias de compatibilidad antes de sustituir el contenedor; después se ejecuta la misma suite de integración contra ambos entornos y se documenta cualquier comportamiento distinto.
 
 Un límite importante que debe reconocerse explícitamente: cloud local (como cualquier emulador, sin importar su fidelidad) es una herramienta diseñada para desarrollo y pruebas, no un sustituto completo de una prueba final contra la nube real antes de un despliegue a producción; aspectos como límites reales de cuota, latencia de red genuina entre regiones geográficas reales, comportamiento bajo carga a escala de producción real, y ciertas particularidades de servicios gestionados completamente específicas de la infraestructura real de cada proveedor (no replicables ni siquiera por un emulador de alta fidelidad) requieren necesariamente una validación final contra el entorno real antes de considerar cualquier sistema listo para producción. Igualmente, la persistencia de estado entre reinicios de cloud local (para servicios como ECS, CodeBuild, Config) tiene límites específicos documentados que conviene conocer antes de depender de esa persistencia para flujos de trabajo críticos de desarrollo.
 
@@ -259,21 +230,6 @@ Despliega en Floci, publica duplicados y fuerza cinco fallos hasta DLQ. Implemen
 
 El capítulo se completa cuando la evidencia permite a otra persona reproducir el flujo y explicar qué garantías ofrece y cuáles todavía no.
 
-## Criterio transversal de calidad del código
-
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
 
 ## Laboratorio práctico
 
@@ -300,42 +256,3 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 - **Gestionar LocalStack, Azurite y emuladores de gcloud por separado en vez de un único endpoint unificado.** Simplifica la configuración con cloud local para proyectos multi-nube.
 
 ---
-
-
-
-## Bibliografía y fundamento académico
-
-Estas fuentes sustentan los conceptos y deben consultarse para verificar detalles que cambian entre versiones:
-
-- AWS, Microsoft Azure y Google Cloud, marcos oficiales de arquitectura bien diseñada.
-- NIST, *Cloud Computing Standards Roadmap* y *Secure Software Development Framework*.
-- Beyer et al., *Site Reliability Engineering*.
-- ACM/IEEE-CS/AAAI, *Computer Science Curricula 2023*.
-- IEEE Computer Society, *SWEBOK Guide V4.0*.
-
-## Resumen del módulo
-
-**Puntos clave**
-
-- Los principios arquitectónicos fundamentales son portables entre AWS, Azure y GCP; la sintaxis exacta de cada API es específica de cada proveedor.
-- cloud local usa motores reales (PostgreSQL real, Docker real, runtimes reales) en vez de simulaciones aproximadas, con alta fidelidad para CI/CD.
-- Un único endpoint de cloud local simplifica proyectos multi-nube frente a gestionar LocalStack, Azurite y emuladores de gcloud por separado.
-- Ningún emulador, sin importar su fidelidad, sustituye completamente una prueba final contra la nube real antes de producción.
-
-**Conceptos aprendidos**
-
-- Arquitectura multi-nube.
-- Portabilidad.
-- Feature parity.
-- Interoperabilidad.
-- CI local con Testcontainers.
-- Arquitectura interna de cloud local (GraalVM).
-- Límites de un emulador para producción.
-
-**Próximos pasos**
-
-Con el track de Cloud completo (módulos 0-31), los mismos principios arquitectónicos aprendidos aquí —serverless, colas y streams, bases de datos gestionadas, IaC, autenticación delegada, observabilidad— reaparecerán en cualquier proyecto real de backend que construyas, independientemente del proveedor cloud específico que uses en producción.
-
-**Recursos adicionales**
-
-- Documentación de cloud local y comparativa multi-proveedor (consulta la tabla `CLOUD_COMPARISON` de la app para referencia rápida de servicios equivalentes).

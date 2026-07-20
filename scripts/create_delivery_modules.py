@@ -3,11 +3,6 @@
 from pathlib import Path
 
 ROOT=Path(__file__).resolve().parents[1]
-QUALITY="""## Criterio transversal de calidad del código
-
-Usa nombres del dominio, dependencias dirigidas hacia políticas estables y errores tipados. Escribe una prueba antes de corregir cada fallo. SOLID se aplica para separar mapas, transporte, persistencia y notificaciones, no para crear capas vacías. No abstraer hasta encontrar repetición con el mismo significado. Revisa nombres, errores, prueba, privacidad, permisos y operación.
-"""
-
 MODULES={
 "flutter":("Flutter para entregas: mapas, GPS y tiempo real",[
 ("Diseño de pantallas y Riverpod","La jornada se diseña desde tareas reales: iniciar turno, aceptar ruta, navegar a una parada, escanear, capturar evidencia y confirmar. Riverpod representa estados sellados de carga, datos, error y sincronización; un provider no debe convertirse en una clase global que conozca UI, red y SQLite. Los widgets observan modelos de pantalla y los casos de uso preservan reglas."),
@@ -54,30 +49,9 @@ sequenceDiagram
 """)
     return f"""# Módulo 14: {title}
 
-## Sílabo
-
-**Objetivo general:** construir una vertical de seguimiento de entregas que conecte interfaz, ubicación, tiempo real, persistencia, seguridad, evidencia y notificaciones sin esconder los fallos normales de una aplicación móvil.
-
-**Evaluación:** 40 % implementación, 25 % pruebas, 20 % explicación y decisiones, 15 % seguridad y operación.
-
 ## Aprende construyendo
 
 {''.join(sections)}
-{QUALITY}
-
-## Bibliografía y fundamento académico
-
-- Documentación oficial de Flutter, Riverpod, Google Maps Platform, Dio, Firebase y Socket.IO para el cliente.
-- Spring Boot Reference, Spring Security Reference, MySQL 8 Spatial Reference, Hibernate Spatial y Firebase Admin para el servidor.
-- RFC 6750 para Bearer Tokens, RFC 7946 para GeoJSON y especificación WebSocket RFC 6455.
-- OWASP MASVS/ASVS para permisos, almacenamiento, autenticación, archivos y APIs.
-- Martin Kleppmann, *Designing Data-Intensive Applications*, para orden, duplicación y fallos parciales.
-
-Verifica versión, licencia y política de precios antes de elegir proveedor de mapas o mensajería. Socket.IO no es WebSocket puro y JWT no significa automáticamente autorización correcta.
-
-## Resumen del módulo
-
-Los temas de la lista ahora forman una capacidad visible y evaluable. La persona diseña pantallas, gestiona estado, dibuja y actualiza rutas, recibe posiciones, conserva trabajo offline, procesa imágenes, consume HTTP, protege recursos y envía notificaciones. El aprendizaje termina cuando puede explicar y demostrar qué ocurre ante mala red, duplicados, datos geográficos imperfectos y accesos indebidos.
 """
 
 for track,(title,topics) in MODULES.items():

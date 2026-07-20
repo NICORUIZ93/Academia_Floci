@@ -1,31 +1,5 @@
 # Módulo 12: Proyecto integrador: app SwiftUI completa
 
-## Sílabo
-
-**Objetivo general**
-
-Unir SwiftUI, concurrencia moderna, networking y persistencia en una app real, integrando arquitectura MVVM, `async`/`await` con manejo de errores tipado, persistencia con SwiftData, y una suite de tests de la capa de dominio con Swift Testing.
-
-**Objetivos específicos**
-
-1. Diseñar la arquitectura MVVM completa: Vistas, ViewModels `@Observable`, Servicios/Repositorios.
-2. Implementar networking real con `URLSession` + `async`/`await` y manejo de errores tipado.
-3. Persistir datos localmente con SwiftData, sincronizados con la API.
-4. Escribir tests de la capa de dominio con Swift Testing.
-5. Subir un build a TestFlight para pruebas internas.
-
-**Contenido**
-
-- Arquitectura MVVM.
-- Networking con `async`/`await`.
-- Persistencia con SwiftData.
-- Tests de la capa de dominio.
-
-**Evaluación**
-
-App iOS con SwiftUI, datos reales, persistencia local y tests, más tres ejercicios de evaluación.
-
----
 
 ## Aprende construyendo
 
@@ -146,21 +120,6 @@ Implementa un adaptador `CLLocationManager`, prueba autorización denegada/restr
 
 El capítulo se completa cuando la evidencia permite a otra persona reproducir el flujo y explicar qué garantías ofrece y cuáles todavía no.
 
-## Criterio transversal de calidad del código
-
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
 
 ## Laboratorio práctico
 
@@ -185,39 +144,3 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 - **Omitir tests de la capa de dominio, confiando solo en probar manualmente en el simulador.** Los tests dan confianza repetible antes de cada subida a TestFlight.
 
 ---
-
-
-
-## Bibliografía y fundamento académico
-
-Estas fuentes sustentan los conceptos y deben consultarse para verificar detalles que cambian entre versiones:
-
-- Apple, *Swift Language Guide* y *Apple Developer Documentation*.
-- Apple, *Human Interface Guidelines* y documentación de accesibilidad.
-- OWASP Foundation, *Mobile Application Security Verification Standard*.
-- ACM/IEEE-CS/AAAI, *Computer Science Curricula 2023*.
-- IEEE Computer Society, *SWEBOK Guide V4.0*.
-
-## Resumen del módulo
-
-**Puntos clave**
-
-- El proyecto integrador combina modelado de dominio, navegación, concurrencia, persistencia, arquitectura MVVM y testing en un único sistema coherente.
-- El ViewModel orquesta tanto la red como la persistencia local sin que la vista conozca ninguna de las dos directamente.
-- Una app iOS "nativa" combina seguridad de tipos, concurrencia estructurada, y UI reactiva sincronizada automáticamente.
-- Reflexionar sobre las decisiones de arquitectura consolida qué es específico de SwiftUI frente a principios universales de UI declarativa.
-
-**Conceptos aprendidos**
-
-- Arquitectura MVVM.
-- Networking con `async`/`await`.
-- Persistencia con SwiftData.
-- Tests de la capa de dominio.
-
-**Próximos pasos**
-
-Con el track de iOS completo, los mismos principios de arquitectura (MVVM, offline-first, concurrencia estructurada, testing) reaparecerán en Kotlin Multiplatform si decides compartir lógica de negocio entre Android e iOS, y en el track de Flutter con un enfoque de UI compartida completa entre plataformas.
-
-**Recursos adicionales**
-
-- Guía oficial de arquitectura de apps de Apple (developer.apple.com/documentation/xcode/architecting-your-app).

@@ -1,33 +1,5 @@
 # Módulo 4: Bases de datos NoSQL con DynamoDB
 
-## Sílabo
-
-**Objetivo general**
-
-Modelar datos en una base de datos NoSQL de clave-valor y documentos, entender los tipos de clave primaria y los índices secundarios, y dominar las operaciones CRUD y de consulta, incluyendo por qué Query es preferible a Scan.
-
-**Objetivos específicos**
-
-1. Explicar qué es NoSQL y en qué escenarios es preferible a una base de datos relacional.
-2. Diseñar una tabla con clave primaria simple o compuesta según el caso de uso.
-3. Realizar operaciones CRUD completas sobre items de DynamoDB.
-4. Diferenciar índices secundarios globales (GSI) de locales (LSI) y saber cuándo usarlos.
-5. Explicar por qué Query es más eficiente que Scan y cuándo cada uno es apropiado.
-
-**Contenido**
-
-- Qué es NoSQL y cuándo usarlo.
-- Tablas, items y atributos.
-- Tipos de datos: S, N, B, BOOL, NULL, L, M.
-- Clave primaria simple (HASH) vs compuesta (HASH + RANGE).
-- Índices secundarios globales (GSI) y locales (LSI).
-- Query vs Scan.
-
-**Evaluación**
-
-Un laboratorio de operaciones CRUD completas y otro de Query vs Scan, más tres ejercicios de evaluación sobre diseño de claves, tipos de datos e índices.
-
----
 
 ## Aprende construyendo
 
@@ -210,21 +182,6 @@ Query (usuario_id = "u-001")           Scan (filtro: estado = "pendiente")
 
 ---
 
-## Criterio transversal de calidad del código
-
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
 
 ## Laboratorio práctico
 
@@ -267,46 +224,3 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 - **Confundir `Count` con `ScannedCount` en la salida de Query o Scan.** `Count` es cuántos items se devolvieron después de aplicar cualquier filtro; `ScannedCount` es cuántos items se examinaron internamente antes del filtro. En una Query sin filtro adicional ambos suelen coincidir; en un Scan con filtro, `ScannedCount` casi siempre será mayor que `Count`, y esa diferencia es precisamente la evidencia del coste oculto de un Scan filtrado.
 
 ---
-
-
-
-## Bibliografía y fundamento académico
-
-Estas fuentes sustentan los conceptos y deben consultarse para verificar detalles que cambian entre versiones:
-
-- AWS, Microsoft Azure y Google Cloud, marcos oficiales de arquitectura bien diseñada.
-- NIST, *Cloud Computing Standards Roadmap* y *Secure Software Development Framework*.
-- Beyer et al., *Site Reliability Engineering*.
-- ACM/IEEE-CS/AAAI, *Computer Science Curricula 2023*.
-- IEEE Computer Society, *SWEBOK Guide V4.0*.
-
-## Resumen del módulo
-
-**Puntos clave**
-
-- DynamoDB es una base de datos NoSQL de clave-valor y documentos, con esquema flexible por item y escalado horizontal automático según la clave primaria.
-- Una tabla no impone columnas fijas; solo la clave primaria es obligatoria en todos los items.
-- Los tipos de datos (`S`, `N`, `B`, `BOOL`, `NULL`, `L`, `M`, y los tipos de conjunto) deben elegirse correctamente para permitir comparaciones y operaciones válidas más adelante.
-- La clave primaria puede ser simple (HASH) o compuesta (HASH + RANGE); la compuesta permite agrupar y ordenar items relacionados bajo la misma partición.
-- Los índices secundarios (GSI y LSI) habilitan patrones de consulta adicionales más allá de la clave primaria original.
-- Query es eficiente porque accede directamente a la partición correcta; Scan examina toda la tabla y debe evitarse como patrón de consulta habitual en tablas grandes.
-
-**Conceptos aprendidos**
-
-- Diferencias entre NoSQL y bases de datos relacionales, y cuándo elegir cada una.
-- Tablas, items y atributos, y la flexibilidad de esquema por item.
-- Los siete tipos de datos escalares y de documento de DynamoDB.
-- Clave primaria simple vs compuesta, y su impacto en el patrón de acceso.
-- Índices secundarios globales y locales.
-- Query vs Scan y su impacto real en coste y eficiencia.
-
-**Próximos pasos**
-
-En el Módulo 5 vas a escribir tu primera función serverless con Lambda, y vas a conectar conceptualmente ese cómputo sin servidor con los datos que ya sabes guardar en S3 y DynamoDB.
-
-**Recursos adicionales**
-
-- Documentación oficial de Amazon DynamoDB: conceptos básicos y guía de desarrollador.
-- Documentación oficial sobre el diseño de claves primarias e índices secundarios en DynamoDB.
-- Guía oficial de AWS sobre patrones de modelado de datos NoSQL (single-table design).
-- Código ejecutable de cada operación (crear tabla, put, get, update, delete, query, scan) en Node.js, Python y Java: carpeta [`examples/`](https://github.com/NICORUIZ93/Academia_Floci/tree/main/examples) del repositorio, archivos que empiezan por `dynamodb-`/`dynamodb_`/`DynamoDb` (ver [`examples/README.md`](https://github.com/NICORUIZ93/Academia_Floci/blob/main/examples/README.md) para la lista completa).

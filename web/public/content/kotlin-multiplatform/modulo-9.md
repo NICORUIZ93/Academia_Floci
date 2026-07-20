@@ -1,30 +1,5 @@
 # Módulo 9: Testing multiplataforma
 
-## Sílabo
-
-**Objetivo general**
-
-Probar la lógica compartida una única vez y confiar en que se comporta igual en ambas plataformas, usando `kotlin.test` en código común, fakes para dependencias de plataforma, y `runTest` para coroutines.
-
-**Objetivos específicos**
-
-1. Escribir un test con `kotlin.test` en `commonTest` que pruebe un caso de uso.
-2. Usar una implementación fake del repositorio para aislar la prueba.
-3. Testear una función suspend con `runTest`, controlando tiempo virtual.
-4. Ejecutar la misma suite de tests contra el target Android y el target iOS.
-
-**Contenido**
-
-- `kotlin.test` en código común.
-- Fakes para dependencias de plataforma.
-- Testing de coroutines (`runTest`).
-- Cobertura de la capa compartida.
-
-**Evaluación**
-
-Suite de tests sobre el módulo common que corre igual en Android e iOS, más tres ejercicios de evaluación.
-
----
 
 ## Aprende construyendo
 
@@ -129,21 +104,6 @@ fun pruebaConDelay() = runTest {
 
 ---
 
-## Criterio transversal de calidad del código
-
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
 
 ## Laboratorio práctico
 
@@ -167,37 +127,3 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 - **Duplicar la misma prueba por separado para Android e iOS.** Escríbela una única vez en `commonTest`, ejecutable contra ambos targets automáticamente.
 
 ---
-
-
-
-## Bibliografía y fundamento académico
-
-Estas fuentes sustentan los conceptos y deben consultarse para verificar detalles que cambian entre versiones:
-
-- JetBrains, documentación oficial de *Kotlin Multiplatform* y Kotlin Coroutines.
-- Google, *Android Developers Documentation*; Apple, *Developer Documentation*.
-- Kotlin Foundation, especificación y pautas de compatibilidad de Kotlin.
-- ACM/IEEE-CS/AAAI, *Computer Science Curricula 2023*.
-- IEEE Computer Society, *SWEBOK Guide V4.0*.
-
-## Resumen del módulo
-
-**Puntos clave**
-
-- Un test escrito en `commonTest` verifica la lógica compartida contra ambos targets sin duplicar esfuerzo.
-- Los fakes son código Kotlin ordinario compatible con cualquier target, a diferencia de mocks dependientes de mecanismos específicos de la JVM.
-- `runTest` gestiona tiempo virtual, permitiendo que tests con `delay()` interno corran instantáneamente sin esperas reales.
-
-**Conceptos aprendidos**
-
-- `kotlin.test` en código común.
-- Fakes para dependencias de plataforma.
-- `runTest` para coroutines.
-
-**Próximos pasos**
-
-En el Módulo 10 aprenderás CI/CD para KMP: pipelines Gradle multiplataforma, distribución a TestFlight/Play Console, y Fastlane.
-
-**Recursos adicionales**
-
-- Documentación oficial de kotlinx-coroutines-test (kotlinlang.org/api/kotlinx.coroutines/kotlinx-coroutines-test).

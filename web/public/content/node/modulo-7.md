@@ -1,32 +1,5 @@
 # Módulo 7: Testing e integración continua
 
-## Sílabo
-
-**Objetivo general**
-
-Probar endpoints HTTP reales de una API Node, no solo funciones aisladas, usando Supertest para peticiones reales y Testcontainers para bases de datos de prueba efímeras, integrando todo en un pipeline de CI.
-
-**Objetivos específicos**
-
-1. Escribir pruebas de integración HTTP reales con Vitest y Supertest.
-2. Levantar una base de datos real y efímera con Testcontainers para pruebas.
-3. Mockear servicios externos para que las pruebas no dependan de conectividad real a internet.
-4. Configurar un pipeline de CI que instale dependencias, levante la base de prueba y ejecute los tests.
-
-**Contenido**
-
-- Vitest + Supertest.
-- Bases de datos de prueba (Testcontainers).
-- Mocks de servicios externos.
-- Pipeline de CI para una API Node.
-- Jest, Mocha, Chai y Sinon como alternativas.
-- Debugging con `--inspect` y Chrome DevTools.
-
-**Evaluación**
-
-Una suite de pruebas de integración que levanta la API contra una base de datos real en Docker, más tres ejercicios de evaluación.
-
----
 
 ## Aprende construyendo
 
@@ -130,21 +103,6 @@ node --inspect servidor.js
 
 ---
 
-## Criterio transversal de calidad del código
-
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
 
 ## Laboratorio práctico
 
@@ -170,41 +128,3 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 - **Probar solo el camino feliz, sin cubrir escenarios de error.** Incluye siempre pruebas para los casos de validación fallida y errores esperados.
 
 ---
-
-
-
-## Bibliografía y fundamento académico
-
-Estas fuentes sustentan los conceptos y deben consultarse para verificar detalles que cambian entre versiones:
-
-- OpenJS Foundation, *Node.js Documentation*.
-- IETF, especificaciones HTTP Semantics, OAuth 2.0 y JSON.
-- OWASP Foundation, *Application Security Verification Standard*.
-- ACM/IEEE-CS/AAAI, *Computer Science Curricula 2023*.
-- IEEE Computer Society, *SWEBOK Guide V4.0*.
-
-## Resumen del módulo
-
-**Puntos clave**
-
-- Supertest permite pruebas de integración HTTP reales contra una aplicación Express, sin necesidad de un puerto de red real abierto.
-- Testcontainers levanta una base de datos real y efímera por corrida de pruebas, combinando confianza real con aislamiento completo.
-- Los servicios externos de terceros deben mockearse siempre para pruebas rápidas, deterministas y libres de costes reales.
-- Un pipeline de CI con `npm ci` y Testcontainers reproduce con alta fidelidad las condiciones reales sin depender de infraestructura compartida frágil.
-- Jest, Mocha/Chai/Sinon son alternativas de testing; `--inspect` con Chrome DevTools ofrece depuración avanzada de código Node.
-
-**Conceptos aprendidos**
-
-- Pruebas de integración HTTP con Vitest y Supertest.
-- Bases de datos de prueba reales y efímeras con Testcontainers.
-- Mockeo de servicios externos y diseño de pipelines de CI.
-- Panorama de alternativas de testing y debugging avanzado de Node.
-
-**Próximos pasos**
-
-En el Módulo 8 aprenderás patrones asíncronos avanzados: Worker Threads para trabajo CPU-bound, el módulo cluster, y colas de trabajo con BullMQ para procesamiento en background.
-
-**Recursos adicionales**
-
-- Documentación oficial de Supertest y de Testcontainers (testcontainers.com).
-- Documentación oficial de Vitest, Jest y Mocha.

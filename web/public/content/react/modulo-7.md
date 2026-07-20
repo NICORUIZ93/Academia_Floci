@@ -1,33 +1,5 @@
 # Módulo 7: Gestión de estado global
 
-## Sílabo
-
-**Objetivo general**
-
-Elegir con criterio una herramienta dedicada de estado global cuando el estado ya no cabe cómodamente en un componente ni en Context, distinguiendo claramente entre estado del servidor y estado de cliente.
-
-**Objetivos específicos**
-
-1. Construir un store de Zustand sin boilerplate.
-2. Construir el mismo caso de uso con Redux Toolkit y comparar la ceremonia.
-3. Explicar por qué mezclar estado de servidor y de cliente en el mismo store suele ser un error.
-4. Identificar cuándo NO se necesita ninguna librería de estado global.
-5. Ubicar Jotai/Recoil y XState como alternativas con modelos distintos.
-
-**Contenido**
-
-- Zustand: stores mínimos sin boilerplate.
-- Redux Toolkit: slices y RTK Query.
-- Cuándo NO necesitas una librería de estado global.
-- Estado del servidor vs estado de cliente.
-- Jotai (atoms) y Recoil (selectors).
-- XState para máquinas de estado complejas.
-
-**Evaluación**
-
-Store global propio (carrito de compras o similar) con Zustand, más tres ejercicios de evaluación.
-
----
 
 ## Aprende construyendo
 
@@ -125,21 +97,6 @@ XState: estados nombrados + transiciones explícitas, rechaza transiciones no de
 
 ---
 
-## Criterio transversal de calidad del código
-
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
 
 ## Laboratorio práctico
 
@@ -163,39 +120,3 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 - **Suscribirse al store completo en vez de seleccionar la porción específica necesaria.** Usa una función selectora (`state => state.items`) para limitar los re-renders.
 
 ---
-
-
-
-## Bibliografía y fundamento académico
-
-Estas fuentes sustentan los conceptos y deben consultarse para verificar detalles que cambian entre versiones:
-
-- Meta Open Source, *React Documentation*.
-- WHATWG, estándares de DOM, HTML y Fetch.
-- W3C, *Web Content Accessibility Guidelines (WCAG)*.
-- ACM/IEEE-CS/AAAI, *Computer Science Curricula 2023*.
-- IEEE Computer Society, *SWEBOK Guide V4.0*.
-
-## Resumen del módulo
-
-**Puntos clave**
-
-- Zustand ofrece stores mínimos con suscripción selectiva sin Provider obligatorio.
-- Redux Toolkit reduce el boilerplate del Redux clásico, pero sigue trayendo más ceremonia que Zustand.
-- El estado de servidor pertenece a TanStack Query; el estado de cliente puro pertenece a Zustand/Context/`useState`.
-- Jotai/Recoil ofrecen un modelo atómico; XState aporta garantías estructurales de transición de estado.
-
-**Conceptos aprendidos**
-
-- Zustand: stores mínimos y suscripción selectiva.
-- Redux Toolkit: slices y RTK Query.
-- Separación entre estado de servidor y de cliente.
-- Jotai, Recoil y XState como alternativas.
-
-**Próximos pasos**
-
-En el Módulo 8 aprenderás testing en React: React Testing Library, mocking de peticiones con MSW, y testing de hooks personalizados.
-
-**Recursos adicionales**
-
-- Documentación oficial de Zustand (zustand-demo.pmnd.rs) y Redux Toolkit (redux-toolkit.js.org).

@@ -2,13 +2,6 @@
 
 Una aplicación no está terminada cuando muestra datos. En producción recibe entradas hostiles, permanece abierta durante horas, corre en dispositivos diferentes y debe explicar qué falló sin filtrar información privada. En este módulo endurecerás la SPA del módulo 12 mediante evidencia reproducible.
 
-## Sílabo
-
-1. Fronteras de confianza, XSS, CSP y cadena de suministro.
-2. Garbage collection, retención y fugas de memoria.
-3. Errores, telemetría, source maps y privacidad.
-4. Compatibilidad, mejora progresiva, internacionalización y tiempo.
-5. Proyecto: auditoría y endurecimiento de la SPA sin framework.
 
 ## Aprende construyendo
 
@@ -179,21 +172,6 @@ La referencia estable del curso es **ECMAScript 2026**. La especificación viva 
 
 **Aplicación al proyecto:** reemplaza una fecha logística modelada como string por `Temporal.Instant` más zona de presentación; prueba un cambio de horario y documenta fallback. Revisa también ECMA-402 para internacionalización y registra la edición consultada en el README.
 
-## Criterio transversal de calidad del código
-
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
 
 ## Laboratorio práctico
 
@@ -225,18 +203,7 @@ Trabaja sobre el proyecto del módulo 12 y conserva una rama o tag previo para c
 
 
 
-## Bibliografía y fundamento académico
 
-- ECMA-262 y MDN Web Docs: semántica del lenguaje y APIs web.
-- OWASP, *Cross Site Scripting Prevention Cheat Sheet* y *Content Security Policy Cheat Sheet*.
-- W3C, Content Security Policy y Trusted Types; Unicode Consortium, CLDR.
-- Chrome DevTools, documentación de análisis de memoria y rendimiento.
-- ACM/IEEE-CS CS2023: Security, Human-Computer Interaction, Software Development Fundamentals y Society, Ethics, and the Profession.
-- SWEBOK V4: Software Security, Construction, Testing, Quality y Professional Practice.
-
-Los resultados observables son neutralizar un payload según contexto, demostrar eliminación de una retención, reconstruir un error minificado sin exponer datos y mantener función correcta entre locales, zonas y capacidades.
-
-<!-- OFFICIAL-TOPIC-ATLAS:START -->
 ## Atlas completo de temas oficiales
 
 Derivado de la [documentación oficial](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide), sus referencias, migraciones y guías de operación. Inventariar no equivale a dominar: cada selección se demuestra con código, prueba, medición y explicación. **Cobertura: 42 temas.**
@@ -254,12 +221,3 @@ Derivado de la [documentación oficial](https://developer.mozilla.org/en-US/docs
 
 Para cada tema responde qué problema resuelve, cuál es su modelo mental, cómo falla, cómo se verifica y cuándo no conviene. Elige uno por área e intégralos en una vertical RutaFlow. Entrega diagrama, ADR, pruebas de éxito y fallo, una medición, una amenaza y el enlace oficial con versión y fecha. Una API preview se aísla en laboratorio y nunca se presenta como base estable.
 <!-- OFFICIAL-TOPIC-ATLAS:END -->
-
-## Resumen del módulo
-
-- Todo dato externo cruza una frontera de confianza; valida estructura y codifica según el destino.
-- CSP y Trusted Types agregan defensa, pero no sustituyen APIs de render seguras.
-- El GC libera objetos inalcanzables; listeners y closures pueden retener estado inútil indefinidamente.
-- Los errores necesitan recuperación explícita, causas y telemetría mínima con privacidad.
-- Feature detection y mejora progresiva resisten capacidades diferentes.
-- Locale, moneda, Unicode y zona horaria son datos del dominio, no detalles cosméticos.

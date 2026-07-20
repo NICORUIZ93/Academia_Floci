@@ -1,33 +1,5 @@
 # Módulo 9: Observabilidad y manejo de errores en producción
 
-## Sílabo
-
-**Objetivo general**
-
-Diagnosticar un proceso Node en producción basándose en evidencia (logs estructurados, correlation IDs) en vez de adivinar, implementando manejo robusto de excepciones y apagado ordenado (graceful shutdown).
-
-**Objetivos específicos**
-
-1. Reemplazar `console.log` por logging estructurado en formato JSON con Pino.
-2. Implementar un correlation ID por petición para rastrear su ciclo de vida completo.
-3. Manejar excepciones no capturadas y rechazos de promesas sin `catch`.
-4. Implementar un endpoint de health check y graceful shutdown ante `SIGTERM`.
-5. Comparar REST, GraphQL y gRPC como estilos de diseño de API.
-
-**Contenido**
-
-- Logging estructurado (pino/winston).
-- Correlation ID por request.
-- Manejo de excepciones no capturadas.
-- Health checks y graceful shutdown.
-- `process.on("unhandledRejection")`.
-- Diseño de APIs: REST frente a GraphQL (Apollo Server) frente a gRPC.
-
-**Evaluación**
-
-Una API con logging estructurado, correlation ID y apagado controlado, más tres ejercicios de evaluación.
-
----
 
 ## Aprende construyendo
 
@@ -128,21 +100,6 @@ gRPC:    binario (Protocol Buffers), contratos .proto tipados, ideal para micros
 
 ---
 
-## Criterio transversal de calidad del código
-
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
 
 ## Laboratorio práctico
 
@@ -168,43 +125,3 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 - **Terminar el proceso abruptamente ante `SIGTERM` sin esperar peticiones en curso.** Implementa graceful shutdown explícitamente para evitar cortar respuestas a mitad de camino durante despliegues rutinarios.
 
 ---
-
-
-
-## Bibliografía y fundamento académico
-
-Estas fuentes sustentan los conceptos y deben consultarse para verificar detalles que cambian entre versiones:
-
-- OpenJS Foundation, *Node.js Documentation*.
-- IETF, especificaciones HTTP Semantics, OAuth 2.0 y JSON.
-- OWASP Foundation, *Application Security Verification Standard*.
-- ACM/IEEE-CS/AAAI, *Computer Science Curricula 2023*.
-- IEEE Computer Society, *SWEBOK Guide V4.0*.
-
-## Resumen del módulo
-
-**Puntos clave**
-
-- El logging estructurado en JSON con Pino es indexable y consultable de forma confiable, a diferencia del texto libre de `console.log`.
-- Un correlation ID único por petición permite reconstruir el rastro completo de esa petición específica entre logs concurrentes masivos.
-- Excepciones no capturadas y rechazos de Promesas sin manejar deben registrarse y, generalmente, terminar deliberadamente el proceso.
-- Graceful shutdown responde ordenadamente a `SIGTERM`, completando peticiones en curso antes de terminar el proceso.
-- REST, GraphQL y gRPC son estilos de diseño de API con trade-offs distintos de flexibilidad, cacheo y rendimiento.
-
-**Conceptos aprendidos**
-
-- Logging estructurado con Pino.
-- Correlation ID y su propagación por petición.
-- Manejo de excepciones no capturadas y rechazos sin manejar.
-- Health checks y graceful shutdown.
-- Panorama comparativo de REST, GraphQL y gRPC.
-
-**Próximos pasos**
-
-En el Módulo 10 aprenderás los errores de seguridad más comunes en APIs Node (inyección SQL, XSS, falta de rate limiting) y cómo mitigarlos sistemáticamente.
-
-**Recursos adicionales**
-
-- Documentación oficial de Pino (getpino.io).
-- Documentación oficial de Node.js: "process" (eventos `uncaughtException`, `unhandledRejection`, señales).
-- Documentación de Apollo Server y de gRPC (grpc.io) para quien quiera profundizar en alternativas a REST.

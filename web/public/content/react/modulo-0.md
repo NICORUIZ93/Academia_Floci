@@ -1,33 +1,5 @@
 # Módulo 0: JSX, componentes y props
 
-## Sílabo
-
-**Objetivo general**
-
-Comprender React como un modelo declarativo que describe la interfaz como una función del estado, dominar JSX como azúcar sintáctica sobre `createElement`, y construir componentes reutilizables mediante composición.
-
-**Objetivos específicos**
-
-1. Explicar qué transforma realmente JSX por debajo.
-2. Renderizar listas con `key` estable y explicar por qué el índice es riesgoso.
-3. Componer componentes pequeños usando `children` en vez de herencia.
-4. Aplicar renderizado condicional con `&&` y el operador ternario, sabiendo cuándo usar cada uno.
-5. Explicar la diferencia entre React describiendo la UI declarativamente y la manipulación imperativa del DOM.
-
-**Contenido**
-
-- JSX: expresiones embebidas y listas con `key`.
-- Componentes de función y props.
-- Composición frente a herencia.
-- Renderizado condicional.
-- Fragments (`<> </>`) y `children`.
-- Estilos: CSS Modules, Styled Components y Tailwind.
-
-**Evaluación**
-
-Set de componentes de presentación reutilizables (botón, tarjeta, lista), más tres ejercicios de evaluación.
-
----
 
 ## Antes de comenzar: instala el entorno
 
@@ -155,21 +127,6 @@ No crees un proyecto desechable por módulo. Conserva un único repositorio que 
 
 Al iniciar cada laboratorio crea una rama `modulo-N`, implementa el incremento, verifica el criterio de éxito y fusiona solo con pruebas verdes. Si un módulo necesita un experimento aislado, colócalo en `experiments/modulo-N/`; el producto acumulativo permanece ejecutable. Al terminar, otra persona debe poder clonar el repositorio y reproducir el último hito siguiendo únicamente el README.
 
-## Criterio transversal de calidad del código
-
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
 
 ## Laboratorio práctico
 
@@ -194,40 +151,3 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 - **Confundir `class` con `className`.** JSX usa `className` porque `class` es palabra reservada en JavaScript.
 
 ---
-
-
-
-## Bibliografía y fundamento académico
-
-Estas fuentes sustentan los conceptos y deben consultarse para verificar detalles que cambian entre versiones:
-
-- Meta Open Source, *React Documentation*.
-- WHATWG, estándares de DOM, HTML y Fetch.
-- W3C, *Web Content Accessibility Guidelines (WCAG)*.
-- ACM/IEEE-CS/AAAI, *Computer Science Curricula 2023*.
-- IEEE Computer Society, *SWEBOK Guide V4.0*.
-
-## Resumen del módulo
-
-**Puntos clave**
-
-- JSX es azúcar sintáctica sobre `createElement`, no un lenguaje de plantillas separado.
-- Una `key` estable e inherente al dato evita bugs sutiles al reordenar listas.
-- React favorece composición de componentes pequeños con `children` sobre herencia de clases.
-- El renderizado condicional reutiliza operadores nativos de JavaScript (`&&`, ternario).
-
-**Conceptos aprendidos**
-
-- JSX y su transformación a `createElement`.
-- Listas con `key` estable.
-- Composición sobre herencia y Fragments.
-- Renderizado condicional y opciones de estilado.
-
-**Próximos pasos**
-
-En el Módulo 1 aprenderás estado local y el ciclo de render: `useState`, actualizaciones funcionales, render vs commit, y batching.
-
-**Recursos adicionales**
-
-- Documentación oficial de React (react.dev): "Writing Markup with JSX" y "Rendering Lists".
-- Ejemplos de código ejecutables de este track, en JSX: carpeta [`examples/tracks/react/`](https://github.com/NICORUIZ93/Academia_Floci/tree/main/examples/tracks/react) del repositorio — `hooks-state.jsx` (Módulos 1-2), `custom-hook.jsx` (Módulo 2), `context-provider.jsx` (Módulo 4), `router-setup.jsx` (Módulo 5), `data-fetching.jsx` (Módulo 6).

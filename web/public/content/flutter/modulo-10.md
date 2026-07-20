@@ -1,30 +1,5 @@
 # Módulo 10: Theming, accesibilidad y Material/Cupertino
 
-## Sílabo
-
-**Objetivo general**
-
-Construir una app pulida que se sienta nativa en ambas plataformas sin duplicar código, usando `ThemeData` con Material 3, adaptación explícita entre widgets Material y Cupertino según la plataforma detectada en runtime, accesibilidad con `Semantics`, y soporte completo de dark mode.
-
-**Objetivos específicos**
-
-1. Definir un `ThemeData` con Material 3 aplicado a toda la app.
-2. Detectar la plataforma en runtime y mostrar el widget adaptado correspondiente.
-3. Agregar `Semantics` con labels apropiados a elementos sin texto visible.
-4. Implementar soporte completo de dark mode.
-
-**Contenido**
-
-- `ThemeData` y Material 3.
-- Adaptación Material vs Cupertino.
-- Accesibilidad (`Semantics`, soporte de lectores de pantalla).
-- Dark mode.
-
-**Evaluación**
-
-App con theming consistente, dark mode y accesibilidad auditada, más tres ejercicios de evaluación.
-
----
 
 ## Aprende construyendo
 
@@ -119,21 +94,6 @@ Semantics(label: 'Eliminar tarea', button: true, child: IconButton(icon: Icon(Ic
 
 ---
 
-## Criterio transversal de calidad del código
-
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
 
 ## Laboratorio práctico
 
@@ -157,39 +117,3 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 - **Probar solo un modo de color (claro u oscuro) y asumir que el otro funciona igual.** Prueba explícitamente ambos en dispositivo real.
 
 ---
-
-
-
-## Bibliografía y fundamento académico
-
-Estas fuentes sustentan los conceptos y deben consultarse para verificar detalles que cambian entre versiones:
-
-- Google, *Flutter Documentation* y guías de arquitectura y rendimiento.
-- Google, *Dart Language Documentation* y *Effective Dart*.
-- OWASP Foundation, *Mobile Application Security Verification Standard*.
-- ACM/IEEE-CS/AAAI, *Computer Science Curricula 2023*.
-- IEEE Computer Society, *SWEBOK Guide V4.0*.
-
-## Resumen del módulo
-
-**Puntos clave**
-
-- Centralizar `ThemeData` con Material 3 garantiza coherencia visual sin repetir configuración en cada widget.
-- Adaptar Material/Cupertino según la plataforma detectada hace que una app Flutter se sienta genuinamente nativa en cada sistema operativo.
-- `Semantics` con labels apropiados es necesario para que TalkBack/VoiceOver describan correctamente elementos sin texto visible.
-- Probar explícitamente ambos modos de color revela problemas de contraste o iconografía que no se notarían probando solo uno.
-
-**Conceptos aprendidos**
-
-- `ThemeData` y Material 3.
-- Adaptación Material vs Cupertino.
-- Accesibilidad con `Semantics`.
-- Dark mode.
-
-**Próximos pasos**
-
-En el Módulo 11 aprenderás a publicar tu app en App Store y Google Play desde una sola base de código, con builds de release separados para cada tienda.
-
-**Recursos adicionales**
-
-- Documentación oficial de Material 3 en Flutter (docs.flutter.dev/ui/design/material).

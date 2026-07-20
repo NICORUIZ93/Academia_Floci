@@ -1,31 +1,5 @@
 # Módulo 4: CI — pipelines automatizados
 
-## Sílabo
-
-**Objetivo general**
-
-Diseñar pipelines de integración continua que construyan, prueben y validen automáticamente cada cambio de código, usando matrices de build, caché de dependencias y artifacts, con CI obligatorio como norma técnica, no social.
-
-**Objetivos específicos**
-
-1. Crear un workflow de CI que ejecute lint y tests en cada pull request.
-2. Configurar caché de dependencias y medir su impacto en la velocidad del pipeline.
-3. Configurar una matriz de build que ejecute pruebas en múltiples versiones de runtime.
-4. Publicar artifacts (como reportes de cobertura) desde una ejecución de pipeline.
-5. Configurar el repositorio para que CI sea obligatorio antes de fusionar un pull request.
-
-**Contenido**
-
-- Jobs, steps y matrices de build.
-- Caché de dependencias en CI.
-- Artifacts y reportes de cobertura.
-- Pipelines como código (GitHub Actions/GitLab CI).
-
-**Evaluación**
-
-Un laboratorio que construye un pipeline de CI completo con matriz, caché y artifacts, y tres ejercicios de evaluación sobre diseño de jobs, diagnóstico de caché ineficaz, y política de CI obligatorio.
-
----
 
 ## Aprende construyendo
 
@@ -148,21 +122,6 @@ on: schedule (cron)  ──▶  dispara el workflow en un horario programado
 
 ---
 
-## Criterio transversal de calidad del código
-
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
 
 ## Laboratorio práctico
 
@@ -192,42 +151,3 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 - **La matriz ejecuta las combinaciones de forma secuencial en vez de paralela.** Esto normalmente indica un límite de runners concurrentes disponibles en tu cuenta o plan de GitHub Actions, no un error de configuración; revisa los límites de concurrencia de tu plan si esto es un problema recurrente.
 
 ---
-
-
-
-## Bibliografía y fundamento académico
-
-Estas fuentes sustentan los conceptos y deben consultarse para verificar detalles que cambian entre versiones:
-
-- CNCF, documentación oficial de Kubernetes, Prometheus y OpenTelemetry.
-- HashiCorp, *Terraform Documentation*.
-- Beyer et al., *Site Reliability Engineering*; Forsgren et al., *Accelerate*.
-- ACM/IEEE-CS/AAAI, *Computer Science Curricula 2023*.
-- IEEE Computer Society, *SWEBOK Guide V4.0*.
-
-## Resumen del módulo
-
-**Puntos clave**
-
-- Los jobs de un pipeline corren en paralelo por defecto; los steps dentro de un job son secuenciales; las matrices ejecutan el mismo job múltiples veces con combinaciones distintas de parámetros.
-- El caché de dependencias, con una clave derivada del contenido del lockfile, evita reinstalar dependencias en cada ejecución mientras estas no cambien.
-- Los artifacts hacen que los resultados de una ejecución (reportes de cobertura, binarios) queden disponibles para consulta y para pasar información entre jobs distintos.
-- Tratar el pipeline como código versionado, junto al proyecto, aplica al proceso de CI/CD la misma trazabilidad y revisión que ya se aplica al código de aplicación.
-- Hacer CI obligatorio a nivel técnico del repositorio convierte "no romper la rama principal" en una regla imposible de saltarse, en vez de depender de la disciplina individual de cada persona.
-
-**Conceptos aprendidos**
-
-- Jobs, steps, ejecución paralela y matrices de build.
-- Caché de dependencias y su mecanismo de invalidación basado en el lockfile.
-- Artifacts como mecanismo de trazabilidad y de paso de información entre jobs.
-- Pipelines como código versionado, con GitHub Actions y GitLab CI como ejemplos concretos.
-
-**Próximos pasos**
-
-En el Módulo 5 vas a diseñar estrategias de despliegue (CD) que lleven código validado por CI a producción sin downtime, con capacidad de revertir en segundos si algo sale mal.
-
-**Recursos adicionales**
-
-- Documentación oficial de GitHub Actions: sintaxis completa de workflows, matrices, caché y artifacts.
-- Documentación oficial de GitLab CI/CD como alternativa comparable.
-- Guías de buenas prácticas de diseño de pipelines publicadas por ambas plataformas.

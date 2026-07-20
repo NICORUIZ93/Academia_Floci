@@ -1,34 +1,5 @@
 # Módulo 4: Streams y programación funcional
 
-## Sílabo
-
-**Objetivo general**
-
-Procesar colecciones con un estilo declarativo mediante la Stream API introducida en Java 8, dominando lambdas, referencias a métodos, `Optional` para evitar `null` explícitamente, y saber cuándo un stream paralelo realmente ayuda.
-
-**Objetivos específicos**
-
-1. Encadenar `map`/`filter`/`collect` para transformar colecciones declarativamente.
-2. Usar `reduce` para agregaciones.
-3. Reemplazar lambdas verbosas por referencias a métodos.
-4. Reemplazar el uso de `null` por `Optional`.
-5. Determinar cuándo un stream paralelo mejora o empeora el rendimiento.
-
-**Contenido**
-
-- Stream API: map/filter/reduce/collect.
-- Lambdas y referencias a métodos.
-- Optional: evitar null de forma explícita.
-- Streams paralelos: cuándo ayudan.
-- peek, distinct, sorted, limit y skip.
-- Collectors: groupingBy, partitioningBy y joining.
-- `@FunctionalInterface` y sus reglas.
-
-**Evaluación**
-
-Pipeline de procesamiento de datos con Streams que reemplaza loops manuales, más tres ejercicios de evaluación.
-
----
 
 ## Aprende construyendo
 
@@ -103,21 +74,6 @@ long conteo = numeros.parallelStream().filter(this::esPrimo).count();
 
 ---
 
-## Criterio transversal de calidad del código
-
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
 
 ## Laboratorio práctico
 
@@ -142,39 +98,3 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 - **Usar lambdas verbosas donde una referencia a método sería más clara.** Prefiere `Clase::metodo` cuando la lambda simplemente invoca ese método.
 
 ---
-
-
-
-## Bibliografía y fundamento académico
-
-Estas fuentes sustentan los conceptos y deben consultarse para verificar detalles que cambian entre versiones:
-
-- Oracle, *Java Language Specification* y *Java Virtual Machine Specification*.
-- OpenJDK, documentación de Java SE, JFR y JMH.
-- Bloch, J., *Effective Java*.
-- ACM/IEEE-CS/AAAI, *Computer Science Curricula 2023*.
-- IEEE Computer Society, *SWEBOK Guide V4.0*.
-
-## Resumen del módulo
-
-**Puntos clave**
-
-- Los Streams expresan transformaciones de colecciones de forma declarativa mediante operaciones intermedias y una operación terminal que dispara la ejecución.
-- `Optional` obliga, en el tipo de retorno, a manejar explícitamente el caso de ausencia de valor.
-- Los streams paralelos solo mejoran el rendimiento con datasets grandes y operaciones CPU-intensivas sin efectos secundarios.
-- Las referencias a métodos son una forma más concisa de expresar lambdas que simplemente invocan un método existente.
-
-**Conceptos aprendidos**
-
-- Stream API: map/filter/reduce/collect.
-- Lambdas y referencias a métodos.
-- `Optional` para evitar null explícitamente.
-- Streams paralelos y cuándo ayudan.
-
-**Próximos pasos**
-
-En el Módulo 5 aprenderás concurrencia: hilos, `ExecutorService`, `CompletableFuture`, y virtual threads de Java 21.
-
-**Recursos adicionales**
-
-- Documentación oficial de Java (docs.oracle.com/en/java): "Stream" y "Optional".

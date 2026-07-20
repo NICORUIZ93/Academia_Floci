@@ -1,31 +1,5 @@
 # Módulo 12: Proyecto integrador: app Android completa
 
-## Sílabo
-
-**Objetivo general**
-
-Unir Compose, Room, Retrofit, Hilt y testing en una app Android real, integrando arquitectura MVVM con UDF, persistencia offline-first, inyección de dependencias completa y una suite de tests que dé confianza antes de publicar en Play Console.
-
-**Objetivos específicos**
-
-1. Diseñar la arquitectura MVVM completa: UI Compose → ViewModel (StateFlow) → Repositorio → Room + Retrofit.
-2. Implementar persistencia offline-first end-to-end.
-3. Inyectar todas las dependencias con Hilt, sin instanciación manual.
-4. Escribir tests del ViewModel principal y al menos un test de Compose UI.
-5. Generar el App Bundle firmado listo para Play Console.
-
-**Contenido**
-
-- Arquitectura MVVM con UDF.
-- Persistencia offline-first.
-- Inyección de dependencias con Hilt.
-- Tests de ViewModel y UI.
-
-**Evaluación**
-
-App Android con Compose, datos reales, persistencia offline y tests, más tres ejercicios de evaluación.
-
----
 
 ## Aprende construyendo
 
@@ -158,21 +132,6 @@ Conecta la política a Fused Location Provider y foreground service solo durante
 
 El capítulo se completa cuando la evidencia permite a otra persona reproducir el flujo y explicar qué garantías ofrece y cuáles todavía no.
 
-## Criterio transversal de calidad del código
-
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
 
 ## Laboratorio práctico
 
@@ -197,39 +156,3 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 - **Omitir tests de Compose UI, confiando solo en tests de ViewModel.** No cubre la brecha entre estado correcto y renderizado correcto (Módulo 9).
 
 ---
-
-
-
-## Bibliografía y fundamento académico
-
-Estas fuentes sustentan los conceptos y deben consultarse para verificar detalles que cambian entre versiones:
-
-- Google, *Android Developers Documentation* y guías de arquitectura de aplicaciones.
-- JetBrains, *Kotlin Language Documentation*.
-- OWASP Foundation, *Mobile Application Security Verification Standard*.
-- ACM/IEEE-CS/AAAI, *Computer Science Curricula 2023*.
-- IEEE Computer Society, *SWEBOK Guide V4.0*.
-
-## Resumen del módulo
-
-**Puntos clave**
-
-- El proyecto integrador combina UI declarativa, navegación, UDF, offline-first, DI y testing en una única arquitectura coherente.
-- Cada capa (UI, ViewModel, Repositorio, Room, Retrofit) tiene una única responsabilidad y se comunica en una única dirección predecible.
-- La ausencia total de instanciación manual (todo inyectado vía Hilt) es lo que habilita que el sistema completo sea testeable de forma aislada.
-- Una app Android profesional se define por la combinación de flujo predecible, resiliencia offline, desacoplamiento y confianza vía tests, no solo por su UI.
-
-**Conceptos aprendidos**
-
-- Arquitectura MVVM con UDF.
-- Persistencia offline-first.
-- Inyección de dependencias con Hilt.
-- Tests de ViewModel y UI.
-
-**Próximos pasos**
-
-Con el track de Android completo, los mismos principios de arquitectura (UDF, offline-first, DI, testing) reaparecerán en el track de iOS con SwiftUI y Combine/async-await, y en Kotlin Multiplatform si decides compartir lógica de negocio entre ambas plataformas.
-
-**Recursos adicionales**
-
-- Guía oficial de arquitectura de apps Android (developer.android.com/topic/architecture).

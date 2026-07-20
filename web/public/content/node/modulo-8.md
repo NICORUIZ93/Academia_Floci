@@ -1,32 +1,5 @@
 # Módulo 8: Patrones asíncronos avanzados
 
-## Sílabo
-
-**Objetivo general**
-
-Escalar una aplicación Node más allá de una sola instancia y un solo hilo, usando Worker Threads para trabajo CPU-bound, el módulo cluster para aprovechar múltiples núcleos, y colas de trabajo para procesamiento en background.
-
-**Objetivos específicos**
-
-1. Mover una tarea CPU-bound a un Worker Thread sin bloquear el Event Loop principal.
-2. Usar el módulo `cluster` para balancear peticiones entre múltiples procesos.
-3. Configurar una cola de trabajo con BullMQ y Redis para procesamiento en background.
-4. Configurar reintentos automáticos con backoff exponencial para jobs que fallan.
-
-**Contenido**
-
-- Worker threads para CPU-bound.
-- Cluster module y balanceo entre procesos.
-- Colas de trabajo con BullMQ + Redis.
-- Procesamiento en background.
-- `pm2` en modo cluster y `--max-old-space-size`.
-- Heap snapshots y detección de memory leaks.
-
-**Evaluación**
-
-Una cola de procesamiento en background (envío de emails) con reintentos y backoff, más tres ejercicios de evaluación.
-
----
 
 ## Aprende construyendo
 
@@ -128,21 +101,6 @@ node --max-old-space-size=4096 servidor.js   # ajusta el límite de memoria de V
 
 ---
 
-## Criterio transversal de calidad del código
-
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
 
 ## Laboratorio práctico
 
@@ -168,40 +126,3 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 - **No limitar el número de reintentos en una cola de trabajo.** Sin un límite (`attempts`), un job que falla permanentemente podría reintentarse indefinidamente sin ningún beneficio real.
 
 ---
-
-
-
-## Bibliografía y fundamento académico
-
-Estas fuentes sustentan los conceptos y deben consultarse para verificar detalles que cambian entre versiones:
-
-- OpenJS Foundation, *Node.js Documentation*.
-- IETF, especificaciones HTTP Semantics, OAuth 2.0 y JSON.
-- OWASP Foundation, *Application Security Verification Standard*.
-- ACM/IEEE-CS/AAAI, *Computer Science Curricula 2023*.
-- IEEE Computer Society, *SWEBOK Guide V4.0*.
-
-## Resumen del módulo
-
-**Puntos clave**
-
-- Los Worker Threads ejecutan cómputo CPU-bound en un hilo separado sin bloquear el Event Loop principal, comunicándose por mensajes.
-- El módulo cluster bifurca procesos completamente aislados en memoria, uno por núcleo, con balanceo automático de conexiones.
-- BullMQ desacopla trabajo pesado del ciclo request-response mediante una cola respaldada por Redis, con reintentos configurables por backoff.
-- PM2 gestiona procesos Node fuera de un contexto de contenedores; heap snapshots permiten diagnosticar fugas de memoria comparando el estado del heap en distintos momentos.
-
-**Conceptos aprendidos**
-
-- Worker Threads para trabajo CPU-bound genuino.
-- El módulo cluster y el aislamiento de memoria entre procesos.
-- Colas de trabajo con BullMQ y reintentos con backoff exponencial.
-- PM2, ajuste de memoria de V8, y diagnóstico de fugas con heap snapshots.
-
-**Próximos pasos**
-
-En el Módulo 9 aprenderás observabilidad en producción: logging estructurado, correlation IDs, manejo de excepciones no capturadas, y graceful shutdown.
-
-**Recursos adicionales**
-
-- Documentación oficial de Node.js: "Worker threads" y "Cluster".
-- Documentación oficial de BullMQ (docs.bullmq.io).

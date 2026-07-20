@@ -1,31 +1,5 @@
 # Módulo 13: Proyecto integrador
 
-## Sílabo
-
-**Objetivo general**
-
-Unir programación orientada a objetos, concurrencia con virtual threads, testing con JUnit y Mockito, y un build reproducible en una aplicación real de consola o servicio.
-
-**Objetivos específicos**
-
-1. Diseñar la arquitectura por capas de una aplicación real.
-2. Implementar procesamiento concurrente con virtual threads.
-3. Modelar el dominio con records y sealed interfaces donde sea apropiado.
-4. Escribir tests unitarios con JUnit 5 y Mockito para la lógica crítica.
-5. Configurar un build reproducible ejecutable con un solo comando.
-
-**Contenido**
-
-- Arquitectura por capas.
-- Concurrencia con virtual threads.
-- Tests con JUnit y Mockito.
-- Build reproducible con Gradle/Maven.
-
-**Evaluación**
-
-Aplicación Java con lógica concurrente, tests y build reproducible documentado, más tres ejercicios de evaluación de cierre.
-
----
 
 ## Aprende construyendo
 
@@ -124,21 +98,6 @@ Implementa reglas base, sobrepeso y zona remota; prueba bordes, escala y redonde
 
 El capítulo se completa cuando la evidencia permite a otra persona reproducir el flujo y explicar qué garantías ofrece y cuáles todavía no.
 
-## Criterio transversal de calidad del código
-
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
 
 ## Laboratorio práctico
 
@@ -163,38 +122,3 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 - **Dejar el build sin documentar el comando de ejecución.** Documenta claramente cómo clonar y ejecutar el proyecto con un solo comando.
 
 ---
-
-
-
-## Bibliografía y fundamento académico
-
-Estas fuentes sustentan los conceptos y deben consultarse para verificar detalles que cambian entre versiones:
-
-- Oracle, *Java Language Specification* y *Java Virtual Machine Specification*.
-- OpenJDK, documentación de Java SE, JFR y JMH.
-- Bloch, J., *Effective Java*.
-- ACM/IEEE-CS/AAAI, *Computer Science Curricula 2023*.
-- IEEE Computer Society, *SWEBOK Guide V4.0*.
-
-## Resumen del módulo
-
-**Puntos clave**
-
-- La arquitectura por capas (dominio, servicio, infraestructura) separa responsabilidades con razones de cambio distintas.
-- El procesamiento concurrente con virtual threads combinado con un resultado modelado como sealed interface maneja éxito/error explícitamente.
-- Un build reproducible ejecutable con un solo comando elimina fricción de configuración manual.
-- Java moderno (17-21) reduce boilerplate histórico sin sacrificar tipado fuerte ni el rendimiento maduro de la JVM.
-
-**Conceptos aprendidos**
-
-- Arquitectura por capas de un proyecto real.
-- Integración de concurrencia, modelado de dominio y testing.
-- Build reproducible con Gradle/Maven.
-
-**Próximos pasos**
-
-Con el track de Java completo, estás preparado para construir, mantener y escalar aplicaciones y servicios Java modernos, combinando POO, concurrencia con virtual threads, modelado de dominio expresivo, testing riguroso y builds reproducibles.
-
-**Recursos adicionales**
-
-- Documentación oficial de Java (docs.oracle.com/en/java) como referencia continua para profundizar en cualquiera de los temas de este track.

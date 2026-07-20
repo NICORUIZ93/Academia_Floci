@@ -1,31 +1,5 @@
 # Módulo 12: Proyecto integrador — SPA sin framework
 
-## Sílabo
-
-**Objetivo general**
-
-Demostrar dominio de los fundamentos de JavaScript construyendo una Single Page Application real y funcional sin depender de Angular, React ni Vue, integrando routing manual, gestión de estado propia, y consumo de una API real.
-
-**Objetivos específicos**
-
-1. Implementar un router manual con la History API para múltiples rutas.
-2. Construir un store propio que notifique a la UI cuando el estado cambia.
-3. Conectar el store a una API real con manejo explícito de estados de carga y error.
-4. Renderizar vistas actualizando el DOM manualmente según la ruta activa y el estado.
-5. Generar y auditar un build de producción optimizado con Vite.
-
-**Contenido**
-
-- Routing manual con History API.
-- Estado de aplicación con un store propio.
-- Consumo de una API real con manejo de errores.
-- Build de producción optimizado.
-
-**Evaluación**
-
-Una SPA funcional (varias vistas, estado compartido, datos reales) sin ningún framework de UI, más tres ejercicios de evaluación.
-
----
 
 ## Aprende construyendo
 
@@ -183,21 +157,6 @@ Prueba caracteres HTML en `publicCode`, fecha inválida, actualización de estad
 
 El capítulo se completa cuando la evidencia permite a otra persona reproducir el flujo y explicar qué garantías ofrece y cuáles todavía no.
 
-## Criterio transversal de calidad del código
-
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
 
 ## Laboratorio práctico
 
@@ -223,41 +182,3 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 - **Dejar la interfaz en un estado ambiguo cuando `fetch` falla, sin ningún mensaje visible.** Verifica que el estado `error` del store siempre se traduzca en un mensaje claro y visible para el usuario.
 
 ---
-
-
-
-## Bibliografía y fundamento académico
-
-Estas fuentes sustentan los conceptos y deben consultarse para verificar detalles que cambian entre versiones:
-
-- ECMA International, *ECMAScript Language Specification*.
-- MDN Web Docs, guías de JavaScript y Web APIs.
-- WHATWG, *HTML Living Standard* y *Fetch Standard*.
-- ACM/IEEE-CS/AAAI, *Computer Science Curricula 2023*.
-- IEEE Computer Society, *SWEBOK Guide V4.0*.
-
-## Resumen del módulo
-
-**Puntos clave**
-
-- La History API (`pushState` + `popstate`) permite construir routing manual sin recargas completas de página, sincronizando URL y contenido renderizado.
-- Un store propio centraliza estado compartido y notifica a suscriptores mediante el patrón observador, con actualización inmutable.
-- Modelar explícitamente carga/datos/error en el estado es el patrón estándar para comunicar claramente el progreso de operaciones asíncronas.
-- El ciclo completo ruta→estado→renderizado→acción→estado es exactamente lo que Angular y React automatizan mediante sus propios mecanismos.
-- Construir esto manualmente antes de aprender un framework da una base conceptual sólida para entender qué problema real resuelve cada capacidad de esos frameworks.
-
-**Conceptos aprendidos**
-
-- Routing manual con la History API.
-- Diseño de un store propio con notificación de cambios.
-- Integración de datos asíncronos reales con manejo explícito de estados.
-- Síntesis completa de los doce módulos del track en un proyecto funcional real.
-
-**Próximos pasos**
-
-Con el track de JavaScript completo, el siguiente paso natural es el track de Node.js (para aplicar estos fundamentos al backend) o el track de Angular/React (para aprender un framework completo que automatiza gran parte de lo construido manualmente en este proyecto).
-
-**Recursos adicionales**
-
-- MDN Web Docs: "Working with the History API".
-- El artículo "Build Your Own React" (Rodrigo Pombo) para profundizar en cómo un framework real implementa internamente el diffing y el renderizado eficiente.

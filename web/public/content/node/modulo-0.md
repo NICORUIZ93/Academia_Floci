@@ -1,33 +1,5 @@
 # Módulo 0: El runtime de Node — V8, libuv y el Event Loop
 
-## Sílabo
-
-**Objetivo general**
-
-Entender que Node.js no es simplemente "JavaScript en el servidor", sino un runtime completo con I/O no bloqueante construido sobre V8 y libuv, dominando las fases del Event Loop específicas de Node y los módulos core esenciales.
-
-**Objetivos específicos**
-
-1. Explicar la diferencia entre el Event Loop del navegador y el de Node.
-2. Describir las fases del Event Loop de Node (timers, poll, check, entre otras).
-3. Predecir el orden de ejecución entre `setTimeout`, `setImmediate` y `process.nextTick`.
-4. Usar el objeto `process` para leer argumentos, variables de entorno e información del runtime.
-5. Identificar los módulos core más relevantes de Node (`os`, `buffer`, `crypto`, `util`, `child_process`, `cluster`).
-
-**Contenido**
-
-- Diferencias entre el Event Loop del navegador y el de Node.
-- Fases del Event Loop (timers, poll, check).
-- `process`, `global` y módulos core.
-- `npx` y la CLI de Node.
-- Módulos core: `os`, `buffer`, `crypto`, `util`, `child_process` y `cluster`.
-- Event-driven architecture y non-blocking I/O.
-
-**Evaluación**
-
-Un script que demuestra el orden de ejecución entre `setImmediate`, `setTimeout` y `process.nextTick`, más tres ejercicios de evaluación.
-
----
 
 ## Antes de comenzar: instala Node sin problemas de permisos
 
@@ -172,21 +144,6 @@ No crees un proyecto desechable por módulo. Conserva un único repositorio que 
 
 Al iniciar cada laboratorio crea una rama `modulo-N`, implementa el incremento, verifica el criterio de éxito y fusiona solo con pruebas verdes. Si un módulo necesita un experimento aislado, colócalo en `experiments/modulo-N/`; el producto acumulativo permanece ejecutable. Al terminar, otra persona debe poder clonar el repositorio y reproducir el último hito siguiendo únicamente el README.
 
-## Criterio transversal de calidad del código
-
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
 
 ## Laboratorio práctico
 
@@ -211,42 +168,3 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 - **Confundir `global` con el uso idiomático de módulos.** Node fomenta módulos explícitos sobre variables verdaderamente globales; reserva `global` para casos muy específicos.
 
 ---
-
-
-
-## Bibliografía y fundamento académico
-
-Estas fuentes sustentan los conceptos y deben consultarse para verificar detalles que cambian entre versiones:
-
-- OpenJS Foundation, *Node.js Documentation*.
-- IETF, especificaciones HTTP Semantics, OAuth 2.0 y JSON.
-- OWASP Foundation, *Application Security Verification Standard*.
-- ACM/IEEE-CS/AAAI, *Computer Science Curricula 2023*.
-- IEEE Computer Society, *SWEBOK Guide V4.0*.
-
-## Resumen del módulo
-
-**Puntos clave**
-
-- Node combina V8 (ejecuta JavaScript) con libuv (Event Loop e I/O no bloqueante), permitiendo manejar miles de conexiones con un solo hilo si la carga es dominada por I/O.
-- El Event Loop de Node tiene fases (timers, poll, check, entre otras) ejecutadas en orden fijo y repetido.
-- `process.nextTick` tiene prioridad incluso sobre las fases del Event Loop; su uso recursivo sin límite puede causar inanición de I/O.
-- `process` expone información y control sobre el proceso Node en ejecución; los módulos core cubren capacidades fundamentales de un runtime de servidor.
-- La arquitectura orientada a eventos (`EventEmitter`) y el no bloqueo son los dos principios de diseño que unifican la API de Node.
-
-**Conceptos aprendidos**
-
-- La arquitectura de dos capas de Node (V8 + libuv).
-- Las fases del Event Loop y la prioridad de `process.nextTick`.
-- El objeto `process` y los módulos core esenciales.
-- Event-driven architecture y el principio de no bloqueo.
-
-**Próximos pasos**
-
-En el Módulo 1 aprenderás a gestionar dependencias de forma reproducible con npm/pnpm, entendiendo lockfiles, semver y workspaces para monorepos.
-
-**Recursos adicionales**
-
-- Documentación oficial de Node.js: "The Node.js Event Loop, Timers, and process.nextTick()".
-- Documentación de libuv (libuv.org) para quien quiera profundizar en el detalle de implementación.
-- Ejemplos de código ejecutables de este track, en JavaScript: carpeta [`examples/tracks/node/`](https://github.com/NICORUIZ93/Academia_Floci/tree/main/examples/tracks/node) del repositorio — `http-server-native.js` (Módulo 3), `express-middleware.js` (Módulo 4), `db-orm.js` (Módulo 5), `jwt-auth.js` (Módulo 6), `async-patterns.js` (Módulo 8).

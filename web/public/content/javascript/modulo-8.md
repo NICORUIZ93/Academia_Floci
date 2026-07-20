@@ -1,33 +1,5 @@
 # Módulo 8: El DOM y eventos del navegador
 
-## Sílabo
-
-**Objetivo general**
-
-Entender cómo JavaScript manipula una página web real antes de depender de cualquier framework: selección y manipulación del DOM, delegación de eventos, formularios, y las Web APIs más usadas del navegador.
-
-**Objetivos específicos**
-
-1. Seleccionar y manipular elementos del DOM dinámicamente.
-2. Aplicar delegación de eventos y explicar su ventaja de rendimiento.
-3. Construir formularios con validación nativa.
-4. Usar `localStorage`, `IntersectionObserver`, `ResizeObserver` y `MutationObserver`.
-5. Aplicar `requestAnimationFrame` y `requestIdleCallback` apropiadamente.
-
-**Contenido**
-
-- Selección y manipulación del DOM.
-- Delegación de eventos.
-- Formularios y validación nativa.
-- Web APIs: `localStorage`, `IntersectionObserver`.
-- `ResizeObserver` y `MutationObserver`.
-- `requestAnimationFrame` y `requestIdleCallback`.
-
-**Evaluación**
-
-Un componente de UI interactivo (lista filtrable) sin frameworks, solo DOM API, más tres ejercicios de evaluación.
-
----
 
 ## Aprende construyendo
 
@@ -202,21 +174,6 @@ requestIdleCallback((deadline) => {
 
 ---
 
-## Criterio transversal de calidad del código
-
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
 
 ## Laboratorio práctico
 
@@ -242,43 +199,3 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 - **Olvidar desconectar un `IntersectionObserver`/`MutationObserver`/`ResizeObserver` cuando el elemento observado se elimina.** Llama a `.disconnect()` explícitamente para evitar overhead innecesario acumulado.
 
 ---
-
-
-
-## Bibliografía y fundamento académico
-
-Estas fuentes sustentan los conceptos y deben consultarse para verificar detalles que cambian entre versiones:
-
-- ECMA International, *ECMAScript Language Specification*.
-- MDN Web Docs, guías de JavaScript y Web APIs.
-- WHATWG, *HTML Living Standard* y *Fetch Standard*.
-- ACM/IEEE-CS/AAAI, *Computer Science Curricula 2023*.
-- IEEE Computer Society, *SWEBOK Guide V4.0*.
-
-## Resumen del módulo
-
-**Puntos clave**
-
-- `querySelector`/`querySelectorAll` y `createElement` son la base de la manipulación dinámica del DOM; `DocumentFragment` optimiza inserciones múltiples.
-- La delegación de eventos, aprovechando el bubbling, es más eficiente en memoria y funciona automáticamente con elementos dinámicos futuros.
-- La validación nativa de formularios (`required`, `pattern`, `setCustomValidity`) cubre casos comunes sin JavaScript adicional, pero nunca reemplaza la validación del servidor.
-- `localStorage` persiste datos simples entre sesiones; `IntersectionObserver` detecta visibilidad de forma eficiente sin sondeo de scroll.
-- `ResizeObserver` y `MutationObserver` notifican eficientemente cambios de tamaño y de estructura del DOM.
-- `requestAnimationFrame` sincroniza animaciones con el repintado real; `requestIdleCallback` programa trabajo de baja prioridad en tiempo ocioso.
-
-**Conceptos aprendidos**
-
-- Manipulación eficiente del DOM y su relación con lo que automatizan los frameworks.
-- Delegación de eventos como patrón estándar recomendado.
-- Validación nativa de formularios.
-- Las Web APIs de observación (`Intersection`/`Resize`/`Mutation`) y `localStorage`.
-- Sincronización con el ciclo de renderizado y trabajo de baja prioridad.
-
-**Próximos pasos**
-
-En el Módulo 9 aprenderás testing y calidad de código: Vitest, mocks/spies, ESLint/Prettier, y cómo medir cobertura de código de forma significativa.
-
-**Recursos adicionales**
-
-- MDN Web Docs: "Document Object Model", "Event delegation", "Constraint validation", "IntersectionObserver".
-- web.dev (Google): guías sobre rendimiento de renderizado y `requestIdleCallback`.

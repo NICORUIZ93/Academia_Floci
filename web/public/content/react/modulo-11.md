@@ -1,31 +1,5 @@
 # Módulo 11: TypeScript con React
 
-## Sílabo
-
-**Objetivo general**
-
-Tipar props, estado, hooks personalizados y eventos de React para detectar errores en tiempo de compilación en vez de en ejecución, incluyendo componentes polimórficos correctamente tipados.
-
-**Objetivos específicos**
-
-1. Tipar props de un componente con una interface, incluyendo `children`.
-2. Escribir un hook personalizado genérico reutilizable para cualquier tipo de dato.
-3. Tipar correctamente eventos sintéticos de React.
-4. Migrar un componente a TypeScript estricto sin usar `any`.
-5. Explicar cómo tipar un componente polimórfico.
-
-**Contenido**
-
-- Tipado de props y `children`.
-- Generics en hooks personalizados.
-- Tipado de eventos sintéticos.
-- Componentes polimórficos tipados.
-
-**Evaluación**
-
-Migración de un componente complejo a TypeScript estricto sin `any`, más tres ejercicios de evaluación.
-
----
 
 ## Aprende construyendo
 
@@ -110,21 +84,6 @@ function Boton<T extends React.ElementType = 'button'>({ as, ...props }: BotonPr
 
 ---
 
-## Criterio transversal de calidad del código
-
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
 
 ## Laboratorio práctico
 
@@ -148,39 +107,3 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 - **Olvidar el parámetro de tipo al invocar un hook genérico.** Especifícalo explícitamente cuando TypeScript no pueda inferirlo del contexto.
 
 ---
-
-
-
-## Bibliografía y fundamento académico
-
-Estas fuentes sustentan los conceptos y deben consultarse para verificar detalles que cambian entre versiones:
-
-- Meta Open Source, *React Documentation*.
-- WHATWG, estándares de DOM, HTML y Fetch.
-- W3C, *Web Content Accessibility Guidelines (WCAG)*.
-- ACM/IEEE-CS/AAAI, *Computer Science Curricula 2023*.
-- IEEE Computer Society, *SWEBOK Guide V4.0*.
-
-## Resumen del módulo
-
-**Puntos clave**
-
-- Tipar props con una interface detecta errores de uso del componente en tiempo de compilación.
-- `React.ReactNode` es el tipo apropiado para `children` y contenido renderizable arbitrario.
-- Un hook genérico se reutiliza correctamente tipado para cualquier tipo de dato sin duplicar su implementación.
-- Los componentes polimórficos correctamente tipados ajustan dinámicamente qué props son válidas según el elemento renderizado.
-
-**Conceptos aprendidos**
-
-- Tipado de props y `children`.
-- Hooks genéricos con parámetros de tipo.
-- Eventos sintéticos tipados.
-- Componentes polimórficos tipados.
-
-**Próximos pasos**
-
-En el Módulo 12, el proyecto integrador final, unirás routing, estado global y data fetching en una aplicación real con TypeScript.
-
-**Recursos adicionales**
-
-- Documentación oficial de TypeScript (typescriptlang.org) y de React (react.dev): "TypeScript" en la sección de referencia.

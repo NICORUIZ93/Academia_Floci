@@ -1,30 +1,5 @@
 # Módulo 3: Navegación con Navigation Compose
 
-## Sílabo
-
-**Objetivo general**
-
-Estructurar una app con múltiples pantallas, paso de argumentos tipado, deep links y navegación anidada con stacks independientes por sección.
-
-**Objetivos específicos**
-
-1. Definir un `NavHost` con al menos 4 destinos y navegar entre ellos.
-2. Pasar un argumento tipado de una pantalla de lista a una de detalle.
-3. Configurar un deep link que abra directamente una pantalla de detalle.
-4. Implementar una bottom navigation bar con stacks de navegación independientes por sección.
-
-**Contenido**
-
-- `NavHost` y `NavController`.
-- Argumentos de navegación tipados.
-- Deep links.
-- Navegación anidada (bottom nav + stack).
-
-**Evaluación**
-
-App con al menos 4 pantallas, navegación con argumentos y un bottom navigation, más tres ejercicios de evaluación.
-
----
 
 ## Aprende construyendo
 
@@ -145,21 +120,6 @@ Cambiar de pestaña NO resetea el stack de la pestaña anterior.
 
 ---
 
-## Criterio transversal de calidad del código
-
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
 
 ## Laboratorio práctico
 
@@ -183,39 +143,3 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 - **Olvidar registrar el `uriPattern` del deep link en el manifiesto (intent-filter) además del grafo de navegación.** Ambos son necesarios para que el sistema operativo enrute la URI hacia la app.
 
 ---
-
-
-
-## Bibliografía y fundamento académico
-
-Estas fuentes sustentan los conceptos y deben consultarse para verificar detalles que cambian entre versiones:
-
-- Google, *Android Developers Documentation* y guías de arquitectura de aplicaciones.
-- JetBrains, *Kotlin Language Documentation*.
-- OWASP Foundation, *Mobile Application Security Verification Standard*.
-- ACM/IEEE-CS/AAAI, *Computer Science Curricula 2023*.
-- IEEE Computer Society, *SWEBOK Guide V4.0*.
-
-## Resumen del módulo
-
-**Puntos clave**
-
-- `NavHost` declara el grafo completo de navegación; `NavController` ejecuta transiciones y gestiona el historial automáticamente.
-- Los argumentos tipados evitan errores de conversión manual frente a un `Bundle` genérico.
-- Los deep links mapean URIs externas directamente hacia rutas ya declaradas, con argumentos resueltos automáticamente.
-- Cada sección de una bottom navigation suele necesitar su propio stack de navegación independiente.
-
-**Conceptos aprendidos**
-
-- `NavHost` y `NavController`.
-- Argumentos de navegación tipados.
-- Deep links.
-- Navegación anidada (bottom nav + stack).
-
-**Próximos pasos**
-
-En el Módulo 4 aprenderás a conectar la capa de datos con la UI de forma reactiva usando `StateFlow` y el patrón UDF completo.
-
-**Recursos adicionales**
-
-- Documentación oficial de Navigation Compose (developer.android.com/jetpack/compose/navigation).

@@ -65,14 +65,6 @@ flowchart LR
     requested="\n".join(f"- **{name}**: cubierto mediante fundamento, laboratorio y evidencia del capítulo." for name in REQUESTED[track])
     return f"""# Módulo {module}: {title}
 
-## Sílabo
-
-**Objetivo general:** dominar las capacidades avanzadas señaladas en la auditoría del track mediante una ampliación ejecutable de RutaFlow, decisiones justificadas, pruebas, seguridad y evidencia operacional.
-
-**Resultados observables:** explicar cada tecnología sin depender de marcas; implementar un incremento pequeño; comparar alternativas; provocar un fallo; medir el resultado; y escribir un runbook de recuperación.
-
-**Evaluación:** 20 % fundamento, 35 % implementación, 25 % pruebas y fallos, 10 % seguridad, 10 % documentación y comunicación.
-
 ## Aprende construyendo
 
 {''.join(sections)}
@@ -80,24 +72,6 @@ flowchart LR
 ## Trazabilidad de la auditoría original
 
 {requested}
-
-## Criterio transversal de calidad del código
-
-Usa nombres del dominio, errores tipados y límites claros. Escribe una prueba que exprese el comportamiento antes de corregir el defecto. SOLID se aplica cuando reduce el coste real de sustituir infraestructura o política; no abstraer antes de observar repetición con el mismo significado. Revisa nombres, cohesión, dependencias, errores, prueba, mínimo privilegio y capacidad de diagnóstico.
-
-
-## Bibliografía y fundamento académico
-
-- Documentación primaria enlazada en el capítulo de actualizaciones oficiales del track.
-- ACM/IEEE CS2023 y SWEBOK V4 para fundamentos, diseño, pruebas, seguridad y operación.
-- NIST Secure Software Development Framework y OWASP ASVS/MASVS.
-- Martin Kleppmann, *Designing Data-Intensive Applications*.
-- Google, *Site Reliability Engineering* y *SRE Workbook*.
-- Documentación de accesibilidad W3C/WCAG cuando exista interfaz humana.
-
-## Resumen del módulo
-
-Este capítulo vuelve visibles las capacidades solicitadas y las convierte en trabajo evaluable. Completarlo significa poder explicar, implementar, romper, medir y operar una solución; reconocer el nombre de una herramienta no demuestra nivel Master. La evidencia final conecta el track con RutaFlow y conserva decisiones, pruebas y recuperación para que otra persona pueda revisarlas.
 """
 
 inventory=[]

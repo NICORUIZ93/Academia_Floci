@@ -1,30 +1,5 @@
 # Módulo 8: Azure y GCP con Floci
 
-## Sílabo
-
-**Objetivo general**
-
-Repetir los patrones de almacenamiento y mensajería ya dominados en AWS, ahora en Azure (con floci-az) y GCP (con floci-gcp), consolidando la idea de que los conceptos de nube se transfieren entre proveedores aunque cambien los nombres.
-
-**Objetivos específicos**
-
-1. Levantar floci-az y operar Blob Storage y Queue Storage.
-2. Levantar floci-gcp y operar Cloud Storage y Pub/Sub.
-3. Explicar las diferencias y similitudes entre Cosmos DB, Firestore y DynamoDB.
-4. Construir una tabla comparativa de los tres proveedores para un mismo caso de uso.
-5. Justificar cuándo elegir un proveedor u otro según el servicio y el contexto.
-
-**Contenido**
-
-- floci-az: Blob Storage, Queue Storage, Table Storage, Cosmos DB, Functions.
-- floci-gcp: Cloud Storage, Pub/Sub, Firestore, Cloud Functions.
-- Comparativa AWS vs Azure vs GCP por categoría de servicio.
-
-**Evaluación**
-
-Dos laboratorios (uno por proveedor) y tres ejercicios de evaluación sobre equivalencias de servicios y criterios de elección entre proveedores.
-
----
 
 ## Aprende construyendo
 
@@ -152,21 +127,6 @@ Serverless           Lambda           Azure Functions      Cloud Functions
 
 ---
 
-## Criterio transversal de calidad del código
-
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
 
 ## Laboratorio práctico
 
@@ -208,41 +168,3 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 - **Confundir el orden de creación en Pub/Sub.** A diferencia de SQS, donde solo existe la cola, en Pub/Sub necesitas crear primero el topic y después, por separado, al menos una suscripción sobre ese topic antes de que cualquier mensaje publicado tenga a dónde llegar de forma recuperable.
 
 ---
-
-
-
-## Bibliografía y fundamento académico
-
-Estas fuentes sustentan los conceptos y deben consultarse para verificar detalles que cambian entre versiones:
-
-- AWS, Microsoft Azure y Google Cloud, marcos oficiales de arquitectura bien diseñada.
-- NIST, *Cloud Computing Standards Roadmap* y *Secure Software Development Framework*.
-- Beyer et al., *Site Reliability Engineering*.
-- ACM/IEEE-CS/AAAI, *Computer Science Curricula 2023*.
-- IEEE Computer Society, *SWEBOK Guide V4.0*.
-
-## Resumen del módulo
-
-**Puntos clave**
-
-- floci-az emula Blob Storage, Queue Storage, Table Storage, Cosmos DB y Azure Functions, con equivalencias directas a S3, SQS, DynamoDB y Lambda respectivamente.
-- floci-gcp emula Cloud Storage, Pub/Sub, Firestore y Cloud Functions; Pub/Sub, en particular, tiene un modelo de topic y múltiples suscripciones más parecido a un patrón fan-out que a una cola SQS simple.
-- El almacenamiento de objetos y el cómputo serverless tienen equivalencia funcional muy directa entre los tres proveedores; la mensajería y las bases de datos NoSQL tienen diferencias de modelo más relevantes que conviene entender antes de elegir.
-- La elección de proveedor en un caso real depende principalmente de la integración con la infraestructura existente, y solo en segundo lugar de diferencias funcionales específicas entre servicios equivalentes.
-
-**Conceptos aprendidos**
-
-- Los servicios equivalentes de Azure (Blob Storage, Queue Storage, Cosmos DB, Azure Functions) frente a sus contrapartes de AWS.
-- Los servicios equivalentes de GCP (Cloud Storage, Pub/Sub, Firestore, Cloud Functions) frente a sus contrapartes de AWS.
-- Las diferencias de modelo entre SQS y Pub/Sub, y entre DynamoDB, Cosmos DB y Firestore.
-- Criterios prácticos para elegir un proveedor u otro en un contexto real.
-
-**Próximos pasos**
-
-En el Módulo 9, el proyecto final del curso, vas a integrar S3, SQS, DynamoDB, Lambda, API Gateway e IAM en un solo Sistema de Gestión de Tareas, usando exclusivamente AWS (a través de Floci) para consolidar en un proyecto real todo lo aprendido en los módulos 1 a 7.
-
-**Recursos adicionales**
-
-- Documentación oficial de Azure Blob Storage, Queue Storage y Cosmos DB.
-- Documentación oficial de Google Cloud Storage, Pub/Sub y Firestore.
-- Comparativas oficiales de servicios entre AWS, Azure y GCP publicadas por cada proveedor y por analistas independientes de la industria.

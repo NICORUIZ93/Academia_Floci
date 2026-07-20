@@ -1,35 +1,5 @@
 # Módulo 1: Git avanzado y estrategias de branching
 
-## Sílabo
-
-**Objetivo general**
-
-Ir más allá de `add`/`commit`/`push`: reescribir historial con confianza, elegir una estrategia de branching adecuada al tamaño y madurez de un equipo, y usar herramientas de diagnóstico como `bisect` para encontrar regresiones con precisión.
-
-**Objetivos específicos**
-
-1. Comparar trunk-based development y GitFlow, y justificar cuándo usar cada uno.
-2. Usar rebase interactivo para limpiar un historial de commits antes de compartirlo.
-3. Usar `git bisect` para localizar el commit exacto que introdujo un bug.
-4. Configurar hooks de Git y explicar el valor de los commits firmados.
-5. Diferenciar monorepos de polyrepos y sus implicaciones de tooling y ownership.
-6. Usar `cherry-pick`, `stash`, `reset` y `revert` de forma apropiada según el contexto.
-
-**Contenido**
-
-- Trunk-based development vs GitFlow.
-- Rebase interactivo vs merge.
-- Bisect para encontrar regresiones.
-- Hooks de Git y commits firmados.
-- Monorepos vs polyrepos.
-- `git cherry-pick`, `git stash`, `git reset` vs `git revert`.
-- `git reflog`, `git worktree` y `git submodule`.
-
-**Evaluación**
-
-Un laboratorio que limpia un historial con rebase, provoca y resuelve un conflicto, y usa `bisect` para encontrar una regresión; tres ejercicios de evaluación sobre elección de estrategia de branching, riesgos de reescribir historial compartido, y diferencias entre `reset` y `revert`.
-
----
 
 ## Aprende construyendo
 
@@ -234,21 +204,6 @@ git reflog
 
 ---
 
-## Criterio transversal de calidad del código
-
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
 
 ## Laboratorio práctico
 
@@ -277,47 +232,3 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 - **Reescribiste con rebase una rama que un compañero ya había clonado, y ahora aparecen conflictos extraños al sincronizar.** Esto es exactamente el riesgo descrito en el Tema 2; la solución más simple es coordinar con el equipo, y que quien clonó la versión antigua vuelva a clonar la rama reescrita desde cero, en vez de intentar reconciliar manualmente ambos historiales divergentes.
 
 ---
-
-
-
-## Bibliografía y fundamento académico
-
-Estas fuentes sustentan los conceptos y deben consultarse para verificar detalles que cambian entre versiones:
-
-- CNCF, documentación oficial de Kubernetes, Prometheus y OpenTelemetry.
-- HashiCorp, *Terraform Documentation*.
-- Beyer et al., *Site Reliability Engineering*; Forsgren et al., *Accelerate*.
-- ACM/IEEE-CS/AAAI, *Computer Science Curricula 2023*.
-- IEEE Computer Society, *SWEBOK Guide V4.0*.
-
-## Resumen del módulo
-
-**Puntos clave**
-
-- Trunk-based development favorece integración frecuente con CI maduro y feature flags; GitFlow da más estructura formal para releases programados o regulados.
-- El rebase interactivo limpia el historial reaplicando commits, pero nunca debe usarse sobre ramas que otros ya tienen clonadas o fusionadas.
-- `git bisect` usa búsqueda binaria para encontrar el commit exacto que introdujo una regresión, mucho más rápido que revisar commits uno por uno.
-- Los hooks de Git dan validación local rápida pero opcional; la validación obligatoria para todo el equipo debe vivir en CI.
-- Monorepos facilitan cambios atómicos entre paquetes relacionados; los polyrepos dan límites de ownership más claros.
-- `revert` es seguro sobre ramas compartidas porque no reescribe historial; `reset` sí lo reescribe y puede causar divergencia si se usa sobre una rama ya compartida.
-- `git reflog` es la red de seguridad para recuperarte de operaciones destructivas accidentales.
-
-**Conceptos aprendidos**
-
-- Trunk-based development vs GitFlow y cuándo elegir cada uno.
-- Rebase interactivo, sus comandos (`pick`/`squash`/`reword`/`drop`) y su riesgo sobre historial compartido.
-- `git bisect` como herramienta de búsqueda binaria de regresiones.
-- Hooks de Git y commits firmados.
-- Monorepos vs polyrepos.
-- `cherry-pick`, `stash`, `reset` vs `revert`.
-- `reflog`, `worktree` y `submodule`.
-
-**Próximos pasos**
-
-En el Módulo 2 vas a empaquetar aplicaciones en imágenes Docker reproducibles, aplicando buenas prácticas de multi-stage builds y gestión de capas para minimizar el tamaño final de imagen.
-
-**Recursos adicionales**
-
-- Documentación oficial de Git: referencia completa de `rebase`, `bisect`, `reflog`, `worktree` y `submodule`.
-- Guía oficial de GitHub sobre commits firmados con GPG y SSH.
-- Comparativas publicadas por la comunidad sobre trunk-based development frente a GitFlow, incluyendo el material original que popularizó cada modelo.

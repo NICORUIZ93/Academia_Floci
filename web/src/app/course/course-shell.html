@@ -21,20 +21,20 @@
         <strong>Índice del curso</strong>
         <button class="icon-button" aria-label="Cerrar índice del curso" (click)="sidebarOpen.set(false)"><lucide-icon [img]="icons.X" /></button>
       </div>
-      <section class="official-path" *ngIf="officialPath() as path" aria-labelledby="official-path-title">
-        <div class="official-path-heading">
+      <details class="official-path" *ngIf="officialPath() as path">
+        <summary class="official-path-heading">
           <lucide-icon [img]="icons.BookOpenCheck" />
           <div><small>Ruta contrastada</small><strong id="official-path-title">Guía oficial</strong></div>
-          <a [href]="path.sourceUrl" target="_blank" rel="noopener noreferrer" [attr.aria-label]="'Abrir ' + path.source"><lucide-icon [img]="icons.ExternalLink" /></a>
-        </div>
+          <span aria-hidden="true">⌄</span>
+        </summary>
         <ol>
           <li *ngFor="let stage of path.stages; let i = index">
             <span>{{ i + 1 }}</span>
             <div><strong>{{ stage.label }}</strong><small>{{ stage.outcome }}</small><em>Módulos {{ stage.modules.join(', ') }}</em></div>
           </li>
         </ol>
-        <p>Fuente: <a [href]="path.sourceUrl" target="_blank" rel="noopener noreferrer">{{ path.source }}</a></p>
-      </section>
+        <p>Fuente: <a [href]="path.sourceUrl" target="_blank" rel="noopener noreferrer">{{ path.source }} ↗</a></p>
+      </details>
       <app-lesson-index [trackId]="t.id" />
     </aside>
     <div class="shell-scrim mobile-only" *ngIf="sidebarOpen()" (click)="sidebarOpen.set(false)"></div>

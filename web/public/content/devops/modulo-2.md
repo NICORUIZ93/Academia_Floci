@@ -1,34 +1,5 @@
 # Módulo 2: Docker — imágenes y buenas prácticas
 
-## Sílabo
-
-**Objetivo general**
-
-Empaquetar aplicaciones propias en imágenes Docker reproducibles y optimizadas, dominando Dockerfiles multi-stage, gestión de capas, imágenes base mínimas, y la diferencia entre volúmenes y bind mounts.
-
-**Objetivos específicos**
-
-1. Escribir un Dockerfile de una sola etapa y medir el tamaño de imagen resultante.
-2. Reescribirlo como multi-stage y explicar por qué reduce el tamaño final.
-3. Ordenar las instrucciones de un Dockerfile para maximizar el aprovechamiento de caché.
-4. Elegir una imagen base apropiada (completa, alpine o distroless) según el caso de uso.
-5. Diferenciar volúmenes gestionados de bind mounts y saber cuándo usar cada uno.
-6. Explicar el propósito de un registry y comparar las opciones más usadas.
-
-**Contenido**
-
-- Dockerfile multi-stage.
-- Capas e invalidación de caché.
-- Imágenes base distroless/alpine.
-- Volúmenes vs bind mounts.
-- Redes en Docker.
-- Registries: Docker Hub, AWS ECR, Azure Container Registry, Harbor.
-
-**Evaluación**
-
-Un laboratorio que construye, mide y optimiza progresivamente la imagen de una API propia, y tres ejercicios de evaluación sobre orden de capas, elección de imagen base, y volúmenes frente a bind mounts.
-
----
 
 ## Aprende construyendo
 
@@ -209,21 +180,6 @@ Docker Hub          AWS ECR              Azure Container      Harbor
 
 ---
 
-## Criterio transversal de calidad del código
-
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
 
 ## Laboratorio práctico
 
@@ -250,45 +206,3 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 - **Los datos de un bind mount no se reflejan como esperas.** Verifica que la ruta del host especificada en `-v` es una ruta absoluta correcta (usa `$(pwd)` para referenciar el directorio actual de forma portable), y que la ruta dentro del contenedor coincide con dónde la aplicación realmente busca esos archivos.
 
 ---
-
-
-
-## Bibliografía y fundamento académico
-
-Estas fuentes sustentan los conceptos y deben consultarse para verificar detalles que cambian entre versiones:
-
-- CNCF, documentación oficial de Kubernetes, Prometheus y OpenTelemetry.
-- HashiCorp, *Terraform Documentation*.
-- Beyer et al., *Site Reliability Engineering*; Forsgren et al., *Accelerate*.
-- ACM/IEEE-CS/AAAI, *Computer Science Curricula 2023*.
-- IEEE Computer Society, *SWEBOK Guide V4.0*.
-
-## Resumen del módulo
-
-**Puntos clave**
-
-- Los Dockerfiles multi-stage separan la construcción de la ejecución, dejando en la imagen final solo lo estrictamente necesario para correr la aplicación.
-- El orden de las instrucciones determina qué tan efectivamente se reutiliza la caché de capas; las que cambian con menor frecuencia deben ir primero.
-- Alpine y distroless reducen drásticamente el tamaño de imagen y la superficie de ataque frente a una imagen base completa, a costa de menor comodidad de depuración interactiva.
-- Los volúmenes gestionados son la opción recomendada para persistencia en producción; los bind mounts son ideales para reflejar cambios de código en vivo durante el desarrollo.
-- Las redes definidas por el usuario en Docker habilitan descubrimiento de nombres entre contenedores, la base de cómo se comunican los servicios en Docker Compose.
-- Los registries (Docker Hub, ECR, ACR, Harbor) distribuyen imágenes, y la elección entre gestionado o autoalojado depende de integración con tu ecosistema y requisitos de control.
-
-**Conceptos aprendidos**
-
-- Dockerfiles multi-stage y cómo reducen el tamaño final de una imagen.
-- Capas, caché de build, y el orden de instrucciones que maximiza su reutilización.
-- Imágenes base completas, Alpine y distroless, y sus compromisos de seguridad y comodidad.
-- Volúmenes gestionados frente a bind mounts.
-- Redes Docker y descubrimiento de nombres entre contenedores.
-- Registries de contenedores y criterios para elegir entre ellos.
-
-**Próximos pasos**
-
-En el Módulo 3 vas a orquestar localmente arquitecturas completas con Docker Compose, aplicando healthchecks, variables de entorno externalizadas, y perfiles para distintos entornos.
-
-**Recursos adicionales**
-
-- Documentación oficial de Docker sobre multi-stage builds y gestión de caché de build.
-- Documentación oficial de Alpine Linux y de los proyectos distroless de Google.
-- Documentación oficial de AWS ECR, Azure Container Registry, y del proyecto Harbor.

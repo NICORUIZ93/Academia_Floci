@@ -1,31 +1,5 @@
 # Módulo 11: TypeScript esencial para devs de JavaScript
 
-## Sílabo
-
-**Objetivo general**
-
-Adquirir el TypeScript esencial y suficiente para ser productivo desde el primer día en Angular, React con tipos o Node tipado, entendiendo tanto el poder como los límites reales del sistema de tipos.
-
-**Objetivos específicos**
-
-1. Definir tipos básicos, interfaces y type aliases.
-2. Escribir funciones genéricas reutilizables para múltiples tipos.
-3. Aplicar narrowing para manejar valores de tipo unión de forma segura.
-4. Configurar `tsconfig.json` en modo estricto y entender sus implicaciones.
-5. Explicar por qué TypeScript no protege contra datos mal formados que llegan en runtime.
-
-**Contenido**
-
-- Tipos básicos, interfaces y type aliases.
-- Generics.
-- Narrowing y union types.
-- `tsconfig` esencial y modo strict.
-
-**Evaluación**
-
-Una migración de un módulo JavaScript existente a TypeScript estricto sin usar `any`, más tres ejercicios de evaluación.
-
----
 
 ## Aprende construyendo
 
@@ -147,21 +121,6 @@ TypeScript NO garantiza: los datos EXTERNOS en runtime cumplen esos tipos
 
 ---
 
-## Criterio transversal de calidad del código
-
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
 
 ## Laboratorio práctico
 
@@ -187,42 +146,3 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 - **Olvidar manejar el caso `undefined` al indexar un array con `noUncheckedIndexedAccess` activado.** Verifica explícitamente antes de usar el valor, en vez de asumir que siempre existe.
 
 ---
-
-
-
-## Bibliografía y fundamento académico
-
-Estas fuentes sustentan los conceptos y deben consultarse para verificar detalles que cambian entre versiones:
-
-- ECMA International, *ECMAScript Language Specification*.
-- MDN Web Docs, guías de JavaScript y Web APIs.
-- WHATWG, *HTML Living Standard* y *Fetch Standard*.
-- ACM/IEEE-CS/AAAI, *Computer Science Curricula 2023*.
-- IEEE Computer Society, *SWEBOK Guide V4.0*.
-
-## Resumen del módulo
-
-**Puntos clave**
-
-- `interface` y `type` describen formas de datos; `type` es necesario para uniones, `interface` es la convención para objetos extensibles.
-- Los generics permiten funciones reutilizables sin sacrificar seguridad de tipos, preservando la relación entre tipos de entrada y salida.
-- El narrowing reduce progresivamente el tipo posible de una variable dentro de ramas condicionales, permitiendo trabajar con uniones de forma segura.
-- El modo `strict` (con `noImplicitAny`, `strictNullChecks`, `noUncheckedIndexedAccess`) maximiza las garantías del compilador.
-- TypeScript verifica tipos solo en tiempo de compilación; no protege contra datos externos mal formados que llegan en tiempo de ejecución sin validación adicional.
-
-**Conceptos aprendidos**
-
-- Tipos básicos, interfaces y type aliases.
-- Funciones genéricas y su inferencia automática de tipo.
-- Narrowing con `typeof`, `instanceof` e `in`.
-- Configuración esencial de `tsconfig` en modo estricto.
-- Los límites reales de TypeScript frente a datos externos en runtime.
-
-**Próximos pasos**
-
-En el Módulo 12, el proyecto final de este track, construirás una SPA completa sin ningún framework, aplicando routing manual, un store propio y consumo real de una API, demostrando que entiendes los fundamentos que un framework automatiza.
-
-**Recursos adicionales**
-
-- Documentación oficial de TypeScript (typescriptlang.org), especialmente el "TypeScript Handbook".
-- Documentación de Zod (zod.dev) para validación de datos en tiempo de ejecución.

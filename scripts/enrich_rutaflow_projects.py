@@ -28,7 +28,7 @@ for relative, (title, source, explanation, verification) in PROJECTS.items():
     text = path.read_text(encoding="utf-8")
     if HEADING in text:
         continue
-    anchor = "## Criterio transversal de calidad del código"
+    anchor = "## Laboratorio práctico"
     if anchor not in text:
         raise RuntimeError(f"{path}: falta {anchor}")
     section = f"""{HEADING}: {title}

@@ -1,31 +1,5 @@
 # Módulo 6: Data fetching moderno
 
-## Sílabo
-
-**Objetivo general**
-
-Dejar de manejar manualmente estados de loading/error/cache con `useState`/`useEffect`, adoptando TanStack Query como capa dedicada de gestión de datos del servidor.
-
-**Objetivos específicos**
-
-1. Reemplazar un fetching manual por `useQuery`.
-2. Explicar cómo TanStack Query cachea, invalida y refresca datos.
-3. Implementar una mutación con `useMutation` que invalide la query relacionada.
-4. Implementar un optimistic update con reversión ante error.
-5. Explicar qué problemas de "loading hell" resuelve TanStack Query.
-
-**Contenido**
-
-- TanStack Query: queries y mutations.
-- Cache, invalidación y refetch.
-- Estados de carga, error y datos obsoletos.
-- Optimistic updates.
-
-**Evaluación**
-
-Lista de datos con fetching, cache y mutaciones optimistas usando TanStack Query, más tres ejercicios de evaluación.
-
----
 
 ## Aprende construyendo
 
@@ -103,21 +77,6 @@ useMutation({
 
 ---
 
-## Criterio transversal de calidad del código
-
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
 
 ## Laboratorio práctico
 
@@ -141,37 +100,3 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 - **No implementar `onError` para revertir.** Sin reversión, la interfaz puede mostrar un cambio que en realidad nunca se aplicó en el servidor.
 
 ---
-
-
-
-## Bibliografía y fundamento académico
-
-Estas fuentes sustentan los conceptos y deben consultarse para verificar detalles que cambian entre versiones:
-
-- Meta Open Source, *React Documentation*.
-- WHATWG, estándares de DOM, HTML y Fetch.
-- W3C, *Web Content Accessibility Guidelines (WCAG)*.
-- ACM/IEEE-CS/AAAI, *Computer Science Curricula 2023*.
-- IEEE Computer Society, *SWEBOK Guide V4.0*.
-
-## Resumen del módulo
-
-**Puntos clave**
-
-- `useQuery` reemplaza el patrón manual de `useState`/`useEffect` para fetching, agregando cache, deduplicación y revalidación automática.
-- Las mutaciones invalidan queries relacionadas para mantener la vista sincronizada con el estado real del servidor.
-- Los optimistic updates mejoran la percepción de velocidad, con un mecanismo explícito de reversión ante error.
-
-**Conceptos aprendidos**
-
-- TanStack Query: `useQuery` y `useMutation`.
-- Invalidación y refetch de queries.
-- Optimistic updates y su reversión.
-
-**Próximos pasos**
-
-En el Módulo 7 aprenderás gestión de estado global: Zustand, Redux Toolkit, y la separación entre estado de servidor y estado de cliente.
-
-**Recursos adicionales**
-
-- Documentación oficial de TanStack Query (tanstack.com/query).

@@ -1,33 +1,5 @@
 # Módulo 11: JVM interna — GC, profiling y JIT
 
-## Sílabo
-
-**Objetivo general**
-
-Entender qué hace la JVM por debajo (generaciones de memoria, recolectores de basura, compilación JIT) para poder diagnosticar problemas reales de memoria y rendimiento con herramientas estándar de profiling.
-
-**Objetivos específicos**
-
-1. Explicar la división de la heap en generaciones de memoria.
-2. Comparar G1 y ZGC según su balance de throughput y pausas.
-3. Grabar y analizar una sesión de Java Flight Recorder.
-4. Explicar qué hace el JIT compiler y por qué una aplicación Java se acelera tras el warm-up.
-5. Provocar y diagnosticar un `OutOfMemoryError` con un heap dump.
-
-**Contenido**
-
-- Generaciones de memoria y recolectores (G1, ZGC).
-- Profiling con herramientas estándar (JFR).
-- JIT compilation.
-- Flags de JVM más usados.
-- jconsole, jvisualvm, jstat y jmap.
-- WeakReference, SoftReference, PhantomReference y ReferenceQueue.
-
-**Evaluación**
-
-Reporte de profiling de una aplicación propia identificando un cuello de botella real, más tres ejercicios de evaluación.
-
----
 
 ## Aprende construyendo
 
@@ -98,21 +70,6 @@ Provocar intencionalmente un `OutOfMemoryError` (acumulando objetos indefinidame
 
 ---
 
-## Criterio transversal de calidad del código
-
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
 
 ## Laboratorio práctico
 
@@ -136,39 +93,3 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 - **Usar referencias fuertes normales para una caché que debería liberarse bajo presión de memoria.** Considera `SoftReference` para ese caso específico.
 
 ---
-
-
-
-## Bibliografía y fundamento académico
-
-Estas fuentes sustentan los conceptos y deben consultarse para verificar detalles que cambian entre versiones:
-
-- Oracle, *Java Language Specification* y *Java Virtual Machine Specification*.
-- OpenJDK, documentación de Java SE, JFR y JMH.
-- Bloch, J., *Effective Java*.
-- ACM/IEEE-CS/AAAI, *Computer Science Curricula 2023*.
-- IEEE Computer Society, *SWEBOK Guide V4.0*.
-
-## Resumen del módulo
-
-**Puntos clave**
-
-- La heap se divide en generación joven y vieja, concentrando el esfuerzo de recolección donde efectivamente está la mayoría de la basura.
-- G1 balancea throughput y pausas predecibles; ZGC prioriza pausas ultra-cortas a costa de algo más de overhead.
-- JFR permite perfilar con overhead mínimo, seguro para producción; el JIT compila código caliente a código máquina optimizado en tiempo de ejecución.
-- Las referencias especiales (`WeakReference`, `SoftReference`) cooperan con el recolector; un heap dump ofrece detalle específico del estado de memoria en un fallo.
-
-**Conceptos aprendidos**
-
-- Generaciones de memoria y recolectores G1/ZGC.
-- Java Flight Recorder y JIT compilation.
-- Flags de JVM comunes.
-- Referencias especiales y heap dumps.
-
-**Próximos pasos**
-
-En el Módulo 12 aprenderás buenas prácticas y patrones de diseño: Builder, Factory, Strategy, y principios SOLID.
-
-**Recursos adicionales**
-
-- Documentación oficial de Java (docs.oracle.com/en/java): "Garbage Collection Tuning Guide" y "Java Flight Recorder".

@@ -1,30 +1,5 @@
 # Módulo 4: Lógica de negocio compartida
 
-## Sílabo
-
-**Objetivo general**
-
-Aprovechar el valor real de KMP: escribir la lógica de negocio una única vez y usarla en ambas plataformas nativas, mediante modelos de dominio compartidos, casos de uso independientes de plataforma, y repositorios con interfaces comunes inyectados con Koin.
-
-**Objetivos específicos**
-
-1. Definir modelos de dominio compartidos en `commonMain`.
-2. Implementar un caso de uso que dependa de una interfaz de repositorio, no de su implementación concreta.
-3. Definir una interfaz de repositorio con una implementación real y una fake para tests.
-4. Configurar Koin para inyectar la implementación correcta por plataforma.
-
-**Contenido**
-
-- Modelos de dominio compartidos.
-- Casos de uso (use cases) independientes de plataforma.
-- Repositorios con interfaces comunes.
-- Inyección de dependencias multiplataforma (Koin).
-
-**Evaluación**
-
-Capa de dominio compartida (modelos + casos de uso) sin código específico de plataforma, más tres ejercicios de evaluación.
-
----
 
 ## Aprende construyendo
 
@@ -114,21 +89,6 @@ val sharedModule = module {
 
 ---
 
-## Criterio transversal de calidad del código
-
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
 
 ## Laboratorio práctico
 
@@ -152,39 +112,3 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 - **Filtrar código específico de plataforma dentro de un modelo de dominio.** Mantén los modelos de dominio completamente independientes de detalles de plataforma.
 
 ---
-
-
-
-## Bibliografía y fundamento académico
-
-Estas fuentes sustentan los conceptos y deben consultarse para verificar detalles que cambian entre versiones:
-
-- JetBrains, documentación oficial de *Kotlin Multiplatform* y Kotlin Coroutines.
-- Google, *Android Developers Documentation*; Apple, *Developer Documentation*.
-- Kotlin Foundation, especificación y pautas de compatibilidad de Kotlin.
-- ACM/IEEE-CS/AAAI, *Computer Science Curricula 2023*.
-- IEEE Computer Society, *SWEBOK Guide V4.0*.
-
-## Resumen del módulo
-
-**Puntos clave**
-
-- Los modelos de dominio compartidos garantizan una definición única y consistente entre plataformas.
-- Los casos de uso dependen de interfaces de repositorio, no de implementaciones concretas, facilitando testabilidad aislada.
-- Definir el repositorio como interfaz compartida permite una implementación real y una fake para tests.
-- Koin permite declarar inyección de dependencias una única vez en `commonMain`, funcionando en todas las plataformas.
-
-**Conceptos aprendidos**
-
-- Modelos de dominio compartidos.
-- Casos de uso independientes de plataforma.
-- Repositorios con interfaces comunes.
-- Inyección de dependencias con Koin.
-
-**Próximos pasos**
-
-En el Módulo 5 aprenderás networking compartido con Ktor Client: consumo de APIs HTTP, serialización, y manejo de errores de red.
-
-**Recursos adicionales**
-
-- Documentación oficial de Koin (insert-koin.io).

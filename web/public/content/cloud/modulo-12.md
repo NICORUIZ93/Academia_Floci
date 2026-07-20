@@ -1,33 +1,5 @@
 # Módulo 12: Observabilidad con CloudWatch: logs, métricas y alarmas
 
-## Sílabo
-
-**Objetivo general**
-
-Centralizar logs, crear métricas derivadas de ellos, y configurar alarmas que avisen de un problema antes de que los usuarios lo noten, entendiendo que sin observabilidad estructurada diagnosticar un fallo en producción se reduce a adivinar sin evidencia.
-
-**Objetivos específicos**
-
-1. Crear un log group y enviar logs estructurados con un correlation ID.
-2. Filtrar logs para extraer patrones específicos.
-3. Crear un metric filter que derive una métrica numérica a partir de logs.
-4. Configurar una alarma que se dispare ante un umbral de esa métrica.
-
-**Contenido**
-
-- Log group.
-- Log stream.
-- Metric filter.
-- Alarm.
-- Correlation ID.
-- Dashboard.
-- X-Ray trace.
-
-**Evaluación**
-
-Dashboard de CloudWatch con logs, métricas de errores y alarma configurada, más tres ejercicios de evaluación.
-
----
 
 ## Aprende construyendo
 
@@ -110,21 +82,6 @@ X-Ray (un servicio de tracing distribuido, mencionado como complemento a estas h
 
 ---
 
-## Criterio transversal de calidad del código
-
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
 
 ## Laboratorio práctico
 
@@ -151,42 +108,3 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 - **Diagnosticar problemas basándose en conjeturas sin evidencia de logs, métricas o traces.** Sigue el proceso sistemático de filtrar, correlacionar y contextualizar con las herramientas disponibles.
 
 ---
-
-
-
-## Bibliografía y fundamento académico
-
-Estas fuentes sustentan los conceptos y deben consultarse para verificar detalles que cambian entre versiones:
-
-- AWS, Microsoft Azure y Google Cloud, marcos oficiales de arquitectura bien diseñada.
-- NIST, *Cloud Computing Standards Roadmap* y *Secure Software Development Framework*.
-- Beyer et al., *Site Reliability Engineering*.
-- ACM/IEEE-CS/AAAI, *Computer Science Curricula 2023*.
-- IEEE Computer Society, *SWEBOK Guide V4.0*.
-
-## Resumen del módulo
-
-**Puntos clave**
-
-- Centralizar logs en log groups permite correlacionar información de múltiples instancias distribuidas desde un único lugar.
-- Un correlation ID propagado consistentemente permite reconstruir el recorrido completo de una transacción a través de múltiples servicios.
-- Los metric filters derivan métricas automáticamente de logs existentes, más económicos que métricas custom manuales.
-- Diagnosticar sistemáticamente con logs, métricas y traces (X-Ray) encuentra la causa raíz con evidencia, no con conjeturas.
-
-**Conceptos aprendidos**
-
-- Log group.
-- Log stream.
-- Metric filter.
-- Alarm.
-- Correlation ID.
-- Dashboard.
-- X-Ray trace.
-
-**Próximos pasos**
-
-En el Módulo 13 aprenderás bases de datos relacionales con RDS, corriendo PostgreSQL real, y cuándo elegir SQL sobre NoSQL.
-
-**Recursos adicionales**
-
-- Documentación oficial de Amazon CloudWatch (docs.aws.amazon.com/cloudwatch).

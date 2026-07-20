@@ -1,14 +1,5 @@
 # Módulo 7: Requisitos, diseño, arquitectura y mantenimiento
 
-## Sílabo
-
-**Objetivo general**
-
-Transformar necesidades en software mantenible: especificar resultados verificables, diseñar límites y dependencias guiados por atributos de calidad, registrar decisiones y evolucionar el sistema sin perder comportamiento.
-
-**Resultados observables:** redactar requisitos y criterios; priorizar calidad; producir diagramas C4; refactorizar por capas; justificar patrones; escribir ADRs; clasificar deuda y planificar cambios compatibles.
-
-**Prerrequisitos:** módulos 0–6 y proyectos de inventario con datos, pruebas, CI y seguridad.
 
 ## Aprende construyendo
 
@@ -173,21 +164,6 @@ La ética atraviesa decisiones: accesibilidad, privacidad, sesgo, sostenibilidad
 decisión → ADR → implementación → métricas → nueva evidencia → mantener/revisar
 ```
 
-## Criterio transversal de calidad del código
-
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
 
 ## Laboratorio práctico
 
@@ -214,16 +190,3 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 - Aplicar todos los patrones: justifica fuerzas y coste.
 - Refactor grande sin tests: caracteriza y divide.
 - Documentar solo éxito: registra consecuencias y límites.
-
-
-
-## Bibliografía y fundamento académico
-
-- SWEBOK v4: Requirements, Architecture, Design, Construction, Maintenance y Engineering Management.
-- ACM/IEEE/AAAI CS2023: Software Engineering, HCI y Society, Ethics and Profession.
-- Bass, Clements y Kazman, *Software Architecture in Practice*.
-- Martin Fowler, *Refactoring*; C4 Model y Architecture Decision Records.
-
-## Resumen del módulo
-
-Requisitos conectan necesidades con evidencia. Arquitectura responde a atributos y restricciones. Diseño modular reduce propagación del cambio; patrones son herramientas contextuales. Refactoring protegido mejora estructura sin alterar comportamiento. ADRs preservan razones, deuda se gestiona y evolución requiere compatibilidad, observabilidad y responsabilidad ética.

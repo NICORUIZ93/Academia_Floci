@@ -1,30 +1,5 @@
 # Módulo 7: Combine y programación reactiva
 
-## Sílabo
-
-**Objetivo general**
-
-Entender Combine, el modelo de programación reactiva que resolvía flujos de datos asíncronos en el ecosistema Apple antes de `async`/`await`, y que sigue presente en mucho código real y en APIs nativas de Apple que exponen Publishers directamente.
-
-**Objetivos específicos**
-
-1. Observar cambios de un `@Published` con `sink`.
-2. Implementar un buscador con `debounce` sobre un campo de texto.
-3. Combinar dos Publishers con `combineLatest`.
-4. Documentar cuándo seguir usando Combine frente a `async`/`await`.
-
-**Contenido**
-
-- Publishers y Subscribers.
-- Operadores clave (`map`, `debounce`, `combineLatest`).
-- Combine vs `async`/`await`: cuándo usar cada uno.
-- Integración de Combine con SwiftUI.
-
-**Evaluación**
-
-Buscador con debounce implementado con Combine, más tres ejercicios de evaluación.
-
----
 
 ## Aprende construyendo
 
@@ -110,21 +85,6 @@ Combine      → flujo continuo de valores en el tiempo (texto cambiando, ubicac
 
 ---
 
-## Criterio transversal de calidad del código
-
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
 
 ## Laboratorio práctico
 
@@ -148,39 +108,3 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 - **Olvidar `.store(in:)` una suscripción de Combine.** La suscripción se cancela inmediatamente al salir de ámbito si no se retiene.
 
 ---
-
-
-
-## Bibliografía y fundamento académico
-
-Estas fuentes sustentan los conceptos y deben consultarse para verificar detalles que cambian entre versiones:
-
-- Apple, *Swift Language Guide* y *Apple Developer Documentation*.
-- Apple, *Human Interface Guidelines* y documentación de accesibilidad.
-- OWASP Foundation, *Mobile Application Security Verification Standard*.
-- ACM/IEEE-CS/AAAI, *Computer Science Curricula 2023*.
-- IEEE Computer Society, *SWEBOK Guide V4.0*.
-
-## Resumen del módulo
-
-**Puntos clave**
-
-- Combine modela flujos continuos de valores en el tiempo mediante Publishers y Subscribers, el mismo principio que `Flow` en Kotlin o RxJS.
-- `debounce` evita reaccionar a cada cambio individual esperando un silencio; `combineLatest` reacciona a cambios de múltiples fuentes independientes.
-- `async`/`await` es más simple para operaciones puntuales; Combine sigue siendo apropiado para streams continuos y APIs de Apple que exponen Publishers nativamente.
-- Ambos modelos coexisten en el ecosistema Apple, cada uno apropiado para un caso de uso distinto.
-
-**Conceptos aprendidos**
-
-- Publishers y Subscribers.
-- Operadores clave (`map`, `debounce`, `combineLatest`).
-- Combine vs `async`/`await`.
-- Integración de Combine con SwiftUI.
-
-**Próximos pasos**
-
-En el Módulo 8 aprenderás arquitectura MVVM: cómo organizar una app SwiftUI de tamaño real separando lógica de negocio de las vistas.
-
-**Recursos adicionales**
-
-- Documentación oficial de Combine (developer.apple.com/documentation/combine).

@@ -1,35 +1,5 @@
 # Módulo 7: Kubernetes avanzado — Helm e Ingress
 
-## Sílabo
-
-**Objetivo general**
-
-Empaquetar manifiestos de Kubernetes como charts de Helm reutilizables y parametrizables, exponer un clúster a internet de forma controlada con Ingress, configurar autoscaling automático, y aplicar probes y RBAC para robustez y seguridad.
-
-**Objetivos específicos**
-
-1. Convertir manifiestos YAML sueltos en un Helm chart parametrizable con `values.yaml`.
-2. Instalar un Ingress Controller y enrutar un dominio hacia un Service interno.
-3. Configurar un HorizontalPodAutoscaler basado en uso de CPU.
-4. Diferenciar liveness probes de readiness probes y su efecto respectivo.
-5. Crear un Role y un RoleBinding que limiten el acceso de una cuenta de servicio.
-6. Explicar a nivel conceptual qué resuelve un service mesh y el propósito de mTLS.
-
-**Contenido**
-
-- Helm charts y `values`.
-- Ingress Controllers y reglas de enrutamiento.
-- HorizontalPodAutoscaler.
-- Probes de liveness y readiness.
-- RBAC en Kubernetes.
-- Service Mesh: Istio, Linkerd, Envoy y mTLS.
-- `startupProbe` y estrategias Recreate vs RollingUpdate.
-
-**Evaluación**
-
-Un laboratorio que empaqueta una aplicación como Helm chart, expone con Ingress, configura autoscaling y probes, y tres ejercicios de evaluación sobre Helm vs YAML suelto, liveness vs readiness, y diseño de RBAC.
-
----
 
 ## Aprende construyendo
 
@@ -206,21 +176,6 @@ Pod A                              Pod B
 
 ---
 
-## Criterio transversal de calidad del código
-
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
 
 ## Laboratorio práctico
 
@@ -249,46 +204,3 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 - **El Pod nunca llega a estado `Ready` tras añadir las probes.** Revisa que las rutas configuradas en las probes (`/health`, `/ready`) realmente existen y responden correctamente en tu aplicación; una probe apuntando a una ruta inexistente falla indefinidamente, impidiendo que el Pod se considere listo.
 
 ---
-
-
-
-## Bibliografía y fundamento académico
-
-Estas fuentes sustentan los conceptos y deben consultarse para verificar detalles que cambian entre versiones:
-
-- CNCF, documentación oficial de Kubernetes, Prometheus y OpenTelemetry.
-- HashiCorp, *Terraform Documentation*.
-- Beyer et al., *Site Reliability Engineering*; Forsgren et al., *Accelerate*.
-- ACM/IEEE-CS/AAAI, *Computer Science Curricula 2023*.
-- IEEE Computer Society, *SWEBOK Guide V4.0*.
-
-
-## Resumen del módulo
-
-**Puntos clave**
-
-- Helm empaqueta manifiestos de Kubernetes como charts parametrizables, evitando la duplicación de YAML entre entornos y facilitando actualizaciones y rollback coordinados.
-- Un Ingress define reglas de enrutamiento HTTP, pero requiere un Ingress Controller corriendo en el clúster para tener efecto real.
-- Un HorizontalPodAutoscaler ajusta automáticamente el número de réplicas según una métrica observada, dentro de límites mínimo y máximo configurados.
-- Las liveness probes disparan reinicios ante fallos internos irrecuperables; las readiness probes solo excluyen temporalmente al Pod de recibir tráfico, sin reiniciarlo; `startupProbe` da un periodo de gracia para arranques lentos.
-- RBAC aplica mínimo privilegio a nivel de clúster mediante Roles, ClusterRoles, RoleBindings y ServiceAccounts, el mismo principio que IAM aplica en la nube.
-- Un service mesh centraliza preocupaciones transversales de comunicación entre servicios (mTLS, reintentos, observabilidad) mediante proxies sidecar, a costa de complejidad operativa adicional.
-
-**Conceptos aprendidos**
-
-- Helm charts, `values.yaml`, y el flujo `install`/`upgrade`/`rollback`.
-- Ingress e Ingress Controllers, y enrutamiento por host o por ruta.
-- HorizontalPodAutoscaler y su dependencia de un servidor de métricas.
-- Liveness, readiness y startup probes, y sus efectos respectivos distintos.
-- RBAC: Role, ClusterRole, RoleBinding y ServiceAccount.
-- Service mesh, proxies sidecar, y mTLS.
-
-**Próximos pasos**
-
-En el Módulo 8 vas a describir infraestructura completa como código con Terraform, gestionando estado remoto, módulos reutilizables, y complementando con Ansible y Pulumi como alternativas relacionadas.
-
-**Recursos adicionales**
-
-- Documentación oficial de Helm: estructura de charts, plantillas y el ciclo `install`/`upgrade`/`rollback`.
-- Documentación oficial de Kubernetes sobre Ingress, HorizontalPodAutoscaler, probes y RBAC.
-- Documentación oficial de Istio y Linkerd como referencias de implementaciones de service mesh.

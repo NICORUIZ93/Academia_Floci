@@ -1,32 +1,5 @@
 # Módulo 29: FinOps y gobierno de cuenta — Cost Explorer, Pricing, BCM Data Exports, Resource Groups Tagging y STS
 
-## Sílabo
-
-**Objetivo general**
-
-Cerrar el círculo de la operación responsable de una cuenta AWS con las herramientas de FinOps (entender y controlar el costo) y de gobierno transversal (identidad temporal y descubrimiento de recursos por etiqueta) que complementan todo lo que ya construiste en módulos anteriores: Cost Explorer para ver qué está costando tu propio uso de Floci, Pricing para consultar tarifas de referencia, BCM Data Exports para exportar reportes de costo en formato estándar, Resource Groups Tagging API para descubrir recursos por etiqueta sin importar el servicio, y STS para profundizar en credenciales temporales.
-
-**Objetivos específicos**
-
-1. Consultar el costo sintetizado de tus propios recursos Floci con Cost Explorer.
-2. Consultar el catálogo de precios estático de Pricing y entender sus límites.
-3. Crear una exportación de datos de facturación con BCM Data Exports y explicar su formato de salida.
-4. Etiquetar recursos de distintos servicios y descubrirlos todos con una sola consulta de Resource Groups Tagging API.
-5. Usar STS para asumir un rol y explicar la cadena de resolución de cuenta que Floci aplica.
-
-**Contenido**
-
-- Cost Explorer: síntesis de costos a partir del estado real de tus recursos.
-- Pricing: catálogo de precios estático incluido.
-- BCM Data Exports: exportaciones CUR/FOCUS en Parquet.
-- Resource Groups Tagging API: descubrimiento centralizado por etiqueta.
-- STS: `AssumeRole`, `GetCallerIdentity` y aislamiento multi-cuenta.
-
-**Evaluación**
-
-Dos laboratorios prácticos (consultar costo sintetizado y exportarlo, y descubrir recursos etiquetados entre servicios) y tres ejercicios de evaluación.
-
----
 
 ## Aprende construyendo
 
@@ -92,21 +65,6 @@ Recordarás del Módulo 0 que Floci resuelve el ID de cuenta a partir del `AWS_A
 
 ---
 
-## Criterio transversal de calidad del código
-
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
 
 ## Laboratorio práctico
 
@@ -145,27 +103,3 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 - **`assume-role` con un AKID que no tiene 12 dígitos no aísla la cuenta esperada.** Revisa el Tema 5: solo un `AWS_ACCESS_KEY_ID` de exactamente 12 dígitos se usa directamente como ID de cuenta; cualquier otro formato cae al `FLOCI_DEFAULT_ACCOUNT_ID`.
 
 ---
-
-
-
-## Bibliografía y fundamento académico
-
-Estas fuentes sustentan los conceptos y deben consultarse para verificar detalles que cambian entre versiones:
-
-- AWS, Microsoft Azure y Google Cloud, marcos oficiales de arquitectura bien diseñada.
-- NIST, *Cloud Computing Standards Roadmap* y *Secure Software Development Framework*.
-- Beyer et al., *Site Reliability Engineering*.
-- ACM/IEEE-CS/AAAI, *Computer Science Curricula 2023*.
-- IEEE Computer Society, *SWEBOK Guide V4.0*.
-
-## Resumen del módulo
-
-```bash
-aws ce get-cost-and-usage --endpoint-url http://localhost:4566 \
-  --time-period Start=2026-07-01,End=2026-08-01 \
-  --granularity MONTHLY --metrics UnblendedCost
-```
-
-Conserva periodo, moneda, filtros y etiquetas junto al resultado para que otra persona pueda reproducir el análisis FinOps.
-
-En este módulo cerraste el círculo de la operación responsable de una cuenta AWS con cinco servicios de FinOps y gobierno transversal: Cost Explorer, que sintetiza costos reales a partir del estado actual de tus recursos; Pricing, el catálogo de tarifas de referencia que alimenta esos cálculos; BCM Data Exports, que estandariza tus reportes de costo en el formato FOCUS de la industria; Resource Groups Tagging API, que te permite descubrir recursos de cualquier servicio con una sola consulta por etiqueta; y STS, que profundizaste como el mecanismo central de identidad temporal y aislamiento multi-cuenta que sostiene la seguridad de todo lo demás que construiste en este curso.

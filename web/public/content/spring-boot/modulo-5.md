@@ -1,30 +1,5 @@
 # Módulo 5: Configuración, perfiles y manejo de errores
 
-## Sílabo
-
-**Objetivo general**
-
-Externalizar configuración sensible con `@ConfigurationProperties` tipado, validarla al arranque, y mantener un manejo consistente de errores entre entornos.
-
-**Objetivos específicos**
-
-1. Mapear configuración tipada desde `application.yml` con `@ConfigurationProperties`.
-2. Validar configuración al arranque con `@Validated`.
-3. Provocar y entender el fallo de arranque por configuración inválida.
-4. Centralizar el manejo de una excepción de negocio para un formato de error consistente.
-
-**Contenido**
-
-- `@ConfigurationProperties` tipado.
-- Perfiles y configuración por entorno.
-- Manejo global de excepciones.
-- Validación de configuración al arranque.
-
-**Evaluación**
-
-Configuración tipada y validada al arranque, sin valores hardcodeados, más tres ejercicios de evaluación.
-
----
 
 ## Aprende construyendo
 
@@ -97,21 +72,6 @@ formato de error consistente, sin importar el entorno (dev/test/prod)
 
 ---
 
-## Criterio transversal de calidad del código
-
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
 
 ## Laboratorio práctico
 
@@ -135,37 +95,3 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 - **Crear un nuevo `@ControllerAdvice` separado para cada nueva excepción.** Extiende el mismo `@ControllerAdvice` centralizado existente.
 
 ---
-
-
-
-## Bibliografía y fundamento académico
-
-Estas fuentes sustentan los conceptos y deben consultarse para verificar detalles que cambian entre versiones:
-
-- VMware/Broadcom, documentación de *Spring Framework* y *Spring Boot*.
-- IETF, especificaciones HTTP y OAuth 2.0.
-- OWASP Foundation, *Application Security Verification Standard*.
-- ACM/IEEE-CS/AAAI, *Computer Science Curricula 2023*.
-- IEEE Computer Society, *SWEBOK Guide V4.0*.
-
-## Resumen del módulo
-
-**Puntos clave**
-
-- `@ConfigurationProperties` tipado agrupa configuración relacionada, con autocompletado y validación centralizada.
-- `@Validated` en configuración hace que la aplicación falle al arranque ante valores inválidos o faltantes, en vez de fallar tarde en producción.
-- El manejo global de excepciones se extiende consistentemente para cada nueva excepción de negocio, con el mismo formato en todos los entornos.
-
-**Conceptos aprendidos**
-
-- `@ConfigurationProperties` tipado.
-- Validación de configuración al arranque.
-- Manejo global de excepciones extendido.
-
-**Próximos pasos**
-
-En el Módulo 6 aprenderás testing en Spring Boot: `@SpringBootTest`, slices de testing, MockMvc, y Testcontainers.
-
-**Recursos adicionales**
-
-- Documentación oficial de Spring Boot (docs.spring.io/spring-boot): "Externalized Configuration" y "Type-safe Configuration Properties".

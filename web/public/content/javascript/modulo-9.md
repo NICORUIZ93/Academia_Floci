@@ -1,31 +1,5 @@
 # Módulo 9: Testing y calidad de código
 
-## Sílabo
-
-**Objetivo general**
-
-Adoptar el testing automatizado como práctica central del desarrollo, escribiendo pruebas rápidas y confiables con Vitest, usando mocks y spies correctamente, e integrando ESLint y Prettier al flujo de trabajo diario.
-
-**Objetivos específicos**
-
-1. Escribir pruebas unitarias con Vitest siguiendo el patrón arrange-act-assert.
-2. Usar mocks, spies y fake timers para aislar la unidad bajo prueba.
-3. Mockear `fetch` para probar código que depende de peticiones de red sin hacerlas realmente.
-4. Configurar ESLint y Prettier, entendiendo su responsabilidad complementaria.
-5. Interpretar un reporte de cobertura de código con criterio, sin sobrevalorarlo.
-
-**Contenido**
-
-- Unit testing con Vitest/Jest.
-- Mocks, spies y fakes.
-- ESLint y Prettier en el flujo de trabajo.
-- Cobertura de código: qué medir y qué ignorar.
-
-**Evaluación**
-
-Una suite de pruebas con cobertura mayor al 80% sobre la biblioteca de funciones del Módulo 1, más tres ejercicios de evaluación.
-
----
 
 ## Aprende construyendo
 
@@ -139,21 +113,6 @@ npx vitest --coverage             # reporta qué líneas/ramas se ejecutaron
 
 ---
 
-## Criterio transversal de calidad del código
-
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
 
 ## Laboratorio práctico
 
@@ -179,43 +138,3 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 - **Olvidar restaurar un mock de `fetch` después de la prueba.** Usa `vi.restoreAllMocks()` en un hook de limpieza para evitar contaminar pruebas posteriores.
 
 ---
-
-
-
-## Bibliografía y fundamento académico
-
-Estas fuentes sustentan los conceptos y deben consultarse para verificar detalles que cambian entre versiones:
-
-- ECMA International, *ECMAScript Language Specification*.
-- MDN Web Docs, guías de JavaScript y Web APIs.
-- WHATWG, *HTML Living Standard* y *Fetch Standard*.
-- ACM/IEEE-CS/AAAI, *Computer Science Curricula 2023*.
-- IEEE Computer Society, *SWEBOK Guide V4.0*.
-
-## Resumen del módulo
-
-**Puntos clave**
-
-- Vitest organiza pruebas con `describe`/`it`/`expect`, siguiendo el patrón arrange-act-assert.
-- Mocks reemplazan dependencias completas; spies observan sin alterar; fakes son implementaciones alternativas simplificadas.
-- Mockear `fetch` permite probar código dependiente de red de forma rápida y determinista.
-- ESLint detecta errores de lógica; Prettier aplica formato visual consistente; ambos son complementarios, no intercambiables.
-- La cobertura de código señala qué no está probado en absoluto, pero no garantiza corrección: mide ejecución, no verificación.
-
-**Conceptos aprendidos**
-
-- Estructura y buenas prácticas de pruebas unitarias con Vitest.
-- Mocks, spies, fakes y fake timers.
-- Técnicas para mockear `fetch` de forma robusta.
-- Configuración e integración de ESLint y Prettier.
-- Interpretación crítica de reportes de cobertura de código.
-
-**Próximos pasos**
-
-En el Módulo 10 aprenderás patrones avanzados de rendimiento: debounce/throttle en profundidad, memoización, Web Workers, y cómo perfilar y optimizar código lento con evidencia medible.
-
-**Recursos adicionales**
-
-- Documentación oficial de Vitest (vitest.dev).
-- Documentación oficial de ESLint y Prettier.
-- Martin Fowler: "Mocks Aren't Stubs", para profundizar en las distinciones de terminología de test doubles.

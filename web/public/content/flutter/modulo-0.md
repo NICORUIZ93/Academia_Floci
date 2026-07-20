@@ -1,31 +1,5 @@
 # Módulo 0: Fundamentos de Dart
 
-## Sílabo
-
-**Objetivo general**
-
-Dominar Dart, el lenguaje detrás de Flutter: null safety comprobada de forma sólida (sound), orientación a objetos con clases y mixins, y el modelo asíncrono basado en `Future`/`async`/`await` que sustenta toda la interacción con red y I/O en Flutter.
-
-**Objetivos específicos**
-
-1. Declarar una variable nullable y manejar el caso `null` explícitamente.
-2. Crear una jerarquía de clases con herencia y aplicar un mixin.
-3. Escribir una función `async` que simule una petición con `Future.delayed`.
-4. Transformar una colección con `map`, `where` y `reduce` encadenados.
-5. Ejecutar `dart analyze` y corregir advertencias de null safety.
-
-**Contenido**
-
-- Null safety (sound null safety).
-- Clases, mixins y herencia.
-- Futures y `async`/`await`.
-- Colecciones y funciones de orden superior.
-
-**Evaluación**
-
-Programa de consola en Dart con manejo asíncrono y null safety estricta, más tres ejercicios de evaluación.
-
----
 
 ## Antes de comenzar: instala Flutter y valida todo
 
@@ -176,21 +150,6 @@ No crees un proyecto desechable por módulo. Conserva un único repositorio que 
 
 Al iniciar cada laboratorio crea una rama `modulo-N`, implementa el incremento, verifica el criterio de éxito y fusiona solo con pruebas verdes. Si un módulo necesita un experimento aislado, colócalo en `experiments/modulo-N/`; el producto acumulativo permanece ejecutable. Al terminar, otra persona debe poder clonar el repositorio y reproducir el último hito siguiendo únicamente el README.
 
-## Criterio transversal de calidad del código
-
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
 
 ## Laboratorio práctico
 
@@ -215,40 +174,3 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 - **Bloquear código síncrono esperando un `Future` sin `async`/`await`.** Usa el modificador `async` en la función que necesita esperar el resultado.
 
 ---
-
-
-
-## Bibliografía y fundamento académico
-
-Estas fuentes sustentan los conceptos y deben consultarse para verificar detalles que cambian entre versiones:
-
-- Google, *Flutter Documentation* y guías de arquitectura y rendimiento.
-- Google, *Dart Language Documentation* y *Effective Dart*.
-- OWASP Foundation, *Mobile Application Security Verification Standard*.
-- ACM/IEEE-CS/AAAI, *Computer Science Curricula 2023*.
-- IEEE Computer Society, *SWEBOK Guide V4.0*.
-
-## Resumen del módulo
-
-**Puntos clave**
-
-- El sound null safety de Dart garantiza, verificado en todo el programa, que un tipo no-nullable nunca contendrá `null`.
-- Los mixins permiten compartir comportamiento reutilizable entre clases sin depender de herencia múltiple tradicional.
-- `Future` con `async`/`await` permite código asíncrono legible de forma lineal, el mismo modelo convergente de otros lenguajes modernos.
-- Encadenar `where`/`map`/`fold` expresa transformaciones de colecciones de forma declarativa y legible.
-
-**Conceptos aprendidos**
-
-- Null safety (sound null safety).
-- Clases, mixins y herencia.
-- Futures y `async`/`await`.
-- Colecciones y funciones de orden superior.
-
-**Próximos pasos**
-
-En el Módulo 1 aprenderás que "en Flutter todo es un widget": la diferencia entre `StatelessWidget` y `StatefulWidget`, y el árbol de widgets que sustenta toda la UI.
-
-**Recursos adicionales**
-
-- Documentación oficial de null safety en Dart (dart.dev/null-safety).
-- Ejemplos de código ejecutables de este track, en Dart: carpeta [`examples/tracks/flutter/`](https://github.com/NICORUIZ93/Academia_Floci/tree/main/examples/tracks/flutter) del repositorio — `stateful-widget.dart` (Módulo 1), `responsive-layout.dart` (Módulo 2), `state-management.dart` (Módulo 4), `networking.dart` (Módulo 5), `local-persistence.dart` (Módulo 6).

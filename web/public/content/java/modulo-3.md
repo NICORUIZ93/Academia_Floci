@@ -1,30 +1,5 @@
 # Módulo 3: Excepciones y manejo de recursos
 
-## Sílabo
-
-**Objetivo general**
-
-Manejar errores de forma explícita y liberar recursos externos sin fugas, dominando checked frente a unchecked exceptions, try-with-resources, y excepciones personalizadas.
-
-**Objetivos específicos**
-
-1. Diferenciar excepciones checked de unchecked, y cómo el compilador trata cada una.
-2. Usar try-with-resources para cerrar recursos automáticamente.
-3. Crear excepciones personalizadas apropiadas al dominio.
-4. Reconocer y evitar el antipatrón de "tragar" excepciones silenciosamente.
-
-**Contenido**
-
-- Checked vs unchecked exceptions.
-- try-with-resources.
-- Excepciones personalizadas.
-- Buenas prácticas: no tragar excepciones.
-
-**Evaluación**
-
-Lector de archivos con manejo robusto de excepciones y try-with-resources, más tres ejercicios de evaluación.
-
----
 
 ## Aprende construyendo
 
@@ -101,21 +76,6 @@ try { operacionRiesgosa(); } catch (Exception e) {
 
 ---
 
-## Criterio transversal de calidad del código
-
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
 
 ## Laboratorio práctico
 
@@ -140,39 +100,3 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 - **Capturar `Exception` genérico y descartarlo silenciosamente.** Registra siempre el error como mínimo, y decide explícitamente cómo proceder.
 
 ---
-
-
-
-## Bibliografía y fundamento académico
-
-Estas fuentes sustentan los conceptos y deben consultarse para verificar detalles que cambian entre versiones:
-
-- Oracle, *Java Language Specification* y *Java Virtual Machine Specification*.
-- OpenJDK, documentación de Java SE, JFR y JMH.
-- Bloch, J., *Effective Java*.
-- ACM/IEEE-CS/AAAI, *Computer Science Curricula 2023*.
-- IEEE Computer Society, *SWEBOK Guide V4.0*.
-
-## Resumen del módulo
-
-**Puntos clave**
-
-- Las checked exceptions son verificadas por el compilador y representan condiciones externas previsibles; las unchecked típicamente indican bugs de programación.
-- try-with-resources garantiza el cierre automático de cualquier `AutoCloseable`, incluso ante una excepción.
-- Las excepciones personalizadas comunican con precisión condiciones de error específicas del dominio.
-- Un catch vacío oculta errores reales, haciendo el bug correspondiente invisible y difícil de diagnosticar.
-
-**Conceptos aprendidos**
-
-- Checked vs unchecked exceptions.
-- try-with-resources y `AutoCloseable`.
-- Excepciones personalizadas.
-- El antipatrón del catch vacío y su corrección.
-
-**Próximos pasos**
-
-En el Módulo 4 aprenderás Streams y programación funcional: map/filter/reduce/collect, lambdas, y `Optional`.
-
-**Recursos adicionales**
-
-- Documentación oficial de Java (docs.oracle.com/en/java): "Exceptions" y "The try-with-resources Statement".

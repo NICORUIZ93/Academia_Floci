@@ -1,32 +1,5 @@
 # Módulo 7: Integración con plataformas nativas
 
-## Sílabo
-
-**Objetivo general**
-
-Comunicarse directamente con código nativo de Android e iOS cuando un plugin existente no cubre una necesidad específica, usando `MethodChannel` para invocar código Kotlin/Swift desde Dart, entendiendo plugins federados y el manejo de permisos de plataforma.
-
-**Objetivos específicos**
-
-1. Crear un `MethodChannel` que invoque código nativo Kotlin desde Dart.
-2. Implementar el lado Android (Kotlin) que responde a esa invocación.
-3. Implementar el lado iOS (Swift) del mismo `MethodChannel`.
-4. Solicitar un permiso de plataforma y manejar el rechazo.
-5. Capturar una evidencia desde cámara o galería y subirla como `multipart/form-data` sin acoplar la interfaz a Dio.
-
-**Contenido**
-
-- `MethodChannel`: Dart ↔ Kotlin/Swift.
-- Plugins federados.
-- Permisos de plataforma.
-- Cuándo escribir un platform channel propio.
-- Cámara, galería, validación de archivos y carga multipart.
-
-**Evaluación**
-
-Platform channel propio y flujo de evidencia fotográfica verificable, más cuatro ejercicios de evaluación.
-
----
 
 ## Aprende construyendo
 
@@ -260,21 +233,6 @@ sequenceDiagram
 
 ---
 
-## Criterio transversal de calidad del código
-
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
 
 ## Laboratorio práctico
 
@@ -302,41 +260,3 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 - **Confiar únicamente en la extensión del archivo.** Valida tipo, firma, tamaño y autorización también en el servidor.
 
 ---
-
-
-
-## Bibliografía y fundamento académico
-
-Estas fuentes sustentan los conceptos y deben consultarse para verificar detalles que cambian entre versiones:
-
-- Google, *Flutter Documentation* y guías de arquitectura y rendimiento.
-- Google, *Dart Language Documentation* y *Effective Dart*.
-- OWASP Foundation, *Mobile Application Security Verification Standard*.
-- ACM/IEEE-CS/AAAI, *Computer Science Curricula 2023*.
-- IEEE Computer Society, *SWEBOK Guide V4.0*.
-
-## Resumen del módulo
-
-**Puntos clave**
-
-- Un `MethodChannel` establece comunicación bidireccional entre Dart y el código nativo de cada plataforma, requiriendo implementación separada en Kotlin e iOS Swift.
-- Un plugin federado separa la interfaz Dart de las implementaciones específicas por plataforma, facilitando agregar soporte para plataformas nuevas de forma independiente.
-- Manejar explícitamente el rechazo de un permiso evita fallos silenciosos o crashes.
-- Escribir un platform channel propio solo se justifica cuando no existe ya un plugin publicado que cubra la necesidad.
-- Cámara, validación y carga multipart son fronteras distintas y deben poder probarse por separado.
-
-**Conceptos aprendidos**
-
-- `MethodChannel`: Dart ↔ Kotlin/Swift.
-- Plugins federados.
-- Permisos de plataforma.
-- Cuándo escribir un platform channel propio.
-- Evidencia fotográfica, `XFile`, `FormData`, progreso e idempotencia.
-
-**Próximos pasos**
-
-En el Módulo 8 aprenderás animaciones y rendimiento: `AnimationController`, animaciones implícitas vs explícitas, y cómo detectar jank con Flutter DevTools.
-
-**Recursos adicionales**
-
-- Documentación oficial de platform channels de Flutter (docs.flutter.dev/platform-integration/platform-channels).

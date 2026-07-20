@@ -1,32 +1,5 @@
 # Módulo 5: CD — estrategias de despliegue
 
-## Sílabo
-
-**Objetivo general**
-
-Diseñar estrategias de despliegue que lleven código ya validado por CI a producción sin downtime perceptible, con capacidad real de revertir en segundos si algo sale mal, combinando blue-green, canary, rolling updates y feature flags según el contexto.
-
-**Objetivos específicos**
-
-1. Diferenciar blue-green, canary y rolling update, y justificar cuándo elegir cada uno.
-2. Configurar un pipeline de CD que despliegue automáticamente a un entorno de staging tras pasar CI.
-3. Simular un despliegue canary a un subconjunto de instancias.
-4. Implementar un feature flag simple que desacople el despliegue de la activación para el usuario.
-5. Diseñar (conceptualmente) un mecanismo de rollback automático basado en métricas.
-
-**Contenido**
-
-- Blue-green deployment.
-- Canary releases.
-- Rolling updates.
-- Feature flags vs branches por entorno.
-- Rollback automático por métricas.
-
-**Evaluación**
-
-Un laboratorio que configura un pipeline de CD hacia staging con una simulación de canary, y tres ejercicios de evaluación sobre elección de estrategia, feature flags, y diseño de rollback automático.
-
----
 
 ## Aprende construyendo
 
@@ -169,21 +142,6 @@ Despliegue canario en curso (5% del tráfico en v2)
 
 ---
 
-## Criterio transversal de calidad del código
-
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
 
 ## Laboratorio práctico
 
@@ -209,43 +167,3 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 - **No tienes claro qué métrica usar para el diseño del rollback automático del paso 5.** Empieza con la tasa de error HTTP 5xx como métrica de partida razonable para casi cualquier servicio web; es una señal directa y ampliamente aplicable de que algo está fallando, independientemente del dominio específico de la aplicación.
 
 ---
-
-
-
-## Bibliografía y fundamento académico
-
-Estas fuentes sustentan los conceptos y deben consultarse para verificar detalles que cambian entre versiones:
-
-- CNCF, documentación oficial de Kubernetes, Prometheus y OpenTelemetry.
-- HashiCorp, *Terraform Documentation*.
-- Beyer et al., *Site Reliability Engineering*; Forsgren et al., *Accelerate*.
-- ACM/IEEE-CS/AAAI, *Computer Science Curricula 2023*.
-- IEEE Computer Society, *SWEBOK Guide V4.0*.
-
-## Resumen del módulo
-
-**Puntos clave**
-
-- Blue-green da el rollback más rápido y simple, a costa de infraestructura duplicada; es ideal para cambios de alto riesgo o incompatibles hacia atrás.
-- Canary limita el radio de impacto exponiendo la nueva versión gradualmente a una fracción creciente del tráfico real, observando métricas en cada incremento.
-- Rolling update es la estrategia más simple de implementar nativamente en un orquestador como Kubernetes, reemplazando instancias de forma incremental sin infraestructura duplicada.
-- Los feature flags desacoplan el deploy (llevar código a producción) del release (activarlo para los usuarios), dando control fino sobre cuándo y para quién se activa cada funcionalidad.
-- El rollback automático por métricas cierra el ciclo entre desplegar y reaccionar ante un problema, reduciendo drásticamente el tiempo de detección y reversión frente a depender de supervisión humana manual.
-
-**Conceptos aprendidos**
-
-- Blue-green deployment y su mecanismo de corte de tráfico instantáneo.
-- Canary releases y el incremento gradual de tráfico basado en observación de métricas.
-- Rolling updates y los parámetros `maxUnavailable`/`maxSurge`.
-- Feature flags frente a branches por entorno, y el desacople de deploy y release.
-- Rollback automático por métricas: umbral, ventana de observación, y reversión sin intervención humana.
-
-**Próximos pasos**
-
-En el Módulo 6 vas a aprender los fundamentos de Kubernetes, el orquestador de contenedores estándar de la industria, empezando por Pods, ReplicaSets, Deployments y Services.
-
-**Recursos adicionales**
-
-- Documentación oficial de Kubernetes sobre estrategias de despliegue (rolling update y sus parámetros).
-- Artículos de referencia de la industria sobre blue-green deployment y canary releases (Martin Fowler, entre otros autores de referencia en la disciplina de entrega continua).
-- Documentación de plataformas de feature flags como referencia de implementación (LaunchDarkly, Unleash, u otras alternativas de código abierto).

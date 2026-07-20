@@ -1,31 +1,5 @@
 # Módulo 3: Mensajería asíncrona con SQS
 
-## Sílabo
-
-**Objetivo general**
-
-Entender por qué desacoplar componentes con colas de mensajes hace los sistemas más resilientes, dominar el ciclo de vida completo de un mensaje en SQS, y saber cuándo usar una Dead Letter Queue y cuándo elegir una cola FIFO frente a una Standard.
-
-**Objetivos específicos**
-
-1. Explicar qué significa desacoplar productores y consumidores con una cola de mensajes.
-2. Describir el ciclo de vida completo de un mensaje: envío, recepción, visibilidad y borrado.
-3. Configurar una Dead Letter Queue (DLQ) y explicar cuándo un mensaje termina en ella.
-4. Diferenciar colas FIFO y Standard, y justificar cuándo usar cada una.
-5. Enviar, recibir y eliminar mensajes en SQS usando la AWS CLI.
-
-**Contenido**
-
-- Colas, productores y consumidores.
-- Ciclo de vida de un mensaje.
-- Dead Letter Queues (DLQ).
-- Colas FIFO vs Standard.
-
-**Evaluación**
-
-Un laboratorio con el ciclo completo de una cola estándar y una DLQ, otro laboratorio con una cola FIFO, y tres ejercicios de evaluación sobre entrega duplicada, DLQ y elección de tipo de cola.
-
----
 
 ## Aprende construyendo
 
@@ -155,21 +129,6 @@ Cola Standard                      Cola FIFO (grupo A)      Cola FIFO (grupo B)
 
 ---
 
-## Criterio transversal de calidad del código
-
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
 
 ## Laboratorio práctico
 
@@ -213,44 +172,3 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 - **Confundir `QueueUrl` con `QueueArn`.** Son dos identificadores distintos del mismo recurso: la URL se usa en la mayoría de los comandos de la API (enviar, recibir, borrar), mientras que el ARN se usa específicamente en configuraciones como la RedrivePolicy. Usar uno donde se espera el otro produce errores de validación poco claros a primera vista.
 
 ---
-
-
-
-## Bibliografía y fundamento académico
-
-Estas fuentes sustentan los conceptos y deben consultarse para verificar detalles que cambian entre versiones:
-
-- AWS, Microsoft Azure y Google Cloud, marcos oficiales de arquitectura bien diseñada.
-- NIST, *Cloud Computing Standards Roadmap* y *Secure Software Development Framework*.
-- Beyer et al., *Site Reliability Engineering*.
-- ACM/IEEE-CS/AAAI, *Computer Science Curricula 2023*.
-- IEEE Computer Society, *SWEBOK Guide V4.0*.
-
-## Resumen del módulo
-
-**Puntos clave**
-
-- Las colas de mensajes desacoplan productores de consumidores, permitiendo que cada uno funcione, falle o escale de forma independiente del otro.
-- El ciclo de vida de un mensaje pasa por envío, recepción (con tiempo de visibilidad y ReceiptHandle) y borrado explícito; sin ese borrado, el mensaje vuelve a estar disponible.
-- SQS Standard entrega mensajes "al menos una vez", nunca "exactamente una vez"; los consumidores deben diseñarse para ser idempotentes.
-- Una Dead Letter Queue aísla automáticamente los mensajes que fallan repetidamente (según un `maxReceiveCount`), evitando que bloqueen el procesamiento normal.
-- Las colas FIFO garantizan orden estricto dentro de un `MessageGroupId` y deduplicación automática, a costa de menor rendimiento que Standard.
-
-**Conceptos aprendidos**
-
-- Desacoplamiento de productores y consumidores mediante colas.
-- Ciclo de vida completo de un mensaje: envío, visibilidad, ReceiptHandle y borrado.
-- Entrega "al menos una vez" y la necesidad de idempotencia.
-- Dead Letter Queues y el parámetro `maxReceiveCount`.
-- Colas FIFO frente a Standard, `MessageGroupId` y `MessageDeduplicationId`.
-
-**Próximos pasos**
-
-En el Módulo 4 vas a modelar y consultar datos en una base de datos NoSQL con DynamoDB, entendiendo claves primarias, índices, y por qué Query es preferible a Scan.
-
-**Recursos adicionales**
-
-- Documentación oficial de Amazon SQS: conceptos básicos y guía de desarrollador.
-- Documentación oficial sobre colas FIFO de SQS y sus límites de rendimiento.
-- Documentación oficial sobre Dead Letter Queues y políticas de redrive.
-- Código ejecutable de cada operación (crear cola, enviar, recibir, eliminar mensaje) en Node.js, Python, Java, Go y Rust: carpeta [`examples/`](https://github.com/NICORUIZ93/Academia_Floci/tree/main/examples) del repositorio, archivos que empiezan por `sqs-`/`sqs_`/`Sqs` (ver [`examples/README.md`](https://github.com/NICORUIZ93/Academia_Floci/blob/main/examples/README.md) para la lista completa).

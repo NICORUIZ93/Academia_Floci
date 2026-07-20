@@ -1,31 +1,5 @@
 # Módulo 9: Testing en Android
 
-## Sílabo
-
-**Objetivo general**
-
-Probar lógica, ViewModels y UI con las herramientas estándar del ecosistema Android, distinguiendo cuándo un test de ViewModel con fakes es suficiente y cuándo se necesita un test de UI o un flujo end-to-end completo.
-
-**Objetivos específicos**
-
-1. Escribir un test de ViewModel con un repositorio fake, verificando el `StateFlow`.
-2. Usar `runTest` para probar lógica suspend sin esperas reales.
-3. Escribir un test de Compose UI con `ComposeTestRule`.
-4. Escribir un test end-to-end con Espresso.
-5. Documentar cuándo preferir un fake sobre un mock.
-
-**Contenido**
-
-- JUnit + Coroutines Test para ViewModels.
-- Compose UI Testing.
-- Espresso para flujos end-to-end.
-- Fakes vs mocks en Android.
-
-**Evaluación**
-
-Suite de tests: ViewModel con coroutines test + al menos un test de Compose UI, más tres ejercicios de evaluación.
-
----
 
 ## Aprende construyendo
 
@@ -146,21 +120,6 @@ Test de Espresso (E2E) → verifica el flujo completo de usuario a través de m�
 
 ---
 
-## Criterio transversal de calidad del código
-
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
 
 ## Laboratorio práctico
 
@@ -185,39 +144,3 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 - **Usar Espresso para verificar lógica unitaria aislada.** Es más lento y menos apropiado que un test de ViewModel para ese propósito; reserva Espresso para flujos completos.
 
 ---
-
-
-
-## Bibliografía y fundamento académico
-
-Estas fuentes sustentan los conceptos y deben consultarse para verificar detalles que cambian entre versiones:
-
-- Google, *Android Developers Documentation* y guías de arquitectura de aplicaciones.
-- JetBrains, *Kotlin Language Documentation*.
-- OWASP Foundation, *Mobile Application Security Verification Standard*.
-- ACM/IEEE-CS/AAAI, *Computer Science Curricula 2023*.
-- IEEE Computer Society, *SWEBOK Guide V4.0*.
-
-## Resumen del módulo
-
-**Puntos clave**
-
-- Un repositorio fake hace que los tests de ViewModel sean rápidos y confiables, sin dependencias externas.
-- `runTest` permite testear lógica suspend con esperas simuladas de forma instantánea.
-- Un test de Compose UI cubre la brecha entre estado correcto y renderizado correcto para el usuario.
-- Espresso valida flujos completos end-to-end que ningún test unitario aislado cubre por sí solo.
-
-**Conceptos aprendidos**
-
-- JUnit + Coroutines Test para ViewModels.
-- Compose UI Testing.
-- Espresso para flujos end-to-end.
-- Fakes vs mocks en Android.
-
-**Próximos pasos**
-
-En el Módulo 10 aprenderás performance, Material 3 y accesibilidad: cómo detectar y corregir recomposiciones innecesarias, y por qué la accesibilidad es parte del estándar profesional.
-
-**Recursos adicionales**
-
-- Documentación oficial de testing en Compose (developer.android.com/jetpack/compose/testing).

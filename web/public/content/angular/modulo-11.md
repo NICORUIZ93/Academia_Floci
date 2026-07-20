@@ -1,31 +1,5 @@
 # Módulo 11: Performance, SSR y zoneless
 
-## Sílabo
-
-**Objetivo general**
-
-Mejorar el rendimiento percibido y real de una aplicación Angular mediante Server-Side Rendering, hidratación, carga diferida con `@defer`, y ejecución sin Zone.js.
-
-**Objetivos específicos**
-
-1. Configurar Server-Side Rendering con `ng add @angular/ssr`.
-2. Explicar el proceso de hidratación y por qué reutiliza el DOM existente.
-3. Usar `@defer` con distintos triggers para reducir el bundle inicial.
-4. Explicar cómo el modelo de zoneless depende de que el estado esté modelado con signals.
-5. Diagnosticar cuándo un bloque `@defer` es apropiado frente a carga inmediata.
-
-**Contenido**
-
-- Server-Side Rendering.
-- Hidratación.
-- `@defer`: triggers, placeholder y loading.
-- Zoneless.
-
-**Evaluación**
-
-Configuración de SSR con hidratación y un bloque `@defer` con trigger apropiado, más tres ejercicios de evaluación.
-
----
 
 ## Aprende construyendo
 
@@ -121,21 +95,6 @@ Zoneless (con signals): un signal cambia → SOLO se actualizan sus vistas depen
 
 ---
 
-## Criterio transversal de calidad del código
-
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
 
 ## Laboratorio práctico
 
@@ -160,39 +119,3 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 - **Asumir que zoneless funciona sin migrar el estado a signals.** El modelo zoneless depende de que el estado relevante esté modelado con signals para tener la precisión necesaria.
 
 ---
-
-
-
-## Bibliografía y fundamento académico
-
-Estas fuentes sustentan los conceptos y deben consultarse para verificar detalles que cambian entre versiones:
-
-- Google, *Angular Documentation* y guías oficiales de accesibilidad, seguridad y rendimiento.
-- ReactiveX, *RxJS Documentation*.
-- W3C, *Web Content Accessibility Guidelines (WCAG)*.
-- ACM/IEEE-CS/AAAI, *Computer Science Curricula 2023*.
-- IEEE Computer Society, *SWEBOK Guide V4.0*.
-
-## Resumen del módulo
-
-**Puntos clave**
-
-- SSR genera el HTML inicial en el servidor, mejorando el tiempo hasta contenido visible y el SEO.
-- La hidratación reutiliza el DOM existente, evitando parpadeo visual y trabajo redundante.
-- `@defer` con triggers apropiados reduce el bundle inicial descargado.
-- El modelo zoneless depende de la precisión de signals para saber exactamente qué actualizar.
-
-**Conceptos aprendidos**
-
-- Server-Side Rendering y su beneficio para tiempo de carga y SEO.
-- Hidratación y reutilización del DOM.
-- `@defer`, triggers, `@placeholder` y `@loading`.
-- Zoneless y su dependencia de signals.
-
-**Próximos pasos**
-
-En el Módulo 12 revisarás qué cambió entre versiones mayores de Angular, y cómo interpretar una guía oficial de actualización.
-
-**Recursos adicionales**
-
-- Documentación oficial de Angular: "Server-side rendering", "Hydration", "Deferred loading" y "Zoneless".

@@ -1,32 +1,5 @@
 # Módulo 7: Inyección de dependencias con Hilt
 
-## Sílabo
-
-**Objetivo general**
-
-Desacoplar las dependencias de una app Android usando Hilt, el estándar de la industria construido sobre Dagger, entendiendo módulos, scopes y cómo reemplazar dependencias reales por fakes en tests.
-
-**Objetivos específicos**
-
-1. Anotar la `Application` y un `ViewModel` para habilitar Hilt.
-2. Inyectar un repositorio en un `ViewModel` con `@Inject` en el constructor.
-3. Usar `@Provides` para dependencias que no se pueden anotar directamente.
-4. Usar `@Binds` para mapear una interfaz a su implementación.
-5. Configurar un módulo de test que reemplace una dependencia real por un fake.
-
-**Contenido**
-
-- Hilt: módulos y componentes.
-- `@Inject`, `@Provides`, `@Binds`.
-- Scopes de Hilt (`ViewModelScoped`, `SingletonComponent`).
-- Testing con Hilt.
-- Koin como alternativa más ligera a Hilt.
-
-**Evaluación**
-
-App con todas sus dependencias (repos, servicios) inyectadas vía Hilt, más tres ejercicios de evaluación.
-
----
 
 ## Aprende construyendo
 
@@ -142,21 +115,6 @@ class TareasFlowTest { /* ... */ }
 
 ---
 
-## Criterio transversal de calidad del código
-
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
 
 ## Laboratorio práctico
 
@@ -181,40 +139,3 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 - **Instanciar manualmente una dependencia dentro de una clase en vez de inyectarla.** Reintroduce el acoplamiento que Hilt está diseñado para evitar.
 
 ---
-
-
-
-## Bibliografía y fundamento académico
-
-Estas fuentes sustentan los conceptos y deben consultarse para verificar detalles que cambian entre versiones:
-
-- Google, *Android Developers Documentation* y guías de arquitectura de aplicaciones.
-- JetBrains, *Kotlin Language Documentation*.
-- OWASP Foundation, *Mobile Application Security Verification Standard*.
-- ACM/IEEE-CS/AAAI, *Computer Science Curricula 2023*.
-- IEEE Computer Society, *SWEBOK Guide V4.0*.
-
-## Resumen del módulo
-
-**Puntos clave**
-
-- Hilt centraliza el conocimiento de construcción de dependencias, evitando que cada clase deba saber cómo construir las suyas.
-- `@Provides` construye dependencias externas no anotables; `@Binds` mapea eficientemente una interfaz a su implementación propia.
-- El scope correcto (`@Singleton` vs `@ViewModelScoped`) evita recrear objetos innecesariamente o retenerlos más tiempo del necesario.
-- `@UninstallModules` permite reemplazar dependencias reales por fakes en tests sin modificar el código de producción.
-
-**Conceptos aprendidos**
-
-- Hilt: módulos y componentes.
-- `@Inject`, `@Provides`, `@Binds`.
-- Scopes de Hilt.
-- Testing con Hilt.
-- Koin como alternativa más ligera.
-
-**Próximos pasos**
-
-En el Módulo 8 aprenderás a ejecutar trabajo en segundo plano que sobrevive incluso si la app se cierra, usando WorkManager.
-
-**Recursos adicionales**
-
-- Documentación oficial de Hilt (developer.android.com/training/dependency-injection/hilt-android).

@@ -1,32 +1,5 @@
 # Módulo 16: Orquestación de flujos con Step Functions
 
-## Sílabo
-
-**Objetivo general**
-
-Coordinar múltiples servicios en flujos complejos con lógica condicional, reintentos automáticos y manejo de errores declarativo, distinguiendo cuándo Step Functions es necesario frente a alternativas más simples como EventBridge Pipes.
-
-**Objetivos específicos**
-
-1. Escribir una state machine con estados secuenciales que invocan distintos servicios.
-2. Iniciar y observar una ejecución.
-3. Agregar un Choice state que enrute según una condición.
-4. Configurar Retry y Catch para manejo declarativo de errores.
-
-**Contenido**
-
-- State machine.
-- Task state.
-- Choice state.
-- Retry / Catch.
-- Express vs Standard.
-- Parallel state.
-
-**Evaluación**
-
-Flujo de procesamiento de tareas con validación, guardado, notificación y manejo de errores, más tres ejercicios de evaluación.
-
----
 
 ## Aprende construyendo
 
@@ -106,21 +79,6 @@ EventBridge Pipes  → conexión directa simple entre dos servicios, sin orquest
 
 ---
 
-## Criterio transversal de calidad del código
-
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
 
 ## Laboratorio práctico
 
@@ -147,41 +105,3 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 - **Introducir Step Functions para una simple conexión directa entre dos servicios sin lógica condicional.** Considera EventBridge Pipes, más simple para ese caso.
 
 ---
-
-
-
-## Bibliografía y fundamento académico
-
-Estas fuentes sustentan los conceptos y deben consultarse para verificar detalles que cambian entre versiones:
-
-- AWS, Microsoft Azure y Google Cloud, marcos oficiales de arquitectura bien diseñada.
-- NIST, *Cloud Computing Standards Roadmap* y *Secure Software Development Framework*.
-- Beyer et al., *Site Reliability Engineering*.
-- ACM/IEEE-CS/AAAI, *Computer Science Curricula 2023*.
-- IEEE Computer Society, *SWEBOK Guide V4.0*.
-
-## Resumen del módulo
-
-**Puntos clave**
-
-- Una state machine declara explícitamente la secuencia y lógica de un flujo, con visibilidad operativa clara sobre cada ejecución.
-- `Choice` expresa lógica condicional declarativa; `Retry`/`Catch` declaran manejo de errores explícito con backoff automático.
-- Standard workflows priorizan trazabilidad completa para procesos críticos; Express prioriza costo y throughput para alto volumen.
-- EventBridge Pipes es suficiente para conexiones simples sin necesidad de orquestación compleja, evitando sobre-ingeniería.
-
-**Conceptos aprendidos**
-
-- State machine.
-- Task state.
-- Choice state.
-- Retry / Catch.
-- Express vs Standard.
-- Parallel state.
-
-**Próximos pasos**
-
-En el Módulo 17 aprenderás streaming con Kinesis y MSK, procesando flujos de millones de eventos por segundo, distinto del modelo de colas de SQS.
-
-**Recursos adicionales**
-
-- Documentación oficial de AWS Step Functions (docs.aws.amazon.com/step-functions).

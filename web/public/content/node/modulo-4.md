@@ -1,33 +1,5 @@
 # Módulo 4: Express/Fastify — routing y middleware
 
-## Sílabo
-
-**Objetivo general**
-
-Dominar el patrón middleware, la base de casi todos los frameworks web de Node, construyendo una API con Express que incluya logging, validación y manejo de errores centralizado, y comparándola con Fastify.
-
-**Objetivos específicos**
-
-1. Explicar el orden de ejecución de middleware y el rol de `next()`.
-2. Organizar rutas relacionadas en routers anidados.
-3. Implementar manejo centralizado de errores con un middleware de 4 parámetros.
-4. Validar la entrada de una API con una biblioteca de esquemas como Zod.
-5. Comparar Express con Fastify en rendimiento y ergonomía de schemas.
-
-**Contenido**
-
-- Middleware: orden de ejecución y `next()`.
-- Routers anidados.
-- Manejo centralizado de errores.
-- Validación de entrada (Zod/Joi).
-- `express-validator` como alternativa.
-- Diferencias clave Express frente a Fastify: hooks y JSON Schema nativo.
-
-**Evaluación**
-
-Una API REST con middleware de logging, validación y manejo de errores centralizado, más tres ejercicios de evaluación.
-
----
 
 ## Aprende construyendo
 
@@ -138,21 +110,6 @@ Fastify: hooks granulares (onRequest/preHandler), JSON Schema nativo integrado,
 
 ---
 
-## Criterio transversal de calidad del código
-
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
 
 ## Laboratorio práctico
 
@@ -178,40 +135,3 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 - **Olvidar que un router necesita su propio middleware si lo requiere.** Un middleware registrado en `app` antes de montar el router aplica a todas las rutas incluyendo el router; uno registrado solo en el router aplica únicamente a ese grupo específico.
 
 ---
-
-
-
-## Bibliografía y fundamento académico
-
-Estas fuentes sustentan los conceptos y deben consultarse para verificar detalles que cambian entre versiones:
-
-- OpenJS Foundation, *Node.js Documentation*.
-- IETF, especificaciones HTTP Semantics, OAuth 2.0 y JSON.
-- OWASP Foundation, *Application Security Verification Standard*.
-- ACM/IEEE-CS/AAAI, *Computer Science Curricula 2023*.
-- IEEE Computer Society, *SWEBOK Guide V4.0*.
-
-## Resumen del módulo
-
-**Puntos clave**
-
-- Un middleware es una función `(req, res, next)` que puede inspeccionar, modificar o detener una petición; el orden de registro determina el orden de ejecución.
-- Los routers anidados (`express.Router()`) organizan rutas relacionadas de forma modular, montadas con un prefijo específico.
-- Zod valida la entrada declarativamente; un middleware de 4 parámetros centraliza el manejo de errores de toda la aplicación.
-- Fastify usa hooks y JSON Schema nativo, ofreciendo mejor rendimiento bruto a cambio de un ecosistema algo menos extenso que Express.
-
-**Conceptos aprendidos**
-
-- El patrón middleware y el rol crítico de `next()`.
-- Organización modular de rutas con routers anidados.
-- Validación de entrada con Zod y manejo centralizado de errores.
-- Diferencias arquitectónicas entre Express y Fastify.
-
-**Próximos pasos**
-
-En el Módulo 5 conectarás tu API a una base de datos real, aprendiendo cuándo un ORM como Prisma ayuda y cuándo estorba, incluyendo pools de conexiones y transacciones.
-
-**Recursos adicionales**
-
-- Documentación oficial de Express ("Using middleware") y de Fastify ("Hooks", "Validation and Serialization").
-- Documentación oficial de Zod (zod.dev).

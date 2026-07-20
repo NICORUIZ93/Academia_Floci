@@ -1,30 +1,5 @@
 # Módulo 3: Arquitectura de un proyecto KMP
 
-## Sílabo
-
-**Objetivo general**
-
-Entender cómo un mismo código Kotlin termina ejecutándose en Android e iOS, dominando source sets, el mecanismo `expect`/`actual`, y la configuración de Gradle multiplataforma.
-
-**Objetivos específicos**
-
-1. Explorar la estructura de carpetas de un proyecto KMP (`commonMain`, `androidMain`, `iosMain`).
-2. Declarar una función `expect` en código común e implementarla como `actual` por plataforma.
-3. Configurar Gradle multiplataforma con los targets necesarios.
-4. Explicar por qué el código en `commonMain` no puede usar APIs específicas de plataforma directamente.
-
-**Contenido**
-
-- Source sets: `commonMain`, `androidMain`, `iosMain`.
-- `expect`/`actual`: declarar e implementar por plataforma.
-- Gradle multiplataforma.
-- Targets disponibles (JVM, Native, JS).
-
-**Evaluación**
-
-Proyecto KMP con un módulo compartido que compila para Android e iOS, más tres ejercicios de evaluación.
-
----
 
 ## Aprende construyendo
 
@@ -117,21 +92,6 @@ kotlin {
 
 ---
 
-## Criterio transversal de calidad del código
-
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
 
 ## Laboratorio práctico
 
@@ -156,39 +116,3 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 - **Declarar una dependencia solo en un source set específico cuando se necesita en `commonMain`.** Verifica en qué bloque de `sourceSets` corresponde declarar cada dependencia según su alcance.
 
 ---
-
-
-
-## Bibliografía y fundamento académico
-
-Estas fuentes sustentan los conceptos y deben consultarse para verificar detalles que cambian entre versiones:
-
-- JetBrains, documentación oficial de *Kotlin Multiplatform* y Kotlin Coroutines.
-- Google, *Android Developers Documentation*; Apple, *Developer Documentation*.
-- Kotlin Foundation, especificación y pautas de compatibilidad de Kotlin.
-- ACM/IEEE-CS/AAAI, *Computer Science Curricula 2023*.
-- IEEE Computer Society, *SWEBOK Guide V4.0*.
-
-## Resumen del módulo
-
-**Puntos clave**
-
-- Los source sets (`commonMain`, `androidMain`, `iosMain`) separan código compartido de código específico de plataforma.
-- `expect`/`actual` vincula un contrato declarado en común con su implementación específica de plataforma en tiempo de compilación.
-- Gradle multiplataforma configura explícitamente qué targets de compilación están habilitados.
-- KMP no se limita a Android/iOS; también compila a JVM, JS/Wasm y Native de escritorio.
-
-**Conceptos aprendidos**
-
-- Source sets de un proyecto KMP.
-- `expect`/`actual`.
-- Configuración de Gradle multiplataforma.
-- Targets disponibles más allá de Android/iOS.
-
-**Próximos pasos**
-
-En el Módulo 4 aprenderás lógica de negocio compartida: modelos de dominio, casos de uso, repositorios con interfaces comunes, e inyección de dependencias con Koin.
-
-**Recursos adicionales**
-
-- Documentación oficial de Kotlin Multiplatform (kotlinlang.org/docs/multiplatform.html).

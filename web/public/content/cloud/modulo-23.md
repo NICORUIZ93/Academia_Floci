@@ -1,30 +1,5 @@
 # Módulo 23: Caché en memoria con ElastiCache
 
-## Sílabo
-
-**Objetivo general**
-
-Entender para qué sirve un caché en memoria distribuido, crear un clúster ElastiCache respaldado por un contenedor Valkey/Redis real en Floci, conectarte a él con un cliente Redis estándar, y aplicar el patrón cache-aside para reducir carga sobre una base de datos.
-
-**Objetivos específicos**
-
-1. Explicar cuándo un caché en memoria mejora el rendimiento de una aplicación y cuándo no.
-2. Crear un grupo de réplicas ElastiCache y obtener su puerto de conexión real.
-3. Leer y escribir datos con `redis-cli` contra el clúster.
-4. Crear un usuario ElastiCache con autenticación IAM y validar un token de acceso.
-
-**Contenido**
-
-- Qué resuelve un caché en memoria y el patrón cache-aside.
-- Arquitectura de ElastiCache en Floci: contenedores Valkey/Redis reales y proxy TCP.
-- Creación de clústeres y conexión con clientes Redis estándar.
-- Autenticación IAM para el plano de datos.
-
-**Evaluación**
-
-Un laboratorio práctico (crear un clúster, leer/escribir con redis-cli, y crear un usuario con autenticación IAM) y tres ejercicios de evaluación.
-
----
 
 ## Aprende construyendo
 
@@ -78,21 +53,6 @@ Este es el mismo principio de seguridad que ya viste con roles IAM para Lambda o
 
 ---
 
-## Criterio transversal de calidad del código
-
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
 
 ## Laboratorio práctico
 
@@ -129,30 +89,3 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 - **El valor desaparece antes de lo esperado.** Revisaste el TTL con `TTL` y confirmaste que expiró correctamente: eso es el comportamiento esperado de `EX`, no un error — ajusta el tiempo de vida si necesitas que dure más.
 
 ---
-
-
-
-## Bibliografía y fundamento académico
-
-Estas fuentes sustentan los conceptos y deben consultarse para verificar detalles que cambian entre versiones:
-
-- AWS, Microsoft Azure y Google Cloud, marcos oficiales de arquitectura bien diseñada.
-- NIST, *Cloud Computing Standards Roadmap* y *Secure Software Development Framework*.
-- Beyer et al., *Site Reliability Engineering*.
-- ACM/IEEE-CS/AAAI, *Computer Science Curricula 2023*.
-- IEEE Computer Society, *SWEBOK Guide V4.0*.
-
-## Resumen del módulo
-
-```python
-cached = redis_client.get(f"delivery:{delivery_id}")
-if cached is None:
-    delivery = repository.find(delivery_id)
-    redis_client.setex(f"delivery:{delivery_id}", 60, json.dumps(delivery))
-else:
-    delivery = json.loads(cached)
-```
-
-Prueba el cache miss, el cache hit y la expiración; no uses el caché como única fuente de verdad.
-
-En este módulo entendiste cuándo un caché en memoria mejora el rendimiento de una aplicación (lecturas frecuentes sobre datos que cambian poco) y cuándo no compensa la complejidad. Creaste un clúster ElastiCache respaldado por un contenedor Valkey real en Floci, te conectaste con `redis-cli` como lo harías contra cualquier Redis real, y practicaste el patrón cache-aside con `SET`, `GET` y `EXPIRE`. Finalmente, viste cómo migrar de contraseñas fijas a autenticación IAM, el mismo principio de seguridad —credenciales temporales derivadas de identidad, no secretos estáticos— que ya aplicaste con roles IAM en módulos anteriores.

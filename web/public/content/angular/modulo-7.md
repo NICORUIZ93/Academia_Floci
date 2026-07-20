@@ -1,32 +1,5 @@
 # Módulo 7: HttpClient e interceptores
 
-## Sílabo
-
-**Objetivo general**
-
-Consumir APIs REST de forma tipada con `HttpClient`, y centralizar autenticación y manejo de errores mediante interceptores funcionales.
-
-**Objetivos específicos**
-
-1. Configurar `HttpClient` con `provideHttpClient(withFetch())`.
-2. Realizar peticiones tipadas usando interfaces TypeScript.
-3. Escribir interceptores funcionales para agregar autenticación.
-4. Centralizar el manejo de errores HTTP en un interceptor.
-5. Combinar `HttpClient` con signals mediante `toSignal`.
-
-**Contenido**
-
-- `HttpClient` con backend `fetch`.
-- Peticiones GET tipadas.
-- Interceptores funcionales: autenticación y errores.
-- Registro de interceptores en `app.config.ts`.
-- Por qué centralizar el manejo de errores.
-
-**Evaluación**
-
-Consumo de una API con interceptor de autenticación y manejo centralizado de errores 401, más tres ejercicios de evaluación.
-
----
 
 ## Aprende construyendo
 
@@ -111,21 +84,6 @@ provideHttpClient(withInterceptors([authInterceptor, errorInterceptor]))
 
 ---
 
-## Criterio transversal de calidad del código
-
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
 
 ## Laboratorio práctico
 
@@ -150,39 +108,3 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 - **No relanzar el error en `errorInterceptor`.** Si no usas `throwError`, el código que originó la petición nunca se entera de que hubo un error.
 
 ---
-
-
-
-## Bibliografía y fundamento académico
-
-Estas fuentes sustentan los conceptos y deben consultarse para verificar detalles que cambian entre versiones:
-
-- Google, *Angular Documentation* y guías oficiales de accesibilidad, seguridad y rendimiento.
-- ReactiveX, *RxJS Documentation*.
-- W3C, *Web Content Accessibility Guidelines (WCAG)*.
-- ACM/IEEE-CS/AAAI, *Computer Science Curricula 2023*.
-- IEEE Computer Society, *SWEBOK Guide V4.0*.
-
-## Resumen del módulo
-
-**Puntos clave**
-
-- `HttpClient` con `withFetch()` moderniza el transporte subyacente de las peticiones.
-- Tipar las respuestas HTTP atrapa errores de uso en tiempo de compilación.
-- Los interceptores funcionales centralizan autenticación y manejo de errores transversal.
-- El orden de registro de interceptores determina su orden real de ejecución.
-
-**Conceptos aprendidos**
-
-- `HttpClient` y peticiones tipadas.
-- Interceptores funcionales de autenticación y errores.
-- Registro y orden de ejecución de interceptores.
-- Centralización del manejo de errores HTTP.
-
-**Próximos pasos**
-
-En el Módulo 8 aprenderás standalone components y arquitectura sin NgModules: bootstrap de la aplicación, organización por feature, y migración de un proyecto existente.
-
-**Recursos adicionales**
-
-- Documentación oficial de Angular: "HttpClient" e "Interceptors".

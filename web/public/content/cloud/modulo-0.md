@@ -1,36 +1,5 @@
 # Módulo 0: Introducción y preparación
 
-## Sílabo
-
-**Objetivo general**
-
-Partir de cero absoluto —qué es una terminal, un comando, una dirección IP, un puerto— hasta comprender qué es Floci, por qué existe, qué servicios de AWS, Azure y GCP emula, y dejar el entorno de trabajo completamente instalado y verificado antes de escribir el primer comando real de nube en el Módulo 1. Si ya tienes experiencia con la terminal y conceptos básicos de redes, los Temas 1 y 2 te servirán como repaso rápido; si nunca has abierto una terminal, son el punto de partida real del curso.
-
-**Objetivos específicos**
-
-1. Explicar qué es una terminal, un comando y un sistema operativo, y ejecutar tus primeros comandos.
-2. Explicar qué es una dirección IP, un puerto y el protocolo HTTP, y por qué son la base de cómo hablarás con Floci.
-3. Explicar con tus propias palabras qué es un emulador de nube local y en qué se diferencia de una cuenta cloud real.
-4. Comparar Floci con LocalStack e identificar qué resuelven ambos y dónde se diferencian.
-5. Enumerar los servicios de AWS, Azure y GCP que vas a practicar a lo largo del curso.
-6. Instalar y verificar Docker, AWS CLI, Python 3 y Node.js.
-7. Configurar las variables de entorno necesarias para que la AWS CLI hable con Floci en vez de con AWS real.
-
-**Contenido**
-
-- Fundamentos absolutos: terminal, comandos y sistema operativo.
-- Fundamentos de redes: direcciones IP, puertos, HTTP y APIs.
-- Qué vas a aprender y cómo está estructurado el curso.
-- Qué es Floci: definición, propósito y comparativa con LocalStack.
-- Servicios que emula Floci: AWS, Azure y GCP.
-- Ventajas y limitaciones de practicar con un emulador local.
-- Metodología de estudio: teoría, laboratorio y evaluación en cada módulo.
-
-**Evaluación**
-
-Un laboratorio de instalación y verificación de herramientas (sin código de aplicación todavía) y cuatro ejercicios cortos: dos de reflexión sobre qué esperas de un emulador de nube local frente a una cuenta real, uno de repaso del entorno instalado, y uno que verifica que entendiste el recorrido completo de un comando hasta convertirse en una petición HTTP. No hay proyecto de código en este módulo: es la base sobre la que se apoyan los 31 módulos siguientes.
-
----
 
 ## Antes de comenzar: instalación guiada por sistema operativo
 
@@ -284,21 +253,6 @@ No crees un proyecto desechable por módulo. Conserva un único repositorio que 
 
 Al iniciar cada laboratorio crea una rama `modulo-N`, implementa el incremento, verifica el criterio de éxito y fusiona solo con pruebas verdes. Si un módulo necesita un experimento aislado, colócalo en `experiments/modulo-N/`; el producto acumulativo permanece ejecutable. Al terminar, otra persona debe poder clonar el repositorio y reproducir el último hito siguiendo únicamente el README.
 
-## Criterio transversal de calidad del código
-
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
 
 ## Laboratorio práctico
 
@@ -330,42 +284,3 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 - **`aws: command not found` en Windows tras instalar.** Asegúrate de haber reiniciado la terminal (o la sesión de Windows) después de la instalación; el instalador de AWS CLI v2 en Windows requiere reiniciar la consola para actualizar el PATH del sistema.
 
 ---
-
-
-
-## Bibliografía y fundamento académico
-
-Estas fuentes sustentan los conceptos y deben consultarse para verificar detalles que cambian entre versiones:
-
-- AWS, Microsoft Azure y Google Cloud, marcos oficiales de arquitectura bien diseñada.
-- NIST, *Cloud Computing Standards Roadmap* y *Secure Software Development Framework*.
-- Beyer et al., *Site Reliability Engineering*.
-- ACM/IEEE-CS/AAAI, *Computer Science Curricula 2023*.
-- IEEE Computer Society, *SWEBOK Guide V4.0*.
-
-## Resumen del módulo
-
-**Puntos clave**
-
-- Floci es un emulador de nube local, API-compatible con AWS, Azure y GCP, en la misma línea que herramientas como LocalStack.
-- Usar Floci en vez de una cuenta real elimina el coste y el riesgo durante la fase de aprendizaje, sin sacrificar la fidelidad de los comandos y flujos de trabajo reales.
-- El curso cubre AWS en los Módulos 1 a 7, y Azure/GCP en el Módulo 8, antes de integrarlo todo en el proyecto final del Módulo 9.
-- Cada módulo sigue el mismo ciclo: teoría, laboratorio guiado con verificación, y ejercicios de evaluación sin ayuda.
-
-**Conceptos aprendidos**
-
-- Qué es un emulador de nube y cómo se diferencia de una cuenta real.
-- Floci frente a LocalStack.
-- El catálogo de servicios de Floci, floci-az y floci-gcp.
-- Ventajas (coste, velocidad de iteración, aprendizaje de errores reales) y limitaciones (sin escala real, sin latencia de red real) de un emulador.
-- La metodología de teoría → laboratorio → evaluación que vas a repetir en cada módulo.
-
-**Próximos pasos**
-
-En el Módulo 1 vas a profundizar en Docker —el motor que hace posible que Floci exista— antes de levantarlo por primera vez con `docker run` y verificarlo con una petición HTTP real a su endpoint de salud.
-
-**Recursos adicionales**
-
-- Documentación oficial de Docker: conceptos de imágenes y contenedores.
-- Documentación oficial de la AWS CLI v2: instalación y configuración.
-- Repositorio de LocalStack (referencia del enfoque de emulación que Floci sigue para AWS).

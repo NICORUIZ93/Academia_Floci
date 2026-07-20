@@ -1,23 +1,5 @@
 # Módulo 0: Cómo funciona tu entorno de desarrollo
 
-## Sílabo
-
-**Objetivo general**
-
-Comprender, desde cero absoluto, qué ocurre entre escribir una instrucción y observar un resultado: reconocer las piezas básicas del computador, distinguir programa de proceso, orientarse en el sistema de archivos, utilizar una terminal sin copiar comandos a ciegas y ejecutar un primer programa reproducible.
-
-**Objetivos específicos**
-
-1. Distinguir CPU, memoria RAM, almacenamiento y sistema operativo por la función que cumplen.
-2. Explicar la diferencia entre código fuente, programa y proceso.
-3. Crear, localizar y recorrer carpetas usando rutas absolutas y relativas.
-4. Descomponer un comando en programa, opciones y argumentos.
-5. Interpretar salida estándar, salida de error y código de salida.
-6. Crear y ejecutar un primer programa, provocar un error y documentar la corrección.
-
-**Evaluación**
-
-La evidencia será una carpeta creada desde la terminal que contenga un programa mínimo y un `README.md`. El README deberá registrar los comandos utilizados, la salida correcta, un error provocado deliberadamente y la explicación de cómo se corrigió.
 
 ## Antes de comenzar: instalación guiada
 
@@ -185,21 +167,6 @@ observar error → localizar → formular hipótesis → cambiar una cosa → ej
        └────────────────── si falla, repetir con evidencia ─────────┘
 ```
 
-## Criterio transversal de calidad del código
-
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
 
 ## Laboratorio práctico
 
@@ -222,19 +189,3 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 - **“No such file or directory”.** Comprueba `pwd`, lista archivos y revisa mayúsculas, extensión y ruta.
 - **Editar sin guardar.** Activa Auto Save o guarda antes de ejecutar.
 - **Pegar comandos administrativos.** Detente y comprende cada parte antes de aceptar privilegios.
-
-
-
-## Bibliografía y fundamento académico
-
-- Shotts, *The Linux Command Line*: shell, archivos, procesos y composición de comandos desde fundamentos.
-- Chacon y Straub, *Pro Git*: repositorios, commits y modelo de control de versiones distribuido.
-- Documentación oficial de Python, Git y Visual Studio Code para instalación y comportamiento específico de cada plataforma.
-- ACM/IEEE-CS/AAAI CS2023: Architecture and Organization, Software Development Fundamentals y Systems Fundamentals.
-- IEEE Computer Society SWEBOK V4: Software Construction y Computing Foundations.
-
-Los resultados observables son identificar los componentes del entorno, crear rutas sin interfaz gráfica, ejecutar un programa, interpretar su estado, investigar un fallo deliberado y permitir que otra persona reproduzca el trabajo. Estas acciones evalúan desempeño; reconocer vocabulario por sí solo no basta.
-
-## Resumen del módulo
-
-Un archivo de código es información almacenada; un proceso es su ejecución con memoria y CPU. La terminal permite interactuar con el sistema mediante comandos compuestos por programa, opciones y argumentos. Las rutas dependen de la carpeta actual salvo que sean absolutas. Los errores aportan evidencia y deben investigarse con cambios controlados. El primer estándar profesional es que otra persona pueda reproducir tu trabajo usando el código y su documentación.

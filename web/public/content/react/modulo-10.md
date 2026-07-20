@@ -1,31 +1,5 @@
 # Módulo 10: Server Components y Next.js
 
-## Sílabo
-
-**Objetivo general**
-
-Entender el giro del ecosistema React hacia renderizado en servidor por defecto: Server Components frente a Client Components, el App Router de Next.js, streaming con Suspense en el servidor, y Server Actions.
-
-**Objetivos específicos**
-
-1. Explicar por qué un Server Component nunca envía su JavaScript al navegador.
-2. Identificar cuándo un componente debe marcarse explícitamente como `"use client"`.
-3. Implementar streaming de una sección lenta con Suspense en el servidor.
-4. Implementar una Server Action que procese un formulario sin un endpoint API separado.
-5. Explicar la relación entre Server Components y el bundle final del cliente.
-
-**Contenido**
-
-- Server Components vs Client Components.
-- App Router de Next.js.
-- Streaming y Suspense en el servidor.
-- Server Actions.
-
-**Evaluación**
-
-Aplicación Next.js con App Router, Server Components y al menos una Server Action, más tres ejercicios de evaluación.
-
----
 
 ## Aprende construyendo
 
@@ -118,21 +92,6 @@ async function crearTarea(formData) {
 
 ---
 
-## Criterio transversal de calidad del código
-
-Aplica estas decisiones en todos los ejemplos y en tu entrega:
-
-- usa nombres que expresen intención, dominio y unidades; evita `data`, `temp`, `manager` o `process` cuando exista un término preciso;
-- mantén funciones, componentes, clases, consultas y módulos cohesionados alrededor de una responsabilidad comprobable;
-- haz visibles las dependencias y los efectos de red, tiempo, archivos, estado y base de datos;
-- valida entradas en la frontera y representa errores con contexto, sin ocultar la causa ni registrar secretos;
-- elimina duplicación de reglas, no toda repetición textual; una abstracción incorrecta cuesta más que dos líneas parecidas;
-- escribe primero la solución más simple que satisface el requisito y refactoriza con pruebas verdes;
-- aplica SOLID únicamente cuando exista una necesidad real de cambio, extensión, sustitución o aislamiento.
-
-**SOLID con criterio:** responsabilidad única significa una razón coherente de cambio, no una clase por función. Abierto/cerrado justifica estrategias cuando hay variantes reales. Sustitución exige respetar contratos. Segregación evita obligar a consumidores a depender de operaciones que no usan. Inversión de dependencias protege el dominio frente a detalles externos; no exige crear interfaces para cada objeto.
-
-**Comprobación antes de continuar:** ¿otra persona puede entender los nombres y el flujo?, ¿los casos de error son observables?, ¿una prueba demuestra la regla principal?, ¿cada abstracción aporta más claridad de la que cuesta? Registra una decisión de refactorización y una decisión consciente de *no abstraer*.
 
 ## Laboratorio práctico
 
@@ -156,40 +115,3 @@ Aplica estas decisiones en todos los ejemplos y en tu entrega:
 - **Envolver la sección lenta sin `Suspense`.** Sin `Suspense`, toda la página espera a que la sección lenta complete antes de mostrarse.
 
 ---
-
-
-
-## Bibliografía y fundamento académico
-
-Estas fuentes sustentan los conceptos y deben consultarse para verificar detalles que cambian entre versiones:
-
-- Meta Open Source, *React Documentation*.
-- WHATWG, estándares de DOM, HTML y Fetch.
-- W3C, *Web Content Accessibility Guidelines (WCAG)*.
-- ACM/IEEE-CS/AAAI, *Computer Science Curricula 2023*.
-- IEEE Computer Society, *SWEBOK Guide V4.0*.
-
-
-## Resumen del módulo
-
-**Puntos clave**
-
-- Un Server Component nunca envía su JavaScript al cliente, reduciendo el bundle y permitiendo acceso directo a recursos del servidor.
-- `"use client"` es obligatorio para hooks de estado y manejadores de eventos interactivos.
-- El streaming con Suspense permite mostrar el contenido listo sin esperar a las secciones más lentas.
-- Las Server Actions conectan formularios del cliente con lógica del servidor sin un endpoint API separado.
-
-**Conceptos aprendidos**
-
-- Server Components vs Client Components.
-- App Router de Next.js.
-- Streaming con Suspense en el servidor.
-- Server Actions.
-
-**Próximos pasos**
-
-En el Módulo 11 aprenderás TypeScript con React: tipado de props, hooks genéricos, eventos tipados y componentes polimórficos.
-
-**Recursos adicionales**
-
-- Documentación oficial de Next.js (nextjs.org/docs): "Server Components" y "Server Actions".
