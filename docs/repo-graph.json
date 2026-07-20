@@ -247,7 +247,7 @@
     },
     {
       "path": "docs/student-journey-audit.json",
-      "lines": 4327,
+      "lines": 4323,
       "kind": "project-file",
       "symbols": [],
       "imports": [],
@@ -4785,7 +4785,7 @@
     },
     {
       "path": "web/public/content/foundations/modulo-6.md",
-      "lines": 181,
+      "lines": 215,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -4793,10 +4793,14 @@
         "# M\u00f3dulo 6: Seguridad, privacidad y modelado de amenazas",
         "## Aprende construyendo",
         "### Tema 1: Activos, amenazas, riesgos y l\u00edmites de confianza",
+        "#### Construcci\u00f3n RutaFlow: amenaza conectada a una prueba",
         "### Tema 2: Identidad, contrase\u00f1as, sesiones y autorizaci\u00f3n",
+        "#### Construcci\u00f3n RutaFlow: identidad separada de permiso",
         "### Tema 3: Criptograf\u00eda aplicada, TLS, claves y secretos",
+        "#### Construcci\u00f3n RutaFlow: webhook aut\u00e9ntico y secreto rotatorio",
         "### Tema 4: Validaci\u00f3n, vulnerabilidades web, privacidad y respuesta",
-        "## Laboratorio pr\u00e1ctico",
+        "#### Construcci\u00f3n RutaFlow: entrada hostil y respuesta preparada",
+        "## Construcci\u00f3n guiada del cap\u00edtulo",
         "### Proyecto 6: endurecimiento del inventario"
       ]
     },

@@ -28,8 +28,8 @@
         "installRecovery": true
       },
       "topics": 50,
-      "labs": 5,
-      "verifiableLabs": 5,
+      "labs": 4,
+      "verifiableLabs": 4,
       "states": {
         "explained": 49,
         "practicable": 1
@@ -39,14 +39,14 @@
         "prerequisites": 2,
         "terms": 50,
         "code": 50,
-        "location": 31,
-        "execution": 43,
-        "expected": 32,
+        "location": 35,
+        "execution": 45,
+        "expected": 33,
         "failure": 7,
-        "diagnosis": 16,
-        "practice": 33,
-        "project": 30,
-        "proof": 22,
+        "diagnosis": 17,
+        "practice": 35,
+        "project": 34,
+        "proof": 23,
         "transition": 0
       },
       "blockers": [
@@ -142,40 +142,6 @@
           ]
         },
         {
-          "module": 6,
-          "title": "Tema 1: Activos, amenazas, riesgos y límites de confianza",
-          "state": "explained",
-          "score": 4,
-          "missing": [
-            "goal",
-            "prerequisites",
-            "location",
-            "execution",
-            "expected",
-            "failure",
-            "project",
-            "proof",
-            "transition"
-          ]
-        },
-        {
-          "module": 6,
-          "title": "Tema 2: Identidad, contraseñas, sesiones y autorización",
-          "state": "explained",
-          "score": 4,
-          "missing": [
-            "goal",
-            "prerequisites",
-            "location",
-            "failure",
-            "diagnosis",
-            "practice",
-            "project",
-            "proof",
-            "transition"
-          ]
-        },
-        {
           "module": 7,
           "title": "Tema 3: Diseño modular, principios, patrones y refactoring",
           "state": "explained",
@@ -244,38 +210,6 @@
           ]
         },
         {
-          "module": 6,
-          "title": "Tema 3: Criptografía aplicada, TLS, claves y secretos",
-          "state": "explained",
-          "score": 5,
-          "missing": [
-            "goal",
-            "prerequisites",
-            "location",
-            "failure",
-            "diagnosis",
-            "project",
-            "proof",
-            "transition"
-          ]
-        },
-        {
-          "module": 6,
-          "title": "Tema 4: Validación, vulnerabilidades web, privacidad y respuesta",
-          "state": "explained",
-          "score": 5,
-          "missing": [
-            "goal",
-            "location",
-            "execution",
-            "failure",
-            "diagnosis",
-            "practice",
-            "project",
-            "transition"
-          ]
-        },
-        {
           "module": 7,
           "title": "Tema 1: Requisitos, stakeholders y criterios verificables",
           "state": "explained",
@@ -304,6 +238,68 @@
             "expected",
             "practice",
             "project",
+            "transition"
+          ]
+        },
+        {
+          "module": 8,
+          "title": "Tema 3: Linux como entorno observable",
+          "state": "explained",
+          "score": 5,
+          "missing": [
+            "goal",
+            "prerequisites",
+            "location",
+            "expected",
+            "failure",
+            "diagnosis",
+            "project",
+            "transition"
+          ]
+        },
+        {
+          "module": 9,
+          "title": "Tema 2: Conjuntos, relaciones, funciones e inducción",
+          "state": "explained",
+          "score": 5,
+          "missing": [
+            "goal",
+            "prerequisites",
+            "location",
+            "failure",
+            "diagnosis",
+            "practice",
+            "project",
+            "transition"
+          ]
+        },
+        {
+          "module": 1,
+          "title": "Tema 2: Variables, tipos, expresiones y cambios de estado",
+          "state": "explained",
+          "score": 6,
+          "missing": [
+            "goal",
+            "prerequisites",
+            "expected",
+            "failure",
+            "diagnosis",
+            "proof",
+            "transition"
+          ]
+        },
+        {
+          "module": 1,
+          "title": "Tema 4: Funciones y descomposición de problemas",
+          "state": "explained",
+          "score": 6,
+          "missing": [
+            "goal",
+            "prerequisites",
+            "expected",
+            "failure",
+            "diagnosis",
+            "proof",
             "transition"
           ]
         }

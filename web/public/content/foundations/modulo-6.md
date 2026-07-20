@@ -11,10 +11,12 @@ Seguridad no empieza instalando una librería. Empieza preguntando qué debe pro
 
 Dibuja un flujo de datos: usuario → interfaz → aplicación → base. Marca límites donde cambia confianza: Internet a servidor, proceso a base, CI a nube. Para cada flujo aplica STRIDE como lista de preguntas: suplantación, manipulación, repudio, divulgación, denegación y elevación de privilegio.
 
-```text
-[Usuario] --credenciales--> (Aplicación) --SQL parametrizado--> [SQLite]
-    │                            │
- no confiable              límite de proceso
+```mermaid
+flowchart LR
+    USER["Usuario no confiable"] -->|"credenciales"| APP["Aplicación"]
+    APP -->|"SQL parametrizado"| DB["Base de datos"]
+    USER -. "límite Internet" .-> APP
+    APP -. "límite de proceso" .-> DB
 ```
 
 Ejemplo: activo “stock correcto”; amenaza “operador modifica productos ajenos”; vulnerabilidad “endpoint no comprueba rol”; control “autorización en servidor + audit log + prueba negativa”. “Usar HTTPS” no corrige autorización: protege tránsito, no decide permisos.
@@ -29,9 +31,17 @@ Prioriza con impacto y probabilidad, registra supuestos y propietario. Un riesgo
 
 **Diagrama:**
 
-```text
-activo + actor + camino de ataque → impacto/probabilidad → control → riesgo residual
+```mermaid
+flowchart LR
+    THREAT["activo + actor + camino"] --> RISK["impacto y probabilidad"]
+    RISK --> CONTROL["control y propietario"] --> RESIDUAL["riesgo residual"]
 ```
+
+#### Construcción RutaFlow: amenaza conectada a una prueba
+
+Crea `rutaflow-fundamentos/21-amenazas/docs/threat-model.md` con DFD, límites, activos y una tabla STRIDE. Implementa `src/autorizar.py` y `tests/test_autorizar.py` para el riesgo “operador modifica una guía ajena”. Ejecuta `python -m pytest -q`; el resultado esperado permite al propietario autorizado y niega otro centro sin cambiar estado.
+
+Elimina la comprobación de recurso y comprueba que la prueba negativa falle. Como modificación, puntúa impacto/probabilidad, asigna propietario y anota riesgo residual del control. RutaFlow no convierte STRIDE en una lista decorativa: cada riesgo prioritario conecta arquitectura, control, evidencia y respuesta; HTTPS no sustituye autorización.
 
 ### Tema 2: Identidad, contraseñas, sesiones y autorización
 
@@ -81,9 +91,17 @@ Prueba usuario anónimo, lector, operador y administrador. Aplica mínimo privil
 
 **Diagrama:**
 
-```text
-credencial → autenticar → identidad → autorizar(acción,recurso) → permitir/denegar
+```mermaid
+flowchart LR
+    CRED["credencial"] --> AUTHN["autenticar"] --> ID["identidad"]
+    ID --> AUTHZ["autorizar acción + recurso"] --> DECISION["permitir o denegar"]
 ```
+
+#### Construcción RutaFlow: identidad separada de permiso
+
+Crea `rutaflow-fundamentos/22-identidad/src/seguridad.py` con `scrypt`, salt aleatorio y `compare_digest`, más autorización por permiso y centro. En `tests/test_seguridad.py`, verifica contraseña correcta/incorrecta, salts distintos y lector intentando eliminar. Ejecuta `python -m pytest -q`; todas las denegaciones deben dejar el repositorio intacto.
+
+Almacena temporalmente la contraseña en claro dentro de un fixture para reconocer el dato prohibido y elimínalo. Como modificación, añade expiración y revocación a una sesión opaca de práctica. RutaFlow niega por defecto y autoriza en servidor/dominio; ocultar el botón o usar JWT no decide quién puede actuar sobre una guía concreta.
 
 ### Tema 3: Criptografía aplicada, TLS, claves y secretos
 
@@ -115,9 +133,17 @@ if not database_url:
 
 **Diagrama:**
 
-```text
-propiedad necesaria → primitiva/protocolo → clave → almacenamiento → rotación → auditoría
+```mermaid
+flowchart LR
+    PROPERTY["propiedad necesaria"] --> PROTOCOL["protocolo mantenido"] --> KEY["clave"]
+    KEY --> STORE["almacenamiento"] --> ROTATE["rotación"] --> AUDIT["auditoría"]
 ```
+
+#### Construcción RutaFlow: webhook auténtico y secreto rotatorio
+
+Crea `rutaflow-fundamentos/23-cripto/src/webhook.py` para verificar HMAC-SHA256 con secreto obtenido de `RUTAFLOW_WEBHOOK_SECRET`, timestamp y comparación constante. Añade `tests/test_webhook.py` para firma válida, payload manipulado, timestamp vencido y secreto ausente. Ejecuta `python -m pytest -q`; solo el mensaje íntegro y reciente debe aceptarse.
+
+Codifica una firma con Base64 y explica por qué eso no cifra el payload. Como modificación, acepta durante una ventana dos versiones de clave para practicar rotación y registra solo el identificador de versión. Incluye `.env.example` sin valores y `.gitignore`. Si un secreto llega a Git, RutaFlow lo revoca primero; borrar el archivo no elimina copias ni historial.
 
 ### Tema 4: Validación, vulnerabilidades web, privacidad y respuesta
 
@@ -149,12 +175,20 @@ Un incidente necesita preparación: detectar, contener, preservar evidencia, err
 
 **Diagrama:**
 
-```text
-prevenir → detectar → responder → recuperar → aprender
+```mermaid
+flowchart LR
+    PREVENT["prevenir"] --> DETECT["detectar"] --> RESPOND["responder"]
+    RESPOND --> RECOVER["recuperar"] --> LEARN["aprender"] --> PREVENT
 ```
 
+#### Construcción RutaFlow: entrada hostil y respuesta preparada
 
-## Laboratorio práctico
+Crea `rutaflow-fundamentos/24-defensa/src/comentarios.html` usando `textContent`, y `src/validar.py` con límites de longitud, formato y rango. Añade pruebas para SQL parametrizado, texto `<img onerror=...>`, payload enorme y token ausente. Ejecuta `python -m pytest -q` y sirve HTML con `python -m http.server 8000`; el contenido hostil debe mostrarse como texto, no ejecutarse.
+
+Cambia a `innerHTML` solo en el laboratorio y observa el riesgo; restaura la API segura. Como modificación, crea `docs/incident-runbook.md` para secreto filtrado con detectar, contener, rotar, recuperar y revisar. RutaFlow minimiza y redacta datos en logs; CORS no autentica, CSP no corrige SQL y ningún control aislado reemplaza defensa en profundidad.
+
+
+## Construcción guiada del capítulo
 
 ### Proyecto 6: endurecimiento del inventario
 
