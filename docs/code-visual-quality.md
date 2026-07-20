@@ -4,7 +4,7 @@ Mide únicamente contenido dentro de cada tema. Las guías transversales no cuen
 
 | Track | Temas | Código | Código comentado | Mermaid | ASCII pendiente | Etiqueta engañosa | Ruta | Ejecución | Fuente oficial |
 |---|---:|---:|---:|---:|---:|---:|---:|---:|---:|
-| foundations | 50 | 50 | 7 | 8 | 36 | 0 | 16 | 38 | 0 |
+| foundations | 50 | 50 | 8 | 12 | 32 | 0 | 20 | 38 | 0 |
 | cloud | 153 | 94 | 5 | 14 | 78 | 0 | 24 | 103 | 1 |
 | devops | 91 | 85 | 1 | 7 | 84 | 0 | 19 | 44 | 0 |
 | javascript | 75 | 75 | 19 | 6 | 43 | 0 | 28 | 22 | 0 |
@@ -18,7 +18,7 @@ Mide únicamente contenido dentro de cada tema. Las guías transversales no cuen
 | ios | 51 | 45 | 11 | 8 | 17 | 0 | 2 | 39 | 0 |
 | flutter | 57 | 48 | 11 | 14 | 15 | 0 | 8 | 29 | 0 |
 | rutaflow | 24 | 0 | 0 | 24 | 0 | 0 | 0 | 3 | 0 |
-| **Total** | **893** | **739** | **127** | **140** | **363** | **0** | **219** | **440** | **1** |
+| **Total** | **893** | **739** | **128** | **144** | **359** | **0** | **223** | **440** | **1** |
 
 ## Regla editorial
 

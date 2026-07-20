@@ -3,11 +3,11 @@
     "foundations": {
       "topics": 50,
       "code": 50,
-      "commentedCode": 7,
-      "mermaid": 8,
-      "asciiVisual": 36,
+      "commentedCode": 8,
+      "mermaid": 12,
+      "asciiVisual": 32,
       "misleadingDiagramLabel": 0,
-      "filePath": 16,
+      "filePath": 20,
       "runCommand": 38,
       "officialSource": 0
     },
@@ -258,13 +258,6 @@
       "track": "foundations",
       "module": 11,
       "topic": "Tema 6: Redes, seguridad, web e ingeniería profesional",
-      "missingCode": false,
-      "missingComments": true
-    },
-    {
-      "track": "foundations",
-      "module": 2,
-      "topic": "Tema 1: Elegir estructuras según las operaciones",
       "missingCode": false,
       "missingComments": true
     },

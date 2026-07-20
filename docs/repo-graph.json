@@ -123,7 +123,7 @@
     },
     {
       "path": "docs/code-visual-quality.json",
-      "lines": 5523,
+      "lines": 5516,
       "kind": "project-file",
       "symbols": [],
       "imports": [],
@@ -247,7 +247,7 @@
     },
     {
       "path": "docs/student-journey-audit.json",
-      "lines": 4332,
+      "lines": 4333,
       "kind": "project-file",
       "symbols": [],
       "imports": [],
@@ -4701,7 +4701,7 @@
     },
     {
       "path": "web/public/content/foundations/modulo-2.md",
-      "lines": 204,
+      "lines": 246,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -4709,11 +4709,15 @@
         "# M\u00f3dulo 2: Estructuras de datos, algoritmos y complejidad",
         "## Aprende construyendo",
         "### Tema 1: Elegir estructuras seg\u00fan las operaciones",
+        "#### Construcci\u00f3n RutaFlow: \u00edndice de gu\u00edas",
+        "# En Windows: python estructuras.py",
         "### Tema 2: Pilas, colas y abstracciones de comportamiento",
+        "#### Construcci\u00f3n RutaFlow: cola de entregas y deshacer",
         "### Tema 3: B\u00fasqueda, precondiciones y demostraci\u00f3n de correcci\u00f3n",
+        "#### Construcci\u00f3n RutaFlow: localizar una gu\u00eda con contrato",
         "### Tema 4: Complejidad, medici\u00f3n, ordenamiento y recursi\u00f3n",
-        "## Laboratorio pr\u00e1ctico",
-        "### Proyecto 2: gestor de inventario con an\u00e1lisis de rendimiento"
+        "#### Construcci\u00f3n RutaFlow: medir una decisi\u00f3n completa",
+        "## Construcci\u00f3n guiada del cap\u00edtulo"
       ]
     },
     {
