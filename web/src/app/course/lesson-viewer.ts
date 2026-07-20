@@ -21,6 +21,54 @@ export interface TocItem {
   level: 2 | 3;
 }
 
+const TRACK_OFFICIAL_SOURCES: Record<string, { label: string; url: string }> = {
+  foundations: { label: 'Currículo oficial de MDN', url: 'https://developer.mozilla.org/en-US/curriculum/' },
+  rutaflow: { label: 'Fundamentos web de MDN', url: 'https://developer.mozilla.org/en-US/docs/Learn_web_development' },
+  javascript: { label: 'JavaScript en MDN', url: 'https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide' },
+  node: { label: 'Documentación de Node.js', url: 'https://nodejs.org/en/learn' },
+  angular: { label: 'Tutoriales de Angular', url: 'https://angular.dev/tutorials' },
+  react: { label: 'Aprende React', url: 'https://react.dev/learn' },
+  java: { label: 'Aprende Java', url: 'https://dev.java/learn/' },
+  'spring-boot': { label: 'Guías de Spring', url: 'https://spring.io/guides' },
+  'kotlin-multiplatform': { label: 'Kotlin Multiplatform', url: 'https://kotlinlang.org/docs/multiplatform/get-started.html' },
+  android: { label: 'Android con Compose', url: 'https://developer.android.com/courses/android-basics-compose/course' },
+  ios: { label: 'Tutoriales de Apple', url: 'https://developer.apple.com/tutorials/app-dev-training' },
+  flutter: { label: 'Aprende Flutter', url: 'https://docs.flutter.dev/learn' },
+  devops: { label: 'Tutoriales de Kubernetes', url: 'https://kubernetes.io/docs/tutorials/' },
+  cloud: { label: 'Floci AWS oficial', url: 'https://floci.io/aws/' },
+};
+
+const CLOUD_MODULE_SOURCES: Record<number, { label: string; url: string }> = {
+  2: { label: 'Amazon S3', url: 'https://docs.aws.amazon.com/AmazonS3/latest/userguide/Welcome.html' },
+  3: { label: 'Amazon SQS', url: 'https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/welcome.html' },
+  4: { label: 'Amazon DynamoDB', url: 'https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/Introduction.html' },
+  5: { label: 'AWS Lambda', url: 'https://docs.aws.amazon.com/lambda/latest/dg/welcome.html' },
+  6: { label: 'Amazon API Gateway', url: 'https://docs.aws.amazon.com/apigateway/latest/developerguide/welcome.html' },
+  7: { label: 'AWS IAM', url: 'https://docs.aws.amazon.com/IAM/latest/UserGuide/introduction.html' },
+  10: { label: 'AWS Secrets Manager', url: 'https://docs.aws.amazon.com/secretsmanager/latest/userguide/intro.html' },
+  11: { label: 'Amazon EventBridge', url: 'https://docs.aws.amazon.com/eventbridge/latest/userguide/eb-what-is.html' },
+  12: { label: 'Amazon CloudWatch', url: 'https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/WhatIsCloudWatch.html' },
+  13: { label: 'Amazon RDS', url: 'https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/Welcome.html' },
+  14: { label: 'Amazon ECS', url: 'https://docs.aws.amazon.com/AmazonECS/latest/developerguide/Welcome.html' },
+  15: { label: 'AWS CloudFormation', url: 'https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/Welcome.html' },
+  16: { label: 'AWS Step Functions', url: 'https://docs.aws.amazon.com/step-functions/latest/dg/welcome.html' },
+  17: { label: 'Amazon Kinesis', url: 'https://docs.aws.amazon.com/streams/latest/dev/introduction.html' },
+  18: { label: 'Amazon Cognito', url: 'https://docs.aws.amazon.com/cognito/latest/developerguide/what-is-amazon-cognito.html' },
+  19: { label: 'Amazon Athena', url: 'https://docs.aws.amazon.com/athena/latest/ug/what-is.html' },
+  20: { label: 'Amazon Bedrock', url: 'https://docs.aws.amazon.com/bedrock/latest/userguide/what-is-bedrock.html' },
+  21: { label: 'Amazon EC2', url: 'https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/concepts.html' },
+  22: { label: 'Elastic Load Balancing', url: 'https://docs.aws.amazon.com/elasticloadbalancing/latest/userguide/what-is-load-balancing.html' },
+  23: { label: 'Amazon ElastiCache', url: 'https://docs.aws.amazon.com/AmazonElastiCache/latest/dg/WhatIs.html' },
+  24: { label: 'AWS CodeBuild', url: 'https://docs.aws.amazon.com/codebuild/latest/userguide/welcome.html' },
+  25: { label: 'AWS Config', url: 'https://docs.aws.amazon.com/config/latest/developerguide/WhatIsConfig.html' },
+  26: { label: 'Amazon Data Firehose', url: 'https://docs.aws.amazon.com/firehose/latest/dev/what-is-this-service.html' },
+  27: { label: 'AWS AppSync', url: 'https://docs.aws.amazon.com/appsync/latest/devguide/what-is-appsync.html' },
+  28: { label: 'Amazon Neptune', url: 'https://docs.aws.amazon.com/neptune/latest/userguide/intro.html' },
+  29: { label: 'AWS Cost Explorer', url: 'https://docs.aws.amazon.com/cost-management/latest/userguide/ce-what-is.html' },
+  30: { label: 'AWS Transfer Family', url: 'https://docs.aws.amazon.com/transfer/latest/userguide/what-is-aws-transfer-family.html' },
+  34: { label: 'Floci AWS oficial', url: 'https://floci.io/aws/' },
+};
+
 function slugify(text: string, seen: Set<string>): string {
   const base = text
     .normalize('NFD')
@@ -75,6 +123,9 @@ export class LessonViewerComponent implements OnDestroy {
 
   readonly track = computed(() => findTrack(this.trackId()));
   readonly module = computed(() => this.track()?.modules.find(m => m.id === this.moduleId()));
+  readonly officialSource = computed(() => this.trackId() === 'cloud'
+    ? (CLOUD_MODULE_SOURCES[this.moduleId()] ?? TRACK_OFFICIAL_SOURCES.cloud)
+    : TRACK_OFFICIAL_SOURCES[this.trackId()]);
   readonly projectBootstrap = computed(() => findProjectBootstrap(this.trackId()));
   readonly trackProject = computed(() => projectFor(this.trackId()));
   readonly showProjectBootstrap = computed(() => this.moduleId() === 0 && Boolean(this.projectBootstrap()));

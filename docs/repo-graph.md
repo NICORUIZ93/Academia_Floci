@@ -1,6 +1,6 @@
 # Academia Floci Repo Graph
 
-Generated: 2026-07-20 04:40 UTC
+Generated: 2026-07-20 04:43 UTC
 Root: `Academia_Floci`
 Indexed files: 771
 Import edges: 33
@@ -65,8 +65,8 @@ For automated lookups, use `docs/repo-graph.json`.
   - symbols: CourseCatalogComponent, cards, featuredTracks, foundationTracks, mobileTracks, totalModules
 - `web/src/app/course/course-shell.ts` (46 lines, angular-app)
   - symbols: CourseShellComponent, track, officialPath, sidebarOpen, trackLogo, percent
-- `web/src/app/course/lesson-viewer.ts` (571 lines, angular-app)
-  - symbols: LessonViewerComponent, TocItem, track, module, projectBootstrap, trackProject, showProjectBootstrap, showTrackProject, moduleIndex, isCloudIntroduction
+- `web/src/app/course/lesson-viewer.ts` (622 lines, angular-app)
+  - symbols: LessonViewerComponent, TocItem, track, module, officialSource, projectBootstrap, trackProject, showProjectBootstrap, showTrackProject, moduleIndex
 - `web/public/content/manifest.json` (819 lines, course-content)
 - `web/public/content/es/pasos.md` (1122 lines, course-content)
   - headings: # 45 pasos de Academia Floci, ## Cursos, ## Paso 1: ¿Qué es Docker?, ## Paso 2: Instalar Docker, ## Paso 3: Verificar Docker

@@ -10783,7 +10783,7 @@
     },
     {
       "path": "web/src/app/course/lesson-viewer.html",
-      "lines": 114,
+      "lines": 115,
       "kind": "angular-app",
       "symbols": [
         "floci-overview-title"
@@ -10801,13 +10801,14 @@
     },
     {
       "path": "web/src/app/course/lesson-viewer.ts",
-      "lines": 571,
+      "lines": 622,
       "kind": "angular-app",
       "symbols": [
         "LessonViewerComponent",
         "TocItem",
         "track",
         "module",
+        "officialSource",
         "projectBootstrap",
         "trackProject",
         "showProjectBootstrap",
