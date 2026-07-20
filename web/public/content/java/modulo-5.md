@@ -23,6 +23,12 @@ pool.submit(() -> procesarTarea());
 pool.shutdown();
 ```
 
+#### Construcción RutaFlow: lote con cierre ordenado
+
+Crea `src/main/java/academia/entregas/ProcesadorLote.java`. Construye un pool fijo de cuatro hilos, envía diez `Callable<String>` que devuelvan `guia + " procesada"`, recoge sus `Future` y cierra el ejecutor dentro de `finally`. Ejecuta `javac -d out src/main/java/academia/entregas/ProcesadorLote.java` y `java -cp out academia.entregas.ProcesadorLote`; debes recibir diez resultados y el proceso debe terminar sin quedar abierto.
+
+Comenta `shutdown()` y observa que la JVM puede permanecer activa por los hilos del pool; restáuralo y usa `awaitTermination` con límite. Provoca una tarea fallida y diagnostica la causa dentro de `ExecutionException`, sin reportarla como un simple `null`. Como modificación, limita la cola con `ThreadPoolExecutor` y define qué ocurre al saturarse. Este procesador sirve para trabajo CPU acotado; no crees un pool nuevo por cada guía.
+
 ### Tema 2: CompletableFuture
 
 **Conceptos clave:** composición de operaciones asíncronas, manejo de errores en la cadena.
@@ -43,6 +49,12 @@ CompletableFuture.supplyAsync(() -> obtenerDatos())
     .thenAccept(resultado -> System.out.println(resultado))
     .exceptionally(error -> { log.error("Falló", error); return null; });
 ```
+
+#### Construcción RutaFlow: componer consulta y tarifa
+
+Crea `src/main/java/academia/entregas/ConsultaAsincrona.java`. Modela `consultarGuia` y `consultarTarifa` como `CompletableFuture`, combínalos con `thenCombine` y termina con `join()` únicamente en el borde del demo. Compila y ejecuta la clase; el resultado esperado contiene la guía y su tarifa una sola vez.
+
+Haz que `consultarTarifa` lance una excepción y observa `CompletionException`; usa `handle` para traducir el fallo a un resultado explícito sin perder la causa. Prueba después la diferencia entre `thenApply` y `thenCompose` cuando el siguiente método ya devuelve un future: el primero anida, el segundo aplana. Como modificación, añade `orTimeout` y una salida diferenciada para demora. RutaFlow usará esta composición solo donde varias fuentes independientes puedan avanzar en paralelo.
 
 ### Tema 3: Virtual threads
 
@@ -66,6 +78,12 @@ try (var executor = Executors.newVirtualThreadPerTaskExecutor()) {
 }
 ```
 
+#### Construcción RutaFlow: simular consultas bloqueantes
+
+Crea `src/main/java/academia/entregas/ConsultasVirtuales.java` con 1.000 tareas que duerman 50 ms para representar I/O. Ejecuta cada tarea en `Executors.newVirtualThreadPerTaskExecutor()`, espera los `Future` y cuenta resultados. Compila con JDK 21 y ejecuta la clase; el resultado esperado es `completadas=1000` en mucho menos que 50 segundos.
+
+Ejecuta con un JDK anterior y diagnostica el error de compilación verificando `java --version` y `javac --version`; no reemplaces la API sin comprender la versión. Añade una operación larga dentro de `synchronized` y observa que puede reducir escalabilidad; usa JFR para investigar *pinning* cuando sea relevante. Como modificación, controla la concurrencia hacia un proveedor con `Semaphore(20)`: virtual no significa ilimitado. RutaFlow protege así el servicio de mapas y su cuota externa.
+
 ### Tema 4: Condiciones de carrera y sincronización
 
 **Conceptos clave:** acceso concurrente no coordinado, `synchronized`, primitivas de coordinación.
@@ -84,10 +102,16 @@ Una condición de carrera ocurre cuando múltiples hilos acceden y modifican el 
 synchronized void incrementar() { contador++; } // garantiza acceso exclusivo a la sección crítica
 ```
 
+#### Construcción RutaFlow: demostrar una carrera
+
+Crea `src/main/java/academia/entregas/ContadorEscaneos.java` con un `int total` y lanza 100.000 incrementos concurrentes desde `CarreraDemo.java`. Ejecuta varias veces: sin coordinación el resultado puede ser menor que 100.000. Cambia a `AtomicInteger.incrementAndGet()` y verifica exactamente `100000` en cada ejecución.
+
+La ausencia de fallo en una ejecución no prueba corrección; aumenta repeticiones y coordina el inicio con `CountDownLatch` para ampliar la ventana de carrera. Después compara `synchronized` y `AtomicInteger`, explicando qué invariante protege cada solución. Como modificación, usa `ConcurrentHashMap<String,LongAdder>` para contar por centro operativo. RutaFlow evita compartir mutabilidad siempre que puede; sincroniza la mínima frontera cuando compartir sea inevitable.
+
 ---
 
 
-## Laboratorio práctico
+## Construcción guiada del capítulo
 
 **Objetivo del laboratorio:** construir un servicio concurrente que procese N tareas en paralelo usando virtual threads, corrigiendo una condición de carrera provocada intencionalmente.
 

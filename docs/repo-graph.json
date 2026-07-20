@@ -247,7 +247,7 @@
     },
     {
       "path": "docs/student-journey-audit.json",
-      "lines": 4387,
+      "lines": 4383,
       "kind": "project-file",
       "symbols": [],
       "imports": [],
@@ -5248,7 +5248,7 @@
     },
     {
       "path": "web/public/content/java/modulo-3.md",
-      "lines": 103,
+      "lines": 121,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5256,14 +5256,17 @@
         "# M\u00f3dulo 3: Excepciones y manejo de recursos",
         "## Aprende construyendo",
         "### Tema 1: Checked vs unchecked exceptions",
+        "#### Construcci\u00f3n RutaFlow: distinguir fallo externo de defecto",
         "### Tema 2: try-with-resources",
+        "#### Construcci\u00f3n RutaFlow: importar sin filtrar descriptores",
         "### Tema 3: Excepciones personalizadas y no tragar excepciones",
-        "## Laboratorio pr\u00e1ctico"
+        "#### Construcci\u00f3n RutaFlow: error con lenguaje de negocio",
+        "## Construcci\u00f3n guiada del cap\u00edtulo"
       ]
     },
     {
       "path": "web/public/content/java/modulo-4.md",
-      "lines": 101,
+      "lines": 119,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5271,14 +5274,17 @@
         "# M\u00f3dulo 4: Streams y programaci\u00f3n funcional",
         "## Aprende construyendo",
         "### Tema 1: Stream API \u2014 map, filter, reduce, collect",
+        "#### Construcci\u00f3n RutaFlow: tablero de carga declarativo",
         "### Tema 2: Optional \u2014 evitar null expl\u00edcitamente",
+        "#### Construcci\u00f3n RutaFlow: b\u00fasqueda expl\u00edcitamente ausente",
         "### Tema 3: Streams paralelos y referencias a m\u00e9todos",
-        "## Laboratorio pr\u00e1ctico"
+        "#### Construcci\u00f3n RutaFlow: medir antes de paralelizar",
+        "## Construcci\u00f3n guiada del cap\u00edtulo"
       ]
     },
     {
       "path": "web/public/content/java/modulo-5.md",
-      "lines": 113,
+      "lines": 137,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5286,10 +5292,14 @@
         "# M\u00f3dulo 5: Concurrencia \u2014 hilos y virtual threads",
         "## Aprende construyendo",
         "### Tema 1: ExecutorService y gesti\u00f3n de hilos",
+        "#### Construcci\u00f3n RutaFlow: lote con cierre ordenado",
         "### Tema 2: CompletableFuture",
+        "#### Construcci\u00f3n RutaFlow: componer consulta y tarifa",
         "### Tema 3: Virtual threads",
+        "#### Construcci\u00f3n RutaFlow: simular consultas bloqueantes",
         "### Tema 4: Condiciones de carrera y sincronizaci\u00f3n",
-        "## Laboratorio pr\u00e1ctico"
+        "#### Construcci\u00f3n RutaFlow: demostrar una carrera",
+        "## Construcci\u00f3n guiada del cap\u00edtulo"
       ]
     },
     {

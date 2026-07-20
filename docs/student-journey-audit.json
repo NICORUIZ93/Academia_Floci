@@ -2220,8 +2220,8 @@
         "installRecovery": true
       },
       "topics": 59,
-      "labs": 12,
-      "verifiableLabs": 12,
+      "labs": 9,
+      "verifiableLabs": 9,
       "states": {
         "explained": 59
       },
@@ -2230,14 +2230,14 @@
         "prerequisites": 1,
         "terms": 59,
         "code": 59,
-        "location": 21,
+        "location": 31,
         "execution": 52,
-        "expected": 27,
+        "expected": 30,
         "failure": 2,
-        "diagnosis": 10,
-        "practice": 34,
-        "project": 23,
-        "proof": 10,
+        "diagnosis": 14,
+        "practice": 39,
+        "project": 33,
+        "proof": 12,
         "transition": 1
       },
       "blockers": [
@@ -2251,78 +2251,6 @@
             "prerequisites",
             "location",
             "execution",
-            "expected",
-            "failure",
-            "diagnosis",
-            "practice",
-            "project",
-            "proof",
-            "transition"
-          ]
-        },
-        {
-          "module": 4,
-          "title": "Tema 1: Stream API — map, filter, reduce, collect",
-          "state": "explained",
-          "score": 3,
-          "missing": [
-            "goal",
-            "prerequisites",
-            "location",
-            "expected",
-            "failure",
-            "diagnosis",
-            "practice",
-            "project",
-            "proof",
-            "transition"
-          ]
-        },
-        {
-          "module": 5,
-          "title": "Tema 1: ExecutorService y gestión de hilos",
-          "state": "explained",
-          "score": 3,
-          "missing": [
-            "goal",
-            "prerequisites",
-            "location",
-            "expected",
-            "failure",
-            "diagnosis",
-            "practice",
-            "project",
-            "proof",
-            "transition"
-          ]
-        },
-        {
-          "module": 5,
-          "title": "Tema 2: CompletableFuture",
-          "state": "explained",
-          "score": 3,
-          "missing": [
-            "goal",
-            "prerequisites",
-            "location",
-            "expected",
-            "failure",
-            "diagnosis",
-            "practice",
-            "project",
-            "proof",
-            "transition"
-          ]
-        },
-        {
-          "module": 5,
-          "title": "Tema 3: Virtual threads",
-          "state": "explained",
-          "score": 3,
-          "missing": [
-            "goal",
-            "prerequisites",
-            "location",
             "expected",
             "failure",
             "diagnosis",
@@ -2441,8 +2369,8 @@
           ]
         },
         {
-          "module": 3,
-          "title": "Tema 1: Checked vs unchecked exceptions",
+          "module": 6,
+          "title": "Tema 1: NIO.2 — Path y Files",
           "state": "explained",
           "score": 4,
           "missing": [
@@ -2458,8 +2386,25 @@
           ]
         },
         {
-          "module": 3,
-          "title": "Tema 2: try-with-resources",
+          "module": 6,
+          "title": "Tema 3: Archivos grandes y recursos del classpath",
+          "state": "explained",
+          "score": 4,
+          "missing": [
+            "goal",
+            "prerequisites",
+            "expected",
+            "failure",
+            "diagnosis",
+            "practice",
+            "project",
+            "proof",
+            "transition"
+          ]
+        },
+        {
+          "module": 7,
+          "title": "Tema 2: sealed — jerarquías cerradas y exhaustividad",
           "state": "explained",
           "score": 4,
           "missing": [
@@ -2475,8 +2420,59 @@
           ]
         },
         {
-          "module": 4,
-          "title": "Tema 3: Streams paralelos y referencias a métodos",
+          "module": 7,
+          "title": "Tema 3: Pattern matching exhaustivo y para instanceof",
+          "state": "explained",
+          "score": 4,
+          "missing": [
+            "goal",
+            "prerequisites",
+            "location",
+            "failure",
+            "diagnosis",
+            "practice",
+            "project",
+            "proof",
+            "transition"
+          ]
+        },
+        {
+          "module": 8,
+          "title": "Tema 1: pom.xml vs build.gradle.kts",
+          "state": "explained",
+          "score": 4,
+          "missing": [
+            "goal",
+            "prerequisites",
+            "expected",
+            "failure",
+            "diagnosis",
+            "practice",
+            "project",
+            "proof",
+            "transition"
+          ]
+        },
+        {
+          "module": 9,
+          "title": "Tema 3: Tests parametrizados y cobertura",
+          "state": "explained",
+          "score": 4,
+          "missing": [
+            "goal",
+            "prerequisites",
+            "location",
+            "failure",
+            "diagnosis",
+            "practice",
+            "project",
+            "proof",
+            "transition"
+          ]
+        },
+        {
+          "module": 10,
+          "title": "Tema 3: `opens` para acceso reflexivo controlado de frameworks",
           "state": "explained",
           "score": 4,
           "missing": [
@@ -2492,17 +2488,17 @@
           ]
         },
         {
-          "module": 6,
-          "title": "Tema 1: NIO.2 — Path y Files",
+          "module": 12,
+          "title": "Tema 2: Factory y Strategy",
           "state": "explained",
           "score": 4,
           "missing": [
             "goal",
             "prerequisites",
             "location",
+            "expected",
             "failure",
             "diagnosis",
-            "practice",
             "project",
             "proof",
             "transition"

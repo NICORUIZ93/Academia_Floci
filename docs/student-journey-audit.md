@@ -11,7 +11,7 @@ Esta auditoría simula el recorrido desde la instalación hasta la evidencia fin
 | node | 15 | Sí | 64 | 0 | 64 | 0 | 14/14 | 3 | 10 | 2 |
 | angular | 16 | Sí | 61 | 0 | 61 | 0 | 15/15 | 3 | 4 | 0 |
 | react | 15 | Sí | 55 | 0 | 55 | 0 | 14/14 | 2 | 3 | 0 |
-| java | 16 | Sí | 59 | 0 | 59 | 0 | 12/12 | 2 | 10 | 1 |
+| java | 16 | Sí | 59 | 0 | 59 | 0 | 9/9 | 2 | 14 | 1 |
 | spring-boot | 16 | Sí | 58 | 0 | 58 | 0 | 14/14 | 3 | 3 | 1 |
 | kotlin-multiplatform | 14 | Sí | 46 | 0 | 46 | 0 | 13/13 | 4 | 3 | 0 |
 | android | 15 | Sí | 49 | 0 | 49 | 0 | 14/14 | 2 | 4 | 1 |
@@ -99,10 +99,10 @@ Esta auditoría simula el recorrido desde la instalación hasta la evidencia fin
 ### java
 
 - Módulo 11 · Tema 3: Referencias especiales y heap dumps — 2/13; falta: goal, prerequisites, location, execution, expected, failure, diagnosis, practice, project, proof, transition
-- Módulo 4 · Tema 1: Stream API — map, filter, reduce, collect — 3/13; falta: goal, prerequisites, location, expected, failure, diagnosis, practice, project, proof, transition
-- Módulo 5 · Tema 1: ExecutorService y gestión de hilos — 3/13; falta: goal, prerequisites, location, expected, failure, diagnosis, practice, project, proof, transition
-- Módulo 5 · Tema 2: CompletableFuture — 3/13; falta: goal, prerequisites, location, expected, failure, diagnosis, practice, project, proof, transition
-- Módulo 5 · Tema 3: Virtual threads — 3/13; falta: goal, prerequisites, location, expected, failure, diagnosis, practice, project, proof, transition
+- Módulo 6 · Tema 2: Serialización con Jackson — 3/13; falta: goal, prerequisites, location, expected, failure, diagnosis, practice, project, proof, transition
+- Módulo 8 · Tema 2: Ciclo de vida de build y scopes — 3/13; falta: goal, prerequisites, location, expected, failure, diagnosis, practice, project, proof, transition
+- Módulo 11 · Tema 1: Generaciones de memoria y recolectores — 3/13; falta: goal, prerequisites, location, expected, failure, diagnosis, practice, project, proof, transition
+- Módulo 12 · Tema 1: Builder — constructores con muchos parámetros opcionales — 3/13; falta: goal, prerequisites, location, expected, failure, diagnosis, practice, project, proof, transition
 
 ### spring-boot
 
