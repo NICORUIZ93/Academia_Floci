@@ -4722,7 +4722,7 @@
     },
     {
       "path": "web/public/content/foundations/modulo-3.md",
-      "lines": 202,
+      "lines": 243,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -4730,10 +4730,14 @@
         "# M\u00f3dulo 3: Fundamentos de web, redes y accesibilidad",
         "## Aprende construyendo",
         "### Tema 1: De una URL al servidor: red, DNS, IP y puertos",
+        "#### Construcci\u00f3n RutaFlow: diagnosticar por capas",
         "### Tema 2: HTTP como contrato observable",
+        "#### Construcci\u00f3n RutaFlow: observar el contrato HTTP",
         "### Tema 3: HTML sem\u00e1ntico, formularios y el DOM",
+        "#### Construcci\u00f3n RutaFlow: formulario operable sin rat\u00f3n",
         "### Tema 4: CSS, layout responsive y accesibilidad verificable",
-        "## Laboratorio pr\u00e1ctico",
+        "#### Construcci\u00f3n RutaFlow: panel adaptable y verificable",
+        "## Construcci\u00f3n guiada del cap\u00edtulo",
         "### Proyecto 3: sitio profesional accesible desde carpeta vac\u00eda"
       ]
     },

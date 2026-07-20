@@ -4,11 +4,11 @@
       "topics": 50,
       "code": 50,
       "commentedCode": 8,
-      "mermaid": 12,
-      "asciiVisual": 32,
+      "mermaid": 16,
+      "asciiVisual": 28,
       "misleadingDiagramLabel": 0,
-      "filePath": 20,
-      "runCommand": 38,
+      "filePath": 24,
+      "runCommand": 40,
       "officialSource": 0
     },
     "cloud": {

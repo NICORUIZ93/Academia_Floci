@@ -28,8 +28,8 @@
         "installRecovery": true
       },
       "topics": 50,
-      "labs": 8,
-      "verifiableLabs": 8,
+      "labs": 7,
+      "verifiableLabs": 7,
       "states": {
         "explained": 49,
         "practicable": 1
@@ -39,13 +39,13 @@
         "prerequisites": 2,
         "terms": 50,
         "code": 50,
-        "location": 20,
-        "execution": 38,
-        "expected": 25,
+        "location": 24,
+        "execution": 40,
+        "expected": 28,
         "failure": 7,
         "diagnosis": 15,
-        "practice": 27,
-        "project": 18,
+        "practice": 28,
+        "project": 22,
         "proof": 22,
         "transition": 0
       },
@@ -178,57 +178,6 @@
           ]
         },
         {
-          "module": 3,
-          "title": "Tema 1: De una URL al servidor: red, DNS, IP y puertos",
-          "state": "explained",
-          "score": 4,
-          "missing": [
-            "goal",
-            "prerequisites",
-            "location",
-            "expected",
-            "failure",
-            "practice",
-            "project",
-            "proof",
-            "transition"
-          ]
-        },
-        {
-          "module": 3,
-          "title": "Tema 2: HTTP como contrato observable",
-          "state": "explained",
-          "score": 4,
-          "missing": [
-            "goal",
-            "prerequisites",
-            "location",
-            "expected",
-            "failure",
-            "diagnosis",
-            "project",
-            "proof",
-            "transition"
-          ]
-        },
-        {
-          "module": 3,
-          "title": "Tema 4: CSS, layout responsive y accesibilidad verificable",
-          "state": "explained",
-          "score": 4,
-          "missing": [
-            "goal",
-            "prerequisites",
-            "location",
-            "execution",
-            "failure",
-            "diagnosis",
-            "project",
-            "proof",
-            "transition"
-          ]
-        },
-        {
           "module": 4,
           "title": "Tema 2: SQL para definir, escribir, consultar y relacionar",
           "state": "explained",
@@ -310,6 +259,57 @@
             "diagnosis",
             "practice",
             "project",
+            "transition"
+          ]
+        },
+        {
+          "module": 7,
+          "title": "Tema 4: Decisiones, documentación, deuda y evolución",
+          "state": "explained",
+          "score": 4,
+          "missing": [
+            "goal",
+            "prerequisites",
+            "location",
+            "execution",
+            "expected",
+            "diagnosis",
+            "practice",
+            "project",
+            "transition"
+          ]
+        },
+        {
+          "module": 8,
+          "title": "Tema 4: Contenedores: aislamiento reproducible",
+          "state": "explained",
+          "score": 4,
+          "missing": [
+            "goal",
+            "prerequisites",
+            "location",
+            "expected",
+            "failure",
+            "diagnosis",
+            "project",
+            "proof",
+            "transition"
+          ]
+        },
+        {
+          "module": 9,
+          "title": "Tema 1: Lógica para especificar antes de programar",
+          "state": "explained",
+          "score": 4,
+          "missing": [
+            "goal",
+            "prerequisites",
+            "location",
+            "expected",
+            "diagnosis",
+            "practice",
+            "project",
+            "proof",
             "transition"
           ]
         }
