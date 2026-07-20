@@ -151,15 +151,92 @@ El hilo común entre estos tres mecanismos es el principio de mínimo privilegio
 ---
 
 
-## Laboratorio práctico
+## Construcción guiada: almacena y recupera un archivo
 
-> Este laboratorio asume que ya ejecutaste `floci start` y `eval $(floci env)` (Módulo 1) en tu sesión de terminal, así que los comandos de `aws` no repiten `--endpoint-url`.
+> Esta construcción asume que ya ejecutaste `floci start` y `eval $(floci env)` (Módulo 1) en tu sesión de terminal, así que los comandos de `aws` no repiten `--endpoint-url`.
 
-**Objetivo del laboratorio:** realizar el ciclo completo de operaciones CRUD sobre un bucket S3 en Floci, y después practicar versionado subiendo múltiples versiones de un mismo archivo.
+**Objetivo:** realizar el ciclo completo de operaciones CRUD sobre un bucket S3 en Floci, y después practicar versionado subiendo múltiples versiones de un mismo archivo.
 
 **Requisitos previos:** Floci corriendo (Módulo 1) con el servicio S3 activo, AWS CLI configurada contra `http://localhost:4566`.
 
-### Laboratorio 2.1 — Operaciones CRUD básicas
+### Antes de escribir código: ubica el ejemplo
+
+No necesitas inventar una estructura ni copiar un fragmento aislado. El repositorio ya contiene dos clientes ejecutables que realizan la misma consulta con SDK diferentes:
+
+```text
+Academia_Floci/
+└── examples/
+    ├── node/
+    │   ├── package.json
+    │   └── s3-list-buckets.js
+    └── python/
+        ├── requirements.txt
+        └── s3_list_buckets.py
+```
+
+El archivo `package.json` declara AWS SDK para JavaScript; `requirements.txt` declara `boto3` para Python. Los archivos `s3-list-buckets.js` y `s3_list_buckets.py` son los puntos de entrada: configuran el cliente, envían `ListBuckets` y convierten la respuesta del SDK en una salida legible.
+
+```mermaid
+sequenceDiagram
+    actor Estudiante
+    participant SDK as "SDK AWS"
+    participant Floci as "Floci :4566"
+    participant S3 as "Servicio S3 local"
+    Estudiante->>SDK: Ejecuta el cliente
+    SDK->>Floci: ListBuckets + credenciales test
+    Floci->>S3: Enruta la operación
+    S3-->>Floci: Buckets[]
+    Floci-->>SDK: Respuesta compatible con AWS
+    SDK-->>Estudiante: Nombre y fecha de cada bucket
+```
+
+### Opción A — JavaScript con AWS SDK v3
+
+Abre una terminal en la raíz del repositorio y ejecuta:
+
+```bash
+cd examples/node
+npm install
+node s3-list-buckets.js
+```
+
+El ejemplo usa `S3Client` como conexión reutilizable y `ListBucketsCommand` como descripción de una operación concreta. `endpoint` evita enviar la petición a AWS real; `forcePathStyle` genera rutas compatibles con el entorno local; las credenciales `test` son deliberadamente falsas y solo sirven para firmar la petición compatible.
+
+Si todavía no creaste buckets, la salida será:
+
+```text
+No hay buckets todavía. Crea uno con s3-create-bucket.js
+```
+
+Después de crear `mi-bucket` con el paso 1 de la Parte 1, vuelve a ejecutar el cliente. Debes observar una línea similar a:
+
+```text
+Buckets:
+  - mi-bucket (creado 2026-07-19T14:20:00.000Z)
+```
+
+### Opción B — Python con boto3
+
+En otra terminal, desde la raíz del repositorio:
+
+```bash
+cd examples/python
+python3 -m venv .venv
+source .venv/bin/activate          # macOS o Linux
+# En PowerShell de Windows usa: .venv\Scripts\Activate.ps1
+python -m pip install -r requirements.txt
+python s3_list_buckets.py
+```
+
+`boto3.client("s3", ...)` cumple el mismo papel que `S3Client`: guarda endpoint, región y credenciales. `list_buckets()` realiza la llamada; `result.get("Buckets", [])` trata de forma segura el caso sin resultados. La salida debe coincidir con la del cliente JavaScript porque ambos consultan el mismo runtime local.
+
+### Provoca un fallo útil antes de continuar
+
+Detén Floci y ejecuta cualquiera de los clientes. Debes obtener un error de conexión contra `localhost:4566`. Ese fallo demuestra que el SDK no contiene datos ficticios: depende del servicio local. Inicia Floci de nuevo y confirma que el mismo comando vuelve a funcionar. Si el error menciona AWS real o credenciales de producción, revisa `endpoint`; no añadas claves reales para “arreglarlo”.
+
+**Modificación guiada:** cambia temporalmente la región a `eu-west-1` en uno de los clientes y predice si el listado cambiará en el emulador. Ejecuta, compara el resultado y documenta la diferencia esperada al pasar a AWS real. Luego restaura `us-east-1` para continuar. Esta comparación conecta configuración local con una decisión real de arquitectura, en vez de limitarse a copiar comandos.
+
+### Parte 1 — Operaciones CRUD básicas
 
 | Paso | Acción | Comando | Explicación | Salida esperada |
 |---|---|---|---|---|
@@ -172,7 +249,7 @@ El hilo común entre estos tres mecanismos es el principio de mínimo privilegio
 | 7 | Eliminar el objeto | `aws s3 rm s3://mi-bucket/hola.txt` | Elimina el objeto del bucket | `delete: s3://mi-bucket/hola.txt` |
 | 8 | Eliminar el bucket vacío | `aws s3 rb s3://mi-bucket` | Elimina el bucket, ya sin objetos dentro | `remove_bucket: mi-bucket` |
 
-### Laboratorio 2.2 — Versionado
+### Parte 2 — Versionado
 
 | Paso | Acción | Comando | Explicación | Salida esperada |
 |---|---|---|---|---|
@@ -183,9 +260,9 @@ El hilo común entre estos tres mecanismos es el principio de mínimo privilegio
 | 5 | Listar todas las versiones de la clave | `aws s3api list-object-versions --bucket mi-bucket-versionado` | Muestra ambas versiones con sus IDs de versión distintos | Un JSON con dos entradas en `Versions`, cada una con un `VersionId` distinto |
 | 6 | Descargar específicamente la versión más antigua | `aws s3api get-object --bucket mi-bucket-versionado --key informe.txt --version-id <VersionId-de-la-primera-version> version-1-recuperada.txt` | Recupera exactamente el contenido de la primera versión, aunque ya no sea la "versión actual" | `cat version-1-recuperada.txt` debe mostrar `version 1` |
 
-**Verificación visual con ambas interfaces:** realiza el laboratorio con StackPort en `http://localhost:8080` y repítelo con Floci UI en `http://localhost:4500` → **Cloud Explorer → Storage**. Si configuraste ambas interfaces contra el mismo runtime, puedes compararlas en paralelo; de lo contrario, recuerda que cada stack predeterminado mantiene recursos independientes. En todos los casos confirma con `aws s3 ls s3://NOMBRE --recursive` contra el endpoint correcto.
+**Verificación visual con ambas interfaces:** realiza la construcción con StackPort en `http://localhost:8080` y repítela con Floci UI en `http://localhost:4500` → **Cloud Explorer → Storage**. Si configuraste ambas interfaces contra el mismo runtime, puedes compararlas en paralelo; de lo contrario, recuerda que cada stack predeterminado mantiene recursos independientes. En todos los casos confirma con `aws s3 ls s3://NOMBRE --recursive` contra el endpoint correcto.
 
-**Verificación:** en el Laboratorio 2.1, el contenido observado en Floci UI debe coincidir con `aws s3 ls`; tras el paso 8, ambos deben confirmar que el bucket ya no existe. En el Laboratorio 2.2, `list-object-versions` debe mostrar exactamente dos versiones para la clave `informe.txt`, con IDs distintos, y la versión recuperada explícitamente por su ID debe contener el texto `version 1`, no `version 2`.
+**Verificación:** en la Parte 1, el contenido observado en Floci UI debe coincidir con `aws s3 ls`; tras el paso 8, ambos deben confirmar que el bucket ya no existe. En la Parte 2, `list-object-versions` debe mostrar exactamente dos versiones para la clave `informe.txt`, con IDs distintos, y la versión recuperada explícitamente por su ID debe contener el texto `version 1`, no `version 2`.
 
 **Errores comunes y soluciones**
 

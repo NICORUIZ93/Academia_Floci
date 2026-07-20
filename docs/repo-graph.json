@@ -1,14 +1,6 @@
 {
   "files": [
     {
-      "path": ".claude/settings.local.json",
-      "lines": 14,
-      "kind": "project-file",
-      "symbols": [],
-      "imports": [],
-      "headings": []
-    },
-    {
       "path": ".env.example",
       "lines": 8,
       "kind": "project-file",
@@ -907,7 +899,7 @@
     },
     {
       "path": "examples/node/s3-list-buckets.js",
-      "lines": 28,
+      "lines": 31,
       "kind": "example",
       "symbols": [],
       "imports": [],
@@ -2332,7 +2324,7 @@
     },
     {
       "path": "scripts/build_repo_graph.py",
-      "lines": 445,
+      "lines": 464,
       "kind": "automation-script",
       "symbols": [
         "FileNode",
@@ -2359,6 +2351,7 @@
         "ast",
         "json",
         "re",
+        "subprocess",
         "collections",
         "dataclasses",
         "datetime",
@@ -3439,7 +3432,7 @@
     },
     {
       "path": "web/public/content/cloud/modulo-2.md",
-      "lines": 198,
+      "lines": 275,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -3451,9 +3444,11 @@
         "### Tema 3: Versionado y ciclo de vida",
         "### Tema 4: Transici\u00f3n entre capas de almacenamiento",
         "### Tema 5: Pol\u00edticas de bucket, ACL y URLs pre-firmadas",
-        "## Laboratorio pr\u00e1ctico",
-        "### Laboratorio 2.1 \u2014 Operaciones CRUD b\u00e1sicas",
-        "### Laboratorio 2.2 \u2014 Versionado"
+        "## Construcci\u00f3n guiada: almacena y recupera un archivo",
+        "### Antes de escribir c\u00f3digo: ubica el ejemplo",
+        "### Opci\u00f3n A \u2014 JavaScript con AWS SDK v3",
+        "### Opci\u00f3n B \u2014 Python con boto3",
+        "# En PowerShell de Windows usa: .venv\\Scripts\\Activate.ps1"
       ]
     },
     {

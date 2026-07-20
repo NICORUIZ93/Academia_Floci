@@ -1,8 +1,8 @@
 # Academia Floci Repo Graph
 
-Generated: 2026-07-20 04:16 UTC
+Generated: 2026-07-20 04:33 UTC
 Root: `Academia_Floci`
-Indexed files: 772
+Indexed files: 771
 Import edges: 33
 
 Use this file as the first, compact context for AI assistants. Refresh it with:
@@ -21,7 +21,7 @@ For automated lookups, use `docs/repo-graph.json`.
 - `documentation`: 100 files
 - `example`: 215 files
 - `local-infra`: 1 files
-- `project-file`: 30 files
+- `project-file`: 29 files
 
 ## File Types
 
@@ -30,7 +30,7 @@ For automated lookups, use `docs/repo-graph.json`.
 - `.ts`: 48
 - `.js`: 42
 - `.java`: 40
-- `.json`: 26
+- `.json`: 25
 - `.go`: 24
 - `.rs`: 24
 - `.kt`: 11
@@ -55,7 +55,7 @@ For automated lookups, use `docs/repo-graph.json`.
 - `README.md` (257 lines, documentation)
   - headings: # Academia_Floci, ## Como empezar, ## Levantar Floci, # 1. Levantar todos los servicios, # 2. Verificar Floci AWS
 - `scripts/validate.sh` (125 lines, automation-script)
-- `scripts/build_repo_graph.py` (445 lines, automation-script)
+- `scripts/build_repo_graph.py` (464 lines, automation-script)
   - symbols: FileNode, repo_files, read_text, classify, parse_ts_symbols, parse_ts_imports, parse_python_symbols, parse_python_imports, parse_markdown_headings, unique
 - `web/src/app/app.ts` (11 lines, angular-app)
   - symbols: App
@@ -161,7 +161,7 @@ For automated lookups, use `docs/repo-graph.json`.
 - `scripts/audit_student_journey.py` (146 lines) - symbols: topic_blocks, has, build_report, render, main; imports: __future__, json, re, collections, pathlib
 - `scripts/audit_topic_learning_quality.py` (135 lines) - symbols: student_visible_content, topic_blocks, evaluate, classify, build, render_markdown, main; imports: __future__, argparse, json, re, collections, pathlib
 - `scripts/build_editorial_backlog.py` (101 lines) - symbols: render, main; imports: __future__, argparse, collections, pathlib, audit_topic_learning_quality
-- `scripts/build_repo_graph.py` (445 lines) - symbols: FileNode, repo_files, read_text, classify, parse_ts_symbols, parse_ts_imports, parse_python_symbols, parse_python_imports; imports: __future__, argparse, ast, json, re, collections, dataclasses, datetime
+- `scripts/build_repo_graph.py` (464 lines) - symbols: FileNode, repo_files, read_text, classify, parse_ts_symbols, parse_ts_imports, parse_python_symbols, parse_python_imports; imports: __future__, argparse, ast, json, re, subprocess, collections, dataclasses
 - `scripts/build_web_topic_index.py` (75 lines) - symbols: slugify, clean_topic_title, main; imports: __future__, json, re, sys, unicodedata, collections, pathlib
 - `scripts/create_delivery_modules.py` (61 lines) - symbols: render; imports: pathlib
 - `scripts/create_master_gap_modules.py` (84 lines) - symbols: render; imports: pathlib, json
@@ -249,7 +249,6 @@ For automated lookups, use `docs/repo-graph.json`.
 
 ### project-file
 
-- `.claude/settings.local.json` (14 lines)
 - `.env.example` (8 lines)
 - `.github/workflows/ci.yml` (55 lines)
 - `.gitignore` (25 lines)
@@ -267,4 +266,5 @@ For automated lookups, use `docs/repo-graph.json`.
 - `web/.gitignore` (48 lines)
 - `web/.vscode/extensions.json` (5 lines)
 - `web/.vscode/launch.json` (21 lines)
-- ... 12 more files
+- `web/.vscode/mcp.json` (10 lines)
+- ... 11 more files

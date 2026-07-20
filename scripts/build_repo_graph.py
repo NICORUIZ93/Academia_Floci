@@ -11,6 +11,7 @@ import argparse
 import ast
 import json
 import re
+import subprocess
 from collections import Counter, defaultdict
 from dataclasses import dataclass, field
 from datetime import datetime, timezone
@@ -90,11 +91,29 @@ class FileNode:
 
 
 def repo_files(root: Path) -> list[Path]:
+    """Indexa archivos versionables, no artefactos privados o ignorados del equipo.
+
+    `rglob` incluía archivos locales ignorados (por ejemplo, configuración de
+    asistentes) que no existen en GitHub y hacía que el grafo cambiara entre
+    macOS y Linux. Git proporciona el inventario reproducible correcto e incluye
+    también archivos nuevos todavía no añadidos para facilitar el flujo local.
+    """
+    try:
+        result = subprocess.run(
+            ["git", "ls-files", "--cached", "--others", "--exclude-standard", "-z"],
+            cwd=root,
+            check=True,
+            capture_output=True,
+        )
+        candidates = sorted(Path(item.decode("utf-8")) for item in result.stdout.split(b"\0") if item)
+    except (FileNotFoundError, subprocess.CalledProcessError, UnicodeDecodeError):
+        candidates = [path.relative_to(root) for path in sorted(root.rglob("*")) if path.is_file()]
+
     files: list[Path] = []
-    for path in sorted(root.rglob("*")):
+    for rel in candidates:
+        path = root / rel
         if not path.is_file():
             continue
-        rel = path.relative_to(root)
         if any(part in SKIP_DIRS for part in rel.parts):
             continue
         if path.name in SKIP_NAMES:
