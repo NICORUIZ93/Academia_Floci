@@ -247,7 +247,7 @@
     },
     {
       "path": "docs/student-journey-audit.json",
-      "lines": 4369,
+      "lines": 4332,
       "kind": "project-file",
       "symbols": [],
       "imports": [],
@@ -5126,7 +5126,7 @@
     },
     {
       "path": "web/public/content/java/modulo-10.md",
-      "lines": 98,
+      "lines": 117,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5134,14 +5134,17 @@
         "# M\u00f3dulo 10: M\u00f3dulos (JPMS) y proyectos grandes",
         "## Aprende construyendo",
         "### Tema 1: module-info.java y encapsulaci\u00f3n fuerte",
+        "#### Construcci\u00f3n RutaFlow: encapsulaci\u00f3n comprobada por el compilador",
         "### Tema 2: Migraci\u00f3n incremental y cu\u00e1ndo JPMS aporta valor",
+        "#### Construcci\u00f3n RutaFlow: migraci\u00f3n reversible",
         "### Tema 3: `opens` para acceso reflexivo controlado de frameworks",
-        "## Laboratorio pr\u00e1ctico"
+        "#### Construcci\u00f3n RutaFlow: abrir solo para Jackson",
+        "## Construcci\u00f3n guiada del cap\u00edtulo"
       ]
     },
     {
       "path": "web/public/content/java/modulo-11.md",
-      "lines": 96,
+      "lines": 116,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5149,9 +5152,12 @@
         "# M\u00f3dulo 11: JVM interna \u2014 GC, profiling y JIT",
         "## Aprende construyendo",
         "### Tema 1: Generaciones de memoria y recolectores",
+        "#### Construcci\u00f3n RutaFlow: comparar con la misma carga",
         "### Tema 2: Java Flight Recorder y JIT compilation",
+        "#### Construcci\u00f3n RutaFlow: perfilar una regla caliente",
         "### Tema 3: Referencias especiales y heap dumps",
-        "## Laboratorio pr\u00e1ctico"
+        "#### Construcci\u00f3n RutaFlow: encontrar una retenci\u00f3n real",
+        "## Construcci\u00f3n guiada del cap\u00edtulo"
       ]
     },
     {
@@ -5174,7 +5180,7 @@
     },
     {
       "path": "web/public/content/java/modulo-13.md",
-      "lines": 125,
+      "lines": 141,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5182,19 +5188,20 @@
         "# M\u00f3dulo 13: Proyecto integrador",
         "## Aprende construyendo",
         "### Tema 1: Arquitectura por capas del proyecto integrador",
+        "#### Construcci\u00f3n RutaFlow: esqueleto ejecutable",
         "### Tema 2: Integrando concurrencia, modelado y testing",
+        "#### Construcci\u00f3n RutaFlow: lote parcial y observable",
         "### Tema 3: Build reproducible y cierre del track",
         "# cualquier persona clona el repo y ejecuta con un \u00fanico comando",
+        "#### Construcci\u00f3n RutaFlow: clonaci\u00f3n limpia como prueba",
         "## Proyecto transversal RutaFlow: Motor de tarifas",
         "### Capacidad y fundamento",
-        "### Implementaci\u00f3n guiada",
-        "### Verificaci\u00f3n profesional",
-        "## Laboratorio pr\u00e1ctico"
+        "### Implementaci\u00f3n guiada"
       ]
     },
     {
       "path": "web/public/content/java/modulo-14.md",
-      "lines": 255,
+      "lines": 284,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5202,33 +5209,36 @@
         "# M\u00f3dulo 14: Java en producci\u00f3n \u2014 memoria, benchmarks y runtime seguro",
         "## Aprende construyendo",
         "### Tema 1: Compartir memoria requiere orden y visibilidad",
+        "#### Construcci\u00f3n RutaFlow: publicaci\u00f3n segura",
         "### Tema 2: La JVM optimiza y puede invalidar un cron\u00f3metro ingenuo",
+        "#### Construcci\u00f3n RutaFlow: benchmark que no desaparece",
         "### Tema 3: Deserializar es permitir construcci\u00f3n y comportamiento",
+        "#### Construcci\u00f3n RutaFlow: importar como frontera hostil",
         "### Tema 4: El runtime es parte del artefacto y necesita ciclo de vida",
+        "#### Construcci\u00f3n RutaFlow: runtime actualizable",
         "## Revisi\u00f3n oficial de plataforma \u2014 julio de 2026",
-        "### Java LTS frente a entregas semestrales",
-        "## Laboratorio pr\u00e1ctico",
-        "### Proyecto: endurecimiento medible del procesador concurrente",
-        "## Atlas completo de temas oficiales",
-        "### M\u00e9todo de estudio y proyecto de ampliaci\u00f3n"
+        "### Java LTS frente a entregas semestrales"
       ]
     },
     {
       "path": "web/public/content/java/modulo-15.md",
-      "lines": 157,
+      "lines": 158,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
       "headings": [
-        "# M\u00f3dulo 15: Java Master: builds, testing y logging operacional",
+        "# M\u00f3dulo 15: Java Master \u2014 builds, pruebas y observabilidad",
         "## Aprende construyendo",
         "### Tema 1: Maven avanzado",
+        "#### Construcci\u00f3n RutaFlow",
         "### Tema 2: Gradle y builds reproducibles",
-        "### Tema 3: Proyectos multi-m\u00f3dulo",
-        "### Tema 4: JUnit 5, Mockito y assertions",
-        "### Tema 5: Pruebas de integraci\u00f3n",
-        "### Tema 6: SLF4J, Logback, MDC y logging estructurado",
-        "## Trazabilidad de la auditor\u00eda original"
+        "#### Construcci\u00f3n RutaFlow",
+        "### Tema 3: Proyectos multi-m\u00f3dulo sin ciclos",
+        "#### Construcci\u00f3n RutaFlow",
+        "### Tema 4: JUnit 5, Mockito y assertions expresivas",
+        "#### Construcci\u00f3n RutaFlow",
+        "### Tema 5: Pruebas de integraci\u00f3n reproducibles",
+        "#### Construcci\u00f3n RutaFlow"
       ]
     },
     {

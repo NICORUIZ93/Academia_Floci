@@ -1992,7 +1992,7 @@
       "track": "java",
       "module": 15,
       "position": 3,
-      "title": "Proyectos multi-módulo",
+      "title": "Proyectos multi-módulo sin ciclos",
       "file": "web/public/content/java/modulo-15.md",
       "requires": [
         "java:15:2"
@@ -2003,7 +2003,7 @@
       "track": "java",
       "module": 15,
       "position": 4,
-      "title": "JUnit 5, Mockito y assertions",
+      "title": "JUnit 5, Mockito y assertions expresivas",
       "file": "web/public/content/java/modulo-15.md",
       "requires": [
         "java:15:3"
@@ -2014,7 +2014,7 @@
       "track": "java",
       "module": 15,
       "position": 5,
-      "title": "Pruebas de integración",
+      "title": "Pruebas de integración reproducibles",
       "file": "web/public/content/java/modulo-15.md",
       "requires": [
         "java:15:4"

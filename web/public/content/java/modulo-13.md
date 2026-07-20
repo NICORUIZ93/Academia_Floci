@@ -17,15 +17,19 @@ Esta separación por capas refleja el mismo principio de cohesión y responsabil
 
 **Diagrama:**
 
+```mermaid
+flowchart LR
+    MAIN["Bootstrap"] --> APP["application: casos de uso"]
+    APP --> DOMAIN["domain: reglas y valores"]
+    INFRA["infrastructure: DB y mapas"] --> APP
+    MAIN --> INFRA
 ```
-src/main/java/com/miapp/
-  dominio/        ← records, sealed interfaces (módulo 7)
-  servicio/        ← lógica de negocio, usa virtual threads para I/O concurrente (módulo 5)
-  infraestructura/ ← persistencia, clientes externos
-  Main.java
-src/test/java/com/miapp/
-  servicio/        ← tests con JUnit 5 + Mockito (módulo 9)
-```
+
+#### Construcción RutaFlow: esqueleto ejecutable
+
+En `settings.gradle.kts` conserva los módulos domain, application, infrastructure y cli. Crea `RegistrarGuia` en application, `Guia` en domain y `RepositorioGuiasEnMemoria` en infrastructure; `Main.java` ensambla por constructor. Ejecuta `./gradlew :rutaflow-cli:run`; la salida esperada confirma `RF-1001` sin que domain importe Gradle, Jackson, SQL o logging.
+
+Introduce accidentalmente un import de infrastructure en domain y comprueba que el grafo de módulos impida compilar. Corrige definiendo el puerto en application. Como modificación, sustituye el repositorio en memoria por otro fake sin tocar el caso de uso. Esta estructura es inicial, no una regla universal: si dos capas solo delegan sin decisión ni frontera, simplifica.
 
 ### Tema 2: Integrando concurrencia, modelado y testing
 
@@ -55,6 +59,12 @@ try (var executor = Executors.newVirtualThreadPerTaskExecutor()) {
 }
 ```
 
+#### Construcción RutaFlow: lote parcial y observable
+
+Crea `rutaflow-application/src/main/java/.../ProcesarLote.java`, recibe una lista de guías y un puerto de consulta, y devuelve un resultado sealed por elemento conservando el orden. Usa virtual threads dentro de un alcance cerrado y limita llamadas externas con un semáforo. Ejecuta `./gradlew :rutaflow-application:test`; deben comprobarse lote totalmente exitoso, un fallo parcial y cancelación/timeout.
+
+Haz que una tarea lance excepción sin traducirla y observa cómo `Future.get` la envuelve; corrige convirtiendo únicamente fallos esperados a `Error`, dejando bugs visibles. Como modificación, incluye índice y guía en cada resultado y verifica que no se comparta una lista mutable. RutaFlow no reintenta automáticamente operaciones no idempotentes: esa política pertenece al contrato del puerto.
+
 ### Tema 3: Build reproducible y cierre del track
 
 **Conceptos clave:** ejecución con un solo comando, Java moderno como reducción de boilerplate.
@@ -73,6 +83,12 @@ Java moderno (17 hasta 21) reduce significativamente el boilerplate que históri
 ./gradlew run   # o: mvn compile exec:java
 # cualquier persona clona el repo y ejecuta con un único comando
 ```
+
+#### Construcción RutaFlow: clonación limpia como prueba
+
+Completa `academia-java/README.md` con JDK requerido y conserva el arranque en `rutaflow-cli/src/main/java/com/rutaflow/cli/Main.java`. Documenta `./gradlew clean check`, `./gradlew :rutaflow-cli:run` y salida exacta. Genera wrapper, bloqueos y verificación de dependencias. Desde una copia limpia sin caché ejecuta `./gradlew --no-build-cache clean check` y el comando de arranque; el resultado esperado es el mismo hito RutaFlow sin variables secretas para el modo local.
+
+Quita una dependencia declarada y verifica que el build falle, en vez de usar un JAR global del IDE. Como modificación, crea CI con JDK fijo, artefacto y checksum, y prueba el JAR producido, no clases sueltas. Reproducible significa entradas controladas y artefacto trazable; no garantiza bytes idénticos entre sistemas si el build aún incorpora timestamps o herramientas distintas.
 
 ---
 
@@ -99,7 +115,7 @@ Implementa reglas base, sobrepeso y zona remota; prueba bordes, escala y redonde
 El capítulo se completa cuando la evidencia permite a otra persona reproducir el flujo y explicar qué garantías ofrece y cuáles todavía no.
 
 
-## Laboratorio práctico
+## Construcción guiada del capítulo
 
 **Objetivo del laboratorio:** construir la aplicación integradora completa con arquitectura por capas, procesamiento concurrente, tests y build reproducible.
 

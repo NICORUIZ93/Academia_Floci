@@ -11,7 +11,7 @@ Esta auditoría simula el recorrido desde la instalación hasta la evidencia fin
 | node | 15 | Sí | 64 | 0 | 64 | 0 | 14/14 | 3 | 10 | 2 |
 | angular | 16 | Sí | 61 | 0 | 61 | 0 | 15/15 | 3 | 4 | 0 |
 | react | 15 | Sí | 55 | 0 | 55 | 0 | 14/14 | 2 | 3 | 0 |
-| java | 16 | Sí | 59 | 0 | 59 | 0 | 4/4 | 2 | 19 | 1 |
+| java | 16 | Sí | 59 | 0 | 59 | 0 | 0/0 | 4 | 27 | 1 |
 | spring-boot | 16 | Sí | 58 | 0 | 58 | 0 | 14/14 | 3 | 3 | 1 |
 | kotlin-multiplatform | 14 | Sí | 46 | 0 | 46 | 0 | 13/13 | 4 | 3 | 0 |
 | android | 15 | Sí | 49 | 0 | 49 | 0 | 14/14 | 2 | 4 | 1 |
@@ -98,11 +98,11 @@ Esta auditoría simula el recorrido desde la instalación hasta la evidencia fin
 
 ### java
 
-- Módulo 11 · Tema 3: Referencias especiales y heap dumps — 2/13; falta: goal, prerequisites, location, execution, expected, failure, diagnosis, practice, project, proof, transition
-- Módulo 11 · Tema 1: Generaciones de memoria y recolectores — 3/13; falta: goal, prerequisites, location, expected, failure, diagnosis, practice, project, proof, transition
-- Módulo 14 · Tema 2: La JVM optimiza y puede invalidar un cronómetro ingenuo — 3/13; falta: goal, prerequisites, location, expected, failure, diagnosis, practice, project, proof, transition
-- Módulo 10 · Tema 3: `opens` para acceso reflexivo controlado de frameworks — 4/13; falta: goal, prerequisites, location, expected, failure, diagnosis, project, proof, transition
-- Módulo 13 · Tema 3: Build reproducible y cierre del track — 4/13; falta: goal, prerequisites, location, failure, diagnosis, practice, project, proof, transition
+- Módulo 3 · Tema 2: try-with-resources — 6/13; falta: goal, prerequisites, failure, diagnosis, practice, proof, transition
+- Módulo 15 · Tema 3: Proyectos multi-módulo sin ciclos — 6/13; falta: goal, prerequisites, expected, failure, diagnosis, proof, transition
+- Módulo 0 · Tema 1: Del código fuente a la JVM — 7/13; falta: prerequisites, failure, diagnosis, practice, proof, transition
+- Módulo 0 · Tema 2: public static void main — qué significa cada palabra — 7/13; falta: goal, prerequisites, expected, failure, diagnosis, transition
+- Módulo 0 · Tema 6: Operadores, precedencia y control de flujo — 7/13; falta: goal, prerequisites, failure, diagnosis, proof, transition
 
 ### spring-boot
 

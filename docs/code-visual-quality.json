@@ -79,13 +79,13 @@
     },
     "java": {
       "topics": 59,
-      "code": 49,
+      "code": 51,
       "commentedCode": 10,
-      "mermaid": 11,
-      "asciiVisual": 7,
+      "mermaid": 13,
+      "asciiVisual": 0,
       "misleadingDiagramLabel": 0,
-      "filePath": 43,
-      "runCommand": 53,
+      "filePath": 59,
+      "runCommand": 59,
       "officialSource": 0
     },
     "spring-boot": {
@@ -3548,8 +3548,8 @@
       "track": "java",
       "module": 10,
       "topic": "Tema 2: Migración incremental y cuándo JPMS aporta valor",
-      "missingCode": false,
-      "missingComments": true
+      "missingCode": true,
+      "missingComments": false
     },
     {
       "track": "java",
@@ -3576,8 +3576,8 @@
       "track": "java",
       "module": 11,
       "topic": "Tema 3: Referencias especiales y heap dumps",
-      "missingCode": false,
-      "missingComments": true
+      "missingCode": true,
+      "missingComments": false
     },
     {
       "track": "java",
@@ -3604,8 +3604,8 @@
       "track": "java",
       "module": 13,
       "topic": "Tema 1: Arquitectura por capas del proyecto integrador",
-      "missingCode": false,
-      "missingComments": true
+      "missingCode": true,
+      "missingComments": false
     },
     {
       "track": "java",
@@ -3646,43 +3646,43 @@
       "track": "java",
       "module": 15,
       "topic": "Tema 1: Maven avanzado",
-      "missingCode": true,
-      "missingComments": false
+      "missingCode": false,
+      "missingComments": true
     },
     {
       "track": "java",
       "module": 15,
       "topic": "Tema 2: Gradle y builds reproducibles",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "java",
+      "module": 15,
+      "topic": "Tema 3: Proyectos multi-módulo sin ciclos",
       "missingCode": true,
       "missingComments": false
     },
     {
       "track": "java",
       "module": 15,
-      "topic": "Tema 3: Proyectos multi-módulo",
-      "missingCode": true,
-      "missingComments": false
+      "topic": "Tema 4: JUnit 5, Mockito y assertions expresivas",
+      "missingCode": false,
+      "missingComments": true
     },
     {
       "track": "java",
       "module": 15,
-      "topic": "Tema 4: JUnit 5, Mockito y assertions",
-      "missingCode": true,
-      "missingComments": false
-    },
-    {
-      "track": "java",
-      "module": 15,
-      "topic": "Tema 5: Pruebas de integración",
-      "missingCode": true,
-      "missingComments": false
+      "topic": "Tema 5: Pruebas de integración reproducibles",
+      "missingCode": false,
+      "missingComments": true
     },
     {
       "track": "java",
       "module": 15,
       "topic": "Tema 6: SLF4J, Logback, MDC y logging estructurado",
-      "missingCode": true,
-      "missingComments": false
+      "missingCode": false,
+      "missingComments": true
     },
     {
       "track": "java",

@@ -28,6 +28,12 @@ module com.miapp.app {
 }
 ```
 
+#### Construcción RutaFlow: encapsulación comprobada por el compilador
+
+Crea `rutaflow-domain/src/main/java/module-info.java`, exportando solo `com.rutaflow.domain.api`, y `rutaflow-cli/src/main/java/module-info.java`, requiriendo `com.rutaflow.domain`. Coloca una clase pública interna en `com.rutaflow.domain.internal` e intenta importarla desde CLI. Ejecuta `./gradlew build`; el resultado esperado es un error de acceso al paquete no exportado.
+
+Mueve el comportamiento necesario detrás de una clase de la API y conserva el paquete interno oculto; el build debe pasar. Como modificación, usa `jdeps --module-path ...` para listar dependencias reales y compáralas con los descriptores. No exportes todo para silenciar el error: RutaFlow adopta JPMS únicamente si esos límites aportan valor adicional al multi-módulo de Gradle.
+
 ### Tema 2: Migración incremental y cuándo JPMS aporta valor
 
 **Conceptos clave:** módulos "hoja" primero, `requires transitive`, costo/beneficio.
@@ -42,11 +48,18 @@ Migrar un proyecto legacy grande sin módulos hacia JPMS es un proceso increment
 
 **Diagrama:**
 
+```mermaid
+flowchart LR
+    LEAF["1. rutaflow-domain"] --> APP["2. application"]
+    APP --> ADAPTERS["3. adapters"]
+    ADAPTERS --> API["4. runtime"]
 ```
-Paso 1: módulos "hoja" (sin dependencias internas) obtienen su module-info.java primero
-Paso 2: sube en el árbol de dependencias agregando módulos hasta cubrir todo el proyecto
-requires transitive: cuando un módulo expone tipos de otro módulo en su propia API pública
-```
+
+#### Construcción RutaFlow: migración reversible
+
+Crea `docs/migracion-jpms.md` con el grafo actual, módulos hoja, dependencias automáticas y criterio de salida. Convierte primero `rutaflow-domain`, ejecuta `./gradlew test` y `jdeps --check com.rutaflow.domain`; registra el resultado antes de tocar application. El hito esperado es dominio modular sin cambios funcionales.
+
+Declara `requires transitive` sin exponer tipos del módulo requerido y observa que amplía innecesariamente la API legible. Cámbialo a `requires` normal. Como modificación, prueba la aplicación en classpath y module-path durante la transición. Si el costo supera el beneficio para este despliegue, documenta la decisión de detener la migración: profesional no significa usar JPMS obligatoriamente.
 
 ### Tema 3: `opens` para acceso reflexivo controlado de frameworks
 
@@ -69,10 +82,16 @@ module com.miapp.dominio {
 }
 ```
 
+#### Construcción RutaFlow: abrir solo para Jackson
+
+En `rutaflow-domain/src/main/java/module-info.java`, añade `opens com.rutaflow.domain.dto to com.fasterxml.jackson.databind;` y conserva el paquete sin exportar si ningún consumidor lo llama directamente. Deserializa `GuiaDto` desde `rutaflow-cli` y ejecuta la aplicación por module-path; el resultado esperado es un objeto válido sin abrir todo el módulo.
+
+Elimina `opens` y reproduce `InaccessibleObjectException`; lee el módulo solicitante y el paquete bloqueado en el mensaje. Evita `open module` como solución permanente y restaura la apertura calificada. Como modificación, intenta acceder directamente al DTO desde otro módulo para comprobar que reflexión y API pública siguen siendo permisos distintos. RutaFlow limita la superficie accesible al framework concreto.
+
 ---
 
 
-## Laboratorio práctico
+## Construcción guiada del capítulo
 
 **Objetivo del laboratorio:** dividir un proyecto en al menos dos módulos JPMS con dependencias explícitas.
 

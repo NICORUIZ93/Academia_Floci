@@ -2220,222 +2220,79 @@
         "installRecovery": true
       },
       "topics": 59,
-      "labs": 4,
-      "verifiableLabs": 4,
+      "labs": 0,
+      "verifiableLabs": 0,
       "states": {
         "explained": 59
       },
       "criteria": {
-        "goal": 4,
+        "goal": 6,
         "prerequisites": 1,
         "terms": 59,
         "code": 59,
-        "location": 43,
-        "execution": 53,
-        "expected": 38,
-        "failure": 2,
-        "diagnosis": 19,
-        "practice": 49,
-        "project": 48,
-        "proof": 14,
+        "location": 59,
+        "execution": 59,
+        "expected": 50,
+        "failure": 4,
+        "diagnosis": 27,
+        "practice": 57,
+        "project": 59,
+        "proof": 12,
         "transition": 1
       },
       "blockers": [
         {
-          "module": 11,
-          "title": "Tema 3: Referencias especiales y heap dumps",
+          "module": 3,
+          "title": "Tema 2: try-with-resources",
           "state": "explained",
-          "score": 2,
-          "missing": [
-            "goal",
-            "prerequisites",
-            "location",
-            "execution",
-            "expected",
-            "failure",
-            "diagnosis",
-            "practice",
-            "project",
-            "proof",
-            "transition"
-          ]
-        },
-        {
-          "module": 11,
-          "title": "Tema 1: Generaciones de memoria y recolectores",
-          "state": "explained",
-          "score": 3,
-          "missing": [
-            "goal",
-            "prerequisites",
-            "location",
-            "expected",
-            "failure",
-            "diagnosis",
-            "practice",
-            "project",
-            "proof",
-            "transition"
-          ]
-        },
-        {
-          "module": 14,
-          "title": "Tema 2: La JVM optimiza y puede invalidar un cronómetro ingenuo",
-          "state": "explained",
-          "score": 3,
-          "missing": [
-            "goal",
-            "prerequisites",
-            "location",
-            "expected",
-            "failure",
-            "diagnosis",
-            "practice",
-            "project",
-            "proof",
-            "transition"
-          ]
-        },
-        {
-          "module": 10,
-          "title": "Tema 3: `opens` para acceso reflexivo controlado de frameworks",
-          "state": "explained",
-          "score": 4,
-          "missing": [
-            "goal",
-            "prerequisites",
-            "location",
-            "expected",
-            "failure",
-            "diagnosis",
-            "project",
-            "proof",
-            "transition"
-          ]
-        },
-        {
-          "module": 13,
-          "title": "Tema 3: Build reproducible y cierre del track",
-          "state": "explained",
-          "score": 4,
-          "missing": [
-            "goal",
-            "prerequisites",
-            "location",
-            "failure",
-            "diagnosis",
-            "practice",
-            "project",
-            "proof",
-            "transition"
-          ]
-        },
-        {
-          "module": 10,
-          "title": "Tema 1: module-info.java y encapsulación fuerte",
-          "state": "explained",
-          "score": 5,
-          "missing": [
-            "goal",
-            "prerequisites",
-            "expected",
-            "failure",
-            "diagnosis",
-            "project",
-            "proof",
-            "transition"
-          ]
-        },
-        {
-          "module": 10,
-          "title": "Tema 2: Migración incremental y cuándo JPMS aporta valor",
-          "state": "explained",
-          "score": 5,
+          "score": 6,
           "missing": [
             "goal",
             "prerequisites",
             "failure",
             "diagnosis",
             "practice",
-            "project",
-            "proof",
-            "transition"
-          ]
-        },
-        {
-          "module": 11,
-          "title": "Tema 2: Java Flight Recorder y JIT compilation",
-          "state": "explained",
-          "score": 5,
-          "missing": [
-            "goal",
-            "prerequisites",
-            "location",
-            "expected",
-            "failure",
-            "practice",
-            "project",
-            "transition"
-          ]
-        },
-        {
-          "module": 14,
-          "title": "Tema 1: Compartir memoria requiere orden y visibilidad",
-          "state": "explained",
-          "score": 5,
-          "missing": [
-            "goal",
-            "prerequisites",
-            "location",
-            "expected",
-            "failure",
-            "diagnosis",
-            "project",
-            "transition"
-          ]
-        },
-        {
-          "module": 14,
-          "title": "Tema 3: Deserializar es permitir construcción y comportamiento",
-          "state": "explained",
-          "score": 5,
-          "missing": [
-            "goal",
-            "prerequisites",
-            "location",
-            "failure",
-            "diagnosis",
-            "project",
-            "proof",
-            "transition"
-          ]
-        },
-        {
-          "module": 14,
-          "title": "Tema 4: El runtime es parte del artefacto y necesita ciclo de vida",
-          "state": "explained",
-          "score": 5,
-          "missing": [
-            "prerequisites",
-            "location",
-            "expected",
-            "failure",
-            "practice",
-            "project",
             "proof",
             "transition"
           ]
         },
         {
           "module": 15,
-          "title": "Tema 1: Maven avanzado",
+          "title": "Tema 3: Proyectos multi-módulo sin ciclos",
           "state": "explained",
-          "score": 5,
+          "score": 6,
           "missing": [
             "goal",
             "prerequisites",
-            "location",
-            "execution",
+            "expected",
+            "failure",
+            "diagnosis",
+            "proof",
+            "transition"
+          ]
+        },
+        {
+          "module": 0,
+          "title": "Tema 1: Del código fuente a la JVM",
+          "state": "explained",
+          "score": 7,
+          "missing": [
+            "prerequisites",
+            "failure",
+            "diagnosis",
+            "practice",
+            "proof",
+            "transition"
+          ]
+        },
+        {
+          "module": 0,
+          "title": "Tema 2: public static void main — qué significa cada palabra",
+          "state": "explained",
+          "score": 7,
+          "missing": [
+            "goal",
+            "prerequisites",
             "expected",
             "failure",
             "diagnosis",
@@ -2443,50 +2300,156 @@
           ]
         },
         {
-          "module": 15,
-          "title": "Tema 3: Proyectos multi-módulo",
+          "module": 0,
+          "title": "Tema 6: Operadores, precedencia y control de flujo",
           "state": "explained",
-          "score": 5,
+          "score": 7,
           "missing": [
             "goal",
             "prerequisites",
-            "location",
-            "execution",
-            "expected",
             "failure",
             "diagnosis",
+            "proof",
             "transition"
           ]
         },
         {
-          "module": 15,
-          "title": "Tema 4: JUnit 5, Mockito y assertions",
+          "module": 0,
+          "title": "Tema 8: Entrada y APIs estándar sin aprender APIs obsoletas como modelo principal",
           "state": "explained",
-          "score": 5,
+          "score": 7,
           "missing": [
             "goal",
             "prerequisites",
-            "location",
-            "execution",
-            "expected",
             "failure",
             "diagnosis",
+            "proof",
             "transition"
           ]
         },
         {
-          "module": 15,
-          "title": "Tema 5: Pruebas de integración",
+          "module": 1,
+          "title": "Tema 1: Clases, objetos, constructores y encapsulación",
           "state": "explained",
-          "score": 5,
+          "score": 7,
           "missing": [
             "goal",
             "prerequisites",
-            "location",
-            "execution",
-            "expected",
             "failure",
             "diagnosis",
+            "proof",
+            "transition"
+          ]
+        },
+        {
+          "module": 1,
+          "title": "Tema 3: Interfaces, clases abstractas y cuándo usar cada una",
+          "state": "explained",
+          "score": 7,
+          "missing": [
+            "goal",
+            "prerequisites",
+            "failure",
+            "diagnosis",
+            "proof",
+            "transition"
+          ]
+        },
+        {
+          "module": 2,
+          "title": "Tema 2: Genéricos, wildcards y type erasure",
+          "state": "explained",
+          "score": 7,
+          "missing": [
+            "goal",
+            "prerequisites",
+            "failure",
+            "diagnosis",
+            "proof",
+            "transition"
+          ]
+        },
+        {
+          "module": 4,
+          "title": "Tema 1: Stream API — map, filter, reduce, collect",
+          "state": "explained",
+          "score": 7,
+          "missing": [
+            "goal",
+            "prerequisites",
+            "failure",
+            "diagnosis",
+            "proof",
+            "transition"
+          ]
+        },
+        {
+          "module": 4,
+          "title": "Tema 2: Optional — evitar null explícitamente",
+          "state": "explained",
+          "score": 7,
+          "missing": [
+            "goal",
+            "prerequisites",
+            "failure",
+            "diagnosis",
+            "proof",
+            "transition"
+          ]
+        },
+        {
+          "module": 5,
+          "title": "Tema 1: ExecutorService y gestión de hilos",
+          "state": "explained",
+          "score": 7,
+          "missing": [
+            "goal",
+            "prerequisites",
+            "expected",
+            "failure",
+            "proof",
+            "transition"
+          ]
+        },
+        {
+          "module": 5,
+          "title": "Tema 2: CompletableFuture",
+          "state": "explained",
+          "score": 7,
+          "missing": [
+            "goal",
+            "prerequisites",
+            "failure",
+            "diagnosis",
+            "proof",
+            "transition"
+          ]
+        },
+        {
+          "module": 5,
+          "title": "Tema 4: Condiciones de carrera y sincronización",
+          "state": "explained",
+          "score": 7,
+          "missing": [
+            "goal",
+            "prerequisites",
+            "failure",
+            "diagnosis",
+            "proof",
+            "transition"
+          ]
+        },
+        {
+          "module": 6,
+          "title": "Tema 2: Serialización con Jackson",
+          "state": "explained",
+          "score": 7,
+          "missing": [
+            "goal",
+            "prerequisites",
+            "failure",
+            "diagnosis",
+            "proof",
             "transition"
           ]
         }

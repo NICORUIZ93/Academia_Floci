@@ -53,13 +53,22 @@ Las pruebas unitarias raramente encuentran intercalados. OpenJDK jcstress ejecut
 
 **Diagrama:**
 
-```text
-Hilo A: construir estado -> write volatile ready=true
-                                  | happens-before
-Hilo B:                  read volatile ready -> leer estado completo
-
-counter++ = read -> add -> write; visible no significa atómico
+```mermaid
+sequenceDiagram
+    participant A as Hilo A
+    participant M as Memoria coordinada
+    participant B as Hilo B
+    A->>M: construir estado
+    A->>M: write volatile ready=true
+    M-->>B: read volatile ready (happens-before)
+    B->>B: leer estado completo
 ```
+
+#### Construcción RutaFlow: publicación segura
+
+Crea `src/jcstress/java/com/rutaflow/concurrency/PublicacionState.java` y un test actor/observer donde un hilo publica una tabla y otro lee `ready` y el contenido. Ejecuta `./gradlew jcstress`; documenta outcomes permitidos y prohibidos. Corrige con referencia `volatile` y copia inmutable, y repite hasta que el estado parcial sea prohibido por el modelo, no solo ausente por suerte.
+
+Sustituye un contador atómico por `volatile long` con `++` y demuestra actualizaciones perdidas. Como modificación, compara `AtomicLong` y `LongAdder` bajo contención, manteniendo la misma semántica. RutaFlow usa inmutabilidad para tablas de tarifas y atomics para métricas; una prueba sin fallo no reemplaza la relación happens-before.
 
 ### Tema 2: La JVM optimiza y puede invalidar un cronómetro ingenuo
 
@@ -104,11 +113,18 @@ JMH también puede engañarse: setup incorrecto, estado compartido con contenci�
 
 **Diagrama:**
 
-```text
-pregunta -> workload representativo -> warmup -> forks/iteraciones -> distribución
-                              JIT puede: plegar | eliminar | desvirtualizar
-microbenchmark -> hipótesis local -> JFR/carga servicio -> impacto de usuario
+```mermaid
+flowchart LR
+    Q["pregunta"] --> W["workload"] --> JMH["warmup · forks · iteraciones"]
+    JMH --> DIST["distribución y error"]
+    DIST --> JFR["JFR y carga del servicio"] --> USER["impacto de usuario"]
 ```
+
+#### Construcción RutaFlow: benchmark que no desaparece
+
+Crea `src/jmh/java/com/rutaflow/benchmark/TarifaBenchmark.java` con parámetros 100 y 10.000, estado por hilo y `Blackhole`. Ejecuta `./gradlew jmh`; conserva versión del JDK, CPU, forks, error y unidades. El resultado esperado compara implementaciones con la misma entrada sin incluir la preparación.
+
+Escribe una variante ingenua cuyo resultado no se consuma y observa optimización o varianza; corrígela. Como modificación, valida la mejora elegida con una prueba de carga de RutaFlow y JFR. Si el percentil de usuario no mejora o aumenta memoria, revierte: un microbenchmark no autoriza por sí solo complejidad de producción.
 
 ### Tema 3: Deserializar es permitir construcción y comportamiento
 
@@ -148,11 +164,18 @@ El build descarga código. Fija versiones, verifica repositorios, revisa plugins
 
 **Diagrama:**
 
-```text
-bytes externos -> límite tamaño -> parser/formato -> tipos permitidos -> invariantes
-ObjectInputStream excepcional -> ObjectInputFilter: clase/profundidad/referencias/bytes
-dependencias/plugins -> repositorio verificado -> SBOM -> análisis -> actualización probada
+```mermaid
+flowchart LR
+    BYTES["bytes externos"] --> LIMIT["límite de tamaño"] --> PARSER["parser cerrado"]
+    PARSER --> TYPES["tipos permitidos"] --> RULES["invariantes"]
+    BUILD["dependencias y plugins"] --> VERIFY["checksums y SBOM"] --> UPDATE["actualización probada"]
 ```
+
+#### Construcción RutaFlow: importar como frontera hostil
+
+Crea `rutaflow-infrastructure/src/main/java/.../ImportadorSeguro.java`, recibe un `InputStream` limitado, deserializa un DTO JSON cerrado con Jackson y valida antes de mapear a dominio. Añade pruebas en `src/test/.../ImportadorSeguroTest.java` para payload válido, campo extra, profundidad excesiva, tamaño mayor de 1 MiB y tipo polimórfico. Ejecuta `./gradlew test`; todos los rechazos deben ser explícitos y acotados.
+
+Activa tipado por defecto global y demuestra que amplía la superficie; desactívalo. Si mantienes el ejemplo legacy, aplica `ObjectInputFilter` antes de `readObject`. Como modificación, genera SBOM y registra la versión vulnerable simulada hasta actualizarla con pruebas verdes. Nunca imprimas el payload completo: puede contener secretos o datos personales.
 
 ### Tema 4: El runtime es parte del artefacto y necesita ciclo de vida
 
@@ -186,12 +209,18 @@ El despliegue versiona JAR **y runtime**. Prueba compatibilidad de datos y contr
 
 **Diagrama:**
 
-```text
-fuentes -> build -> JAR + grafo módulos -> jlink runtime -> imagen inmutable
-                                                   |
-                                         límites/señales/JFR
-CVEs JDK -> reconstruir runtime -> canary -> métricas -> promover/rollback
+```mermaid
+flowchart LR
+    SRC["fuentes"] --> BUILD["build"] --> JAR["JAR + módulos"] --> RUNTIME["jlink runtime"]
+    RUNTIME --> IMAGE["imagen inmutable"] --> CANARY["canary"] --> PROMOTE["promover o rollback"]
+    PATCH["parche JDK"] --> RUNTIME
 ```
+
+#### Construcción RutaFlow: runtime actualizable
+
+En `src/main/java/com/rutaflow/runtime/RuntimeSmoke.java` crea un punto de entrada mínimo y desde `scripts/build-runtime.sh` usa el JAR real con `jdeps`, crea `build/runtime` mediante `jlink` y ejecuta su `bin/java`. Empaqueta una imagen no root y prueba `SIGTERM` con un trabajo en curso; el resultado esperado deja de aceptar, termina antes del deadline y registra el cierre. Mide tamaño, arranque y RSS frente al JDK completo.
+
+Elimina un módulo requerido por reflexión y reproduce el fallo en smoke test; corrige la lista o el descriptor. Como modificación, documenta `docs/runbooks/java-runtime-update.md` con reconstrucción, canary y rollback conjunto de JAR/runtime. Deja margen entre `-Xmx` y el límite del contenedor: heap no incluye metaspace, stacks, buffers ni memoria nativa.
 
 ## Revisión oficial de plataforma — julio de 2026
 
@@ -202,7 +231,7 @@ La base de producción recomendada para el curso es **Java 25 LTS**; **JDK 26** 
 **Aplicación al proyecto:** compila y prueba en 25 y 26, experimenta HTTP/3 contra un servidor compatible con fallback medido, registra JEP/estado de cada función y evita publicar artefactos que necesiten preview salvo decisión explícita.
 
 
-## Laboratorio práctico
+## Construcción guiada del capítulo
 
 ### Proyecto: endurecimiento medible del procesador concurrente
 

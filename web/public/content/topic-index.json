@@ -2448,16 +2448,16 @@
         "fragment": "tema-2-gradle-y-builds-reproducibles"
       },
       {
-        "title": "Proyectos multi-módulo",
-        "fragment": "tema-3-proyectos-multi-modulo"
+        "title": "Proyectos multi-módulo sin ciclos",
+        "fragment": "tema-3-proyectos-multi-modulo-sin-ciclos"
       },
       {
-        "title": "JUnit 5, Mockito y assertions",
-        "fragment": "tema-4-junit-5-mockito-y-assertions"
+        "title": "JUnit 5, Mockito y assertions expresivas",
+        "fragment": "tema-4-junit-5-mockito-y-assertions-expresivas"
       },
       {
-        "title": "Pruebas de integración",
-        "fragment": "tema-5-pruebas-de-integracion"
+        "title": "Pruebas de integración reproducibles",
+        "fragment": "tema-5-pruebas-de-integracion-reproducibles"
       },
       {
         "title": "SLF4J, Logback, MDC y logging estructurado",
