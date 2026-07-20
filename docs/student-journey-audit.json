@@ -28,8 +28,8 @@
         "installRecovery": true
       },
       "topics": 50,
-      "labs": 2,
-      "verifiableLabs": 2,
+      "labs": 1,
+      "verifiableLabs": 1,
       "states": {
         "explained": 49,
         "practicable": 1
@@ -39,13 +39,13 @@
         "prerequisites": 2,
         "terms": 50,
         "code": 50,
-        "location": 42,
+        "location": 46,
         "execution": 48,
-        "expected": 37,
-        "failure": 7,
+        "expected": 38,
+        "failure": 6,
         "diagnosis": 21,
-        "practice": 41,
-        "project": 42,
+        "practice": 44,
+        "project": 46,
         "proof": 23,
         "transition": 0
       },
@@ -60,24 +60,6 @@
             "prerequisites",
             "location",
             "execution",
-            "expected",
-            "failure",
-            "diagnosis",
-            "practice",
-            "project",
-            "proof",
-            "transition"
-          ]
-        },
-        {
-          "module": 9,
-          "title": "Tema 3: Conteo, grafos y estructuras conectadas",
-          "state": "explained",
-          "score": 3,
-          "missing": [
-            "goal",
-            "prerequisites",
-            "location",
             "expected",
             "failure",
             "diagnosis",
@@ -124,39 +106,6 @@
           ]
         },
         {
-          "module": 9,
-          "title": "Tema 1: Lógica para especificar antes de programar",
-          "state": "explained",
-          "score": 4,
-          "missing": [
-            "goal",
-            "prerequisites",
-            "location",
-            "expected",
-            "diagnosis",
-            "practice",
-            "project",
-            "proof",
-            "transition"
-          ]
-        },
-        {
-          "module": 9,
-          "title": "Tema 2: Conjuntos, relaciones, funciones e inducción",
-          "state": "explained",
-          "score": 5,
-          "missing": [
-            "goal",
-            "prerequisites",
-            "location",
-            "failure",
-            "diagnosis",
-            "practice",
-            "project",
-            "transition"
-          ]
-        },
-        {
           "module": 1,
           "title": "Tema 2: Variables, tipos, expresiones y cambios de estado",
           "state": "explained",
@@ -188,16 +137,16 @@
         },
         {
           "module": 9,
-          "title": "Tema 4: Probabilidad y evidencia para decisiones técnicas",
+          "title": "Tema 3: Conteo, grafos y estructuras conectadas",
           "state": "explained",
           "score": 6,
           "missing": [
             "goal",
             "prerequisites",
-            "location",
             "expected",
             "failure",
-            "project",
+            "diagnosis",
+            "proof",
             "transition"
           ]
         },
@@ -283,6 +232,48 @@
             "failure",
             "diagnosis",
             "proof",
+            "transition"
+          ]
+        },
+        {
+          "module": 4,
+          "title": "Tema 2: SQL para definir, escribir, consultar y relacionar",
+          "state": "explained",
+          "score": 7,
+          "missing": [
+            "goal",
+            "prerequisites",
+            "failure",
+            "diagnosis",
+            "proof",
+            "transition"
+          ]
+        },
+        {
+          "module": 4,
+          "title": "Tema 4: Transacciones, concurrencia y elección SQL/NoSQL",
+          "state": "explained",
+          "score": 7,
+          "missing": [
+            "goal",
+            "prerequisites",
+            "failure",
+            "diagnosis",
+            "proof",
+            "transition"
+          ]
+        },
+        {
+          "module": 5,
+          "title": "Tema 1: Depurar con evidencia, no con cambios aleatorios",
+          "state": "explained",
+          "score": 7,
+          "missing": [
+            "goal",
+            "prerequisites",
+            "expected",
+            "failure",
+            "diagnosis",
             "transition"
           ]
         }

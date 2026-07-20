@@ -247,7 +247,7 @@
     },
     {
       "path": "docs/student-journey-audit.json",
-      "lines": 4306,
+      "lines": 4297,
       "kind": "project-file",
       "symbols": [],
       "imports": [],
@@ -4848,7 +4848,7 @@
     },
     {
       "path": "web/public/content/foundations/modulo-9.md",
-      "lines": 199,
+      "lines": 223,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -4856,10 +4856,14 @@
         "# Matem\u00e1ticas discretas, l\u00f3gica y probabilidad para software",
         "## Aprende construyendo",
         "### Tema 1: L\u00f3gica para especificar antes de programar",
+        "#### Construcci\u00f3n RutaFlow: buscar un contraejemplo",
         "### Tema 2: Conjuntos, relaciones, funciones e inducci\u00f3n",
+        "#### Construcci\u00f3n RutaFlow: dependencias como relaci\u00f3n sin ciclos",
         "### Tema 3: Conteo, grafos y estructuras conectadas",
+        "#### Construcci\u00f3n RutaFlow: ruta m\u00ednima y orden de despliegue",
         "### Tema 4: Probabilidad y evidencia para decisiones t\u00e9cnicas",
-        "## Laboratorio pr\u00e1ctico",
+        "#### Construcci\u00f3n RutaFlow: medir sin esconder la distribuci\u00f3n",
+        "## Construcci\u00f3n guiada del cap\u00edtulo",
         "### Proyecto 9: cuaderno de propiedades, grafos y evidencia"
       ]
     },

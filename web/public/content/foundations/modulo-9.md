@@ -42,12 +42,18 @@ def test_retirar_preserva_stock_no_negativo(stock, cantidad):
 
 **Diagrama:**
 
-```text
-entrada cumple Pre ──> operación ──> Post debe cumplirse
-       │                    │
-       `──── invariante antes y después ────´
-contraejemplo = entrada válida que rompe la propiedad
+```mermaid
+flowchart LR
+    PRE["entrada cumple precondición"] --> OP["operación"] --> POST["postcondición"]
+    INV["invariante"] -. "antes y después" .-> PRE
+    INV -. "debe conservarse" .-> POST
 ```
+
+#### Construcción RutaFlow: buscar un contraejemplo
+
+Crea `rutaflow-fundamentos/33-logica/src/retiro.py` y `tests/test_propiedades.py` con Hypothesis. Declara precondición, postcondición e invariante `stock >= 0`; ejecuta `python -m pytest -q`. Introduce `cantidad < stock` en vez de `<=` y conserva el contraejemplo mínimo que la herramienta encuentre.
+
+Corrige la frontera y añade una propiedad de autorización usando conjuntos. Como modificación, escribe la negación de “todas las guías tienen centro” y crea un generador que encuentre una sin centro. RutaFlow usa propiedades para ampliar búsqueda, pero documenta dominio y supuestos: miles de ejemplos no constituyen una demostración formal ni cubren I/O externo.
 
 ### Tema 2: Conjuntos, relaciones, funciones e inducción
 
@@ -78,13 +84,19 @@ Una prueba de corrección no demuestra eficiencia ni ausencia de errores de impl
 
 **Diagrama:**
 
-```text
-Permisos requeridos R = {leer, editar}
-Permisos concedidos A = {leer, editar, exportar}
-R subconjunto de A -> autorizado
-
-P(0) cierta + [P(n) implica P(n+1)] -> P(n) para todo natural n
+```mermaid
+flowchart LR
+    R["R = leer, editar"] --> CHECK{"R ⊆ A"}
+    A["A = leer, editar, exportar"] --> CHECK
+    CHECK --> AUTH["autorizado"]
+    BASE["caso base P(0)"] --> STEP["P(n) implica P(n+1)"] --> ALL["P(n) para todo natural"]
 ```
+
+#### Construcción RutaFlow: dependencias como relación sin ciclos
+
+Crea `rutaflow-fundamentos/34-conjuntos/src/prerrequisitos.py`. Modela permisos con conjuntos y módulos con una relación dirigida; valida que cada requisito sea subconjunto de concedidos y que “es prerrequisito” no contenga ciclos. Ejecuta `python src/prerrequisitos.py`; el resultado esperado autoriza el ejemplo y produce un orden válido.
+
+Agrega `fundamentos -> seguridad -> fundamentos` para provocar ciclo. Como modificación, implementa suma recursiva y escribe en `docs/induccion.md` caso base, hipótesis y paso; prueba lista vacía y no vacía. RutaFlow distingue función total de búsqueda parcial y no presenta una prueba de corrección como evidencia de eficiencia.
 
 ### Tema 3: Conteo, grafos y estructuras conectadas
 
@@ -126,13 +138,19 @@ La terminación depende de marcar visitados; la detección del ciclo usa el conj
 
 **Diagrama:**
 
-```text
-dominio -> aplicación -> infraestructura
-   |            |
-   `-> pruebas <-´       DAG: tiene orden posible
-
-A -> B -> C -> A         ciclo: orden imposible
+```mermaid
+flowchart LR
+    DOMAIN["dominio"] --> APP["aplicación"] --> INFRA["infraestructura"]
+    DOMAIN --> TESTS["pruebas"]
+    APP --> TESTS
+    A["A"] --> B["B"] --> C["C"] --> A
 ```
+
+#### Construcción RutaFlow: ruta mínima y orden de despliegue
+
+Crea `rutaflow-fundamentos/35-grafos/src/grafos.py` con BFS para ruta mínima no ponderada y DFS con conjuntos `visitados`/`activos` para ciclos. Ejecuta `python src/grafos.py`; debe encontrar una ruta entre centros y ordenar módulos cuando el grafo sea DAG.
+
+Confunde deliberadamente activos con visitados y observa falso positivo; restaura ambos roles. Como modificación, añade pesos de distancia y explica por qué BFS deja de garantizar ruta mínima, proponiendo Dijkstra sin implementarlo a ciegas. RutaFlow reutiliza grafos para rutas y dependencias, pero algoritmo y contrato dependen de dirección, pesos y ciclos permitidos.
 
 ### Tema 4: Probabilidad y evidencia para decisiones técnicas
 
@@ -163,15 +181,21 @@ Comparar dos versiones exige controlar calentamiento, carga, datos, hardware y o
 
 **Diagrama:**
 
-```text
-población -> diseño de muestreo -> muestra -> estadístico
-    ^                                      |
-    `------ conclusión con incertidumbre --´
-sesgo de selección no se corrige aumentando n
+```mermaid
+flowchart LR
+    POP["población"] --> DESIGN["diseño de muestreo"] --> SAMPLE["muestra"] --> STAT["estadístico"]
+    STAT --> CONCLUSION["conclusión con incertidumbre"]
+    BIAS["sesgo de selección"] -. "no desaparece aumentando n" .-> SAMPLE
 ```
 
+#### Construcción RutaFlow: medir sin esconder la distribución
 
-## Laboratorio práctico
+Crea `rutaflow-fundamentos/36-probabilidad/src/latencias.py`, genera datos con semilla, calentamiento y al menos 30 repeticiones por variante; imprime n, media, mediana, p95 y dispersión. Ejecuta `python src/latencias.py`; el resultado esperado conserva datos crudos y contexto, no solo “A ganó”.
+
+Mide una variante siempre de noche o en segundo lugar para introducir sesgo; alterna orden y registra carga. Como modificación, simula una alerta rara con falsos positivos y calcula valor predictivo para mostrar efecto de tasa base. RutaFlow no confunde correlación con causalidad ni un valor p con importancia práctica; cualquier despliegue requiere métrica de usuario y rollback.
+
+
+## Construcción guiada del capítulo
 
 ### Proyecto 9: cuaderno de propiedades, grafos y evidencia
 
