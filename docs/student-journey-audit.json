@@ -28,8 +28,8 @@
         "installRecovery": true
       },
       "topics": 50,
-      "labs": 1,
-      "verifiableLabs": 1,
+      "labs": 0,
+      "verifiableLabs": 0,
       "states": {
         "explained": 49,
         "practicable": 1
@@ -39,72 +39,17 @@
         "prerequisites": 2,
         "terms": 50,
         "code": 50,
-        "location": 46,
-        "execution": 48,
-        "expected": 38,
+        "location": 50,
+        "execution": 50,
+        "expected": 41,
         "failure": 6,
-        "diagnosis": 21,
-        "practice": 44,
-        "project": 46,
-        "proof": 23,
+        "diagnosis": 22,
+        "practice": 47,
+        "project": 50,
+        "proof": 24,
         "transition": 0
       },
       "blockers": [
-        {
-          "module": 10,
-          "title": "Tema 2: Replicación, consistencia y decisiones explícitas",
-          "state": "explained",
-          "score": 2,
-          "missing": [
-            "goal",
-            "prerequisites",
-            "location",
-            "execution",
-            "expected",
-            "failure",
-            "diagnosis",
-            "practice",
-            "project",
-            "proof",
-            "transition"
-          ]
-        },
-        {
-          "module": 10,
-          "title": "Tema 1: La red convierte el resultado en una incertidumbre",
-          "state": "explained",
-          "score": 3,
-          "missing": [
-            "goal",
-            "prerequisites",
-            "location",
-            "expected",
-            "failure",
-            "diagnosis",
-            "practice",
-            "project",
-            "proof",
-            "transition"
-          ]
-        },
-        {
-          "module": 10,
-          "title": "Tema 3: Mensajes que se procesan con efectos exactamente una vez",
-          "state": "explained",
-          "score": 3,
-          "missing": [
-            "goal",
-            "prerequisites",
-            "location",
-            "execution",
-            "expected",
-            "diagnosis",
-            "practice",
-            "project",
-            "proof",
-            "transition"
-          ]
-        },
         {
           "module": 1,
           "title": "Tema 2: Variables, tipos, expresiones y cambios de estado",
@@ -146,21 +91,6 @@
             "expected",
             "failure",
             "diagnosis",
-            "proof",
-            "transition"
-          ]
-        },
-        {
-          "module": 10,
-          "title": "Tema 4: Resiliencia y observabilidad orientadas a objetivos",
-          "state": "explained",
-          "score": 6,
-          "missing": [
-            "prerequisites",
-            "location",
-            "failure",
-            "diagnosis",
-            "project",
             "proof",
             "transition"
           ]
@@ -274,6 +204,62 @@
             "expected",
             "failure",
             "diagnosis",
+            "transition"
+          ]
+        },
+        {
+          "module": 6,
+          "title": "Tema 2: Identidad, contraseñas, sesiones y autorización",
+          "state": "explained",
+          "score": 7,
+          "missing": [
+            "goal",
+            "prerequisites",
+            "failure",
+            "diagnosis",
+            "proof",
+            "transition"
+          ]
+        },
+        {
+          "module": 6,
+          "title": "Tema 3: Criptografía aplicada, TLS, claves y secretos",
+          "state": "explained",
+          "score": 7,
+          "missing": [
+            "goal",
+            "prerequisites",
+            "failure",
+            "diagnosis",
+            "proof",
+            "transition"
+          ]
+        },
+        {
+          "module": 7,
+          "title": "Tema 3: Diseño modular, principios, patrones y refactoring",
+          "state": "explained",
+          "score": 7,
+          "missing": [
+            "goal",
+            "prerequisites",
+            "expected",
+            "failure",
+            "diagnosis",
+            "transition"
+          ]
+        },
+        {
+          "module": 8,
+          "title": "Tema 2: Memoria y concurrencia sin magia",
+          "state": "explained",
+          "score": 7,
+          "missing": [
+            "goal",
+            "prerequisites",
+            "expected",
+            "failure",
+            "proof",
             "transition"
           ]
         }

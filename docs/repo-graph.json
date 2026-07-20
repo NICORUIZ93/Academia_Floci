@@ -247,7 +247,7 @@
     },
     {
       "path": "docs/student-journey-audit.json",
-      "lines": 4297,
+      "lines": 4283,
       "kind": "project-file",
       "symbols": [],
       "imports": [],
@@ -4661,7 +4661,7 @@
     },
     {
       "path": "web/public/content/foundations/modulo-10.md",
-      "lines": 210,
+      "lines": 239,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -4669,15 +4669,15 @@
         "# Sistemas distribuidos, resiliencia y observabilidad",
         "## Aprende construyendo",
         "### Tema 1: La red convierte el resultado en una incertidumbre",
+        "#### Construcci\u00f3n RutaFlow: timeout con identidad estable",
         "### Tema 2: Replicaci\u00f3n, consistencia y decisiones expl\u00edcitas",
+        "#### Construcci\u00f3n RutaFlow: consistencia elegida por operaci\u00f3n",
         "### Tema 3: Mensajes que se procesan con efectos exactamente una vez",
+        "#### Construcci\u00f3n RutaFlow: efecto \u00fanico sobre entrega duplicada",
         "### Tema 4: Resiliencia y observabilidad orientadas a objetivos",
+        "#### Construcci\u00f3n RutaFlow: degradar antes de colapsar",
         "## Proyecto transversal RutaFlow: Dominio, algoritmos y contabilidad",
-        "### Capacidad y fundamento",
-        "### Implementaci\u00f3n guiada",
-        "### Verificaci\u00f3n profesional",
-        "## Laboratorio pr\u00e1ctico",
-        "### Proyecto 10: inventario distribuido m\u00ednimo y observable"
+        "### Capacidad y fundamento"
       ]
     },
     {

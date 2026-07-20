@@ -4,7 +4,7 @@ Esta auditoría simula el recorrido desde la instalación hasta la evidencia fin
 
 | Track | Módulos | Secuencia | Temas | Listados | Explicados | Practicables | Labs verificables | Error provocado | Diagnóstico | Transición |
 |---|---:|:---:|---:|---:|---:|---:|---:|---:|---:|---:|
-| foundations | 12 | Sí | 50 | 0 | 49 | 1 | 1/1 | 6 | 21 | 0 |
+| foundations | 12 | Sí | 50 | 0 | 49 | 1 | 0/0 | 6 | 22 | 0 |
 | cloud | 35 | Sí | 153 | 8 | 145 | 0 | 32/32 | 10 | 14 | 1 |
 | devops | 16 | Sí | 91 | 0 | 91 | 0 | 15/15 | 1 | 23 | 2 |
 | javascript | 15 | Sí | 75 | 0 | 75 | 0 | 13/13 | 2 | 13 | 1 |
@@ -42,11 +42,11 @@ Esta auditoría simula el recorrido desde la instalación hasta la evidencia fin
 
 ### foundations
 
-- Módulo 10 · Tema 2: Replicación, consistencia y decisiones explícitas — 2/13; falta: goal, prerequisites, location, execution, expected, failure, diagnosis, practice, project, proof, transition
-- Módulo 10 · Tema 1: La red convierte el resultado en una incertidumbre — 3/13; falta: goal, prerequisites, location, expected, failure, diagnosis, practice, project, proof, transition
-- Módulo 10 · Tema 3: Mensajes que se procesan con efectos exactamente una vez — 3/13; falta: goal, prerequisites, location, execution, expected, diagnosis, practice, project, proof, transition
 - Módulo 1 · Tema 2: Variables, tipos, expresiones y cambios de estado — 6/13; falta: goal, prerequisites, expected, failure, diagnosis, proof, transition
 - Módulo 1 · Tema 4: Funciones y descomposición de problemas — 6/13; falta: goal, prerequisites, expected, failure, diagnosis, proof, transition
+- Módulo 9 · Tema 3: Conteo, grafos y estructuras conectadas — 6/13; falta: goal, prerequisites, expected, failure, diagnosis, proof, transition
+- Módulo 0 · Tema 1: Del hardware al programa en ejecución — 7/13; falta: goal, prerequisites, expected, failure, proof, transition
+- Módulo 0 · Tema 2: Archivos, carpetas y rutas sin perderse — 7/13; falta: goal, prerequisites, failure, diagnosis, practice, transition
 
 ### cloud
 
