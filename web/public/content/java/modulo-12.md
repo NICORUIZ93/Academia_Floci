@@ -25,6 +25,12 @@ Pedido pedido = Pedido.builder()
     .build();
 ```
 
+#### Construcción RutaFlow: solicitud legible y válida
+
+Crea `src/main/java/academia/entregas/SolicitudRecogida.java` con campos obligatorios `direccion` y `contacto`, y opcionales `observaciones`, `franja` y `fragil`. Su `Builder.build()` debe validar invariantes antes de construir. En `SolicitudDemo.java`, crea una solicitud y ejecuta `javac -d out src/main/java/academia/entregas/*.java` seguido de `java -cp out academia.entregas.SolicitudDemo`; la salida debe nombrar cada opción sin `null` ambiguos.
+
+Omite la dirección y verifica `IllegalStateException` con un mensaje accionable. Después construye dos solicitudes reutilizando el mismo builder y detecta si el estado opcional se filtra; evita reutilización o copia defensivamente. Como modificación, compara el Builder con parámetros nombrados simulados mediante records y decide cuál expresa mejor el caso. RutaFlow usa Builder solo donde existen múltiples opciones reales, no para objetos de dos campos.
+
 ### Tema 2: Factory y Strategy
 
 **Conceptos clave:** creación centralizada según un criterio, algoritmos intercambiables sin modificar el código consumidor.
@@ -58,6 +64,12 @@ class DescuentoNavidad implements CalculadoraDescuento {
 double precioFinal = estrategia.calcular(precioOriginal); // no sabe (ni le importa) cuál estrategia está activa
 ```
 
+#### Construcción RutaFlow: seleccionar transportador y tarifa
+
+Crea `Transportador.java`, `TransportadorLocal.java` y `TransportadorNacional.java`; una `TransportadorFactory` recibe el alcance validado y devuelve la implementación. Crea además `PoliticaTarifa` con estrategias `TarifaNormal` y `TarifaPico`, inyectadas en `Cotizador`. Ejecuta `PatronesDemo.java`; el resultado esperado muestra proveedor y precio distintos para dos escenarios sin condicional dentro de `Cotizador`.
+
+Pasa un tipo desconocido a la factory y comprueba `IllegalArgumentException`. Agrega luego una tercera estrategia sin modificar `Cotizador` y prueba el nuevo resultado. Como modificación, reemplaza el `switch` de creación por un `Map<String,Supplier<Transportador>>` solo si los proveedores se registran dinámicamente; si el conjunto es cerrado, el switch es más transparente. RutaFlow separa la decisión de creación del algoritmo tarifario porque cambian por razones distintas.
+
 ### Tema 3: SOLID y cuándo NO aplicar un patrón
 
 **Conceptos clave:** responsabilidad única, sobre-ingeniería evitable.
@@ -72,17 +84,24 @@ Reconocer cuándo NO aplicar un patrón de diseño es una habilidad igualmente i
 
 **Diagrama:**
 
+```mermaid
+flowchart LR
+    UC["ConfirmarEntrega"] --> DOMAIN["Entrega: reglas"]
+    UC --> PORT["PuertoNotificacion"]
+    EMAIL["Adaptador correo"] --> PORT
+    PDF["Generador comprobante"] --> UC
 ```
-Pedido (violando SRP): datos + envío de email + generación de PDF → 3 razones de cambio en 1 clase
-Refactor: Pedido | EmailService | PdfGenerator → cada uno con 1 sola razón de cambio
 
-Factory con un único caso, Strategy sin alternativa real → patrón innecesario, prefiere código directo
-```
+#### Construcción RutaFlow: refactor guiado por razones de cambio
+
+Crea primero `src/main/java/academia/entregas/ConfirmadorEntrega.java` mezclando validación, escritura de archivo y correo; registra tres motivos independientes por los que cambia. Refactoriza hacia `Entrega` (invariantes), `ConfirmarEntrega` (orquestación), `RepositorioEntregas` y `PuertoNotificacion`. Compila y ejecuta `ArquitecturaDemo.java`; el resultado esperado confirma la entrega usando adaptadores en memoria.
+
+Haz que el dominio importe una clase concreta de correo y usa la dependencia incómoda como señal: invierte hacia el puerto. Después intenta crear una interfaz para una operación que jamás tendrá alternativa y elimina esa indirección si no mejora prueba ni límite. Como modificación, escribe una prueba de arquitectura que impida dependencias desde dominio hacia infraestructura. SOLID guía decisiones y compromisos; dividir cada método en una clase produce fragmentación, no diseño profesional.
 
 ---
 
 
-## Laboratorio práctico
+## Construcción guiada del capítulo
 
 **Objetivo del laboratorio:** refactorizar un módulo propio aplicando al menos dos patrones de diseño justificados por una necesidad real.
 

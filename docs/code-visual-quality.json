@@ -79,13 +79,13 @@
     },
     "java": {
       "topics": 59,
-      "code": 50,
+      "code": 49,
       "commentedCode": 10,
-      "mermaid": 10,
-      "asciiVisual": 8,
+      "mermaid": 11,
+      "asciiVisual": 7,
       "misleadingDiagramLabel": 0,
-      "filePath": 37,
-      "runCommand": 52,
+      "filePath": 43,
+      "runCommand": 53,
       "officialSource": 0
     },
     "spring-boot": {
@@ -3597,8 +3597,8 @@
       "track": "java",
       "module": 12,
       "topic": "Tema 3: SOLID y cuándo NO aplicar un patrón",
-      "missingCode": false,
-      "missingComments": true
+      "missingCode": true,
+      "missingComments": false
     },
     {
       "track": "java",

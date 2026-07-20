@@ -2220,8 +2220,8 @@
         "installRecovery": true
       },
       "topics": 59,
-      "labs": 6,
-      "verifiableLabs": 6,
+      "labs": 4,
+      "verifiableLabs": 4,
       "states": {
         "explained": 59
       },
@@ -2230,13 +2230,13 @@
         "prerequisites": 1,
         "terms": 59,
         "code": 59,
-        "location": 37,
-        "execution": 52,
-        "expected": 35,
+        "location": 43,
+        "execution": 53,
+        "expected": 38,
         "failure": 2,
-        "diagnosis": 18,
-        "practice": 47,
-        "project": 42,
+        "diagnosis": 19,
+        "practice": 49,
+        "project": 48,
         "proof": 14,
         "transition": 1
       },
@@ -2279,42 +2279,6 @@
           ]
         },
         {
-          "module": 12,
-          "title": "Tema 1: Builder — constructores con muchos parámetros opcionales",
-          "state": "explained",
-          "score": 3,
-          "missing": [
-            "goal",
-            "prerequisites",
-            "location",
-            "expected",
-            "failure",
-            "diagnosis",
-            "practice",
-            "project",
-            "proof",
-            "transition"
-          ]
-        },
-        {
-          "module": 12,
-          "title": "Tema 3: SOLID y cuándo NO aplicar un patrón",
-          "state": "explained",
-          "score": 3,
-          "missing": [
-            "goal",
-            "prerequisites",
-            "location",
-            "execution",
-            "expected",
-            "failure",
-            "diagnosis",
-            "project",
-            "proof",
-            "transition"
-          ]
-        },
-        {
           "module": 14,
           "title": "Tema 2: La JVM optimiza y puede invalidar un cronómetro ingenuo",
           "state": "explained",
@@ -2324,23 +2288,6 @@
             "prerequisites",
             "location",
             "expected",
-            "failure",
-            "diagnosis",
-            "practice",
-            "project",
-            "proof",
-            "transition"
-          ]
-        },
-        {
-          "module": 9,
-          "title": "Tema 3: Tests parametrizados y cobertura",
-          "state": "explained",
-          "score": 4,
-          "missing": [
-            "goal",
-            "prerequisites",
-            "location",
             "failure",
             "diagnosis",
             "practice",
@@ -2367,23 +2314,6 @@
           ]
         },
         {
-          "module": 12,
-          "title": "Tema 2: Factory y Strategy",
-          "state": "explained",
-          "score": 4,
-          "missing": [
-            "goal",
-            "prerequisites",
-            "location",
-            "expected",
-            "failure",
-            "diagnosis",
-            "project",
-            "proof",
-            "transition"
-          ]
-        },
-        {
           "module": 13,
           "title": "Tema 3: Build reproducible y cierre del track",
           "state": "explained",
@@ -2395,38 +2325,6 @@
             "failure",
             "diagnosis",
             "practice",
-            "project",
-            "proof",
-            "transition"
-          ]
-        },
-        {
-          "module": 9,
-          "title": "Tema 1: JUnit 5 — anotaciones y ciclo de vida",
-          "state": "explained",
-          "score": 5,
-          "missing": [
-            "goal",
-            "prerequisites",
-            "location",
-            "failure",
-            "diagnosis",
-            "project",
-            "proof",
-            "transition"
-          ]
-        },
-        {
-          "module": 9,
-          "title": "Tema 2: Mockito — aislar dependencias",
-          "state": "explained",
-          "score": 5,
-          "missing": [
-            "goal",
-            "prerequisites",
-            "location",
-            "failure",
-            "diagnosis",
             "project",
             "proof",
             "transition"
@@ -2493,6 +2391,102 @@
             "failure",
             "diagnosis",
             "project",
+            "transition"
+          ]
+        },
+        {
+          "module": 14,
+          "title": "Tema 3: Deserializar es permitir construcción y comportamiento",
+          "state": "explained",
+          "score": 5,
+          "missing": [
+            "goal",
+            "prerequisites",
+            "location",
+            "failure",
+            "diagnosis",
+            "project",
+            "proof",
+            "transition"
+          ]
+        },
+        {
+          "module": 14,
+          "title": "Tema 4: El runtime es parte del artefacto y necesita ciclo de vida",
+          "state": "explained",
+          "score": 5,
+          "missing": [
+            "prerequisites",
+            "location",
+            "expected",
+            "failure",
+            "practice",
+            "project",
+            "proof",
+            "transition"
+          ]
+        },
+        {
+          "module": 15,
+          "title": "Tema 1: Maven avanzado",
+          "state": "explained",
+          "score": 5,
+          "missing": [
+            "goal",
+            "prerequisites",
+            "location",
+            "execution",
+            "expected",
+            "failure",
+            "diagnosis",
+            "transition"
+          ]
+        },
+        {
+          "module": 15,
+          "title": "Tema 3: Proyectos multi-módulo",
+          "state": "explained",
+          "score": 5,
+          "missing": [
+            "goal",
+            "prerequisites",
+            "location",
+            "execution",
+            "expected",
+            "failure",
+            "diagnosis",
+            "transition"
+          ]
+        },
+        {
+          "module": 15,
+          "title": "Tema 4: JUnit 5, Mockito y assertions",
+          "state": "explained",
+          "score": 5,
+          "missing": [
+            "goal",
+            "prerequisites",
+            "location",
+            "execution",
+            "expected",
+            "failure",
+            "diagnosis",
+            "transition"
+          ]
+        },
+        {
+          "module": 15,
+          "title": "Tema 5: Pruebas de integración",
+          "state": "explained",
+          "score": 5,
+          "missing": [
+            "goal",
+            "prerequisites",
+            "location",
+            "execution",
+            "expected",
+            "failure",
+            "diagnosis",
             "transition"
           ]
         }

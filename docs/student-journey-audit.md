@@ -11,7 +11,7 @@ Esta auditoría simula el recorrido desde la instalación hasta la evidencia fin
 | node | 15 | Sí | 64 | 0 | 64 | 0 | 14/14 | 3 | 10 | 2 |
 | angular | 16 | Sí | 61 | 0 | 61 | 0 | 15/15 | 3 | 4 | 0 |
 | react | 15 | Sí | 55 | 0 | 55 | 0 | 14/14 | 2 | 3 | 0 |
-| java | 16 | Sí | 59 | 0 | 59 | 0 | 6/6 | 2 | 18 | 1 |
+| java | 16 | Sí | 59 | 0 | 59 | 0 | 4/4 | 2 | 19 | 1 |
 | spring-boot | 16 | Sí | 58 | 0 | 58 | 0 | 14/14 | 3 | 3 | 1 |
 | kotlin-multiplatform | 14 | Sí | 46 | 0 | 46 | 0 | 13/13 | 4 | 3 | 0 |
 | android | 15 | Sí | 49 | 0 | 49 | 0 | 14/14 | 2 | 4 | 1 |
@@ -100,9 +100,9 @@ Esta auditoría simula el recorrido desde la instalación hasta la evidencia fin
 
 - Módulo 11 · Tema 3: Referencias especiales y heap dumps — 2/13; falta: goal, prerequisites, location, execution, expected, failure, diagnosis, practice, project, proof, transition
 - Módulo 11 · Tema 1: Generaciones de memoria y recolectores — 3/13; falta: goal, prerequisites, location, expected, failure, diagnosis, practice, project, proof, transition
-- Módulo 12 · Tema 1: Builder — constructores con muchos parámetros opcionales — 3/13; falta: goal, prerequisites, location, expected, failure, diagnosis, practice, project, proof, transition
-- Módulo 12 · Tema 3: SOLID y cuándo NO aplicar un patrón — 3/13; falta: goal, prerequisites, location, execution, expected, failure, diagnosis, project, proof, transition
 - Módulo 14 · Tema 2: La JVM optimiza y puede invalidar un cronómetro ingenuo — 3/13; falta: goal, prerequisites, location, expected, failure, diagnosis, practice, project, proof, transition
+- Módulo 10 · Tema 3: `opens` para acceso reflexivo controlado de frameworks — 4/13; falta: goal, prerequisites, location, expected, failure, diagnosis, project, proof, transition
+- Módulo 13 · Tema 3: Build reproducible y cierre del track — 4/13; falta: goal, prerequisites, location, failure, diagnosis, practice, project, proof, transition
 
 ### spring-boot
 

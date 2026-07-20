@@ -28,6 +28,12 @@ class CalculadoraTest {
 }
 ```
 
+#### Construcción RutaFlow: probar invariantes sin infraestructura
+
+En `src/test/java/academia/entregas/GuiaTest.java`, crea pruebas con nombres de comportamiento: `rechaza_peso_cero`, `rechaza_numero_vacio` y `marca_manejo_especial_desde_25kg`. Usa `assertThrows` para errores y `assertAll` para comprobar una guía válida. Ejecuta `./gradlew test --tests GuiaTest`; el resultado esperado es tres pruebas verdes y un reporte bajo `build/reports/tests/test/`.
+
+Cambia temporalmente el límite de peso para hacer fallar una prueba y lee esperado, real y línea, en vez de corregir al azar. Agrega estado compartido mutable sin reiniciarlo y ejecuta en orden diferente para observar fragilidad; corrige creando una instancia nueva en `@BeforeEach` o dentro de cada prueba. Como modificación, añade casos exactos en los límites 25 y 50 kg. Estas pruebas protegen contratos del dominio RutaFlow y no verifican detalles privados.
+
 ### Tema 2: Mockito — aislar dependencias
 
 **Conceptos clave:** `@Mock`, `@InjectMocks`, `when`/`verify`.
@@ -58,6 +64,12 @@ class ServicioPedidosTest {
 }
 ```
 
+#### Construcción RutaFlow: aislar el puerto de persistencia
+
+Crea `src/test/java/academia/entregas/RegistrarGuiaTest.java`. Mockea `RepositorioGuias`, inyecta el caso de uso `RegistrarGuia` por constructor y configura `when(existe("RF-1")).thenReturn(false)`. Ejecuta `./gradlew test --tests RegistrarGuiaTest`; verifica el resultado y que `guardar` recibió una guía con el número correcto.
+
+Configura luego `existe` como `true` y usa `verify(repositorio, never()).guardar(any())`: una guía duplicada no debe persistirse. Elimina el stub necesario y activa *strict stubbing* para detectar una prueba mal configurada. Como modificación, reemplaza el mock por un fake en memoria y compara legibilidad. No mockees `Guia` ni valores simples; Mockito se reserva para colaboradores con comportamiento, y una prueba de integración posterior comprobará el adaptador real.
+
 ### Tema 3: Tests parametrizados y cobertura
 
 **Conceptos clave:** una única prueba con múltiples conjuntos de datos, `@CsvSource`/`@MethodSource`, cobertura de líneas/ramas.
@@ -83,10 +95,16 @@ void esFibonacci(int numero) {
 mvn test jacoco:report   # genera un reporte HTML con líneas/ramas cubiertas
 ```
 
+#### Construcción RutaFlow: tabla de decisiones y cobertura útil
+
+En `src/test/java/academia/entregas/CalculadoraTarifaTest.java`, usa `@CsvSource` con peso, fragilidad y tarifa esperada para cubrir casos normal, límite y error. Ejecuta `./gradlew test jacocoTestReport` y abre `build/reports/jacoco/test/html/index.html`. La salida esperada no es solo un porcentaje: cada combinación debe afirmar una regla de negocio concreta.
+
+Añade una rama imposible de alcanzar desde la API pública para elevar complejidad y observa la línea roja; no escribas una prueba artificial, elimina código muerto. Provoca además una mutación lógica (`>` por `>=`) y comprueba si los datos de límite la detectan. Como modificación, fija un umbral razonable por módulo y excluye únicamente código generado con justificación. Cobertura mide ejecución, no calidad ni ausencia de defectos.
+
 ---
 
 
-## Laboratorio práctico
+## Construcción guiada del capítulo
 
 **Objetivo del laboratorio:** construir una suite de pruebas unitarias con mocks para un servicio con dependencias externas, incluyendo tests parametrizados y cobertura.
 

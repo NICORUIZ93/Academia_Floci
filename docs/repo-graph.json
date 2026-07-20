@@ -247,7 +247,7 @@
     },
     {
       "path": "docs/student-journey-audit.json",
-      "lines": 4375,
+      "lines": 4369,
       "kind": "project-file",
       "symbols": [],
       "imports": [],
@@ -5156,7 +5156,7 @@
     },
     {
       "path": "web/public/content/java/modulo-12.md",
-      "lines": 108,
+      "lines": 127,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5164,9 +5164,12 @@
         "# M\u00f3dulo 12: Buenas pr\u00e1cticas y patrones de dise\u00f1o",
         "## Aprende construyendo",
         "### Tema 1: Builder \u2014 constructores con muchos par\u00e1metros opcionales",
+        "#### Construcci\u00f3n RutaFlow: solicitud legible y v\u00e1lida",
         "### Tema 2: Factory y Strategy",
+        "#### Construcci\u00f3n RutaFlow: seleccionar transportador y tarifa",
         "### Tema 3: SOLID y cu\u00e1ndo NO aplicar un patr\u00f3n",
-        "## Laboratorio pr\u00e1ctico"
+        "#### Construcci\u00f3n RutaFlow: refactor guiado por razones de cambio",
+        "## Construcci\u00f3n guiada del cap\u00edtulo"
       ]
     },
     {
@@ -5358,7 +5361,7 @@
     },
     {
       "path": "web/public/content/java/modulo-9.md",
-      "lines": 112,
+      "lines": 130,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5366,9 +5369,12 @@
         "# M\u00f3dulo 9: Testing con JUnit 5 y Mockito",
         "## Aprende construyendo",
         "### Tema 1: JUnit 5 \u2014 anotaciones y ciclo de vida",
+        "#### Construcci\u00f3n RutaFlow: probar invariantes sin infraestructura",
         "### Tema 2: Mockito \u2014 aislar dependencias",
+        "#### Construcci\u00f3n RutaFlow: aislar el puerto de persistencia",
         "### Tema 3: Tests parametrizados y cobertura",
-        "## Laboratorio pr\u00e1ctico"
+        "#### Construcci\u00f3n RutaFlow: tabla de decisiones y cobertura \u00fatil",
+        "## Construcci\u00f3n guiada del cap\u00edtulo"
       ]
     },
     {
