@@ -4115,7 +4115,7 @@
     },
     {
       "path": "web/public/content/devops/modulo-10.md",
-      "lines": 155,
+      "lines": 403,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -4123,10 +4123,15 @@
         "# M\u00f3dulo 10: Logging centralizado",
         "## Aprende construyendo",
         "### Tema 1: Logging estructurado (JSON)",
-        "### Tema 2: Pipeline ELK/EFK",
-        "### Tema 3: Loki + Grafana como alternativa ligera",
-        "### Tema 4: Correlation ID a trav\u00e9s de servicios",
-        "## Laboratorio pr\u00e1ctico"
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
+        "#### Paso 2 \u00b7 Contexto y caso real",
+        "#### Paso 3 \u00b7 Teor\u00eda con analog\u00eda",
+        "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
+        "#### Construcci\u00f3n RutaFlow: convenci\u00f3n de campos de logging del proyecto",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
+        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
+        "#### Paso 7 \u00b7 Cierre y evidencia",
+        "### Tema 2: Pipeline ELK/EFK"
       ]
     },
     {

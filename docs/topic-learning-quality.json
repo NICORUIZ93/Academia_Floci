@@ -61,15 +61,15 @@
       "topics": 91,
       "explanation": 91,
       "code": 91,
-      "visual": 84,
-      "filePath": 63,
-      "runCommand": 74,
-      "expectedResult": 71,
-      "practice": 84,
-      "project": 68,
+      "visual": 85,
+      "filePath": 67,
+      "runCommand": 77,
+      "expectedResult": 75,
+      "practice": 86,
+      "project": 72,
       "modelMental": 91,
-      "limitsDecision": 79,
-      "practicable": 62,
+      "limitsDecision": 81,
+      "practicable": 66,
       "genericScaffold": 0
     },
     "flutter": {
@@ -6096,18 +6096,18 @@
         "criteria": {
           "explanation": true,
           "code": true,
-          "visual": false,
-          "filePath": false,
-          "runCommand": false,
-          "expectedResult": false,
-          "practice": false,
-          "project": false,
+          "visual": true,
+          "filePath": true,
+          "runCommand": true,
+          "expectedResult": true,
+          "practice": true,
+          "project": true,
           "modelMental": true,
-          "limitsDecision": false
+          "limitsDecision": true
         },
         "classification": {
-          "rubricScore": 3,
-          "practicable": false,
+          "rubricScore": 16,
+          "practicable": true,
           "genericScaffold": false
         }
       },
@@ -6118,17 +6118,17 @@
           "explanation": true,
           "code": true,
           "visual": true,
-          "filePath": false,
+          "filePath": true,
           "runCommand": true,
-          "expectedResult": false,
+          "expectedResult": true,
           "practice": true,
-          "project": false,
+          "project": true,
           "modelMental": true,
           "limitsDecision": true
         },
         "classification": {
-          "rubricScore": 10,
-          "practicable": false,
+          "rubricScore": 16,
+          "practicable": true,
           "genericScaffold": false
         }
       },
@@ -6139,17 +6139,17 @@
           "explanation": true,
           "code": true,
           "visual": true,
-          "filePath": false,
-          "runCommand": false,
-          "expectedResult": false,
-          "practice": false,
-          "project": false,
+          "filePath": true,
+          "runCommand": true,
+          "expectedResult": true,
+          "practice": true,
+          "project": true,
           "modelMental": true,
           "limitsDecision": true
         },
         "classification": {
-          "rubricScore": 6,
-          "practicable": false,
+          "rubricScore": 16,
+          "practicable": true,
           "genericScaffold": false
         }
       },
@@ -6160,17 +6160,17 @@
           "explanation": true,
           "code": true,
           "visual": true,
-          "filePath": false,
-          "runCommand": false,
-          "expectedResult": false,
+          "filePath": true,
+          "runCommand": true,
+          "expectedResult": true,
           "practice": true,
-          "project": false,
+          "project": true,
           "modelMental": true,
-          "limitsDecision": false
+          "limitsDecision": true
         },
         "classification": {
-          "rubricScore": 7,
-          "practicable": false,
+          "rubricScore": 16,
+          "practicable": true,
           "genericScaffold": false
         }
       },

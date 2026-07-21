@@ -8,14 +8,14 @@ Este inventario se genera desde el Markdown real. Las ayudas visuales, el glosar
 |---|---:|---:|
 | Explicación | 905 | 0 |
 | Código | 905 | 0 |
-| Ruta | 609 | 296 |
-| Ejecución | 713 | 192 |
-| Resultado | 653 | 252 |
-| Modificación | 747 | 158 |
-| Rutaflow | 402 | 503 |
+| Ruta | 613 | 292 |
+| Ejecución | 716 | 189 |
+| Resultado | 657 | 248 |
+| Modificación | 749 | 156 |
+| Rutaflow | 406 | 499 |
 | Modelo mental | 905 | 0 |
-| Límites | 571 | 334 |
-| **Tema practicable completo** | **482** | **423** |
+| Límites | 573 | 332 |
+| **Tema practicable completo** | **486** | **419** |
 
 ## Prioridad por track
 
@@ -24,7 +24,7 @@ Este inventario se genera desde el Markdown real. Las ayudas visuales, el glosar
 | android | 49 | 0 | 45 | 44 | 38 | 25 | 29 |
 | angular | 61 | 0 | 6 | 6 | 6 | 0 | 21 |
 | cloud | 153 | 0 | 82 | 37 | 82 | 42 | 44 |
-| devops | 91 | 0 | 28 | 17 | 20 | 7 | 12 |
+| devops | 91 | 0 | 24 | 14 | 16 | 5 | 10 |
 | flutter | 57 | 0 | 40 | 26 | 29 | 29 | 34 |
 | foundations | 50 | 0 | 0 | 0 | 5 | 0 | 22 |
 | ios | 51 | 0 | 25 | 6 | 8 | 4 | 26 |
