@@ -5,101 +5,271 @@
 
 ### Tema 1: Servicios, dependencias y healthchecks
 
+#### Paso 1 · Objetivo y preparación
+
+Al finalizar podrás configurar un healthcheck y `depends_on: condition: service_healthy` para que un servicio espere disponibilidad real, no solo el arranque del proceso de otro.
+
+**Conocimiento previo:** Docker y Docker Compose básicos (Módulos 0-2 de este track).
+
+#### Paso 2 · Contexto y caso real
+
+**¿Por qué es importante?** Este es un caso real de cualquier stack con base de datos: los errores de arranque intermitentes causados por dependencias mal coordinadas son una fuente común y frustrante de fallos "aleatorios" en desarrollo y CI.
+
+#### Paso 3 · Teoría con analogía
+
 **Conceptos clave:** servicio, `depends_on`, healthcheck, `condition: service_healthy`, disponibilidad real vs arranque del proceso.
 
-Un healthcheck es una instrucción que Docker ejecuta periódicamente dentro de un contenedor para determinar si el servicio que corre ahí está realmente listo para recibir tráfico, más allá de simplemente haber arrancado el proceso. Se define con un comando de verificación (`test`), un intervalo entre chequeos (`interval`), y un número de reintentos antes de considerar el servicio como no saludable (`retries`). Por ejemplo, para una base de datos PostgreSQL, `pg_isready -U postgres` es un comando específico que verifica si el servidor ya está aceptando conexiones, no solo si el proceso del contenedor está en ejecución.
+Un healthcheck es una instrucción que Docker ejecuta periódicamente dentro de un contenedor para determinar si el servicio está realmente listo para recibir tráfico, más allá de haber arrancado el proceso. `depends_on` sin condición adicional solo garantiza el orden de arranque, no que el servicio ya esté listo. `depends_on` combinado con `condition: service_healthy` resuelve esto: Compose espera activamente a que el healthcheck reporte saludable antes de arrancar el siguiente servicio. Este mismo patrón reaparece en Kubernetes como "readiness probes".
 
-`depends_on` en Docker Compose, sin ninguna condición adicional, solo garantiza el orden de arranque de los contenedores (que `db` se inicie antes que `app`), pero no garantiza que `db` ya esté lista para aceptar conexiones en ese momento: muchos servicios, especialmente bases de datos, tardan un tiempo adicional después de arrancar el proceso antes de estar realmente disponibles para recibir peticiones. Sin un healthcheck, es perfectamente posible (y de hecho común) que `app` arranque e intente conectarse a `db` en el instante exacto en que el contenedor de `db` ya existe pero su proceso interno todavía no terminó de inicializarse, provocando errores de conexión intermitentes al inicio.
-
-`depends_on` combinado con `condition: service_healthy` resuelve esto: en vez de simplemente esperar a que el contenedor de `db` exista, Compose espera activamente a que su healthcheck reporte un estado saludable antes de arrancar `app`. Esto convierte una dependencia de "orden de arranque" en una dependencia real de "disponibilidad funcional", eliminando una clase entera de errores intermitentes de arranque que de otra forma requerirían lógica de reintento manual dentro de la propia aplicación para compensar la falta de esa garantía a nivel de orquestación.
-
-Este mismo patrón de healthcheck y espera activa de disponibilidad real reaparece, con su propia implementación específica, en Kubernetes bajo el nombre de "readiness probes", que vas a estudiar en detalle en un módulo posterior de este mismo track: el concepto subyacente —no basta con que un proceso esté corriendo, necesitas verificar activamente que está listo para servir tráfico— es exactamente el mismo, solo que la herramienta de orquestación que lo implementa cambia de Docker Compose (para desarrollo local) a Kubernetes (para producción a escala).
-
-**Analogía:** `depends_on` sin healthcheck es como avisar a un camarero que "la cocina ya está abierta" en el momento exacto en que el cocinero entra a la cocina, sin verificar si ya terminó de encender los fogones y preparar su estación; el camarero podría tomar un pedido y llevarlo a la cocina antes de que esté realmente lista para cocinarlo. Un healthcheck es como esperar a que el cocinero mismo confirme explícitamente "ya estoy listo para recibir pedidos" antes de dejar que el camarero empiece a tomarlos.
-
-**¿Por qué es importante?** Los errores de arranque intermitentes causados por dependencias mal coordinadas son una fuente común y frustrante de fallos "aleatorios" en entornos de desarrollo y CI, que a menudo se diagnostican erróneamente como bugs de la aplicación cuando en realidad son un problema de orquestación de arranque. Configurar healthchecks correctamente elimina esta clase de problemas de raíz.
+**Analogía:** `depends_on` sin healthcheck es como avisar a un camarero que "la cocina ya está abierta" en el momento en que el cocinero entra, sin verificar si terminó de encender los fogones. Un healthcheck es esperar a que el cocinero confirme "ya estoy listo" antes de dejar que tomen pedidos.
 
 **Diagrama:**
 
 ```
-Sin healthcheck:                         Con healthcheck + condition: service_healthy:
-db arranca ──▶ app arranca                db arranca ──▶ healthcheck verifica
-                    │                                          │
-              intenta conectar               ¿pg_isready responde OK?
-              (puede fallar si db                    │
-               no está lista aún)              Sí ──▶ app arranca
-                                                No ──▶ espera y reintenta
+┌── Sin healthcheck ──────────┐   ┌── Con condition: service_healthy ──┐
+│ db arranca ─▶ app arranca      │   │ db arranca ─▶ healthcheck verifica     │
+│   intenta conectar               │   │   ¿pg_isready OK? Sí ─▶ app arranca    │
+│   (puede fallar si db no lista) │   │                       No ─▶ reintenta   │
+└─────────────────────┘   └─────────────────────────┘
 ```
+
+#### Paso 4 · Demostración guiada desde cero
+
+Desde una carpeta vacía crea `academia-devops/src/modulo3/healthcheck`:
+
+```bash
+mkdir -p academia-devops/src/modulo3/healthcheck && cd academia-devops/src/modulo3/healthcheck
+cat > compose.yaml <<'EOF'
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_PASSWORD: demo
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 2s
+      retries: 10
+  app:
+    image: alpine
+    depends_on:
+      db:
+        condition: service_healthy
+    command: sh -c "echo 'app arrancó DESPUES de que db reportara healthy'; sleep 5"
+EOF
+```
+
+**Explicación línea por línea:** `condition: service_healthy` hace que Compose no arranque `app` hasta que el healthcheck de `db` (`pg_isready`) reporte éxito, no simplemente hasta que el contenedor de `db` exista.
+
+Levanta el stack y observa el orden real de arranque:
+
+```bash
+docker compose up -d
+docker compose logs app
+docker compose ps
+```
+
+**Resultado esperado:** los logs de `app` muestran el mensaje solo después de que `docker compose ps` reporta `db` como `healthy`; nunca antes.
+
+**Fallo deliberado:** quita el bloque `healthcheck` completo de `db` y deja solo `depends_on: [db]` (sin `condition`) en `app`. Repite `docker compose up -d`. En una máquina lenta o bajo carga, `app` puede arrancar e intentar conectar a `db` antes de que esté realmente lista — diagnostica revisando `docker compose logs app` en busca de errores de conexión intermitentes al inicio.
+
+#### Construcción RutaFlow: arranque coordinado del stack
+
+El healthcheck de `db` en este demo es la base del `compose.yaml` real de RutaFlow: ningún servicio de RutaFlow que dependa de la base de datos arranca sin `condition: service_healthy`.
+
+#### Paso 5 · Práctica guiada
+
+Agrega un segundo servicio `cache` (imagen `redis:7-alpine`) con su propio healthcheck (`redis-cli ping`) y haz que `app` dependa también de `cache` con `condition: service_healthy`. **Pista:** un servicio puede tener múltiples dependencias en `depends_on`, cada una con su propia condición.
+
+#### Paso 6 · Práctica independiente
+
+Reduce `retries` a `1` en el healthcheck de `db` y observa qué pasa si la base de datos tarda más de lo esperado en arrancar; explica por qué Compose marcaría el servicio como `unhealthy` en vez de seguir esperando indefinidamente.
+
+#### Paso 7 · Cierre y evidencia
+
+Ya coordinas el arranque real de servicios dependientes, no solo su orden. El siguiente tema externaliza configuración sensible fuera del archivo Compose versionado. **Evidencia:** entrega los logs de `app` mostrando que arrancó después de `db healthy`, y el resultado del fallo deliberado sin `condition`. Fuente oficial: [Docker Compose — healthcheck](https://docs.docker.com/reference/compose-file/services/#healthcheck).
+
+**Errores comunes:** confundir `depends_on` simple con una garantía de disponibilidad real; configurar un healthcheck que solo verifica que el proceso existe, no que el servicio funciona.
+
+**Cuándo no usarlo:** para servicios sin estado que no tienen un momento real de "no listo" (por ejemplo, un contenedor que solo imprime un log y termina), un healthcheck añade complejidad sin beneficio; el límite es que solo aporta valor cuando existe una ventana real entre "arrancado" y "listo".
 
 ### Tema 2: Variables de entorno y .env
 
+#### Paso 1 · Objetivo y preparación
+
+Al finalizar podrás externalizar configuración sensible en `.env`, versionando solo una plantilla `.env.example`, sin exponer secretos reales en el repositorio.
+
+**Conocimiento previo:** Tema 1 de este módulo.
+
+#### Paso 2 · Contexto y caso real
+
+**¿Por qué es importante?** Este es un caso real de seguridad: filtrar secretos accidentalmente a un repositorio de código —típicamente por versionar un `.env` real— es uno de los incidentes más comunes y fácilmente evitables en proyectos de software.
+
+#### Paso 3 · Teoría con analogía
+
 **Conceptos clave:** archivo `.env`, interpolación de variables, configuración externalizada, secretos fuera del código versionado.
 
-Un archivo `.env` en la raíz de un proyecto con Docker Compose contiene pares clave-valor que Compose carga automáticamente y pone a disposición para interpolar dentro del `docker-compose.yml`, usando la sintaxis `${NOMBRE_VARIABLE}`. Esto permite separar la configuración específica de cada entorno o desarrollador (contraseñas locales, puertos personalizados, rutas específicas) del archivo de definición de servicios en sí, que normalmente sí se versiona en el control de código junto al resto del proyecto.
+Un archivo `.env` contiene pares clave-valor que Compose carga automáticamente e interpola en `docker-compose.yml` con `${NOMBRE_VARIABLE}`. La práctica estándar: versionar `.env.example` con claves pero valores vacíos, y excluir `.env` real vía `.gitignore`. La interpolación admite valores por defecto (`${VARIABLE:-valor}`), similar a la sintaxis de bash del Módulo 0. Esta externalización es adecuada para desarrollo local, pero no sustituye mecanismos más robustos en producción (Vault, SOPS, Secrets Manager).
 
-La práctica estándar es versionar un archivo de ejemplo (comúnmente llamado `.env.example`) con las claves necesarias pero valores de marcador de posición o vacíos, mientras que el archivo `.env` real, con los valores efectivos (incluyendo cualquier secreto), se excluye explícitamente del control de versiones mediante `.gitignore`. Esto permite que cualquier persona que clone el proyecto sepa exactamente qué variables necesita configurar (consultando `.env.example`), sin que ningún secreto real quede expuesto en el historial del repositorio compartido.
-
-Es importante entender que esta externalización de configuración mediante `.env` en Docker Compose es una solución adecuada para entornos de desarrollo local, pero no sustituye a mecanismos de gestión de secretos más robustos en producción, como los que vas a estudiar en el módulo de seguridad DevSecOps de este mismo track (Vault, SOPS) o los servicios de gestión de secretos nativos de la nube que ya viste en el track Cloud (Secrets Manager). Un archivo `.env` en un servidor de producción sigue siendo, en última instancia, un archivo de texto plano con secretos en disco, con todos los riesgos que eso implica si ese servidor se ve comprometido.
-
-La interpolación de variables en Compose también admite valores por defecto con la sintaxis `${VARIABLE:-valor_por_defecto}`, similar en espíritu a la sintaxis de bash que viste en el Módulo 0 de este track, permitiendo que el proyecto funcione razonablemente incluso si alguien olvida configurar una variable opcional, mientras sigue fallando de forma explícita para variables verdaderamente obligatorias sin un valor por defecto sensato.
-
-**Analogía:** un archivo `.env` es como una hoja de configuración personal que cada persona guarda en su propio cajón (nunca la comparte ni la fotocopia para el archivo general de la oficina), mientras que `.env.example` es como una plantilla en blanco compartida con todos, que muestra qué campos hay que rellenar sin revelar los valores reales de nadie.
-
-**¿Por qué es importante?** Filtrar secretos accidentalmente a un repositorio de código —típicamente por versionar un archivo `.env` real en vez de excluirlo correctamente— es uno de los incidentes de seguridad más comunes y más fácilmente evitables en proyectos de software, y establecer la convención `.env`/`.env.example` desde el inicio de un proyecto es una de las medidas preventivas más simples y efectivas contra ese error.
+**Analogía:** un archivo `.env` es como una hoja de configuración personal que cada persona guarda en su propio cajón, mientras que `.env.example` es una plantilla en blanco compartida que muestra qué campos rellenar sin revelar valores reales.
 
 **Diagrama:**
 
 ```
-.env.example (SÍ se versiona)          .env (NO se versiona, en .gitignore)
-┌───────────────────────┐            ┌───────────────────────┐
-│ POSTGRES_PASSWORD=          │            │ POSTGRES_PASSWORD=          │
-│ API_KEY=                     │            │ API_KEY=sk-real-abc123        │
-└───────────────────────┘            └───────────────────────┘
-   (plantilla, valores vacíos)            (valores reales, privados)
+┌── .env.example (SÍ se versiona) ──┐   ┌── .env (NO se versiona, en .gitignore) ──┐
+│ POSTGRES_PASSWORD=                    │   │ POSTGRES_PASSWORD=real-secreto-123           │
+└─────────────────────────┘   └──────────────────────────────┘
 ```
+
+#### Paso 4 · Demostración guiada desde cero
+
+Desde una carpeta vacía crea `academia-devops/src/modulo3/env-demo`:
+
+```bash
+mkdir -p academia-devops/src/modulo3/env-demo && cd academia-devops/src/modulo3/env-demo
+echo "POSTGRES_PASSWORD=" > .env.example
+echo "POSTGRES_PASSWORD=desarrollo123" > .env
+echo ".env" > .gitignore
+cat > compose.yaml <<'EOF'
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-sin-configurar}
+EOF
+```
+
+**Explicación línea por línea:** `.gitignore` con `.env` evita que el archivo con el valor real se versione; `${POSTGRES_PASSWORD:-sin-configurar}` usa un valor por defecto explícito si la variable no está definida en absoluto.
+
+Verifica que Compose interpola el valor correcto:
+
+```bash
+docker compose config | grep POSTGRES_PASSWORD
+mv .env .env.bak
+docker compose config | grep POSTGRES_PASSWORD
+mv .env.bak .env
+```
+
+**Resultado esperado:** con `.env` presente, `docker compose config` muestra `POSTGRES_PASSWORD: desarrollo123`; tras renombrarlo temporalmente, muestra `POSTGRES_PASSWORD: sin-configurar` (el valor por defecto), sin que Compose falle.
+
+**Fallo deliberado:** quita el valor por defecto del `compose.yaml` (deja solo `${POSTGRES_PASSWORD}`) y repite sin `.env` presente. `docker compose config` muestra la variable vacía sin avisar — diagnostica que sin un valor por defecto explícito ni una variable obligatoria declarada, Compose no siempre falla ruidosamente ante configuración faltante.
+
+#### Construcción RutaFlow: plantilla de configuración del proyecto
+
+`academia-devops/.env.example` es el archivo que cualquier persona nueva en el equipo de RutaFlow copia a `.env` y completa con sus propios valores locales antes de levantar el stack por primera vez.
+
+#### Paso 5 · Práctica guiada
+
+Agrega una segunda variable `APP_PORT` con valor por defecto `3000` en el `compose.yaml`, y verifica con `docker compose config` que cambia si la defines explícitamente en `.env`. **Pista:** usa la misma sintaxis `${APP_PORT:-3000}`.
+
+#### Paso 6 · Práctica independiente
+
+Intenta (deliberadamente, para comprobarlo) hacer `git add .env` en este proyecto de prueba y confirma que `.gitignore` lo bloquea; explica en un comentario qué comando usarías si necesitaras forzar su versionado por error, y por qué nunca deberías hacerlo con secretos reales.
+
+#### Paso 7 · Cierre y evidencia
+
+Ya separas configuración versionable de secretos reales, con valores por defecto explícitos. El siguiente tema explica cómo los servicios de un mismo proyecto Compose se descubren entre sí por nombre. **Evidencia:** entrega la salida de `docker compose config` con y sin `.env` presente, mostrando el valor real y el valor por defecto respectivamente. Fuente oficial: [Docker Compose — variables de entorno](https://docs.docker.com/compose/environment-variables/set-environment-variables/).
+
+**Errores comunes:** versionar accidentalmente el `.env` real en vez de `.env.example`; asumir que Compose siempre falla si una variable no está definida, cuando en realidad puede quedar vacía silenciosamente sin un valor por defecto o una declaración obligatoria.
+
+**Cuándo no usarlo:** en producción, un `.env` en disco no sustituye un gestor de secretos real; el límite de este mecanismo es desarrollo local, no el almacenamiento de credenciales de producción.
 
 ### Tema 3: Redes y descubrimiento por nombre de servicio
 
+#### Paso 1 · Objetivo y preparación
+
+Al finalizar podrás explicar por qué un servicio de Compose alcanza a otro por su nombre, y por qué dos proyectos Compose distintos están aislados entre sí por defecto.
+
+**Conocimiento previo:** Temas 1 y 2 de este módulo; Tema 5 del Módulo 2 (redes Docker).
+
+#### Paso 2 · Contexto y caso real
+
+**¿Por qué es importante?** Este es un caso real de confusión común: intentar que dos `docker-compose.yml` independientes se comuniquen entre sí por nombre de servicio sin configuración de red explícita adicional no funciona, y entender por qué evita perder tiempo depurando algo que es comportamiento esperado.
+
+#### Paso 3 · Teoría con analogía
+
 **Conceptos clave:** red implícita de Compose, nombre de servicio como hostname, aislamiento entre proyectos.
 
-Como adelantaste en el Módulo 2 de este track al estudiar redes Docker en general, Docker Compose crea automáticamente una red definida por el usuario específica para cada proyecto (identificada normalmente por el nombre de la carpeta del proyecto, salvo que se configure explícitamente otro nombre), y conecta a ella todos los servicios definidos en el `docker-compose.yml` sin ninguna configuración adicional de tu parte. Dentro de esa red, cada servicio puede resolver a cualquier otro servicio del mismo archivo Compose usando su nombre de servicio como si fuera un hostname válido, gracias al DNS interno que Docker provee automáticamente para redes definidas por el usuario.
+Docker Compose crea automáticamente una red definida por el usuario específica para cada proyecto, y conecta a ella todos los servicios del `docker-compose.yml`. Dentro de esa red, cada servicio resuelve a cualquier otro por su nombre de servicio como hostname. Esta red es específica de cada proyecto: dos proyectos Compose distintos corriendo simultáneamente viven en redes separadas y aisladas por defecto, evitando colisiones de nombres entre proyectos distintos.
 
-Esto es lo que hace posible que, en el ejemplo de este módulo, el servicio `app` se conecte a la base de datos simplemente usando `db` como parte de su cadena de conexión (`postgres://db:5432/app`), sin necesidad de conocer ninguna dirección IP interna, que además podría cambiar entre reinicios de los contenedores. Este comportamiento es consistente y predecible precisamente porque Compose gestiona automáticamente esa resolución de nombres como parte de la red que crea para el proyecto, sin que tengas que configurar nada explícitamente para habilitarlo.
-
-Un detalle relevante es que esta red es específica de cada proyecto Compose: si tienes dos proyectos Compose distintos corriendo simultáneamente en tu máquina, sus servicios respectivos viven en redes separadas y aisladas entre sí por defecto, sin poder comunicarse directamente a menos que configures explícitamente una red compartida externa entre ambos proyectos. Este aislamiento por defecto es, en general, el comportamiento deseado: evita colisiones accidentales de nombres de servicio entre proyectos distintos (dos proyectos distintos podrían, cada uno, tener su propio servicio llamado `db` sin ningún conflicto entre ellos).
-
-Entender este mecanismo de red y descubrimiento de nombres es lo que te permite razonar correctamente sobre por qué un servicio puede (o no puede) alcanzar a otro en un `docker-compose.yml`, y es la base conceptual directa sobre la que se construye el mecanismo de Services en Kubernetes, que vas a estudiar más adelante en este mismo track, con un propósito y un patrón de descubrimiento por nombre muy similar en espíritu, aunque con su propia implementación específica a mayor escala.
-
-**Analogía:** cada proyecto Compose es como un edificio de oficinas independiente con su propio directorio telefónico interno: dentro de "tu" edificio, puedes llamar a cualquier otra oficina por su nombre de departamento. Un edificio distinto (otro proyecto Compose) tiene su propio directorio interno separado, y aunque ambos edificios podrían tener, coincidentemente, un departamento llamado "recepción", no hay ninguna confusión entre ellos porque cada directorio es privado de su propio edificio.
-
-**¿Por qué es importante?** Comprender que la resolución de nombres de servicio es automática pero está limitada al alcance de un mismo proyecto Compose evita la confusión común de intentar que dos `docker-compose.yml` independientes se comuniquen entre sí por nombre de servicio sin la configuración de red explícita adicional que eso requeriría.
+**Analogía:** cada proyecto Compose es un edificio de oficinas independiente con su propio directorio telefónico interno. Un edificio distinto tiene su propio directorio separado; aunque ambos podrían tener un departamento llamado "recepción", no hay confusión porque cada directorio es privado de su edificio.
 
 **Diagrama:**
 
 ```
-Proyecto Compose "app-principal"        Proyecto Compose "otro-proyecto"
-┌─────────────────────────┐            ┌─────────────────────────┐
-│ red: app-principal_default   │            │ red: otro-proyecto_default    │
-│  app ──▶ db (por nombre)       │            │  web ──▶ db (por nombre)        │
-│  app ──▶ cache (por nombre)     │            │  (su PROPIO "db", sin relación   │
-└─────────────────────────┘            │   con el "db" del otro proyecto) │
-                                          └─────────────────────────┘
-   (aislados entre sí por defecto)
+┌── Proyecto "app-principal" ──────┐   ┌── Proyecto "otro-proyecto" ─────┐
+│ red: app-principal_default            │   │ red: otro-proyecto_default          │
+│  app ──▶ db (por nombre)                │   │  web ──▶ db (SU PROPIO db, sin      │
+│  app ──▶ cache (por nombre)               │   │  relación con el del otro proyecto) │
+└─────────────────────────┘   └────────────────────────┘
 ```
+
+#### Paso 4 · Demostración guiada desde cero
+
+Desde una carpeta vacía crea DOS proyectos Compose independientes con un servicio `db` en cada uno, para demostrar el aislamiento:
+
+```bash
+mkdir -p academia-devops/src/modulo3/proyecto-a academia-devops/src/modulo3/proyecto-b
+cat > academia-devops/src/modulo3/proyecto-a/compose.yaml <<'EOF'
+services:
+  db:
+    image: alpine
+    command: sleep 300
+  cliente:
+    image: alpine
+    depends_on: [db]
+    command: sh -c "ping -c 2 db"
+EOF
+cp academia-devops/src/modulo3/proyecto-a/compose.yaml academia-devops/src/modulo3/proyecto-b/compose.yaml
+cd academia-devops/src/modulo3/proyecto-a && docker compose up -d db
+cd ../proyecto-b && docker compose up -d db
+cd ../proyecto-a && docker compose run --rm cliente
+```
+
+**Explicación línea por línea:** ambos proyectos definen un servicio llamado `db` de forma completamente independiente; `docker compose run --rm cliente` ejecuta el `ping` dentro de la red del proyecto `proyecto-a` exclusivamente.
+
+**Resultado esperado:** el `ping` desde `proyecto-a` alcanza exitosamente a SU `db`, sin ningún conflicto ni ambigüedad con el `db` homónimo de `proyecto-b`.
+
+**Fallo deliberado:** intenta desde un contenedor de `proyecto-a` hacer `ping` al nombre de red completo del `db` de `proyecto-b` (`docker compose -p proyecto-a run --rm cliente ping -c 2 proyecto-b-db-1`). Falla por resolución de nombre — diagnostica que cada proyecto vive en su propia red aislada y no hay resolución cruzada sin configuración explícita de red compartida.
+
+#### Construcción RutaFlow: aislamiento entre entornos de desarrollo
+
+Documenta en `academia-devops/README.md` que cada desarrollador de RutaFlow puede levantar su propia copia completa del stack sin colisionar con la de un compañero, precisamente porque cada carpeta de proyecto Compose obtiene su propia red aislada.
+
+#### Paso 5 · Práctica guiada
+
+Detén ambos proyectos (`docker compose down` en cada carpeta) y verifica con `docker network ls` que existían dos redes separadas con nombres distintos antes de eliminarlas. **Pista:** el nombre de la red suele derivarse del nombre de la carpeta del proyecto.
+
+#### Paso 6 · Práctica independiente
+
+Investiga (y documenta sin necesariamente ejecutarlo) cómo conectarías explícitamente ambos proyectos si necesitaras que se comunicaran, usando una red externa compartida declarada con `networks: external: true` en ambos `compose.yaml`.
+
+#### Paso 7 · Cierre y evidencia
+
+Ya explicas por qué el descubrimiento por nombre funciona dentro de un proyecto y no entre proyectos distintos. El siguiente tema activa servicios opcionales solo cuando se necesitan. **Evidencia:** entrega el `ping` exitoso dentro del mismo proyecto y el fallo de resolución entre proyectos distintos, con su explicación. Fuente oficial: [Docker Compose — Networking](https://docs.docker.com/compose/how-tos/networking/).
+
+**Errores comunes:** asumir que dos proyectos Compose corriendo a la vez comparten red automáticamente; nombrar servicios de forma ambigua asumiendo que el aislamiento por proyecto los protege de cualquier confusión humana también.
+
+**Cuándo no usarlo:** si dos servicios necesitan comunicarse constantemente y viven en proyectos Compose distintos, mantenerlos separados con redes externas compartidas añade fricción innecesaria; ahí conviene definirlos en el mismo `compose.yaml`.
 
 ### Tema 4: Perfiles para distintos entornos
 
+#### Paso 1 · Objetivo y preparación
+
+Al finalizar podrás usar `profiles` para que servicios opcionales (herramientas de administración, generadores de datos) solo se levanten cuando se activan explícitamente.
+
+**Conocimiento previo:** Temas 1 a 3 de este módulo.
+
+#### Paso 2 · Contexto y caso real
+
+**¿Por qué es importante?** Este es un caso real de cualquier equipo: los perfiles evitan duplicar archivos Compose para distintos escenarios de uso, y evitan que cada desarrollador tenga que comentar/descomentar servicios opcionales manualmente.
+
+#### Paso 3 · Teoría con analogía
+
 **Conceptos clave:** `profiles`, activación selectiva de servicios, herramientas opcionales de desarrollo.
 
-Un perfil en Docker Compose etiqueta un servicio para que solo se levante cuando ese perfil se activa explícitamente, en vez de levantarse siempre que ejecutas `docker compose up` sin ninguna opción adicional. Esto es útil para servicios que no forman parte del flujo de trabajo diario habitual de todo el equipo, pero que sí son útiles ocasionalmente para casos específicos: una herramienta de administración visual de la base de datos, un servicio de generación de datos de prueba, o un contenedor de depuración con herramientas adicionales instaladas.
+Un perfil etiqueta un servicio para que solo se levante cuando ese perfil se activa explícitamente (`docker compose --profile <nombre> up`), en vez de levantarse siempre. Un servicio puede no pertenecer a ningún perfil (siempre se levanta), pertenecer a uno específico, o a varios simultáneamente.
 
-Sin perfiles, cualquier servicio adicional definido en el `docker-compose.yml` se levantaría siempre junto con el resto, consumiendo recursos innecesariamente para quien no lo necesita en ese momento, o require mantener archivos Compose separados para distintos escenarios (uno para desarrollo normal, otro para depuración, otro para pruebas de carga), duplicando la definición de los servicios comunes entre esos archivos separados. Con perfiles, un único `docker-compose.yml` puede describir todos los escenarios posibles, y cada persona activa selectivamente solo los servicios que necesita en cada situación específica con `docker compose --profile <nombre> up`.
-
-Un servicio puede pertenecer a ningún perfil (se levanta siempre, por defecto, con cualquier invocación de `docker compose up`), a un perfil específico (solo se levanta si ese perfil se activa explícitamente), o incluso a múltiples perfiles simultáneamente (se levanta si cualquiera de esos perfiles está activo). Esta flexibilidad permite modelar escenarios como "levanta siempre la app y la base de datos, pero la herramienta de administración visual solo si activo el perfil `debug`, y el generador de datos de prueba solo si activo el perfil `seed`", todo desde un único archivo de definición compartido por todo el equipo.
-
-**Analogía:** los perfiles son como las opciones adicionales de un electrodoméstico multifuncional: el modo básico (sin perfil) siempre está disponible con solo encenderlo, pero funciones adicionales específicas (un modo de limpieza profunda, un programa especial) solo se activan si explícitamente seleccionas esa opción, sin que consuman energía ni tiempo cuando simplemente quieres usar el modo estándar.
-
-**¿Por qué es importante?** Los perfiles evitan la duplicación de archivos Compose para distintos escenarios de uso, y evitan que cada desarrollador tenga que levantar manualmente (o comentar/descomentar) servicios opcionales cada vez que cambia de tarea, manteniendo un único archivo de definición compartido y coherente para todo el equipo, con activación selectiva y explícita de lo que cada situación específica requiere.
+**Analogía:** los perfiles son como las opciones adicionales de un electrodoméstico multifuncional: el modo básico siempre está disponible, pero funciones adicionales solo se activan si explícitamente seleccionas esa opción.
 
 **Diagrama:**
 
@@ -109,11 +279,60 @@ docker-compose.yml
 ├── db           (sin perfil → siempre se levanta)
 ├── admin-db     (profiles: ["debug"] → solo con --profile debug)
 └── generador    (profiles: ["seed"] → solo con --profile seed)
-
-docker compose up                    → app, db
-docker compose --profile debug up    → app, db, admin-db
-docker compose --profile seed up     → app, db, generador
 ```
+
+#### Paso 4 · Demostración guiada desde cero
+
+Desde una carpeta vacía crea `academia-devops/src/modulo3/perfiles`:
+
+```bash
+mkdir -p academia-devops/src/modulo3/perfiles && cd academia-devops/src/modulo3/perfiles
+cat > compose.yaml <<'EOF'
+services:
+  app:
+    image: alpine
+    command: sleep 300
+  admin-db:
+    image: alpine
+    command: sleep 300
+    profiles: ["debug"]
+EOF
+docker compose up -d
+docker compose ps --services
+```
+
+**Explicación línea por línea:** `admin-db` tiene `profiles: ["debug"]`, por lo que `docker compose up -d` sin argumentos adicionales no debe incluirlo.
+
+Ahora activa el perfil explícitamente:
+
+```bash
+docker compose --profile debug up -d
+docker compose ps --services
+```
+
+**Resultado esperado:** el primer `docker compose ps --services` lista solo `app`; después de activar `--profile debug`, la lista incluye también `admin-db`.
+
+**Fallo deliberado:** ejecuta `docker compose up -d` (sin `--profile`) esperando ver `admin-db`, sin haberlo activado nunca. No aparece — diagnostica revisando la indentación de `profiles:` en el YAML (debe estar al mismo nivel que `image`/`command` dentro del servicio, no a nivel del archivo completo).
+
+#### Construcción RutaFlow: herramientas opcionales del equipo
+
+Agrega un perfil `debug` al `compose.yaml` de RutaFlow con una herramienta de administración visual de base de datos, y documenta en el README que solo el equipo que la necesita activamente la levanta con `--profile debug`.
+
+#### Paso 5 · Práctica guiada
+
+Agrega un tercer servicio `generador` con `profiles: ["seed"]`, y confirma que `docker compose --profile seed up -d` levanta `app` y `generador`, pero no `admin-db`. **Pista:** cada perfil se activa de forma independiente; puedes combinar varios con `--profile debug --profile seed`.
+
+#### Paso 6 · Práctica independiente
+
+Cambia `admin-db` para que pertenezca a dos perfiles simultáneamente (`profiles: ["debug", "seed"]`) y confirma que se levanta al activar cualquiera de los dos perfiles por separado.
+
+#### Paso 7 · Cierre y evidencia
+
+Ya activas selectivamente servicios opcionales desde un único archivo compartido por todo el equipo. Esto cierra el módulo de Docker Compose; el siguiente módulo construye el pipeline de integración continua que usará estos mismos servicios. **Evidencia:** entrega la salida de `docker compose ps --services` sin perfil y con `--profile debug` activado, y explica la diferencia observada. Fuente oficial: [Docker Compose — profiles](https://docs.docker.com/compose/how-tos/profiles/).
+
+**Errores comunes:** indentar `profiles` incorrectamente, aplicándolo sin querer al archivo completo en vez de a un servicio específico; olvidar documentar qué perfiles existen, dejando que el equipo no sepa que una herramienta opcional está disponible.
+
+**Cuándo no usarlo:** si un servicio es necesario para que la aplicación funcione en cualquier escenario, no debe llevar `profiles`; el límite de esta técnica es exclusivamente para lo verdaderamente opcional, no para dependencias core del sistema.
 
 ---
 
@@ -126,23 +345,23 @@ docker compose --profile seed up     → app, db, generador
 
 | Paso | Acción | Comando/Configuración | Explicación | Salida esperada |
 |---|---|---|---|---|
-| 1 | Crear el archivo `.env.example` y `.env` | `.env.example` con `POSTGRES_PASSWORD=` (vacío); `.env` con `POSTGRES_PASSWORD=desarrollo123` | Separa la plantilla versionable del valor real privado | Ambos archivos existen; `.env` está en `.gitignore` |
-| 2 | Definir el servicio de base de datos con healthcheck | En `docker-compose.yml`, servicio `db` con imagen `postgres:16`, variable `POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}`, y un healthcheck con `pg_isready -U postgres` | Define la base de datos y su verificación de disponibilidad real | El archivo se guarda sin errores de sintaxis YAML |
-| 3 | Definir el servicio de caché | Servicio `cache` con imagen `redis:7`, sin configuración adicional necesaria para este laboratorio | Servicio simple sin dependencias | El archivo incluye el servicio `cache` |
-| 4 | Definir el servicio de aplicación con dependencia saludable | Servicio `app` que construye desde tu propio `Dockerfile`, con `depends_on: db: condition: service_healthy`, y una variable de entorno que arma la cadena de conexión usando `db` como hostname | Aplica los Temas 1 y 3 juntos: espera activa por disponibilidad real, y descubrimiento por nombre de servicio | El archivo Compose queda completo con los tres servicios |
-| 5 | Añadir un servicio opcional de administración con perfil | Servicio `pgadmin` (o similar) con `profiles: ["debug"]` | Aplica el Tema 4: solo se levanta si se activa explícitamente ese perfil | El servicio existe en el archivo pero no se levanta por defecto |
-| 6 | Levantar el stack básico | `docker compose up -d` | Solo deberían levantarse `app`, `db` y `cache`, no `pgadmin` | `docker compose ps` muestra tres servicios corriendo, sin `pgadmin` |
-| 7 | Verificar que `app` esperó correctamente a `db` | `docker compose logs app` | Confirma que `app` no reportó errores de conexión al arrancar, gracias al healthcheck | Los logs de `app` no muestran errores de conexión a la base de datos al inicio |
-| 8 | Levantar también el perfil de depuración | `docker compose --profile debug up -d` | Ahora sí se levanta también `pgadmin` | `docker compose ps` muestra los tres servicios anteriores más `pgadmin` |
-| 9 | Verificar el descubrimiento de nombres | Desde dentro del contenedor de `app` (`docker compose exec app sh`), intenta hacer ping o conectar a `db` usando ese nombre | Confirma que el nombre de servicio se resuelve correctamente dentro de la red de Compose | La conexión a `db:5432` (o el puerto correspondiente) se establece correctamente usando el nombre, no una IP |
+| 1 | Crear `.env.example` y `.env` | `.env.example` con `POSTGRES_PASSWORD=` vacío; `.env` con valor real | Separa plantilla versionable de valor privado | Ambos existen; `.env` en `.gitignore` |
+| 2 | Definir `db` con healthcheck | Imagen `postgres:16`, `POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}`, healthcheck con `pg_isready` | Aplica el Tema 1 | El archivo se guarda sin errores YAML |
+| 3 | Definir `cache` | Imagen `redis:7` | Servicio simple sin dependencias | El archivo incluye `cache` |
+| 4 | Definir `app` con dependencia saludable | `depends_on: db: condition: service_healthy`, conexión usando `db` como hostname | Aplica los Temas 1 y 3 | El archivo Compose queda completo |
+| 5 | Añadir `pgadmin` con perfil | `profiles: ["debug"]` | Aplica el Tema 4 | Existe en el archivo pero no se levanta por defecto |
+| 6 | Levantar el stack básico | `docker compose up -d` | Solo `app`, `db`, `cache` | `docker compose ps` sin `pgadmin` |
+| 7 | Verificar que `app` esperó a `db` | `docker compose logs app` | Confirma ausencia de errores de conexión al inicio | Sin errores de conexión prematura |
+| 8 | Levantar también el perfil de depuración | `docker compose --profile debug up -d` | Ahora sí se levanta `pgadmin` | `docker compose ps` incluye `pgadmin` |
+| 9 | Verificar descubrimiento de nombres | `docker compose exec app sh`, luego conectar a `db` por nombre | Confirma resolución de nombre dentro de la red de Compose | Conexión exitosa usando el nombre, no una IP |
 
-**Verificación:** el laboratorio se considera exitoso si `docker compose up -d` (sin perfil) levanta exactamente tres servicios (sin `pgadmin`), si los logs de `app` no muestran errores de conexión prematura a la base de datos, y si activar el perfil `debug` efectivamente añade el cuarto servicio sin necesidad de modificar el archivo `docker-compose.yml`.
+**Verificación:** el laboratorio se considera exitoso si `docker compose up -d` sin perfil levanta exactamente tres servicios, si los logs de `app` no muestran errores de conexión prematura, y si activar `debug` añade el cuarto servicio sin modificar el archivo.
 
 **Errores comunes y soluciones**
 
-- **`app` sigue fallando al conectar a la base de datos a pesar del healthcheck configurado.** Verifica que el healthcheck realmente refleja disponibilidad funcional (no solo que el proceso arrancó); para PostgreSQL, confirma que usas `pg_isready` con el usuario correcto, y que `interval` y `retries` dan tiempo suficiente para la inicialización real de la base de datos en tu máquina.
-- **Las variables de `.env` no se interpolan en `docker-compose.yml`.** Confirma que el archivo `.env` está en la misma carpeta desde la que ejecutas `docker compose` (por defecto, Compose busca `.env` en el directorio del proyecto), y que la sintaxis de interpolación (`${VARIABLE}`) está escrita correctamente sin errores tipográficos.
-- **El perfil `debug` se levanta siempre, incluso sin especificarlo explícitamente.** Revisa que la clave `profiles` esté correctamente indentada dentro de la definición del servicio en el YAML, y no aplicada por error a nivel del archivo completo o de otro servicio.
-- **`docker compose exec app sh` falla porque no hay un shell disponible.** Si tu imagen de aplicación usa una base distroless (Módulo 2, Tema 3), no tendrá shell disponible; usa una imagen con Alpine o completa para este paso específico de depuración, o verifica la conectividad por otros medios (como logs de la propia aplicación).
+- **`app` sigue fallando al conectar a pesar del healthcheck.** Verifica que refleja disponibilidad funcional real, con `interval`/`retries` suficientes.
+- **Las variables de `.env` no se interpolan.** Confirma que `.env` está en la misma carpeta desde la que ejecutas `docker compose`.
+- **El perfil `debug` se levanta siempre.** Revisa la indentación de `profiles` dentro del servicio, no a nivel del archivo.
+- **`docker compose exec app sh` falla sin shell disponible.** Si tu imagen es distroless (Módulo 2, Tema 3), usa Alpine para este paso de depuración.
 
 ---

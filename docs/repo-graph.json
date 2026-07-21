@@ -4245,7 +4245,7 @@
     },
     {
       "path": "web/public/content/devops/modulo-3.md",
-      "lines": 149,
+      "lines": 368,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -4253,10 +4253,15 @@
         "# M\u00f3dulo 3: Docker Compose y orquestaci\u00f3n local",
         "## Aprende construyendo",
         "### Tema 1: Servicios, dependencias y healthchecks",
-        "### Tema 2: Variables de entorno y .env",
-        "### Tema 3: Redes y descubrimiento por nombre de servicio",
-        "### Tema 4: Perfiles para distintos entornos",
-        "## Laboratorio pr\u00e1ctico"
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
+        "#### Paso 2 \u00b7 Contexto y caso real",
+        "#### Paso 3 \u00b7 Teor\u00eda con analog\u00eda",
+        "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
+        "#### Construcci\u00f3n RutaFlow: arranque coordinado del stack",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
+        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
+        "#### Paso 7 \u00b7 Cierre y evidencia",
+        "### Tema 2: Variables de entorno y .env"
       ]
     },
     {
