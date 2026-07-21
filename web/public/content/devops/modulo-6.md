@@ -5,196 +5,635 @@
 
 ### Tema 1: Pod, ReplicaSet, Deployment
 
+#### Paso 1 · Objetivo y preparación
+
+Al finalizar podrás explicar la jerarquía Deployment → ReplicaSet → Pod y observar cómo un Deployment gestiona un rollout y un rollback entre dos versiones.
+
+**Conocimiento previo:** Docker (Módulos 0-2) y el patrón de rolling update (Módulo 5) de este track; `kind` y `kubectl` instalados.
+
+#### Paso 2 · Contexto y caso real
+
+**¿Por qué es importante?** Este es un caso real de diagnóstico: sin entender esta jerarquía de tres niveles, comandos como `kubectl get pods/replicasets/deployments` parecen mostrar información redundante, cuando cada uno responde una pregunta distinta.
+
+#### Paso 3 · Teoría con analogía
+
 **Conceptos clave:** Pod (unidad mínima desplegable), ReplicaSet (garantía de réplicas), Deployment (gestión de actualizaciones), reconciliación continua.
 
-Un Pod es la unidad más pequeña que Kubernetes puede desplegar y gestionar: agrupa uno o más contenedores que comparten red y almacenamiento, tratados como una única unidad indivisible desde la perspectiva del clúster. En la inmensa mayoría de los casos prácticos, un Pod contiene un único contenedor principal (el patrón de múltiples contenedores en un mismo Pod, llamado "sidecar", es un caso avanzado que cubren módulos posteriores de este track relacionados con service mesh); lo importante de entender es que Kubernetes nunca gestiona contenedores sueltos directamente, siempre los gestiona envueltos en al menos un Pod.
+Un Pod es la unidad más pequeña que Kubernetes despliega: agrupa uno o más contenedores que comparten red y almacenamiento. Un ReplicaSet garantiza que siempre haya un número exacto de Pods idénticos corriendo, recreándolos automáticamente si fallan. Un Deployment gestiona ReplicaSets: al cambiar la imagen, crea un ReplicaSet nuevo y transiciona gradualmente los Pods del antiguo al nuevo (rolling update por defecto), conservando el ReplicaSet anterior con cero réplicas para rollback casi instantáneo.
 
-Un ReplicaSet resuelve un problema específico: garantizar que siempre haya un número exacto de Pods idénticos corriendo en todo momento. Si defines un ReplicaSet con `replicas: 3` y uno de esos Pods falla o es eliminado por cualquier motivo, el ReplicaSet lo detecta automáticamente (mediante un ciclo continuo de reconciliación, comparando el estado deseado —3 réplicas— contra el estado actual observado) y crea un Pod nuevo de reemplazo, sin ninguna intervención manual, hasta volver a tener exactamente el número deseado.
-
-Un Deployment, a su vez, gestiona ReplicaSets, añadiendo la capa que hace posible actualizaciones controladas y reversibles: cuando cambias la imagen de contenedor especificada en un Deployment (por ejemplo, de `mi-api:1.0` a `mi-api:1.1`), Kubernetes no modifica el ReplicaSet existente; crea un ReplicaSet nuevo con la configuración actualizada, y gestiona la transición gradual de Pods del ReplicaSet antiguo al nuevo (por defecto, siguiendo exactamente el patrón de rolling update que estudiaste en el Módulo 5 de este track). El ReplicaSet antiguo no se elimina inmediatamente: se conserva con cero réplicas activas, lo que permite un rollback casi instantáneo a la versión anterior si algo sale mal, simplemente revirtiendo el Deployment a apuntar de nuevo al ReplicaSet anterior.
-
-En la práctica diaria, casi nunca creas o gestionas ReplicaSets directamente: interactúas con Deployments, y Kubernetes gestiona los ReplicaSets subyacentes automáticamente como un detalle de implementación. Entender esta jerarquía completa (Pod dentro de ReplicaSet dentro de Deployment) es, sin embargo, esencial para diagnosticar correctamente el estado de una aplicación desplegada, porque los comandos de diagnóstico de `kubectl` (Tema 4 de este módulo) exponen los tres niveles, y entender cuál consultar para qué pregunta específica ahorra mucho tiempo de depuración confusa.
-
-**Analogía:** un Pod es como una caja individual que contiene un producto (o un producto con su empaque protector, en el caso de múltiples contenedores). Un ReplicaSet es como un supervisor de almacén cuyo único trabajo es asegurarse de que siempre haya exactamente 3 cajas de ese producto específico en el estante, reponiendo automáticamente cualquier caja que se retire o se dañe. Un Deployment es como el gerente que decide cuándo cambiar a un producto con una versión nueva de etiqueta, coordinando con el supervisor de almacén una transición gradual (retirando cajas viejas y añadiendo cajas nuevas de a poco) en vez de vaciar y rellenar todo el estante de golpe, y que conserva el registro de la versión anterior por si necesita revertir rápidamente.
-
-**¿Por qué es importante?** Esta jerarquía de tres niveles es la base absoluta de cómo Kubernetes gestiona aplicaciones sin estado (stateless): sin entenderla, comandos como `kubectl get pods`, `kubectl get replicasets` y `kubectl get deployments` parecen mostrar información redundante o confusa, cuando en realidad cada uno responde a una pregunta distinta y complementaria sobre el estado del sistema.
+**Analogía:** un Pod es una caja individual de un producto. Un ReplicaSet es un supervisor de almacén que asegura siempre 3 cajas en el estante, reponiendo cualquiera que se retire. Un Deployment es el gerente que coordina una transición gradual a un producto nuevo, conservando el registro del anterior por si necesita revertir.
 
 **Diagrama:**
 
 ```
-Deployment "mi-api"                (gestiona actualizaciones y rollback)
-    │
-    ├── ReplicaSet "mi-api-v1" (0 réplicas, conservado para rollback)
-    │
-    └── ReplicaSet "mi-api-v2" (3 réplicas activas)
-            ├── Pod (contenedor mi-api:1.1)
-            ├── Pod (contenedor mi-api:1.1)
-            └── Pod (contenedor mi-api:1.1)
+┌── Deployment "mi-api" (gestiona actualizaciones y rollback) ──┐
+│  ├── ReplicaSet "mi-api-v1" (0 réplicas, conservado para rollback) │
+│  └── ReplicaSet "mi-api-v2" (3 réplicas activas)                     │
+│       ├── Pod (mi-api:1.1)  ├── Pod (mi-api:1.1)  └── Pod (mi-api:1.1) │
+└─────────────────────────────────────────┘
 ```
+
+#### Paso 4 · Demostración guiada desde cero
+
+Desde una carpeta vacía crea `academia-devops/src/modulo6/deployment` y levanta un clúster local:
+
+```bash
+mkdir -p academia-devops/src/modulo6/deployment && cd academia-devops/src/modulo6/deployment
+kind create cluster --name academia-devops
+kubectl get nodes
+cat > deployment.yaml <<'EOF'
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mi-api
+spec:
+  replicas: 3
+  selector:
+    matchLabels: { app: mi-api }
+  template:
+    metadata:
+      labels: { app: mi-api }
+    spec:
+      containers:
+        - name: mi-api
+          image: node:22-alpine
+          command: ["node", "-e", "require('http').createServer((q,r)=>r.end('v1')).listen(3000)"]
+EOF
+kubectl apply -f deployment.yaml
+```
+
+**Explicación línea por línea:** `replicas: 3` declara el estado deseado que el ReplicaSet subyacente mantiene; `selector.matchLabels` conecta el Deployment con los Pods que gestiona a través de la etiqueta `app: mi-api`.
+
+Actualiza la imagen y observa el rollout gestionado automáticamente:
+
+```bash
+kubectl get replicasets
+kubectl set image deployment/mi-api mi-api=node:22-alpine --record 2>/dev/null || true
+kubectl rollout status deployment/mi-api
+kubectl get replicasets
+```
+
+**Resultado esperado:** antes de la actualización, `kubectl get replicasets` muestra un único ReplicaSet con 3 réplicas; después de `kubectl rollout status`, aparece un segundo ReplicaSet con 3 réplicas activas y el original en 0, confirmando la transición gestionada.
+
+**Fallo deliberado:** ejecuta `kubectl set image deployment/mi-api mi-api=node:no-existe-version` (una imagen inexistente). El rollout queda atascado — diagnostica con `kubectl rollout status deployment/mi-api` (que no termina) y `kubectl describe pod <uno-de-los-nuevos>` para ver el evento `ErrImagePull`, luego revierte con `kubectl rollout undo deployment/mi-api`.
+
+#### Construcción RutaFlow: gestión declarativa del backend
+
+`deployment.yaml` es la base del manifiesto real que gestionará el backend de RutaFlow en Kubernetes; cada cambio de imagen pasa por este mismo mecanismo de rollout gestionado, nunca reemplazando Pods manualmente uno por uno.
+
+#### Paso 5 · Práctica guiada
+
+Ejecuta `kubectl rollout history deployment/mi-api` para ver el historial de revisiones, y `kubectl rollout undo deployment/mi-api --to-revision=1` para volver explícitamente a la primera. **Pista:** cada `kubectl set image` o `kubectl apply` con cambios genera una nueva revisión en el historial.
+
+#### Paso 6 · Práctica independiente
+
+Cambia `replicas: 3` a `replicas: 5` y aplica de nuevo; confirma con `kubectl get pods` que Kubernetes agrega 2 Pods nuevos sin tocar los 3 existentes, demostrando que un reescalado no dispara un rollout completo como un cambio de imagen sí lo hace.
+
+#### Paso 7 · Cierre y evidencia
+
+Ya distingues qué nivel de la jerarquía consultar para cada pregunta de diagnóstico, y cómo un Deployment gestiona rollout y rollback. El siguiente tema da una dirección estable de red a estos Pods efímeros. **Evidencia:** entrega la salida de `kubectl get replicasets` antes y después del cambio de imagen, y el resultado del rollback tras el fallo con una imagen inexistente. Fuente oficial: [Kubernetes — Deployments](https://kubernetes.io/docs/concepts/workloads/controllers/deployment/).
+
+**Errores comunes:** editar un ReplicaSet directamente en vez de gestionar todo a través del Deployment; esperar que un reescalado (`replicas`) dispare el mismo proceso de rolling update que un cambio de imagen.
+
+**Cuándo no usarlo:** para una tarea que debe ejecutarse una vez y terminar (una migración puntual), un Deployment no es el objeto correcto porque espera procesos de larga duración continua; ahí un Job (Tema 6) es el patrón apropiado.
 
 ### Tema 2: Service (ClusterIP, NodePort, LoadBalancer)
 
+#### Paso 1 · Objetivo y preparación
+
+Al finalizar podrás exponer un Deployment con un Service que enruta tráfico de forma estable hacia Pods efímeros, sin depender de sus direcciones IP internas.
+
+**Conocimiento previo:** Tema 1 de este módulo; Módulo 3 (descubrimiento por nombre en Docker Compose).
+
+#### Paso 2 · Contexto y caso real
+
+**¿Por qué es importante?** Este es un caso real: sin un Service, la comunicación confiable entre componentes sería prácticamente imposible, dado que los Pods individuales cambian de identidad constantemente.
+
+#### Paso 3 · Teoría con analogía
+
 **Conceptos clave:** Service, selector de etiquetas, IP estable, ClusterIP, NodePort, LoadBalancer.
 
-Los Pods en Kubernetes son efímeros por naturaleza: pueden destruirse y recrearse en cualquier momento (por un fallo, una actualización, un reescalado), y cada vez que esto ocurre, el Pod nuevo recibe una dirección IP interna distinta a la del Pod anterior. Depender directamente de la IP de un Pod específico para comunicarte con él sería, por tanto, frágil e inviable en la práctica. Un Service resuelve esto proporcionando una dirección estable (tanto una IP interna fija como, más importante, un nombre DNS resoluble dentro del clúster) que enruta automáticamente el tráfico hacia cualquiera de los Pods que coincidan con un selector de etiquetas definido, sin importar cuántas veces esos Pods específicos hayan sido reemplazados por debajo.
+Los Pods son efímeros: al recrearse reciben una IP interna distinta. Un Service da una dirección estable (IP fija y nombre DNS) que enruta hacia cualquier Pod que coincida con un selector de etiquetas. `ClusterIP` expone el Service solo dentro del clúster; `NodePort` lo expone en un puerto de cada nodo; `LoadBalancer` aprovisiona un balanceador externo del proveedor de nube.
 
-Existen varios tipos de Service según qué alcance de acceso necesitas. `ClusterIP`, el tipo por defecto, expone el Service únicamente dentro del clúster, accesible por otros Pods internos pero no desde fuera del clúster; es el tipo apropiado para comunicación interna entre servicios (por ejemplo, un backend accediendo a una base de datos, ambos corriendo dentro del mismo clúster). `NodePort` expone el Service en un puerto específico de cada nodo (máquina física o virtual) del clúster, haciendo posible el acceso desde fuera del clúster apuntando directamente a la IP de cualquier nodo en ese puerto, un mecanismo simple pero poco práctico de gestionar a gran escala. `LoadBalancer` aprovisiona automáticamente un balanceador de carga externo (típicamente provisto por el proveedor de nube donde corre el clúster) que dirige tráfico externo hacia el Service, siendo el tipo más común para exponer un servicio directamente a internet en un entorno de nube real.
-
-El selector de etiquetas es el mecanismo que conecta un Service con los Pods correctos: un Service definido con `selector: { app: mi-api }` automáticamente incluye en su enrutamiento a cualquier Pod que tenga la etiqueta `app: mi-api`, sin importar de qué Deployment o ReplicaSet provenga ese Pod específicamente. Esto es lo que permite que, durante un rolling update (Tema 1), el Service siga enrutando correctamente tráfico tanto hacia Pods de la versión antigua como hacia Pods de la versión nueva mientras ambos coexisten temporalmente durante la transición, porque ambos comparten la misma etiqueta que el selector del Service está buscando.
-
-Este mecanismo de Service con selector de etiquetas es, conceptualmente, el mismo problema de descubrimiento de nombres que resolviste con Docker Compose en el Módulo 3 de este track (permitir que un servicio se comunique con otro sin depender de direcciones IP frágiles), pero implementado a la escala y con la robustez adicional que un clúster de producción con Pods efímeros y en constante cambio requiere.
-
-**Analogía:** un Service es como el número de atención al cliente de una empresa que nunca cambia, sin importar qué empleado específico (Pod) atienda la llamada en cada momento, ni cuántas veces ese empleado específico cambie de turno o sea reemplazado. `ClusterIP` es como una línea interna que solo funciona dentro del edificio de la empresa. `NodePort` es como dar el número de teléfono directo de cada sucursal física para que alguien externo llame directamente a cualquiera de ellas. `LoadBalancer` es como contratar un servicio de centralita profesional externo que recibe todas las llamadas externas y las distribuye automáticamente a la sucursal correcta.
-
-**¿Por qué es importante?** Sin un Service, la comunicación confiable entre componentes de una aplicación en Kubernetes sería prácticamente imposible de mantener, dado que los Pods individuales cambian de identidad constantemente. Elegir el tipo correcto de Service según el alcance de acceso necesario (interno vs externo) es una de las primeras decisiones de configuración que cualquier aplicación desplegada en Kubernetes requiere.
+**Analogía:** un Service es como el número de atención al cliente que nunca cambia, sin importar qué empleado (Pod) atienda la llamada. `ClusterIP` es una línea interna; `NodePort` es el teléfono directo de cada sucursal; `LoadBalancer` es una centralita profesional externa.
 
 **Diagrama:**
 
 ```
-Service "mi-api" (selector: app=mi-api)
-        │
-   (enruta automáticamente, sin importar qué Pod específico exista ahora)
-        │
-   ┌────┼────┬────────┐
-   ▼         ▼        ▼
- Pod A     Pod B    Pod C     (todos con la etiqueta app=mi-api,
-(v1.1)    (v1.1)   (v1.2, nuevo)  incluso durante un rolling update)
+┌── Service "mi-api" (selector: app=mi-api) ──────┐
+│  enruta automáticamente, sin importar qué Pod exista ahora  │
+│    Pod A (v1.1)   Pod B (v1.1)   Pod C (v1.2, nuevo)          │
+└─────────────────────────────────────────┘
 ```
+
+#### Paso 4 · Demostración guiada desde cero
+
+Desde una carpeta vacía (reutilizando el clúster ya creado en el Tema 1) crea `academia-devops/src/modulo6/service`:
+
+```bash
+mkdir -p academia-devops/src/modulo6/service && cd academia-devops/src/modulo6/service
+cat > service.yaml <<'EOF'
+apiVersion: v1
+kind: Service
+metadata:
+  name: mi-api-svc
+spec:
+  type: ClusterIP
+  selector: { app: mi-api }
+  ports:
+    - port: 80
+      targetPort: 3000
+EOF
+kubectl apply -f service.yaml
+kubectl get service mi-api-svc
+kubectl describe service mi-api-svc | grep Endpoints
+```
+
+**Explicación línea por línea:** `selector: { app: mi-api }` conecta este Service con los Pods del Deployment del Tema 1 que comparten esa misma etiqueta, sin importar sus nombres específicos; `kubectl describe ... | grep Endpoints` confirma cuántos Pods concretos está enrutando en este momento.
+
+Accede al Service desde tu máquina y confirma que sigue funcionando tras eliminar un Pod:
+
+```bash
+kubectl port-forward service/mi-api-svc 8080:80 &
+sleep 2
+curl -s http://localhost:8080/
+kubectl delete pod $(kubectl get pods -l app=mi-api -o jsonpath='{.items[0].metadata.name}')
+sleep 3
+curl -s http://localhost:8080/
+kill %1
+```
+
+**Resultado esperado:** ambas peticiones `curl` reciben respuesta exitosa, la segunda incluso después de eliminar uno de los Pods originales, porque el Service redirige automáticamente hacia los Pods restantes (y el nuevo Pod de reemplazo) sin que el cliente note el cambio.
+
+**Fallo deliberado:** cambia el `selector` a `{ app: nombre-que-no-existe }` y vuelve a aplicar. `kubectl describe service mi-api-svc` muestra `Endpoints: <none>` — diagnostica que un Service sin endpoints típicamente significa que el `selector` no coincide con ninguna etiqueta real de ningún Pod existente.
+
+#### Construcción RutaFlow: acceso estable entre servicios internos
+
+`mi-api-svc` es el patrón que RutaFlow usará para que su frontend se conecte al backend usando `mi-api-svc` como hostname (vía DNS interno del clúster), nunca la IP de un Pod específico.
+
+#### Paso 5 · Práctica guiada
+
+Cambia el `type` del Service a `NodePort` y localiza el puerto asignado con `kubectl get service mi-api-svc`. **Pista:** el puerto de nodo asignado aparece en la columna `PORT(S)` con el formato `80:XXXXX/TCP`.
+
+#### Paso 6 · Práctica independiente
+
+Crea un segundo Deployment con una etiqueta `app` distinta y un segundo Service apuntando a él; confirma con `kubectl get endpoints` que cada Service enruta exclusivamente a los Pods de su propio selector, sin mezclarse entre sí.
+
+#### Paso 7 · Cierre y evidencia
+
+Ya expones aplicaciones de forma estable sin depender de IPs de Pods efímeros. El siguiente tema externaliza configuración y secretos hacia los Pods. **Evidencia:** entrega ambas respuestas de `curl` (antes y después de eliminar un Pod) y el resultado de `Endpoints: <none>` con un selector incorrecto. Fuente oficial: [Kubernetes — Service](https://kubernetes.io/docs/concepts/services-networking/service/).
+
+**Errores comunes:** que el `selector` del Service no coincida exactamente con las etiquetas de los Pods; asumir que `LoadBalancer` funciona igual en un clúster local (`kind`) que en un proveedor de nube real, donde sí aprovisiona un balanceador externo real.
+
+**Cuándo no usarlo:** para comunicación exclusivamente interna entre Pods del mismo clúster que nunca necesita acceso externo, `NodePort` o `LoadBalancer` exponen más superficie de la necesaria; `ClusterIP` es el límite correcto ahí.
 
 ### Tema 3: ConfigMaps y Secrets
 
+#### Paso 1 · Objetivo y preparación
+
+Al finalizar podrás externalizar configuración con ConfigMaps y datos sensibles con Secrets, entendiendo que un Secret nativo de Kubernetes solo está codificado en base64, no cifrado.
+
+**Conocimiento previo:** Temas 1 y 2 de este módulo; Módulo 3 (`.env` en Docker Compose).
+
+#### Paso 2 · Contexto y caso real
+
+**¿Por qué es importante?** Este es un caso real de seguridad: malinterpretar que un Secret de Kubernetes ya implica cifrado fuerte automático es un error común entre quienes empiezan con Kubernetes.
+
+#### Paso 3 · Teoría con analogía
+
 **Conceptos clave:** ConfigMap, Secret, configuración externalizada, datos codificados (no cifrados) en base64.
 
-Un ConfigMap almacena datos de configuración no sensibles como pares clave-valor, que luego pueden inyectarse en un Pod como variables de entorno o como archivos montados, sin necesidad de hornear esos valores directamente dentro de la imagen de contenedor. Esto sigue exactamente el mismo principio de externalización de configuración que ya viste con archivos `.env` en Docker Compose (Módulo 3 de este track), pero implementado como un objeto de primera clase gestionado por Kubernetes, con su propio ciclo de vida y capacidad de actualizarse independientemente de la imagen de la aplicación.
+Un ConfigMap almacena datos de configuración no sensibles inyectables como variables de entorno o archivos montados. Un Secret es estructuralmente similar pero pensado para datos sensibles; por defecto solo está codificado en base64, trivialmente reversible, no cifrado criptográficamente. Para protección real se combina con un gestor externo (Vault, Secrets Manager).
 
-Un Secret, estructuralmente, es muy similar a un ConfigMap (pares clave-valor inyectables de la misma forma), pero está pensado específicamente para datos sensibles: contraseñas, tokens, claves de API. Es importante entender una limitación real de los Secrets nativos de Kubernetes que sorprende a quien los usa por primera vez: por defecto, los valores de un Secret solo están codificados en base64, no cifrados criptográficamente. La codificación en base64 no es un mecanismo de seguridad —es trivialmente reversible por cualquiera con acceso de lectura al objeto—, así que un Secret de Kubernetes sin configuración adicional de cifrado en reposo a nivel de clúster no ofrece, por sí solo, una protección de seguridad mucho más fuerte que un ConfigMap; lo que sí aporta es una separación semántica clara (marcando explícitamente qué datos son sensibles) y algunas protecciones de acceso adicionales a nivel de API de Kubernetes (por ejemplo, los Secrets no se muestran completos por defecto en la salida de algunos comandos de `kubectl describe`, a diferencia de los ConfigMaps).
-
-Para una protección de seguridad real de secretos en un clúster de producción, la práctica recomendada es combinar Kubernetes con un gestor de secretos externo dedicado —como Vault, que vas a estudiar en el Módulo 11 de este mismo track sobre DevSecOps, o los servicios de gestión de secretos nativos de la nube que ya conociste en el track Cloud (Secrets Manager)— en vez de depender únicamente de los Secrets nativos de Kubernetes sin cifrado en reposo configurado explícitamente a nivel del propio clúster.
-
-Tanto ConfigMaps como Secrets se crean de forma imperativa con `kubectl create configmap`/`kubectl create secret`, especificando valores literales o archivos completos, o de forma declarativa como parte de manifiestos YAML versionados junto al resto de la configuración del clúster (el enfoque preferido en proyectos serios, siguiendo la misma filosofía de "todo como código" que ya viste aplicada a pipelines de CI/CD en el Módulo 4 de este track).
-
-**Analogía:** un ConfigMap es como una nota pública pegada en el tablón de anuncios de la oficina con información operativa general (el horario de atención, la dirección de la sucursal). Un Secret es como un sobre cerrado marcado "confidencial" en ese mismo tablón: la etiqueta indica que su contenido es sensible y debería tratarse con más cuidado, pero si alguien simplemente abre el sobre (decodifica el base64), puede leer el contenido con la misma facilidad que la nota pública, a menos que exista una cerradura adicional real (cifrado en reposo) protegiendo ese sobre específico.
-
-**¿Por qué es importante?** Malinterpretar que un Secret de Kubernetes, por su nombre, ya implica cifrado fuerte automático es un error de seguridad común entre quienes empiezan con Kubernetes; entender esta limitación desde el principio evita depender únicamente de Secrets nativos sin configuración adicional para datos verdaderamente críticos en un entorno de producción real.
+**Analogía:** un ConfigMap es una nota pública en el tablón de anuncios. Un Secret es un sobre marcado "confidencial" en ese mismo tablón: la etiqueta indica sensibilidad, pero cualquiera que abra el sobre (decodifique base64) lee el contenido igual de fácil, a menos que haya una cerradura real (cifrado en reposo).
 
 **Diagrama:**
 
 ```
-ConfigMap "config-app"              Secret "db-creds"
-┌─────────────────────┐           ┌─────────────────────┐
-│ LOG_LEVEL: info          │           │ password: c2VjcmV0bw==   │  ← solo base64,
-└─────────────────────┘           └─────────────────────┘     NO cifrado
-        │                                    │                   por defecto
-        ▼                                    ▼
-   Pod (variable de entorno LOG_LEVEL, variable de entorno password)
+┌── ConfigMap "config-app" ──────┐   ┌── Secret "db-creds" ───────────┐
+│ LOG_LEVEL: info                   │   │ password: c2VjcmV0bw==  ← solo base64 │
+└─────────────────────────┘   └──────────────────────────┘
+                Pod (variables de entorno LOG_LEVEL, password)
 ```
+
+#### Paso 4 · Demostración guiada desde cero
+
+Desde una carpeta vacía crea `academia-devops/src/modulo6/config-secrets` y demuestra que un Secret no está realmente cifrado:
+
+```bash
+mkdir -p academia-devops/src/modulo6/config-secrets && cd academia-devops/src/modulo6/config-secrets
+kubectl create configmap config-app --from-literal=LOG_LEVEL=info
+kubectl create secret generic db-creds --from-literal=password=secreto123
+kubectl get secret db-creds -o jsonpath='{.data.password}'
+echo
+kubectl get secret db-creds -o jsonpath='{.data.password}' | base64 -d
+echo
+```
+
+**Explicación línea por línea:** `kubectl get secret ... -o jsonpath='{.data.password}'` extrae el valor tal como Kubernetes lo almacena internamente; `base64 -d` lo decodifica, demostrando que cualquiera con permiso de lectura sobre el objeto puede recuperar el valor original sin ninguna clave adicional.
+
+Inyecta ambos en un Pod y confirma que llegan como variables de entorno:
+
+```bash
+kubectl run demo-config --image=alpine --restart=Never --command -- sh -c \
+  "env | grep -E 'LOG_LEVEL|DB_PASSWORD'; sleep 3" \
+  --env="LOG_LEVEL=$(kubectl get configmap config-app -o jsonpath='{.data.LOG_LEVEL}')" \
+  --env="DB_PASSWORD=$(kubectl get secret db-creds -o jsonpath='{.data.password}' | base64 -d)"
+sleep 4
+kubectl logs demo-config
+```
+
+**Resultado esperado:** el primer `jsonpath` devuelve la cadena codificada en base64 (`c2VjcmV0MTIz`); tras decodificar con `base64 -d`, se recupera exactamente `secreto123`; los logs del Pod `demo-config` muestran ambas variables con sus valores reales.
+
+**Fallo deliberado:** asume erróneamente que el Secret está cifrado y comparte el manifiesto YAML completo del Secret (con `kubectl get secret db-creds -o yaml`) como si fuera seguro de compartir. Cualquiera con ese YAML puede decodificar el valor en un paso — diagnostica ejecutando tú mismo `base64 -d` sobre el valor compartido para confirmar qué tan trivial es la reversión.
+
+#### Construcción RutaFlow: separación semántica de configuración y secretos
+
+Documenta en `academia-devops/README.md` que RutaFlow usa ConfigMaps para configuración no sensible y Secrets solo como paso intermedio hacia una integración real con un gestor de secretos externo (Módulo 11, DevSecOps), nunca como protección final por sí sola.
+
+#### Paso 5 · Práctica guiada
+
+Crea un Secret desde un archivo en vez de un literal (`kubectl create secret generic db-creds-2 --from-file=password=./password.txt`) y confirma que el resultado decodificado es idéntico. **Pista:** crea primero `password.txt` con `echo -n secreto123 > password.txt` para evitar un salto de línea accidental en el valor.
+
+#### Paso 6 · Práctica independiente
+
+Investiga (documentando sin necesariamente configurarlo en este laboratorio) qué es el cifrado en reposo (`encryption at rest`) de `etcd` en Kubernetes, y explica en 3-4 líneas por qué es el complemento necesario para que un Secret nativo ofrezca protección real más allá de la separación semántica.
+
+#### Paso 7 · Cierre y evidencia
+
+Ya externalizas configuración y entiendes la limitación real de los Secrets nativos sin cifrado adicional. El siguiente tema cubre los comandos esenciales para diagnosticar cualquier objeto de un clúster. **Evidencia:** entrega como resultado el valor del Secret codificado y decodificado, y explica la reversibilidad trivial del base64. Fuente oficial: [Kubernetes — Secrets](https://kubernetes.io/docs/concepts/configuration/secret/).
+
+**Errores comunes:** compartir un YAML de Secret asumiendo que está protegido por estar en base64; almacenar datos verdaderamente críticos solo en Secrets nativos sin cifrado en reposo ni gestor externo.
+
+**Cuándo no usarlo:** para credenciales de alta sensibilidad en un clúster de producción real, un Secret nativo sin configuración adicional no es suficiente; ahí un gestor externo dedicado (Vault, Secrets Manager) es el límite correcto.
 
 ### Tema 4: kubectl esencial
 
+#### Paso 1 · Objetivo y preparación
+
+Al finalizar podrás diagnosticar el estado de cualquier objeto de un clúster con `kubectl get`, `describe`, `logs` y `exec`, verificando siempre contra qué contexto operas.
+
+**Conocimiento previo:** Temas 1 a 3 de este módulo.
+
+#### Paso 2 · Contexto y caso real
+
+**¿Por qué es importante?** Este es un caso real de trabajo diario con Kubernetes: estos cuatro comandos, junto con la verificación de contexto, son tan fundamentales como `docker ps`/`logs`/`exec` lo son para Docker suelto.
+
+#### Paso 3 · Teoría con analogía
+
 **Conceptos clave:** `kubectl get`, `kubectl describe`, `kubectl logs`, `kubectl exec`, contexto de clúster.
 
-`kubectl` es la herramienta de línea de comandos principal para interactuar con cualquier clúster de Kubernetes, y cuatro comandos cubren la inmensa mayoría del trabajo diario de operación y diagnóstico. `kubectl get <recurso>` (por ejemplo, `kubectl get pods`, `kubectl get deployments`, `kubectl get services`) lista los objetos de un tipo específico, mostrando un resumen conciso de su estado actual: cuántas réplicas están listas, cuánto tiempo llevan corriendo, su estado general.
+`kubectl get <recurso>` lista objetos con un resumen de su estado. `kubectl describe <recurso> <nombre>` muestra detalle completo, incluyendo eventos recientes — la primera herramienta de diagnóstico ante un problema. `kubectl logs <pod>` muestra su salida estándar/error. `kubectl exec -it <pod> -- <comando>` ejecuta un comando dentro de un contenedor ya corriendo. `kubectl config current-context` confirma contra qué clúster operas, crítico al trabajar con varios clústeres simultáneamente.
 
-`kubectl describe <recurso> <nombre>` (por ejemplo, `kubectl describe pod mi-api-xyz`) muestra información mucho más detallada sobre un objeto específico, incluyendo, crucialmente, una sección de eventos recientes relacionados con ese objeto: por qué un Pod no ha podido arrancar, qué error específico produjo un fallo de programación (scheduling), o por qué un healthcheck (que en Kubernetes se llama "probe", como verás en el módulo siguiente de este track) está fallando. Este comando es, con diferencia, la primera herramienta de diagnóstico cuando algo no funciona como se espera, mucho antes de recurrir a revisar logs.
-
-`kubectl logs <nombre-del-pod>` muestra la salida estándar (y de error) del contenedor principal de ese Pod, exactamente análogo en propósito a `docker logs` que ya conoces del track Cloud, pero aplicado a un Pod dentro del clúster; con la opción `-f` sigue mostrando nuevas líneas en tiempo real. `kubectl exec -it <nombre-del-pod> -- <comando>` ejecuta un comando dentro de un contenedor ya en ejecución, típicamente usado para abrir una shell interactiva (`kubectl exec -it mi-api-xyz -- sh`) e inspeccionar el estado interno del contenedor directamente, el mismo propósito que `docker exec -it` cumple para contenedores Docker sueltos.
-
-Un detalle operativo importante es que `kubectl` opera siempre contra un contexto específico (una combinación de clúster, usuario y namespace configurados), y es fácil, especialmente cuando se trabaja con múltiples clústeres (por ejemplo, uno local de pruebas y otro de producción real), ejecutar un comando pensando que apunta a un clúster cuando en realidad apunta a otro; `kubectl config current-context` y `kubectl config get-contexts` son comandos esenciales para verificar contra qué clúster estás operando antes de ejecutar cualquier cambio potencialmente destructivo.
-
-**Analogía:** `kubectl get` es como pedir la lista resumida de huéspedes de un hotel con su estado actual (ocupado, disponible). `kubectl describe` es como pedir el expediente completo de un huésped específico, incluyendo el historial reciente de incidencias relacionadas con su habitación. `kubectl logs` es como revisar el registro de actividad de esa habitación específica. `kubectl exec` es como que el personal de mantenimiento entre físicamente a esa habitación mientras el huésped sigue ahí, para inspeccionar algo directamente sin desalojarlo.
-
-**¿Por qué es importante?** Estos cuatro comandos, junto con la verificación de contexto, son la base absoluta del trabajo diario con cualquier clúster Kubernetes real; dominarlos hasta el punto de usarlos reflexivamente es tan fundamental para trabajar con Kubernetes como dominar `docker ps`/`docker logs`/`docker exec` lo es para trabajar con Docker suelto.
+**Analogía:** `kubectl get` es la lista resumida de huéspedes de un hotel. `kubectl describe` es el expediente completo de un huésped, con incidencias recientes. `kubectl logs` es el registro de actividad de su habitación. `kubectl exec` es que mantenimiento entre a inspeccionar directamente sin desalojarlo.
 
 **Diagrama:**
 
 ```
-kubectl get pods           ──▶ vista resumida de todos los Pods
-kubectl describe pod <x>   ──▶ detalle completo + eventos recientes de ese Pod
-kubectl logs <x>           ──▶ salida estándar/error de ese Pod
-kubectl exec -it <x> -- sh ──▶ shell interactiva dentro de ese Pod
-kubectl config current-context ──▶ confirma contra qué clúster estás operando
+kubectl get pods                ──▶ vista resumida de todos los Pods
+kubectl describe pod <x>        ──▶ detalle completo + eventos recientes
+kubectl logs <x>                ──▶ salida estándar/error de ese Pod
+kubectl exec -it <x> -- sh      ──▶ shell interactiva dentro de ese Pod
+kubectl config current-context  ──▶ confirma contra qué clúster operas
 ```
+
+#### Paso 4 · Demostración guiada desde cero
+
+Desde una carpeta vacía crea `academia-devops/src/modulo6/kubectl-esencial` y provoca un fallo real para diagnosticarlo con los cuatro comandos:
+
+```bash
+mkdir -p academia-devops/src/modulo6/kubectl-esencial && cd academia-devops/src/modulo6/kubectl-esencial
+kubectl config current-context
+kubectl run diagnostico --image=alpine --restart=Never -- sh -c "echo arrancando; sleep 60"
+kubectl get pods
+kubectl logs diagnostico
+kubectl exec -it diagnostico -- sh -c "echo 'estoy dentro del contenedor'; hostname"
+```
+
+**Explicación línea por línea:** `kubectl config current-context` confirma contra qué clúster se ejecutan los comandos siguientes, antes de crear ningún objeto; `kubectl exec -it ... -- sh -c "..."` ejecuta un comando puntual dentro del Pod ya en ejecución.
+
+Provoca un fallo de programación con recursos imposibles y diagnostica con `describe`:
+
+```bash
+kubectl run imposible --image=alpine --restart=Never --requests=cpu=1000,memory=1000Gi -- sleep 60
+kubectl get pods imposible
+kubectl describe pod imposible | grep -A5 Events
+kubectl delete pod diagnostico imposible
+```
+
+**Resultado esperado:** `diagnostico` llega a estado `Running`, `logs` muestra "arrancando", y `exec` imprime "estoy dentro del contenedor" seguido del hostname del Pod; `imposible` queda en estado `Pending`, y la sección `Events` de `describe` muestra un mensaje de recursos insuficientes explicando por qué no puede programarse en ningún nodo.
+
+**Fallo deliberado:** ejecuta `kubectl logs pod-que-no-existe`. Obtienes un error explícito de "not found" — diagnostica confirmando primero con `kubectl get pods` que el nombre exacto existe antes de asumir un problema más profundo con `logs`.
+
+#### Construcción RutaFlow: runbook de diagnóstico del equipo
+
+Documenta en `academia-devops/README.md` el orden recomendado de diagnóstico para RutaFlow ante cualquier incidente: primero `get`, luego `describe` (eventos), luego `logs`, y solo si es necesario `exec` para inspección interactiva.
+
+#### Paso 5 · Práctica guiada
+
+Ejecuta `kubectl get pods -o wide` y compara la información adicional (IP, nodo) frente a `kubectl get pods` simple. **Pista:** `-o wide` es útil específicamente cuando necesitas saber en qué nodo físico corre cada Pod.
+
+#### Paso 6 · Práctica independiente
+
+Investiga y documenta la diferencia entre `kubectl logs <pod>` y `kubectl logs <pod> --previous`, y en qué situación de diagnóstico real usarías la segunda variante.
+
+#### Paso 7 · Cierre y evidencia
+
+Ya diagnosticas cualquier objeto del clúster con las herramientas correctas para cada pregunta. El siguiente tema aísla lógicamente los objetos de un clúster compartido. **Evidencia:** entrega la salida de `describe` mostrando el evento de recursos insuficientes de `imposible`, y el error explícito al pedir logs de un Pod inexistente. Fuente oficial: [kubectl Cheat Sheet](https://kubernetes.io/docs/reference/kubectl/cheatsheet/).
+
+**Errores comunes:** ejecutar comandos destructivos sin verificar antes `kubectl config current-context`, arriesgando operar sobre el clúster equivocado; recurrir a `logs` antes de revisar `describe`, perdiendo la sección de eventos que suele explicar el problema más directamente.
+
+**Cuándo no usarlo:** para automatización a gran escala sobre muchos objetos, `kubectl` interactivo no es el límite adecuado; ahí manifiestos declarativos aplicados con `kubectl apply -f` o herramientas de gestión de paquetes como Helm son más apropiados.
 
 ### Tema 5: Namespaces
 
+#### Paso 1 · Objetivo y preparación
+
+Al finalizar podrás aislar lógicamente objetos de un mismo clúster en namespaces distintos, evitando colisiones de nombres entre entornos o equipos.
+
+**Conocimiento previo:** Temas 1 a 4 de este módulo.
+
+#### Paso 2 · Contexto y caso real
+
+**¿Por qué es importante?** Este es un caso real de clústeres compartidos por múltiples equipos: omitir el namespace explícitamente es una fuente común de confusión, arriesgando listar o modificar recursos en el entorno equivocado.
+
+#### Paso 3 · Teoría con analogía
+
 **Conceptos clave:** namespace, aislamiento lógico, `kubectl -n`, namespace por defecto.
 
-Un namespace divide lógicamente un único clúster físico de Kubernetes en múltiples espacios de nombres virtuales independientes, cada uno pudiendo contener sus propios objetos (Pods, Services, ConfigMaps) sin colisionar con objetos del mismo nombre en otro namespace. Esto permite, por ejemplo, tener un namespace `desarrollo` y otro `staging` dentro del mismo clúster físico, cada uno con su propia versión de una aplicación llamada `mi-api`, sin que ambos entren en conflicto entre sí, a pesar de compartir el nombre.
+Un namespace divide lógicamente un clúster físico en espacios de nombres virtuales independientes. Sin especificar uno, Kubernetes usa `default` implícitamente. Los namespaces son el punto de aplicación de cuotas de recursos, políticas de red y RBAC. Por defecto, sin políticas de red adicionales, Pods de namespaces distintos todavía pueden comunicarse entre sí: el namespace organiza, pero no aísla la red por sí solo.
 
-Si no especificas explícitamente un namespace al crear un objeto o al ejecutar un comando de `kubectl`, Kubernetes usa el namespace `default` de forma implícita. Esto es cómodo para experimentar rápidamente en un clúster local de pruebas, pero en un entorno con múltiples equipos o múltiples entornos compartiendo el mismo clúster físico, omitir el namespace explícitamente es una fuente común de confusión: es fácil, sin darte cuenta, listar o modificar recursos en el namespace equivocado, especialmente si tu contexto actual de `kubectl` tiene un namespace por defecto distinto al que asumes.
-
-Los namespaces también son el punto de aplicación de varias políticas de gobernanza de un clúster compartido: cuotas de recursos (limitar cuánta CPU o memoria puede consumir en total un namespace específico), políticas de red (restringir qué namespaces pueden comunicarse entre sí), y control de acceso basado en roles (RBAC, que verás en el módulo siguiente de este track), que puede otorgar permisos limitados a un usuario o equipo específico solo sobre su propio namespace, sin acceso al resto del clúster.
-
-Es importante notar que un namespace no es un mecanismo de aislamiento tan fuerte como clústeres físicamente separados: por defecto, sin políticas de red adicionales explícitamente configuradas, los Pods de distintos namespaces todavía pueden comunicarse entre sí por red dentro del mismo clúster. El namespace organiza y separa lógicamente los objetos y facilita aplicar políticas específicas, pero el aislamiento de red real requiere configuración adicional explícita si es un requisito de seguridad del contexto.
-
-**Analogía:** los namespaces son como pisos distintos dentro del mismo edificio de oficinas: cada piso puede tener su propia sala llamada "Sala de reuniones A" sin conflicto con la sala del mismo nombre en otro piso, y es posible aplicar reglas específicas por piso (un límite de aforo distinto para cada uno), pero salvo que se instalen controles de acceso adicionales explícitos entre pisos, cualquiera puede tomar el ascensor y moverse libremente de un piso a otro dentro del mismo edificio.
-
-**¿Por qué es importante?** En cualquier clúster real compartido por múltiples equipos o entornos, entender y usar namespaces correctamente evita colisiones de nombres, permite aplicar cuotas y políticas diferenciadas, y reduce el riesgo de operar accidentalmente sobre el entorno equivocado por omitir el namespace en un comando de `kubectl`.
+**Analogía:** los namespaces son como pisos distintos de un mismo edificio: cada piso puede tener su propia "Sala de reuniones A" sin conflicto con otro piso, pero cualquiera puede tomar el ascensor entre pisos salvo que se instalen controles de acceso adicionales.
 
 **Diagrama:**
 
 ```
-Clúster físico único
-├── namespace "desarrollo"
-│    └── Deployment "mi-api" (versión de desarrollo)
-├── namespace "staging"
-│    └── Deployment "mi-api" (versión de staging, mismo nombre, sin conflicto)
-└── namespace "default"
-     └── (lo que crees sin especificar namespace explícitamente)
+┌── Clúster físico único ──────────────────┐
+│ namespace "desarrollo"  → Deployment "mi-api" (dev)  │
+│ namespace "staging"     → Deployment "mi-api" (staging, sin conflicto) │
+│ namespace "default"     → lo que crees sin especificar namespace │
+└─────────────────────────────────────┘
 ```
+
+#### Paso 4 · Demostración guiada desde cero
+
+Desde una carpeta vacía crea `academia-devops/src/modulo6/namespaces` y demuestra que dos namespaces pueden tener objetos homónimos sin conflicto:
+
+```bash
+mkdir -p academia-devops/src/modulo6/namespaces && cd academia-devops/src/modulo6/namespaces
+kubectl create namespace desarrollo
+kubectl create namespace staging
+kubectl run mi-api --image=alpine --restart=Never -n desarrollo -- sh -c "echo soy-desarrollo; sleep 60"
+kubectl run mi-api --image=alpine --restart=Never -n staging -- sh -c "echo soy-staging; sleep 60"
+kubectl get pods -n desarrollo
+kubectl get pods -n staging
+```
+
+**Explicación línea por línea:** ambos Pods se llaman `mi-api`, pero viven en namespaces distintos (`-n desarrollo`, `-n staging`), por lo que Kubernetes no los trata como el mismo objeto ni genera ningún conflicto de nombres.
+
+Confirma qué pasa si omites el namespace explícitamente:
+
+```bash
+kubectl get pods
+kubectl config set-context --current --namespace=desarrollo
+kubectl get pods
+```
+
+**Resultado esperado:** `kubectl get pods` sin `-n` explícito muestra los Pods del namespace `default` (ninguno de los dos que creaste), demostrando que quedaron en namespaces distintos al implícito; tras cambiar el namespace por defecto del contexto actual a `desarrollo`, `kubectl get pods` sin `-n` sí muestra el Pod `mi-api` de ese namespace.
+
+**Fallo deliberado:** con el contexto ya cambiado a `desarrollo` (paso anterior), ejecuta `kubectl delete pod mi-api` SIN especificar `-n staging`, asumiendo que borrarías el de staging. En realidad elimina el de `desarrollo` — diagnostica confirmando siempre con `kubectl config get-contexts` y `kubectl get pods -n <namespace>` explícito antes de cualquier operación destructiva.
+
+#### Construcción RutaFlow: entornos aislados en el mismo clúster
+
+Documenta en `academia-devops/README.md` que RutaFlow usa namespaces `rutaflow-dev` y `rutaflow-staging` dentro del mismo clúster local de prácticas, cada uno con su propia copia completa del Deployment y Service, sin colisión de nombres entre ambos.
+
+#### Paso 5 · Práctica guiada
+
+Ejecuta `kubectl get pods --all-namespaces` (o `-A`) y confirma que ves ambos Pods `mi-api` simultáneamente, cada uno junto a su namespace en la columna correspondiente. **Pista:** `--all-namespaces` es la forma de ver el estado completo del clúster sin filtrar por un namespace específico.
+
+#### Paso 6 · Práctica independiente
+
+Aplica una `ResourceQuota` simple al namespace `staging` limitando el número máximo de Pods a 2, e intenta crear un tercer Pod ahí; documenta el mensaje de error que Kubernetes devuelve al exceder la cuota.
+
+#### Paso 7 · Cierre y evidencia
+
+Ya aíslas lógicamente entornos dentro del mismo clúster físico, y verificas siempre el namespace antes de operaciones destructivas. El siguiente tema cubre objetos especializados más allá de Deployment. **Evidencia:** entrega la salida de `kubectl get pods --all-namespaces` mostrando ambos `mi-api` sin conflicto, y explica el fallo de haber borrado el Pod del namespace equivocado. Fuente oficial: [Kubernetes — Namespaces](https://kubernetes.io/docs/concepts/overview/working-with-objects/namespaces/).
+
+**Errores comunes:** asumir que el namespace por defecto del contexto actual es siempre `default`, después de haberlo cambiado en una sesión anterior; ejecutar comandos destructivos sin `-n` explícito, confiando en el namespace implícito del contexto.
+
+**Cuándo no usarlo:** para aislamiento de seguridad fuerte entre cargas de trabajo verdaderamente no confiables entre sí, un namespace no basta (Pods de namespaces distintos siguen comunicándose por red por defecto); ahí clústeres físicamente separados o políticas de red explícitas son el límite necesario.
 
 ### Tema 6: StatefulSets, DaemonSets, Jobs y CronJobs
 
+#### Paso 1 · Objetivo y preparación
+
+Al finalizar podrás elegir entre Deployment, StatefulSet, DaemonSet, Job o CronJob según si tu carga de trabajo necesita identidad estable, presencia por nodo, o una tarea con principio y fin.
+
+**Conocimiento previo:** Temas 1 a 5 de este módulo; cron de Linux (Módulo 0).
+
+#### Paso 2 · Contexto y caso real
+
+**¿Por qué es importante?** Este es un caso real: usar Deployment para todo, incluyendo cargas que necesitan las garantías de un StatefulSet (una base de datos) o el patrón de un Job (una migración puntual), es un error común que puede causar pérdida de datos.
+
+#### Paso 3 · Teoría con analogía
+
 **Conceptos clave:** StatefulSet (identidad estable), DaemonSet (un Pod por nodo), Job (tarea que termina), CronJob (Job programado).
 
-Más allá de Deployment (para aplicaciones sin estado, donde cualquier réplica es intercambiable con cualquier otra), Kubernetes ofrece objetos especializados para patrones distintos. Un StatefulSet gestiona Pods que necesitan una identidad estable y persistente a lo largo del tiempo: cada réplica de un StatefulSet recibe un nombre ordinal predecible y estable (`mi-base-0`, `mi-base-1`, `mi-base-2`, no nombres aleatorios como los Pods normales de un Deployment), y, combinado con almacenamiento persistente (Tema 7), cada réplica mantiene su propio volumen de datos asociado consistentemente, incluso si el Pod se reinicia. Esto es exactamente lo que necesita una base de datos distribuida desplegada dentro de Kubernetes, donde cada réplica necesita mantener su propia identidad y sus propios datos de forma consistente, a diferencia de una aplicación sin estado donde cualquier réplica es perfectamente intercambiable con cualquier otra.
+Un StatefulSet gestiona Pods con identidad estable y persistente: cada réplica recibe un nombre ordinal predecible (`mi-base-0`, `mi-base-1`). Un DaemonSet garantiza exactamente un Pod por nodo del clúster, el patrón típico para agentes de infraestructura. Un Job ejecuta una tarea que debe completarse, reintentando si falla. Un CronJob añade programación temporal sobre un Job con la misma sintaxis cron del Módulo 0.
 
-Un DaemonSet garantiza que exactamente un Pod de un tipo específico corra en cada nodo del clúster (o en un subconjunto de nodos que cumplan cierto criterio), en vez de un número fijo de réplicas distribuidas sin relación directa con los nodos físicos subyacentes. Es el patrón típico para agentes de infraestructura que necesitan estar presentes en cada máquina del clúster: un agente de recolección de logs, un agente de monitorización de métricas de nodo, o un agente de red específico, cada uno necesitando exactamente una instancia por nodo, ni más ni menos.
-
-Un Job ejecuta una tarea que se espera que termine (a diferencia de un Deployment, pensado para procesos de larga duración continua que nunca deberían terminar por sí solos), y Kubernetes garantiza que esa tarea se complete exitosamente, reintentando automáticamente si el Pod falla antes de completarse. Es el patrón apropiado para tareas puntuales como una migración de base de datos, un procesamiento de datos por lotes, o cualquier tarea con un principio y un fin claramente definidos. Un CronJob añade programación temporal sobre un Job, ejecutándolo automáticamente según una expresión cron (exactamente la misma sintaxis que estudiaste con `cron` de Linux en el Módulo 0 de este track), siendo el equivalente nativo de Kubernetes a programar tareas periódicas, pero gestionado y observable como cualquier otro objeto del clúster.
-
-Elegir el objeto correcto según el patrón de tu carga de trabajo —Deployment para servicios sin estado de larga duración, StatefulSet para servicios con estado que necesitan identidad estable, DaemonSet para agentes de infraestructura por nodo, Job/CronJob para tareas puntuales o programadas— es una decisión de diseño fundamental que determina cómo Kubernetes gestiona el ciclo de vida completo de esos Pods.
-
-**Analogía:** un Deployment es como un equipo de operadores de call center intercambiables, donde cualquier operador disponible puede atender cualquier llamada entrante. Un StatefulSet es como un equipo de gerentes de cuenta, donde cada cliente específico siempre habla con su mismo gerente asignado, que mantiene el historial completo de esa relación específica. Un DaemonSet es como un guardia de seguridad asignado permanentemente a cada entrada del edificio, uno por cada entrada física, ni más ni menos. Un Job es como una tarea de mudanza puntual que se considera completa una vez terminada, no un puesto de trabajo permanente. Un CronJob es esa misma tarea de mudanza, pero programada para repetirse automáticamente cada cierto tiempo.
-
-**¿Por qué es importante?** Usar Deployment para todo, incluyendo cargas de trabajo que en realidad necesitan las garantías específicas de un StatefulSet (como una base de datos) o el patrón de un Job (como una migración puntual), es un error de diseño común entre quienes empiezan con Kubernetes, que puede causar pérdida de datos o comportamiento inesperado precisamente porque Deployment no ofrece las garantías de identidad estable ni de finalización garantizada que esos otros patrones sí ofrecen.
+**Analogía:** un Deployment es un equipo de operadores intercambiables. Un StatefulSet es un equipo de gerentes de cuenta, cada uno siempre asignado al mismo cliente. Un DaemonSet es un guardia por cada entrada del edificio. Un Job es una mudanza puntual que termina. Un CronJob es esa misma mudanza programada para repetirse.
 
 **Diagrama:**
 
 ```
-Deployment          StatefulSet           DaemonSet            Job / CronJob
-(sin estado,        (con estado,          (uno por nodo,       (tarea que termina,
- réplicas            identidad             para agentes de       opcionalmente
- intercambiables)     estable por           infraestructura)      programada)
-                      réplica)
+┌ Deployment ┐ ┌ StatefulSet ┐ ┌ DaemonSet ┐ ┌ Job / CronJob ┐
+│ sin estado,  │ │ con estado,   │ │ uno por     │ │ tarea que        │
+│ intercambiable│ │ identidad     │ │ nodo          │ │ termina (o se     │
+│              │ │ estable       │ │               │ │ programa)          │
+└──────────┘ └───────────┘ └─────────┘ └──────────────┘
 ```
+
+#### Paso 4 · Demostración guiada desde cero
+
+Desde una carpeta vacía crea `academia-devops/src/modulo6/workloads` y compara los cuatro objetos:
+
+```bash
+mkdir -p academia-devops/src/modulo6/workloads && cd academia-devops/src/modulo6/workloads
+cat > job.yaml <<'EOF'
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: migracion-datos
+spec:
+  template:
+    spec:
+      containers:
+        - name: migracion
+          image: alpine
+          command: ["sh", "-c", "echo 'migrando datos...'; sleep 2; echo 'migracion completa'"]
+      restartPolicy: Never
+EOF
+cat > cronjob.yaml <<'EOF'
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: respaldo-nocturno
+spec:
+  schedule: "0 3 * * *"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+            - name: respaldo
+              image: alpine
+              command: ["sh", "-c", "echo 'respaldo ejecutado'"]
+          restartPolicy: Never
+EOF
+kubectl apply -f job.yaml -f cronjob.yaml
+kubectl wait --for=condition=complete job/migracion-datos --timeout=30s
+kubectl get jobs cronjobs
+```
+
+**Explicación línea por línea:** `restartPolicy: Never` en un Job es obligatorio (o `OnFailure`), a diferencia de un Deployment que siempre reinicia el proceso; `schedule: "0 3 * * *"` en el CronJob usa exactamente la sintaxis cron del Módulo 0 para ejecutarse a las 3 AM cada día.
+
+Confirma que el Job efectivamente termina (a diferencia de un Deployment, que nunca debería):
+
+```bash
+kubectl get pods -l job-name=migracion-datos
+kubectl logs -l job-name=migracion-datos
+```
+
+**Resultado esperado:** `kubectl get jobs` muestra `migracion-datos` con `COMPLETIONS: 1/1`; los logs muestran "migrando datos..." seguido de "migracion completa"; el Pod del Job queda en estado `Completed`, no `Running`, porque su propósito es terminar, a diferencia de los Pods de un Deployment.
+
+**Fallo deliberado:** cambia el comando del Job para que termine con código de salida distinto de cero (`command: ["sh", "-c", "exit 1"]`) y vuelve a aplicar con un nombre nuevo. Kubernetes reintenta automáticamente el Job varias veces antes de marcarlo como fallido — diagnostica con `kubectl describe job <nombre>` revisando el conteo de reintentos y el evento de fallo final.
+
+#### Construcción RutaFlow: tareas de mantenimiento del proyecto
+
+`respaldo-nocturno` es la base del CronJob real que RutaFlow usará para respaldar su base de datos cada noche, reemplazando el `cron` de Linux del Módulo 0 por su equivalente nativo y observable dentro del clúster.
+
+#### Paso 5 · Práctica guiada
+
+Ejecuta `kubectl create job --from=cronjob/respaldo-nocturno respaldo-manual` para disparar manualmente una ejecución del CronJob fuera de su horario programado, y confirma con `kubectl logs -l job-name=respaldo-manual` que corrió exitosamente. **Pista:** esto es útil para probar un CronJob sin esperar a su horario real.
+
+#### Paso 6 · Práctica independiente
+
+Diseña (en un manifiesto YAML, sin necesariamente desplegarlo en este laboratorio) un StatefulSet de 3 réplicas para una base de datos ficticia, y explica en un comentario qué nombres ordinales recibiría cada réplica y por qué eso es distinto de un Deployment equivalente.
+
+#### Paso 7 · Cierre y evidencia
+
+Ya eliges el objeto correcto según el patrón real de tu carga de trabajo, no solo Deployment para todo. El siguiente tema añade almacenamiento persistente real para los casos que lo necesitan. **Evidencia:** entrega la salida de `kubectl get jobs` mostrando `COMPLETIONS: 1/1`, y el resultado de los reintentos automáticos del Job que falla deliberadamente. Fuente oficial: [Kubernetes — Jobs](https://kubernetes.io/docs/concepts/workloads/controllers/job/).
+
+**Errores comunes:** usar un Deployment para una tarea que debe terminar, dejando el Pod corriendo indefinidamente sin propósito; olvidar `restartPolicy: Never` u `OnFailure` en un Job, que por defecto en otros contextos podría no ser el esperado.
+
+**Cuándo no usarlo:** para un servicio de larga duración sin estado (la mayoría de APIs web), un StatefulSet añade complejidad innecesaria (nombres ordinales, orden de arranque estricto) sin beneficio real; ahí un Deployment simple es el límite correcto.
 
 ### Tema 7: Persistent Volumes, PVCs y StorageClasses
 
+#### Paso 1 · Objetivo y preparación
+
+Al finalizar podrás solicitar almacenamiento persistente para un Pod con un PVC, aprovisionado dinámicamente por una StorageClass, sin acoplar la aplicación a los detalles físicos del almacenamiento.
+
+**Conocimiento previo:** Temas 1 a 6 de este módulo; volúmenes de Docker (Módulo 2).
+
+#### Paso 2 · Contexto y caso real
+
+**¿Por qué es importante?** Este es un caso real de portabilidad: este sistema de abstracción en tres capas permite que aplicaciones con estado se desplieguen de forma portable entre distintos entornos de infraestructura subyacente.
+
+#### Paso 3 · Teoría con analogía
+
 **Conceptos clave:** Persistent Volume (PV), Persistent Volume Claim (PVC), StorageClass, aprovisionamiento dinámico.
 
-Un Persistent Volume (PV) representa una porción de almacenamiento físico real disponible en el clúster (un disco de red, un volumen de un proveedor de nube, almacenamiento local de un nodo), existiendo como un recurso del clúster independiente del ciclo de vida de cualquier Pod específico que eventualmente lo use. Un Persistent Volume Claim (PVC) es, en cambio, una solicitud que hace una aplicación (o más específicamente, un Pod) pidiendo almacenamiento con ciertas características (tamaño mínimo, modo de acceso), sin necesitar conocer los detalles concretos de qué PV físico específico va a satisfacer esa solicitud.
+Un PV representa almacenamiento físico real disponible en el clúster, independiente del ciclo de vida de cualquier Pod. Un PVC es una solicitud de una aplicación pidiendo almacenamiento con ciertas características, sin conocer el PV físico específico. Una StorageClass automatiza la creación de PVs bajo demanda cuando un PVC la referencia, sin intervención manual previa.
 
-Esta separación entre PV (la oferta de almacenamiento real) y PVC (la solicitud de una aplicación) sigue el mismo espíritu de abstracción que ya viste con Services desacoplando a los consumidores de la identidad específica de los Pods que los atienden: una aplicación declara "necesito 10 GB de almacenamiento persistente" mediante un PVC, sin acoplarse a los detalles de infraestructura de almacenamiento subyacente, que puede cambiar entre distintos clústeres o proveedores sin que la definición de la aplicación necesite modificarse.
-
-Una StorageClass automatiza la creación de Persistent Volumes bajo demanda (aprovisionamiento dinámico): en vez de que un administrador del clúster tenga que crear manualmente un PV específico de antemano para cada PVC que una aplicación pueda necesitar, una StorageClass define una plantilla de cómo aprovisionar almacenamiento automáticamente (por ejemplo, "crea un disco SSD de red en el proveedor de nube subyacente") cuando un PVC la referencia, generando el PV correspondiente de forma dinámica y automática en el momento en que se necesita, sin intervención manual previa.
-
-Combinar StatefulSet (Tema 6) con PVCs respaldados por una StorageClass es exactamente el patrón que hace posible desplegar de forma confiable una base de datos dentro de Kubernetes: cada réplica del StatefulSet recibe automáticamente su propio PVC (y por tanto su propio almacenamiento persistente independiente), aprovisionado dinámicamente, y ese almacenamiento específico permanece asociado consistentemente a esa réplica específica del StatefulSet a lo largo de reinicios y actualizaciones, preservando sus datos de forma confiable.
-
-**Analogía:** un Persistent Volume es como un depósito de almacenamiento físico real ya construido en algún lugar de una ciudad de almacenes. Un PVC es como el formulario de solicitud de una empresa pidiendo "necesito 10 metros cúbicos de espacio de almacenamiento", sin necesitar saber ni elegir manualmente en qué depósito físico específico de la ciudad se le va a asignar ese espacio. Una StorageClass es como el sistema automatizado de gestión de la ciudad de almacenes que, cada vez que llega una solicitud nueva, construye o asigna automáticamente el depósito correspondiente sin que un gestor humano tenga que intervenir manualmente en cada solicitud individual.
-
-**¿Por qué es importante?** Este sistema de abstracción de almacenamiento en tres capas (PV, PVC, StorageClass) es lo que permite que aplicaciones con estado —bases de datos, sistemas de archivos compartidos, cualquier carga de trabajo que necesite persistencia real— puedan desplegarse dentro de Kubernetes de forma portable entre distintos entornos de infraestructura subyacente, sin acoplar la definición de la aplicación a los detalles específicos de dónde y cómo se provee físicamente ese almacenamiento en cada clúster particular.
+**Analogía:** un PV es un depósito de almacenamiento físico ya construido. Un PVC es el formulario de una empresa pidiendo "necesito 10 metros cúbicos", sin elegir el depósito específico. Una StorageClass es el sistema automatizado que construye o asigna el depósito correspondiente sin intervención humana en cada solicitud.
 
 **Diagrama:**
 
 ```
-StatefulSet "mi-base" (3 réplicas)
-    │
-    ├── mi-base-0 ──▶ PVC "datos-0" ──▶ (StorageClass aprovisiona) ──▶ PV físico 0
-    ├── mi-base-1 ──▶ PVC "datos-1" ──▶ (StorageClass aprovisiona) ──▶ PV físico 1
-    └── mi-base-2 ──▶ PVC "datos-2" ──▶ (StorageClass aprovisiona) ──▶ PV físico 2
-         (cada réplica mantiene consistentemente SU PROPIO volumen persistente)
+┌── StatefulSet "mi-base" (3 réplicas) ────────────────┐
+│ mi-base-0 ──▶ PVC "datos-0" ──▶ (StorageClass) ──▶ PV físico 0 │
+│ mi-base-1 ──▶ PVC "datos-1" ──▶ (StorageClass) ──▶ PV físico 1 │
+│ mi-base-2 ──▶ PVC "datos-2" ──▶ (StorageClass) ──▶ PV físico 2 │
+└─────────────────────────────────────────┘
 ```
+
+#### Paso 4 · Demostración guiada desde cero
+
+Desde una carpeta vacía crea `academia-devops/src/modulo6/almacenamiento` y demuestra persistencia real a través de un reinicio de Pod:
+
+```bash
+mkdir -p academia-devops/src/modulo6/almacenamiento && cd academia-devops/src/modulo6/almacenamiento
+cat > pvc.yaml <<'EOF'
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: datos-app
+spec:
+  accessModes: ["ReadWriteOnce"]
+  resources:
+    requests:
+      storage: 1Gi
+EOF
+kubectl apply -f pvc.yaml
+kubectl get pvc datos-app
+cat > pod-con-volumen.yaml <<'EOF'
+apiVersion: v1
+kind: Pod
+metadata:
+  name: escritor
+spec:
+  containers:
+    - name: escritor
+      image: alpine
+      command: ["sh", "-c", "echo 'dato persistente' > /datos/registro.txt; sleep 3600"]
+      volumeMounts:
+        - name: almacenamiento
+          mountPath: /datos
+  volumes:
+    - name: almacenamiento
+      persistentVolumeClaim:
+        claimName: datos-app
+EOF
+kubectl apply -f pod-con-volumen.yaml
+kubectl wait --for=condition=Ready pod/escritor --timeout=30s
+kubectl exec escritor -- cat /datos/registro.txt
+```
+
+**Explicación línea por línea:** el PVC `datos-app` solicita 1Gi sin especificar dónde vive físicamente; el Pod `escritor` lo monta en `/datos` y escribe un archivo que debe sobrevivir aunque el Pod se elimine y se recree, siempre que reference el mismo PVC.
+
+Elimina el Pod y confirma que el dato persiste al recrearlo apuntando al mismo PVC:
+
+```bash
+kubectl delete pod escritor
+kubectl apply -f pod-con-volumen.yaml
+kubectl wait --for=condition=Ready pod/escritor --timeout=30s
+kubectl exec escritor -- cat /datos/registro.txt
+```
+
+**Resultado esperado:** tras eliminar y recrear el Pod, `cat /datos/registro.txt` sigue mostrando "dato persistente", confirmando que el PVC (y el PV que lo respalda) sobrevivió a la eliminación del Pod, exactamente como un volumen gestionado de Docker (Módulo 2) sobrevive a `docker rm`.
+
+**Fallo deliberado:** elimina el PVC directamente (`kubectl delete pvc datos-app`) antes de recrear el Pod. El nuevo Pod queda en estado `Pending` porque su volumen referenciado ya no existe — diagnostica con `kubectl describe pod escritor` revisando el evento que menciona el PVC faltante.
+
+#### Construcción RutaFlow: persistencia de la base de datos del proyecto
+
+`datos-app` es el patrón que RutaFlow combinará con un StatefulSet (Tema 6) para que cada réplica de su base de datos mantenga su propio PVC independiente, aprovisionado dinámicamente por la StorageClass del clúster.
+
+#### Paso 5 · Práctica guiada
+
+Ejecuta `kubectl get pv` y localiza el Persistent Volume que fue creado automáticamente para satisfacer el PVC `datos-app`; confirma que su tamaño coincide con lo solicitado. **Pista:** el nombre del PV suele generarse automáticamente con un prefijo relacionado con el aprovisionador dinámico.
+
+#### Paso 6 · Práctica independiente
+
+Investiga con `kubectl get storageclass` qué StorageClass es la predeterminada en tu clúster local (`kind` normalmente incluye una llamada `standard`), y documenta qué cambiaría si tu clúster tuviera múltiples StorageClasses disponibles (por ejemplo, una para SSD rápido y otra para almacenamiento económico).
+
+#### Paso 7 · Cierre y evidencia
+
+Ya separas la solicitud de almacenamiento de una aplicación de los detalles físicos de dónde vive ese almacenamiento. Esto cierra el módulo de fundamentos de Kubernetes; el siguiente módulo profundiza en configuración avanzada del clúster. **Evidencia:** entrega el contenido del archivo persistente antes y después de eliminar y recrear el Pod, y el resultado del Pod en `Pending` tras eliminar el PVC. Fuente oficial: [Kubernetes — Persistent Volumes](https://kubernetes.io/docs/concepts/storage/persistent-volumes/).
+
+**Errores comunes:** eliminar un PVC pensando que solo afecta al Pod actual, sin considerar que cualquier Pod futuro que lo referencie quedará sin poder programarse; asumir que todos los `accessModes` permiten múltiples Pods escribiendo simultáneamente (`ReadWriteOnce` no lo permite).
+
+**Cuándo no usarlo:** para datos verdaderamente temporales que no necesitan sobrevivir al Pod (cachés locales, archivos de trabajo intermedios), un volumen `emptyDir` es más simple que un PVC completo; el límite de un PVC es cuando la persistencia real más allá del ciclo de vida del Pod es un requisito genuino.
 
 ---
 
@@ -203,26 +642,26 @@ StatefulSet "mi-base" (3 réplicas)
 
 **Objetivo del laboratorio:** crear un clúster local con `kind` o `minikube`, desplegar una aplicación propia con un Deployment de 3 réplicas, exponerla con un Service, inyectar configuración con ConfigMap y Secret, y observar la auto-reparación de un Pod eliminado manualmente.
 
-**Requisitos previos:** Docker instalado, `kubectl` instalado, y `kind` o `minikube` instalado para crear un clúster local de pruebas.
+**Requisitos previos:** Docker instalado, `kubectl` instalado, y `kind` o `minikube` instalado.
 
 | Paso | Acción | Comando | Explicación | Salida esperada |
 |---|---|---|---|---|
-| 1 | Crear un clúster local | `kind create cluster --name mi-cluster` (o `minikube start`) | Levanta un clúster Kubernetes completo dentro de contenedores Docker en tu propia máquina | El comando termina confirmando que el clúster está listo |
-| 2 | Verificar el clúster | `kubectl get nodes` | Confirma que `kubectl` puede comunicarse con el clúster recién creado | Al menos un nodo listado con estado `Ready` |
-| 3 | Crear el ConfigMap y el Secret | `kubectl create configmap config-app --from-literal=LOG_LEVEL=info`<br>`kubectl create secret generic db-creds --from-literal=password=secreto` | Prepara la configuración que el Deployment va a consumir | Ambos objetos se crean sin error |
-| 4 | Definir y aplicar el Deployment | Crea un archivo YAML con un Deployment de 3 réplicas de tu propia imagen, inyectando `LOG_LEVEL` y `password` como variables de entorno desde el ConfigMap y el Secret respectivamente, y aplícalo con `kubectl apply -f deployment.yaml` | Despliega la aplicación con su configuración externalizada | `kubectl get pods` muestra 3 Pods en estado `Running` |
-| 5 | Exponer el Deployment con un Service | Crea un archivo YAML con un Service tipo `ClusterIP` con `selector: { app: mi-api }`, y aplícalo | Da una dirección estable de acceso a las 3 réplicas | `kubectl get services` muestra el Service con una IP de clúster asignada |
-| 6 | Acceder al Service desde tu máquina | `kubectl port-forward service/mi-api 8080:80` | Redirige temporalmente el puerto del Service a tu máquina local para poder probarlo directamente | Puedes acceder a `http://localhost:8080` y recibir respuesta de la aplicación |
-| 7 | Eliminar un Pod manualmente | `kubectl delete pod <nombre-de-uno-de-los-pods>` | Simula un fallo para observar la auto-reparación | El Pod eliminado desaparece de inmediato |
-| 8 | Verificar la auto-reparación | `kubectl get pods` (repetido varias veces en los segundos siguientes) | El ReplicaSet detrás del Deployment detecta la discrepancia y crea un Pod nuevo automáticamente | Vuelve a haber exactamente 3 Pods en estado `Running`, uno de ellos con un nombre nuevo y un tiempo de vida (`AGE`) menor que los demás |
+| 1 | Crear un clúster local | `kind create cluster --name mi-cluster` | Levanta un clúster Kubernetes en contenedores Docker locales | El clúster queda listo |
+| 2 | Verificar el clúster | `kubectl get nodes` | Confirma comunicación con el clúster | Al menos un nodo en estado `Ready` |
+| 3 | Crear ConfigMap y Secret | `kubectl create configmap`/`kubectl create secret` | Prepara la configuración a consumir | Ambos objetos se crean sin error |
+| 4 | Definir y aplicar el Deployment | YAML con 3 réplicas inyectando ambos como variables | Despliega con configuración externalizada | `kubectl get pods` muestra 3 Pods `Running` |
+| 5 | Exponer con un Service | YAML `ClusterIP` con `selector: { app: mi-api }` | Da dirección estable a las 3 réplicas | El Service tiene IP de clúster asignada |
+| 6 | Acceder desde tu máquina | `kubectl port-forward service/mi-api 8080:80` | Redirige el puerto localmente | `http://localhost:8080` responde |
+| 7 | Eliminar un Pod manualmente | `kubectl delete pod <nombre>` | Simula un fallo | El Pod desaparece de inmediato |
+| 8 | Verificar auto-reparación | `kubectl get pods` repetido | El ReplicaSet crea un Pod nuevo automáticamente | Vuelve a haber 3 Pods `Running` |
 
-**Verificación:** el laboratorio se considera exitoso si, tras eliminar manualmente un Pod, `kubectl get pods` muestra que el número de réplicas vuelve automáticamente a 3 sin ninguna intervención manual adicional, confirmando el comportamiento de reconciliación continua del ReplicaSet gestionado por el Deployment.
+**Verificación:** el laboratorio se considera exitoso si, tras eliminar un Pod, `kubectl get pods` muestra que el número vuelve automáticamente a 3 sin intervención manual.
 
 **Errores comunes y soluciones**
 
-- **`kubectl get nodes` no muestra ningún nodo, o reporta error de conexión.** Verifica que el clúster local (`kind` o `minikube`) realmente terminó de arrancar, y que tu contexto de `kubectl` (`kubectl config current-context`) apunta al clúster recién creado, no a uno distinto configurado previamente.
-- **Los Pods del Deployment quedan en estado `ImagePullBackOff`.** Si tu imagen es local y no está publicada en un registry accesible desde el clúster, `kind` requiere cargarla explícitamente con `kind load docker-image <tu-imagen> --name mi-cluster` antes de que los Pods puedan usarla.
-- **El Service no enruta tráfico a ningún Pod (`kubectl describe service` muestra 0 endpoints).** Revisa que el `selector` del Service coincide exactamente con las etiquetas (`labels`) definidas en la plantilla de Pods del Deployment; un desajuste de etiquetas es la causa más común de un Service sin endpoints.
-- **El Pod nuevo tras `kubectl delete pod` no aparece, o el conteo de réplicas queda en menos de 3 permanentemente.** Ejecuta `kubectl describe deployment mi-api` y revisa la sección de eventos; frecuentemente indica un problema de recursos insuficientes en el clúster local, o un error persistente en la imagen que impide que el Pod de reemplazo llegue a estado `Running`.
+- **`kubectl get nodes` no muestra ningún nodo.** Verifica que el clúster terminó de arrancar y que `kubectl config current-context` apunta al correcto.
+- **Los Pods quedan en `ImagePullBackOff`.** Si tu imagen es local, cárgala con `kind load docker-image <imagen> --name mi-cluster`.
+- **El Service no enruta tráfico (`0 endpoints`).** Revisa que el `selector` coincide exactamente con las etiquetas del Deployment.
+- **El Pod nuevo no aparece tras `delete`.** Revisa `kubectl describe deployment mi-api` en busca de eventos de recursos insuficientes.
 
 ---

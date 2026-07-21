@@ -4308,7 +4308,7 @@
     },
     {
       "path": "web/public/content/devops/modulo-6.md",
-      "lines": 229,
+      "lines": 668,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -4316,13 +4316,15 @@
         "# M\u00f3dulo 6: Kubernetes \u2014 fundamentos",
         "## Aprende construyendo",
         "### Tema 1: Pod, ReplicaSet, Deployment",
-        "### Tema 2: Service (ClusterIP, NodePort, LoadBalancer)",
-        "### Tema 3: ConfigMaps y Secrets",
-        "### Tema 4: kubectl esencial",
-        "### Tema 5: Namespaces",
-        "### Tema 6: StatefulSets, DaemonSets, Jobs y CronJobs",
-        "### Tema 7: Persistent Volumes, PVCs y StorageClasses",
-        "## Laboratorio pr\u00e1ctico"
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
+        "#### Paso 2 \u00b7 Contexto y caso real",
+        "#### Paso 3 \u00b7 Teor\u00eda con analog\u00eda",
+        "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
+        "#### Construcci\u00f3n RutaFlow: gesti\u00f3n declarativa del backend",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
+        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
+        "#### Paso 7 \u00b7 Cierre y evidencia",
+        "### Tema 2: Service (ClusterIP, NodePort, LoadBalancer)"
       ]
     },
     {
