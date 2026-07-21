@@ -15,6 +15,28 @@ Esto significa que en este módulo vas a practicar el ciclo de vida completo del
 
 **¿Por qué es importante?** Practicar el plano de control de ELB v2 te prepara para el mismo flujo de trabajo con Terraform/CDK que usarías contra AWS real: definir grupos objetivo, listeners y reglas es idéntico: solo cambia que en Floci el tráfico real todavía no atraviesa el balanceador.
 
+**Practícalo tú:**
+
+```bash
+# archivo: src/labs/modulo-22/tema-1-alb.sh — ejecutar con: bash tema-1-alb.sh
+LB_ARN=$(aws elbv2 create-load-balancer --name rutaflow-alb --type application --scheme internet-facing \
+  --query 'LoadBalancers[0].LoadBalancerArn' --output text)
+TG_ARN=$(aws elbv2 create-target-group --name rutaflow-objetivos --protocol HTTP --port 80 --target-type instance \
+  --query 'TargetGroups[0].TargetGroupArn' --output text)
+LISTENER_ARN=$(aws elbv2 create-listener --load-balancer-arn "$LB_ARN" --protocol HTTP --port 80 \
+  --default-actions Type=forward,TargetGroupArn="$TG_ARN" --query 'Listeners[0].ListenerArn' --output text)
+aws elbv2 create-rule --listener-arn "$LISTENER_ARN" --priority 10 \
+  --conditions Field=path-pattern,Values='/api/*' --actions Type=forward,TargetGroupArn="$TG_ARN"
+```
+
+**Resultado esperado:** cada comando devuelve su ARN (`LoadBalancerArn`, `TargetGroupArn`, `ListenerArn`, `RuleArn`); `aws elbv2 describe-target-health --target-group-arn $TG_ARN` siempre devuelve estado `initial` — recuerda que Floci aún no enruta tráfico real (Fase 2 pendiente).
+
+**Modifica esto:** registra una instancia real del Módulo 21 con `register-targets` y confirma con `describe-target-groups` que aparece asociada, aunque su salud siga `initial`.
+
+**Cuándo no usarlo:** no uses `describe-target-health` de Floci para validar que tu aplicación responde de verdad; eso solo lo confirmas contra un ALB real o probando la instancia directamente.
+
+**Cómo crece RutaFlow:** este ALB es el punto de entrada que balanceará tráfico hacia los nodos de reparto de RutaFlow en cuanto tengas más de una instancia activa.
+
 ### Tema 2: ACM — certificados TLS con criptografía real
 
 **Conceptos clave:** emisión automática, criptografía real (RSA/EC), tipos `AMAZON_ISSUED` vs `PRIVATE`.
@@ -26,6 +48,24 @@ Esta combinación —emisión instantánea, pero con criptografía verdadera— 
 **Analogía:** ACM en Floci es como un notario de práctica en una escuela de derecho: emite documentos con formato y firma perfectamente válidos técnicamente, de forma instantánea, sin el proceso de verificación de identidad completo que exigiría un notario real.
 
 **¿Por qué es importante?** Tener certificados reales pero de emisión instantánea te permite practicar arquitecturas HTTPS-first (la única forma correcta de construir en la nube hoy) sin fricción, algo que sería mucho más lento de ensayar contra AWS real cada vez.
+
+**Practícalo tú:**
+
+```bash
+# archivo: src/labs/modulo-22/tema-2-acm.sh — ejecutar con: bash tema-2-acm.sh
+CERT_ARN=$(aws acm request-certificate --domain-name rutaflow.example.com --validation-method DNS \
+  --query 'CertificateArn' --output text)
+aws acm describe-certificate --certificate-arn "$CERT_ARN" --query 'Certificate.Status' --output text
+aws acm get-certificate --certificate-arn "$CERT_ARN"
+```
+
+**Resultado esperado:** `describe-certificate` devuelve `ISSUED` de inmediato; `get-certificate` devuelve un PEM real con una cadena X.509 válida — puedes verificarlo pasando el `Certificate` devuelto a `openssl x509 -noout -text`.
+
+**Modifica esto:** repite la solicitud con `--certificate-authority-arn <arn>` (tipo `PRIVATE`) y confirma que ahora sí puedes exportar la clave privada con `export-certificate`, algo que un certificado `AMAZON_ISSUED` no permite.
+
+**Cuándo no usarlo:** no confíes en la emisión instantánea como comportamiento realista de tiempos; en AWS real la validación DNS puede tardar minutos, y tu automatización debe esperar el evento correspondiente, no asumir éxito inmediato.
+
+**Cómo crece RutaFlow:** este certificado es el que adjuntarás al listener HTTPS del ALB de RutaFlow para servir su API de seguimiento por TLS.
 
 ### Tema 3: CloudFront — distribución de contenido y control de acceso al origen
 
@@ -39,6 +79,25 @@ Un detalle de comportamiento importante: todas las operaciones de mutación (`PU
 
 **¿Por qué es importante?** Practicar la configuración de políticas de caché, orígenes y control de acceso es la parte que más se diseña con cuidado en una arquitectura CDN real; el volumen de tráfico que efectivamente sirve CloudFront es una preocupación operativa distinta que se valida contra AWS real.
 
+**Practícalo tú:**
+
+```bash
+# archivo: src/labs/modulo-22/tema-3-cloudfront.sh — ejecutar con: bash tema-3-cloudfront.sh
+DIST_ID=$(aws cloudfront create-distribution --distribution-config \
+  '{"CallerReference":"rutaflow-1","Enabled":true,"Origins":{"Quantity":1,"Items":[{"Id":"origen-s3","DomainName":"curso-cloud-local.s3.amazonaws.com","S3OriginConfig":{"OriginAccessIdentity":""}}]},"DefaultCacheBehavior":{"TargetOriginId":"origen-s3","ViewerProtocolPolicy":"redirect-to-https","CachePolicyId":"658327ea-f89d-4fab-a63d-7e88639e58f6"}}' \
+  --query 'Distribution.Id' --output text)
+aws cloudfront create-invalidation --distribution-id "$DIST_ID" \
+  --invalidation-batch '{"Paths":{"Quantity":1,"Items":["/*"]},"CallerReference":"inv-1"}'
+```
+
+**Resultado esperado:** `create-distribution` devuelve estado `Deployed` de inmediato y un `DomainName` tipo `{id}.cloudfront.net`; la invalidación se marca `Completed` sin esperar propagación real.
+
+**Modifica esto:** intenta borrar la distribución directamente con `aws cloudfront delete-distribution --id $DIST_ID --if-match <etag>` sin deshabilitarla antes, y observa el error `DistributionNotDisabled` — corrígelo llamando primero a `update-distribution` con `Enabled=false`.
+
+**Cuándo no usarlo:** no midas aquí latencia de entrega de contenido ni comportamiento de caché de borde real; Floci solo emula el plano de gestión, no la red de distribución física.
+
+**Cómo crece RutaFlow:** esta distribución serviría los assets estáticos del panel de seguimiento de RutaFlow, reusando el mismo origen S3 de módulos anteriores.
+
 ### Tema 4: Route53 — zonas alojadas y registros de recursos
 
 **Conceptos clave:** zona alojada, registro SOA/NS, `ChangeResourceRecordSets`, comprobación de estado (health check).
@@ -51,6 +110,25 @@ Un detalle útil para depurar: los IDs de zona alojada se devuelven con el prefi
 
 **¿Por qué es importante?** El plano de gestión de DNS es donde se cometen la mayoría de los errores de configuración reales (registros mal apuntados, TTLs incorrectos, zonas huérfanas); practicarlo aquí sin miedo a romper resolución de producción es exactamente el tipo de práctica segura que justifica un emulador local.
 
+**Practícalo tú:**
+
+```bash
+# archivo: src/labs/modulo-22/tema-4-route53.sh — ejecutar con: bash tema-4-route53.sh
+ZONE_ID=$(aws route53 create-hosted-zone --name rutaflow.example.com --caller-reference "$(date +%s)" \
+  --query 'HostedZone.Id' --output text)
+aws route53 change-resource-record-sets --hosted-zone-id "$ZONE_ID" --change-batch \
+  '{"Changes":[{"Action":"CREATE","ResourceRecordSet":{"Name":"rutaflow.example.com.","Type":"CNAME","TTL":300,"ResourceRecords":[{"Value":"d111111abcdef8.cloudfront.net"}]}}]}'
+aws route53 list-resource-record-sets --hosted-zone-id "$ZONE_ID"
+```
+
+**Resultado esperado:** la zona nace con registros `SOA` y `NS` automáticos en el vértice; el cambio del `CNAME` devuelve estado `INSYNC` de inmediato; `list-resource-record-sets` muestra los tres registros juntos.
+
+**Modifica esto:** intenta borrar el registro `SOA` del vértice con `Action: DELETE` y confirma que Route53 lo rechaza — esos registros los gestiona el servicio automáticamente, no tú.
+
+**Cuándo no usarlo:** no resuelvas el dominio desde tu navegador esperando que funcione; Floci guarda y valida la configuración, pero no ejecuta resolución DNS real.
+
+**Cómo crece RutaFlow:** esta zona es la que apuntará `rutaflow.example.com` hacia el ALB o la distribución que sirve el proyecto integrador.
+
 ### Tema 5: Cómo se integran los cuatro servicios en una arquitectura de borde real
 
 **Conceptos clave:** cadena ACM → ALB/CloudFront → Route53, alias record, terminación TLS.
@@ -62,6 +140,24 @@ Reconocer esta cadena de dependencias —certificado, punto de entrada de tráfi
 **Analogía:** ACM es la credencial de identidad verificada de tu negocio, el ALB o CloudFront es la puerta de entrada física con esa credencial exhibida, y Route53 es la dirección postal que le dice a los clientes hacia dónde caminar para llegar a esa puerta.
 
 **¿Por qué es importante?** Diseñar pensando en esta cadena completa —no solo en un servicio aislado— es lo que separa a alguien que sabe usar comandos de AWS de alguien que sabe diseñar arquitecturas de borde coherentes y seguras.
+
+**Practícalo tú:**
+
+```bash
+# archivo: src/labs/modulo-22/tema-5-cadena-completa.sh — ejecutar con: bash tema-5-cadena-completa.sh
+aws acm describe-certificate --certificate-arn "$CERT_ARN" --query 'Certificate.Status'
+aws elbv2 modify-listener --listener-arn "$LISTENER_ARN" --protocol HTTPS --port 443 \
+  --certificates CertificateArn="$CERT_ARN"
+aws route53 list-resource-record-sets --hosted-zone-id "$ZONE_ID" --query "ResourceRecordSets[?Type=='CNAME']"
+```
+
+**Resultado esperado:** el certificado sigue `ISSUED`; el listener queda en `HTTPS`/443 con el certificado adjunto; el registro DNS del Tema 4 sigue apuntando al punto de entrada — la cadena completa queda verificable con tres llamadas de solo lectura y una de modificación.
+
+**Modifica esto:** cambia el `CNAME` del Tema 4 para que apunte al `DomainName` del ALB en vez de al de CloudFront, y confirma que `list-resource-record-sets` refleja el nuevo destino.
+
+**Cuándo no usarlo:** no repliques esta cadena completa por cada microservicio de un sistema grande; en arquitecturas reales normalmente compartes un ALB/CloudFront y un certificado wildcard entre varios servicios para reducir piezas a coordinar.
+
+**Cómo crece RutaFlow:** esta es exactamente la cadena (certificado → punto de entrada → DNS) que RutaFlow necesita para exponer su API de seguimiento de forma segura al cierre del track.
 
 ---
 

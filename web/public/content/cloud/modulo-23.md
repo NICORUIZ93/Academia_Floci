@@ -15,6 +15,25 @@ El patrón más común para usar un caché es cache-aside: la aplicación primer
 
 **¿Por qué es importante?** Saber reconocer cuándo un problema es "de lectura repetida sobre datos que cambian poco" —el caso ideal para caché— frente a "de datos que cambian todo el tiempo" es la decisión de diseño más importante antes de añadir esta pieza a una arquitectura, más importante que cualquier detalle de configuración.
 
+**Practícalo tú:**
+
+```bash
+# archivo: src/labs/modulo-23/tema-1-cache-aside.sh — ejecutar con: bash tema-1-cache-aside.sh
+PUERTO=$(aws elasticache describe-replication-groups --replication-group-id rutaflow-cache \
+  --query 'ReplicationGroups[0].NodeGroups[0].PrimaryEndpoint.Port' --output text)
+redis-cli -h localhost -p "$PUERTO" get usuario:1 || \
+  redis-cli -h localhost -p "$PUERTO" set usuario:1 '{"nombre":"Ana"}' EX 60
+redis-cli -h localhost -p "$PUERTO" get usuario:1
+```
+
+**Resultado esperado:** la primera lectura falla (cache miss), así que el script guarda el valor con TTL de 60 s; la segunda `get` lo devuelve directamente (cache hit) sin volver a tocar ninguna base de datos.
+
+**Modifica esto:** repite el `get` después de 60 segundos y confirma que el valor ya no está — reconstrúyelo consultando "la base de datos" (en este ejercicio, el mismo JSON) y guárdalo de nuevo con `SET ... EX`.
+
+**Cuándo no usarlo:** no apliques cache-aside a datos que deban leerse siempre actualizados al instante (saldo de una cuenta antes de una transferencia, por ejemplo); ahí la inconsistencia temporal del caché es inaceptable.
+
+**Cómo crece RutaFlow:** este patrón cachea la posición GPS más reciente de un repartidor de RutaFlow para no golpear la base de datos en cada refresco del mapa.
+
 ### Tema 2: Arquitectura de ElastiCache en Floci — contenedores reales, no simulación
 
 **Conceptos clave:** contenedor Valkey/Redis real, proxy TCP, `CreateReplicationGroup`.
@@ -26,6 +45,23 @@ Esto tiene una implicación práctica directa: todo lo que sabes sobre comandos 
 **Analogía:** ElastiCache en Floci es como practicar con el mismo modelo de instrumento musical que usarás en el concierto real, solo que ensayando en tu casa en vez de en la sala de conciertos: la técnica que desarrollas se transfiere directamente.
 
 **¿Por qué es importante?** Que el motor sea real —no una reimplementación aproximada del protocolo Redis— es lo que garantiza que comandos avanzados, estructuras de datos complejas y comportamientos de expiración se comporten exactamente igual que en producción, sin sorpresas al migrar.
+
+**Practícalo tú:**
+
+```bash
+# archivo: src/labs/modulo-23/tema-2-contenedor-real.sh — ejecutar con: bash tema-2-contenedor-real.sh
+aws elasticache create-replication-group \
+  --replication-group-id rutaflow-cache --replication-group-description "Cache de RutaFlow"
+docker ps | grep valkey
+```
+
+**Resultado esperado:** `docker ps` muestra un contenedor real `valkey/valkey:8` corriendo — la prueba de que `CreateReplicationGroup` no es un registro simulado, sino un servidor Redis/Valkey real que puedes inspeccionar con las mismas herramientas de Docker que usaste en el Módulo 21.
+
+**Modifica esto:** conéctate con `docker exec -it <container-id> valkey-cli info server` y busca el campo `redis_version` — confirma que es el motor real, no una reimplementación del protocolo.
+
+**Cuándo no usarlo:** no asumas que el rendimiento medido aquí (un solo contenedor en tu laptop) predice la latencia de un ElastiCache real con réplicas distribuidas geográficamente; para eso necesitas medir contra AWS real.
+
+**Cómo crece RutaFlow:** `rutaflow-cache` es el clúster que usará el resto del track para cachear consultas repetidas del panel de seguimiento.
 
 ### Tema 3: Creación de clústeres y conexión con clientes estándar
 
@@ -39,6 +75,23 @@ Eliminar el clúster (`DeleteReplicationGroup`) detiene y elimina el contenedor 
 
 **¿Por qué es importante?** Este patrón de "no hardcodees el puerto, consúltalo" es exactamente el que necesitas para escribir código de aplicación robusto que no se rompa si en algún momento cambia la configuración de rango de puertos de tu entorno de Floci.
 
+**Practícalo tú:**
+
+```bash
+# archivo: src/labs/modulo-23/tema-3-puerto-dinamico.sh — ejecutar con: bash tema-3-puerto-dinamico.sh
+PUERTO=$(aws elasticache describe-replication-groups --replication-group-id rutaflow-cache \
+  --query 'ReplicationGroups[0].NodeGroups[0].PrimaryEndpoint.Port' --output text)
+redis-cli -h localhost -p "$PUERTO" ping
+```
+
+**Resultado esperado:** `describe-replication-groups` devuelve un número de puerto dentro del rango 6379–6399; `redis-cli ping` contra ese puerto responde `PONG`.
+
+**Modifica esto:** crea un segundo clúster (`rutaflow-cache-2`) y confirma que `describe-replication-groups` le asigna un puerto distinto al primero — la prueba de que no puedes asumir un puerto fijo.
+
+**Cuándo no usarlo:** no hardcodees `6379` en tu aplicación pensando que siempre será ese puerto; en Floci, con varios clústeres activos, ya viste que no lo es.
+
+**Cómo crece RutaFlow:** el servicio de RutaFlow lee este puerto dinámicamente desde `describe-replication-groups` al arrancar, en vez de asumirlo fijo en su configuración.
+
 ### Tema 4: Autenticación IAM para el plano de datos de ElastiCache
 
 **Conceptos clave:** usuario ElastiCache, cadena de acceso (access string), `ValidateIamAuthToken`.
@@ -50,6 +103,23 @@ Este es el mismo principio de seguridad que ya viste con roles IAM para Lambda o
 **Analogía:** un usuario ElastiCache con auth IAM es como un guardia de seguridad que en vez de pedirte una llave física que podrías perder o prestar, verifica tu identificación institucional vigente en el momento — mucho más difícil de robar o reutilizar indebidamente.
 
 **¿Por qué es importante?** Adoptar autenticación IAM en vez de contraseñas de Redis hardcodeadas es una de las mejoras de seguridad más directas que puedes aplicar a una arquitectura de caché en producción real.
+
+**Practícalo tú:**
+
+```bash
+# archivo: src/labs/modulo-23/tema-4-usuario-iam.sh — ejecutar con: bash tema-4-usuario-iam.sh
+aws elasticache create-user --user-id alice --user-name alice --engine redis \
+  --access-string "on ~* +@all" --no-no-password-required
+aws elasticache describe-users --query "Users[?UserId=='alice']"
+```
+
+**Resultado esperado:** `describe-users` muestra a `alice` con `AccessString: "on ~* +@all"` y autenticación IAM habilitada, sin ninguna contraseña estática almacenada.
+
+**Modifica esto:** crea un segundo usuario con una cadena de acceso restringida (`"on ~pedidos:* +get +set"`) y compárala con la de `alice`: ese es el patrón RBAC de Redis limitando qué claves y comandos puede usar cada identidad.
+
+**Cuándo no usarlo:** no mezcles usuarios con contraseña fija y usuarios IAM en el mismo clúster sin una razón clara; complica la auditoría de quién accedió con qué mecanismo.
+
+**Cómo crece RutaFlow:** `alice` representa el servicio de RutaFlow que lee y escribe posiciones en caché sin guardar ningún secreto de Redis en su configuración.
 
 ---
 

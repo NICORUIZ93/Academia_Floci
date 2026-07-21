@@ -145,7 +145,7 @@
     },
     {
       "path": "docs/code-visual-quality.json",
-      "lines": 5159,
+      "lines": 5026,
       "kind": "project-file",
       "symbols": [],
       "imports": [],
@@ -172,7 +172,7 @@
     },
     {
       "path": "docs/editorial-backlog.md",
-      "lines": 57,
+      "lines": 53,
       "kind": "documentation",
       "symbols": [],
       "imports": [],
@@ -3683,7 +3683,7 @@
     },
     {
       "path": "web/public/content/cloud/modulo-22.md",
-      "lines": 107,
+      "lines": 203,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -3691,18 +3691,20 @@
         "# M\u00f3dulo 22: Balanceo de carga, CDN y DNS \u2014 ELB, CloudFront, Route53 y ACM",
         "## Aprende construyendo",
         "### Tema 1: ELB v2 \u2014 balanceadores, grupos objetivo y reglas",
+        "# archivo: src/labs/modulo-22/tema-1-alb.sh \u2014 ejecutar con: bash tema-1-alb.sh",
         "### Tema 2: ACM \u2014 certificados TLS con criptograf\u00eda real",
+        "# archivo: src/labs/modulo-22/tema-2-acm.sh \u2014 ejecutar con: bash tema-2-acm.sh",
         "### Tema 3: CloudFront \u2014 distribuci\u00f3n de contenido y control de acceso al origen",
+        "# archivo: src/labs/modulo-22/tema-3-cloudfront.sh \u2014 ejecutar con: bash tema-3-cloudfront.sh",
         "### Tema 4: Route53 \u2014 zonas alojadas y registros de recursos",
+        "# archivo: src/labs/modulo-22/tema-4-route53.sh \u2014 ejecutar con: bash tema-4-route53.sh",
         "### Tema 5: C\u00f3mo se integran los cuatro servicios en una arquitectura de borde real",
-        "## Laboratorio pr\u00e1ctico",
-        "### Laboratorio 22.1 \u2014 Application Load Balancer con enrutamiento por ruta",
-        "### Laboratorio 22.2 \u2014 Certificado, distribuci\u00f3n CDN y zona DNS"
+        "# archivo: src/labs/modulo-22/tema-5-cadena-completa.sh \u2014 ejecutar con: bash tema-5-cadena-completa.sh"
       ]
     },
     {
       "path": "web/public/content/cloud/modulo-23.md",
-      "lines": 92,
+      "lines": 162,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -3710,17 +3712,20 @@
         "# M\u00f3dulo 23: Cach\u00e9 en memoria con ElastiCache",
         "## Aprende construyendo",
         "### Tema 1: Qu\u00e9 resuelve un cach\u00e9 en memoria \u2014 y cu\u00e1ndo no ayuda",
+        "# archivo: src/labs/modulo-23/tema-1-cache-aside.sh \u2014 ejecutar con: bash tema-1-cache-aside.sh",
         "### Tema 2: Arquitectura de ElastiCache en Floci \u2014 contenedores reales, no simulaci\u00f3n",
+        "# archivo: src/labs/modulo-23/tema-2-contenedor-real.sh \u2014 ejecutar con: bash tema-2-contenedor-real.sh",
         "### Tema 3: Creaci\u00f3n de cl\u00fasteres y conexi\u00f3n con clientes est\u00e1ndar",
+        "# archivo: src/labs/modulo-23/tema-3-puerto-dinamico.sh \u2014 ejecutar con: bash tema-3-puerto-dinamico.sh",
         "### Tema 4: Autenticaci\u00f3n IAM para el plano de datos de ElastiCache",
+        "# archivo: src/labs/modulo-23/tema-4-usuario-iam.sh \u2014 ejecutar con: bash tema-4-usuario-iam.sh",
         "## Laboratorio pr\u00e1ctico",
-        "### Laboratorio 23.1 \u2014 Cl\u00faster ElastiCache con cache-aside",
-        "### Laboratorio 23.2 \u2014 Usuario con autenticaci\u00f3n IAM"
+        "### Laboratorio 23.1 \u2014 Cl\u00faster ElastiCache con cache-aside"
       ]
     },
     {
       "path": "web/public/content/cloud/modulo-24.md",
-      "lines": 106,
+      "lines": 225,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -3728,18 +3733,20 @@
         "# M\u00f3dulo 24: CI/CD nativo de AWS con CodeBuild y CodeDeploy",
         "## Aprende construyendo",
         "### Tema 1: CodeBuild \u2014 compilaciones reales dentro de contenedores Docker",
+        "# archivo: src/labs/modulo-24/tema-1-codebuild-real.sh \u2014 ejecutar con: bash tema-1-codebuild-real.sh",
         "### Tema 2: buildspec.yml \u2014 fases y artefactos",
+        "# archivo: src/labs/modulo-24/tema-2-fases.sh \u2014 ejecutar con: bash tema-2-fases.sh",
         "### Tema 3: CodeDeploy \u2014 aplicaciones, grupos y configuraciones predefinidas",
+        "# archivo: src/labs/modulo-24/tema-3-aplicacion-y-grupo.sh \u2014 ejecutar con: bash tema-3-aplicacion-y-grupo.sh",
         "### Tema 4: Despliegue Blue/Green de Lambda \u2014 cambio de tr\u00e1fico por alias",
+        "# archivo: src/labs/modulo-24/tema-4-canary-lambda.sh \u2014 ejecutar con: bash tema-4-canary-lambda.sh",
         "### Tema 5: Despliegue Blue/Green de ECS \u2014 cambio de tr\u00e1fico por listener ELB",
-        "## Laboratorio pr\u00e1ctico",
-        "### Laboratorio 24.1 \u2014 Compilaci\u00f3n real con CodeBuild",
-        "### Laboratorio 24.2 \u2014 Despliegue canary de Lambda con CodeDeploy"
+        "# archivo: src/labs/modulo-24/tema-5-blue-green-ecs.sh \u2014 ejecutar con: bash tema-5-blue-green-ecs.sh"
       ]
     },
     {
       "path": "web/public/content/cloud/modulo-25.md",
-      "lines": 107,
+      "lines": 202,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -3747,13 +3754,15 @@
         "# M\u00f3dulo 25: Gobierno, configuraci\u00f3n y continuidad \u2014 AWS Config, AppConfig y Backup",
         "## Aprende construyendo",
         "### Tema 1: AWS Config \u2014 rastrear reglas sobre tus recursos",
+        "# archivo: src/labs/modulo-25/tema-1-config-rule.sh \u2014 ejecutar con: bash tema-1-config-rule.sh",
         "### Tema 2: AppConfig \u2014 desplegar configuraci\u00f3n sin redeployar c\u00f3digo",
+        "# archivo: src/labs/modulo-25/tema-2-appconfig.sh \u2014 ejecutar con: bash tema-2-appconfig.sh",
         "### Tema 3: AppConfigData \u2014 el plano de datos que consume tu aplicaci\u00f3n",
+        "# archivo: src/labs/modulo-25/tema-3-appconfigdata.sh \u2014 ejecutar con: bash tema-3-appconfigdata.sh",
         "### Tema 4: AWS Backup \u2014 centralizar la pol\u00edtica de respaldo de m\u00faltiples servicios",
+        "# archivo: src/labs/modulo-25/tema-4-backup-plan.sh \u2014 ejecutar con: bash tema-4-backup-plan.sh",
         "### Tema 5: El ciclo de vida de un trabajo de respaldo",
-        "## Laboratorio pr\u00e1ctico",
-        "### Laboratorio 25.1 \u2014 Configuraci\u00f3n din\u00e1mica con AppConfig",
-        "### Laboratorio 25.2 \u2014 Plan de respaldo para DynamoDB"
+        "# archivo: src/labs/modulo-25/tema-5-ciclo-de-vida.sh \u2014 ejecutar con: bash tema-5-ciclo-de-vida.sh"
       ]
     },
     {

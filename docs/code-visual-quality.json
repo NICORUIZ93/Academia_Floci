@@ -13,13 +13,13 @@
     },
     "cloud": {
       "topics": 153,
-      "code": 99,
-      "commentedCode": 9,
+      "code": 118,
+      "commentedCode": 28,
       "mermaid": 14,
       "asciiVisual": 78,
       "misleadingDiagramLabel": 0,
-      "filePath": 28,
-      "runCommand": 104,
+      "filePath": 45,
+      "runCommand": 109,
       "officialSource": 1
     },
     "devops": {
@@ -771,139 +771,6 @@
       "topic": "Tema 1: El modelo de ejecución de EC2 — instancias que son contenedores Docker reales",
       "missingCode": false,
       "missingComments": true
-    },
-    {
-      "track": "cloud",
-      "module": 22,
-      "topic": "Tema 1: ELB v2 — balanceadores, grupos objetivo y reglas",
-      "missingCode": true,
-      "missingComments": false
-    },
-    {
-      "track": "cloud",
-      "module": 22,
-      "topic": "Tema 2: ACM — certificados TLS con criptografía real",
-      "missingCode": true,
-      "missingComments": false
-    },
-    {
-      "track": "cloud",
-      "module": 22,
-      "topic": "Tema 3: CloudFront — distribución de contenido y control de acceso al origen",
-      "missingCode": true,
-      "missingComments": false
-    },
-    {
-      "track": "cloud",
-      "module": 22,
-      "topic": "Tema 4: Route53 — zonas alojadas y registros de recursos",
-      "missingCode": true,
-      "missingComments": false
-    },
-    {
-      "track": "cloud",
-      "module": 22,
-      "topic": "Tema 5: Cómo se integran los cuatro servicios en una arquitectura de borde real",
-      "missingCode": true,
-      "missingComments": false
-    },
-    {
-      "track": "cloud",
-      "module": 23,
-      "topic": "Tema 1: Qué resuelve un caché en memoria — y cuándo no ayuda",
-      "missingCode": true,
-      "missingComments": false
-    },
-    {
-      "track": "cloud",
-      "module": 23,
-      "topic": "Tema 2: Arquitectura de ElastiCache en Floci — contenedores reales, no simulación",
-      "missingCode": true,
-      "missingComments": false
-    },
-    {
-      "track": "cloud",
-      "module": 23,
-      "topic": "Tema 3: Creación de clústeres y conexión con clientes estándar",
-      "missingCode": true,
-      "missingComments": false
-    },
-    {
-      "track": "cloud",
-      "module": 23,
-      "topic": "Tema 4: Autenticación IAM para el plano de datos de ElastiCache",
-      "missingCode": true,
-      "missingComments": false
-    },
-    {
-      "track": "cloud",
-      "module": 24,
-      "topic": "Tema 1: CodeBuild — compilaciones reales dentro de contenedores Docker",
-      "missingCode": true,
-      "missingComments": false
-    },
-    {
-      "track": "cloud",
-      "module": 24,
-      "topic": "Tema 2: buildspec.yml — fases y artefactos",
-      "missingCode": true,
-      "missingComments": false
-    },
-    {
-      "track": "cloud",
-      "module": 24,
-      "topic": "Tema 3: CodeDeploy — aplicaciones, grupos y configuraciones predefinidas",
-      "missingCode": true,
-      "missingComments": false
-    },
-    {
-      "track": "cloud",
-      "module": 24,
-      "topic": "Tema 4: Despliegue Blue/Green de Lambda — cambio de tráfico por alias",
-      "missingCode": true,
-      "missingComments": false
-    },
-    {
-      "track": "cloud",
-      "module": 24,
-      "topic": "Tema 5: Despliegue Blue/Green de ECS — cambio de tráfico por listener ELB",
-      "missingCode": true,
-      "missingComments": false
-    },
-    {
-      "track": "cloud",
-      "module": 25,
-      "topic": "Tema 1: AWS Config — rastrear reglas sobre tus recursos",
-      "missingCode": true,
-      "missingComments": false
-    },
-    {
-      "track": "cloud",
-      "module": 25,
-      "topic": "Tema 2: AppConfig — desplegar configuración sin redeployar código",
-      "missingCode": true,
-      "missingComments": false
-    },
-    {
-      "track": "cloud",
-      "module": 25,
-      "topic": "Tema 3: AppConfigData — el plano de datos que consume tu aplicación",
-      "missingCode": true,
-      "missingComments": false
-    },
-    {
-      "track": "cloud",
-      "module": 25,
-      "topic": "Tema 4: AWS Backup — centralizar la política de respaldo de múltiples servicios",
-      "missingCode": true,
-      "missingComments": false
-    },
-    {
-      "track": "cloud",
-      "module": 25,
-      "topic": "Tema 5: El ciclo de vida de un trabajo de respaldo",
-      "missingCode": true,
-      "missingComments": false
     },
     {
       "track": "cloud",

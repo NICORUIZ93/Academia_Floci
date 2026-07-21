@@ -15,6 +15,23 @@ En Floci, las reglas, grabadores y paquetes de conformidad se almacenan y se dev
 
 **¿Por qué es importante?** Practicar la creación de reglas, grabadores y paquetes de conformidad vía IaC es exactamente el mismo flujo de trabajo que usarías para desplegar gobierno de cumplimiento en una cuenta real, aunque la verificación de "¿de verdad cumple?" la debas validar contra AWS real antes de confiar en ella para producción.
 
+**Practícalo tú:**
+
+```bash
+# archivo: src/labs/modulo-25/tema-1-config-rule.sh — ejecutar con: bash tema-1-config-rule.sh
+aws configservice put-config-rule --config-rule '{"ConfigRuleName":"rutaflow-s3-versionado","Source":{"Owner":"AWS","SourceIdentifier":"S3_BUCKET_VERSIONING_ENABLED"}}'
+aws configservice describe-config-rules --query "ConfigRules[?ConfigRuleName=='rutaflow-s3-versionado']"
+aws configservice describe-compliance-by-config-rule --config-rule-names rutaflow-s3-versionado
+```
+
+**Resultado esperado:** la regla queda registrada y consultable con `describe-config-rules`; `describe-compliance-by-config-rule` devuelve `INSUFFICIENT_DATA` — recuerda que Floci no evalúa cumplimiento real, solo gestiona el plano de reglas.
+
+**Modifica esto:** agrupa esta regla dentro de un paquete de conformidad con `put-conformance-pack` y confirma con `describe-conformance-packs` que quedó asociada.
+
+**Cuándo no usarlo:** no reportes `INSUFFICIENT_DATA` como "cumple" en ningún dashboard real; es la ausencia de evaluación, no una aprobación.
+
+**Cómo crece RutaFlow:** esta regla es la que, contra AWS real, verificaría que el bucket de evidencias de entrega de RutaFlow siempre tenga versionado activo.
+
 ### Tema 2: AppConfig — desplegar configuración sin redeployar código
 
 **Conceptos clave:** aplicación, entorno, perfil de configuración, estrategia de despliegue.
@@ -26,6 +43,26 @@ Para efectivamente cambiar la configuración que ve tu aplicación, creas una es
 **Analogía:** AppConfig es como un panel de control central de un edificio inteligente donde puedes cambiar la temperatura objetivo de todos los termostatos con una sola actualización versionada y reversible, en vez de tener que ir físicamente a reprogramar cada termostato uno por uno.
 
 **¿Por qué es importante?** Separar "cambios de comportamiento" (configuración) de "cambios de código" (despliegue de artefactos) es lo que permite reaccionar en minutos —no en un ciclo completo de CI/CD— ante un feature flag que hay que desactivar urgentemente en producción.
+
+**Practícalo tú:**
+
+```bash
+# archivo: src/labs/modulo-25/tema-2-appconfig.sh — ejecutar con: bash tema-2-appconfig.sh
+APP_ID=$(aws appconfig create-application --name rutaflow-config --query 'Id' --output text)
+ENV_ID=$(aws appconfig create-environment --application-id "$APP_ID" --name dev --query 'Id' --output text)
+PROFILE_ID=$(aws appconfig create-configuration-profile --application-id "$APP_ID" \
+  --name feature-flags --location-uri hosted --type AWS.Freeform --query 'Id' --output text)
+aws appconfig create-hosted-configuration-version --application-id "$APP_ID" \
+  --configuration-profile-id "$PROFILE_ID" --content '{"modo_mantenimiento": false}' --content-type application/json
+```
+
+**Resultado esperado:** cada comando devuelve el ID correspondiente (`APP_ID`, `ENV_ID`, `PROFILE_ID`) y la versión de configuración queda registrada con `VersionNumber: 1`, lista para desplegarse.
+
+**Modifica esto:** crea una segunda versión con `"modo_mantenimiento": true` y despliega solo esa versión — confirma que la anterior sigue existiendo, versionada, para poder volver a ella.
+
+**Cuándo no usarlo:** no uses AppConfig para secretos (contraseñas, claves API); para eso está Secrets Manager o Parameter Store con cifrado, no configuración de aplicación en texto plano.
+
+**Cómo crece RutaFlow:** este feature flag activa o desactiva el modo mantenimiento del servicio de seguimiento de RutaFlow sin recompilar ni redesplegar código.
 
 ### Tema 3: AppConfigData — el plano de datos que consume tu aplicación
 
@@ -39,6 +76,24 @@ Este patrón de "sesión más polling eficiente" es exactamente lo que hace el S
 
 **¿Por qué es importante?** Separar explícitamente plano de gestión (quién despliega configuración) de plano de datos (cómo la consume la aplicación) es el mismo patrón arquitectónico que ya viste en otros servicios de AWS, y reconocerlo aquí refuerza esa intuición general.
 
+**Practícalo tú:**
+
+```bash
+# archivo: src/labs/modulo-25/tema-3-appconfigdata.sh — ejecutar con: bash tema-3-appconfigdata.sh
+TOKEN=$(aws appconfigdata start-configuration-session \
+  --application-identifier "$APP_ID" --environment-identifier "$ENV_ID" \
+  --configuration-profile-identifier "$PROFILE_ID" --query InitialConfigurationToken --output text)
+aws appconfigdata get-latest-configuration --configuration-token "$TOKEN"
+```
+
+**Resultado esperado:** tras desplegar la configuración del Tema 2, `get-latest-configuration` devuelve el JSON `{"modo_mantenimiento": false}` y un nuevo token para la siguiente consulta.
+
+**Modifica esto:** vuelve a llamar `get-latest-configuration` inmediatamente con el nuevo token, sin que haya cambiado nada, y confirma que el contenido viene vacío — así ahorra ancho de banda cuando no hay novedades.
+
+**Cuándo no usarlo:** no abras una sesión nueva en cada petición de tu aplicación; el patrón correcto es abrir una sesión una vez y reusar el token en cada consulta periódica.
+
+**Cómo crece RutaFlow:** el servicio de seguimiento de RutaFlow usa exactamente este flujo de sesión + polling para enterarse de cambios de configuración sin reiniciarse.
+
 ### Tema 4: AWS Backup — centralizar la política de respaldo de múltiples servicios
 
 **Conceptos clave:** bóveda de respaldo, plan de respaldo, selección de recursos, punto de recuperación.
@@ -51,6 +106,26 @@ Además de los respaldos programados por el plan, puedes iniciar un respaldo baj
 
 **¿Por qué es importante?** Centralizar la política de respaldo reduce drásticamente la probabilidad de que un servicio quede sin protección por descuido — un riesgo real y común en cuentas AWS que crecen orgánicamente sin una estrategia de respaldo unificada desde el principio.
 
+**Practícalo tú:**
+
+```bash
+# archivo: src/labs/modulo-25/tema-4-backup-plan.sh — ejecutar con: bash tema-4-backup-plan.sh
+aws backup create-backup-vault --backup-vault-name rutaflow-boveda
+PLAN_ID=$(aws backup create-backup-plan --backup-plan \
+  '{"BackupPlanName":"rutaflow-diario","Rules":[{"RuleName":"diario","TargetBackupVaultName":"rutaflow-boveda","ScheduleExpression":"cron(0 12 * * ? *)"}]}' \
+  --query 'BackupPlanId' --output text)
+aws backup create-backup-selection --backup-plan-id "$PLAN_ID" --backup-selection \
+  '{"SelectionName":"tablas-rutaflow","IamRoleArn":"arn:aws:iam::000000000000:role/backup-role","Resources":["arn:aws:dynamodb:us-east-1:000000000000:table/rutaflow-entregas"]}'
+```
+
+**Resultado esperado:** la bóveda, el plan y la selección quedan creados y encadenados; `aws backup list-backup-plans` muestra `rutaflow-diario` con su regla cron de las 12:00.
+
+**Modifica esto:** intenta borrar `rutaflow-boveda` con `delete-backup-vault` antes de tener ningún punto de recuperación — a diferencia del Tema 5, aquí sí debería funcionar porque todavía no hay puntos de recuperación que proteger.
+
+**Cuándo no usarlo:** no confíes en la ejecución real de datos de este respaldo: Floci gestiona el ciclo de vida del trabajo, pero no lee ni escribe los datos reales de la tabla DynamoDB referenciada.
+
+**Cómo crece RutaFlow:** este plan protege la tabla de entregas de RutaFlow con un respaldo diario automático, sin que nadie tenga que ejecutarlo a mano.
+
 ### Tema 5: El ciclo de vida de un trabajo de respaldo
 
 **Conceptos clave:** `CREATED → RUNNING → COMPLETED`, punto de recuperación, `StopBackupJob`.
@@ -62,6 +137,26 @@ Restricciones importantes a tener en cuenta: no puedes eliminar una bóveda que 
 **Analogía:** el ciclo de vida de un trabajo de respaldo es como el proceso de un banco al procesar un depósito: primero se registra la solicitud (`CREATED`), luego se procesa activamente (`RUNNING`), y finalmente queda confirmado y disponible en tu cuenta (`COMPLETED`) — no puedes cerrar la cuenta bancaria mientras haya depósitos pendientes de procesar.
 
 **¿Por qué es importante?** Entender que las restricciones de eliminación existen para prevenir pérdida accidental de datos de respaldo —no son limitaciones arbitrarias de la API— te ayuda a diseñar scripts de limpieza de infraestructura que respeten el orden correcto de dependencias.
+
+**Practícalo tú:**
+
+```bash
+# archivo: src/labs/modulo-25/tema-5-ciclo-de-vida.sh — ejecutar con: bash tema-5-ciclo-de-vida.sh
+JOB_ID=$(aws backup start-backup-job --backup-vault-name rutaflow-boveda \
+  --resource-arn arn:aws:dynamodb:us-east-1:000000000000:table/rutaflow-entregas \
+  --iam-role-arn arn:aws:iam::000000000000:role/backup-role --query 'BackupJobId' --output text)
+sleep 4
+aws backup describe-backup-job --backup-job-id "$JOB_ID" --query 'State'
+aws backup describe-backup-vault --backup-vault-name rutaflow-boveda --query 'NumberOfRecoveryPoints'
+```
+
+**Resultado esperado:** el trabajo pasa de `CREATED` a `RUNNING` y, tras ~3 segundos, a `COMPLETED`; `NumberOfRecoveryPoints` en la bóveda aumenta en uno.
+
+**Modifica esto:** intenta ahora sí borrar `rutaflow-boveda` con `delete-backup-vault` y confirma el error `InvalidRequestException` — a diferencia del Tema 4, ahora la bóveda sí tiene un punto de recuperación que la protege de eliminación.
+
+**Cuándo no usarlo:** no uses `StopBackupJob` esperando poder reanudar después; detener un trabajo lo cancela por completo, no lo pausa.
+
+**Cómo crece RutaFlow:** este es el trabajo bajo demanda que ejecutarías antes de una migración riesgosa de la tabla de entregas de RutaFlow, sin esperar al cron programado.
 
 ---
 

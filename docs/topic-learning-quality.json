@@ -45,16 +45,16 @@
     "cloud": {
       "topics": 153,
       "explanation": 152,
-      "code": 107,
+      "code": 126,
       "visual": 59,
-      "filePath": 28,
-      "runCommand": 103,
-      "expectedResult": 36,
-      "practice": 75,
-      "project": 13,
+      "filePath": 45,
+      "runCommand": 108,
+      "expectedResult": 50,
+      "practice": 90,
+      "project": 32,
       "modelMental": 153,
-      "limitsDecision": 79,
-      "practicable": 13,
+      "limitsDecision": 91,
+      "practicable": 32,
       "genericScaffold": 0
     },
     "devops": {
@@ -3699,19 +3699,19 @@
         "topic": "Tema 1: ELB v2 — balanceadores, grupos objetivo y reglas",
         "criteria": {
           "explanation": true,
-          "code": false,
+          "code": true,
           "visual": false,
-          "filePath": false,
+          "filePath": true,
           "runCommand": true,
-          "expectedResult": false,
-          "practice": false,
-          "project": false,
+          "expectedResult": true,
+          "practice": true,
+          "project": true,
           "modelMental": true,
-          "limitsDecision": false
+          "limitsDecision": true
         },
         "classification": {
-          "rubricScore": 3,
-          "practicable": false,
+          "rubricScore": 14,
+          "practicable": true,
           "genericScaffold": false
         }
       },
@@ -3720,19 +3720,19 @@
         "topic": "Tema 2: ACM — certificados TLS con criptografía real",
         "criteria": {
           "explanation": true,
-          "code": false,
+          "code": true,
           "visual": false,
-          "filePath": false,
+          "filePath": true,
           "runCommand": true,
           "expectedResult": true,
           "practice": true,
-          "project": false,
+          "project": true,
           "modelMental": true,
           "limitsDecision": true
         },
         "classification": {
-          "rubricScore": 8,
-          "practicable": false,
+          "rubricScore": 14,
+          "practicable": true,
           "genericScaffold": false
         }
       },
@@ -3741,19 +3741,19 @@
         "topic": "Tema 3: CloudFront — distribución de contenido y control de acceso al origen",
         "criteria": {
           "explanation": true,
-          "code": false,
+          "code": true,
           "visual": false,
-          "filePath": false,
+          "filePath": true,
           "runCommand": true,
-          "expectedResult": false,
+          "expectedResult": true,
           "practice": true,
-          "project": false,
+          "project": true,
           "modelMental": true,
-          "limitsDecision": false
+          "limitsDecision": true
         },
         "classification": {
-          "rubricScore": 5,
-          "practicable": false,
+          "rubricScore": 14,
+          "practicable": true,
           "genericScaffold": false
         }
       },
@@ -3762,19 +3762,19 @@
         "topic": "Tema 4: Route53 — zonas alojadas y registros de recursos",
         "criteria": {
           "explanation": true,
-          "code": false,
+          "code": true,
           "visual": false,
-          "filePath": false,
+          "filePath": true,
           "runCommand": true,
-          "expectedResult": false,
+          "expectedResult": true,
           "practice": true,
-          "project": false,
+          "project": true,
           "modelMental": true,
-          "limitsDecision": false
+          "limitsDecision": true
         },
         "classification": {
-          "rubricScore": 5,
-          "practicable": false,
+          "rubricScore": 14,
+          "practicable": true,
           "genericScaffold": false
         }
       },
@@ -3783,19 +3783,19 @@
         "topic": "Tema 5: Cómo se integran los cuatro servicios en una arquitectura de borde real",
         "criteria": {
           "explanation": true,
-          "code": false,
+          "code": true,
           "visual": false,
-          "filePath": false,
+          "filePath": true,
           "runCommand": true,
           "expectedResult": true,
-          "practice": false,
-          "project": false,
+          "practice": true,
+          "project": true,
           "modelMental": true,
-          "limitsDecision": false
+          "limitsDecision": true
         },
         "classification": {
-          "rubricScore": 5,
-          "practicable": false,
+          "rubricScore": 14,
+          "practicable": true,
           "genericScaffold": false
         }
       },
@@ -3804,19 +3804,19 @@
         "topic": "Tema 1: Qué resuelve un caché en memoria — y cuándo no ayuda",
         "criteria": {
           "explanation": true,
-          "code": false,
+          "code": true,
           "visual": false,
-          "filePath": false,
-          "runCommand": false,
-          "expectedResult": false,
-          "practice": false,
-          "project": false,
+          "filePath": true,
+          "runCommand": true,
+          "expectedResult": true,
+          "practice": true,
+          "project": true,
           "modelMental": true,
           "limitsDecision": true
         },
         "classification": {
-          "rubricScore": 2,
-          "practicable": false,
+          "rubricScore": 14,
+          "practicable": true,
           "genericScaffold": false
         }
       },
@@ -3825,19 +3825,19 @@
         "topic": "Tema 2: Arquitectura de ElastiCache en Floci — contenedores reales, no simulación",
         "criteria": {
           "explanation": true,
-          "code": false,
+          "code": true,
           "visual": false,
-          "filePath": false,
+          "filePath": true,
           "runCommand": true,
-          "expectedResult": false,
+          "expectedResult": true,
           "practice": true,
-          "project": false,
+          "project": true,
           "modelMental": true,
           "limitsDecision": true
         },
         "classification": {
-          "rubricScore": 6,
-          "practicable": false,
+          "rubricScore": 14,
+          "practicable": true,
           "genericScaffold": false
         }
       },
@@ -3846,19 +3846,19 @@
         "topic": "Tema 3: Creación de clústeres y conexión con clientes estándar",
         "criteria": {
           "explanation": true,
-          "code": false,
+          "code": true,
           "visual": false,
-          "filePath": false,
+          "filePath": true,
           "runCommand": true,
-          "expectedResult": false,
-          "practice": false,
-          "project": false,
+          "expectedResult": true,
+          "practice": true,
+          "project": true,
           "modelMental": true,
-          "limitsDecision": false
+          "limitsDecision": true
         },
         "classification": {
-          "rubricScore": 3,
-          "practicable": false,
+          "rubricScore": 14,
+          "practicable": true,
           "genericScaffold": false
         }
       },
@@ -3867,19 +3867,19 @@
         "topic": "Tema 4: Autenticación IAM para el plano de datos de ElastiCache",
         "criteria": {
           "explanation": true,
-          "code": false,
+          "code": true,
           "visual": false,
-          "filePath": false,
+          "filePath": true,
           "runCommand": true,
           "expectedResult": true,
-          "practice": false,
-          "project": false,
+          "practice": true,
+          "project": true,
           "modelMental": true,
-          "limitsDecision": false
+          "limitsDecision": true
         },
         "classification": {
-          "rubricScore": 5,
-          "practicable": false,
+          "rubricScore": 14,
+          "practicable": true,
           "genericScaffold": false
         }
       },
@@ -3888,19 +3888,19 @@
         "topic": "Tema 1: CodeBuild — compilaciones reales dentro de contenedores Docker",
         "criteria": {
           "explanation": true,
-          "code": false,
+          "code": true,
           "visual": false,
           "filePath": true,
           "runCommand": true,
-          "expectedResult": false,
-          "practice": false,
-          "project": false,
+          "expectedResult": true,
+          "practice": true,
+          "project": true,
           "modelMental": true,
-          "limitsDecision": false
+          "limitsDecision": true
         },
         "classification": {
-          "rubricScore": 5,
-          "practicable": false,
+          "rubricScore": 14,
+          "practicable": true,
           "genericScaffold": false
         }
       },
@@ -3909,19 +3909,19 @@
         "topic": "Tema 2: buildspec.yml — fases y artefactos",
         "criteria": {
           "explanation": true,
-          "code": false,
+          "code": true,
           "visual": false,
           "filePath": true,
           "runCommand": true,
-          "expectedResult": false,
-          "practice": false,
-          "project": false,
+          "expectedResult": true,
+          "practice": true,
+          "project": true,
           "modelMental": true,
-          "limitsDecision": false
+          "limitsDecision": true
         },
         "classification": {
-          "rubricScore": 5,
-          "practicable": false,
+          "rubricScore": 14,
+          "practicable": true,
           "genericScaffold": false
         }
       },
@@ -3930,19 +3930,19 @@
         "topic": "Tema 3: CodeDeploy — aplicaciones, grupos y configuraciones predefinidas",
         "criteria": {
           "explanation": true,
-          "code": false,
+          "code": true,
           "visual": false,
-          "filePath": false,
+          "filePath": true,
           "runCommand": true,
           "expectedResult": true,
-          "practice": false,
-          "project": false,
+          "practice": true,
+          "project": true,
           "modelMental": true,
-          "limitsDecision": false
+          "limitsDecision": true
         },
         "classification": {
-          "rubricScore": 5,
-          "practicable": false,
+          "rubricScore": 14,
+          "practicable": true,
           "genericScaffold": false
         }
       },
@@ -3951,19 +3951,19 @@
         "topic": "Tema 4: Despliegue Blue/Green de Lambda — cambio de tráfico por alias",
         "criteria": {
           "explanation": true,
-          "code": false,
+          "code": true,
           "visual": false,
-          "filePath": false,
-          "runCommand": false,
-          "expectedResult": false,
-          "practice": false,
-          "project": false,
+          "filePath": true,
+          "runCommand": true,
+          "expectedResult": true,
+          "practice": true,
+          "project": true,
           "modelMental": true,
-          "limitsDecision": false
+          "limitsDecision": true
         },
         "classification": {
-          "rubricScore": 1,
-          "practicable": false,
+          "rubricScore": 14,
+          "practicable": true,
           "genericScaffold": false
         }
       },
@@ -3972,19 +3972,19 @@
         "topic": "Tema 5: Despliegue Blue/Green de ECS — cambio de tráfico por listener ELB",
         "criteria": {
           "explanation": true,
-          "code": false,
+          "code": true,
           "visual": false,
-          "filePath": false,
-          "runCommand": false,
-          "expectedResult": false,
-          "practice": false,
-          "project": false,
+          "filePath": true,
+          "runCommand": true,
+          "expectedResult": true,
+          "practice": true,
+          "project": true,
           "modelMental": true,
           "limitsDecision": true
         },
         "classification": {
-          "rubricScore": 2,
-          "practicable": false,
+          "rubricScore": 14,
+          "practicable": true,
           "genericScaffold": false
         }
       },
@@ -3993,19 +3993,19 @@
         "topic": "Tema 1: AWS Config — rastrear reglas sobre tus recursos",
         "criteria": {
           "explanation": true,
-          "code": false,
+          "code": true,
           "visual": false,
-          "filePath": false,
+          "filePath": true,
           "runCommand": true,
           "expectedResult": true,
-          "practice": false,
-          "project": false,
+          "practice": true,
+          "project": true,
           "modelMental": true,
           "limitsDecision": true
         },
         "classification": {
-          "rubricScore": 6,
-          "practicable": false,
+          "rubricScore": 14,
+          "practicable": true,
           "genericScaffold": false
         }
       },
@@ -4014,19 +4014,19 @@
         "topic": "Tema 2: AppConfig — desplegar configuración sin redeployar código",
         "criteria": {
           "explanation": true,
-          "code": false,
+          "code": true,
           "visual": false,
-          "filePath": false,
-          "runCommand": false,
-          "expectedResult": false,
-          "practice": false,
-          "project": false,
+          "filePath": true,
+          "runCommand": true,
+          "expectedResult": true,
+          "practice": true,
+          "project": true,
           "modelMental": true,
           "limitsDecision": true
         },
         "classification": {
-          "rubricScore": 2,
-          "practicable": false,
+          "rubricScore": 14,
+          "practicable": true,
           "genericScaffold": false
         }
       },
@@ -4035,19 +4035,19 @@
         "topic": "Tema 3: AppConfigData — el plano de datos que consume tu aplicación",
         "criteria": {
           "explanation": true,
-          "code": false,
+          "code": true,
           "visual": false,
-          "filePath": false,
+          "filePath": true,
           "runCommand": true,
-          "expectedResult": false,
-          "practice": false,
-          "project": false,
+          "expectedResult": true,
+          "practice": true,
+          "project": true,
           "modelMental": true,
-          "limitsDecision": false
+          "limitsDecision": true
         },
         "classification": {
-          "rubricScore": 3,
-          "practicable": false,
+          "rubricScore": 14,
+          "practicable": true,
           "genericScaffold": false
         }
       },
@@ -4056,19 +4056,19 @@
         "topic": "Tema 4: AWS Backup — centralizar la política de respaldo de múltiples servicios",
         "criteria": {
           "explanation": true,
-          "code": false,
+          "code": true,
           "visual": false,
-          "filePath": false,
+          "filePath": true,
           "runCommand": true,
-          "expectedResult": false,
-          "practice": false,
-          "project": false,
+          "expectedResult": true,
+          "practice": true,
+          "project": true,
           "modelMental": true,
           "limitsDecision": true
         },
         "classification": {
-          "rubricScore": 4,
-          "practicable": false,
+          "rubricScore": 14,
+          "practicable": true,
           "genericScaffold": false
         }
       },
@@ -4077,19 +4077,19 @@
         "topic": "Tema 5: El ciclo de vida de un trabajo de respaldo",
         "criteria": {
           "explanation": true,
-          "code": false,
+          "code": true,
           "visual": false,
-          "filePath": false,
-          "runCommand": false,
-          "expectedResult": false,
-          "practice": false,
-          "project": false,
+          "filePath": true,
+          "runCommand": true,
+          "expectedResult": true,
+          "practice": true,
+          "project": true,
           "modelMental": true,
-          "limitsDecision": false
+          "limitsDecision": true
         },
         "classification": {
-          "rubricScore": 1,
-          "practicable": false,
+          "rubricScore": 14,
+          "practicable": true,
           "genericScaffold": false
         }
       },
