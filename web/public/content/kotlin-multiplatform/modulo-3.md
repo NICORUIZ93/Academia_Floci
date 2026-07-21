@@ -284,13 +284,7 @@ kotlin {
     }
 }
 EOF
-python3 -c "
-config = open('build.gradle.kts').read()
-assert 'androidTarget()' in config, 'falta configurar el target de Android'
-assert all(t in config for t in ['iosX64()', 'iosArm64()', 'iosSimulatorArm64()']), 'faltan variantes de iOS'
-assert 'commonMain.dependencies' in config, 'la dependencia debe declararse en commonMain para estar disponible en todo el código compartido'
-print('build.gradle.kts: targets Android+iOS configurados, dependencia en commonMain')
-"
+./gradlew projects
 ```
 
 **Explicación línea por línea:** `androidTarget()` habilita la compilación para Android; `iosX64(); iosArm64(); iosSimulatorArm64()` habilitan las tres variantes de iOS necesarias (simulador Intel, dispositivo físico ARM, simulador ARM en Mac Apple Silicon); `commonMain.dependencies { implementation(...) }` declara Ktor disponible para TODO el código compartido, no solo para una plataforma.
@@ -403,12 +397,7 @@ sourceSets {
     // macosMain.get().dependsOn(appleMain) -- se agregaría igual si el target macOS está habilitado
 }
 EOF
-python3 -c "
-config = open('build.gradle.kts').read()
-assert 'val appleMain by creating' in config, 'falta declarar el source set intermedio appleMain'
-assert 'iosMain.get().dependsOn(appleMain)' in config, 'falta vincular iosMain a appleMain'
-print('build.gradle.kts: appleMain declarado como intermedio entre commonMain e iosMain')
-"
+./gradlew :shared:compileKotlinIosX64
 ```
 
 **Explicación línea por línea:** `val appleMain by creating { dependsOn(commonMain.get()) }` crea un nuevo source set intermedio que a su vez depende de `commonMain` (ve todo lo que `commonMain` expone); `iosMain.get().dependsOn(appleMain)` hace que `iosMain` ahora dependa de `appleMain` en vez de solo de `commonMain` directamente, ganando acceso a cualquier código Apple-específico que se coloque ahí.
