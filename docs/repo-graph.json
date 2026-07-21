@@ -137,7 +137,7 @@
     },
     {
       "path": "docs/code-visual-quality.json",
-      "lines": 4788,
+      "lines": 4774,
       "kind": "project-file",
       "symbols": [],
       "imports": [],
@@ -4157,7 +4157,7 @@
     },
     {
       "path": "web/public/content/devops/modulo-12.md",
-      "lines": 210,
+      "lines": 623,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -4165,12 +4165,15 @@
         "# M\u00f3dulo 12: DevOps y este curso \u2014 del laboratorio a la nube",
         "## Aprende construyendo",
         "### Tema 1: De cloud local a un proveedor cloud real",
-        "### Tema 2: Gesti\u00f3n de secretos cloud-native",
-        "### Tema 3: IaC multi-nube",
-        "### Tema 4: Checklist de salida a producci\u00f3n",
-        "### Tema 5: GitOps con ArgoCD y FluxCD",
-        "### Tema 6: Platform Engineering \u2014 Internal Developer Platforms (IDPs)",
-        "## Laboratorio pr\u00e1ctico"
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
+        "#### Paso 2 \u00b7 Contexto y caso real",
+        "#### Paso 3 \u00b7 Teor\u00eda con analog\u00eda",
+        "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
+        "#### Construcci\u00f3n RutaFlow: separaci\u00f3n de entornos del proyecto",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
+        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
+        "#### Paso 7 \u00b7 Cierre y evidencia",
+        "### Tema 2: Gesti\u00f3n de secretos cloud-native"
       ]
     },
     {

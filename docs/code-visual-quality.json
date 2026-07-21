@@ -25,13 +25,13 @@
     "devops": {
       "topics": 91,
       "code": 85,
-      "commentedCode": 8,
+      "commentedCode": 10,
       "mermaid": 7,
       "asciiVisual": 84,
       "misleadingDiagramLabel": 0,
-      "filePath": 74,
-      "runCommand": 81,
-      "officialSource": 28
+      "filePath": 79,
+      "runCommand": 82,
+      "officialSource": 30
     },
     "javascript": {
       "topics": 83,
@@ -1308,20 +1308,6 @@
       "track": "devops",
       "module": 12,
       "topic": "Tema 4: Checklist de salida a producción",
-      "missingCode": false,
-      "missingComments": true
-    },
-    {
-      "track": "devops",
-      "module": 12,
-      "topic": "Tema 5: GitOps con ArgoCD y FluxCD",
-      "missingCode": false,
-      "missingComments": true
-    },
-    {
-      "track": "devops",
-      "module": 12,
-      "topic": "Tema 6: Platform Engineering — Internal Developer Platforms (IDPs)",
       "missingCode": false,
       "missingComments": true
     },

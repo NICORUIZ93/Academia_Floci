@@ -5,181 +5,594 @@
 
 ### Tema 1: De cloud local a un proveedor cloud real
 
+#### Paso 1 · Objetivo y preparación
+
+Al finalizar podrás identificar exactamente qué dos configuraciones cambian al migrar un proyecto Terraform de Floci (local) a un proveedor cloud real.
+
+**Conocimiento previo:** track Cloud (Floci/LocalStack); Terraform (Módulo 8 de este track).
+
+#### Paso 2 · Contexto y caso real
+
+**¿Por qué es importante?** Entender que la transición técnica de Floci a un proveedor real es deliberadamente simple es lo que justifica todo el enfoque pedagógico del track Cloud: el tiempo invertido practicando contra un emulador es directamente transferible, no tiempo que haya que volver a aprender de otra forma en producción real.
+
+#### Paso 3 · Teoría con analogía
+
 **Conceptos clave:** paridad de API, endpoint personalizado, credenciales reales, transición mínima de configuración.
 
-Todo lo que practicaste en el track Cloud contra Floci usa exactamente las mismas APIs que AWS, Azure o GCP reales exponen: los mismos comandos de AWS CLI, las mismas llamadas de SDK, la misma estructura de peticiones y respuestas. Esta paridad deliberada de API es, precisamente, la razón de ser de un emulador como Floci: todo el conocimiento práctico que construiste —cómo crear un bucket, cómo configurar una política IAM, cómo desplegar una función Lambda— se transfiere directamente a una cuenta real sin necesidad de aprender nada fundamentalmente distinto.
+Todo lo practicado contra Floci usa exactamente las mismas APIs que AWS, Azure o GCP reales exponen. Lo que cambia son dos configuraciones puntuales: el endpoint (en Floci apuntabas explícitamente a `http://localhost:4566`; contra un proveedor real simplemente omites ese endpoint) y las credenciales (de marcador de posición `test`/`test` a credenciales IAM reales con mínimo privilegio, Módulo 11). Un emulador local no replica comportamiento a escala real, latencia de red entre regiones, ni coste real de producción — la transición de configuración es simple; operar responsablemente en producción real es sustancialmente mayor responsabilidad.
 
-Lo que efectivamente cambia al pasar de Floci a un proveedor real son, en esencia, dos configuraciones puntuales, no la lógica de lo que haces. Primero, el endpoint: en Floci, la AWS CLI o Terraform apuntaban explícitamente a `http://localhost:4566` (o el endpoint específico de floci-az o floci-gcp); contra un proveedor real, simplemente omites ese endpoint personalizado, y las herramientas apuntan por defecto a los servidores reales del proveedor. Segundo, las credenciales: en Floci, usaste credenciales de marcador de posición (`test`/`test`, que Floci no valida realmente); contra un proveedor real, necesitas credenciales IAM reales, generadas y gestionadas con exactamente el mismo cuidado de mínimo privilegio que estudiaste en profundidad en el track Cloud.
-
-Este mismo patrón de "solo cambia el endpoint y las credenciales" aplica igual de bien a la configuración de Terraform: un bloque de provider que en Floci especificaba explícitamente `endpoints = { s3 = "http://localhost:4566" }` simplemente omite ese bloque de endpoints personalizados al apuntar a AWS real, dejando que Terraform se comunique directamente con los servidores de producción del proveedor usando las credenciales reales configuradas en el entorno.
-
-Es importante no confundir esta simplicidad de transición de configuración con una equivalencia total de comportamiento: como ya se discutió en el Módulo 0 del track Cloud, un emulador local no replica comportamiento a gran escala, latencia de red real entre regiones geográficas, ni el coste real de producción. La transición de configuración es simple; la responsabilidad de operar correctamente en un entorno de producción real —con datos reales, usuarios reales, y coste real asociado a cada decisión— es sustancialmente mayor, y es exactamente lo que el resto de los temas de este módulo aborda.
-
-**Analogía:** practicar contra Floci y luego pasar a un proveedor real es como aprender a conducir en un simulador de vuelo (o de conducción) extremadamente fiel, y después subirte al vehículo real: los controles, los procedimientos y las reacciones son idénticos, y el cambio de "simulador a vehículo real" es, mecánicamente, tan simple como sentarte en el asiento correcto; lo que cambia sustancialmente es que ahora las consecuencias de cualquier error son reales, no simuladas.
-
-**¿Por qué es importante?** Entender que la transición técnica de Floci a un proveedor real es deliberadamente simple es lo que justifica todo el enfoque pedagógico del track Cloud: el tiempo invertido practicando contra un emulador no es tiempo "perdido" que haya que volver a aprender de otra forma al llegar a producción real, sino una inversión directamente transferible.
+**Analogía:** practicar contra Floci y pasar a un proveedor real es como aprender en un simulador de vuelo extremadamente fiel y luego subir al avión real: los controles son idénticos, y lo que cambia sustancialmente es que ahora las consecuencias de cualquier error son reales, no simuladas.
 
 **Diagrama:**
 
 ```
-Terraform contra Floci (local):          Terraform contra AWS real:
-provider "aws" {                          provider "aws" {
-  endpoints = {                              region = "us-east-1"
-    s3 = "http://localhost:4566"            (sin endpoint personalizado:
-  }                                          apunta directo a AWS real)
-}                                          }
-credenciales: test/test                   credenciales: IAM reales, mínimo privilegio
+┌── Terraform contra Floci (local) ────────┐   ┌── Terraform contra AWS real ─────────┐
+│ endpoints = { s3 = "http://localhost:4566" } │   │ region = "us-east-1"                        │
+│ credenciales: test/test                          │   │ (sin endpoint personalizado: apunta directo) │
+└─────────────────────────────────┘   │ credenciales: IAM reales, mínimo privilegio    │
+                                                 └─────────────────────────────────┘
 ```
+
+#### Paso 4 · Demostración guiada desde cero
+
+Desde una carpeta vacía crea `academia-devops/src/modulo12/floci-a-real` con dos configuraciones Terraform equivalentes usando el provider `local` (sin necesidad de credenciales reales) para representar objetivamente el mismo recurso apuntado a "Floci" y a "producción real":
+
+```bash
+mkdir -p academia-devops/src/modulo12/floci-a-real
+cd academia-devops/src/modulo12/floci-a-real
+cat > floci.tf <<'EOF'
+terraform {
+  required_providers { local = { source = "hashicorp/local" } }
+}
+variable "endpoint" { default = "http://localhost:4566" }
+variable "credenciales" { default = "test/test (marcador de posicion, Floci no las valida)" }
+resource "local_file" "config_bucket" {
+  filename = "bucket-config-floci.txt"
+  content  = "endpoint=${var.endpoint}\ncredenciales=${var.credenciales}\n"
+}
+EOF
+cat > produccion.tf.ejemplo <<'EOF'
+terraform {
+  required_providers { local = { source = "hashicorp/local" } }
+}
+variable "region" { default = "us-east-1" }
+variable "credenciales" { default = "IAM real, rol con minimo privilegio (Modulo 11)" }
+resource "local_file" "config_bucket" {
+  filename = "bucket-config-produccion.txt"
+  content  = "region=${var.region}\ncredenciales=${var.credenciales}\n(sin endpoint personalizado: apunta directo a AWS real)\n"
+}
+EOF
+docker run --rm -v "$(pwd)":/trabajo -w /trabajo hashicorp/terraform:1.9 init >/dev/null
+docker run --rm -v "$(pwd)":/trabajo -w /trabajo hashicorp/terraform:1.9 apply -auto-approve
+```
+
+**Explicación línea por línea:** `floci.tf` documenta explícitamente el endpoint personalizado y las credenciales de marcador de posición de Floci; `produccion.tf.ejemplo` (con extensión `.ejemplo` para que Terraform no lo aplique junto al primero en este laboratorio) documenta la ausencia deliberada de endpoint y el uso de credenciales IAM reales, siendo la única diferencia real de configuración entre ambos contextos.
+
+Compara ambos archivos generados, confirmando que el diagrama del Paso 3 se refleja literalmente en la configuración real:
+
+```bash
+diff <(grep -v '^$' bucket-config-floci.txt) <(sed 's/produccion/floci/' bucket-config-produccion.txt 2>/dev/null || echo "genera primero produccion.tf")
+cat bucket-config-floci.txt
+```
+
+**Resultado esperado:** `bucket-config-floci.txt` refleja el endpoint local y las credenciales de marcador de posición; el contraste con `produccion.tf.ejemplo` confirma que la única diferencia estructural entre ambos es el endpoint y el origen de las credenciales, no la lógica del recurso en sí.
+
+**Fallo deliberado:** copia `produccion.tf.ejemplo` a `produccion.tf` (activándolo junto a `floci.tf` en el mismo directorio) y ejecuta `apply` de nuevo. Terraform aplica ambos recursos sin conflicto porque tienen nombres de archivo de salida distintos, pero si ambos definieran el mismo `resource "local_file" "config_bucket"` sin distinguir su nombre, Terraform fallaría con un error de recurso duplicado — diagnostica confirmando que, igual que en un proyecto real, mezclar configuración de dos entornos distintos en el mismo estado de Terraform sin una separación clara (como los workspaces del Módulo 8) genera justamente este tipo de conflicto.
+
+#### Construcción RutaFlow: separación de entornos del proyecto
+
+Documenta en `academia-devops/README.md` que el módulo Terraform de RutaFlow (Módulo 8) mantiene una única definición de recursos y varía solo `endpoint` y `credenciales` mediante variables, exactamente el mismo patrón de este Tema, entre su entorno local (Floci) y su entorno de producción real.
+
+#### Paso 5 · Práctica guiada
+
+Renombra los recursos en `produccion.tf.ejemplo` para que no colisionen con `floci.tf` (por ejemplo, `local_file.config_bucket_produccion`) y aplica ambos en el mismo `apply`, confirmando que Terraform genera ambos archivos de configuración simultáneamente sin conflicto. **Pista:** el nombre del recurso, no solo su tipo, debe ser único dentro del mismo estado de Terraform.
+
+#### Paso 6 · Práctica independiente
+
+Toma un módulo Terraform propio (del Módulo 8 de este track) y documenta línea por línea qué cambiaría exactamente al migrarlo de Floci a un proveedor real, siguiendo el mismo formato de comparación de este Tema.
+
+#### Paso 7 · Cierre y evidencia
+
+Ya identificas con precisión las dos únicas configuraciones que cambian entre Floci y un proveedor real, confirmando que el conocimiento práctico del track Cloud se transfiere directamente. El siguiente tema aborda cómo cambia específicamente la gestión de secretos en ese mismo salto a producción. **Evidencia:** entrega el contenido de `bucket-config-floci.txt`, y el resultado del conflicto de recursos duplicados al no distinguir nombres entre ambos entornos. Fuente oficial: [LocalStack — AWS API Parity](https://docs.localstack.cloud/).
+
+**Errores comunes:** dejar credenciales de marcador de posición (`test/test`) olvidadas en archivos que se copian sin revisión hacia una configuración de producción real; asumir que "funciona en Floci" garantiza automáticamente comportamiento idéntico a escala real en producción.
+
+**Cuándo no usarlo:** para un proyecto que nunca se desplegará a un proveedor cloud real (un ejercicio puramente educativo sin intención de producción), mantener esta distinción explícita de configuración por entorno aporta menos valor inmediato.
 
 ### Tema 2: Gestión de secretos cloud-native
 
-**Conceptos clave:** Secrets Manager/Key Vault en producción, integración con el pipeline de despliegue.
+#### Paso 1 · Objetivo y preparación
 
-En el Módulo 3 de este track estudiaste la gestión de secretos con un archivo `.env` local, adecuada para desarrollo, y en el Módulo 11 estudiaste Vault y SOPS como herramientas dedicadas de gestión de secretos. En producción sobre un proveedor cloud real, la opción más directa y frecuentemente preferida es usar el servicio de gestión de secretos nativo de ese mismo proveedor —AWS Secrets Manager, Azure Key Vault, GCP Secret Manager—, exactamente los mismos servicios que ya practicaste en profundidad en el Módulo 10 (avanzado) del track Cloud, ahora conectados directamente a tu pipeline de CI/CD para inyectar secretos en el momento exacto del despliegue.
+Al finalizar podrás describir el flujo completo de un secreto gestionado de forma nativa por un proveedor cloud, desde su almacenamiento hasta su inyección en el pipeline de despliegue.
 
-Esta elección tiene una ventaja práctica de integración nativa similar a la que ya viste al comparar registries de contenedores gestionados por el proveedor (Módulo 2 de este track): un pipeline que se ejecuta con un rol IAM apropiado puede leer directamente de Secrets Manager sin gestionar ninguna credencial adicional separada específicamente para acceder al gestor de secretos, aprovechando la misma identidad y el mismo sistema de permisos que ya usa para el resto de sus operaciones contra ese proveedor cloud, evitando la complejidad adicional de gestionar credenciales de acceso a un sistema de secretos completamente externo al ecosistema del proveedor.
+**Conocimiento previo:** `.env` (Módulo 3) y Vault/SOPS (Módulo 11) de este track.
 
-El flujo típico en un pipeline de despliegue real es: el pipeline se autentica ante el proveedor cloud (idealmente mediante identidad federada de corta duración, como se mencionó en el Módulo 11 de este track), consulta el secreto necesario directamente desde Secrets Manager (o el equivalente del proveedor) en el momento del despliegue, y lo inyecta como variable de entorno o archivo de configuración en el entorno de ejecución final (una función Lambda, un contenedor en ECS, un Pod de Kubernetes), sin que ese secreto pase nunca por un paso intermedio menos seguro, como quedar almacenado en texto plano en algún artifact del pipeline o en un log.
+#### Paso 2 · Contexto y caso real
 
-Elegir entre el servicio nativo del proveedor (Secrets Manager) y una herramienta multi-nube como Vault depende del mismo criterio que ya aplicaste al comparar proveedores de nube en el track Cloud: si tu infraestructura vive completamente dentro de un único proveedor, su servicio nativo suele ser la opción de menor fricción operativa; si operas en múltiples proveedores simultáneamente o necesitas una capa de abstracción común independiente de cualquier proveedor específico, una herramienta como Vault puede justificar su complejidad adicional.
+**¿Por qué es importante?** La transición de `.env` local (adecuado solo para desarrollo) a un gestor de secretos cloud-native en producción es una de las diferencias operativas más concretas y de mayor impacto de seguridad entre practicar contra Floci y operar realmente en producción.
 
-**Analogía:** usar el gestor de secretos nativo del proveedor cloud donde ya vive el resto de tu infraestructura es como usar la caja fuerte integrada de tu propio edificio de oficinas, que ya reconoce automáticamente las credenciales de acceso de tus empleados autorizados, en vez de contratar un servicio de custodia externo completamente independiente que requeriría gestionar un conjunto separado de credenciales de acceso específicamente para esa caja fuerte externa.
+#### Paso 3 · Teoría con analogía
 
-**¿Por qué es importante?** La transición de `.env` local (adecuado solo para desarrollo) a un gestor de secretos cloud-native en producción es una de las diferencias operativas más concretas y de mayor impacto de seguridad entre practicar contra Floci y operar realmente en producción, y entender ese camino de migración es directamente relevante para cualquier proyecto real que construyas después de este curso.
+**Conceptos clave:** Secrets Manager/Key Vault en producción, integración con el pipeline de despliegue, identidad federada.
+
+El servicio de gestión de secretos nativo de un proveedor cloud (AWS Secrets Manager, Azure Key Vault, GCP Secret Manager) tiene una ventaja de integración nativa: un pipeline con un rol IAM apropiado lee directamente el secreto sin gestionar ninguna credencial adicional separada. El flujo típico: el pipeline se autentica ante el proveedor (idealmente identidad federada de corta duración, Módulo 11), consulta el secreto en el momento del despliegue, y lo inyecta como variable de entorno en el entorno final, sin pasar nunca por un paso intermedio menos seguro.
+
+**Analogía:** usar el gestor de secretos nativo del proveedor donde ya vive tu infraestructura es como usar la caja fuerte integrada de tu propio edificio, que ya reconoce las credenciales de tus empleados autorizados, en vez de contratar un servicio de custodia externo con credenciales separadas.
 
 **Diagrama:**
 
 ```
-Desarrollo local (Módulo 3):        Producción real (este módulo):
-.env (archivo local,                 AWS Secrets Manager / Azure Key Vault /
- nunca versionado)                    GCP Secret Manager
-        │                                    │
-   Docker Compose lo lee              Pipeline autenticado (rol IAM)
-   directamente                       consulta el secreto en el momento
-                                       exacto del despliegue
+┌── Desarrollo local (Módulo 3) ────┐   ┌── Producción real (este tema) ──────────┐
+│ .env (archivo local, nunca            │   │ Secrets Manager / Key Vault / Secret Manager │
+│ versionado)                                 │                                                    │
+│      │                                        │      │                                            │
+│ Docker Compose lo lee                    │   │ Pipeline con rol IAM consulta el secreto      │
+│ directamente                                 │   │ en el momento exacto del despliegue              │
+└─────────────────────────┘   └───────────────────────────────┘
 ```
+
+#### Paso 4 · Demostración guiada desde cero
+
+Desde una carpeta vacía crea `academia-devops/src/modulo12/secretos-cloud-native` usando LocalStack (el mismo emulador del track Cloud) para representar de forma real la API de Secrets Manager:
+
+```bash
+mkdir -p academia-devops/src/modulo12/secretos-cloud-native
+cd academia-devops/src/modulo12/secretos-cloud-native
+docker run -d --name localstack-secretos -p 4566:4566 localstack/localstack:3.7
+sleep 8
+docker run --rm --network host -e AWS_ACCESS_KEY_ID=test -e AWS_SECRET_ACCESS_KEY=test \
+  amazon/aws-cli --endpoint-url=http://localhost:4566 secretsmanager create-secret \
+  --name mi-api/api-key --secret-string "sk-real-gestionado-por-secrets-manager"
+```
+
+**Explicación línea por línea:** el secreto se crea directamente vía la API de Secrets Manager (contra LocalStack, con paridad de API real como viste en el Tema 1), nunca escrito en ningún archivo `.env` local ni en el código de la aplicación.
+
+Simula el flujo del pipeline: consultar el secreto en el momento del despliegue e inyectarlo como variable de entorno, sin que quede en ningún archivo versionado:
+
+```bash
+SECRETO=$(docker run --rm --network host -e AWS_ACCESS_KEY_ID=test -e AWS_SECRET_ACCESS_KEY=test \
+  amazon/aws-cli --endpoint-url=http://localhost:4566 secretsmanager get-secret-value \
+  --secret-id mi-api/api-key --query SecretString --output text)
+docker run --rm -e API_KEY="$SECRETO" node:22-alpine node -e "console.log('API_KEY inyectada, longitud:', process.env.API_KEY.length)"
+grep -r "sk-real-gestionado-por-secrets-manager" . 2>/dev/null || echo "no encontrado en ningún archivo versionado"
+```
+
+**Resultado esperado:** el contenedor Node.js confirma que recibió `API_KEY` como variable de entorno con la longitud esperada; el `grep` sobre el directorio del proyecto no encuentra ninguna coincidencia del valor real del secreto, confirmando que nunca existió en un archivo versionable.
+
+**Fallo deliberado:** consulta un secreto con un nombre que nunca fue creado (`--secret-id mi-api/secreto-inexistente`). El comando falla con un error `ResourceNotFoundException` — diagnostica confirmando que, a diferencia de un archivo `.env` que simplemente tendría una variable vacía o indefinida sin ningún aviso explícito, Secrets Manager falla de forma ruidosa y explícita ante un secreto que no existe, una señal de error mucho más clara para el pipeline.
+
+#### Construcción RutaFlow: flujo de secretos de producción del proyecto
+
+Documenta en `academia-devops/README.md` que el pipeline de despliegue de RutaFlow, en su entorno de producción real, sustituye la lectura de `.env` local por una consulta a Secrets Manager en el momento del despliegue, usando el rol IAM del propio pipeline sin credenciales adicionales.
+
+#### Paso 5 · Práctica guiada
+
+Actualiza el secreto ya creado con `secretsmanager update-secret --secret-id mi-api/api-key --secret-string "sk-nuevo-valor-rotado"` y confirma que una nueva consulta obtiene el valor actualizado, simulando una rotación de secreto sin ningún cambio de código en la aplicación. **Pista:** la rotación de secretos es justamente el tipo de operación que un gestor dedicado facilita frente a un archivo `.env` estático.
+
+#### Paso 6 · Práctica independiente
+
+Detén el contenedor `localstack-secretos` e intenta consultar el secreto nuevamente; documenta qué comportamiento debería tener un pipeline real si el servicio de gestión de secretos estuviera temporalmente inaccesible durante un despliegue (¿debería reintentar? ¿debería abortar el despliegue?).
+
+#### Paso 7 · Cierre y evidencia
+
+Ya describes el flujo completo de un secreto gestionado de forma nativa por el proveedor cloud, desde su creación hasta su inyección segura en el pipeline. El siguiente tema aborda si vale la pena abstraer esta y otras decisiones entre múltiples proveedores de nube. **Evidencia:** entrega el resultado exitoso de la inyección de `API_KEY` en el contenedor Node.js, y el error `ResourceNotFoundException` al consultar un secreto inexistente. Fuente oficial: [AWS Secrets Manager — Documentation](https://docs.aws.amazon.com/secretsmanager/).
+
+**Errores comunes:** seguir usando `.env` en producción real "porque ya funcionaba en desarrollo", sin migrar a un gestor de secretos apropiado; no manejar explícitamente el caso de un secreto inexistente o inaccesible durante el despliegue.
+
+**Cuándo no usarlo:** para un proyecto que se despliega íntegramente en una sola máquina sin ningún proveedor cloud de por medio, un gestor de secretos nativo del proveedor no aplica; ahí Vault o SOPS (Módulo 11) siguen siendo las alternativas apropiadas.
 
 ### Tema 3: IaC multi-nube
 
-**Conceptos clave:** módulos por proveedor, abstracción multi-nube, coste de mantener portabilidad.
+#### Paso 1 · Objetivo y preparación
 
-Como viste en el Módulo 8 de este track, Terraform soporta múltiples providers simultáneamente (AWS, Azure, GCP, entre muchos otros), lo que técnicamente permite describir infraestructura de múltiples proveedores en el mismo proyecto de Terraform. Sin embargo, es importante distinguir entre "Terraform soporta múltiples proveedores" y "mi infraestructura es realmente portable entre proveedores sin cambios": cada provider expone recursos con nombres, estructuras y capacidades específicas de ese proveedor concreto (`aws_s3_bucket` frente a `azurerm_storage_account`, con atributos y comportamientos que no son un simple mapeo uno a uno), de forma que escribir infraestructura verdaderamente abstraída y reutilizable entre proveedores distintos requiere un esfuerzo deliberado de diseño de módulos con esa portabilidad explícitamente en mente, no algo que ocurra automáticamente por el simple hecho de usar Terraform.
+Al finalizar podrás distinguir entre "Terraform soporta múltiples proveedores" y "mi infraestructura es realmente portable entre proveedores", construyendo un módulo con la misma interfaz para dos proveedores distintos.
 
-Esto conecta directamente con el ejercicio comparativo que hiciste en el Módulo 8 del track Cloud, documentando cómo el mismo caso de uso (guardar un archivo) se resuelve de forma distinta en AWS, Azure y GCP: esas diferencias de modelo entre proveedores, que ya identificaste a nivel de servicios individuales, se trasladan directamente al esfuerzo de diseñar módulos de Terraform verdaderamente multi-nube, donde cada módulo específico por proveedor necesita implementar la misma interfaz funcional (las mismas variables de entrada, los mismos outputs) mientras internamente invoca los recursos específicos y con la sintaxis particular de cada proveedor.
+**Conocimiento previo:** Terraform y módulos reutilizables (Módulo 8 de este track).
 
-La decisión de invertir en una capa de abstracción multi-nube tiene un coste real de complejidad adicional que solo se justifica en contextos específicos: organizaciones con requisitos regulatorios o de negocio que exigen operar simultáneamente en múltiples proveedores, o que buscan explícitamente evitar la dependencia de un único proveedor (vendor lock-in) por razones estratégicas. Para la gran mayoría de los proyectos, que operan dentro de un único proveedor cloud de forma sostenida, esa inversión adicional en abstracción multi-nube no suele justificarse frente al beneficio más directo de aprovechar plenamente las capacidades y servicios específicos (y frecuentemente más ricos) de un único proveedor bien conocido por el equipo.
+#### Paso 2 · Contexto y caso real
 
-El proyecto integrador multi-nube que verás mencionado como contenido avanzado adicional del track Cloud es, precisamente, una oportunidad de experimentar directamente con este esfuerzo de abstracción entre proveedores en un contexto acotado y de aprendizaje, antes de enfrentar esa misma decisión con las implicaciones reales de un proyecto de producción.
+**¿Por qué es importante?** Entender que "soportar múltiples proveedores técnicamente" y "tener infraestructura realmente portable entre ellos" son cosas distintas evita la expectativa poco realista de que adoptar Terraform automáticamente resuelve la portabilidad multi-nube sin esfuerzo de diseño adicional.
 
-**Analogía:** escribir infraestructura verdaderamente portable entre AWS, Azure y GCP es como diseñar un electrodoméstico que funcione indistintamente con los estándares eléctricos de tres países distintos, cada uno con su propio voltaje, frecuencia y forma de enchufe: es técnicamente posible con el diseño adecuado, pero requiere un esfuerzo de ingeniería deliberado y específico para esa portabilidad, muy distinto de simplemente diseñar el electrodoméstico óptimo para un único estándar eléctrico específico y bien conocido.
+#### Paso 3 · Teoría con analogía
 
-**¿Por qué es importante?** Entender que "soportar múltiples proveedores técnicamente" y "tener infraestructura realmente portable entre ellos" son cosas distintas, con un coste de diseño explícito para lo segundo, evita la expectativa poco realista de que adoptar Terraform automáticamente resuelve la portabilidad multi-nube sin ningún esfuerzo de diseño adicional específico para ese objetivo.
+**Conceptos clave:** módulos por proveedor, abstracción multi-nube, coste de mantener portabilidad, vendor lock-in.
+
+Terraform soporta múltiples providers simultáneamente, pero cada uno expone recursos con nombres y estructuras específicas (`aws_s3_bucket` frente a `azurerm_storage_account`), sin un mapeo uno a uno automático. Escribir infraestructura verdaderamente portable requiere diseñar módulos con la misma interfaz funcional (mismas variables de entrada, mismos outputs) que internamente invocan recursos distintos por proveedor. Esta inversión solo se justifica en contextos específicos: requisitos regulatorios multi-nube, o evitar vendor lock-in por razones estratégicas explícitas.
+
+**Analogía:** escribir infraestructura verdaderamente portable entre AWS, Azure y GCP es como diseñar un electrodoméstico que funcione con los estándares eléctricos de tres países distintos: técnicamente posible, pero requiere un esfuerzo de ingeniería deliberado, muy distinto de optimizar para un único estándar bien conocido.
 
 **Diagrama:**
 
 ```
-"Terraform soporta múltiples providers"    "Mi infraestructura es realmente portable"
-┌─────────────────────────┐              ┌─────────────────────────┐
-│ Puedo escribir código         │              │ Requiere módulos diseñados     │
-│ para AWS Y Azure en el          │              │ deliberadamente con la MISMA     │
-│ mismo proyecto                  │  ≠           │ interfaz (variables/outputs)      │
-│ (verdad técnica trivial)          │              │ que internamente implementan       │
-│                                    │              │ cada proveedor por separado          │
-└─────────────────────────┘              └─────────────────────────┘
+┌── "Terraform soporta múltiples providers" ┐   ┌── "Mi infraestructura es realmente portable" ┐
+│ Puedo escribir código para AWS Y Azure          │   │ Requiere módulos con la MISMA interfaz               │
+│ en el mismo proyecto (verdad técnica trivial)     │ ≠ │ (variables/outputs) que internamente implementan │
+│                                                        │   │ cada proveedor por separado                              │
+└─────────────────────────────────────┘   └───────────────────────────────────────┘
 ```
+
+#### Paso 4 · Demostración guiada desde cero
+
+Desde una carpeta vacía crea `academia-devops/src/modulo12/iac-multi-nube` con dos módulos que implementan la misma interfaz (`nombre_archivo`, `contenido`) usando el provider `local` para simular dos "proveedores" distintos sin necesidad de credenciales reales:
+
+```bash
+mkdir -p academia-devops/src/modulo12/iac-multi-nube/modulos/almacenamiento-proveedor-a
+mkdir -p academia-devops/src/modulo12/iac-multi-nube/modulos/almacenamiento-proveedor-b
+cd academia-devops/src/modulo12/iac-multi-nube
+cat > modulos/almacenamiento-proveedor-a/main.tf <<'EOF'
+variable "nombre_archivo" {}
+variable "contenido" {}
+resource "local_file" "almacenamiento" {
+  filename = "${path.root}/salida-proveedor-a-${var.nombre_archivo}"
+  content  = "proveedor=A\n${var.contenido}"
+}
+output "ruta" { value = local_file.almacenamiento.filename }
+EOF
+cat > modulos/almacenamiento-proveedor-b/main.tf <<'EOF'
+variable "nombre_archivo" {}
+variable "contenido" {}
+resource "local_file" "almacenamiento" {
+  filename = "${path.root}/objeto-proveedor-b-${var.nombre_archivo}"
+  content  = "proveedor=B (nombres de recurso y de archivo distintos)\n${var.contenido}"
+}
+output "ruta" { value = local_file.almacenamiento.filename }
+EOF
+cat > main.tf <<'EOF'
+terraform { required_providers { local = { source = "hashicorp/local" } } }
+module "almacen_a" {
+  source         = "./modulos/almacenamiento-proveedor-a"
+  nombre_archivo = "config.txt"
+  contenido      = "misma interfaz de entrada para ambos módulos"
+}
+module "almacen_b" {
+  source         = "./modulos/almacenamiento-proveedor-b"
+  nombre_archivo = "config.txt"
+  contenido      = "misma interfaz de entrada para ambos módulos"
+}
+output "ruta_a" { value = module.almacen_a.ruta }
+output "ruta_b" { value = module.almacen_b.ruta }
+EOF
+docker run --rm -v "$(pwd)":/trabajo -w /trabajo hashicorp/terraform:1.9 init >/dev/null
+docker run --rm -v "$(pwd)":/trabajo -w /trabajo hashicorp/terraform:1.9 apply -auto-approve
+```
+
+**Explicación línea por línea:** ambos módulos (`almacenamiento-proveedor-a` y `-b`) reciben exactamente las mismas variables de entrada (`nombre_archivo`, `contenido`) y exponen el mismo output (`ruta`), la interfaz funcional común; internamente cada uno implementa una convención de nombres de archivo completamente distinta, representando cómo cada proveedor real nombra y estructura sus recursos de forma diferente.
+
+Confirma que ambos módulos, invocados con la misma entrada, produjeron resultados funcionalmente equivalentes pero con implementación interna distinta:
+
+```bash
+cat salida-proveedor-a-config.txt
+cat objeto-proveedor-b-config.txt
+docker run --rm -v "$(pwd)":/trabajo -w /trabajo hashicorp/terraform:1.9 output -json | python3 -m json.tool
+```
+
+**Resultado esperado:** ambos archivos contienen el mismo `contenido` recibido como entrada, confirmando la misma interfaz funcional; sus nombres de archivo (`salida-proveedor-a-*` frente a `objeto-proveedor-b-*`) son deliberadamente distintos, representando cómo cada proveedor real expone sus recursos con convenciones propias que el módulo encapsula.
+
+**Fallo deliberado:** modifica `modulos/almacenamiento-proveedor-b/main.tf` para que reciba una variable llamada `archivo` en vez de `nombre_archivo` (rompiendo la interfaz común), sin actualizar `main.tf` en la raíz. Ejecuta `apply` de nuevo. Terraform falla con un error de variable no declarada — diagnostica confirmando que la portabilidad depende enteramente de mantener la interfaz idéntica entre módulos; un cambio no coordinado en un módulo específico rompe la abstracción multi-nube inmediatamente.
+
+#### Construcción RutaFlow: decisión de abstracción del proyecto
+
+Documenta en `academia-devops/README.md` que RutaFlow, al operar dentro de un único proveedor cloud de forma sostenida, decide explícitamente NO invertir en una capa de abstracción multi-nube completa, priorizando aprovechar las capacidades específicas de ese proveedor sobre la portabilidad teórica.
+
+#### Paso 5 · Práctica guiada
+
+Agrega un tercer módulo `almacenamiento-proveedor-c` con la misma interfaz, e inclúyelo en `main.tf` junto a los otros dos, confirmando que la misma entrada produce un tercer resultado funcionalmente equivalente. **Pista:** copia la estructura de uno de los módulos existentes y solo cambia su convención interna de nombres.
+
+#### Paso 6 · Práctica independiente
+
+Documenta en una tabla de dos columnas, para un servicio real que ya conozcas de dos proveedores distintos (por ejemplo, almacenamiento de objetos en AWS vs. Azure), qué atributos de configuración no tienen un mapeo uno a uno directo entre ambos.
+
+#### Paso 7 · Cierre y evidencia
+
+Ya distingues el coste real de diseñar infraestructura verdaderamente portable frente a simplemente usar Terraform con múltiples providers. El siguiente tema construye la checklist que formaliza todas las prácticas de este track antes de salir a producción. **Evidencia:** entrega el resultado con el contenido de ambos archivos generados por los módulos A y B, y explica el error de variable no declarada que aparece al romper deliberadamente la interfaz común. Fuente oficial: [Terraform — Module Composition](https://developer.hashicorp.com/terraform/language/modules/develop/composition).
+
+**Errores comunes:** asumir que agregar un segundo `provider` a un proyecto Terraform ya garantiza portabilidad real; no coordinar cambios de interfaz entre módulos de distintos proveedores, rompiendo la abstracción silenciosamente.
+
+**Cuándo no usarlo:** para un proyecto que opera y operará siempre dentro de un único proveedor cloud, invertir en esta abstracción multi-nube es coste sin beneficio real; resérvala para el caso explícito de requisito multi-nube genuino.
 
 ### Tema 4: Checklist de salida a producción
 
+#### Paso 1 · Objetivo y preparación
+
+Al finalizar podrás construir y ejecutar una checklist verificable de salida a producción que cubra observabilidad, seguridad, resiliencia, costos y documentación.
+
+**Conocimiento previo:** Módulos 9, 10, 11 y 5/6/7 de este track (observabilidad, logging, seguridad, resiliencia).
+
+#### Paso 2 · Contexto y caso real
+
+**¿Por qué es importante?** Sin una checklist explícita, es común que un proyecto llegue a producción con alguna categoría incompleta simplemente por presión de tiempo, y el coste de descubrir esa omisión durante un incidente real es sustancialmente mayor que el coste de haberla verificado deliberadamente antes del lanzamiento.
+
+#### Paso 3 · Teoría con analogía
+
 **Conceptos clave:** verificación pre-lanzamiento, cobertura de observabilidad/seguridad/resiliencia/costos/documentación.
 
-Una checklist de salida a producción formaliza, en una lista explícita y verificable, todas las prácticas que este track completo ha ido construyendo módulo a módulo, asegurando que ninguna se quede fuera por descuido antes de que un sistema nuevo (o un cambio significativo a uno existente) se considere listo para atender tráfico real. Una checklist mínima razonable cubre, como mínimo, cinco categorías: observabilidad (¿hay logs centralizados, métricas expuestas, y al menos una alerta configurada sobre un síntoma real de usuario, como estudiaste en los Módulos 9 y 10?), seguridad (¿los secretos están fuera del código, la imagen fue escaneada sin vulnerabilidades críticas pendientes, y los permisos de las credenciales de despliegue son mínimos, como estudiaste en el Módulo 11?).
+Una checklist mínima razonable cubre cinco categorías: observabilidad (logs centralizados, métricas, al menos una alerta sobre un síntoma real, Módulos 9-10), seguridad (secretos fuera del código, imagen escaneada, permisos mínimos, Módulo 11), resiliencia (healthchecks y rollback efectivamente probado, no solo documentado, Módulos 3/5/6/7), costos (límites de autoscaling razonables y recursos etiquetados) y documentación (al menos un runbook básico de incidentes).
 
-La tercera categoría, resiliencia, verifica que existan healthchecks apropiados (Módulo 3 y Módulo 6/7 de este track) y que la estrategia de rollback —ya sea blue-green, canary, o rolling update (Módulo 5)— haya sido efectivamente probada al menos una vez, no solo documentada teóricamente sin verificación práctica real de que funciona como se espera cuando realmente se necesita. La cuarta categoría, costos, verifica que los límites de autoscaling (Módulo 7) sean razonables y no puedan generar un gasto descontrolado ante un pico de tráfico anómalo o un bug, y que los recursos estén correctamente etiquetados para poder atribuir costos a proyectos o equipos específicos en un entorno de nube real con múltiples cargas de trabajo compartiendo la misma cuenta.
-
-La quinta categoría, documentación, verifica que exista al menos un runbook básico —una guía concreta de qué hacer si el sistema falla en un momento inoportuno (la clásica referencia a "las 3 de la madrugada", cuando la persona de guardia puede no tener el contexto completo fresco en la memoria)—, incluyendo cómo diagnosticar el problema más común, a quién escalar si el problema no se resuelve con los pasos documentados, y cómo ejecutar un rollback manual si el automático (si existe) no se dispara correctamente.
-
-Esta checklist no es una lista estática universal aplicable idénticamente a cualquier proyecto: cada organización o equipo debería adaptarla a su contexto específico, añadiendo verificaciones adicionales relevantes a su dominio particular (por ejemplo, verificaciones de cumplimiento normativo específico en industrias reguladas), pero la estructura de cinco categorías —observabilidad, seguridad, resiliencia, costos, documentación— es un punto de partida sólido y ampliamente aplicable, que además mapea directamente, módulo por módulo, a todo lo que este track ha cubierto.
-
-**Analogía:** una checklist de salida a producción es como la lista de verificación previa al despegue que un piloto revisa antes de cada vuelo, sin importar cuántas veces haya volado antes: no es una desconfianza en la experiencia del piloto, sino un reconocimiento de que, bajo presión de tiempo o rutina, es fácil pasar por alto un detalle crítico sin una lista explícita que fuerce la verificación sistemática de cada aspecto esencial, cada vez, sin excepción.
-
-**¿Por qué es importante?** Sin una checklist explícita, es común que un proyecto llegue a producción con alguna de estas categorías incompleta simplemente por presión de tiempo o porque nadie se detuvo explícitamente a verificarla, y el coste de descubrir esa omisión durante un incidente real en producción es sustancialmente mayor que el coste de haberla verificado deliberadamente antes del lanzamiento.
+**Analogía:** una checklist de salida a producción es como la lista de verificación previa al despegue de un piloto: no es desconfianza en su experiencia, sino reconocimiento de que bajo presión de tiempo es fácil pasar por alto un detalle crítico sin una lista explícita que fuerce la verificación sistemática.
 
 **Diagrama:**
 
 ```
-┌──────────────────────────────────────────────────┐
-│              Checklist de salida a producción             │
-├──────────────────────────────────────────────────┤
-│ ☐ Observabilidad: logs centralizados, métricas, alerta      │
-│ ☐ Seguridad: secretos fuera del código, imagen escaneada,     │
-│    permisos mínimos                                            │
-│ ☐ Resiliencia: healthchecks, rollback PROBADO                  │
-│ ☐ Costos: límites de autoscaling, recursos etiquetados          │
-│ ☐ Documentación: runbook de incidentes                           │
-└──────────────────────────────────────────────────┘
+┌──────────────────────────────────────────┐
+│      Checklist de salida a producción         │
+├──────────────────────────────────────────┤
+│ [ ] Observabilidad: logs, métricas, alerta   │
+│ [ ] Seguridad: secretos fuera, imagen escaneada │
+│ [ ] Resiliencia: healthchecks, rollback PROBADO │
+│ [ ] Costos: límites de autoscaling, tags          │
+│ [ ] Documentación: runbook de incidentes            │
+└──────────────────────────────────────────┘
 ```
+
+#### Paso 4 · Demostración guiada desde cero
+
+Desde una carpeta vacía crea `academia-devops/src/modulo12/checklist-produccion` con un script que verifica programáticamente ítems reales de un proyecto (reutilizando artefactos de módulos anteriores de este track):
+
+```bash
+mkdir -p academia-devops/src/modulo12/checklist-produccion
+cd academia-devops/src/modulo12/checklist-produccion
+docker pull python:3.12-slim >/dev/null
+mkdir -p proyecto-simulado
+echo '{"level":"info","service":"api"}' > proyecto-simulado/ejemplo.log
+cat > verificar-checklist.py <<'EOF'
+import os, sys
+
+items = {
+    "observabilidad_logs_estructurados": os.path.exists("proyecto-simulado/ejemplo.log")
+        and open("proyecto-simulado/ejemplo.log").read().strip().startswith("{"),
+    "seguridad_sin_env_versionado": not os.path.exists("proyecto-simulado/.env"),
+    "resiliencia_healthcheck_documentado": os.path.exists("proyecto-simulado/healthcheck.md"),
+    "documentacion_runbook_existe": os.path.exists("proyecto-simulado/runbook.md"),
+}
+for nombre, cumplido in items.items():
+    estado = "CUMPLE" if cumplido else "NO CUMPLE"
+    print(f"[{estado}] {nombre}")
+
+total = len(items)
+cumplidos = sum(items.values())
+print(f"\nResumen: {cumplidos}/{total} items cumplidos")
+if cumplidos < total:
+    sys.exit(1)
+EOF
+docker run --rm -v "$(pwd)":/trabajo -w /trabajo python:3.12-slim python3 verificar-checklist.py
+echo "código de salida: $?"
+```
+
+**Explicación línea por línea:** el script verifica programáticamente ítems concretos y binarios (¿existe el log estructurado? ¿existe el runbook?) en vez de una autoevaluación subjetiva; el código de salida distinto de cero cuando algún ítem no se cumple permite, igual que en el Tema 2 del Módulo 11, integrarlo como un gate más del pipeline antes de un despliegue a producción.
+
+**Resultado esperado:** el script reporta cada ítem como `CUMPLE` o `NO CUMPLE`; en este proyecto simulado, `healthcheck.md` y `runbook.md` no existen todavía, por lo que el resumen muestra menos de 4/4 ítems cumplidos y el script termina con código de salida `1`.
+
+**Fallo deliberado:** crea los archivos faltantes vacíos (`touch proyecto-simulado/healthcheck.md proyecto-simulado/runbook.md`) y ejecuta el script de nuevo — ahora reporta 4/4 cumplidos, pero los archivos están vacíos y no documentan realmente nada útil. Diagnostica revisando el contenido de ambos archivos (`cat proyecto-simulado/runbook.md`): confirma que la checklist automatizada solo verifica existencia, no calidad de contenido, exactamente la advertencia del laboratorio de que "una checklist que pasa todo perfectamente" puede ser demasiado superficial si no se revisa también el contenido real, no solo su presencia.
+
+#### Construcción RutaFlow: checklist de salida del proyecto
+
+Documenta en `academia-devops/README.md` la checklist completa de RutaFlow con al menos 15 ítems concretos y verificables (no genéricos), cubriendo las cinco categorías de este Tema, como precondición documentada antes de cualquier despliegue a producción real del proyecto.
+
+#### Paso 5 · Práctica guiada
+
+Agrega un quinto ítem verificable programáticamente a `verificar-checklist.py` (por ejemplo, confirmar que existe un archivo de política de escaneo de seguridad del Módulo 11) y confirma que el script lo reporta correctamente como `CUMPLE` o `NO CUMPLE`. **Pista:** sigue el mismo patrón de `os.path.exists` u otra verificación concreta y objetiva.
+
+#### Paso 6 · Práctica independiente
+
+Escribe contenido real (no vacío) en `runbook.md` documentando al menos: cómo diagnosticar el problema más común de tu proyecto, a quién escalar, y cómo ejecutar un rollback manual — y luego escribe una verificación adicional en el script que confirme que el archivo tiene más de una línea de contenido, no solo que existe.
+
+#### Paso 7 · Cierre y evidencia
+
+Ya construyes y ejecutas una checklist de producción verificable programáticamente, no solo una lista teórica. El siguiente tema presenta GitOps como una forma específica de aplicar consistentemente parte de estas prácticas de despliegue. **Evidencia:** entrega el resumen del script mostrando ítems incompletos inicialmente, y el resultado tras completarlos, explicando por qué la existencia de un archivo no garantiza por sí sola la calidad de su contenido. Fuente oficial: [Google SRE Book — Production Readiness Reviews](https://sre.google/sre-book/table-of-contents/).
+
+**Errores comunes:** dejar la checklist como un documento teórico nunca verificado programáticamente contra el proyecto real; marcar un ítem como cumplido solo por la existencia de un archivo sin revisar si su contenido es realmente útil.
+
+**Cuándo no usarlo:** para un cambio interno menor sin ningún riesgo de impacto en usuarios reales (un script de uso puramente personal), aplicar la checklist completa de producción es una sobrecarga innecesaria.
 
 ### Tema 5: GitOps con ArgoCD y FluxCD
 
+#### Paso 1 · Objetivo y preparación
+
+Al finalizar podrás explicar el modelo de reconciliación pull-based de GitOps y demostrar cómo corrige automáticamente una deriva manual no autorizada.
+
+**Conocimiento previo:** Kubernetes (Módulo 6), CD tradicional (Módulo 5) y `git revert` (Módulo 1) de este track.
+
+#### Paso 2 · Contexto y caso real
+
+**¿Por qué es importante?** GitOps reduce la superficie de exposición de credenciales sensibles de despliegue y añade una capa de auto-corrección continua contra cambios manuales no autorizados, dos propiedades que el modelo tradicional de CD basado en push no ofrece de la misma forma nativa.
+
+#### Paso 3 · Teoría con analogía
+
 **Conceptos clave:** GitOps, reconciliación continua desde Git, pull-based deployment, Git como fuente de verdad.
 
-GitOps es un modelo de despliegue continuo donde el estado deseado completo de la infraestructura y las aplicaciones se declara en un repositorio Git (típicamente manifiestos de Kubernetes o charts de Helm, como los que estudiaste en el Módulo 7 de este track), y un agente especializado que corre dentro del propio clúster —ArgoCD o FluxCD son las implementaciones más adoptadas— observa continuamente ese repositorio y reconcilia automáticamente el estado real del clúster para que coincida con lo declarado en Git, sin que ningún sistema externo necesite "empujar" (push) cambios activamente hacia el clúster.
+En GitOps, un agente (ArgoCD/FluxCD) corre dentro del propio clúster y observa continuamente un repositorio Git, reconciliando el estado real para que coincida con lo declarado, sin que un sistema externo empuje cambios. Esto contrasta con el CD tradicional del Módulo 5, donde un pipeline externo ejecuta `kubectl apply` con credenciales de escritura directa. Al reconciliar continuamente, el agente detecta y revierte automáticamente cualquier deriva: si alguien modifica manualmente un recurso con `kubectl edit`, el agente lo revierte de vuelta al estado declarado en Git en su siguiente ciclo.
 
-Esto contrasta con el modelo de CD tradicional que construiste en el Módulo 5 de este track, donde un pipeline de CI/CD externo (GitHub Actions, por ejemplo) ejecuta activamente comandos de despliegue (`kubectl apply`, `helm upgrade`) contra el clúster, requiriendo que ese pipeline externo tenga credenciales con permiso de escritura directa sobre el clúster de producción. En GitOps, el agente (ArgoCD/FluxCD) vive dentro del propio clúster y es él quien activamente consulta (pull) el repositorio Git en busca de cambios, en vez de que un sistema externo empuje (push) cambios hacia adentro; esta inversión de dirección elimina la necesidad de exponer credenciales de escritura sobre el clúster hacia sistemas de CI/CD externos, reduciendo la superficie de ataque de exactamente el tipo de credencial sensible que estudiaste en el Módulo 11 de este track.
-
-Un beneficio adicional importante de GitOps es que, al reconciliar continuamente (no solo en el momento puntual de un despliegue), el sistema detecta y corrige automáticamente cualquier deriva (drift) entre el estado real del clúster y lo declarado en Git: si alguien modifica manualmente un recurso directamente en el clúster (por ejemplo, con `kubectl edit`, saltándose el proceso normal), el agente GitOps revertirá automáticamente ese cambio manual no autorizado de vuelta al estado declarado en Git en su siguiente ciclo de reconciliación, reforzando Git como la única fuente de verdad legítima del estado deseado del sistema, no solo en el momento de cada despliegue sino de forma continua y sostenida en el tiempo.
-
-Esta arquitectura también facilita naturalmente el rollback: revertir a un estado anterior del clúster es, literalmente, revertir el commit correspondiente en el repositorio Git (usando exactamente `git revert`, que ya estudiaste en el Módulo 1 de este track), y el agente GitOps reconciliará automáticamente el clúster de vuelta a ese estado anterior sin necesidad de ejecutar ningún comando adicional específico de despliegue.
-
-**Analogía:** el modelo tradicional de CD es como un mensajero que activamente viaja hasta tu casa cada vez que hay un paquete nuevo que entregar, necesitando una llave de tu puerta para poder entrar y dejarlo. GitOps es como tener un sistema de vigilancia dentro de tu propia casa que revisa constantemente un catálogo público compartido de qué debería haber en cada habitación, y reorganiza automáticamente cualquier cosa que no coincida con ese catálogo, sin que nadie externo necesite nunca una llave de tu puerta para entrar.
-
-**¿Por qué es importante?** GitOps reduce la superficie de exposición de credenciales sensibles de despliegue (el agente vive dentro del clúster, no fuera de él necesitando acceso externo), y añade una capa de auto-corrección continua contra cambios manuales no autorizados, dos propiedades de seguridad y consistencia operativa que el modelo tradicional de CD basado en push no ofrece de la misma forma nativa.
+**Analogía:** el CD tradicional es un mensajero que viaja hasta tu casa con una llave de tu puerta cada vez que hay un paquete. GitOps es un sistema de vigilancia dentro de tu propia casa que revisa constantemente un catálogo compartido de qué debería haber en cada habitación, y reorganiza automáticamente cualquier cosa que no coincida, sin que nadie externo necesite nunca una llave.
 
 **Diagrama:**
 
 ```
-CD tradicional (push):                   GitOps (pull):
-Pipeline CI/CD ──▶ kubectl apply         Repositorio Git (estado deseado)
-   (necesita credenciales                       ▲
-    de escritura sobre el clúster)               │  el agente CONSULTA continuamente
-                                          ArgoCD/FluxCD (dentro del clúster)
-                                                  │
-                                          reconcilia el clúster real para
-                                          que coincida con Git, y revierte
-                                          cualquier cambio manual no autorizado
+┌── CD tradicional (push) ──────────────┐   ┌── GitOps (pull) ────────────────────┐
+│ Pipeline CI/CD ──▶ kubectl apply           │   │ Repositorio Git (estado deseado)         │
+│ (necesita credenciales de escritura          │   │        ▲                                    │
+│  sobre el clúster)                                │   │        │ el agente CONSULTA continuamente   │
+└─────────────────────────────────┘   │ ArgoCD/FluxCD (dentro del clúster)          │
+                                                  │ reconcilia y revierte cambios manuales   │
+                                                  └───────────────────────────────┘
 ```
+
+#### Paso 4 · Demostración guiada desde cero
+
+Desde una carpeta vacía crea `academia-devops/src/modulo12/gitops-reconciliacion` simulando el ciclo de reconciliación de un agente GitOps con un script que compara el "estado deseado" (un repo Git real) contra el "estado real" (un archivo que representa el clúster):
+
+```bash
+mkdir -p academia-devops/src/modulo12/gitops-reconciliacion
+cd academia-devops/src/modulo12/gitops-reconciliacion
+docker run --rm -v "$(pwd)":/repo -w /repo alpine/git:2.45.2 sh -c "
+  git init -q -b main &&
+  git config user.email a@a.com && git config user.name a &&
+  echo 'replicas: 3' > deployment-mi-api.yaml &&
+  git add -A && git commit -q -m 'estado deseado inicial: 3 replicas'
+"
+cp deployment-mi-api.yaml estado-real-clúster.yaml
+cat > reconciliar.sh <<'EOF'
+#!/bin/sh
+if ! diff -q deployment-mi-api.yaml estado-real-clúster.yaml >/dev/null 2>&1; then
+  echo "DERIVA DETECTADA: el estado real no coincide con Git. Reconciliando..."
+  cp deployment-mi-api.yaml estado-real-clúster.yaml
+  echo "Reconciliado: estado real ahora coincide con Git."
+else
+  echo "Sin deriva: el estado real ya coincide con el declarado en Git."
+fi
+EOF
+chmod +x reconciliar.sh
+./reconciliar.sh
+```
+
+**Explicación línea por línea:** `deployment-mi-api.yaml` dentro del repositorio Git representa el estado deseado (lo que ArgoCD/FluxCD observaría); `estado-real-clúster.yaml` representa el estado real del clúster; `reconciliar.sh` simula el ciclo de reconciliación comparando ambos y corrigiendo cualquier diferencia, exactamente el comportamiento central de un agente GitOps.
+
+Simula un cambio manual no autorizado directamente sobre el "clúster" (saltándose Git) y ejecuta la reconciliación:
+
+```bash
+echo "replicas: 99" > estado-real-clúster.yaml
+echo "--- cambio manual aplicado directamente al clúster, saltándose Git ---"
+cat estado-real-clúster.yaml
+./reconciliar.sh
+cat estado-real-clúster.yaml
+```
+
+**Resultado esperado:** tras el cambio manual, `estado-real-clúster.yaml` muestra `replicas: 99`; al ejecutar `reconciliar.sh`, el script detecta la deriva y revierte automáticamente el archivo de vuelta a `replicas: 3` (el estado declarado en Git), demostrando el comportamiento central de auto-corrección de GitOps sin que nadie ejecutara ningún comando de despliegue manual.
+
+**Fallo deliberado:** modifica el estado deseado directamente en Git (`echo 'replicas: 5' > deployment-mi-api.yaml`) sin hacer commit del cambio, y ejecuta `reconciliar.sh`. El script reconcilia comparando contra el archivo de trabajo sin commitear — diagnostica revisando `git status` dentro del repo: confirma que en un agente GitOps real, la reconciliación observa el estado commiteado en la rama configurada, no cambios sin commitear en el árbol de trabajo; un cambio real requeriría un commit (y típicamente un push) para que el agente lo reconcilie.
+
+#### Construcción RutaFlow: adopción de GitOps del proyecto
+
+Documenta en `academia-devops/README.md` que RutaFlow evalúa adoptar GitOps (ArgoCD) para su entorno de producción como evolución natural del CD tradicional del Módulo 5, reduciendo la necesidad de que el pipeline de CI externo mantenga credenciales de escritura directa sobre el clúster.
+
+#### Paso 5 · Práctica guiada
+
+Modifica `deployment-mi-api.yaml`, haz commit del cambio dentro del contenedor `alpine/git` (`git add -A && git commit -m "actualizar replicas a 5"`), y ejecuta `reconciliar.sh` para confirmar que el estado real se actualiza al nuevo valor commiteado. **Pista:** este es el flujo real de un despliegue GitOps: cambiar Git, no ejecutar un comando de despliegue directo.
+
+#### Paso 6 · Práctica independiente
+
+Extiende `reconciliar.sh` para que registre en un archivo `historial-reconciliacion.log` cada vez que detecta y corrige una deriva, con una marca de tiempo, simulando el registro de auditoría que un agente GitOps real mantendría de cada reconciliación efectuada.
+
+#### Paso 7 · Cierre y evidencia
+
+Ya demuestras el modelo de reconciliación pull-based de GitOps y su capacidad de auto-corrección ante cambios manuales no autorizados. El siguiente y último tema del módulo aborda cómo estas prácticas se consolidan a escala organizacional mediante Platform Engineering. **Evidencia:** entrega el resultado de la detección y corrección automática de la deriva (`replicas: 99` revertido a `replicas: 3`), y explica por qué un cambio sin commitear en Git no sería reconciliado por un agente GitOps real. Fuente oficial: [OpenGitOps — Principles](https://opengitops.dev/).
+
+**Errores comunes:** modificar recursos manualmente en el clúster esperando que el cambio persista, sin entender que un agente GitOps lo revertirá en su siguiente ciclo; olvidar hacer commit (y push) de un cambio, asumiendo incorrectamente que el agente ya lo detectó.
+
+**Cuándo no usarlo:** para un entorno de un solo desarrollador con despliegues muy infrecuentes y de bajo riesgo, la complejidad adicional de operar un agente GitOps puede no justificarse frente a un `kubectl apply` manual simple y ocasional.
 
 ### Tema 6: Platform Engineering — Internal Developer Platforms (IDPs)
 
+#### Paso 1 · Objetivo y preparación
+
+Al finalizar podrás explicar el problema que resuelve una Internal Developer Platform y diseñar una interfaz mínima de autoservicio para una tarea común de despliegue.
+
+**Conocimiento previo:** todos los módulos anteriores de este track (Kubernetes, Terraform, CI/CD, observabilidad, seguridad).
+
+#### Paso 2 · Contexto y caso real
+
+**¿Por qué es importante?** A medida que una organización crece en número de equipos y servicios, Platform Engineering e IDPs son la respuesta a escala al mismo problema fundamental que este track completo aborda a nivel individual: aplicar de forma consistente las buenas prácticas de CI/CD, seguridad y observabilidad, en vez de que cada equipo las redescubra de forma inconsistente.
+
+#### Paso 3 · Teoría con analogía
+
 **Conceptos clave:** plataforma interna de desarrollo, autoservicio para equipos de producto, abstracción de complejidad operativa.
 
-Platform Engineering es una disciplina emergente que reconoce un problema práctico que surge naturalmente a medida que una organización adopta las prácticas de este track completo (Kubernetes, Terraform, CI/CD, observabilidad, seguridad): cada equipo de producto individual que necesita desplegar una aplicación nueva se enfrenta a una complejidad operativa considerable —escribir manifiestos de Kubernetes, configurar pipelines de CI/CD, definir políticas de seguridad, configurar dashboards de observabilidad— que, si cada equipo la resuelve completamente por su cuenta y de forma independiente, produce inconsistencia entre equipos y duplica esfuerzo de aprendizaje que ya fue resuelto correctamente por otro equipo en algún lugar de la misma organización.
+Cada equipo que necesita desplegar una aplicación nueva enfrenta complejidad operativa considerable (manifiestos de Kubernetes, pipelines de CI/CD, políticas de seguridad, dashboards de observabilidad); si cada equipo la resuelve por su cuenta, produce inconsistencia y duplica esfuerzo. Una IDP expone una interfaz simplificada (un formulario, un archivo mínimo, un comando de CLI interno) para tareas comunes, sin que cada equipo entienda toda la complejidad subyacente. La IDP no reemplaza Kubernetes, Terraform o Prometheus; los orquesta y expone de forma estandarizada, encapsulando las buenas prácticas de este track como comportamiento por defecto.
 
-Una Internal Developer Platform (IDP) es la solución a este problema: una capa de autoservicio, construida y mantenida por un equipo de plataforma dedicado, que expone a los equipos de producto una interfaz simplificada (por ejemplo, un formulario web, un archivo de configuración mínimo, o un comando de CLI interno específico de la organización) para tareas comunes ("crea un nuevo servicio con esta configuración estándar de CI/CD, observabilidad y seguridad ya preconfiguradas"), sin que cada equipo de producto individual necesite entender ni operar directamente toda la complejidad subyacente de Kubernetes, Terraform, o los pipelines de CI/CD específicos que la plataforma orquesta internamente en su nombre.
-
-Esta capa de abstracción no oculta ni reemplaza el valor de las herramientas que estudiaste en este track completo —Kubernetes, Helm, Terraform, Prometheus, Trivy siguen siendo los componentes reales subyacentes que hacen el trabajo—; una IDP los orquesta y expone de forma coherente y estandarizada a través de toda la organización, encapsulando las decisiones de buenas prácticas (las mismas que estudiaste módulo a módulo en este track: mínimo privilegio, healthchecks apropiados, observabilidad desde el diseño) como el comportamiento por defecto de la plataforma, en vez de dejar que cada equipo de producto individual tenga que redescubrir y aplicar correctamente esas mismas prácticas de forma independiente cada vez.
-
-El rol de "ingeniero de plataforma" (platform engineer) que construye y mantiene estas IDPs es, en esencia, aplicar todo el conocimiento de este track completo no para operar directamente una aplicación de producto específica, sino para construir la infraestructura de autoservicio que permite que muchos otros equipos operen sus propias aplicaciones de forma consistente, segura y eficiente, sin necesitar el mismo nivel de profundidad técnica en cada una de las disciplinas cubiertas por este track.
-
-**Analogía:** sin una IDP, cada equipo de producto es como un cocinero que necesita construir su propia cocina desde cero cada vez que abre un nuevo restaurante: comprar y calibrar cada electrodoméstico, diseñar el sistema eléctrico, decidir la disposición de seguridad, repitiendo ese trabajo completo una y otra vez con resultados inconsistentes entre restaurantes distintos de la misma cadena. Una IDP es como una cocina estandarizada y preconstruida que la cadena entera de restaurantes proporciona a cada nuevo local: el cocinero se concentra en cocinar (el producto), mientras la infraestructura de cocina (los electrodomésticos, la seguridad eléctrica, el sistema de ventilación) ya viene correctamente configurada y consistente en todos los locales de la cadena.
-
-**¿Por qué es importante?** A medida que una organización crece en número de equipos y servicios, Platform Engineering e IDPs son la respuesta a escala al mismo problema fundamental que este track completo aborda a nivel individual: cómo aplicar de forma consistente y sin fricción excesiva las buenas prácticas de CI/CD, seguridad y observabilidad, en vez de dejar que cada equipo las redescubra y las implemente de forma independiente e inconsistente.
+**Analogía:** sin una IDP, cada equipo es un cocinero que construye su propia cocina desde cero en cada restaurante nuevo. Una IDP es una cocina estandarizada y preconstruida que la cadena entera proporciona: el cocinero se concentra en cocinar, mientras la infraestructura ya viene correctamente configurada y consistente.
 
 **Diagrama:**
 
 ```
-Sin IDP:                              Con IDP:
-Equipo A construye su propio            Equipo A, B y C usan la MISMA
-  pipeline de CI/CD desde cero            plataforma de autoservicio
-Equipo B construye el suyo,               (que internamente orquesta
-  ligeramente distinto                     Kubernetes, Terraform, CI/CD,
-Equipo C construye el suyo,                observabilidad, seguridad ya
-  con otras inconsistencias                 preconfiguradas correctamente)
-   │
-   Resultado: inconsistencia,           Resultado: consistencia,
-   duplicación de esfuerzo,              menor fricción, buenas
-   riesgo de mala configuración           prácticas por defecto
+┌── Sin IDP ──────────────────────────┐   ┌── Con IDP ───────────────────────────┐
+│ Equipo A construye su pipeline desde cero  │   │ Equipos A, B y C usan la MISMA plataforma  │
+│ Equipo B construye el suyo, distinto           │   │ de autoservicio (orquesta Kubernetes,        │
+│ Equipo C construye el suyo, inconsistente       │ ≠ │ Terraform, CI/CD, observabilidad, seguridad)  │
+│ Resultado: inconsistencia, duplicación             │   │ Resultado: consistencia, menor fricción         │
+└─────────────────────────────────┘   └───────────────────────────────────┘
 ```
+
+#### Paso 4 · Demostración guiada desde cero
+
+Desde una carpeta vacía crea `academia-devops/src/modulo12/idp-minima` con un script de CLI interno mínimo que representa una IDP muy simplificada: un solo comando que genera todos los artefactos estandarizados (Dockerfile, workflow de CI, manifiesto de Kubernetes) para un servicio nuevo:
+
+```bash
+mkdir -p academia-devops/src/modulo12/idp-minima
+cd academia-devops/src/modulo12/idp-minima
+cat > crear-servicio.sh <<'EOF'
+#!/bin/sh
+NOMBRE_SERVICIO=$1
+if [ -z "$NOMBRE_SERVICIO" ]; then
+  echo "Uso: ./crear-servicio.sh <nombre-del-servicio>"
+  exit 1
+fi
+mkdir -p "servicios/$NOMBRE_SERVICIO/.github/workflows"
+cat > "servicios/$NOMBRE_SERVICIO/Dockerfile" <<DOCKERFILE
+FROM node:22-alpine
+WORKDIR /app
+CMD ["node", "-e", "console.log('$NOMBRE_SERVICIO activo')"]
+DOCKERFILE
+cat > "servicios/$NOMBRE_SERVICIO/.github/workflows/ci.yml" <<CIYML
+name: CI de $NOMBRE_SERVICIO
+on: [pull_request]
+jobs:
+  escaneo-seguridad:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "escaneo estandar de la plataforma (Modulo 11)"
+CIYML
+cat > "servicios/$NOMBRE_SERVICIO/deployment.yaml" <<DEPLOY
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: $NOMBRE_SERVICIO
+spec:
+  replicas: 2
+  template:
+    spec:
+      containers:
+        - name: $NOMBRE_SERVICIO
+          livenessProbe: { httpGet: { path: /health, port: 3000 } }
+DEPLOY
+echo "Servicio '$NOMBRE_SERVICIO' creado con CI, seguridad y healthchecks preconfigurados."
+EOF
+chmod +x crear-servicio.sh
+./crear-servicio.sh mi-nuevo-servicio
+find servicios -type f
+```
+
+**Explicación línea por línea:** un equipo de producto ejecuta un único comando (`./crear-servicio.sh mi-nuevo-servicio`) sin necesitar escribir manualmente ningún Dockerfile, workflow de CI o manifiesto de Kubernetes; la "plataforma" (este script, en una IDP real sería una herramienta interna mucho más sofisticada) ya incorpora el escaneo de seguridad del Módulo 11 y el healthcheck del Módulo 3/6 como comportamiento por defecto, sin que el equipo de producto tenga que recordarlos ni configurarlos manualmente.
+
+Confirma que dos equipos distintos, usando la misma IDP mínima, obtienen servicios consistentes sin ninguna variación accidental entre ellos:
+
+```bash
+./crear-servicio.sh servicio-equipo-b
+diff servicios/mi-nuevo-servicio/.github/workflows/ci.yml servicios/servicio-equipo-b/.github/workflows/ci.yml | grep -v "^[<>] name:"
+echo "diferencias fuera del nombre del servicio: (vacío si son consistentes)"
+```
+
+**Resultado esperado:** ambos servicios generados comparten exactamente la misma estructura de CI, seguridad y healthcheck, difiriendo únicamente en su nombre — el `diff` filtrado por líneas de nombre no muestra ninguna otra diferencia, confirmando la consistencia que una IDP aporta frente a que cada equipo construyera su propio pipeline de forma independiente.
+
+**Fallo deliberado:** crea manualmente un tercer servicio sin usar `crear-servicio.sh` (por ejemplo, con un `mkdir` y un Dockerfile escrito a mano, omitiendo el escaneo de seguridad y el healthcheck). Compáralo con los servicios generados por la IDP — le faltan el workflow de CI y el healthcheck por completo — diagnostica confirmando exactamente el problema que una IDP resuelve: sin la plataforma de autoservicio, nada garantiza que un equipo recuerde incluir esas prácticas, mientras que pasar por la IDP las incluye automáticamente sin depender de que alguien las recuerde.
+
+#### Construcción RutaFlow: plataforma interna del proyecto
+
+Documenta en `academia-devops/README.md` que, si RutaFlow creciera a múltiples equipos y servicios independientes, el patrón de `crear-servicio.sh` se formalizaría en una IDP real, garantizando que todo servicio nuevo incluya por defecto CI, seguridad y observabilidad ya configuradas según los estándares de este track.
+
+#### Paso 5 · Práctica guiada
+
+Agrega al script `crear-servicio.sh` la generación adicional de un archivo `README.md` con una plantilla estándar (nombre del servicio, cómo ejecutarlo localmente, a quién contactar), y confirma que el nuevo servicio generado lo incluye automáticamente. **Pista:** sigue el mismo patrón de heredoc (`cat > archivo <<EOF`) ya usado para los demás artefactos.
+
+#### Paso 6 · Práctica independiente
+
+Documenta en una frase qué otra práctica de este track (por ejemplo, un dashboard de Grafana preconfigurado del Módulo 9, o una política de RBAC acotada del Módulo 11) incluirías por defecto en una IDP real para tu propio contexto de proyecto, y por qué.
+
+#### Paso 7 · Cierre y evidencia
+
+Ya explicas el problema que resuelve una IDP y demuestras, con un ejemplo mínimo, cómo garantiza consistencia entre equipos sin que cada uno redescubra las mismas buenas prácticas de forma independiente. Esto cierra el track de DevOps completo: desde el shell scripting básico del Módulo 0 hasta la consolidación organizacional de estas prácticas en una plataforma interna; el siguiente módulo del proyecto integrador RutaFlow aplica todo este recorrido en conjunto. **Evidencia:** entrega el resultado de la comparación sin diferencias entre los dos servicios generados por la IDP, y explica el contraste con el tercer servicio creado manualmente que carece de CI y healthcheck. Fuente oficial: [Platform Engineering — What is an Internal Developer Platform](https://platformengineering.org/blog/what-is-an-internal-developer-platform).
+
+**Errores comunes:** construir una IDP demasiado rígida que no permite ninguna personalización legítima que un equipo específico realmente necesite; confundir una IDP con simplemente documentación de buenas prácticas sin ninguna automatización real que las aplique por defecto.
+
+**Cuándo no usarlo:** para una organización con un solo equipo pequeño y un solo servicio, construir una IDP formal es una sobre-inversión; el valor de una IDP aparece con múltiples equipos repitiendo el mismo esfuerzo de configuración de forma independiente.
 
 ---
 
