@@ -25,13 +25,13 @@
     "devops": {
       "topics": 91,
       "code": 85,
-      "commentedCode": 5,
+      "commentedCode": 6,
       "mermaid": 7,
       "asciiVisual": 84,
       "misleadingDiagramLabel": 0,
-      "filePath": 36,
-      "runCommand": 57,
-      "officialSource": 9
+      "filePath": 41,
+      "runCommand": 62,
+      "officialSource": 10
     },
     "javascript": {
       "topics": 83,
@@ -1539,13 +1539,6 @@
       "track": "devops",
       "module": 5,
       "topic": "Tema 4: Feature flags vs branches por entorno",
-      "missingCode": false,
-      "missingComments": true
-    },
-    {
-      "track": "devops",
-      "module": 5,
-      "topic": "Tema 5: Rollback automático por métricas",
       "missingCode": false,
       "missingComments": true
     },

@@ -137,7 +137,7 @@
     },
     {
       "path": "docs/code-visual-quality.json",
-      "lines": 4809,
+      "lines": 4802,
       "kind": "project-file",
       "symbols": [],
       "imports": [],
@@ -4287,7 +4287,7 @@
     },
     {
       "path": "web/public/content/devops/modulo-5.md",
-      "lines": 170,
+      "lines": 496,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -4295,11 +4295,15 @@
         "# M\u00f3dulo 5: CD \u2014 estrategias de despliegue",
         "## Aprende construyendo",
         "### Tema 1: Blue-green deployment",
-        "### Tema 2: Canary releases",
-        "### Tema 3: Rolling updates",
-        "### Tema 4: Feature flags vs branches por entorno",
-        "### Tema 5: Rollback autom\u00e1tico por m\u00e9tricas",
-        "## Laboratorio pr\u00e1ctico"
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
+        "#### Paso 2 \u00b7 Contexto y caso real",
+        "#### Paso 3 \u00b7 Teor\u00eda con analog\u00eda",
+        "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
+        "#### Construcci\u00f3n RutaFlow: rollback en segundos para cambios de riesgo alto",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
+        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
+        "#### Paso 7 \u00b7 Cierre y evidencia",
+        "### Tema 2: Canary releases"
       ]
     },
     {
