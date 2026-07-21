@@ -137,7 +137,7 @@
     },
     {
       "path": "docs/code-visual-quality.json",
-      "lines": 4389,
+      "lines": 4368,
       "kind": "project-file",
       "symbols": [],
       "imports": [],
@@ -224,7 +224,7 @@
     },
     {
       "path": "docs/prerequisite-graph.json",
-      "lines": 10040,
+      "lines": 10051,
       "kind": "project-file",
       "symbols": [],
       "imports": [],
@@ -252,7 +252,7 @@
     },
     {
       "path": "docs/seven-step-methodology.json",
-      "lines": 24027,
+      "lines": 24053,
       "kind": "project-file",
       "symbols": [],
       "imports": [],
@@ -308,7 +308,7 @@
     },
     {
       "path": "docs/topic-learning-quality.json",
-      "lines": 19409,
+      "lines": 19430,
       "kind": "project-file",
       "symbols": [],
       "imports": [],
@@ -6325,7 +6325,7 @@
     },
     {
       "path": "web/public/content/kotlin-multiplatform/modulo-7.md",
-      "lines": 117,
+      "lines": 531,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -6333,10 +6333,15 @@
         "# M\u00f3dulo 7: Compose Multiplatform \u2014 UI compartida",
         "## Aprende construyendo",
         "### Tema 1: Compose Multiplatform vs Jetpack Compose",
-        "#### Contrato t\u00e9cnico de `@Composable` en c\u00f3digo compartido",
-        "### Tema 2: Theming y navegaci\u00f3n compartidos",
-        "### Tema 3: Limitaciones en iOS y otros targets",
-        "## Laboratorio pr\u00e1ctico"
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
+        "#### Paso 2 \u00b7 Contexto y caso real",
+        "#### Paso 3 \u00b7 Teor\u00eda con analog\u00eda",
+        "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
+        "# compila el m\u00f3dulo compartido con Gradle para confirmar que no depende de ninguna plataforma",
+        "#### Construcci\u00f3n RutaFlow: pantalla compartida de paradas pendientes",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada \u2014 repetici\u00f3n progresiva",
+        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
+        "#### Paso 7 \u00b7 Cierre y evidencia"
       ]
     },
     {
@@ -9542,7 +9547,7 @@
     },
     {
       "path": "web/public/content/topic-index.json",
-      "lines": 4127,
+      "lines": 4131,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -11902,7 +11907,7 @@
     },
     {
       "path": "web/src/app/tracks/kotlin-multiplatform.track.ts",
-      "lines": 189,
+      "lines": 190,
       "kind": "angular-app",
       "symbols": [],
       "imports": [

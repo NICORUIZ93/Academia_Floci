@@ -148,18 +148,18 @@
       "genericScaffold": 0
     },
     "kotlin-multiplatform": {
-      "topics": 53,
-      "explanation": 53,
-      "code": 53,
-      "visual": 34,
-      "filePath": 31,
-      "runCommand": 38,
-      "expectedResult": 32,
-      "practice": 37,
-      "project": 34,
-      "modelMental": 53,
-      "limitsDecision": 42,
-      "practicable": 28,
+      "topics": 54,
+      "explanation": 54,
+      "code": 54,
+      "visual": 38,
+      "filePath": 35,
+      "runCommand": 42,
+      "expectedResult": 36,
+      "practice": 40,
+      "project": 38,
+      "modelMental": 54,
+      "limitsDecision": 45,
+      "practicable": 32,
       "genericScaffold": 0
     },
     "node": {
@@ -14907,60 +14907,81 @@
         "criteria": {
           "explanation": true,
           "code": true,
-          "visual": false,
-          "filePath": false,
-          "runCommand": false,
-          "expectedResult": false,
+          "visual": true,
+          "filePath": true,
+          "runCommand": true,
+          "expectedResult": true,
           "practice": true,
-          "project": false,
-          "modelMental": true,
-          "limitsDecision": false
-        },
-        "classification": {
-          "rubricScore": 5,
-          "practicable": false,
-          "genericScaffold": false
-        }
-      },
-      {
-        "module": 7,
-        "topic": "Tema 2: Theming y navegación compartidos",
-        "criteria": {
-          "explanation": true,
-          "code": true,
-          "visual": false,
-          "filePath": false,
-          "runCommand": false,
-          "expectedResult": false,
-          "practice": false,
-          "project": false,
-          "modelMental": true,
-          "limitsDecision": false
-        },
-        "classification": {
-          "rubricScore": 3,
-          "practicable": false,
-          "genericScaffold": false
-        }
-      },
-      {
-        "module": 7,
-        "topic": "Tema 3: Limitaciones en iOS y otros targets",
-        "criteria": {
-          "explanation": true,
-          "code": true,
-          "visual": false,
-          "filePath": false,
-          "runCommand": false,
-          "expectedResult": false,
-          "practice": false,
-          "project": false,
+          "project": true,
           "modelMental": true,
           "limitsDecision": true
         },
         "classification": {
-          "rubricScore": 4,
-          "practicable": false,
+          "rubricScore": 16,
+          "practicable": true,
+          "genericScaffold": false
+        }
+      },
+      {
+        "module": 7,
+        "topic": "Tema 2: Estado y recomposición — mutableStateOf y por qué la UI se redibuja",
+        "criteria": {
+          "explanation": true,
+          "code": true,
+          "visual": true,
+          "filePath": true,
+          "runCommand": true,
+          "expectedResult": true,
+          "practice": true,
+          "project": true,
+          "modelMental": true,
+          "limitsDecision": true
+        },
+        "classification": {
+          "rubricScore": 16,
+          "practicable": true,
+          "genericScaffold": false
+        }
+      },
+      {
+        "module": 7,
+        "topic": "Tema 3: Theming y navegación compartidos",
+        "criteria": {
+          "explanation": true,
+          "code": true,
+          "visual": true,
+          "filePath": true,
+          "runCommand": true,
+          "expectedResult": true,
+          "practice": true,
+          "project": true,
+          "modelMental": true,
+          "limitsDecision": true
+        },
+        "classification": {
+          "rubricScore": 16,
+          "practicable": true,
+          "genericScaffold": false
+        }
+      },
+      {
+        "module": 7,
+        "topic": "Tema 4: Limitaciones en iOS y otros targets",
+        "criteria": {
+          "explanation": true,
+          "code": true,
+          "visual": true,
+          "filePath": true,
+          "runCommand": true,
+          "expectedResult": true,
+          "practice": true,
+          "project": true,
+          "modelMental": true,
+          "limitsDecision": true
+        },
+        "classification": {
+          "rubricScore": 16,
+          "practicable": true,
           "genericScaffold": false
         }
       },

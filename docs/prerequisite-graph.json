@@ -5105,7 +5105,7 @@
       "track": "kotlin-multiplatform",
       "module": 7,
       "position": 2,
-      "title": "Theming y navegación compartidos",
+      "title": "Estado y recomposición — mutableStateOf y por qué la UI se redibuja",
       "file": "web/public/content/kotlin-multiplatform/modulo-7.md",
       "requires": [
         "kotlin-multiplatform:7:1"
@@ -5116,10 +5116,21 @@
       "track": "kotlin-multiplatform",
       "module": 7,
       "position": 3,
-      "title": "Limitaciones en iOS y otros targets",
+      "title": "Theming y navegación compartidos",
       "file": "web/public/content/kotlin-multiplatform/modulo-7.md",
       "requires": [
         "kotlin-multiplatform:7:2"
+      ]
+    },
+    {
+      "id": "kotlin-multiplatform:7:4",
+      "track": "kotlin-multiplatform",
+      "module": 7,
+      "position": 4,
+      "title": "Limitaciones en iOS y otros targets",
+      "file": "web/public/content/kotlin-multiplatform/modulo-7.md",
+      "requires": [
+        "kotlin-multiplatform:7:3"
       ]
     },
     {
@@ -5130,7 +5141,7 @@
       "title": "El framework generado para iOS",
       "file": "web/public/content/kotlin-multiplatform/modulo-8.md",
       "requires": [
-        "kotlin-multiplatform:7:3"
+        "kotlin-multiplatform:7:4"
       ]
     },
     {

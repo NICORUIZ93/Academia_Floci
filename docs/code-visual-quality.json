@@ -100,15 +100,15 @@
       "officialSource": 58
     },
     "kotlin-multiplatform": {
-      "topics": 53,
-      "code": 47,
-      "commentedCode": 30,
-      "mermaid": 22,
-      "asciiVisual": 20,
+      "topics": 54,
+      "code": 48,
+      "commentedCode": 34,
+      "mermaid": 23,
+      "asciiVisual": 22,
       "misleadingDiagramLabel": 0,
-      "filePath": 31,
-      "runCommand": 38,
-      "officialSource": 20
+      "filePath": 35,
+      "runCommand": 42,
+      "officialSource": 21
     },
     "android": {
       "topics": 49,
@@ -3536,27 +3536,6 @@
       "topic": "Tema 6: Compatibilidad binaria y CI multi-target",
       "missingCode": true,
       "missingComments": false
-    },
-    {
-      "track": "kotlin-multiplatform",
-      "module": 7,
-      "topic": "Tema 1: Compose Multiplatform vs Jetpack Compose",
-      "missingCode": false,
-      "missingComments": true
-    },
-    {
-      "track": "kotlin-multiplatform",
-      "module": 7,
-      "topic": "Tema 2: Theming y navegación compartidos",
-      "missingCode": false,
-      "missingComments": true
-    },
-    {
-      "track": "kotlin-multiplatform",
-      "module": 7,
-      "topic": "Tema 3: Limitaciones en iOS y otros targets",
-      "missingCode": false,
-      "missingComments": true
     },
     {
       "track": "kotlin-multiplatform",

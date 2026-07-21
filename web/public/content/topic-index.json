@@ -3150,12 +3150,16 @@
         "fragment": "tema-1-compose-multiplatform-vs-jetpack-compose"
       },
       {
+        "title": "Estado y recomposición — mutableStateOf y por qué la UI se redibuja",
+        "fragment": "tema-2-estado-y-recomposicion-mutablestateof-y-por-que-la-ui-se-redibuja"
+      },
+      {
         "title": "Theming y navegación compartidos",
-        "fragment": "tema-2-theming-y-navegacion-compartidos"
+        "fragment": "tema-3-theming-y-navegacion-compartidos"
       },
       {
         "title": "Limitaciones en iOS y otros targets",
-        "fragment": "tema-3-limitaciones-en-ios-y-otros-targets"
+        "fragment": "tema-4-limitaciones-en-ios-y-otros-targets"
       }
     ],
     "8": [
