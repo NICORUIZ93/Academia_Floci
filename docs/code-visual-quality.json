@@ -113,13 +113,13 @@
     "android": {
       "topics": 49,
       "code": 43,
-      "commentedCode": 6,
+      "commentedCode": 9,
       "mermaid": 6,
       "asciiVisual": 24,
       "misleadingDiagramLabel": 0,
-      "filePath": 6,
-      "runCommand": 6,
-      "officialSource": 3
+      "filePath": 9,
+      "runCommand": 9,
+      "officialSource": 6
     },
     "ios": {
       "topics": 51,
@@ -3702,27 +3702,6 @@
       "track": "android",
       "module": 0,
       "topic": "Tema 3: AndroidManifest.xml y módulos Gradle",
-      "missingCode": false,
-      "missingComments": true
-    },
-    {
-      "track": "android",
-      "module": 1,
-      "topic": "Tema 1: Ciclo de vida de una Activity",
-      "missingCode": false,
-      "missingComments": true
-    },
-    {
-      "track": "android",
-      "module": 1,
-      "topic": "Tema 2: ViewModel sobrevive a la rotación",
-      "missingCode": false,
-      "missingComments": true
-    },
-    {
-      "track": "android",
-      "module": 1,
-      "topic": "Tema 3: SavedStateHandle",
       "missingCode": false,
       "missingComments": true
     },

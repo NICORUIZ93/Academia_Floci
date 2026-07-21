@@ -137,7 +137,7 @@
     },
     {
       "path": "docs/code-visual-quality.json",
-      "lines": 4774,
+      "lines": 4753,
       "kind": "project-file",
       "symbols": [],
       "imports": [],
@@ -2865,7 +2865,7 @@
     },
     {
       "path": "web/public/content/android/modulo-1.md",
-      "lines": 126,
+      "lines": 362,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -2873,9 +2873,15 @@
         "# M\u00f3dulo 1: Ciclo de vida: Activities y ViewModel",
         "## Aprende construyendo",
         "### Tema 1: Ciclo de vida de una Activity",
-        "### Tema 2: ViewModel sobrevive a la rotaci\u00f3n",
-        "### Tema 3: SavedStateHandle",
-        "## Laboratorio pr\u00e1ctico"
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
+        "#### Paso 2 \u00b7 Contexto y caso real",
+        "#### Paso 3 \u00b7 Teor\u00eda con analog\u00eda",
+        "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
+        "# python valida despu\u00e9s la sintaxis; primero se genera el archivo Kotlin",
+        "#### Construcci\u00f3n RutaFlow: instrumentaci\u00f3n de logs del proyecto",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
+        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
+        "#### Paso 7 \u00b7 Cierre y evidencia"
       ]
     },
     {
