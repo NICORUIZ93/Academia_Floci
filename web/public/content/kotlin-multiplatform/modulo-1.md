@@ -49,12 +49,7 @@ fun procesarLista(lista: List<Int>, accion: (Int) -> Unit) {
     lista.forEach { accion(it) }
 }
 EOF
-python3 -c "
-codigo = open('shared/src/commonMain/kotlin/com/academia/kmp/OrdenSuperior.kt').read()
-assert 'accion: (Int) -> Unit' in codigo, 'falta la firma de tipo de función como parámetro'
-assert 'lista.forEach { accion(it) }' in codigo, 'falta invocar la función recibida sobre cada elemento'
-print('OrdenSuperior.kt: procesarLista recibe comportamiento sin conocerlo de antemano')
-"
+./gradlew :shared:compileKotlinMetadata
 ```
 
 **Explicación línea por línea:** `accion: (Int) -> Unit` documenta que el parámetro es una función que recibe un `Int` y no devuelve nada relevante; `lista.forEach { accion(it) }` invoca esa función recibida sobre cada elemento, sin que `procesarLista` sepa qué hace `accion` internamente.
@@ -164,12 +159,7 @@ fun construirConfig(): Config = Config().apply {
 
 fun saludarSiExiste(nombre: String?): String? = nombre?.let { n -> "Hola, $n" }
 EOF
-python3 -c "
-codigo = open('shared/src/commonMain/kotlin/com/academia/kmp/ScopeFunctions.kt').read()
-assert 'Config().apply {' in codigo, 'falta usar apply para configurar y devolver el receptor'
-assert 'nombre?.let' in codigo, 'falta combinar safe call con let para ejecutar solo si existe'
-print('ScopeFunctions.kt: apply devuelve el receptor configurado; let ejecuta solo si no es null')
-"
+./gradlew :shared:compileKotlinMetadata
 ```
 
 **Explicación línea por línea:** `Config().apply { timeout = 30; reintentos = 3 }` configura el objeto recién creado dentro del bloque (usando `this` implícito) y devuelve ESE MISMO objeto como resultado de toda la expresión; `nombre?.let { n -> "Hola, $n" }` ejecuta el bloque solo si `nombre` no es `null`, devolviendo el resultado del bloque (el saludo) en vez del `nombre` original.
@@ -292,12 +282,7 @@ fun nombresAdultos(personas: List<Persona>): List<String> =
 fun totalPedidos(pedidos: List<Pedido>): Double =
     pedidos.fold(0.0) { acumulado, pedido -> acumulado + pedido.monto }
 EOF
-python3 -c "
-codigo = open('shared/src/commonMain/kotlin/com/academia/kmp/EstadoYColecciones.kt').read()
-assert '.filter { it.edad >= 18 }.map { it.nombre }' in codigo, 'falta encadenar filter y map'
-assert 'fold(0.0)' in codigo, 'falta usar fold con valor inicial explícito'
-print('EstadoYColecciones.kt: filter+map encadenados; fold acumula con valor inicial')
-"
+./gradlew :shared:compileKotlinMetadata
 ```
 
 **Explicación línea por línea:** `personas.filter { it.edad >= 18 }` produce una nueva lista solo con adultos; `.map { it.nombre }` transforma esa lista filtrada extrayendo solo el nombre; `pedidos.fold(0.0) { acumulado, pedido -> acumulado + pedido.monto }` recorre cada pedido acumulando su monto sobre el valor inicial `0.0`.
@@ -427,12 +412,7 @@ val miRuta = ruta {
     parada("Cliente B")
 }
 EOF
-python3 -c "
-codigo = open('shared/src/commonMain/kotlin/com/academia/kmp/DslBuilder.kt').read()
-assert 'bloque: RutaBuilder.() -> Unit' in codigo, 'falta declarar la lambda con receptor RutaBuilder.()'
-assert 'builder.bloque()' in codigo, 'falta invocar el bloque con el builder como receptor'
-print('DslBuilder.kt: ruta {} construye una lista sin exponer RutaBuilder directamente al llamador')
-"
+./gradlew :shared:compileKotlinMetadata
 ```
 
 **Explicación línea por línea:** `bloque: RutaBuilder.() -> Unit` declara que `bloque` es una función que, al ejecutarse, tiene `RutaBuilder` como receptor implícito (`this`); `builder.bloque()` ejecuta ese bloque usando `builder` como el `this` dentro de él; dentro de `ruta { parada("Depósito central") }`, `parada(...)` se resuelve como `builder.parada(...)` sin necesitar el prefijo, porque `this` dentro del bloque ES `builder`.
