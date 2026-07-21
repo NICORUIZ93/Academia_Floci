@@ -4903,6 +4903,17 @@
       ]
     },
     {
+      "id": "kotlin-multiplatform:2:4",
+      "track": "kotlin-multiplatform",
+      "module": 2,
+      "position": 4,
+      "title": "Dispatchers y withContext: en qué hilo corre tu código",
+      "file": "web/public/content/kotlin-multiplatform/modulo-2.md",
+      "requires": [
+        "kotlin-multiplatform:2:3"
+      ]
+    },
+    {
       "id": "kotlin-multiplatform:3:1",
       "track": "kotlin-multiplatform",
       "module": 3,
@@ -4910,7 +4921,7 @@
       "title": "Source sets",
       "file": "web/public/content/kotlin-multiplatform/modulo-3.md",
       "requires": [
-        "kotlin-multiplatform:2:3"
+        "kotlin-multiplatform:2:4"
       ]
     },
     {

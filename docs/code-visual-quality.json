@@ -100,15 +100,15 @@
       "officialSource": 58
     },
     "kotlin-multiplatform": {
-      "topics": 48,
-      "code": 42,
-      "commentedCode": 15,
-      "mermaid": 11,
-      "asciiVisual": 12,
+      "topics": 49,
+      "code": 43,
+      "commentedCode": 19,
+      "mermaid": 13,
+      "asciiVisual": 14,
       "misleadingDiagramLabel": 0,
-      "filePath": 13,
-      "runCommand": 21,
-      "officialSource": 8
+      "filePath": 17,
+      "runCommand": 23,
+      "officialSource": 12
     },
     "android": {
       "topics": 49,
@@ -3536,27 +3536,6 @@
       "topic": "Tema 6: Compatibilidad binaria y CI multi-target",
       "missingCode": true,
       "missingComments": false
-    },
-    {
-      "track": "kotlin-multiplatform",
-      "module": 2,
-      "topic": "Tema 1: suspend functions y concurrencia estructurada",
-      "missingCode": false,
-      "missingComments": true
-    },
-    {
-      "track": "kotlin-multiplatform",
-      "module": 2,
-      "topic": "Tema 2: Flow, StateFlow y SharedFlow",
-      "missingCode": false,
-      "missingComments": true
-    },
-    {
-      "track": "kotlin-multiplatform",
-      "module": 2,
-      "topic": "Tema 3: Manejo de errores y exclusión mutua",
-      "missingCode": false,
-      "missingComments": true
     },
     {
       "track": "kotlin-multiplatform",

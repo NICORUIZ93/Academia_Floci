@@ -137,7 +137,7 @@
     },
     {
       "path": "docs/code-visual-quality.json",
-      "lines": 4459,
+      "lines": 4438,
       "kind": "project-file",
       "symbols": [],
       "imports": [],
@@ -224,7 +224,7 @@
     },
     {
       "path": "docs/prerequisite-graph.json",
-      "lines": 9985,
+      "lines": 9996,
       "kind": "project-file",
       "symbols": [],
       "imports": [],
@@ -252,7 +252,7 @@
     },
     {
       "path": "docs/seven-step-methodology.json",
-      "lines": 23897,
+      "lines": 23923,
       "kind": "project-file",
       "symbols": [],
       "imports": [],
@@ -308,7 +308,7 @@
     },
     {
       "path": "docs/topic-learning-quality.json",
-      "lines": 19304,
+      "lines": 19325,
       "kind": "project-file",
       "symbols": [],
       "imports": [],
@@ -6220,7 +6220,7 @@
     },
     {
       "path": "web/public/content/kotlin-multiplatform/modulo-2.md",
-      "lines": 113,
+      "lines": 607,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -6228,9 +6228,15 @@
         "# M\u00f3dulo 2: Coroutines y Flow",
         "## Aprende construyendo",
         "### Tema 1: suspend functions y concurrencia estructurada",
-        "### Tema 2: Flow, StateFlow y SharedFlow",
-        "### Tema 3: Manejo de errores y exclusi\u00f3n mutua",
-        "## Laboratorio pr\u00e1ctico"
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
+        "#### Paso 2 \u00b7 Contexto y caso real",
+        "#### Paso 3 \u00b7 Teor\u00eda con analog\u00eda",
+        "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
+        "# python confirma despu\u00e9s la ejecuci\u00f3n real en paralelo con asyncio",
+        "#### Construcci\u00f3n RutaFlow: carga paralela de ruta y clima",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada \u2014 repetici\u00f3n progresiva",
+        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
+        "#### Paso 7 \u00b7 Cierre y evidencia"
       ]
     },
     {
@@ -9512,7 +9518,7 @@
     },
     {
       "path": "web/public/content/topic-index.json",
-      "lines": 4107,
+      "lines": 4111,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -11872,7 +11878,7 @@
     },
     {
       "path": "web/src/app/tracks/kotlin-multiplatform.track.ts",
-      "lines": 183,
+      "lines": 185,
       "kind": "angular-app",
       "symbols": [],
       "imports": [

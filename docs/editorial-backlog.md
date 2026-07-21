@@ -6,16 +6,16 @@ Este inventario se genera desde el Markdown real. Las ayudas visuales, el glosar
 
 | Criterio | Cubierto | Pendiente |
 |---|---:|---:|
-| Explicación | 907 | 0 |
-| Código | 907 | 0 |
-| Ruta | 678 | 229 |
-| Ejecución | 769 | 138 |
-| Resultado | 706 | 201 |
-| Modificación | 779 | 128 |
-| Rutaflow | 469 | 438 |
-| Modelo mental | 907 | 0 |
-| Límites | 615 | 292 |
-| **Tema practicable completo** | **555** | **352** |
+| Explicación | 908 | 0 |
+| Código | 908 | 0 |
+| Ruta | 682 | 226 |
+| Ejecución | 771 | 137 |
+| Resultado | 709 | 199 |
+| Modificación | 782 | 126 |
+| Rutaflow | 473 | 435 |
+| Modelo mental | 908 | 0 |
+| Límites | 617 | 291 |
+| **Tema practicable completo** | **559** | **349** |
 
 ## Prioridad por track
 
@@ -30,7 +30,7 @@ Este inventario se genera desde el Markdown real. Las ayudas visuales, el glosar
 | ios | 51 | 0 | 25 | 6 | 8 | 4 | 26 |
 | java | 59 | 0 | 0 | 0 | 2 | 0 | 15 |
 | javascript | 83 | 0 | 0 | 0 | 0 | 0 | 19 |
-| kotlin-multiplatform | 48 | 0 | 35 | 27 | 34 | 28 | 18 |
+| kotlin-multiplatform | 49 | 0 | 32 | 26 | 32 | 26 | 17 |
 | node | 68 | 0 | 0 | 0 | 0 | 0 | 14 |
 | react | 55 | 0 | 5 | 6 | 6 | 0 | 30 |
 | rutaflow | 24 | 0 | 24 | 21 | 21 | 21 | 19 |
