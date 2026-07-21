@@ -100,15 +100,15 @@
       "officialSource": 58
     },
     "kotlin-multiplatform": {
-      "topics": 49,
-      "code": 43,
-      "commentedCode": 19,
-      "mermaid": 13,
+      "topics": 50,
+      "code": 44,
+      "commentedCode": 22,
+      "mermaid": 16,
       "asciiVisual": 14,
       "misleadingDiagramLabel": 0,
-      "filePath": 17,
-      "runCommand": 23,
-      "officialSource": 12
+      "filePath": 19,
+      "runCommand": 26,
+      "officialSource": 16
     },
     "android": {
       "topics": 49,
@@ -3536,20 +3536,6 @@
       "topic": "Tema 6: Compatibilidad binaria y CI multi-target",
       "missingCode": true,
       "missingComments": false
-    },
-    {
-      "track": "kotlin-multiplatform",
-      "module": 3,
-      "topic": "Tema 1: Source sets",
-      "missingCode": false,
-      "missingComments": true
-    },
-    {
-      "track": "kotlin-multiplatform",
-      "module": 3,
-      "topic": "Tema 3: Gradle multiplataforma y targets disponibles",
-      "missingCode": false,
-      "missingComments": true
     },
     {
       "track": "kotlin-multiplatform",

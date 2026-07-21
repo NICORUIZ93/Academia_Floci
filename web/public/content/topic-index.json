@@ -3084,6 +3084,10 @@
       {
         "title": "Gradle multiplataforma y targets disponibles",
         "fragment": "tema-3-gradle-multiplataforma-y-targets-disponibles"
+      },
+      {
+        "title": "Jerarquía de source sets intermedios",
+        "fragment": "tema-4-jerarquia-de-source-sets-intermedios"
       }
     ],
     "4": [

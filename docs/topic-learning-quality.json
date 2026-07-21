@@ -148,18 +148,18 @@
       "genericScaffold": 0
     },
     "kotlin-multiplatform": {
-      "topics": 49,
-      "explanation": 49,
-      "code": 49,
-      "visual": 18,
-      "filePath": 17,
-      "runCommand": 23,
-      "expectedResult": 17,
-      "practice": 23,
-      "project": 18,
-      "modelMental": 49,
-      "limitsDecision": 32,
-      "practicable": 12,
+      "topics": 50,
+      "explanation": 50,
+      "code": 50,
+      "visual": 22,
+      "filePath": 19,
+      "runCommand": 26,
+      "expectedResult": 21,
+      "practice": 26,
+      "project": 22,
+      "modelMental": 50,
+      "limitsDecision": 35,
+      "practicable": 16,
       "genericScaffold": 0
     },
     "node": {
@@ -14571,18 +14571,18 @@
         "criteria": {
           "explanation": true,
           "code": true,
-          "visual": false,
+          "visual": true,
           "filePath": true,
-          "runCommand": false,
-          "expectedResult": false,
-          "practice": false,
-          "project": false,
+          "runCommand": true,
+          "expectedResult": true,
+          "practice": true,
+          "project": true,
           "modelMental": true,
           "limitsDecision": true
         },
         "classification": {
-          "rubricScore": 6,
-          "practicable": false,
+          "rubricScore": 16,
+          "practicable": true,
           "genericScaffold": false
         }
       },
@@ -14592,18 +14592,18 @@
         "criteria": {
           "explanation": true,
           "code": true,
-          "visual": false,
-          "filePath": false,
-          "runCommand": false,
-          "expectedResult": false,
-          "practice": false,
-          "project": false,
+          "visual": true,
+          "filePath": true,
+          "runCommand": true,
+          "expectedResult": true,
+          "practice": true,
+          "project": true,
           "modelMental": true,
-          "limitsDecision": false
+          "limitsDecision": true
         },
         "classification": {
-          "rubricScore": 3,
-          "practicable": false,
+          "rubricScore": 16,
+          "practicable": true,
           "genericScaffold": false
         }
       },
@@ -14613,18 +14613,39 @@
         "criteria": {
           "explanation": true,
           "code": true,
-          "visual": false,
+          "visual": true,
           "filePath": true,
           "runCommand": true,
-          "expectedResult": false,
+          "expectedResult": true,
           "practice": true,
-          "project": false,
+          "project": true,
           "modelMental": true,
-          "limitsDecision": false
+          "limitsDecision": true
         },
         "classification": {
-          "rubricScore": 9,
-          "practicable": false,
+          "rubricScore": 16,
+          "practicable": true,
+          "genericScaffold": false
+        }
+      },
+      {
+        "module": 3,
+        "topic": "Tema 4: Jerarquía de source sets intermedios",
+        "criteria": {
+          "explanation": true,
+          "code": true,
+          "visual": true,
+          "filePath": true,
+          "runCommand": true,
+          "expectedResult": true,
+          "practice": true,
+          "project": true,
+          "modelMental": true,
+          "limitsDecision": true
+        },
+        "classification": {
+          "rubricScore": 16,
+          "practicable": true,
           "genericScaffold": false
         }
       },
