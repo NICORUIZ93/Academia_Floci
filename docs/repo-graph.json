@@ -137,7 +137,7 @@
     },
     {
       "path": "docs/code-visual-quality.json",
-      "lines": 4424,
+      "lines": 4410,
       "kind": "project-file",
       "symbols": [],
       "imports": [],
@@ -224,7 +224,7 @@
     },
     {
       "path": "docs/prerequisite-graph.json",
-      "lines": 10007,
+      "lines": 10018,
       "kind": "project-file",
       "symbols": [],
       "imports": [],
@@ -252,7 +252,7 @@
     },
     {
       "path": "docs/seven-step-methodology.json",
-      "lines": 23949,
+      "lines": 23975,
       "kind": "project-file",
       "symbols": [],
       "imports": [],
@@ -308,7 +308,7 @@
     },
     {
       "path": "docs/topic-learning-quality.json",
-      "lines": 19346,
+      "lines": 19367,
       "kind": "project-file",
       "symbols": [],
       "imports": [],
@@ -6262,7 +6262,7 @@
     },
     {
       "path": "web/public/content/kotlin-multiplatform/modulo-4.md",
-      "lines": 115,
+      "lines": 586,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -6270,9 +6270,15 @@
         "# M\u00f3dulo 4: L\u00f3gica de negocio compartida",
         "## Aprende construyendo",
         "### Tema 1: Modelos de dominio y casos de uso",
-        "### Tema 2: Repositorios con interfaz com\u00fan",
-        "### Tema 3: Inyecci\u00f3n de dependencias multiplataforma con Koin",
-        "## Laboratorio pr\u00e1ctico"
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
+        "#### Paso 2 \u00b7 Contexto y caso real",
+        "#### Paso 3 \u00b7 Teor\u00eda con analog\u00eda",
+        "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
+        "# python confirma despu\u00e9s que el caso de uso funciona igual con cualquier implementaci\u00f3n",
+        "#### Construcci\u00f3n RutaFlow: modelo de entrega y caso de uso de paradas pendientes",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada \u2014 repetici\u00f3n progresiva",
+        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
+        "#### Paso 7 \u00b7 Cierre y evidencia"
       ]
     },
     {
@@ -9524,7 +9530,7 @@
     },
     {
       "path": "web/public/content/topic-index.json",
-      "lines": 4115,
+      "lines": 4119,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -11884,7 +11890,7 @@
     },
     {
       "path": "web/src/app/tracks/kotlin-multiplatform.track.ts",
-      "lines": 186,
+      "lines": 187,
       "kind": "angular-app",
       "symbols": [],
       "imports": [

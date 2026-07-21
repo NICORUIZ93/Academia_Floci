@@ -4991,6 +4991,17 @@
       ]
     },
     {
+      "id": "kotlin-multiplatform:4:4",
+      "track": "kotlin-multiplatform",
+      "module": 4,
+      "position": 4,
+      "title": "Modelado de errores de dominio con un tipo Result explícito",
+      "file": "web/public/content/kotlin-multiplatform/modulo-4.md",
+      "requires": [
+        "kotlin-multiplatform:4:3"
+      ]
+    },
+    {
       "id": "kotlin-multiplatform:5:1",
       "track": "kotlin-multiplatform",
       "module": 5,
@@ -4998,7 +5009,7 @@
       "title": "Ktor Client multiplataforma",
       "file": "web/public/content/kotlin-multiplatform/modulo-5.md",
       "requires": [
-        "kotlin-multiplatform:4:3"
+        "kotlin-multiplatform:4:4"
       ]
     },
     {

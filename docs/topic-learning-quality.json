@@ -148,18 +148,18 @@
       "genericScaffold": 0
     },
     "kotlin-multiplatform": {
-      "topics": 50,
-      "explanation": 50,
-      "code": 50,
-      "visual": 22,
-      "filePath": 19,
-      "runCommand": 26,
-      "expectedResult": 21,
-      "practice": 26,
-      "project": 22,
-      "modelMental": 50,
-      "limitsDecision": 35,
-      "practicable": 16,
+      "topics": 51,
+      "explanation": 51,
+      "code": 51,
+      "visual": 26,
+      "filePath": 23,
+      "runCommand": 30,
+      "expectedResult": 25,
+      "practice": 29,
+      "project": 26,
+      "modelMental": 51,
+      "limitsDecision": 37,
+      "practicable": 20,
       "genericScaffold": 0
     },
     "node": {
@@ -14655,18 +14655,18 @@
         "criteria": {
           "explanation": true,
           "code": true,
-          "visual": false,
-          "filePath": false,
-          "runCommand": false,
-          "expectedResult": false,
-          "practice": false,
-          "project": false,
+          "visual": true,
+          "filePath": true,
+          "runCommand": true,
+          "expectedResult": true,
+          "practice": true,
+          "project": true,
           "modelMental": true,
-          "limitsDecision": false
+          "limitsDecision": true
         },
         "classification": {
-          "rubricScore": 3,
-          "practicable": false,
+          "rubricScore": 16,
+          "practicable": true,
           "genericScaffold": false
         }
       },
@@ -14676,18 +14676,18 @@
         "criteria": {
           "explanation": true,
           "code": true,
-          "visual": false,
-          "filePath": false,
-          "runCommand": false,
-          "expectedResult": false,
+          "visual": true,
+          "filePath": true,
+          "runCommand": true,
+          "expectedResult": true,
           "practice": true,
-          "project": false,
+          "project": true,
           "modelMental": true,
           "limitsDecision": true
         },
         "classification": {
-          "rubricScore": 6,
-          "practicable": false,
+          "rubricScore": 16,
+          "practicable": true,
           "genericScaffold": false
         }
       },
@@ -14697,18 +14697,39 @@
         "criteria": {
           "explanation": true,
           "code": true,
-          "visual": false,
-          "filePath": false,
-          "runCommand": false,
-          "expectedResult": false,
-          "practice": false,
-          "project": false,
+          "visual": true,
+          "filePath": true,
+          "runCommand": true,
+          "expectedResult": true,
+          "practice": true,
+          "project": true,
           "modelMental": true,
           "limitsDecision": true
         },
         "classification": {
-          "rubricScore": 4,
-          "practicable": false,
+          "rubricScore": 16,
+          "practicable": true,
+          "genericScaffold": false
+        }
+      },
+      {
+        "module": 4,
+        "topic": "Tema 4: Modelado de errores de dominio con un tipo Result explícito",
+        "criteria": {
+          "explanation": true,
+          "code": true,
+          "visual": true,
+          "filePath": true,
+          "runCommand": true,
+          "expectedResult": true,
+          "practice": true,
+          "project": true,
+          "modelMental": true,
+          "limitsDecision": true
+        },
+        "classification": {
+          "rubricScore": 16,
+          "practicable": true,
           "genericScaffold": false
         }
       },

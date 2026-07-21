@@ -3102,6 +3102,10 @@
       {
         "title": "Inyección de dependencias multiplataforma con Koin",
         "fragment": "tema-3-inyeccion-de-dependencias-multiplataforma-con-koin"
+      },
+      {
+        "title": "Modelado de errores de dominio con un tipo Result explícito",
+        "fragment": "tema-4-modelado-de-errores-de-dominio-con-un-tipo-result-explicito"
       }
     ],
     "5": [

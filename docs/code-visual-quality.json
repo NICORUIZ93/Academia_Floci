@@ -100,15 +100,15 @@
       "officialSource": 58
     },
     "kotlin-multiplatform": {
-      "topics": 50,
-      "code": 44,
-      "commentedCode": 22,
-      "mermaid": 16,
-      "asciiVisual": 14,
+      "topics": 51,
+      "code": 45,
+      "commentedCode": 25,
+      "mermaid": 18,
+      "asciiVisual": 16,
       "misleadingDiagramLabel": 0,
-      "filePath": 19,
-      "runCommand": 26,
-      "officialSource": 16
+      "filePath": 23,
+      "runCommand": 30,
+      "officialSource": 19
     },
     "android": {
       "topics": 49,
@@ -3536,20 +3536,6 @@
       "topic": "Tema 6: Compatibilidad binaria y CI multi-target",
       "missingCode": true,
       "missingComments": false
-    },
-    {
-      "track": "kotlin-multiplatform",
-      "module": 4,
-      "topic": "Tema 2: Repositorios con interfaz común",
-      "missingCode": false,
-      "missingComments": true
-    },
-    {
-      "track": "kotlin-multiplatform",
-      "module": 4,
-      "topic": "Tema 3: Inyección de dependencias multiplataforma con Koin",
-      "missingCode": false,
-      "missingComments": true
     },
     {
       "track": "kotlin-multiplatform",
