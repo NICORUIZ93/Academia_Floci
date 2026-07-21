@@ -137,7 +137,7 @@
     },
     {
       "path": "docs/code-visual-quality.json",
-      "lines": 4704,
+      "lines": 4683,
       "kind": "project-file",
       "symbols": [],
       "imports": [],
@@ -3037,7 +3037,7 @@
     },
     {
       "path": "web/public/content/android/modulo-5.md",
-      "lines": 144,
+      "lines": 386,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -3045,9 +3045,15 @@
         "# M\u00f3dulo 5: Networking con Retrofit/Ktor",
         "## Aprende construyendo",
         "### Tema 1: Retrofit con coroutines",
-        "### Tema 2: Manejo de errores HTTP",
-        "### Tema 3: Interceptores de OkHttp",
-        "## Laboratorio pr\u00e1ctico"
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
+        "#### Paso 2 \u00b7 Contexto y caso real",
+        "#### Paso 3 \u00b7 Teor\u00eda con analog\u00eda",
+        "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
+        "# python levanta un servidor HTTP real de prueba en el puerto 8000",
+        "#### Construcci\u00f3n RutaFlow: interfaz de API del proyecto",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
+        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
+        "#### Paso 7 \u00b7 Cierre y evidencia"
       ]
     },
     {

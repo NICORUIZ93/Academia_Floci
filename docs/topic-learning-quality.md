@@ -4,7 +4,7 @@ Esta auditoría mide exclusivamente el contenido editorial real. **Explicación*
 
 | Track | Temas | Explicación | Código | Ruta | Ejecución | Resultado | Práctica | Proyecto | Modelo mental | Límites | Practicable | Texto genérico |
 |---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
-| android | 49 | 49 | 49 | 17 | 18 | 24 | 34 | 21 | 49 | 27 | 15 | 0 |
+| android | 49 | 49 | 49 | 20 | 20 | 27 | 35 | 24 | 49 | 28 | 18 | 0 |
 | angular | 61 | 61 | 61 | 55 | 55 | 55 | 61 | 7 | 61 | 40 | 35 | 0 |
 | cloud | 153 | 153 | 153 | 71 | 116 | 71 | 111 | 59 | 153 | 109 | 59 | 0 |
 | devops | 91 | 91 | 91 | 79 | 82 | 83 | 87 | 84 | 91 | 87 | 78 | 0 |
@@ -18,7 +18,7 @@ Esta auditoría mide exclusivamente el contenido editorial real. **Explicación*
 | react | 55 | 55 | 55 | 50 | 49 | 49 | 55 | 6 | 55 | 25 | 19 | 0 |
 | rutaflow | 24 | 24 | 24 | 0 | 3 | 3 | 3 | 24 | 24 | 5 | 0 | 0 |
 | spring-boot | 58 | 58 | 58 | 58 | 58 | 58 | 58 | 13 | 58 | 32 | 38 | 0 |
-| **Total** | **905** | **905** | **905** | **638** | **734** | **678** | **760** | **433** | **905** | **586** | **513** | **0** |
+| **Total** | **905** | **905** | **905** | **641** | **736** | **681** | **761** | **436** | **905** | **587** | **516** | **0** |
 
 ## Regla editorial
 

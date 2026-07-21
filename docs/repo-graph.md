@@ -1,6 +1,6 @@
 # Academia Floci Repo Graph
 
-Generated: 2026-07-21 09:33 UTC
+Generated: 2026-07-21 09:36 UTC
 Root: `Academia_Floci`
 Indexed files: 781
 Import edges: 33
@@ -191,7 +191,7 @@ For automated lookups, use `docs/repo-graph.json`.
 - `web/public/content/android/modulo-2.md` (389 lines) - headings: # Módulo 2: Jetpack Compose: UI declarativa, ## Aprende construyendo, ### Tema 1: Composables y recomposición, #### Paso 1 · Objetivo y preparación
 - `web/public/content/android/modulo-3.md` (398 lines) - headings: # Módulo 3: Navegación con Navigation Compose, ## Aprende construyendo, ### Tema 1: NavHost y NavController, #### Paso 1 · Objetivo y preparación
 - `web/public/content/android/modulo-4.md` (392 lines) - headings: # Módulo 4: Estado con StateFlow y Compose, ## Aprende construyendo, ### Tema 1: StateFlow en el ViewModel, #### Paso 1 · Objetivo y preparación
-- `web/public/content/android/modulo-5.md` (144 lines) - headings: # Módulo 5: Networking con Retrofit/Ktor, ## Aprende construyendo, ### Tema 1: Retrofit con coroutines, ### Tema 2: Manejo de errores HTTP
+- `web/public/content/android/modulo-5.md` (386 lines) - headings: # Módulo 5: Networking con Retrofit/Ktor, ## Aprende construyendo, ### Tema 1: Retrofit con coroutines, #### Paso 1 · Objetivo y preparación
 - `web/public/content/android/modulo-6.md` (149 lines) - headings: # Módulo 6: Persistencia local con Room, ## Aprende construyendo, ### Tema 1: Entities, DAOs y Database, ### Tema 2: Room + Flow reactivo, y migraciones
 - `web/public/content/android/modulo-7.md` (142 lines) - headings: # Módulo 7: Inyección de dependencias con Hilt, ## Aprende construyendo, ### Tema 1: Configuración básica de Hilt, ### Tema 2: @Provides y @Binds
 - `web/public/content/android/modulo-8.md` (140 lines) - headings: # Módulo 8: Trabajo en segundo plano, ## Aprende construyendo, ### Tema 1: CoroutineWorker y garantía de ejecución, ### Tema 2: Constraints y trabajo periódico
@@ -252,7 +252,7 @@ For automated lookups, use `docs/repo-graph.json`.
 - `.env.example` (8 lines)
 - `.github/workflows/ci.yml` (55 lines)
 - `.gitignore` (26 lines)
-- `docs/code-visual-quality.json` (4704 lines)
+- `docs/code-visual-quality.json` (4683 lines)
 - `docs/curriculum-matrix.json` (155 lines)
 - `docs/floci-official-curriculum.json` (14 lines)
 - `docs/official-learning-guides.json` (22 lines)
