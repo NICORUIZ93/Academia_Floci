@@ -99,8 +99,8 @@ El servicio de metadatos de instancia (IMDS) es un servidor HTTP que Floci expon
 aws ec2 run-instances --image-id ami-amazonlinux2023 --instance-type t2.micro \
   --user-data '#!/bin/bash
 echo "listo" > /tmp/listo.txt'
-# copia el InstanceId de la respuesta y busca el container-id con: docker ps
-docker logs <container-id> | grep listo
+# docker ps -lq = el contenedor creado más recientemente (el que acabas de lanzar)
+docker logs "$(docker ps -lq)" | grep listo
 
 TOKEN=$(curl -s -X PUT http://localhost:9169/latest/api/token -H "x-aws-ec2-metadata-token-ttl-seconds: 21600")
 curl -s -H "x-aws-ec2-metadata-token: $TOKEN" http://localhost:9169/latest/meta-data/instance-id

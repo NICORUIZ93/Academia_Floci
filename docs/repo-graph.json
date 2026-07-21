@@ -3674,7 +3674,7 @@
         "# archivo: src/labs/modulo-21/tema-2-security-group-y-clave.sh \u2014 ejecutar con: bash tema-2-security-group-y-clave.sh",
         "### Tema 3: UserData e IMDS \u2014 arranque automatizado y credenciales por instancia",
         "# archivo: src/labs/modulo-21/tema-3-userdata-imds.sh \u2014 ejecutar con: bash tema-3-userdata-imds.sh",
-        "# copia el InstanceId de la respuesta y busca el container-id con: docker ps",
+        "# docker ps -lq = el contenedor creado m\u00e1s recientemente (el que acabas de lanzar)",
         "### Tema 4: Auto Scaling \u2014 configuraciones de lanzamiento y grupos",
         "# archivo: src/labs/modulo-21/tema-4-launch-config.sh \u2014 ejecutar con: bash tema-4-launch-config.sh",
         "### Tema 5: El reconciliador de capacidad y las pol\u00edticas de escalado"
