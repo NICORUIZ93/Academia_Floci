@@ -1,6 +1,6 @@
 # Academia Floci Repo Graph
 
-Generated: 2026-07-21 08:16 UTC
+Generated: 2026-07-21 08:34 UTC
 Root: `Academia_Floci`
 Indexed files: 782
 Import edges: 33
@@ -253,7 +253,7 @@ For automated lookups, use `docs/repo-graph.json`.
 - `.env.example` (8 lines)
 - `.github/workflows/ci.yml` (55 lines)
 - `.gitignore` (25 lines)
-- `docs/code-visual-quality.json` (4837 lines)
+- `docs/code-visual-quality.json` (4809 lines)
 - `docs/curriculum-matrix.json` (155 lines)
 - `docs/floci-official-curriculum.json` (14 lines)
 - `docs/official-learning-guides.json` (22 lines)

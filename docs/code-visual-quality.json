@@ -25,12 +25,12 @@
     "devops": {
       "topics": 91,
       "code": 85,
-      "commentedCode": 1,
+      "commentedCode": 5,
       "mermaid": 7,
       "asciiVisual": 84,
       "misleadingDiagramLabel": 0,
-      "filePath": 19,
-      "runCommand": 44,
+      "filePath": 27,
+      "runCommand": 50,
       "officialSource": 0
     },
     "javascript": {
@@ -1139,28 +1139,7 @@
     {
       "track": "devops",
       "module": 0,
-      "topic": "Tema 1: Sistema de archivos y permisos (chmod/chown)",
-      "missingCode": false,
-      "missingComments": true
-    },
-    {
-      "track": "devops",
-      "module": 0,
-      "topic": "Tema 2: Procesos, señales y jobs en segundo plano",
-      "missingCode": false,
-      "missingComments": true
-    },
-    {
-      "track": "devops",
-      "module": 0,
       "topic": "Tema 3: Pipes, redirección y filtros (grep, awk, sed)",
-      "missingCode": false,
-      "missingComments": true
-    },
-    {
-      "track": "devops",
-      "module": 0,
-      "topic": "Tema 5: Cron y tareas programadas",
       "missingCode": false,
       "missingComments": true
     },
@@ -1175,13 +1154,6 @@
       "track": "devops",
       "module": 0,
       "topic": "Tema 7: Redes — modelo OSI, TCP/IP, DNS y balanceadores de carga",
-      "missingCode": false,
-      "missingComments": true
-    },
-    {
-      "track": "devops",
-      "module": 0,
-      "topic": "Tema 8: Cultura DevOps y el ciclo Plan→Code→Build→Test→Release→Deploy→Operate→Monitor",
       "missingCode": false,
       "missingComments": true
     },

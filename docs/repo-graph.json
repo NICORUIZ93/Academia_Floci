@@ -145,7 +145,7 @@
     },
     {
       "path": "docs/code-visual-quality.json",
-      "lines": 4837,
+      "lines": 4809,
       "kind": "project-file",
       "symbols": [],
       "imports": [],
@@ -4081,7 +4081,7 @@
     },
     {
       "path": "web/public/content/devops/modulo-0.md",
-      "lines": 412,
+      "lines": 871,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -4093,11 +4093,11 @@
         "### Linux (Ubuntu/Debian)",
         "## Aprende construyendo",
         "### Tema 1: Sistema de archivos y permisos (chmod/chown)",
-        "### Tema 2: Procesos, se\u00f1ales y jobs en segundo plano",
-        "### Tema 3: Pipes, redirecci\u00f3n y filtros (grep, awk, sed)",
-        "### Tema 4: Variables de entorno y scripts bash robustos (set -euo pipefail)",
-        "# \u2502\u2502\u2502",
-        "# \u2502\u2502\u2514\u2500 pipefail: un pipe falla si CUALQUIER comando de la cadena falla"
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
+        "#### Paso 2 \u00b7 Contexto y caso real",
+        "#### Paso 3 \u00b7 Teor\u00eda con analog\u00eda",
+        "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
+        "#### Construcci\u00f3n RutaFlow: permisos m\u00ednimos para credenciales"
       ]
     },
     {
