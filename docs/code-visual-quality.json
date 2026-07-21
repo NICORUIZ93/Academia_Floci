@@ -113,13 +113,13 @@
     "android": {
       "topics": 49,
       "code": 43,
-      "commentedCode": 33,
+      "commentedCode": 36,
       "mermaid": 6,
-      "asciiVisual": 42,
+      "asciiVisual": 43,
       "misleadingDiagramLabel": 0,
-      "filePath": 38,
-      "runCommand": 37,
-      "officialSource": 33
+      "filePath": 41,
+      "runCommand": 39,
+      "officialSource": 36
     },
     "ios": {
       "topics": 51,
@@ -3716,27 +3716,6 @@
       "track": "android",
       "module": 11,
       "topic": "Tema 3: Versionado, tracks y políticas",
-      "missingCode": false,
-      "missingComments": true
-    },
-    {
-      "track": "android",
-      "module": 12,
-      "topic": "Tema 1: Arquitectura MVVM completa con UDF",
-      "missingCode": false,
-      "missingComments": true
-    },
-    {
-      "track": "android",
-      "module": 12,
-      "topic": "Tema 2: Inyección de dependencias en toda la app",
-      "missingCode": false,
-      "missingComments": true
-    },
-    {
-      "track": "android",
-      "module": 12,
-      "topic": "Tema 3: Cierre del track y próximos pasos",
       "missingCode": false,
       "missingComments": true
     },

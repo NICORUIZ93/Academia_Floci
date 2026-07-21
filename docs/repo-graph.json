@@ -137,7 +137,7 @@
     },
     {
       "path": "docs/code-visual-quality.json",
-      "lines": 4585,
+      "lines": 4564,
       "kind": "project-file",
       "symbols": [],
       "imports": [],
@@ -2928,7 +2928,7 @@
     },
     {
       "path": "web/public/content/android/modulo-12.md",
-      "lines": 159,
+      "lines": 359,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -2936,13 +2936,15 @@
         "# M\u00f3dulo 12: Proyecto integrador: app Android completa",
         "## Aprende construyendo",
         "### Tema 1: Arquitectura MVVM completa con UDF",
-        "### Tema 2: Inyecci\u00f3n de dependencias en toda la app",
-        "### Tema 3: Cierre del track y pr\u00f3ximos pasos",
-        "## Proyecto transversal RutaFlow: Ubicaci\u00f3n consciente de bater\u00eda",
-        "### Capacidad y fundamento",
-        "### Implementaci\u00f3n guiada",
-        "### Verificaci\u00f3n profesional",
-        "## Laboratorio pr\u00e1ctico"
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
+        "#### Paso 2 \u00b7 Contexto y caso real",
+        "#### Paso 3 \u00b7 Teor\u00eda con analog\u00eda",
+        "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
+        "# python verifica que la integraci\u00f3n conecta las capas en el orden correcto",
+        "#### Construcci\u00f3n RutaFlow: arquitectura completa del proyecto",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
+        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
+        "#### Paso 7 \u00b7 Cierre y evidencia"
       ]
     },
     {
