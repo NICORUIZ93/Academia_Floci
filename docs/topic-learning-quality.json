@@ -211,15 +211,15 @@
       "topics": 58,
       "explanation": 58,
       "code": 58,
-      "visual": 14,
+      "visual": 17,
       "filePath": 58,
       "runCommand": 58,
       "expectedResult": 58,
       "practice": 58,
-      "project": 13,
+      "project": 16,
       "modelMental": 58,
-      "limitsDecision": 32,
-      "practicable": 38,
+      "limitsDecision": 33,
+      "practicable": 39,
       "genericScaffold": 0
     }
   },
@@ -18212,18 +18212,18 @@
         "criteria": {
           "explanation": true,
           "code": true,
-          "visual": false,
+          "visual": true,
           "filePath": true,
           "runCommand": true,
           "expectedResult": true,
           "practice": true,
-          "project": false,
+          "project": true,
           "modelMental": true,
-          "limitsDecision": false
+          "limitsDecision": true
         },
         "classification": {
-          "rubricScore": 11,
-          "practicable": false,
+          "rubricScore": 16,
+          "practicable": true,
           "genericScaffold": false
         }
       },
@@ -18233,17 +18233,17 @@
         "criteria": {
           "explanation": true,
           "code": true,
-          "visual": false,
+          "visual": true,
           "filePath": true,
           "runCommand": true,
           "expectedResult": true,
           "practice": true,
-          "project": false,
+          "project": true,
           "modelMental": true,
           "limitsDecision": true
         },
         "classification": {
-          "rubricScore": 12,
+          "rubricScore": 16,
           "practicable": true,
           "genericScaffold": false
         }
@@ -18254,17 +18254,17 @@
         "criteria": {
           "explanation": true,
           "code": true,
-          "visual": false,
+          "visual": true,
           "filePath": true,
           "runCommand": true,
           "expectedResult": true,
           "practice": true,
-          "project": false,
+          "project": true,
           "modelMental": true,
           "limitsDecision": true
         },
         "classification": {
-          "rubricScore": 12,
+          "rubricScore": 16,
           "practicable": true,
           "genericScaffold": false
         }

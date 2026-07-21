@@ -91,8 +91,8 @@
     "spring-boot": {
       "topics": 58,
       "code": 58,
-      "commentedCode": 5,
-      "mermaid": 14,
+      "commentedCode": 7,
+      "mermaid": 16,
       "asciiVisual": 11,
       "misleadingDiagramLabel": 0,
       "filePath": 58,
@@ -3058,20 +3058,6 @@
       "track": "java",
       "module": 9,
       "topic": "Tema 3: Tests parametrizados y cobertura",
-      "missingCode": false,
-      "missingComments": true
-    },
-    {
-      "track": "spring-boot",
-      "module": 0,
-      "topic": "Tema 1: Inversión de control y el contenedor de Spring",
-      "missingCode": false,
-      "missingComments": true
-    },
-    {
-      "track": "spring-boot",
-      "module": 0,
-      "topic": "Tema 3: Estereotipos, autoconfiguración y scopes",
       "missingCode": false,
       "missingComments": true
     },

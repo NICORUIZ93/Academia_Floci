@@ -137,7 +137,7 @@
     },
     {
       "path": "docs/code-visual-quality.json",
-      "lines": 4368,
+      "lines": 4354,
       "kind": "project-file",
       "symbols": [],
       "imports": [],
@@ -9211,7 +9211,7 @@
     },
     {
       "path": "web/public/content/spring-boot/modulo-0.md",
-      "lines": 244,
+      "lines": 488,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -9224,10 +9224,10 @@
         "### Tema 1: Inversi\u00f3n de control y el contenedor de Spring",
         "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
         "#### Paso 2 \u00b7 Contexto y caso real",
-        "#### Paso 3 \u00b7 Teor\u00eda, modelo mental y analog\u00eda",
+        "#### Paso 3 \u00b7 Teor\u00eda con analog\u00eda",
         "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
-        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
-        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente"
+        "# arranca con Maven el contenedor real de Spring",
+        "#### Construcci\u00f3n RutaFlow: contenedor para el servicio de rutas"
       ]
     },
     {

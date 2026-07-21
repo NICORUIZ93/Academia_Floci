@@ -12,10 +12,10 @@ Este inventario se genera desde el Markdown real. Las ayudas visuales, el glosar
 | Ejecución | 790 | 123 |
 | Resultado | 728 | 185 |
 | Modificación | 799 | 114 |
-| Rutaflow | 493 | 420 |
+| Rutaflow | 496 | 417 |
 | Modelo mental | 913 | 0 |
-| Límites | 630 | 283 |
-| **Tema practicable completo** | **579** | **334** |
+| Límites | 631 | 282 |
+| **Tema practicable completo** | **580** | **333** |
 
 ## Prioridad por track
 
@@ -34,7 +34,7 @@ Este inventario se genera desde el Markdown real. Las ayudas visuales, el glosar
 | node | 68 | 0 | 0 | 0 | 0 | 0 | 14 |
 | react | 55 | 0 | 5 | 6 | 6 | 0 | 30 |
 | rutaflow | 24 | 0 | 24 | 21 | 21 | 21 | 19 |
-| spring-boot | 58 | 0 | 0 | 0 | 0 | 0 | 26 |
+| spring-boot | 58 | 0 | 0 | 0 | 0 | 0 | 25 |
 
 ## Temas sin código editorial
 
