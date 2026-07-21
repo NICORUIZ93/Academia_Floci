@@ -56,11 +56,7 @@ class ObtenerTareasPendientesUseCase(private val repositorio: TareaRepository) {
         repositorio.obtenerTodas().filter { !it.completada }
 }
 EOF
-python3 -c "
-codigo = open('shared/src/commonMain/kotlin/com/academia/kmp/Dominio.kt').read()
-assert 'private val repositorio: TareaRepository' in codigo, 'el caso de uso debe depender de la interfaz, no de una implementación concreta'
-print('Dominio.kt: ObtenerTareasPendientesUseCase depende solo de la interfaz TareaRepository')
-"
+./gradlew :shared:compileKotlinMetadata
 ```
 
 **Explicación línea por línea:** `data class Tarea(...)` define la entidad sin ninguna referencia a plataforma; `interface TareaRepository { suspend fun obtenerTodas(): List<Tarea> }` declara el contrato sin especificar cómo se obtienen los datos; `ObtenerTareasPendientesUseCase(private val repositorio: TareaRepository)` recibe la interfaz como dependencia, no una clase concreta, por lo que puede funcionar con cualquier implementación que la satisfaga.
@@ -197,12 +193,7 @@ class FakeTareaRepository(private val datos: MutableList<Tarea> = mutableListOf(
     override suspend fun guardar(tarea: Tarea) { datos.add(tarea) }
 }
 EOF
-python3 -c "
-codigo = open('shared/src/commonMain/kotlin/com/academia/kmp/Repositorio.kt').read()
-assert 'class TareaRepositoryImpl' in codigo and ': TareaRepository' in codigo, 'falta la implementación real satisfaciendo la interfaz'
-assert 'class FakeTareaRepository' in codigo and 'MutableList<Tarea>' in codigo, 'falta la implementación fake en memoria'
-print('Repositorio.kt: dos implementaciones (real y fake) satisfacen el mismo contrato TareaRepository')
-"
+./gradlew :shared:compileKotlinMetadata
 ```
 
 **Explicación línea por línea:** `interface TareaRepository` declara el contrato; `TareaRepositoryImpl` lo implementa combinando fuentes reales (`api`, `db`); `FakeTareaRepository` lo implementa con una simple `MutableList` en memoria, sin ninguna dependencia externa, ideal para pruebas rápidas y deterministas.
@@ -323,12 +314,7 @@ val sharedModule = module {
     factory { ObtenerTareasPendientesUseCase(get()) }
 }
 EOF
-python3 -c "
-codigo = open('shared/src/commonMain/kotlin/com/academia/kmp/DiModule.kt').read()
-assert 'single<TareaRepository>' in codigo, 'falta declarar TareaRepository como single (instancia única)'
-assert 'factory {' in codigo, 'falta declarar el caso de uso como factory (nueva instancia)'
-print('DiModule.kt: TareaRepository es single, ObtenerTareasPendientesUseCase es factory')
-"
+./gradlew :shared:compileKotlinMetadata
 ```
 
 **Explicación línea por línea:** `single<TareaRepository> { TareaRepositoryImpl(get(), get()) }` le dice a Koin que construya `TareaRepositoryImpl` UNA SOLA VEZ y reutilice esa misma instancia en cada solicitud posterior; `factory { ObtenerTareasPendientesUseCase(get()) }` le dice a Koin que construya una instancia NUEVA cada vez que algo solicite `ObtenerTareasPendientesUseCase`, inyectando automáticamente el `TareaRepository` (`get()`) que corresponda.
@@ -467,12 +453,7 @@ fun guardarTareaSegura(tarea: Tarea, simularFalloRed: Boolean): Resultado<Tarea>
     return Resultado.Ok(tarea)
 }
 EOF
-python3 -c "
-codigo = open('shared/src/commonMain/kotlin/com/academia/kmp/Resultado.kt').read()
-assert 'sealed class Resultado<out T>' in codigo, 'falta modelar el resultado como sealed class explícita'
-assert ': Resultado<Tarea>' in codigo, 'la función debe declarar en su firma que puede fallar'
-print('Resultado.kt: guardarTareaSegura documenta en su firma que puede fallar')
-"
+./gradlew :shared:compileKotlinMetadata
 ```
 
 **Explicación línea por línea:** `sealed class Resultado<out T>` con `Ok<T>` y `Err` modela exhaustivamente ambos desenlaces posibles; `fun guardarTareaSegura(...): Resultado<Tarea>` declara en su TIPO DE RETORNO que la operación puede fallar, visible para cualquiera que lea la firma sin necesidad de leer el cuerpo de la función ni documentación externa.
