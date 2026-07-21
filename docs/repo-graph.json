@@ -4329,7 +4329,7 @@
     },
     {
       "path": "web/public/content/devops/modulo-7.md",
-      "lines": 207,
+      "lines": 613,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -4337,12 +4337,15 @@
         "# M\u00f3dulo 7: Kubernetes avanzado \u2014 Helm e Ingress",
         "## Aprende construyendo",
         "### Tema 1: Helm charts y values",
-        "### Tema 2: Ingress Controllers y reglas de enrutamiento",
-        "### Tema 3: HorizontalPodAutoscaler",
-        "### Tema 4: Probes de liveness y readiness",
-        "### Tema 5: RBAC en Kubernetes",
-        "### Tema 6: Service Mesh \u2014 Istio, Linkerd, Envoy y mTLS",
-        "## Laboratorio pr\u00e1ctico"
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
+        "#### Paso 2 \u00b7 Contexto y caso real",
+        "#### Paso 3 \u00b7 Teor\u00eda con analog\u00eda",
+        "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
+        "#### Construcci\u00f3n RutaFlow: un chart por servicio del proyecto",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
+        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
+        "#### Paso 7 \u00b7 Cierre y evidencia",
+        "### Tema 2: Ingress Controllers y reglas de enrutamiento"
       ]
     },
     {

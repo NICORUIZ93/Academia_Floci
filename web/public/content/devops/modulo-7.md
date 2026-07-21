@@ -5,174 +5,580 @@
 
 ### Tema 1: Helm charts y values
 
+#### Paso 1 · Objetivo y preparación
+
+Al finalizar podrás empaquetar manifiestos de Kubernetes como un Helm chart parametrizable, desplegando el mismo chart en distintos entornos con valores distintos.
+
+**Conocimiento previo:** Módulo 6 completo de este track (Deployment, Service); Helm instalado.
+
+#### Paso 2 · Contexto y caso real
+
+**¿Por qué es importante?** Este es un caso real de crecimiento de complejidad: a medida que una aplicación acumula múltiples Deployments, Services, ConfigMaps e Ingress relacionados, gestionarlos como archivos YAML sueltos entre múltiples entornos se vuelve rápidamente inmanejable.
+
+#### Paso 3 · Teoría con analogía
+
 **Conceptos clave:** chart, `values.yaml`, plantillas con sintaxis Go template, `helm install`/`upgrade`.
 
-Un Helm chart empaqueta un conjunto completo de manifiestos de Kubernetes —Deployments, Services, ConfigMaps, y cualquier otro objeto necesario— como una unidad reutilizable y versionable, con puntos de parametrización explícitos definidos en un archivo `values.yaml`. En vez de mantener manifiestos YAML estáticos donde cualquier diferencia entre entornos (número de réplicas, tag de imagen, límites de recursos) requiere archivos separados casi idénticos o ediciones manuales propensas a error, un chart usa plantillas con sintaxis de Go template (`{{ .Values.replicaCount }}`) que se rellenan dinámicamente con los valores de `values.yaml` en el momento de instalar o actualizar el chart.
+Un Helm chart empaqueta un conjunto completo de manifiestos como unidad reutilizable, con plantillas Go template (`{{ .Values.replicaCount }}`) rellenadas dinámicamente desde `values.yaml`. El mismo chart se despliega en desarrollo con `replicaCount: 1` y en producción con `replicaCount: 5` sin duplicar manifiestos. `helm install` crea un "release"; `helm upgrade` lo actualiza manteniendo historial, permitiendo `helm rollback`.
 
-Esto significa que el mismo chart puede desplegarse en desarrollo con `replicaCount: 1` y en producción con `replicaCount: 5`, simplemente proporcionando un archivo de `values` distinto para cada entorno (o sobrescribiendo valores puntuales directamente en la línea de comandos con `--set replicaCount=5`), sin duplicar ni mantener manifiestos YAML completos separados para cada entorno. El chart en sí —su estructura, su lógica de plantillas— se mantiene idéntico entre entornos; solo cambian los valores concretos que lo parametrizan.
-
-`helm install <nombre> <ruta-del-chart>` instala un chart por primera vez, creando lo que Helm llama un "release": una instancia nombrada y versionada de ese chart desplegada en el clúster. `helm upgrade <nombre> <ruta-del-chart>` actualiza un release existente con una nueva versión del chart o nuevos valores, y Helm mantiene un historial de revisiones de cada release, permitiendo revertir a una revisión anterior con `helm rollback` de forma similar en espíritu al rollback de versiones que ya viste con Deployments en el módulo anterior de este track, pero operando ahora sobre el conjunto completo de manifiestos que el chart representa, no sobre un único Deployment aislado.
-
-Helm también resuelve el problema de compartir configuración y lógica común entre múltiples charts mediante subcharts y bibliotecas de plantillas reutilizables, y el ecosistema de Helm incluye repositorios públicos de charts ya construidos para software de terceros ampliamente usado (bases de datos, herramientas de observabilidad, controladores de infraestructura), permitiendo instalar software complejo de terceros dentro de tu clúster con una configuración mínima propia, en vez de escribir manifiestos completos desde cero para cada pieza de software externo que necesites desplegar.
-
-**Analogía:** un conjunto de manifiestos YAML sueltos es como escribir una carta completa nueva cada vez que necesitas comunicar algo similar a alguien distinto, copiando y ajustando manualmente cada vez. Un Helm chart es como una plantilla de carta con campos marcados claramente (`[NOMBRE]`, `[FECHA]`) que rellenas con los datos específicos de cada destinatario, mientras la estructura y el contenido general de la carta permanecen consistentes y se mantienen en un único lugar.
-
-**¿Por qué es importante?** A medida que una aplicación crece en complejidad de manifiestos (múltiples Deployments, Services, ConfigMaps, Ingress, HorizontalPodAutoscaler, todos relacionados entre sí), gestionarlos como archivos YAML sueltos se vuelve rápidamente inmanejable entre múltiples entornos; Helm es, con diferencia, la herramienta más adoptada de la industria para resolver ese problema de empaquetado y parametrización a escala.
+**Analogía:** manifiestos YAML sueltos son como escribir una carta nueva completa cada vez. Un Helm chart es una plantilla de carta con campos marcados (`[NOMBRE]`, `[FECHA]`) que rellenas por destinatario, mientras la estructura permanece consistente.
 
 **Diagrama:**
 
 ```
-mi-chart/
-├── Chart.yaml           (metadatos del chart)
-├── values.yaml           (valores por defecto: replicaCount: 3, image.tag: "1.0")
-└── templates/
-     ├── deployment.yaml   (usa {{ .Values.replicaCount }}, {{ .Values.image.tag }})
-     └── service.yaml
-
+┌── mi-chart/ ──────────────────────────┐
+│ Chart.yaml            (metadatos)                   │
+│ values.yaml            (replicaCount: 3, image.tag: "1.0") │
+│ templates/deployment.yaml  (usa {{ .Values.replicaCount }})  │
+└─────────────────────────────────────┘
 helm install mi-api ./mi-chart --set replicaCount=5
-     └──▶ genera los manifiestos finales con replicaCount=5, los aplica al clúster
 ```
+
+#### Paso 4 · Demostración guiada desde cero
+
+Desde una carpeta vacía crea un chart mínimo en `academia-devops/src/modulo7/helm-chart`:
+
+```bash
+mkdir -p academia-devops/src/modulo7/helm-chart/templates
+cd academia-devops/src/modulo7/helm-chart
+cat > Chart.yaml <<'EOF'
+apiVersion: v2
+name: mi-api
+version: 0.1.0
+EOF
+cat > values.yaml <<'EOF'
+replicaCount: 1
+image: node:22-alpine
+EOF
+cat > templates/deployment.yaml <<'EOF'
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mi-api
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector: { matchLabels: { app: mi-api } }
+  template:
+    metadata: { labels: { app: mi-api } }
+    spec:
+      containers:
+        - name: mi-api
+          image: {{ .Values.image }}
+          command: ["node", "-e", "require('http').createServer((q,r)=>r.end('ok')).listen(3000)"]
+EOF
+helm template mi-api . | grep -A1 "kind: Deployment"
+```
+
+**Explicación línea por línea:** `{{ .Values.replicaCount }}` y `{{ .Values.image }}` se rellenan con los valores de `values.yaml`; `helm template` renderiza el YAML final localmente sin instalarlo, útil para verificar antes de aplicar al clúster.
+
+Instala el chart con un valor sobrescrito en la línea de comandos, y confirma el número real de réplicas:
+
+```bash
+kind create cluster --name helm-demo 2>/dev/null || true
+helm install mi-api . --set replicaCount=3
+kubectl get deployment mi-api -o jsonpath='{.spec.replicas}'
+echo
+helm upgrade mi-api . --set replicaCount=5
+kubectl get deployment mi-api -o jsonpath='{.spec.replicas}'
+```
+
+**Resultado esperado:** tras `helm install --set replicaCount=3`, el Deployment reporta `3`; tras `helm upgrade --set replicaCount=5`, reporta `5`, demostrando que el mismo chart parametriza el número de réplicas sin editar manifiestos directamente.
+
+**Fallo deliberado:** rompe la sintaxis de la plantilla (cambia `{{ .Values.replicaCount }}` por `{{ .Values.replicaCont }}`, con una errata) y ejecuta `helm template mi-api .`. El resultado renderiza `replicas:` vacío o con `<no value>` en vez de un número — diagnostica que Helm no valida que la clave referenciada exista en `values.yaml`, solo sustituye lo que encuentra.
+
+#### Construcción RutaFlow: un chart por servicio del proyecto
+
+`mi-chart` es la base del chart real que empaquetará cada servicio de RutaFlow; cada entorno (desarrollo, staging) tendrá su propio archivo `values-<entorno>.yaml` aplicado con `helm upgrade -f values-staging.yaml`.
+
+#### Paso 5 · Práctica guiada
+
+Crea un segundo archivo `values-produccion.yaml` con `replicaCount: 10`, e instala usando `helm upgrade mi-api . -f values-produccion.yaml` en vez de `--set`. **Pista:** `-f` acepta un archivo completo de valores, útil cuando son muchos parámetros distintos por entorno.
+
+#### Paso 6 · Práctica independiente
+
+Ejecuta `helm history mi-api` para ver el historial de revisiones generado por los `install`/`upgrade` anteriores, y usa `helm rollback mi-api 1` para volver a la primera revisión; confirma con `kubectl get deployment` que las réplicas volvieron al valor original.
+
+#### Paso 7 · Cierre y evidencia
+
+Ya parametrizas el mismo conjunto de manifiestos para múltiples entornos sin duplicarlos. El siguiente tema expone múltiples servicios detrás de un único punto de entrada HTTP. **Evidencia:** entrega los valores de réplicas antes y después del `upgrade`, y explica el resultado de la plantilla con la clave mal escrita. Fuente oficial: [Helm — Charts](https://helm.sh/docs/topics/charts/).
+
+**Errores comunes:** referenciar una clave de `values.yaml` con un nombre distinto al real, fallando silenciosamente en vez de con un error explícito; instalar directamente sin `helm template` primero, perdiendo la oportunidad de revisar el YAML renderizado antes de aplicarlo.
+
+**Cuándo no usarlo:** para un único manifiesto simple sin variación real entre entornos, empaquetarlo como chart añade complejidad de plantillas sin beneficio; el límite es cuando de verdad necesitas parametrización reutilizable entre múltiples despliegues.
 
 ### Tema 2: Ingress Controllers y reglas de enrutamiento
 
+#### Paso 1 · Objetivo y preparación
+
+Al finalizar podrás exponer múltiples Services por dominio o ruta detrás de un único Ingress Controller, sin necesitar un LoadBalancer separado por servicio.
+
+**Conocimiento previo:** Tema 1 de este módulo; Módulo 6 (Service, LoadBalancer).
+
+#### Paso 2 · Contexto y caso real
+
+**¿Por qué es importante?** Este es un caso real de eficiencia de costos: el Ingress permite exponer múltiples servicios HTTP compartiendo un único punto de entrada externo, en vez de aprovisionar un balanceador de carga independiente y costoso para cada servicio.
+
+#### Paso 3 · Teoría con analogía
+
 **Conceptos clave:** Ingress (regla de enrutamiento), Ingress Controller (implementación), host-based routing, path-based routing.
 
-Un objeto Ingress define reglas de enrutamiento HTTP/HTTPS desde el exterior del clúster hacia Services internos específicos, basándose en el dominio (host) y/o la ruta (path) de la petición entrante. Por ejemplo, una regla de Ingress puede especificar que las peticiones dirigidas al dominio `api.miapp.com` se enruten hacia el Service `mi-api`, mientras que peticiones a `admin.miapp.com` se enruten hacia un Service completamente distinto, todo compartiendo la misma dirección IP externa de entrada al clúster, en vez de necesitar un `LoadBalancer` (Módulo 6, Tema 2) separado y con su propia IP externa dedicada para cada servicio individual que necesites exponer.
+Un objeto Ingress define reglas de enrutamiento HTTP/HTTPS según dominio y/o ruta. Por sí solo es solo una declaración: necesita un Ingress Controller corriendo (NGINX Ingress Controller, Traefik) que efectivamente lea esas reglas y enrute el tráfico. Centralizar el enrutamiento facilita TLS, redirecciones y rate limiting en un solo lugar.
 
-Es importante entender que un objeto Ingress, por sí solo, es solo una declaración de intención: define las reglas deseadas, pero no implementa ningún comportamiento real sin un Ingress Controller corriendo en el clúster que efectivamente lea esas reglas y las aplique. Un Ingress Controller (implementaciones comunes incluyen NGINX Ingress Controller, Traefik, o soluciones nativas de proveedores de nube específicos) es el componente que realmente escucha tráfico entrante, consulta las reglas de Ingress definidas en el clúster, y enruta cada petición al Service interno correcto según esas reglas. Sin un Ingress Controller instalado y corriendo, crear objetos Ingress no tiene ningún efecto observable, de forma similar a cómo definir recursos y métodos en API Gateway (que estudiaste en el track Cloud) no tiene efecto hasta desplegarlos a un stage.
-
-Concentrar el enrutamiento de múltiples servicios detrás de un único punto de entrada (el Ingress Controller) también facilita centralizar preocupaciones transversales como terminación TLS/SSL (gestionar los certificados HTTPS en un único lugar, en vez de en cada servicio individual), redirecciones, y políticas de limitación de tasa (rate limiting), sin tener que implementar esas mismas preocupaciones repetidamente dentro de cada aplicación individual desplegada en el clúster.
-
-El enrutamiento basado en host (host-based routing) dirige tráfico según el dominio de la petición (`api.miapp.com` vs `admin.miapp.com`), mientras que el enrutamiento basado en ruta (path-based routing) dirige tráfico según la ruta dentro del mismo dominio (`miapp.com/api` vs `miapp.com/admin`); un mismo objeto Ingress puede combinar ambos tipos de reglas simultáneamente según las necesidades específicas de la aplicación.
-
-**Analogía:** un Ingress es como el directorio de un edificio de oficinas que especifica "la empresa A está en el piso 3, la empresa B está en el piso 5", pero ese directorio por sí solo no dirige físicamente a nadie a ningún lado. El Ingress Controller es como el guardia de seguridad en la entrada principal del edificio que efectivamente lee ese directorio y dirige a cada visitante hacia el piso correcto según a quién busque, siendo el único punto de entrada físico compartido por todas las empresas del edificio.
-
-**¿Por qué es importante?** El Ingress es el mecanismo estándar para exponer múltiples servicios HTTP dentro de un clúster de Kubernetes de forma eficiente en costos (compartiendo un único punto de entrada externo) y centralizada (gestionando TLS y otras preocupaciones transversales en un solo lugar), en vez de aprovisionar un balanceador de carga externo independiente y costoso para cada servicio individual.
+**Analogía:** un Ingress es el directorio de un edificio que dice "la empresa A está en el piso 3". El Ingress Controller es el guardia de seguridad que efectivamente lee ese directorio y dirige a cada visitante al piso correcto.
 
 **Diagrama:**
 
 ```
 Internet
-   │
    ▼
-Ingress Controller (único punto de entrada externo)
-   │
-   ├── host: api.miapp.com    ──▶ Service "mi-api"
-   ├── host: admin.miapp.com  ──▶ Service "mi-admin"
-   └── path: /docs             ──▶ Service "documentacion"
+┌── Ingress Controller (único punto de entrada externo) ──┐
+│ host: api.miapp.com    ──▶ Service "mi-api"                  │
+│ host: admin.miapp.com  ──▶ Service "mi-admin"                  │
+│ path: /docs             ──▶ Service "documentacion"              │
+└─────────────────────────────────────┘
 ```
+
+#### Paso 4 · Demostración guiada desde cero
+
+Desde una carpeta vacía crea `academia-devops/src/modulo7/ingress` con dos servicios enrutados por dominio distinto:
+
+```bash
+mkdir -p academia-devops/src/modulo7/ingress && cd academia-devops/src/modulo7/ingress
+kubectl create deployment api --image=node:22-alpine -- node -e "require('http').createServer((q,r)=>r.end('soy la API')).listen(3000)"
+kubectl expose deployment api --port=80 --target-port=3000
+kubectl create deployment admin --image=node:22-alpine -- node -e "require('http').createServer((q,r)=>r.end('soy ADMIN')).listen(3000)"
+kubectl expose deployment admin --port=80 --target-port=3000
+cat > ingress.yaml <<'EOF'
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: mi-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+spec:
+  rules:
+    - host: api.local
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend: { service: { name: api, port: { number: 80 } } }
+    - host: admin.local
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend: { service: { name: admin, port: { number: 80 } } }
+EOF
+kubectl apply -f ingress.yaml
+kubectl get ingress mi-ingress
+```
+
+**Explicación línea por línea:** cada entrada bajo `rules` asocia un `host` distinto (`api.local`, `admin.local`) con un Service interno distinto; sin un Ingress Controller instalado y corriendo, este objeto queda definido pero no enruta ningún tráfico real todavía.
+
+Verifica las reglas definidas y qué Service resolvería cada dominio:
+
+```bash
+kubectl describe ingress mi-ingress | grep -A6 Rules
+```
+
+**Resultado esperado:** la sección `Rules` muestra `api.local` asociado al backend `api:80` y `admin.local` asociado a `admin:80`, confirmando que las reglas de enrutamiento están correctamente definidas según el host.
+
+**Fallo deliberado:** define una tercera regla con `host: api.local` (duplicado) apuntando a un backend distinto, y aplica de nuevo. El comportamiento resultante depende del Ingress Controller específico, pero típicamente solo una de las dos reglas para el mismo host toma efecto — diagnostica revisando `kubectl describe ingress` para confirmar cuál regla quedó activa y por qué duplicar un host sin distinguir por `path` genera ambigüedad.
+
+#### Construcción RutaFlow: un solo punto de entrada para todos los servicios
+
+`mi-ingress` es el patrón que RutaFlow usará para exponer su API y su panel de administración bajo dominios distintos compartiendo la misma IP externa del clúster, en vez de un `LoadBalancer` independiente por servicio.
+
+#### Paso 5 · Práctica guiada
+
+Agrega una tercera regla con `path: /docs` bajo el mismo host `api.local`, enrutando hacia un tercer Service `documentacion`. **Pista:** puedes combinar host-based y path-based routing en las mismas reglas de un único objeto Ingress.
+
+#### Paso 6 · Práctica independiente
+
+Investiga (documentando sin necesariamente configurarlo) qué anotación de tu Ingress Controller específico habilitarías para terminar TLS automáticamente con un certificado, y qué recurso adicional (como un `Secret` de tipo `kubernetes.io/tls`) necesitarías referenciar.
+
+#### Paso 7 · Cierre y evidencia
+
+Ya enrutas múltiples servicios HTTP compartiendo un único punto de entrada externo. El siguiente tema escala automáticamente las réplicas detrás de estos Services según demanda real. **Evidencia:** entrega la salida de `kubectl describe ingress` mostrando ambas reglas correctamente asociadas, y explica el resultado de la ambigüedad con el host duplicado. Fuente oficial: [Kubernetes — Ingress](https://kubernetes.io/docs/concepts/services-networking/ingress/).
+
+**Errores comunes:** crear un objeto Ingress sin tener un Ingress Controller instalado, esperando que enrute tráfico igualmente; duplicar un host sin distinguir por path, generando reglas ambiguas.
+
+**Cuándo no usarlo:** para un único servicio sin necesidad de compartir punto de entrada con otros, un `LoadBalancer` directo (Módulo 6) puede ser más simple que introducir un Ingress Controller completo; el beneficio del Ingress aparece con múltiples servicios HTTP.
 
 ### Tema 3: HorizontalPodAutoscaler
 
+#### Paso 1 · Objetivo y preparación
+
+Al finalizar podrás configurar un HorizontalPodAutoscaler que ajusta automáticamente el número de réplicas según el uso real de CPU, con límites mínimo y máximo explícitos.
+
+**Conocimiento previo:** Temas 1 y 2 de este módulo; Módulo 6 (Deployment).
+
+#### Paso 2 · Contexto y caso real
+
+**¿Por qué es importante?** Este es un caso real de tráfico variable: el HPA permite que un servicio responda automáticamente a fluctuaciones de demanda sin intervención manual constante, un requisito prácticamente indispensable para tráfico impredecible.
+
+#### Paso 3 · Teoría con analogía
+
 **Conceptos clave:** HorizontalPodAutoscaler (HPA), métrica objetivo, escalado automático de réplicas, mínimo y máximo.
 
-Un HorizontalPodAutoscaler ajusta automáticamente el número de réplicas de un Deployment (u otro objeto escalable equivalente) en función de una métrica observada, típicamente el uso de CPU o memoria, aunque también puede configurarse contra métricas personalizadas más específicas del negocio (como el número de mensajes pendientes en una cola, si se integra con un sistema de métricas adicional). Al configurar un HPA con `kubectl autoscale deployment mi-api --cpu-percent=70 --min=2 --max=10`, le indicas a Kubernetes que mantenga automáticamente el uso promedio de CPU de las réplicas alrededor del 70%, incrementando el número de réplicas si el uso supera ese objetivo (hasta un máximo de 10), y reduciéndolo si el uso cae significativamente por debajo (hasta un mínimo de 2, nunca menos, para mantener disponibilidad básica incluso con tráfico mínimo).
+Un HPA ajusta el número de réplicas de un Deployment según una métrica observada, típicamente CPU. `kubectl autoscale deployment mi-api --cpu-percent=70 --min=2 --max=10` mantiene el uso promedio alrededor del 70%, incrementando réplicas si se supera (hasta 10) y reduciendo si cae por debajo (hasta un mínimo de 2). Depende de `metrics-server` instalado en el clúster; sin él, el HPA no tiene datos para decidir.
 
-Este escalado automático horizontal (añadir o quitar réplicas completas) es distinto del escalado vertical (dar más CPU o memoria a una réplica individual existente): el HPA por defecto opera horizontalmente, siguiendo la filosofía de que, en aplicaciones sin estado bien diseñadas, es generalmente más simple y más resiliente escalar añadiendo más instancias intercambiables que intentar hacer una instancia individual progresivamente más grande y potente, un principio que conecta directamente con por qué las aplicaciones sin estado (Módulo 6, Tema 6) son el caso ideal para este tipo de escalado automático horizontal.
-
-Configurar correctamente los límites mínimo y máximo de réplicas es una decisión de diseño importante: un mínimo demasiado bajo puede dejar el servicio con capacidad insuficiente durante picos súbitos de tráfico mientras el HPA reacciona (el escalado no es instantáneo, toma cierto tiempo observar la métrica y crear los Pods adicionales), mientras que un máximo demasiado bajo limita artificialmente cuánto puede crecer el servicio incluso ante demanda legítima sostenida, y un máximo sin ningún límite razonable puede exponer al equipo a un coste de infraestructura descontrolado si, por ejemplo, un bug provoca un consumo anómalo y sostenido de CPU que el HPA interpretaría erróneamente como demanda legítima de más réplicas.
-
-El HPA depende de que el clúster tenga habilitado un servidor de métricas (metrics-server, en la configuración más común) que le proporcione datos actualizados de uso de recursos; sin esa pieza de infraestructura adicional funcionando correctamente, el HPA no tiene datos sobre los cuales basar sus decisiones de escalado, y simplemente no actuará, independientemente de cómo esté configurado.
-
-**Analogía:** un HorizontalPodAutoscaler es como un sistema automático de contratación temporal para un restaurante: si el número de comensales (la métrica de carga) supera cierto umbral, el sistema contrata automáticamente más meseros (réplicas) hasta un máximo razonable; si el restaurante se vacía, reduce automáticamente el personal activo hasta un mínimo que garantiza que siempre haya alguien atendiendo, sin llegar nunca a cero.
-
-**¿Por qué es importante?** El HPA es lo que permite que una aplicación desplegada en Kubernetes responda automáticamente a fluctuaciones reales de demanda sin intervención manual constante, un requisito prácticamente indispensable para cualquier servicio con tráfico variable a lo largo del día o con picos de demanda impredecibles.
+**Analogía:** un HPA es como un sistema automático de contratación temporal para un restaurante: si el número de comensales supera cierto umbral, contrata más meseros hasta un máximo razonable; si se vacía, reduce personal hasta un mínimo que garantiza atención básica.
 
 **Diagrama:**
 
 ```
-HorizontalPodAutoscaler (objetivo: 70% CPU, min:2, max:10)
-        │
-   observa uso real de CPU de las réplicas actuales
-        │
-   ¿uso > 70%? ──▶ Sí ──▶ incrementa réplicas (hasta el máximo de 10)
-        │
-        └────────▶ No, uso << 70% ──▶ reduce réplicas (hasta el mínimo de 2)
+┌── HorizontalPodAutoscaler (objetivo: 70% CPU, min:2, max:10) ──┐
+│ observa uso real de CPU de las réplicas actuales                   │
+│ ¿uso > 70%? Sí ──▶ incrementa réplicas (hasta 10)                    │
+│             No, uso bajo ──▶ reduce réplicas (hasta el mínimo de 2)   │
+└─────────────────────────────────────────┘
 ```
+
+#### Paso 4 · Demostración guiada desde cero
+
+Desde una carpeta vacía crea `academia-devops/src/modulo7/hpa` con un Deployment que consume CPU deliberadamente bajo carga:
+
+```bash
+mkdir -p academia-devops/src/modulo7/hpa && cd academia-devops/src/modulo7/hpa
+kubectl create deployment carga-cpu --image=vish/stress -- -cpus 1
+kubectl set resources deployment carga-cpu --requests=cpu=100m --limits=cpu=200m
+kubectl autoscale deployment carga-cpu --cpu-percent=50 --min=1 --max=4
+kubectl get hpa carga-cpu
+```
+
+**Explicación línea por línea:** `--requests=cpu=100m` es imprescindible: el HPA calcula el porcentaje de uso relativo a lo solicitado, y sin una solicitud de CPU definida no tiene una base contra la cual medir el porcentaje.
+
+Observa el escalado en respuesta a la carga simulada durante unos minutos:
+
+```bash
+kubectl get hpa carga-cpu --watch &
+sleep 60
+kill %1
+kubectl get hpa carga-cpu
+```
+
+**Resultado esperado:** la columna `TARGETS` de `kubectl get hpa` muestra un porcentaje de uso creciente por encima del 50% configurado, y la columna `REPLICAS` aumenta gradualmente desde 1 hacia el máximo de 4 a medida que el HPA reacciona a la carga sostenida.
+
+**Fallo deliberado:** elimina el `metrics-server` del clúster (o simula su ausencia consultando `kubectl top pods` en un clúster sin él instalado). `kubectl get hpa` muestra `<unknown>` en la columna de métricas actuales — diagnostica que sin un servidor de métricas funcionando, el HPA no tiene datos sobre los cuales basar ninguna decisión de escalado, independientemente de su configuración.
+
+#### Construcción RutaFlow: escalado automático del backend bajo demanda
+
+Documenta en `academia-devops/README.md` los límites `min`/`max` que usará el HPA real de RutaFlow, justificando el máximo según el presupuesto de infraestructura aceptable ante un pico de tráfico inesperado.
+
+#### Paso 5 · Práctica guiada
+
+Detén la carga de CPU (`kubectl scale deployment carga-cpu --replicas=0` y vuelve a `1` sin el proceso de estrés) y observa cómo el HPA reduce gradualmente las réplicas de vuelta hacia el mínimo configurado. **Pista:** la reducción suele ser más lenta que el incremento, por diseño, para evitar oscilaciones bruscas.
+
+#### Paso 6 · Práctica independiente
+
+Cambia `--max=4` a `--max=2` mientras el HPA ya había escalado a 4 réplicas, y confirma que Kubernetes reduce automáticamente hasta respetar el nuevo máximo, incluso si la métrica de CPU seguiría justificando más réplicas.
+
+#### Paso 7 · Cierre y evidencia
+
+Ya escalas automáticamente según demanda real, con límites explícitos que evitan tanto capacidad insuficiente como coste descontrolado. El siguiente tema verifica que cada réplica esté realmente sana antes de recibir tráfico o de considerarse viva. **Evidencia:** entrega la progresión de réplicas observada en `kubectl get hpa --watch` y el resultado de `<unknown>` sin metrics-server. Fuente oficial: [Kubernetes — HorizontalPodAutoscaler](https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/).
+
+**Errores comunes:** configurar un HPA sin definir `requests.cpu` en el Deployment, dejando sin base de cálculo el porcentaje objetivo; establecer un máximo sin considerar el coste de infraestructura ante un consumo anómalo sostenido (por ejemplo, un bug, no tráfico legítimo).
+
+**Cuándo no usarlo:** para una carga de trabajo con estado que no puede simplemente añadir réplicas intercambiables (una base de datos con un único líder de escritura), un HPA horizontal no aplica de la misma forma; ahí el escalado requiere una estrategia específica del propio sistema con estado.
 
 ### Tema 4: Probes de liveness y readiness
 
+#### Paso 1 · Objetivo y preparación
+
+Al finalizar podrás configurar liveness y readiness probes distintas para el mismo contenedor, entendiendo que una dispara un reinicio y la otra solo excluye tráfico temporalmente.
+
+**Conocimiento previo:** Temas 1 a 3 de este módulo; Módulo 3 (healthchecks de Docker Compose).
+
+#### Paso 2 · Contexto y caso real
+
+**¿Por qué es importante?** Este es un caso real muy común: usar una liveness probe demasiado agresiva para verificar una dependencia externa temporalmente caída provoca reinicios innecesarios de un contenedor que en realidad está perfectamente sano internamente.
+
+#### Paso 3 · Teoría con analogía
+
 **Conceptos clave:** liveness probe, readiness probe, `startupProbe`, reinicio vs exclusión de tráfico.
 
-Una liveness probe verifica periódicamente si un contenedor sigue funcionando correctamente desde una perspectiva interna; si falla repetidamente (según el número de reintentos configurado), Kubernetes concluye que el contenedor está en un estado irrecuperable (por ejemplo, atascado en un bloqueo interno del que nunca se recuperaría por sí solo) y lo reinicia automáticamente, exactamente el mismo Pod pero con un contenedor nuevo arrancado desde cero. Es el mecanismo de auto-reparación a nivel de proceso individual, complementario a la reconciliación de réplicas que ya viste con ReplicaSet en el módulo anterior de este track.
+Una liveness probe verifica si el contenedor sigue funcionando; si falla repetidamente, Kubernetes lo reinicia. Una readiness probe determina si está listo para recibir tráfico; si falla, Kubernetes deja de enrutarle tráfico sin reiniciarlo, el mismo concepto que `condition: service_healthy` de Docker Compose (Módulo 3) pero continuo durante toda la vida del Pod. `startupProbe` da un periodo de gracia inicial antes de evaluar las otras dos, evitando reinicios prematuros durante un arranque lento.
 
-Una readiness probe, en cambio, no dispara ningún reinicio: determina si el contenedor está actualmente listo para recibir tráfico de usuarios, y si la probe falla, Kubernetes simplemente deja de enrutar tráfico hacia ese Pod específico a través de cualquier Service que lo referencie (Módulo 6, Tema 2), sin reiniciarlo ni tomar ninguna otra acción destructiva. Esto es exactamente el mismo concepto que estudiaste con los healthchecks de Docker Compose en el Módulo 3 de este track (`condition: service_healthy`), pero aplicado de forma continua durante toda la vida del Pod, no solo en el momento del arranque inicial: un Pod que estuvo sano durante horas puede volverse temporalmente no-listo (por ejemplo, si pierde conexión temporal con una base de datos externa) sin que eso signifique que el proceso en sí está roto y necesite reiniciarse.
-
-La diferencia práctica entre ambas es crucial y con consecuencias muy distintas si se configuran mal: usar solo una liveness probe demasiado agresiva para verificar dependencias externas (por ejemplo, hacer que la liveness probe falle si la conexión a una base de datos externa está temporalmente caída) puede provocar reinicios innecesarios y repetidos de un contenedor que en realidad está perfectamente sano internamente, simplemente esperando a que una dependencia externa se recupere; ese escenario es exactamente el caso de uso correcto para una readiness probe (dejar de recibir tráfico temporalmente sin reiniciar nada), no para una liveness probe.
-
-`startupProbe` resuelve un problema adicional específico de aplicaciones con tiempos de arranque lentos o variables: da un periodo de gracia inicial durante el cual ni la liveness ni la readiness probe se evalúan todavía, evitando que Kubernetes reinicie prematuramente un contenedor que simplemente todavía está en proceso legítimo de arranque (cargando datos iniciales, estableciendo conexiones) y aún no ha llegado al punto de poder responder correctamente a las probes normales.
-
-**Analogía:** una liveness probe es como comprobar si el corazón de un paciente sigue latiendo: si deja de latir, se requiere una intervención de emergencia (reanimación, en este caso el reinicio del contenedor). Una readiness probe es como comprobar si el paciente está en condiciones de recibir visitas en este momento específico: puede estar perfectamente vivo y estable, pero temporalmente no disponible para recibir visitas (por ejemplo, durmiendo), sin que eso requiera ninguna intervención médica de emergencia, solo esperar y dejar de dirigir visitantes hacia esa habitación por ahora.
-
-**¿Por qué es importante?** Confundir el propósito de liveness y readiness (o configurar la liveness probe para verificar dependencias externas que fluctúan de forma normal y temporal) es una de las causas más comunes de reinicios innecesarios y disrupción en clústeres de Kubernetes reales, precisamente porque el efecto de un reinicio (liveness) es mucho más disruptivo que simplemente dejar de recibir tráfico temporalmente (readiness).
+**Analogía:** una liveness probe es comprobar si el corazón de un paciente late: si se detiene, requiere reanimación (reinicio). Una readiness probe es comprobar si puede recibir visitas ahora mismo: puede estar vivo pero temporalmente no disponible, sin necesitar ninguna intervención de emergencia.
 
 **Diagrama:**
 
 ```
 livenessProbe falla repetidamente  ──▶  Kubernetes REINICIA el contenedor
-readinessProbe falla                ──▶  Kubernetes deja de enrutar tráfico
-                                          (NO reinicia, el contenedor sigue vivo)
-startupProbe (periodo de gracia inicial) ──▶ liveness/readiness no se evalúan
-                                              todavía mientras arranca
+readinessProbe falla                ──▶  Kubernetes deja de enrutar tráfico (NO reinicia)
+startupProbe (gracia inicial)       ──▶  liveness/readiness no se evalúan aún
 ```
+
+#### Paso 4 · Demostración guiada desde cero
+
+Desde una carpeta vacía crea `academia-devops/src/modulo7/probes` con un backend que expone rutas de salud distintas para cada probe:
+
+```bash
+mkdir -p academia-devops/src/modulo7/probes && cd academia-devops/src/modulo7/probes
+cat > app.js <<'EOF'
+const http = require('node:http');
+let listo = false;
+setTimeout(() => { listo = true; }, 5000);
+http.createServer((req, res) => {
+  if (req.url === '/live') { res.end('vivo'); return; }
+  if (req.url === '/ready') {
+    if (listo) { res.end('listo'); } else { res.writeHead(503).end('todavia no'); }
+    return;
+  }
+  res.end('app');
+}).listen(3000);
+EOF
+kubectl create configmap app-probes-src --from-file=app.js
+cat > pod.yaml <<'EOF'
+apiVersion: v1
+kind: Pod
+metadata:
+  name: con-probes
+spec:
+  containers:
+    - name: app
+      image: node:22-alpine
+      command: ["node", "/app/app.js"]
+      volumeMounts: [{ name: src, mountPath: /app }]
+      livenessProbe:
+        httpGet: { path: /live, port: 3000 }
+        initialDelaySeconds: 2
+        periodSeconds: 5
+      readinessProbe:
+        httpGet: { path: /ready, port: 3000 }
+        periodSeconds: 2
+  volumes:
+    - name: src
+      configMap: { name: app-probes-src }
+EOF
+kubectl apply -f pod.yaml
+```
+
+**Explicación línea por línea:** `/live` siempre responde `200` (el proceso está vivo); `/ready` responde `503` durante los primeros 5 segundos, simulando una inicialización lenta, y solo después reporta listo — exactamente el escenario donde `readinessProbe` debe excluir tráfico sin que `livenessProbe` reinicie nada.
+
+Observa la transición de no-listo a listo sin ningún reinicio:
+
+```bash
+sleep 1 && kubectl get pod con-probes -o jsonpath='{.status.containerStatuses[0].ready}'
+echo
+sleep 8 && kubectl get pod con-probes -o jsonpath='{.status.containerStatuses[0].ready}'
+echo
+kubectl get pod con-probes -o jsonpath='{.status.containerStatuses[0].restartCount}'
+```
+
+**Resultado esperado:** el primer chequeo (a 1 segundo) reporta `false` (no listo todavía); el segundo (a 9 segundos) reporta `true`; el conteo de reinicios (`restartCount`) permanece en `0` durante toda la transición, confirmando que la readiness probe excluyó tráfico sin disparar ningún reinicio.
+
+**Fallo deliberado:** cambia `livenessProbe` para que apunte también a `/ready` en vez de `/live` (una configuración incorrecta común). Durante los primeros 5 segundos, la liveness probe también falla, y tras varios reintentos Kubernetes reinicia el contenedor innecesariamente — diagnostica con `kubectl describe pod con-probes` revisando el evento de reinicio, y confirma que el problema es haber usado la ruta equivocada para la probe equivocada.
+
+#### Construcción RutaFlow: arranque robusto sin reinicios innecesarios
+
+Documenta en `academia-devops/README.md` que cada servicio de RutaFlow expone rutas `/live` y `/ready` diferenciadas, precisamente para evitar el error de configuración demostrado en el fallo deliberado de este tema.
+
+#### Paso 5 · Práctica guiada
+
+Agrega un `startupProbe` con `failureThreshold: 30` y `periodSeconds: 1` apuntando también a `/live`, dando hasta 30 segundos de gracia antes de que la liveness probe normal empiece a evaluarse. **Pista:** mientras el `startupProbe` no reporte éxito, ni liveness ni readiness se evalúan todavía.
+
+#### Paso 6 · Práctica independiente
+
+Modifica `app.js` para que `/live` falle permanentemente después de 20 segundos (simulando un bloqueo real irrecuperable), y confirma que en ese caso sí ocurre un reinicio automático, a diferencia del escenario de solo-no-listo del Paso 4.
+
+#### Paso 7 · Cierre y evidencia
+
+Ya distingues cuándo un problema requiere reiniciar un contenedor y cuándo solo requiere dejar de enrutarle tráfico temporalmente. El siguiente tema aplica mínimo privilegio a las identidades que operan dentro del clúster. **Evidencia:** entrega los valores de `ready` en ambos momentos y el `restartCount` confirmando cero reinicios durante la transición normal, y el resultado del fallo con la probe mal configurada. Fuente oficial: [Kubernetes — Configure Liveness, Readiness Probes](https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/).
+
+**Errores comunes:** apuntar la liveness probe a una ruta que verifica dependencias externas fluctuantes; olvidar un `startupProbe` en aplicaciones con arranque lento, causando reinicios prematuros durante la inicialización legítima.
+
+**Cuándo no usarlo:** para un Job que debe terminar (Módulo 6, Tema 6), las probes de liveness/readiness no aplican de la misma forma, ya que el contenedor no está pensado para vivir indefinidamente esperando tráfico.
 
 ### Tema 5: RBAC en Kubernetes
 
+#### Paso 1 · Objetivo y preparación
+
+Al finalizar podrás crear un Role limitado a un namespace, vincularlo a una ServiceAccount con un RoleBinding, y confirmar que un Pod con esa identidad solo puede hacer exactamente lo permitido.
+
+**Conocimiento previo:** Temas 1 a 4 de este módulo; IAM del track Cloud (principio de mínimo privilegio).
+
+#### Paso 2 · Contexto y caso real
+
+**¿Por qué es importante?** Este es un caso real de seguridad: sin RBAC configurado deliberadamente, es común que las cargas de trabajo terminen con permisos mucho más amplios de los que realmente necesitan, replicando el mismo riesgo que las políticas IAM demasiado permisivas.
+
+#### Paso 3 · Teoría con analogía
+
 **Conceptos clave:** Role, ClusterRole, RoleBinding, cuenta de servicio (ServiceAccount), mínimo privilegio aplicado a Kubernetes.
 
-RBAC (control de acceso basado en roles) en Kubernetes aplica el mismo principio de mínimo privilegio que ya estudiaste en profundidad con IAM en el track Cloud, pero a nivel del propio clúster de Kubernetes: define exactamente qué acciones (verbos como `get`, `list`, `create`, `delete`) puede realizar una identidad sobre qué recursos (Pods, Services, Secrets) y en qué alcance (un namespace específico, o el clúster completo).
+Un Role define permisos limitados a un namespace específico; un ClusterRole aplica a nivel de clúster completo. Un RoleBinding conecta un Role con una identidad (usuario, grupo o ServiceAccount); sin binding explícito, un Role no concede nada. Una ServiceAccount es la identidad que usan los Pods (no personas) para autenticarse contra la API de Kubernetes.
 
-Un Role define un conjunto de permisos limitado a un namespace específico (por ejemplo, "puede leer Pods y Services, pero no puede eliminarlos, dentro del namespace `desarrollo`"), mientras que un ClusterRole define permisos que aplican a nivel de clúster completo, sin restricción a un namespace específico (necesario, por ejemplo, para permisos sobre recursos que no son específicos de ningún namespace en particular, como los propios Nodes del clúster). Un RoleBinding conecta un Role con una identidad específica (un usuario, un grupo, o una cuenta de servicio), otorgándole efectivamente esos permisos; sin un binding explícito, definir un Role por sí solo no concede ningún acceso a nadie, exactamente igual que una política IAM sin adjuntar a ningún usuario o rol no tiene ningún efecto práctico.
-
-Una cuenta de servicio (ServiceAccount) es la identidad que usan los propios Pods (no personas humanas) para autenticarse contra la API de Kubernetes cuando necesitan realizar acciones dentro del clúster (por ejemplo, un Pod que necesita consultar el estado de otros Pods, o crear nuevos recursos dinámicamente). Por defecto, cada Pod usa una cuenta de servicio implícita con permisos muy limitados; para operaciones más específicas, se crea una ServiceAccount dedicada, se le asigna un Role con exactamente los permisos que esa carga de trabajo específica necesita mediante un RoleBinding, y se asigna esa ServiceAccount al Pod correspondiente, en vez de otorgar permisos amplios innecesarios por comodidad.
-
-Este mismo patrón conceptual de mínimo privilegio aplicado a cargas de trabajo, y no solo a personas —definir permisos específicos por función y adjuntarlos explícitamente a la identidad que realmente los necesita, sin conceder acceso amplio "por si acaso"— es exactamente el mismo principio que aplicaste al diseñar roles IAM específicos por función Lambda en el proyecto final del track Cloud, ahora trasladado al contexto de las cargas de trabajo dentro de un clúster de Kubernetes.
-
-**Analogía:** un Role es como una descripción de puesto de trabajo que especifica exactamente qué tareas puede realizar alguien en ese puesto ("puede consultar el inventario, pero no puede modificar precios"), limitada a un departamento específico de la empresa. Un ClusterRole es esa misma descripción pero aplicable a través de toda la empresa, no limitada a un departamento. Un RoleBinding es la carta de asignación formal que efectivamente pone a una persona específica (o a un sistema automatizado específico, en el caso de una ServiceAccount) en ese puesto de trabajo con esos permisos exactos, sin la cual la descripción del puesto por sí sola no habilita a nadie a hacer nada.
-
-**¿Por qué es importante?** Sin RBAC configurado deliberadamente, es común que las cargas de trabajo dentro de un clúster terminen con permisos mucho más amplios de los que realmente necesitan (por usar cuentas de servicio con permisos por defecto demasiado generosos, o por pereza de definir Roles específicos), replicando exactamente el mismo riesgo de seguridad que ya estudiaste con políticas IAM demasiado permisivas en el track Cloud, ahora a nivel del propio clúster de Kubernetes.
+**Analogía:** un Role es una descripción de puesto de trabajo limitada a un departamento. Un ClusterRole es esa misma descripción aplicable a toda la empresa. Un RoleBinding es la carta de asignación formal que pone a alguien (o a un sistema automatizado) en ese puesto con esos permisos exactos.
 
 **Diagrama:**
 
 ```
-Role "lector-pods" (namespace: desarrollo)
-   permisos: get, list sobre Pods           ← solo lectura, sin eliminar ni crear
-        │
-        │  RoleBinding conecta el Role con...
-        ▼
-ServiceAccount "mi-app-sa"  ──▶  Pod que usa esta cuenta de servicio
-   (hereda exactamente esos permisos limitados, ni más ni menos)
+┌── Role "lector-pods" (namespace: desarrollo) ──┐
+│ permisos: get, list sobre Pods (solo lectura)      │
+└──────────────┬──────────────────┘
+               │ RoleBinding conecta el Role con...
+               ▼
+ServiceAccount "mi-app-sa" ──▶ Pod que usa esta cuenta
 ```
+
+#### Paso 4 · Demostración guiada desde cero
+
+Desde una carpeta vacía crea `academia-devops/src/modulo7/rbac` y confirma que una ServiceAccount sin permisos no puede listar Pods:
+
+```bash
+mkdir -p academia-devops/src/modulo7/rbac && cd academia-devops/src/modulo7/rbac
+kubectl create serviceaccount lector-limitado
+kubectl auth can-i list pods --as=system:serviceaccount:default:lector-limitado
+```
+
+**Explicación línea por línea:** `kubectl auth can-i ... --as=<cuenta>` simula la pregunta "¿esta identidad puede hacer esto?" sin necesitar realmente ejecutar la acción, ideal para verificar permisos antes de conceder o denegar acceso real.
+
+Otorga permisos explícitos mínimos y confirma que ahora sí puede, pero solo eso:
+
+```bash
+cat > rbac.yaml <<'EOF'
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: lector-pods
+rules:
+  - apiGroups: [""]
+    resources: ["pods"]
+    verbs: ["get", "list"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: lector-pods-binding
+subjects:
+  - kind: ServiceAccount
+    name: lector-limitado
+    namespace: default
+roleRef:
+  kind: Role
+  name: lector-pods
+  apiGroup: rbac.authorization.k8s.io
+EOF
+kubectl apply -f rbac.yaml
+kubectl auth can-i list pods --as=system:serviceaccount:default:lector-limitado
+kubectl auth can-i delete pods --as=system:serviceaccount:default:lector-limitado
+```
+
+**Resultado esperado:** antes del `Role`/`RoleBinding`, `can-i list pods` responde `no`; después, responde `yes`; pero `can-i delete pods` con la misma cuenta sigue respondiendo `no`, confirmando que solo tiene exactamente los verbos (`get`, `list`) que el Role le otorgó explícitamente.
+
+**Fallo deliberado:** cambia `resources: ["pods"]` a `resources: ["secrets"]` en el Role sin cambiar el nombre, y vuelve a aplicar. `can-i list pods` con esa misma cuenta ahora responde `no` de nuevo — diagnostica revisando `kubectl describe role lector-pods` para confirmar que el recurso al que aplica el permiso cambió, no que el binding se rompió.
+
+#### Construcción RutaFlow: permisos mínimos por componente
+
+Documenta en `academia-devops/README.md` que cada componente de RutaFlow que necesita hablar con la API de Kubernetes (por ejemplo, un operador de despliegue propio) recibe su propia ServiceAccount con un Role específico, nunca la cuenta de servicio por defecto con permisos amplios.
+
+#### Paso 5 · Práctica guiada
+
+Crea un segundo Role que permita `create` sobre `pods` (no solo lectura) y un segundo RoleBinding para una nueva ServiceAccount `creador-pods`; confirma con `kubectl auth can-i create pods --as=system:serviceaccount:default:creador-pods` que solo esa cuenta específica tiene ese permiso adicional. **Pista:** cada RoleBinding es independiente; una ServiceAccount solo tiene la unión de los permisos de todos sus bindings.
+
+#### Paso 6 · Práctica independiente
+
+Investiga la diferencia entre un `Role` y un `ClusterRole` ejecutando `kubectl auth can-i list nodes --as=system:serviceaccount:default:lector-limitado` (los Nodes no son específicos de ningún namespace) y explica por qué un `Role` namespaced nunca podría otorgar ese permiso, sin importar cómo se configure.
+
+#### Paso 7 · Cierre y evidencia
+
+Ya aplicas mínimo privilegio real a las identidades que operan dentro del clúster, verificando con `can-i` antes de asumir qué puede hacer cada una. El siguiente tema centraliza seguridad y observabilidad de la comunicación entre servicios. **Evidencia:** entrega las tres respuestas de `can-i` (antes del binding, después con `list` permitido, y `delete` denegado), y explica el resultado del recurso cambiado en el fallo deliberado. Fuente oficial: [Kubernetes — RBAC](https://kubernetes.io/docs/reference/access-control/rbac/).
+
+**Errores comunes:** usar la ServiceAccount por defecto con permisos amplios en vez de crear una específica y mínima por carga de trabajo; olvidar que un Role sin un RoleBinding no concede ningún acceso, exactamente igual que una política IAM sin adjuntar.
+
+**Cuándo no usarlo:** para un permiso que debe aplicar a nivel de clúster completo (no limitado a un namespace), un `Role` no basta; ahí un `ClusterRole` con su correspondiente `ClusterRoleBinding` es el objeto correcto.
 
 ### Tema 6: Service Mesh — Istio, Linkerd, Envoy y mTLS
 
+#### Paso 1 · Objetivo y preparación
+
+Al finalizar podrás explicar cómo un proxy sidecar centraliza mTLS, reintentos y observabilidad entre servicios sin que el código de la aplicación las implemente directamente.
+
+**Conocimiento previo:** Temas 1 a 5 de este módulo.
+
+#### Paso 2 · Contexto y caso real
+
+**¿Por qué es importante?** Este es un caso real de arquitecturas con muchos microservicios: gestionar seguridad, resiliencia y observabilidad de la comunicación interna dentro del código de cada aplicación individual se vuelve progresivamente inmanejable a medida que crece el número de servicios.
+
+#### Paso 3 · Teoría con analogía
+
 **Conceptos clave:** service mesh, sidecar proxy, mTLS, observabilidad de tráfico entre servicios.
 
-Un service mesh es una capa de infraestructura dedicada a gestionar la comunicación entre servicios dentro de un clúster, típicamente implementada inyectando un proxy sidecar (comúnmente Envoy, un proxy de alto rendimiento de propósito general) junto a cada Pod, de forma que todo el tráfico de red entrante y saliente de ese Pod pasa a través de su proxy sidecar antes de llegar (o después de salir) del contenedor de la aplicación en sí. Istio y Linkerd son las dos implementaciones de service mesh más adoptadas, cada una gestionando esta red de proxies sidecar de forma centralizada con un plano de control.
+Un service mesh gestiona la comunicación entre servicios inyectando un proxy sidecar (comúnmente Envoy) junto a cada Pod; todo el tráfico entrante y saliente pasa por ese proxy. Esto centraliza cifrado, reintentos, circuit breakers y observabilidad sin implementarlos en el código de cada aplicación. mTLS hace que ambas partes de una comunicación (no solo el servidor) verifiquen certificados mutuamente, cifrando el tráfico interno de forma transparente.
 
-Esta arquitectura permite implementar preocupaciones transversales de comunicación entre servicios —cifrado de tráfico, reintentos automáticos, disyuntores de circuito (circuit breakers), enrutamiento avanzado por porcentaje (habilitando patrones de canary release, del Módulo 5 de este track, pero implementados a nivel de comunicación entre microservicios internos, no solo entre versiones de un mismo servicio expuesto externamente), y observabilidad detallada de cada llamada entre servicios— sin necesidad de implementar cada una de esas capacidades individualmente dentro del código de cada aplicación, centralizándolas en su lugar en la infraestructura del proxy sidecar compartido por todos los servicios del mesh.
-
-mTLS (mutual TLS, o TLS mutuo) es una de las capacidades más valiosas que un service mesh habilita de forma centralizada: en TLS tradicional (el que protege, por ejemplo, las conexiones HTTPS normales), solo el servidor demuestra su identidad al cliente mediante un certificado; en mTLS, ambas partes de la comunicación —tanto el llamador como el receptor— presentan y verifican certificados mutuamente, garantizando que ambos extremos de cada comunicación interna dentro del clúster son quienes dicen ser, y cifrando el tráfico entre ellos automáticamente. Sin un service mesh, implementar mTLS entre todos los pares de servicios de una arquitectura de microservicios requeriría gestionar certificados y lógica de verificación dentro del código de cada aplicación individual; con un service mesh, esto se habilita de forma transparente y centralizada para todo el tráfico interno del clúster, sin que el código de la aplicación necesite saber nada al respecto.
-
-Adoptar un service mesh introduce complejidad operativa adicional real (un componente más que entender, operar y depurar), por lo que su adopción suele justificarse en arquitecturas con un número considerable de microservicios que se comunican intensamente entre sí, donde el beneficio de centralizar estas preocupaciones transversales supera claramente el coste operativo adicional; para arquitecturas más simples, con pocos servicios o comunicación interna limitada, esa complejidad adicional puede no estar justificada todavía.
-
-**Analogía:** un service mesh es como instalar un sistema de seguridad y comunicación estandarizado en cada oficina de un complejo empresarial de múltiples edificios: en vez de que cada oficina individual implemente su propio sistema de verificación de identidad de visitantes y su propio registro de comunicaciones, un sistema centralizado y transparente gestiona automáticamente la verificación de identidad mutua (mTLS) y el registro de todas las comunicaciones entre oficinas, sin que cada oficina individual tenga que preocuparse por implementar eso por su cuenta.
-
-**¿Por qué es importante?** A medida que una arquitectura crece en número de microservicios que se comunican entre sí, gestionar la seguridad, resiliencia y observabilidad de esa comunicación interna se vuelve progresivamente más complejo de mantener dentro del código de cada aplicación individual; un service mesh centraliza esas preocupaciones de forma consistente en toda la arquitectura, a costa de la complejidad operativa adicional de gestionar el propio mesh.
+**Analogía:** un service mesh es como instalar un sistema de seguridad y comunicación estandarizado en cada oficina de un complejo empresarial: en vez de que cada oficina implemente su propio sistema de verificación, uno centralizado gestiona automáticamente la identidad mutua y el registro de comunicaciones entre oficinas.
 
 **Diagrama:**
 
 ```
-Pod A                              Pod B
-┌──────────────┐                ┌──────────────┐
-│ Contenedor app A  │              │ Contenedor app B  │
-│      │              │              │      │              │
-│ Proxy sidecar    │◀── mTLS ───▶│ Proxy sidecar    │
-│ (Envoy)            │  cifrado    │ (Envoy)            │
-└──────────────┘                └──────────────┘
-   (la app en sí no gestiona directamente el cifrado
-    ni la verificación de identidad; el sidecar lo hace)
+┌── Pod A ──────────┐         ┌── Pod B ──────────┐
+│ Contenedor app A       │         │ Contenedor app B       │
+│ Proxy sidecar (Envoy)   │◀─ mTLS cifrado ─▶│ Proxy sidecar (Envoy)   │
+└──────────────┘         └──────────────┘
+   (la app no gestiona directamente el cifrado; el sidecar lo hace)
 ```
+
+#### Paso 4 · Demostración guiada desde cero
+
+Desde una carpeta vacía crea `academia-devops/src/modulo7/service-mesh` y simula el patrón de sidecar con dos contenedores dentro del mismo Pod, uno como proxy delante del otro (sin instalar Istio completo, para ilustrar el mecanismo básico):
+
+```bash
+mkdir -p academia-devops/src/modulo7/service-mesh/nginx && cd academia-devops/src/modulo7/service-mesh
+cat > nginx/sidecar.conf <<'EOF'
+server {
+    listen 8443 ssl;
+    ssl_certificate /etc/ssl/certs/demo.crt;
+    ssl_certificate_key /etc/ssl/private/demo.key;
+    location / { proxy_pass http://localhost:3000; }
+}
+EOF
+cat > pod-sidecar.yaml <<'EOF'
+apiVersion: v1
+kind: Pod
+metadata:
+  name: con-sidecar
+  labels: { app: con-sidecar }
+spec:
+  containers:
+    - name: app
+      image: node:22-alpine
+      command: ["node", "-e", "require('http').createServer((q,r)=>r.end('app real, solo accesible via sidecar')).listen(3000)"]
+    - name: sidecar-proxy
+      image: nginx:1.27-alpine
+      ports: [{ containerPort: 8443 }]
+EOF
+kubectl apply -f pod-sidecar.yaml
+kubectl get pod con-sidecar -o jsonpath='{.spec.containers[*].name}'
+echo
+```
+
+**Explicación línea por línea:** el Pod tiene dos contenedores (`app` y `sidecar-proxy`) que comparten red por definición de Pod (Módulo 6, Tema 1); en un service mesh real, este patrón se automatiza inyectando el sidecar en cada Pod del mesh sin que el desarrollador lo defina manualmente cada vez, como sí se hizo aquí de forma explícita para ilustrarlo.
+
+**Resultado esperado:** `kubectl get pod con-sidecar -o jsonpath='{.spec.containers[*].name}'` imprime `app sidecar-proxy`, confirmando que ambos contenedores comparten el mismo Pod y por tanto la misma red interna, la base estructural sobre la que un service mesh real construye mTLS automático.
+
+**Fallo deliberado:** intenta acceder directamente al contenedor `app` en el puerto 3000 desde fuera del Pod (sin pasar por el sidecar), simulando qué pasaría si alguien intentara saltarse el proxy. Sin un Service que exponga específicamente ese puerto, no hay forma externa de alcanzarlo directamente — diagnostica confirmando que el diseño de service mesh depende de que TODO el tráfico entre/salga exclusivamente a través del sidecar, nunca directamente al contenedor de aplicación.
+
+#### Construcción RutaFlow: decisión de adopción de service mesh
+
+Documenta en `academia-devops/README.md` que RutaFlow, con su número limitado de servicios para fines del curso, NO adopta un service mesh completo (Istio/Linkerd) todavía, mientras el beneficio no supere la complejidad operativa adicional real de gestionar uno.
+
+#### Paso 5 · Práctica guiada
+
+Investiga (documentando, sin instalarlo completo en este laboratorio) los pasos de `istioctl install` o `linkerd install` para un clúster `kind`, y qué comando usarías para confirmar que el sidecar se inyectó automáticamente en un namespace etiquetado para el mesh. **Pista:** ambos usan una etiqueta de namespace (`istio-injection=enabled` en Istio) para decidir dónde inyectar el sidecar automáticamente.
+
+#### Paso 6 · Práctica independiente
+
+Compara en un documento propio el coste operativo (un componente más que entender y depurar) contra el beneficio (mTLS automático, observabilidad centralizada) para una arquitectura hipotética de 3 microservicios frente a una de 30 microservicios, concluyendo en qué punto la adopción se justifica.
+
+#### Paso 7 · Cierre y evidencia
+
+Ya entiendes el mecanismo estructural de un service mesh (sidecar compartiendo red con la app) y cuándo su complejidad adicional se justifica. Esto cierra el módulo de Kubernetes avanzado; el siguiente módulo cubre infraestructura como código con Terraform. **Evidencia:** entrega la salida confirmando ambos contenedores en el mismo Pod, y tu conclusión documentada sobre cuándo adoptar un service mesh. Fuente oficial: [Istio — What is Istio](https://istio.io/latest/docs/overview/what-is-istio/).
+
+**Errores comunes:** adoptar un service mesh completo antes de tener suficientes microservicios comunicándose entre sí para justificar su complejidad operativa; asumir que un sidecar se configura solo, sin entender que requiere instalación y configuración explícita del plano de control del mesh.
+
+**Cuándo no usarlo:** para una arquitectura con pocos servicios y comunicación interna limitada, un service mesh completo añade una capa operativa entera sin beneficio proporcional; el límite es cuando el número de servicios y la necesidad de mTLS/observabilidad centralizada realmente lo justifican.
 
 ---
 
@@ -185,22 +591,22 @@ Pod A                              Pod B
 
 | Paso | Acción | Comando/Configuración | Explicación | Resultado esperado |
 |---|---|---|---|---|
-| 1 | Crear la estructura de un Helm chart | `helm create mi-chart` | Genera una estructura base de chart con plantillas de ejemplo | Se crea la carpeta `mi-chart/` con `Chart.yaml`, `values.yaml` y `templates/` |
-| 2 | Adaptar las plantillas a tu Deployment y Service | Reemplaza el contenido de `templates/deployment.yaml` y `templates/service.yaml` con la configuración de tu aplicación del Módulo 6, usando `{{ .Values.* }}` para los valores parametrizables (réplicas, imagen, tag) | Convierte los manifiestos estáticos en plantillas reutilizables | Los archivos usan correctamente la sintaxis de Go template |
-| 3 | Definir valores por defecto | Edita `values.yaml` con `replicaCount: 3` y los valores de imagen correspondientes | Establece la configuración por defecto del chart | El archivo se guarda correctamente |
-| 4 | Instalar el chart | `helm install mi-api ./mi-chart` | Despliega la aplicación usando el chart parametrizado | `kubectl get pods` muestra los Pods desplegados vía Helm |
-| 5 | Instalar un Ingress Controller | Instala NGINX Ingress Controller siguiendo su documentación oficial para tu tipo de clúster local | Habilita el enrutamiento HTTP hacia Services internos | El Ingress Controller aparece corriendo con `kubectl get pods -n <su-namespace>` |
-| 6 | Crear una regla de Ingress | Define un objeto Ingress con `host: mi-api.local` enrutando hacia tu Service, y aplícalo | Expone la aplicación por nombre de dominio a través del Ingress Controller | El objeto Ingress se crea correctamente (`kubectl get ingress`) |
-| 7 | Configurar el HorizontalPodAutoscaler | `kubectl autoscale deployment mi-api --cpu-percent=70 --min=2 --max=10` | Habilita escalado automático según uso de CPU | `kubectl get hpa` muestra el autoscaler configurado |
-| 8 | Añadir probes de liveness y readiness | Añade `livenessProbe` y `readinessProbe` a la plantilla del Deployment, apuntando a rutas de verificación de tu aplicación (por ejemplo, `/health` y `/ready`), y actualiza el release con `helm upgrade mi-api ./mi-chart` | Aplica robustez de arranque y disponibilidad al Deployment | `kubectl describe pod` muestra ambas probes configuradas y pasando exitosamente |
+| 1 | Crear la estructura de un Helm chart | `helm create mi-chart` | Genera estructura base con plantillas de ejemplo | Se crea `mi-chart/` con `Chart.yaml`, `values.yaml`, `templates/` |
+| 2 | Adaptar las plantillas | Usa `{{ .Values.* }}` para réplicas, imagen, tag | Convierte manifiestos estáticos en reutilizables | Los archivos usan correctamente Go template |
+| 3 | Definir valores por defecto | `replicaCount: 3` en `values.yaml` | Establece configuración por defecto | El archivo se guarda correctamente |
+| 4 | Instalar el chart | `helm install mi-api ./mi-chart` | Despliega usando el chart parametrizado | `kubectl get pods` muestra los Pods desplegados |
+| 5 | Instalar un Ingress Controller | Sigue la documentación oficial para tu clúster local | Habilita enrutamiento HTTP | El controller corre (`kubectl get pods -n <namespace>`) |
+| 6 | Crear una regla de Ingress | `host: mi-api.local` enrutando al Service | Expone la app por dominio | `kubectl get ingress` muestra el objeto |
+| 7 | Configurar el HPA | `kubectl autoscale deployment mi-api --cpu-percent=70 --min=2 --max=10` | Habilita escalado automático | `kubectl get hpa` muestra el autoscaler |
+| 8 | Añadir probes | `livenessProbe`/`readinessProbe` en la plantilla, `helm upgrade` | Aplica robustez de arranque | `kubectl describe pod` muestra ambas probes pasando |
 
-**Verificación:** el laboratorio se considera exitoso si `helm upgrade` con un cambio de valores (por ejemplo, cambiar `replicaCount` en `values.yaml` y volver a ejecutar `helm upgrade`) refleja correctamente el nuevo número de réplicas sin necesidad de editar manifiestos YAML directamente, y si el HPA y las probes aparecen correctamente configurados y en estado saludable.
+**Verificación:** el laboratorio se considera exitoso si `helm upgrade` con un cambio de valores refleja el nuevo número de réplicas sin editar YAML directamente, y si HPA y probes aparecen configurados y saludables.
 
 **Errores comunes y soluciones**
 
-- **`helm install` falla con un error de sintaxis en las plantillas.** Usa `helm template ./mi-chart` para renderizar las plantillas localmente sin instalarlas, revisando el YAML resultante antes de intentar aplicarlo al clúster; esto ayuda a aislar si el problema está en la sintaxis de la plantilla o en el manifiesto resultante en sí.
-- **El Ingress no enruta tráfico, aunque el Ingress Controller está corriendo.** Verifica que el `host` configurado en el objeto Ingress se resuelve correctamente hacia la IP del Ingress Controller (en un clúster local, esto normalmente requiere una entrada manual en tu archivo `hosts` local apuntando ese dominio a `127.0.0.1` o a la IP correspondiente del clúster local).
-- **El HPA muestra `<unknown>` en la columna de métricas actuales.** Esto casi siempre indica que el clúster no tiene `metrics-server` instalado o funcionando correctamente; instálalo explícitamente si tu distribución de Kubernetes local no lo incluye por defecto.
-- **El Pod nunca llega a estado `Ready` tras añadir las probes.** Revisa que las rutas configuradas en las probes (`/health`, `/ready`) realmente existen y responden correctamente en tu aplicación; una probe apuntando a una ruta inexistente falla indefinidamente, impidiendo que el Pod se considere listo.
+- **`helm install` falla con error de sintaxis.** Usa `helm template ./mi-chart` para renderizar localmente antes de instalar.
+- **El Ingress no enruta tráfico.** Verifica que el `host` resuelve hacia la IP del Ingress Controller (en local, vía tu archivo `hosts`).
+- **El HPA muestra `<unknown>`.** Instala `metrics-server` si no viene por defecto en tu distribución.
+- **El Pod nunca llega a `Ready` tras añadir probes.** Verifica que las rutas configuradas realmente existen y responden en tu aplicación.
 
 ---
