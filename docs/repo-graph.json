@@ -4266,7 +4266,7 @@
     },
     {
       "path": "web/public/content/devops/modulo-4.md",
-      "lines": 154,
+      "lines": 360,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -4274,10 +4274,15 @@
         "# M\u00f3dulo 4: CI \u2014 pipelines automatizados",
         "## Aprende construyendo",
         "### Tema 1: Jobs, steps y matrices de build",
-        "### Tema 2: Cach\u00e9 de dependencias en CI",
-        "### Tema 3: Artifacts y reportes de cobertura",
-        "### Tema 4: Pipelines como c\u00f3digo (GitHub Actions/GitLab CI)",
-        "## Laboratorio pr\u00e1ctico"
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
+        "#### Paso 2 \u00b7 Contexto y caso real",
+        "#### Paso 3 \u00b7 Teor\u00eda con analog\u00eda",
+        "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
+        "#### Construcci\u00f3n RutaFlow: matriz de versiones soportadas",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
+        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
+        "#### Paso 7 \u00b7 Cierre y evidencia",
+        "### Tema 2: Cach\u00e9 de dependencias en CI"
       ]
     },
     {

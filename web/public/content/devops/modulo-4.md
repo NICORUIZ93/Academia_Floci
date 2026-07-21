@@ -5,120 +5,326 @@
 
 ### Tema 1: Jobs, steps y matrices de build
 
+#### Paso 1 · Objetivo y preparación
+
+Al finalizar podrás escribir un workflow de GitHub Actions con un job matricial que ejecuta las mismas pruebas contra varias versiones de runtime en paralelo.
+
+**Conocimiento previo:** Git (Módulo 1) y Docker (Módulo 2) de este track; un repositorio con un `package.json` simple.
+
+#### Paso 2 · Contexto y caso real
+
+**¿Por qué es importante?** Este es un caso real de cualquier equipo activo: diseñar bien jobs, steps y matrices determina si CI se siente como una herramienta rápida que da confianza inmediata, o como un obstáculo lento que el equipo empieza a evitar.
+
+#### Paso 3 · Teoría con analogía
+
 **Conceptos clave:** job, step, ejecución paralela, `strategy.matrix`, runner.
 
-Un pipeline de CI se organiza en jobs, cada uno ejecutándose en su propio runner (una máquina virtual o contenedor aislado provisto por la plataforma de CI), y cada job se compone de una secuencia de steps que se ejecutan en orden dentro de ese mismo runner. Por defecto, distintos jobs dentro de un mismo workflow se ejecutan en paralelo entre sí (a menos que se declare explícitamente una dependencia entre ellos), mientras que los steps dentro de un mismo job se ejecutan siempre de forma secuencial, cada uno dependiendo de que el anterior haya terminado (y, típicamente, de que haya tenido éxito).
+Un pipeline de CI se organiza en jobs, cada uno en su propio runner, compuesto de steps secuenciales. Distintos jobs corren en paralelo por defecto, a menos que se declare una dependencia explícita entre ellos. Una matriz de build (`strategy.matrix`) ejecuta el mismo job múltiples veces, una por cada combinación de valores especificados (por ejemplo, `node-version: [20, 22]`), sin duplicar la definición del job.
 
-Una matriz de build (`strategy.matrix` en GitHub Actions) permite ejecutar el mismo job múltiples veces, una vez por cada combinación de valores especificados, sin duplicar la definición del job manualmente para cada variante. Por ejemplo, definir una matriz con `node-version: [20, 22]` ejecuta automáticamente dos instancias paralelas del mismo job de pruebas, una con cada versión de Node.js especificada, verificando que el código funciona correctamente en ambos entornos sin necesidad de escribir dos jobs casi idénticos por separado. Una matriz puede combinar múltiples dimensiones a la vez (por ejemplo, versión de runtime y sistema operativo), generando automáticamente el producto cartesiano de todas las combinaciones especificadas.
-
-Este paralelismo —tanto entre jobs distintos como entre las distintas combinaciones de una matriz— es lo que permite que un pipeline de CI bien diseñado reporte resultados en minutos en vez de en el tiempo acumulado de ejecutar cada verificación secuencialmente una tras otra. Diseñar bien la separación de jobs (por ejemplo, un job de lint independiente de un job de tests, ejecutándose en paralelo) es una decisión de diseño de pipeline que afecta directamente cuánto tiempo espera un desarrollador desde que abre un pull request hasta obtener retroalimentación completa sobre si su cambio es correcto.
-
-Un detalle práctico importante es que, aunque los jobs corren en paralelo por defecto, es común que algunos jobs necesiten depender explícitamente de que otro haya terminado con éxito antes de ejecutarse (por ejemplo, un job de despliegue que solo debe correr después de que el job de tests haya pasado); esto se declara explícitamente con una cláusula de dependencia entre jobs, convirtiendo el pipeline en un grafo dirigido de dependencias en vez de una simple lista paralela.
-
-**Analogía:** los jobs de un pipeline son como distintos equipos de inspección trabajando en paralelo sobre un mismo producto (uno revisa el estilo de la caja, otro prueba su funcionamiento, otro mide su peso), cada uno pudiendo terminar en un tiempo distinto sin esperar a los demás salvo que uno dependa explícitamente del resultado de otro. Una matriz de build es como pedirle al mismo equipo de pruebas de funcionamiento que repita exactamente la misma prueba sobre varias versiones distintas del producto (una con batería A, otra con batería B), automáticamente y en paralelo, sin tener que redactar instrucciones de prueba separadas para cada batería.
-
-**¿Por qué es importante?** Diseñar bien la estructura de jobs, steps y matrices de un pipeline es lo que determina si CI se siente como una herramienta rápida que da confianza inmediata sobre cada cambio, o como un obstáculo lento que el equipo empieza a evitar o ignorar por la frustración de esperar demasiado por retroalimentación.
+**Analogía:** los jobs son como distintos equipos de inspección trabajando en paralelo sobre un mismo producto. Una matriz de build es pedirle al mismo equipo que repita la misma prueba sobre varias versiones del producto, automáticamente y en paralelo.
 
 **Diagrama:**
 
 ```
-Workflow CI
-├── Job "lint"                    (corre en paralelo con "test")
-│    └── steps: checkout, instalar deps, ejecutar linter
-└── Job "test" (matriz: node 20, node 22)
-     ├── Instancia node-20: checkout, instalar deps, correr tests
-     └── Instancia node-22: checkout, instalar deps, correr tests
-          (ambas instancias corren en paralelo entre sí también)
+┌── Workflow CI ──────────────────────┐
+│ Job "lint"          (paralelo con "test") │
+│  └ steps: checkout, deps, linter          │
+│ Job "test" (matriz: node 20, node 22)       │
+│  ├ instancia node-20: checkout, deps, test │
+│  └ instancia node-22: checkout, deps, test │
+└──────────────────────────────┘
 ```
+
+#### Paso 4 · Demostración guiada desde cero
+
+Desde una carpeta vacía crea `academia-devops/src/modulo4/ci-matriz` con el workflow y valida su sintaxis:
+
+```bash
+mkdir -p academia-devops/src/modulo4/ci-matriz/.github/workflows
+cd academia-devops/src/modulo4/ci-matriz
+cat > .github/workflows/ci.yml <<'EOF'
+name: CI
+on: [pull_request]
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [20, 22]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+      - run: npm test
+EOF
+echo '{"scripts":{"test":"node -e \"console.log(process.version)\""}}' > package.json
+```
+
+**Explicación línea por línea:** `strategy.matrix.node-version` genera dos instancias del job `test`, una por cada versión listada; `${{ matrix.node-version }}` interpola el valor de esa instancia específica dentro de cada step.
+
+Valida la sintaxis YAML y simula localmente las dos instancias de la matriz con Docker (sin depender de GitHub real):
+
+```bash
+docker run --rm -v "$(pwd)":/w -w /w python:3.12-alpine python3 -c "import yaml; yaml.safe_load(open('.github/workflows/ci.yml')); print('YAML valido')"
+for version in 20 22; do
+  echo "--- instancia matriz node-version=$version ---"
+  docker run --rm -v "$(pwd)":/app -w /app "node:$version-alpine" npm test
+done
+```
+
+**Resultado esperado:** `YAML valido` confirma que el workflow no tiene errores de sintaxis; cada instancia de la "matriz" simulada imprime su propia versión de Node (`v20.x.x` y `v22.x.x`), demostrando en local el mismo paralelismo que GitHub Actions ejecutaría remotamente.
+
+**Fallo deliberado:** rompe la indentación de `strategy` (quítale dos espacios, dejándola al mismo nivel que `jobs` en vez de dentro de `test`) y repite la validación con `python3 -c "import yaml; yaml.safe_load(...)"`. El YAML puede seguir siendo sintácticamente válido pero GitHub Actions lo rechazaría como estructura de workflow inválida — diagnostica revisando que cada clave estructural (`strategy`, `steps`) esté anidada exactamente bajo el job correspondiente.
+
+#### Construcción RutaFlow: matriz de versiones soportadas
+
+`ci.yml` con esta matriz es la base del pipeline real de RutaFlow: cada servicio declara explícitamente qué versiones de su runtime soporta oficialmente, verificadas en cada pull request.
+
+#### Paso 5 · Práctica guiada
+
+Agrega una segunda dimensión a la matriz (`os: [ubuntu-latest]`, luego amplía a más de un valor si tu proyecto lo requiere) y cuenta cuántas instancias totales generaría el producto cartesiano resultante. **Pista:** el número total de instancias es el producto del tamaño de cada dimensión de la matriz.
+
+#### Paso 6 · Práctica independiente
+
+Agrega un segundo job `lint` sin matriz, y declara que `test` no depende de `lint` (corren en paralelo); documenta en un comentario qué cambiarías si quisieras que `test` solo corriera después de que `lint` pasara.
+
+#### Paso 7 · Cierre y evidencia
+
+Ya diseñas jobs paralelos y matrices sin duplicar definiciones. El siguiente tema evita reinstalar dependencias en cada ejecución con caché. **Evidencia:** entrega la salida de las dos instancias simuladas de la matriz mostrando cada versión de Node, y explica el resultado del YAML mal indentado. Fuente oficial: [GitHub Actions — matrix](https://docs.github.com/actions/using-jobs/using-a-matrix-for-your-jobs).
+
+**Errores comunes:** indentar `strategy.matrix` fuera del job al que pertenece; asumir que todos los jobs de un workflow corren secuencialmente por defecto, cuando en realidad corren en paralelo salvo dependencia explícita.
+
+**Cuándo no usarlo:** para un proyecto que solo soporta oficialmente una única versión de runtime, una matriz añade tiempo de ejecución sin beneficio real; el límite es que solo aporta valor cuando de verdad necesitas verificar compatibilidad entre varias combinaciones.
 
 ### Tema 2: Caché de dependencias en CI
 
-**Conceptos clave:** caché de `node_modules` (o equivalente), clave de caché basada en el lockfile, invalidación de caché.
+#### Paso 1 · Objetivo y preparación
 
-Instalar dependencias desde cero (`npm ci`, `pip install`, o el equivalente de cualquier ecosistema) en cada ejecución de un pipeline de CI puede consumir una porción significativa del tiempo total del pipeline, especialmente en proyectos con muchas dependencias. El caché de dependencias en CI resuelve esto guardando el resultado de esa instalación (por ejemplo, la carpeta `node_modules` completa) entre ejecuciones, asociado a una clave de caché derivada típicamente del contenido del archivo de lock de dependencias (`package-lock.json`, `poetry.lock`, o equivalente).
+Al finalizar podrás configurar caché de dependencias basada en el lockfile para evitar reinstalaciones innecesarias en cada ejecución del pipeline.
 
-Mientras ese archivo de lock no cambie entre una ejecución y la siguiente, la plataforma de CI puede restaurar directamente la caché guardada en vez de reinstalar todo desde cero, ahorrando ese tiempo en cada ejecución posterior. En cuanto el archivo de lock cambia (porque se añadió, actualizó o eliminó una dependencia), la clave de caché derivada de su contenido también cambia, lo que automáticamente invalida la caché anterior y fuerza una instalación completa nueva, exactamente el comportamiento correcto: quieres reutilizar caché cuando las dependencias son idénticas, pero necesitas una instalación real y actualizada cuando cambiaron.
+**Conocimiento previo:** Tema 1 de este módulo; Módulo 2 (invalidación de caché de capas Docker).
 
-Este mismo principio de "clave de caché derivada del contenido de lo que se está cacheando" es conceptualmente el mismo mecanismo de invalidación de capas que estudiaste con Docker en el Módulo 2 de este track: en ambos casos, el sistema detecta automáticamente cuándo el contenido relevante cambió y solo entonces paga el coste de recalcular, reutilizando el resultado anterior en cualquier otro caso donde el contenido de entrada sea idéntico.
+#### Paso 2 · Contexto y caso real
 
-Configurar caché de dependencias correctamente (por ejemplo, con `cache: 'npm'` como opción directa de la acción `setup-node` en GitHub Actions, que gestiona automáticamente tanto la clave de caché como su restauración) es una de las optimizaciones de pipeline más simples de implementar y con mayor impacto proporcional en la velocidad total del pipeline, especialmente en proyectos donde la instalación de dependencias representa una fracción significativa del tiempo total de cada ejecución.
+**¿Por qué es importante?** Este es un caso real de cualquier equipo con pipelines frecuentes: incluso un ahorro de un minuto por ejecución gracias al caché se traduce en un ahorro acumulado sustancial para todo el equipo.
 
-**Analogía:** el caché de dependencias en CI es como no tener que volver a comprar y desempacar todas las herramientas de un taller cada vez que empiezas un nuevo trabajo, siempre que la lista de herramientas necesarias (el lockfile) no haya cambiado desde la última vez: simplemente reutilizas el mismo juego de herramientas ya organizado. Si la lista de herramientas cambia (añades una herramienta nueva a tu inventario), entonces sí necesitas actualizar el juego completo antes de empezar a trabajar.
+#### Paso 3 · Teoría con analogía
 
-**¿Por qué es importante?** En pipelines que se ejecutan docenas o cientos de veces al día en un equipo activo, incluso un ahorro de un minuto por ejecución gracias al caché de dependencias se traduce en un ahorro acumulado sustancial de tiempo de espera para todo el equipo, además de reducir el consumo de recursos de cómputo del propio sistema de CI.
+**Conceptos clave:** caché de `node_modules`, clave de caché basada en el lockfile, invalidación de caché.
+
+El caché de dependencias guarda el resultado de una instalación entre ejecuciones, asociado a una clave derivada del contenido del lockfile (`package-lock.json`). Mientras el lockfile no cambie, la plataforma restaura la caché en vez de reinstalar. En cuanto cambia, la clave cambia y se fuerza una instalación completa nueva. Este es el mismo mecanismo de invalidación de capas que estudiaste con Docker.
+
+**Analogía:** el caché de dependencias es como no tener que volver a comprar y desempacar herramientas de un taller cada vez que empiezas un trabajo, siempre que la lista de herramientas (el lockfile) no haya cambiado.
 
 **Diagrama:**
 
 ```
-Ejecución 1 (lockfile: hash-A)          Ejecución 2 (lockfile: hash-A, sin cambios)
-   │                                        │
-   ▼                                        ▼
-npm ci (instalación completa)          restaura caché con clave "hash-A"
-   │                                        │
-   ▼                                        ▼
-guarda caché con clave "hash-A"        salta la instalación completa (rápido)
-
-Ejecución 3 (lockfile: hash-B, cambió)
-   │
-   ▼
-clave "hash-B" no existe en caché ──▶ npm ci (instalación completa de nuevo)
+┌── Ejecución 1 (lockfile hash-A) ──┐   ┌── Ejecución 2 (mismo hash-A) ──┐
+│ npm ci (instalación completa)        │   │ restaura caché con clave "hash-A"  │
+│ guarda caché con clave "hash-A"       │   │ salta la instalación (rápido)        │
+└─────────────────────┘   └───────────────────────┘
+Ejecución 3 (lockfile hash-B, cambió) ──▶ clave no existe ──▶ npm ci de nuevo
 ```
+
+#### Paso 4 · Demostración guiada desde cero
+
+Desde una carpeta vacía crea `academia-devops/src/modulo4/cache-ci` y simula el ciclo de caché con un volumen Docker (equivalente local al `cache: 'npm'` de `setup-node`):
+
+```bash
+mkdir -p academia-devops/src/modulo4/cache-ci && cd academia-devops/src/modulo4/cache-ci
+echo '{"name":"demo","dependencies":{"left-pad":"1.3.0"}}' > package.json
+docker volume create npm-cache-demo
+HASH1=$(sha256sum package.json | cut -d" " -f1)
+echo "clave de cache derivada del lockfile: $HASH1"
+time docker run --rm -v "$(pwd)":/app -v npm-cache-demo:/root/.npm -w /app node:22-alpine npm install --prefer-offline
+```
+
+**Explicación línea por línea:** `sha256sum package.json` deriva una clave estable a partir del contenido exacto del archivo, el mismo principio que usa `setup-node` internamente; el volumen `npm-cache-demo` persiste el caché de npm entre ejecuciones del contenedor.
+
+Repite la instalación sin cambiar nada, y mide si es más rápida:
+
+```bash
+time docker run --rm -v "$(pwd)":/app -v npm-cache-demo:/root/.npm -w /app node:22-alpine npm install --prefer-offline
+```
+
+**Resultado esperado:** la segunda ejecución reporta un tiempo (`real`) notablemente menor que la primera, porque `npm` reutiliza los paquetes ya descargados en el volumen `npm-cache-demo` en vez de descargarlos de la red nuevamente.
+
+**Fallo deliberado:** cambia la versión de `left-pad` en `package.json` (por ejemplo a `1.3.1`) y repite. El hash (`sha256sum package.json`) cambia, y aunque el volumen de caché sigue existiendo, npm debe resolver y potencialmente descargar la nueva versión — diagnostica que la clave de caché cambiada refleja correctamente que las dependencias declaradas ya no son idénticas a las cacheadas.
+
+#### Construcción RutaFlow: caché explícito por lockfile
+
+Documenta en `academia-devops/README.md` que el workflow real de RutaFlow usa `cache: 'npm'` en `setup-node`, derivando su clave automáticamente de `package-lock.json`, sin gestión manual de volúmenes como en este demo local.
+
+#### Paso 5 · Práctica guiada
+
+Calcula el hash de `package.json` antes y después de un cambio cosmético que no afecte dependencias (por ejemplo, reordenar campos) y confirma si el hash cambia igual. **Pista:** `sha256sum` es sensible a cualquier byte distinto, incluso espacios; por eso `setup-node` usa específicamente el lockfile, no el `package.json` completo.
+
+#### Paso 6 · Práctica independiente
+
+Simula una "invalidación de caché en cascada" eliminando el volumen (`docker volume rm npm-cache-demo`) y mide de nuevo el tiempo de instalación; compara los tres tiempos (sin caché, con caché válido, con caché eliminado) y documenta la diferencia.
+
+#### Paso 7 · Cierre y evidencia
+
+Ya evitas reinstalaciones innecesarias basando el caché en el contenido real del lockfile. El siguiente tema conserva reportes generados durante una ejecución más allá de sus logs. **Evidencia:** entrega los tres tiempos medidos (sin caché, con caché, tras invalidación) y explica la diferencia observada. Fuente oficial: [GitHub Actions — setup-node caching](https://github.com/actions/setup-node#caching-global-packages-data).
+
+**Errores comunes:** cachear directamente `node_modules` sin lockfile como clave, arriesgando reutilizar dependencias desactualizadas; no versionar el lockfile, dejando sin base estable la clave de caché.
+
+**Cuándo no usarlo:** en un proyecto con muy pocas dependencias donde la instalación tarda segundos, el caché añade complejidad de configuración sin beneficio proporcional; el límite es cuándo el tiempo ahorrado supera el coste de mantener la configuración de caché.
 
 ### Tema 3: Artifacts y reportes de cobertura
 
+#### Paso 1 · Objetivo y preparación
+
+Al finalizar podrás publicar un reporte de cobertura como artifact descargable de una ejecución de CI, y pasar resultados entre jobs que no comparten sistema de archivos.
+
+**Conocimiento previo:** Temas 1 y 2 de este módulo.
+
+#### Paso 2 · Contexto y caso real
+
+**¿Por qué es importante?** Este es un caso real de revisión de código: un revisor puede consultar directamente el reporte de cobertura de una ejecución concreta para confirmar que el código nuevo está cubierto por pruebas, sin depender únicamente de la palabra del autor.
+
+#### Paso 3 · Teoría con analogía
+
 **Conceptos clave:** artifact, reporte de cobertura, retención de artifacts, trazabilidad de una ejecución.
 
-Un artifact es cualquier archivo o conjunto de archivos generado durante la ejecución de un pipeline que se sube y queda disponible para descarga directamente desde la página de esa ejecución específica, sin necesidad de publicarlo en ningún otro sistema externo. Los casos de uso más comunes incluyen reportes de cobertura de pruebas (generados por herramientas de testing con la opción `--coverage`), binarios compilados, o logs detallados de una ejecución que se quiere conservar más allá de lo que la interfaz estándar de logs del pipeline muestra.
+Un artifact es cualquier archivo generado durante una ejecución que se sube y queda disponible para descarga desde esa ejecución específica. Los artifacts tienen un periodo de retención configurable tras el cual se eliminan automáticamente; no sustituyen almacenamiento permanente (para eso existe un registry de contenedores, Módulo 2). También son el mecanismo típico para pasar resultados entre jobs que corren en runners aislados sin sistema de archivos compartido.
 
-Subir un reporte de cobertura como artifact permite a cualquier persona del equipo revisar exactamente qué líneas de código quedaron o no cubiertas por pruebas en esa ejecución específica, sin tener que reproducir la ejecución de pruebas localmente en su propia máquina. Esto es especialmente valioso al revisar un pull request: un revisor puede consultar directamente el reporte de cobertura de esa ejecución concreta para confirmar que el código nuevo introducido efectivamente está cubierto por pruebas, en vez de depender únicamente de la palabra del autor del cambio.
-
-Los artifacts tienen, típicamente, un periodo de retención configurable (por ejemplo, 30, 60 o 90 días) después del cual la plataforma de CI los elimina automáticamente para no acumular almacenamiento indefinidamente; esto es adecuado para artifacts de diagnóstico o revisión temporal, pero no debe confundirse con almacenamiento permanente: cualquier artifact que necesite conservarse indefinidamente (como una versión de release oficial) debe publicarse en un lugar de almacenamiento duradero y explícitamente diseñado para eso, como un registry de contenedores (Módulo 2) o un sistema de gestión de releases dedicado.
-
-Más allá de la cobertura de pruebas, los artifacts también son el mecanismo típico para pasar el resultado construido de un job a otro job posterior dentro del mismo pipeline (por ejemplo, un job de "build" que compila la aplicación y sube el binario resultante como artifact, para que un job posterior de "deploy" lo descargue y lo despliegue), permitiendo que jobs distintos —que corren en runners aislados y no comparten sistema de archivos entre sí— compartan resultados de forma explícita y trazable.
-
-**Analogía:** un artifact es como el expediente de evidencia que queda archivado y disponible para consulta después de una inspección, en vez de que el inspector simplemente diga verbalmente "todo está bien" sin dejar ningún registro consultable de los detalles específicos que revisó. Cualquiera que necesite verificar los detalles después puede pedir ese expediente concreto, en vez de tener que repetir la inspección completa desde cero.
-
-**¿Por qué es importante?** Los artifacts hacen que el proceso de CI sea trazable y auditable: cualquier decisión sobre si un cambio está listo (¿la cobertura es suficiente? ¿el binario compilado es el correcto?) puede verificarse consultando la evidencia concreta de esa ejecución específica, en vez de depender de confianza ciega en que "el pipeline pasó".
+**Analogía:** un artifact es como el expediente de evidencia archivado tras una inspección, disponible para consulta después, en vez de que el inspector solo diga verbalmente "todo está bien".
 
 **Diagrama:**
 
 ```
-Job "test"                                     Job "deploy" (posterior)
-┌────────────────────────┐                   ┌────────────────────────┐
-│ ejecuta tests con --coverage │                │ descarga el artifact      │
-│ sube "coverage/" como           │  ────────▶   │ "binario-compilado"       │
-│ artifact                          │                │ generado por el job        │
-└────────────────────────┘                   │ "build" anterior              │
-                                                └────────────────────────┘
+┌── Job "test" ────────────────┐       ┌── Job "deploy" (posterior) ──┐
+│ ejecuta tests con --coverage      │  ───▶ │ descarga el artifact              │
+│ sube "coverage/" como artifact      │       │ "binario-compilado" del job "build" │
+└────────────────────────┘       └─────────────────────────┘
 ```
+
+#### Paso 4 · Demostración guiada desde cero
+
+Desde una carpeta vacía crea `academia-devops/src/modulo4/artifacts` y simula la generación y el paso de un artifact entre dos "jobs" (dos contenedores que no comparten sistema de archivos, salvo un volumen explícito que representa el mecanismo de artifacts):
+
+```bash
+mkdir -p academia-devops/src/modulo4/artifacts && cd academia-devops/src/modulo4/artifacts
+docker volume create artifacts-demo
+docker run --rm -v artifacts-demo:/artifacts alpine sh -c \
+  "mkdir -p /artifacts/coverage && echo 'lineas cubiertas: 87%' > /artifacts/coverage/resumen.txt && echo 'job build: artifact generado'"
+docker run --rm -v artifacts-demo:/artifacts alpine sh -c \
+  "echo 'job deploy: leyendo artifact del job anterior'; cat /artifacts/coverage/resumen.txt"
+```
+
+**Explicación línea por línea:** el volumen `artifacts-demo` simula el mecanismo de artifacts de CI: el primer contenedor ("job build") escribe un resultado que el segundo contenedor ("job deploy", que no comparte sistema de archivos por defecto) puede leer explícitamente a través de ese volumen compartido.
+
+**Resultado esperado:** el segundo contenedor imprime `lineas cubiertas: 87%`, confirmando que pudo leer el resultado generado por el primer contenedor sin haber compartido su sistema de archivos original.
+
+**Fallo deliberado:** ejecuta el segundo contenedor SIN montar el volumen `artifacts-demo` (`docker run --rm alpine cat /artifacts/coverage/resumen.txt`). Falla con "No such file or directory" — diagnostica que sin el mecanismo explícito de artifact (aquí, el volumen), dos jobs/contenedores aislados no comparten absolutamente nada por defecto.
+
+#### Construcción RutaFlow: cobertura visible en cada pull request
+
+Documenta en `academia-devops/README.md` que el pipeline real de RutaFlow sube `coverage/` como artifact en cada ejecución de `test`, con una retención de 30 días, para que cualquier revisor pueda auditar la cobertura de un cambio específico.
+
+#### Paso 5 · Práctica guiada
+
+Agrega un segundo artifact simulado (un "binario" ficticio: `echo 'contenido binario' > /artifacts/app-compilada.bin`) generado por el primer contenedor, y confirma que el segundo también puede leerlo. **Pista:** ambos artifacts viven en el mismo volumen compartido, simulando el almacenamiento común de una ejecución de workflow.
+
+#### Paso 6 · Práctica independiente
+
+Simula la expiración de retención eliminando el volumen (`docker volume rm artifacts-demo`) después de "descargar" (copiar a tu carpeta local con `docker cp` si tuvieras un contenedor persistente, o simplemente documentando el resultado) y explica por qué un artifact expirado no debe ser la única copia de algo importante como una release oficial.
+
+#### Paso 7 · Cierre y evidencia
+
+Ya conservas y pasas resultados entre pasos aislados de un pipeline con artifacts. El siguiente tema versiona el pipeline mismo como código junto al proyecto. **Evidencia:** entrega la salida del segundo contenedor leyendo el artifact exitosamente, y el fallo al intentar leerlo sin el volumen montado. Fuente oficial: [GitHub Actions — artifacts](https://docs.github.com/actions/how-tos/write-workflows/choose-what-workflows-do/store-and-share-data).
+
+**Errores comunes:** asumir que todos los jobs de un pipeline comparten sistema de archivos automáticamente; tratar un artifact con retención temporal como si fuera almacenamiento permanente para releases oficiales.
+
+**Cuándo no usarlo:** para pasar datos triviales entre steps del MISMO job (que sí comparten sistema de archivos dentro de ese runner), un artifact es innecesario; su propósito es específicamente compartir entre jobs distintos o conservar resultados más allá de la ejecución.
 
 ### Tema 4: Pipelines como código (GitHub Actions/GitLab CI)
 
+#### Paso 1 · Objetivo y preparación
+
+Al finalizar podrás explicar por qué versionar el pipeline de CI/CD como código junto al proyecto da trazabilidad y reversibilidad que una configuración manual externa no da.
+
+**Conocimiento previo:** Temas 1 a 3 de este módulo; Módulo 1 (Git avanzado).
+
+#### Paso 2 · Contexto y caso real
+
+**¿Por qué es importante?** Este es un caso real: si necesitas reproducir exactamente cómo se construía y probaba una versión del proyecto hace seis meses, el archivo de definición del pipeline de esa época está disponible en el historial de Git, no sobrescrito silenciosamente en una configuración externa.
+
+#### Paso 3 · Teoría con analogía
+
 **Conceptos clave:** pipeline declarativo en YAML, versionado del propio pipeline, disparadores (`on`).
 
-Un pipeline como código significa que la definición completa del proceso de CI/CD —qué jobs existen, qué steps ejecuta cada uno, bajo qué condiciones se disparan— vive en un archivo de texto (típicamente YAML) versionado junto al resto del código del proyecto, en vez de configurarse manualmente a través de una interfaz gráfica de administración separada del repositorio. Esto significa que cualquier cambio al proceso de CI/CD pasa por el mismo flujo de revisión (pull request, historial de cambios, posibilidad de revertir) que cualquier otro cambio de código del proyecto.
+Un pipeline como código vive en un archivo versionado junto al resto del proyecto, en vez de configurarse manualmente en una interfaz separada. Cualquier cambio al proceso de CI/CD pasa por el mismo flujo de revisión que cualquier otro cambio de código. Un disparador (`on`) especifica bajo qué evento se ejecuta el workflow: en cada `pull_request`, en cada push, en un horario cron (la misma sintaxis del Módulo 0), o manualmente.
 
-GitHub Actions y GitLab CI son dos de las plataformas más usadas para implementar este enfoque, cada una con su propia sintaxis específica de YAML pero compartiendo los mismos conceptos fundamentales de jobs, steps, y disparadores. Un disparador (la clave `on` en GitHub Actions) especifica bajo qué evento del repositorio se ejecuta el workflow: en cada `pull_request`, en cada push a una rama específica, en un horario programado (usando sintaxis cron, la misma que estudiaste en el Módulo 0 de este track), o manualmente bajo demanda.
-
-Versionar el pipeline como código junto al proyecto tiene una consecuencia práctica importante: si necesitas reproducir exactamente cómo se construía y probaba una versión específica del proyecto hace seis meses, el archivo de definición del pipeline de esa época está disponible en el historial de Git de esa misma versión del código, en vez de haber sido sobrescrito silenciosamente por cambios posteriores en una configuración externa no versionada. Esto también permite experimentar con cambios al pipeline en una rama de funcionalidad, probándolos de forma aislada antes de fusionarlos a la rama principal, exactamente igual que cualquier otro cambio de código.
-
-Esta filosofía de "todo como código, todo versionado" que aplicas aquí al pipeline de CI/CD es la misma filosofía que vas a aplicar, con su propia herramienta específica, a la infraestructura completa en el Módulo 8 de este track con Terraform: tratar la configuración operativa (ya sea un pipeline o infraestructura de servidores) con el mismo rigor de control de versiones que el código de aplicación en sí.
-
-**Analogía:** un pipeline como código es como tener la receta completa de un plato escrita y archivada junto con el resto de la documentación del restaurante, versionada y con historial de cambios, en vez de que la receta viva únicamente en la memoria de un cocinero específico o en una pizarra que se borra y reescribe sin dejar rastro de cómo era antes.
-
-**¿Por qué es importante?** Tratar el pipeline de CI/CD como código versionado, en vez de configuración manual en una interfaz separada, aplica al proceso de entrega de software la misma disciplina de trazabilidad, revisión y reversibilidad que ya das por sentada para el código de la aplicación, cerrando una brecha común entre "cómo se ve el código" y "cómo realmente se construye y despliega ese código en la práctica".
+**Analogía:** un pipeline como código es como tener la receta completa de un plato archivada y versionada junto con el resto de la documentación del restaurante, en vez de vivir solo en la memoria de un cocinero.
 
 **Diagrama:**
 
 ```
-.github/workflows/ci.yml   (versionado en el repositorio, junto al código)
-   │
-   │  cambios al pipeline pasan por pull request,
-   │  revisión, y quedan en el historial de Git
-   ▼
-on: [pull_request]  ──▶  dispara el workflow en cada PR
-on: schedule (cron)  ──▶  dispara el workflow en un horario programado
+┌── .github/workflows/ci.yml (versionado junto al código) ──┐
+│ cambios pasan por pull request, revisión, historial de Git   │
+│ on: [pull_request]  ──▶ dispara el workflow en cada PR         │
+│ on: schedule (cron) ──▶ dispara en horario programado           │
+└─────────────────────────────────────────────┘
 ```
+
+#### Paso 4 · Demostración guiada desde cero
+
+Desde una carpeta vacía crea `academia-devops/src/modulo4/pipeline-como-codigo` y demuestra la reproducibilidad histórica versionando dos versiones del pipeline:
+
+```bash
+mkdir -p academia-devops/src/modulo4/pipeline-como-codigo/.github/workflows
+cd academia-devops/src/modulo4/pipeline-como-codigo
+docker run --rm -v "$(pwd)":/repo -w /repo alpine/git sh -c '
+  git init -q && git config user.email demo@academia.dev && git config user.name demo
+  echo "name: CI
+on: [push]
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo solo un paso" > .github/workflows/ci.yml
+  git add . && git commit -qm "pipeline v1: solo un paso"
+  echo "name: CI
+on: [push, pull_request]
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo paso 1
+      - run: echo paso 2 nuevo" > .github/workflows/ci.yml
+  git add . && git commit -qm "pipeline v2: agrega pull_request y un paso nuevo"
+  git log --oneline
+  git show HEAD~1:.github/workflows/ci.yml'
+```
+
+**Explicación línea por línea:** `git show HEAD~1:.github/workflows/ci.yml` recupera exactamente cómo era el pipeline en el commit anterior, demostrando que su historial completo queda disponible en Git, igual que cualquier otro archivo del proyecto.
+
+**Resultado esperado:** `git log --oneline` muestra dos commits; `git show HEAD~1:...` imprime el contenido exacto de la versión anterior del pipeline (`on: [push]`, un solo step), disponible aunque la versión actual ya sea distinta.
+
+**Fallo deliberado:** intenta `git show HEAD~5:.github/workflows/ci.yml` (un commit que no existe, solo hay dos). Falla con un error de referencia inválida — diagnostica que el historial solo existe hasta donde realmente hay commits, y que reproducir una versión requiere que efectivamente haya sido versionada en ese momento.
+
+#### Construcción RutaFlow: historial auditable del propio pipeline
+
+Documenta en `academia-devops/README.md` que cualquier cambio al `ci.yml` real de RutaFlow pasa por pull request como cualquier otro cambio de código, permitiendo auditar cuándo y por qué cambió el proceso de integración continua.
+
+#### Paso 5 · Práctica guiada
+
+Agrega una tercera versión del pipeline con un disparador `schedule` (cron diario) además de `push`, y confirma con `git log --oneline` que ahora hay tres commits versionando la evolución completa. **Pista:** la sintaxis cron de `on: schedule` usa el mismo formato de cinco campos del Módulo 0.
+
+#### Paso 6 · Práctica independiente
+
+Usa `git diff HEAD~1 HEAD -- .github/workflows/ci.yml` para ver exactamente qué cambió entre las dos últimas versiones del pipeline, y explica en un comentario por qué esta visibilidad no existiría si el pipeline se configurara manualmente en una interfaz web no versionada.
+
+#### Paso 7 · Cierre y evidencia
+
+Ya versionas el pipeline con la misma disciplina que el código de la aplicación, con historial auditable y reversible. Esto cierra el módulo de CI; el siguiente módulo extiende este pipeline hacia el despliegue continuo. **Evidencia:** entrega como resultado el contenido recuperado de la versión anterior del pipeline vía `git show`, y explica el fallo al intentar acceder a un commit inexistente. Fuente oficial: [GitHub Actions — Understanding GitHub Actions](https://docs.github.com/actions/learn-github-actions/understanding-github-actions).
+
+**Errores comunes:** configurar el pipeline manualmente en una interfaz web sin versionarlo, perdiendo trazabilidad; olvidar que cambios al pipeline mismo también deberían pasar por revisión de pull request, no aplicarse directamente a la rama principal.
+
+**Cuándo no usarlo:** para una automatización completamente personal y de un solo uso que nunca necesitará auditarse ni revertirse, versionarla con el mismo rigor que un pipeline de equipo es una formalidad innecesaria; el límite es el valor real de la trazabilidad para el contexto específico.
 
 ---
 
@@ -127,27 +333,27 @@ on: schedule (cron)  ──▶  dispara el workflow en un horario programado
 
 **Objetivo del laboratorio:** crear un workflow de GitHub Actions que ejecute lint y tests en cada pull request, con caché de dependencias, una matriz de dos versiones de runtime, y publicación de un reporte de cobertura como artifact.
 
-**Requisitos previos:** un repositorio en GitHub con un proyecto Node.js simple (o el lenguaje de tu preferencia, adaptando los comandos), con scripts de `lint` y `test` ya configurados en su `package.json`.
+**Requisitos previos:** un repositorio en GitHub con un proyecto Node.js simple, con scripts de `lint` y `test` configurados en su `package.json`.
 
 | Paso | Acción | Configuración | Explicación | Resultado esperado |
 |---|---|---|---|---|
-| 1 | Crear el archivo del workflow | Crea `.github/workflows/ci.yml` con `name: CI` y `on: [pull_request]` | Define cuándo se dispara el pipeline | El archivo existe en la ruta correcta que GitHub Actions reconoce automáticamente |
-| 2 | Definir el job con matriz | Añade un job `test` con `strategy: matrix: node-version: [20, 22]` y `runs-on: ubuntu-latest` | Ejecutará el job dos veces, una por cada versión de Node especificada | La definición del job incluye la matriz correctamente |
-| 3 | Añadir los steps de checkout y setup con caché | `uses: actions/checkout@v4`, seguido de `uses: actions/setup-node@v4` con `node-version: '${{ matrix.node-version }}'` y `cache: 'npm'` | Descarga el código y configura el runtime con caché automático de dependencias | Ambos steps se definen sin errores de sintaxis YAML |
-| 4 | Añadir los steps de instalación, lint y test | `run: npm ci`, `run: npm run lint`, `run: npm test -- --coverage` | Instala dependencias (aprovechando caché si aplica) y ejecuta las validaciones | Los tres steps se definen en orden secuencial correcto |
-| 5 | Añadir la publicación del artifact de cobertura | `uses: actions/upload-artifact@v4` con `name: coverage` y `path: coverage/` | Sube el reporte de cobertura generado por el step anterior | El artifact queda definido para subirse tras una ejecución exitosa de tests |
-| 6 | Abrir un pull request de prueba | Crea una rama, haz un cambio menor, y abre un PR contra la rama principal | Dispara el workflow recién configurado | GitHub muestra el workflow ejecutándose en la página del PR |
-| 7 | Verificar la ejecución en paralelo de la matriz | Observa la página de la ejecución del workflow | Deberías ver dos instancias del job `test`, una por cada versión de Node | Ambas instancias aparecen ejecutándose (o habiendo terminado) de forma independiente |
-| 8 | Descargar el artifact de cobertura | Desde la página de la ejecución completada, descarga el artifact `coverage` | Confirma que el reporte de cobertura quedó disponible como se esperaba | El archivo descargado contiene el reporte de cobertura generado durante la ejecución |
-| 9 | Provocar un fallo intencional | Rompe deliberadamente un test y haz push del cambio al mismo PR | Verifica que el pipeline efectivamente detecta y reporta el fallo | El workflow reporta estado fallido, visible directamente en la página del PR |
+| 1 | Crear el archivo del workflow | `.github/workflows/ci.yml` con `name: CI` y `on: [pull_request]` | Define cuándo se dispara el pipeline | El archivo existe en la ruta correcta |
+| 2 | Definir el job con matriz | Job `test` con `strategy: matrix: node-version: [20, 22]` | Ejecutará el job dos veces | La definición incluye la matriz correctamente |
+| 3 | Añadir steps de checkout y setup con caché | `actions/checkout@v4`, `actions/setup-node@v4` con `cache: 'npm'` | Descarga código y configura runtime con caché | Ambos steps sin errores de sintaxis |
+| 4 | Añadir instalación, lint y test | `npm ci`, `npm run lint`, `npm test -- --coverage` | Instala y ejecuta validaciones | Los tres steps en orden secuencial |
+| 5 | Añadir publicación del artifact | `actions/upload-artifact@v4` con `path: coverage/` | Sube el reporte de cobertura | El artifact queda definido |
+| 6 | Abrir un pull request de prueba | Crea rama, cambio menor, abre PR | Dispara el workflow | GitHub muestra el workflow ejecutándose |
+| 7 | Verificar la matriz en paralelo | Observa la ejecución | Dos instancias del job `test` | Ambas aparecen ejecutándose independientemente |
+| 8 | Descargar el artifact de cobertura | Desde la ejecución completada | Confirma disponibilidad del reporte | El archivo descargado contiene el reporte |
+| 9 | Provocar un fallo intencional | Rompe un test y push | Verifica detección de fallos | El workflow reporta estado fallido |
 
-**Verificación:** el laboratorio se considera exitoso si el workflow se ejecuta automáticamente al abrir el PR, si la matriz efectivamente ejecuta dos instancias paralelas (una por versión de Node), si el artifact de cobertura queda disponible para descarga, y si romper un test intencionalmente hace que el pipeline reporte fallo de forma visible en el PR.
+**Verificación:** el laboratorio se considera exitoso si el workflow se ejecuta al abrir el PR, la matriz ejecuta dos instancias paralelas, el artifact queda disponible, y romper un test hace que el pipeline reporte fallo visible.
 
 **Errores comunes y soluciones**
 
-- **El workflow no se dispara al abrir el pull request.** Verifica que el archivo está exactamente en la ruta `.github/workflows/` (con ese nombre de carpeta exacto) y que el YAML no tiene errores de sintaxis que impidan a GitHub Actions siquiera reconocerlo como un workflow válido.
-- **`cache: 'npm'` no parece acelerar ejecuciones sucesivas.** Confirma que tu proyecto tiene un `package-lock.json` (u otro lockfile equivalente) versionado en el repositorio; la caché de `setup-node` deriva su clave del contenido de ese archivo, y sin él, no tiene una base estable para determinar cuándo reutilizar la caché.
-- **El artifact de cobertura aparece vacío o no se genera.** Verifica que el comando de test realmente genera el reporte en la ruta `coverage/` especificada en `path`, y que el step de test se ejecutó exitosamente antes del step de subida (si el test falla, el step de subida de artifact podría no ejecutarse, dependiendo de la configuración de condición del step).
-- **La matriz ejecuta las combinaciones de forma secuencial en vez de paralela.** Esto normalmente indica un límite de runners concurrentes disponibles en tu cuenta o plan de GitHub Actions, no un error de configuración; revisa los límites de concurrencia de tu plan si esto es un problema recurrente.
+- **El workflow no se dispara.** Verifica la ruta exacta `.github/workflows/` y que el YAML no tiene errores de sintaxis.
+- **`cache: 'npm'` no acelera ejecuciones.** Confirma que tienes un `package-lock.json` versionado.
+- **El artifact de cobertura aparece vacío.** Verifica que el test genera el reporte en la ruta especificada antes del step de subida.
+- **La matriz ejecuta secuencialmente.** Normalmente indica un límite de runners concurrentes de tu plan, no un error de configuración.
 
 ---
