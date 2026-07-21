@@ -137,7 +137,7 @@
     },
     {
       "path": "docs/code-visual-quality.json",
-      "lines": 4592,
+      "lines": 4585,
       "kind": "project-file",
       "symbols": [],
       "imports": [],
@@ -2907,7 +2907,7 @@
     },
     {
       "path": "web/public/content/android/modulo-11.md",
-      "lines": 141,
+      "lines": 324,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -2915,9 +2915,15 @@
         "# M\u00f3dulo 11: Publicaci\u00f3n en Google Play",
         "## Aprende construyendo",
         "### Tema 1: Firma de la app",
-        "### Tema 2: App Bundle vs APK",
-        "### Tema 3: Versionado, tracks y pol\u00edticas",
-        "## Laboratorio pr\u00e1ctico"
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
+        "#### Paso 2 \u00b7 Contexto y caso real",
+        "#### Paso 3 \u00b7 Teor\u00eda con analog\u00eda",
+        "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
+        "#### Construcci\u00f3n RutaFlow: gesti\u00f3n de la keystore del proyecto",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
+        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
+        "#### Paso 7 \u00b7 Cierre y evidencia",
+        "### Tema 2: App Bundle vs APK"
       ]
     },
     {

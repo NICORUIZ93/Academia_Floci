@@ -113,13 +113,13 @@
     "android": {
       "topics": 49,
       "code": 43,
-      "commentedCode": 32,
+      "commentedCode": 33,
       "mermaid": 6,
-      "asciiVisual": 41,
+      "asciiVisual": 42,
       "misleadingDiagramLabel": 0,
-      "filePath": 36,
-      "runCommand": 35,
-      "officialSource": 30
+      "filePath": 38,
+      "runCommand": 37,
+      "officialSource": 33
     },
     "ios": {
       "topics": 51,
@@ -3709,13 +3709,6 @@
       "track": "android",
       "module": 11,
       "topic": "Tema 1: Firma de la app",
-      "missingCode": false,
-      "missingComments": true
-    },
-    {
-      "track": "android",
-      "module": 11,
-      "topic": "Tema 2: App Bundle vs APK",
       "missingCode": false,
       "missingComments": true
     },
