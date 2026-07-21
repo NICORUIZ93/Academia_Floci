@@ -137,7 +137,7 @@
     },
     {
       "path": "docs/code-visual-quality.json",
-      "lines": 4641,
+      "lines": 4627,
       "kind": "project-file",
       "symbols": [],
       "imports": [],
@@ -3100,7 +3100,7 @@
     },
     {
       "path": "web/public/content/android/modulo-8.md",
-      "lines": 140,
+      "lines": 401,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -3108,9 +3108,15 @@
         "# M\u00f3dulo 8: Trabajo en segundo plano",
         "## Aprende construyendo",
         "### Tema 1: CoroutineWorker y garant\u00eda de ejecuci\u00f3n",
-        "### Tema 2: Constraints y trabajo peri\u00f3dico",
-        "### Tema 3: Notificaciones desde background work",
-        "## Laboratorio pr\u00e1ctico"
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
+        "#### Paso 2 \u00b7 Contexto y caso real",
+        "#### Paso 3 \u00b7 Teor\u00eda con analog\u00eda",
+        "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
+        "# python modela la persistencia de la solicitud de trabajo en un archivo real",
+        "#### Construcci\u00f3n RutaFlow: sincronizaci\u00f3n en background del proyecto",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
+        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
+        "#### Paso 7 \u00b7 Cierre y evidencia"
       ]
     },
     {

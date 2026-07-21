@@ -113,13 +113,13 @@
     "android": {
       "topics": 49,
       "code": 43,
-      "commentedCode": 25,
+      "commentedCode": 27,
       "mermaid": 6,
-      "asciiVisual": 36,
+      "asciiVisual": 38,
       "misleadingDiagramLabel": 0,
-      "filePath": 27,
-      "runCommand": 26,
-      "officialSource": 21
+      "filePath": 30,
+      "runCommand": 29,
+      "officialSource": 24
     },
     "ios": {
       "topics": 51,
@@ -3830,20 +3830,6 @@
       "topic": "Tema 6: AnimatedContent y AnimationSpec",
       "missingCode": true,
       "missingComments": false
-    },
-    {
-      "track": "android",
-      "module": 8,
-      "topic": "Tema 1: CoroutineWorker y garantía de ejecución",
-      "missingCode": false,
-      "missingComments": true
-    },
-    {
-      "track": "android",
-      "module": 8,
-      "topic": "Tema 3: Notificaciones desde background work",
-      "missingCode": false,
-      "missingComments": true
     },
     {
       "track": "android",
