@@ -4224,7 +4224,7 @@
     },
     {
       "path": "web/public/content/devops/modulo-2.md",
-      "lines": 209,
+      "lines": 520,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -4232,12 +4232,15 @@
         "# M\u00f3dulo 2: Docker \u2014 im\u00e1genes y buenas pr\u00e1cticas",
         "## Aprende construyendo",
         "### Tema 1: Dockerfile multi-stage",
-        "### Tema 2: Capas e invalidaci\u00f3n de cach\u00e9",
-        "### Tema 3: Im\u00e1genes base distroless/alpine",
-        "### Tema 4: Vol\u00famenes vs bind mounts",
-        "### Tema 5: Redes en Docker",
-        "### Tema 6: Registries \u2014 Docker Hub, AWS ECR, Azure Container Registry, Harbor",
-        "## Laboratorio pr\u00e1ctico"
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
+        "#### Paso 2 \u00b7 Contexto y caso real",
+        "#### Paso 3 \u00b7 Teor\u00eda con analog\u00eda",
+        "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
+        "#### Construcci\u00f3n RutaFlow: imagen de producci\u00f3n del backend",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
+        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
+        "#### Paso 7 \u00b7 Cierre y evidencia",
+        "### Tema 2: Capas e invalidaci\u00f3n de cach\u00e9"
       ]
     },
     {
