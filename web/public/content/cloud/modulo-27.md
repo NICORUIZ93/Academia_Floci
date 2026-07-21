@@ -48,6 +48,8 @@ Un detalle de comportamiento importante para gestionar el ciclo de vida de tu AP
 
 ```bash
 # archivo: src/labs/modulo-27/tema-2-resolver-local.sh — ejecutar con: bash tema-2-resolver-local.sh
+# El apiId se recupera por nombre, no de la sesión de terminal del Tema 1.
+API_ID=$(aws appsync list-graphql-apis --query "graphqlApis[?name=='rutaflow-api'].apiId | [0]" --output text)
 aws appsync create-data-source --api-id "$API_ID" --name origen-local --type NONE
 aws appsync create-resolver --api-id "$API_ID" --type-name Query --field-name estadoEntrega \
   --data-source-name origen-local

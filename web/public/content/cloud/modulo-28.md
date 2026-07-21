@@ -116,6 +116,9 @@ En sistemas reales, es común usar los tres simultáneamente para distintas part
 
 ```bash
 # archivo: src/labs/modulo-28/tema-4-tres-vistas.sh — ejecutar con: bash tema-4-tres-vistas.sh
+# El endpoint se recupera por nombre de dominio, no de la sesión del Tema 3.
+ENDPOINT=$(aws opensearch describe-domain --domain-name rutaflow-busqueda --query 'DomainStatus.Endpoint' --output text)
+
 aws dynamodb get-item --table-name rutaflow-entregas --key '{"guia":{"S":"RF-001"}}'
 curl -s "http://$ENDPOINT/paquetes/_search?q=fragil" | head -c 200
 echo

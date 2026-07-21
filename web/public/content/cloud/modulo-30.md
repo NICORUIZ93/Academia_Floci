@@ -48,7 +48,10 @@ Un usuario (`CreateUser`) se asocia siempre a un servidor específico, con un ro
 
 ```bash
 # archivo: src/labs/modulo-30/tema-2-ciclo-de-vida.sh — ejecutar con: bash tema-2-ciclo-de-vida.sh
-SERVER_ID=$(aws transfer create-server --protocols SFTP --endpoint-type PUBLIC --query 'ServerId' --output text)
+# Etiqueta el servidor: Transfer Family no tiene un campo "nombre", así que
+# la etiqueta Name es lo que te permite volver a encontrarlo en otro tema.
+SERVER_ID=$(aws transfer create-server --protocols SFTP --endpoint-type PUBLIC \
+  --tags Key=Name,Value=rutaflow-transfer --query 'ServerId' --output text)
 aws transfer create-user --server-id "$SERVER_ID" --user-name socio-logistico \
   --role arn:aws:iam::000000000000:role/transfer-role --home-directory /uploads
 aws transfer stop-server --server-id "$SERVER_ID"
@@ -79,6 +82,9 @@ Este modelo de autenticación por clave —sin contraseñas que gestionar, rotar
 
 ```bash
 # archivo: src/labs/modulo-30/tema-3-clave-ssh.sh — ejecutar con: bash tema-3-clave-ssh.sh
+# Si tienes varios servidores, filtra por la etiqueta Name=rutaflow-transfer
+# con `list-tags-for-resource`; aquí asumimos uno solo para simplificar.
+SERVER_ID=$(aws transfer list-servers --query 'Servers[0].ServerId' --output text)
 ssh-keygen -t rsa -f /tmp/clave-socio -N "" -q
 aws transfer import-ssh-public-key --server-id "$SERVER_ID" --user-name socio-logistico \
   --ssh-public-key-body "$(cat /tmp/clave-socio.pub)"
@@ -109,6 +115,7 @@ Reconocer explícitamente esta frontera —qué es plano de gestión emulado vs 
 
 ```bash
 # archivo: src/labs/modulo-30/tema-4-limites-fase-1.sh — ejecutar con: bash tema-4-limites-fase-1.sh
+SERVER_ID=$(aws transfer list-servers --query 'Servers[0].ServerId' --output text)
 aws transfer describe-server --server-id "$SERVER_ID" --query 'Server.{Estado:State,Protocolos:Protocols}'
 sftp -i /tmp/clave-socio socio-logistico@localhost 2>&1 | head -3 || true
 ```

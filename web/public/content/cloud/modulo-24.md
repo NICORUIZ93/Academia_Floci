@@ -166,6 +166,11 @@ Este flujo asume que tu servicio ECS fue creado con `deploymentController.type: 
 
 ```bash
 # archivo: src/labs/modulo-24/tema-5-blue-green-ecs.sh — ejecutar con: bash tema-5-blue-green-ecs.sh
+# El listener se recupera por nombre del ALB del Módulo 22 — no hace falta
+# haber conservado ninguna variable de esa sesión de terminal.
+LB_ARN=$(aws elbv2 describe-load-balancers --names rutaflow-alb --query 'LoadBalancers[0].LoadBalancerArn' --output text)
+LISTENER_ARN=$(aws elbv2 describe-listeners --load-balancer-arn "$LB_ARN" --query 'Listeners[0].ListenerArn' --output text)
+
 aws deploy create-application --application-name rutaflow-app-ecs --compute-platform ECS
 aws deploy create-deployment-group --application-name rutaflow-app-ecs --deployment-group-name rutaflow-grupo-ecs \
   --deployment-config-name CodeDeployDefault.ECSAllAtOnce \

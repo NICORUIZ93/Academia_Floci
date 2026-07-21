@@ -80,6 +80,12 @@ Este patrón de "sesión más polling eficiente" es exactamente lo que hace el S
 
 ```bash
 # archivo: src/labs/modulo-25/tema-3-appconfigdata.sh — ejecutar con: bash tema-3-appconfigdata.sh
+# Los tres IDs se recuperan por nombre, no de la sesión de terminal del Tema 2.
+APP_ID=$(aws appconfig list-applications --query "Items[?Name=='rutaflow-config'].Id | [0]" --output text)
+ENV_ID=$(aws appconfig list-environments --application-id "$APP_ID" --query "Items[?Name=='dev'].Id | [0]" --output text)
+PROFILE_ID=$(aws appconfig list-configuration-profiles --application-id "$APP_ID" \
+  --query "Items[?Name=='feature-flags'].Id | [0]" --output text)
+
 TOKEN=$(aws appconfigdata start-configuration-session \
   --application-identifier "$APP_ID" --environment-identifier "$ENV_ID" \
   --configuration-profile-identifier "$PROFILE_ID" --query InitialConfigurationToken --output text)

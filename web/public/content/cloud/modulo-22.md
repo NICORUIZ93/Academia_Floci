@@ -145,6 +145,13 @@ Reconocer esta cadena de dependencias —certificado, punto de entrada de tráfi
 
 ```bash
 # archivo: src/labs/modulo-22/tema-5-cadena-completa.sh — ejecutar con: bash tema-5-cadena-completa.sh
+# Cada ARN se recupera por nombre: este bloque no depende de variables de
+# los Temas 1, 2 y 4 — puedes correrlo en una terminal nueva.
+LB_ARN=$(aws elbv2 describe-load-balancers --names rutaflow-alb --query 'LoadBalancers[0].LoadBalancerArn' --output text)
+LISTENER_ARN=$(aws elbv2 describe-listeners --load-balancer-arn "$LB_ARN" --query 'Listeners[0].ListenerArn' --output text)
+CERT_ARN=$(aws acm list-certificates --query "CertificateSummaryList[?DomainName=='rutaflow.example.com'].CertificateArn | [0]" --output text)
+ZONE_ID=$(aws route53 list-hosted-zones-by-name --dns-name rutaflow.example.com --query 'HostedZones[0].Id' --output text)
+
 aws acm describe-certificate --certificate-arn "$CERT_ARN" --query 'Certificate.Status'
 aws elbv2 modify-listener --listener-arn "$LISTENER_ARN" --protocol HTTPS --port 443 \
   --certificates CertificateArn="$CERT_ARN"

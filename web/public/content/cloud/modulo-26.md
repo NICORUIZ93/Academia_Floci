@@ -80,6 +80,10 @@ Un pipe tiene un ciclo de vida propio: se crea en estado `STARTING`, pasa a `RUN
 
 ```bash
 # archivo: src/labs/modulo-26/tema-3-pipe.sh — ejecutar con: bash tema-3-pipe.sh
+# Crea la cola aquí mismo: el ejercicio no depende de haber corrido nada antes.
+aws sqs create-queue --queue-name rutaflow-cola
+COLA_URL=$(aws sqs get-queue-url --queue-name rutaflow-cola --query QueueUrl --output text)
+
 aws pipes create-pipe --name rutaflow-pipe \
   --source arn:aws:sqs:us-east-1:000000000000:rutaflow-cola \
   --target arn:aws:lambda:us-east-1:000000000000:function:rutaflow-notificar \

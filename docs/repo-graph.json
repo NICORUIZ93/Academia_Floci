@@ -3682,7 +3682,7 @@
     },
     {
       "path": "web/public/content/cloud/modulo-22.md",
-      "lines": 203,
+      "lines": 210,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -3724,7 +3724,7 @@
     },
     {
       "path": "web/public/content/cloud/modulo-24.md",
-      "lines": 225,
+      "lines": 230,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -3745,7 +3745,7 @@
     },
     {
       "path": "web/public/content/cloud/modulo-25.md",
-      "lines": 202,
+      "lines": 208,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -3758,15 +3758,15 @@
         "# archivo: src/labs/modulo-25/tema-2-appconfig.sh \u2014 ejecutar con: bash tema-2-appconfig.sh",
         "### Tema 3: AppConfigData \u2014 el plano de datos que consume tu aplicaci\u00f3n",
         "# archivo: src/labs/modulo-25/tema-3-appconfigdata.sh \u2014 ejecutar con: bash tema-3-appconfigdata.sh",
+        "# Los tres IDs se recuperan por nombre, no de la sesi\u00f3n de terminal del Tema 2.",
         "### Tema 4: AWS Backup \u2014 centralizar la pol\u00edtica de respaldo de m\u00faltiples servicios",
         "# archivo: src/labs/modulo-25/tema-4-backup-plan.sh \u2014 ejecutar con: bash tema-4-backup-plan.sh",
-        "### Tema 5: El ciclo de vida de un trabajo de respaldo",
-        "# archivo: src/labs/modulo-25/tema-5-ciclo-de-vida.sh \u2014 ejecutar con: bash tema-5-ciclo-de-vida.sh"
+        "### Tema 5: El ciclo de vida de un trabajo de respaldo"
       ]
     },
     {
       "path": "web/public/content/cloud/modulo-26.md",
-      "lines": 166,
+      "lines": 170,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -3779,15 +3779,15 @@
         "# archivo: src/labs/modulo-26/tema-2-comparar-firehose-kinesis.sh \u2014 ejecutar con: bash tema-2-comparar-firehose-kinesis.sh",
         "### Tema 3: EventBridge Pipes \u2014 conectar origen y destino sin c\u00f3digo de pegamento",
         "# archivo: src/labs/modulo-26/tema-3-pipe.sh \u2014 ejecutar con: bash tema-3-pipe.sh",
+        "# Crea la cola aqu\u00ed mismo: el ejercicio no depende de haber corrido nada antes.",
         "### Tema 4: Cu\u00e1ndo usar Pipes frente a reglas EventBridge o Step Functions",
         "# archivo: src/labs/modulo-26/tema-4-cuando-cada-uno.sh \u2014 ejecutar con: bash tema-4-cuando-cada-uno.sh",
-        "## Laboratorio pr\u00e1ctico",
-        "### Laboratorio 26.1 \u2014 Entrega autom\u00e1tica con Firehose"
+        "## Laboratorio pr\u00e1ctico"
       ]
     },
     {
       "path": "web/public/content/cloud/modulo-27.md",
-      "lines": 167,
+      "lines": 169,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -3798,17 +3798,17 @@
         "# archivo: src/labs/modulo-27/tema-1-appsync-api.sh \u2014 ejecutar con: bash tema-1-appsync-api.sh",
         "### Tema 2: Fuentes de datos y resolvers",
         "# archivo: src/labs/modulo-27/tema-2-resolver-local.sh \u2014 ejecutar con: bash tema-2-resolver-local.sh",
+        "# El apiId se recupera por nombre, no de la sesi\u00f3n de terminal del Tema 1.",
         "### Tema 3: SES \u2014 identidades, env\u00edo y plantillas",
         "# archivo: src/labs/modulo-27/tema-3-ses-plantilla.sh \u2014 ejecutar con: bash tema-3-ses-plantilla.sh",
         "### Tema 4: El simulador de buzones y el punto de inspecci\u00f3n local",
         "# archivo: src/labs/modulo-27/tema-4-simulador.sh \u2014 ejecutar con: bash tema-4-simulador.sh",
-        "## Laboratorio pr\u00e1ctico",
-        "### Laboratorio 27.1 \u2014 API GraphQL con resolver local"
+        "## Laboratorio pr\u00e1ctico"
       ]
     },
     {
       "path": "web/public/content/cloud/modulo-28.md",
-      "lines": 173,
+      "lines": 176,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -3868,7 +3868,7 @@
     },
     {
       "path": "web/public/content/cloud/modulo-30.md",
-      "lines": 154,
+      "lines": 161,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -3879,12 +3879,12 @@
         "# archivo: src/labs/modulo-30/tema-1-por-que-transfer-family.sh \u2014 ejecutar con: bash tema-1-por-que-transfer-family.sh",
         "### Tema 2: Ciclo de vida del servidor y modelo de usuarios",
         "# archivo: src/labs/modulo-30/tema-2-ciclo-de-vida.sh \u2014 ejecutar con: bash tema-2-ciclo-de-vida.sh",
+        "# Etiqueta el servidor: Transfer Family no tiene un campo \"nombre\", as\u00ed que",
+        "# la etiqueta Name es lo que te permite volver a encontrarlo en otro tema.",
         "### Tema 3: Claves p\u00fablicas SSH y autenticaci\u00f3n de usuarios",
         "# archivo: src/labs/modulo-30/tema-3-clave-ssh.sh \u2014 ejecutar con: bash tema-3-clave-ssh.sh",
-        "### Tema 4: Los l\u00edmites de la Fase 1 \u2014 plano de gesti\u00f3n completo, plano de datos pendiente",
-        "# archivo: src/labs/modulo-30/tema-4-limites-fase-1.sh \u2014 ejecutar con: bash tema-4-limites-fase-1.sh",
-        "## Laboratorio pr\u00e1ctico",
-        "### Laboratorio 30.1 \u2014 Servidor, usuario y clave SSH"
+        "# Si tienes varios servidores, filtra por la etiqueta Name=rutaflow-transfer",
+        "# con `list-tags-for-resource`; aqu\u00ed asumimos uno solo para simplificar."
       ]
     },
     {
