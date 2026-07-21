@@ -5765,7 +5765,7 @@
       "track": "android",
       "module": 14,
       "position": 1,
-      "title": "ComposeTestRule",
+      "title": "ComposeTestRule ejecuta tu UI sin emulador visible",
       "file": "web/public/content/android/modulo-14.md",
       "requires": [
         "android:13:4"
@@ -5776,7 +5776,7 @@
       "track": "android",
       "module": 14,
       "position": 2,
-      "title": "Finders, assertions y actions",
+      "title": "Finders, assertions y actions navegan el árbol semántico",
       "file": "web/public/content/android/modulo-14.md",
       "requires": [
         "android:14:1"
@@ -5787,7 +5787,7 @@
       "track": "android",
       "module": 14,
       "position": 3,
-      "title": "Semantics y clearAndSetSemantics",
+      "title": "Semantics y clearAndSetSemantics definen qué percibe la accesibilidad",
       "file": "web/public/content/android/modulo-14.md",
       "requires": [
         "android:14:2"
@@ -5798,7 +5798,7 @@
       "track": "android",
       "module": 14,
       "position": 4,
-      "title": "AccessibilityService y TalkBack",
+      "title": "AccessibilityService y TalkBack consumen el árbol semántico en producción",
       "file": "web/public/content/android/modulo-14.md",
       "requires": [
         "android:14:3"
@@ -5809,7 +5809,7 @@
       "track": "android",
       "module": 14,
       "position": 5,
-      "title": "Animaciones de estado y visibilidad",
+      "title": "Animaciones de estado y visibilidad usan una especificación medible",
       "file": "web/public/content/android/modulo-14.md",
       "requires": [
         "android:14:4"
@@ -5820,7 +5820,7 @@
       "track": "android",
       "module": 14,
       "position": 6,
-      "title": "AnimatedContent y AnimationSpec",
+      "title": "AnimatedContent y AnimationSpec especifican transiciones completas",
       "file": "web/public/content/android/modulo-14.md",
       "requires": [
         "android:14:5"

@@ -112,14 +112,14 @@
     },
     "android": {
       "topics": 49,
-      "code": 43,
-      "commentedCode": 40,
-      "mermaid": 6,
-      "asciiVisual": 43,
+      "code": 49,
+      "commentedCode": 46,
+      "mermaid": 5,
+      "asciiVisual": 44,
       "misleadingDiagramLabel": 0,
-      "filePath": 43,
-      "runCommand": 43,
-      "officialSource": 40
+      "filePath": 49,
+      "runCommand": 49,
+      "officialSource": 46
     },
     "ios": {
       "topics": 51,
@@ -3718,48 +3718,6 @@
       "topic": "Tema 3: Versionado, tracks y políticas",
       "missingCode": false,
       "missingComments": true
-    },
-    {
-      "track": "android",
-      "module": 14,
-      "topic": "Tema 1: ComposeTestRule",
-      "missingCode": true,
-      "missingComments": false
-    },
-    {
-      "track": "android",
-      "module": 14,
-      "topic": "Tema 2: Finders, assertions y actions",
-      "missingCode": true,
-      "missingComments": false
-    },
-    {
-      "track": "android",
-      "module": 14,
-      "topic": "Tema 3: Semantics y clearAndSetSemantics",
-      "missingCode": true,
-      "missingComments": false
-    },
-    {
-      "track": "android",
-      "module": 14,
-      "topic": "Tema 4: AccessibilityService y TalkBack",
-      "missingCode": true,
-      "missingComments": false
-    },
-    {
-      "track": "android",
-      "module": 14,
-      "topic": "Tema 5: Animaciones de estado y visibilidad",
-      "missingCode": true,
-      "missingComments": false
-    },
-    {
-      "track": "android",
-      "module": 14,
-      "topic": "Tema 6: AnimatedContent y AnimationSpec",
-      "missingCode": true,
-      "missingComments": false
     },
     {
       "track": "ios",

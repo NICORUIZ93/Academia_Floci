@@ -90,28 +90,28 @@
     ],
     "14": [
       {
-        "title": "ComposeTestRule",
-        "fragment": "tema-1-composetestrule"
+        "title": "ComposeTestRule ejecuta tu UI sin emulador visible",
+        "fragment": "tema-1-composetestrule-ejecuta-tu-ui-sin-emulador-visible"
       },
       {
-        "title": "Finders, assertions y actions",
-        "fragment": "tema-2-finders-assertions-y-actions"
+        "title": "Finders, assertions y actions navegan el árbol semántico",
+        "fragment": "tema-2-finders-assertions-y-actions-navegan-el-arbol-semantico"
       },
       {
-        "title": "Semantics y clearAndSetSemantics",
-        "fragment": "tema-3-semantics-y-clearandsetsemantics"
+        "title": "Semantics y clearAndSetSemantics definen qué percibe la accesibilidad",
+        "fragment": "tema-3-semantics-y-clearandsetsemantics-definen-que-percibe-la-accesibilidad"
       },
       {
-        "title": "AccessibilityService y TalkBack",
-        "fragment": "tema-4-accessibilityservice-y-talkback"
+        "title": "AccessibilityService y TalkBack consumen el árbol semántico en producción",
+        "fragment": "tema-4-accessibilityservice-y-talkback-consumen-el-arbol-semantico-en-produccion"
       },
       {
-        "title": "Animaciones de estado y visibilidad",
-        "fragment": "tema-5-animaciones-de-estado-y-visibilidad"
+        "title": "Animaciones de estado y visibilidad usan una especificación medible",
+        "fragment": "tema-5-animaciones-de-estado-y-visibilidad-usan-una-especificacion-medible"
       },
       {
-        "title": "AnimatedContent y AnimationSpec",
-        "fragment": "tema-6-animatedcontent-y-animationspec"
+        "title": "AnimatedContent y AnimationSpec especifican transiciones completas",
+        "fragment": "tema-6-animatedcontent-y-animationspec-especifican-transiciones-completas"
       }
     ],
     "2": [

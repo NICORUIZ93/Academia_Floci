@@ -137,7 +137,7 @@
     },
     {
       "path": "docs/code-visual-quality.json",
-      "lines": 4536,
+      "lines": 4494,
       "kind": "project-file",
       "symbols": [],
       "imports": [],
@@ -2970,20 +2970,23 @@
     },
     {
       "path": "web/public/content/android/modulo-14.md",
-      "lines": 157,
+      "lines": 728,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
       "headings": [
-        "# M\u00f3dulo 14: Compose Master: pruebas, accesibilidad y animaci\u00f3n",
+        "# M\u00f3dulo 14: Compose Master \u2014 pruebas, accesibilidad y animaci\u00f3n",
         "## Aprende construyendo",
-        "### Tema 1: ComposeTestRule",
-        "### Tema 2: Finders, assertions y actions",
-        "### Tema 3: Semantics y clearAndSetSemantics",
-        "### Tema 4: AccessibilityService y TalkBack",
-        "### Tema 5: Animaciones de estado y visibilidad",
-        "### Tema 6: AnimatedContent y AnimationSpec",
-        "## Trazabilidad de la auditor\u00eda original"
+        "### Tema 1: ComposeTestRule ejecuta tu UI sin emulador visible",
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
+        "#### Paso 2 \u00b7 Contexto y caso real",
+        "#### Paso 3 \u00b7 Teor\u00eda con analog\u00eda",
+        "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
+        "# python ejecuta despu\u00e9s un modelo equivalente de sincronizaci\u00f3n de recomposici\u00f3n",
+        "#### Construcci\u00f3n RutaFlow: prueba del contador de tareas pendientes",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
+        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
+        "#### Paso 7 \u00b7 Cierre y evidencia"
       ]
     },
     {

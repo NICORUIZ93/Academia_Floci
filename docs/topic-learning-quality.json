@@ -17,14 +17,14 @@
       "explanation": 49,
       "code": 49,
       "visual": 49,
-      "filePath": 43,
-      "runCommand": 43,
-      "expectedResult": 43,
+      "filePath": 49,
+      "runCommand": 49,
+      "expectedResult": 49,
       "practice": 49,
       "project": 49,
       "modelMental": 49,
       "limitsDecision": 49,
-      "practicable": 43,
+      "practicable": 49,
       "genericScaffold": 0
     },
     "angular": {
@@ -626,127 +626,127 @@
       },
       {
         "module": 14,
-        "topic": "Tema 1: ComposeTestRule",
+        "topic": "Tema 1: ComposeTestRule ejecuta tu UI sin emulador visible",
         "criteria": {
           "explanation": true,
           "code": true,
           "visual": true,
-          "filePath": false,
-          "runCommand": false,
-          "expectedResult": false,
+          "filePath": true,
+          "runCommand": true,
+          "expectedResult": true,
           "practice": true,
           "project": true,
           "modelMental": true,
           "limitsDecision": true
         },
         "classification": {
-          "rubricScore": 10,
-          "practicable": false,
+          "rubricScore": 16,
+          "practicable": true,
           "genericScaffold": false
         }
       },
       {
         "module": 14,
-        "topic": "Tema 2: Finders, assertions y actions",
+        "topic": "Tema 2: Finders, assertions y actions navegan el árbol semántico",
         "criteria": {
           "explanation": true,
           "code": true,
           "visual": true,
-          "filePath": false,
-          "runCommand": false,
-          "expectedResult": false,
+          "filePath": true,
+          "runCommand": true,
+          "expectedResult": true,
           "practice": true,
           "project": true,
           "modelMental": true,
           "limitsDecision": true
         },
         "classification": {
-          "rubricScore": 10,
-          "practicable": false,
+          "rubricScore": 16,
+          "practicable": true,
           "genericScaffold": false
         }
       },
       {
         "module": 14,
-        "topic": "Tema 3: Semantics y clearAndSetSemantics",
+        "topic": "Tema 3: Semantics y clearAndSetSemantics definen qué percibe la accesibilidad",
         "criteria": {
           "explanation": true,
           "code": true,
           "visual": true,
-          "filePath": false,
-          "runCommand": false,
-          "expectedResult": false,
+          "filePath": true,
+          "runCommand": true,
+          "expectedResult": true,
           "practice": true,
           "project": true,
           "modelMental": true,
           "limitsDecision": true
         },
         "classification": {
-          "rubricScore": 10,
-          "practicable": false,
+          "rubricScore": 16,
+          "practicable": true,
           "genericScaffold": false
         }
       },
       {
         "module": 14,
-        "topic": "Tema 4: AccessibilityService y TalkBack",
+        "topic": "Tema 4: AccessibilityService y TalkBack consumen el árbol semántico en producción",
         "criteria": {
           "explanation": true,
           "code": true,
           "visual": true,
-          "filePath": false,
-          "runCommand": false,
-          "expectedResult": false,
+          "filePath": true,
+          "runCommand": true,
+          "expectedResult": true,
           "practice": true,
           "project": true,
           "modelMental": true,
           "limitsDecision": true
         },
         "classification": {
-          "rubricScore": 10,
-          "practicable": false,
+          "rubricScore": 16,
+          "practicable": true,
           "genericScaffold": false
         }
       },
       {
         "module": 14,
-        "topic": "Tema 5: Animaciones de estado y visibilidad",
+        "topic": "Tema 5: Animaciones de estado y visibilidad usan una especificación medible",
         "criteria": {
           "explanation": true,
           "code": true,
           "visual": true,
-          "filePath": false,
-          "runCommand": false,
-          "expectedResult": false,
+          "filePath": true,
+          "runCommand": true,
+          "expectedResult": true,
           "practice": true,
           "project": true,
           "modelMental": true,
           "limitsDecision": true
         },
         "classification": {
-          "rubricScore": 10,
-          "practicable": false,
+          "rubricScore": 16,
+          "practicable": true,
           "genericScaffold": false
         }
       },
       {
         "module": 14,
-        "topic": "Tema 6: AnimatedContent y AnimationSpec",
+        "topic": "Tema 6: AnimatedContent y AnimationSpec especifican transiciones completas",
         "criteria": {
           "explanation": true,
           "code": true,
           "visual": true,
-          "filePath": false,
-          "runCommand": false,
-          "expectedResult": false,
+          "filePath": true,
+          "runCommand": true,
+          "expectedResult": true,
           "practice": true,
           "project": true,
           "modelMental": true,
           "limitsDecision": true
         },
         "classification": {
-          "rubricScore": 10,
-          "practicable": false,
+          "rubricScore": 16,
+          "practicable": true,
           "genericScaffold": false
         }
       },
