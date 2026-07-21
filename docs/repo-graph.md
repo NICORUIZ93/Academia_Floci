@@ -1,8 +1,8 @@
 # Academia Floci Repo Graph
 
-Generated: 2026-07-20 05:41 UTC
+Generated: 2026-07-21 07:32 UTC
 Root: `Academia_Floci`
-Indexed files: 776
+Indexed files: 782
 Import edges: 33
 
 Use this file as the first, compact context for AI assistants. Refresh it with:
@@ -16,25 +16,25 @@ For automated lookups, use `docs/repo-graph.json`.
 ## Project Shape
 
 - `angular-app`: 53 files
-- `automation-script`: 27 files
+- `automation-script`: 28 files
 - `course-content`: 347 files
-- `documentation`: 102 files
+- `documentation`: 104 files
 - `example`: 216 files
 - `local-infra`: 1 files
-- `project-file`: 30 files
+- `project-file`: 33 files
 
 ## File Types
 
-- `.md`: 440
-- `.py`: 57
+- `.md`: 442
+- `.py`: 58
 - `.ts`: 48
 - `.js`: 42
 - `.java`: 40
-- `.json`: 26
+- `.json`: 28
 - `.go`: 24
 - `.rs`: 24
 - `.kt`: 11
-- `.html`: 7
+- `.html`: 8
 - `.scss`: 7
 - `.yml`: 6
 - `.sh`: 6
@@ -54,7 +54,7 @@ For automated lookups, use `docs/repo-graph.json`.
 
 - `README.md` (257 lines, documentation)
   - headings: # Academia_Floci, ## Como empezar, ## Levantar Floci, # 1. Levantar todos los servicios, # 2. Verificar Floci AWS
-- `scripts/validate.sh` (126 lines, automation-script)
+- `scripts/validate.sh` (127 lines, automation-script)
 - `scripts/build_repo_graph.py` (464 lines, automation-script)
   - symbols: FileNode, repo_files, read_text, classify, parse_ts_symbols, parse_ts_imports, parse_python_symbols, parse_python_imports, parse_markdown_headings, unique
 - `web/src/app/app.ts` (11 lines, angular-app)
@@ -65,7 +65,7 @@ For automated lookups, use `docs/repo-graph.json`.
   - symbols: CourseCatalogComponent, cards, featuredTracks, foundationTracks, mobileTracks, totalModules
 - `web/src/app/course/course-shell.ts` (46 lines, angular-app)
   - symbols: CourseShellComponent, track, officialPath, sidebarOpen, trackLogo, percent
-- `web/src/app/course/lesson-viewer.ts` (627 lines, angular-app)
+- `web/src/app/course/lesson-viewer.ts` (679 lines, angular-app)
   - symbols: LessonViewerComponent, TocItem, track, module, officialSource, projectBootstrap, trackProject, showProjectBootstrap, showTrackProject, moduleIndex
 - `web/public/content/manifest.json` (819 lines, course-content)
 - `web/public/content/es/pasos.md` (1122 lines, course-content)
@@ -138,7 +138,7 @@ For automated lookups, use `docs/repo-graph.json`.
 - `web/src/app/app.config.ts` (12 lines) - imports: @angular/core, @angular/router, ./app.routes
 - `web/src/app/app.html` (4 lines)
 - `web/src/app/app.routes.ts` (27 lines) - imports: @angular/router, ./catalog/course-catalog, ./course/course-shell, ./course/lesson-viewer
-- `web/src/app/app.spec.ts` (141 lines) - imports: @angular/core/testing, @angular/router, @angular/router/testing, ./app, ./app.routes, ./catalog/course-catalog, ./course-data
+- `web/src/app/app.spec.ts` (155 lines) - imports: @angular/core/testing, @angular/router, @angular/router/testing, ./app, ./app.routes, ./catalog/course-catalog, ./course-data
 - `web/src/app/app.ts` (11 lines) - symbols: App; imports: @angular/core, @angular/router, ./command-palette
 - `web/src/app/catalog/course-catalog.html` (91 lines) - symbols: main-content, catalog-title, tracks-title, official-title
 - `web/src/app/catalog/course-catalog.scss` (198 lines)
@@ -158,6 +158,7 @@ For automated lookups, use `docs/repo-graph.json`.
 ### automation-script
 
 - `scripts/audit_code_visual_quality.py` (128 lines) - symbols: student_visible_content, structural_text, blocks, evaluate, build, render, main; imports: __future__, argparse, json, re, collections, pathlib
+- `scripts/audit_seven_step_methodology.py` (136 lines) - symbols: matches, evaluate, build, render_markdown, main; imports: __future__, argparse, json, re, collections, pathlib, audit_topic_learning_quality
 - `scripts/audit_student_journey.py` (157 lines) - symbols: structural_text, topic_blocks, has, build_report, render, main; imports: __future__, json, re, collections, pathlib
 - `scripts/audit_topic_learning_quality.py` (155 lines) - symbols: student_visible_content, structural_text, topic_blocks, evaluate, classify, build, render_markdown, main; imports: __future__, argparse, json, re, collections, pathlib
 - `scripts/build_editorial_backlog.py` (101 lines) - symbols: render, main; imports: __future__, argparse, collections, pathlib, audit_topic_learning_quality
@@ -174,8 +175,7 @@ For automated lookups, use `docs/repo-graph.json`.
 - `scripts/fix_misleading_diagram_labels.py` (43 lines) - symbols: replace, main; imports: __future__, re, pathlib
 - `scripts/start.sh` (10 lines)
 - `scripts/validate-floci.sh` (43 lines)
-- `scripts/validate.sh` (126 lines)
-- ... 9 more files
+- ... 10 more files
 
 ### course-content
 
@@ -196,11 +196,12 @@ For automated lookups, use `docs/repo-graph.json`.
 - `web/public/content/android/modulo-7.md` (142 lines) - headings: # Módulo 7: Inyección de dependencias con Hilt, ## Aprende construyendo, ### Tema 1: Configuración básica de Hilt, ### Tema 2: @Provides y @Binds
 - `web/public/content/android/modulo-8.md` (140 lines) - headings: # Módulo 8: Trabajo en segundo plano, ## Aprende construyendo, ### Tema 1: CoroutineWorker y garantía de ejecución, ### Tema 2: Constraints y trabajo periódico
 - `web/public/content/android/modulo-9.md` (147 lines) - headings: # Módulo 9: Testing en Android, ## Aprende construyendo, ### Tema 1: Testing de ViewModels con fakes y runTest, ### Tema 2: Compose UI Testing
-- `web/public/content/angular/modulo-0.md` (173 lines) - headings: # Módulo 0: Fundamentos y Angular CLI, ## Antes de comenzar: prepara tu equipo desde cero, ### Windows, ### macOS
+- `web/public/content/angular/modulo-0.md` (293 lines) - headings: # Módulo 0: Fundamentos y Angular CLI, ## Antes de comenzar: prepara tu equipo desde cero, ### Windows, ### macOS
 - ... 329 more files
 
 ### documentation
 
+- `CLAUDE.md` (118 lines) - headings: # CLAUDE.md, ## What this is, ## First step for any repo exploration, ## Commands
 - `README.md` (257 lines) - headings: # Academia_Floci, ## Como empezar, ## Levantar Floci, # 1. Levantar todos los servicios
 - `docs/ESTANDAR-DE-CODIGO.md` (56 lines) - headings: # Estándar transversal de código y diseño, ## Prioridades, ## Clean Code con criterio, ## SOLID cuando aporta valor
 - `docs/MATRIZ-CURRICULAR.md` (71 lines) - headings: # Matriz curricular auditable, ## Progresión de competencia, ## Cobertura por módulo, ## Método de evaluación
@@ -210,6 +211,7 @@ For automated lookups, use `docs/repo-graph.json`.
 - `docs/editorial-backlog.md` (58 lines) - headings: # Deuda editorial verificable, ## Estado global, ## Prioridad por track, ## Temas sin código editorial
 - `docs/editorial-contract.md` (44 lines) - headings: # Contrato editorial de Academia Floci, ## Unidad mínima: un tema explicado y practicable, ## Progresión de libro, ## Código y recursos visuales
 - `docs/prerequisite-graph.md` (40 lines) - headings: # Grafo de prerrequisitos, ## Dependencias entre libros, ## Cobertura
+- `docs/seven-step-methodology.md` (30 lines) - headings: # Auditoría de metodología universal por tema, ## Interpretación
 - `docs/student-journey-audit.md` (155 lines) - headings: # Auditoría del recorrido del estudiante, ## Instalación y primera ejecución, ## Bloqueos prioritarios por track, ### foundations
 - `docs/topic-learning-quality.md` (26 lines) - headings: # Auditoría pedagógica tema por tema, ## Regla editorial
 - `web/README.md` (39 lines) - headings: # Web, ## Abrir la academia, ## Que contiene, ## Archivos principales
@@ -217,9 +219,7 @@ For automated lookups, use `docs/repo-graph.json`.
 - `web/scripts/source-docs-en/configuration/application-yml.md` (7 lines) - headings: # application.yml Reference
 - `web/scripts/source-docs-en/configuration/docker-compose.md` (184 lines) - headings: # Running with Docker, ## Quick Start, ## Docker Compose, ### Minimal (stateless)
 - `web/scripts/source-docs-en/configuration/docker-images.md` (103 lines) - headings: # Docker Images, ## Axis 1 — Variant (what's inside), ## Axis 2 — Channel (how stable), ## Full Tag Matrix
-- `web/scripts/source-docs-en/configuration/docker.md` (186 lines) - headings: # Docker Configuration, ## Docker Daemon Socket, ## Private Registry Authentication, ### Mount the host Docker config
-- `web/scripts/source-docs-en/configuration/environment-variables.md` (439 lines) - headings: # Environment Variables Reference, ## Global, ## Authentication, ## Browser CORS
-- ... 84 more files
+- ... 86 more files
 
 ### example
 
@@ -249,22 +249,22 @@ For automated lookups, use `docs/repo-graph.json`.
 
 ### project-file
 
+- `.claude/settings.local.json` (14 lines)
 - `.env.example` (8 lines)
 - `.github/workflows/ci.yml` (55 lines)
 - `.gitignore` (25 lines)
-- `docs/code-visual-quality.json` (5516 lines)
+- `docs/code-visual-quality.json` (5187 lines)
 - `docs/curriculum-matrix.json` (155 lines)
 - `docs/floci-official-curriculum.json` (14 lines)
 - `docs/official-learning-guides.json` (22 lines)
 - `docs/official-sources.json` (21 lines)
 - `docs/official-topic-atlas.json` (175 lines)
-- `docs/prerequisite-graph.json` (9831 lines)
+- `docs/prerequisite-graph.json` (9963 lines)
 - `docs/requested-master-topics.json` (189 lines)
+- `docs/seven-step-methodology.json` (23845 lines)
 - `docs/specialization-outcomes.json` (116 lines)
-- `docs/student-journey-audit.json` (4283 lines)
-- `docs/topic-learning-quality.json` (19010 lines)
+- `docs/student-journey-audit.json` (3758 lines)
+- `docs/topic-learning-quality.json` (19262 lines)
 - `install.sh` (99 lines)
 - `web/.gitignore` (48 lines)
-- `web/.vscode/extensions.json` (5 lines)
-- `web/.vscode/launch.json` (21 lines)
-- ... 12 more files
+- ... 15 more files

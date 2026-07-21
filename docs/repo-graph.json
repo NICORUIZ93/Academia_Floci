@@ -1,6 +1,14 @@
 {
   "files": [
     {
+      "path": ".claude/settings.local.json",
+      "lines": 14,
+      "kind": "project-file",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
       "path": ".env.example",
       "lines": 8,
       "kind": "project-file",
@@ -23,6 +31,20 @@
       "symbols": [],
       "imports": [],
       "headings": []
+    },
+    {
+      "path": "CLAUDE.md",
+      "lines": 118,
+      "kind": "documentation",
+      "symbols": [],
+      "imports": [],
+      "headings": [
+        "# CLAUDE.md",
+        "## What this is",
+        "## First step for any repo exploration",
+        "## Commands",
+        "## Architecture"
+      ]
     },
     {
       "path": "README.md",
@@ -123,7 +145,7 @@
     },
     {
       "path": "docs/code-visual-quality.json",
-      "lines": 5516,
+      "lines": 5187,
       "kind": "project-file",
       "symbols": [],
       "imports": [],
@@ -211,7 +233,7 @@
     },
     {
       "path": "docs/prerequisite-graph.json",
-      "lines": 9831,
+      "lines": 9963,
       "kind": "project-file",
       "symbols": [],
       "imports": [],
@@ -238,6 +260,25 @@
       "headings": []
     },
     {
+      "path": "docs/seven-step-methodology.json",
+      "lines": 23845,
+      "kind": "project-file",
+      "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "docs/seven-step-methodology.md",
+      "lines": 30,
+      "kind": "documentation",
+      "symbols": [],
+      "imports": [],
+      "headings": [
+        "# Auditor\u00eda de metodolog\u00eda universal por tema",
+        "## Interpretaci\u00f3n"
+      ]
+    },
+    {
       "path": "docs/specialization-outcomes.json",
       "lines": 116,
       "kind": "project-file",
@@ -247,7 +288,7 @@
     },
     {
       "path": "docs/student-journey-audit.json",
-      "lines": 4283,
+      "lines": 3758,
       "kind": "project-file",
       "symbols": [],
       "imports": [],
@@ -276,7 +317,7 @@
     },
     {
       "path": "docs/topic-learning-quality.json",
-      "lines": 19010,
+      "lines": 19262,
       "kind": "project-file",
       "symbols": [],
       "imports": [],
@@ -2306,6 +2347,28 @@
       "headings": []
     },
     {
+      "path": "scripts/audit_seven_step_methodology.py",
+      "lines": 136,
+      "kind": "automation-script",
+      "symbols": [
+        "matches",
+        "evaluate",
+        "build",
+        "render_markdown",
+        "main"
+      ],
+      "imports": [
+        "__future__",
+        "argparse",
+        "json",
+        "re",
+        "collections",
+        "pathlib",
+        "audit_topic_learning_quality"
+      ],
+      "headings": []
+    },
+    {
       "path": "scripts/audit_student_journey.py",
       "lines": 157,
       "kind": "automation-script",
@@ -2568,7 +2631,7 @@
     },
     {
       "path": "scripts/validate.sh",
-      "lines": 126,
+      "lines": 127,
       "kind": "automation-script",
       "symbols": [],
       "imports": [],
@@ -3031,7 +3094,7 @@
     },
     {
       "path": "web/public/content/angular/modulo-0.md",
-      "lines": 173,
+      "lines": 293,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -3044,15 +3107,15 @@
         "### Tu primer proyecto verificable",
         "## Aprende construyendo",
         "### Tema 1: El CLI ya no genera NgModules",
-        "### Tema 2: Interpolaci\u00f3n y property binding",
-        "### Tema 3: TypeScript a fondo \u2014 unknown, any, never y utility types",
-        "### Tema 4: Compilador AOT frente a JIT",
-        "## Ruta de proyecto progresivo desde carpeta vac\u00eda"
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
+        "#### Paso 2 \u00b7 Contexto y caso real",
+        "#### Paso 3 \u00b7 Teor\u00eda, modelo mental y analog\u00eda",
+        "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero"
       ]
     },
     {
       "path": "web/public/content/angular/modulo-1.md",
-      "lines": 229,
+      "lines": 379,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -3060,16 +3123,20 @@
         "# M\u00f3dulo 1: Componentes, plantillas y data binding",
         "## Aprende construyendo",
         "### Tema 1: input()/output() basados en signals",
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
+        "#### Paso 2 \u00b7 Contexto y caso real",
+        "#### Paso 3 \u00b7 Teor\u00eda, modelo mental y analog\u00eda",
+        "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
+        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
+        "#### Paso 7 \u00b7 Cierre y evidencia",
         "### Tema 2: Control de flujo nativo \u2014 @if, @for, @switch",
-        "### Tema 3: Content projection con ng-content",
-        "### Tema 4: Ciclo de vida completo de un componente",
-        "### Tema 5: Consultas signal y trabajo posterior al render",
-        "## Laboratorio pr\u00e1ctico"
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n"
       ]
     },
     {
       "path": "web/public/content/angular/modulo-10.md",
-      "lines": 109,
+      "lines": 199,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -3077,14 +3144,20 @@
         "# M\u00f3dulo 10: Testing en Angular",
         "## Aprende construyendo",
         "### Tema 1: TestBed y componentes standalone",
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
+        "#### Paso 2 \u00b7 Contexto y caso real",
+        "#### Paso 3 \u00b7 Teor\u00eda, modelo mental y analog\u00eda",
+        "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
+        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
+        "#### Paso 7 \u00b7 Cierre y evidencia",
         "### Tema 2: Angular Testing Library",
-        "### Tema 3: Mockear HttpClient y el nuevo builder basado en Vitest",
-        "## Laboratorio pr\u00e1ctico"
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n"
       ]
     },
     {
       "path": "web/public/content/angular/modulo-11.md",
-      "lines": 122,
+      "lines": 246,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -3092,15 +3165,20 @@
         "# M\u00f3dulo 11: Performance, SSR y zoneless",
         "## Aprende construyendo",
         "### Tema 1: Server-Side Rendering",
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
+        "#### Paso 2 \u00b7 Contexto y caso real",
+        "#### Paso 3 \u00b7 Teor\u00eda, modelo mental y analog\u00eda",
+        "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
+        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
+        "#### Paso 7 \u00b7 Cierre y evidencia",
         "### Tema 2: Hidrataci\u00f3n",
-        "### Tema 3: @defer \u2014 carga diferida de vistas",
-        "### Tema 4: Zoneless",
-        "## Laboratorio pr\u00e1ctico"
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n"
       ]
     },
     {
       "path": "web/public/content/angular/modulo-12.md",
-      "lines": 98,
+      "lines": 191,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -3108,14 +3186,20 @@
         "# M\u00f3dulo 12: Ap\u00e9ndice: qu\u00e9 cambi\u00f3 entre versiones mayores",
         "## Aprende construyendo",
         "### Tema 1: Los saltos que importan",
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
+        "#### Paso 2 \u00b7 Contexto y caso real",
+        "#### Paso 3 \u00b7 Teor\u00eda, modelo mental y analog\u00eda",
+        "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
+        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
+        "#### Paso 7 \u00b7 Cierre y evidencia",
         "### Tema 2: C\u00f3mo leer un Angular Update Guide",
-        "### Tema 3: Por qu\u00e9 migrar una versi\u00f3n mayor a la vez",
-        "## Laboratorio pr\u00e1ctico"
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n"
       ]
     },
     {
       "path": "web/public/content/angular/modulo-13.md",
-      "lines": 137,
+      "lines": 227,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -3123,18 +3207,20 @@
         "# M\u00f3dulo 13: Proyecto integrador \u2014 aplicaci\u00f3n standalone completa",
         "## Aprende construyendo",
         "### Tema 1: Estructura del proyecto integrador",
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
+        "#### Paso 2 \u00b7 Contexto y caso real",
+        "#### Paso 3 \u00b7 Teor\u00eda, modelo mental y analog\u00eda",
+        "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
+        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
+        "#### Paso 7 \u00b7 Cierre y evidencia",
         "### Tema 2: Integrando routing, store y formularios",
-        "### Tema 3: TareasStore \u2014 combinando signals, computed y HttpClient",
-        "## Proyecto transversal RutaFlow: Consola operativa de rutas",
-        "### Capacidad y fundamento",
-        "### Implementaci\u00f3n guiada",
-        "### Verificaci\u00f3n profesional",
-        "## Laboratorio pr\u00e1ctico"
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n"
       ]
     },
     {
       "path": "web/public/content/angular/modulo-14.md",
-      "lines": 226,
+      "lines": 356,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -3142,15 +3228,15 @@
         "# M\u00f3dulo 14: Angular en producci\u00f3n \u2014 accesibilidad, seguridad e internacionalizaci\u00f3n",
         "## Aprende construyendo",
         "### Tema 1: Accesibilidad es comportamiento, no una puntuaci\u00f3n",
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
+        "#### Paso 2 \u00b7 Contexto y caso real",
+        "#### Paso 3 \u00b7 Teor\u00eda, modelo mental y analog\u00eda",
+        "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
+        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
+        "#### Paso 7 \u00b7 Cierre y evidencia",
         "### Tema 2: La seguridad autom\u00e1tica tiene fronteras expl\u00edcitas",
-        "### Tema 3: Internacionalizar implica significado, no reemplazo de texto",
-        "### Tema 4: Rendimiento y actualizaci\u00f3n son contratos de experiencia",
-        "## Revisi\u00f3n oficial de plataforma \u2014 julio de 2026",
-        "### Angular v22 y adopci\u00f3n seg\u00fan estabilidad",
-        "## Laboratorio pr\u00e1ctico",
-        "### Proyecto: auditor\u00eda integral de la aplicaci\u00f3n standalone",
-        "## Atlas completo de temas oficiales",
-        "### M\u00e9todo de estudio y proyecto de ampliaci\u00f3n"
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n"
       ]
     },
     {
@@ -3173,7 +3259,7 @@
     },
     {
       "path": "web/public/content/angular/modulo-2.md",
-      "lines": 129,
+      "lines": 249,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -3181,15 +3267,20 @@
         "# M\u00f3dulo 2: Signals \u2014 el nuevo modelo de reactividad",
         "## Aprende construyendo",
         "### Tema 1: signal(), computed() y effect()",
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
+        "#### Paso 2 \u00b7 Contexto y caso real",
+        "#### Paso 3 \u00b7 Teor\u00eda, modelo mental y analog\u00eda",
+        "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
+        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
+        "#### Paso 7 \u00b7 Cierre y evidencia",
         "### Tema 2: Mutaci\u00f3n frente a actualizaci\u00f3n inmutable",
-        "### Tema 3: Signals frente a Observables",
-        "### Tema 4: Hacia zoneless change detection",
-        "## Laboratorio pr\u00e1ctico"
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n"
       ]
     },
     {
       "path": "web/public/content/angular/modulo-3.md",
-      "lines": 138,
+      "lines": 258,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -3197,16 +3288,20 @@
         "# M\u00f3dulo 3: Servicios e inyecci\u00f3n de dependencias",
         "## Aprende construyendo",
         "### Tema 1: @Injectable y providedIn: root",
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
+        "#### Paso 2 \u00b7 Contexto y caso real",
+        "#### Paso 3 \u00b7 Teor\u00eda, modelo mental y analog\u00eda",
+        "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
+        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
+        "#### Paso 7 \u00b7 Cierre y evidencia",
         "#### Qu\u00e9 significa `@` aqu\u00ed: decoradores y metadatos de Angular",
-        "### Tema 2: inject() frente a inyecci\u00f3n por constructor",
-        "### Tema 3: Jerarqu\u00eda de inyectores",
-        "### Tema 4: Tokens de inyecci\u00f3n y decoradores de resoluci\u00f3n",
-        "## Laboratorio pr\u00e1ctico"
+        "### Tema 2: inject() frente a inyecci\u00f3n por constructor"
       ]
     },
     {
       "path": "web/public/content/angular/modulo-4.md",
-      "lines": 126,
+      "lines": 246,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -3214,15 +3309,20 @@
         "# M\u00f3dulo 4: Routing y navegaci\u00f3n",
         "## Aprende construyendo",
         "### Tema 1: Router config con rutas standalone",
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
+        "#### Paso 2 \u00b7 Contexto y caso real",
+        "#### Paso 3 \u00b7 Teor\u00eda, modelo mental y analog\u00eda",
+        "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
+        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
+        "#### Paso 7 \u00b7 Cierre y evidencia",
         "### Tema 2: Guards funcionales",
-        "### Tema 3: Lazy loading con loadComponent",
-        "### Tema 4: Par\u00e1metros de ruta, query params y capacidades avanzadas de routing",
-        "## Laboratorio pr\u00e1ctico"
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n"
       ]
     },
     {
       "path": "web/public/content/angular/modulo-5.md",
-      "lines": 134,
+      "lines": 254,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -3230,15 +3330,20 @@
         "# M\u00f3dulo 5: Formularios reactivos y template-driven",
         "## Aprende construyendo",
         "### Tema 1: Reactive Forms \u2014 FormGroup y FormControl",
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
+        "#### Paso 2 \u00b7 Contexto y caso real",
+        "#### Paso 3 \u00b7 Teor\u00eda, modelo mental y analog\u00eda",
+        "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
+        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
+        "#### Paso 7 \u00b7 Cierre y evidencia",
         "### Tema 2: Validadores as\u00edncronos",
-        "### Tema 3: FormArray para campos din\u00e1micos",
-        "### Tema 4: Template-driven forms \u2014 cu\u00e1ndo siguen siendo v\u00e1lidos",
-        "## Laboratorio pr\u00e1ctico"
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n"
       ]
     },
     {
       "path": "web/public/content/angular/modulo-6.md",
-      "lines": 129,
+      "lines": 249,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -3246,15 +3351,20 @@
         "# M\u00f3dulo 6: RxJS esencial para Angular",
         "## Aprende construyendo",
         "### Tema 1: Observable frente a Promise",
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
+        "#### Paso 2 \u00b7 Contexto y caso real",
+        "#### Paso 3 \u00b7 Teor\u00eda, modelo mental y analog\u00eda",
+        "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
+        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
+        "#### Paso 7 \u00b7 Cierre y evidencia",
         "### Tema 2: Operadores clave \u2014 debounceTime, distinctUntilChanged, switchMap, combineLatest",
-        "### Tema 3: Manejo de suscripciones sin fugas de memoria",
-        "### Tema 4: Subjects y operadores de aplanamiento avanzados",
-        "## Laboratorio pr\u00e1ctico"
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n"
       ]
     },
     {
       "path": "web/public/content/angular/modulo-7.md",
-      "lines": 111,
+      "lines": 201,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -3262,14 +3372,20 @@
         "# M\u00f3dulo 7: HttpClient e interceptores",
         "## Aprende construyendo",
         "### Tema 1: HttpClient con backend fetch",
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
+        "#### Paso 2 \u00b7 Contexto y caso real",
+        "#### Paso 3 \u00b7 Teor\u00eda, modelo mental y analog\u00eda",
+        "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
+        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
+        "#### Paso 7 \u00b7 Cierre y evidencia",
         "### Tema 2: Interceptores funcionales",
-        "### Tema 3: Registro de interceptores y centralizaci\u00f3n del manejo de errores",
-        "## Laboratorio pr\u00e1ctico"
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n"
       ]
     },
     {
       "path": "web/public/content/angular/modulo-8.md",
-      "lines": 107,
+      "lines": 197,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -3277,14 +3393,20 @@
         "# M\u00f3dulo 8: Standalone components y arquitectura sin NgModules",
         "## Aprende construyendo",
         "### Tema 1: Bootstrap sin NgModules",
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
+        "#### Paso 2 \u00b7 Contexto y caso real",
+        "#### Paso 3 \u00b7 Teor\u00eda, modelo mental y analog\u00eda",
+        "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
+        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
+        "#### Paso 7 \u00b7 Cierre y evidencia",
         "### Tema 2: Organizaci\u00f3n por feature",
-        "### Tema 3: Migraci\u00f3n desde NgModules",
-        "## Laboratorio pr\u00e1ctico"
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n"
       ]
     },
     {
       "path": "web/public/content/angular/modulo-9.md",
-      "lines": 109,
+      "lines": 199,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -3292,9 +3414,15 @@
         "# M\u00f3dulo 9: Gesti\u00f3n de estado",
         "## Aprende construyendo",
         "### Tema 1: Store propio con signals",
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
+        "#### Paso 2 \u00b7 Contexto y caso real",
+        "#### Paso 3 \u00b7 Teor\u00eda, modelo mental y analog\u00eda",
+        "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
+        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
+        "#### Paso 7 \u00b7 Cierre y evidencia",
         "### Tema 2: NgRx \u2014 actions, reducers y selectors",
-        "### Tema 3: Cu\u00e1ndo NgRx justifica su complejidad",
-        "## Laboratorio pr\u00e1ctico"
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n"
       ]
     },
     {
@@ -4357,7 +4485,7 @@
     },
     {
       "path": "web/public/content/flutter/modulo-0.md",
-      "lines": 177,
+      "lines": 267,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -4366,16 +4494,19 @@
         "## Antes de comenzar: instala Flutter y valida todo",
         "## Aprende construyendo",
         "### Tema 1: Sound null safety",
-        "### Tema 2: Clases y mixins",
-        "#### `extends`, `implements`, `with` y `@override` no significan lo mismo",
-        "### Tema 3: Futures, async/await y colecciones funcionales",
-        "## Ruta de proyecto progresivo desde carpeta vac\u00eda",
-        "## Laboratorio pr\u00e1ctico"
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
+        "#### Paso 2 \u00b7 Contexto y caso real",
+        "#### Paso 3 \u00b7 Teor\u00eda, modelo mental y analog\u00eda",
+        "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
+        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
+        "#### Paso 7 \u00b7 Cierre y evidencia",
+        "### Tema 2: Clases y mixins"
       ]
     },
     {
       "path": "web/public/content/flutter/modulo-1.md",
-      "lines": 127,
+      "lines": 217,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -4383,9 +4514,15 @@
         "# M\u00f3dulo 1: Widgets: stateless vs stateful",
         "## Aprende construyendo",
         "### Tema 1: StatelessWidget vs StatefulWidget",
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
+        "#### Paso 2 \u00b7 Contexto y caso real",
+        "#### Paso 3 \u00b7 Teor\u00eda, modelo mental y analog\u00eda",
+        "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
+        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
+        "#### Paso 7 \u00b7 Cierre y evidencia",
         "### Tema 2: Layout con Row, Column y Stack, y ciclo de vida",
-        "### Tema 3: Keys",
-        "## Laboratorio pr\u00e1ctico"
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n"
       ]
     },
     {
@@ -4497,7 +4634,7 @@
     },
     {
       "path": "web/public/content/flutter/modulo-2.md",
-      "lines": 116,
+      "lines": 206,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -4505,9 +4642,15 @@
         "# M\u00f3dulo 2: Layout y dise\u00f1o responsive",
         "## Aprende construyendo",
         "### Tema 1: MediaQuery vs LayoutBuilder",
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
+        "#### Paso 2 \u00b7 Contexto y caso real",
+        "#### Paso 3 \u00b7 Teor\u00eda, modelo mental y analog\u00eda",
+        "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
+        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
+        "#### Paso 7 \u00b7 Cierre y evidencia",
         "### Tema 2: C\u00f3mo Flutter calcula tama\u00f1os",
-        "### Tema 3: Breakpoints propios y SafeArea",
-        "## Laboratorio pr\u00e1ctico"
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n"
       ]
     },
     {
@@ -4619,7 +4762,7 @@
     },
     {
       "path": "web/public/content/foundations/modulo-0.md",
-      "lines": 197,
+      "lines": 331,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -4628,19 +4771,19 @@
         "## Antes de comenzar: instalaci\u00f3n guiada",
         "## Aprende construyendo",
         "### Tema 1: Del hardware al programa en ejecuci\u00f3n",
-        "### Tema 2: Archivos, carpetas y rutas sin perderse",
-        "### Tema 3: C\u00f3mo leer un comando antes de ejecutarlo",
-        "### Tema 4: Primer programa, primer error y primera evidencia",
-        "# Mi primer programa",
-        "## C\u00f3mo ejecutarlo",
-        "## Resultado esperado",
-        "## Error investigado",
-        "## Construcci\u00f3n guiada del cap\u00edtulo"
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
+        "#### Paso 2 \u00b7 Contexto y caso real",
+        "#### Paso 3 \u00b7 Teor\u00eda, modelo mental y analog\u00eda",
+        "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
+        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
+        "#### Paso 7 \u00b7 Cierre y evidencia",
+        "### Tema 2: Archivos, carpetas y rutas sin perderse"
       ]
     },
     {
       "path": "web/public/content/foundations/modulo-1.md",
-      "lines": 227,
+      "lines": 361,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -4648,15 +4791,15 @@
         "# M\u00f3dulo 1: Pensamiento computacional y programaci\u00f3n",
         "## Aprende construyendo",
         "### Tema 1: Del problema al algoritmo y a los casos de prueba",
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
+        "#### Paso 2 \u00b7 Contexto y caso real",
+        "#### Paso 3 \u00b7 Teor\u00eda, modelo mental y analog\u00eda",
+        "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
+        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
+        "#### Paso 7 \u00b7 Cierre y evidencia",
         "#### Construcci\u00f3n RutaFlow: especificar antes de programar",
-        "# En Windows, si el instalador registr\u00f3 este comando: python tarifa.py",
-        "### Tema 2: Variables, tipos, expresiones y cambios de estado",
-        "#### Construcci\u00f3n RutaFlow: estado visible",
-        "### Tema 3: Decisiones, repeticiones y trazado de ejecuci\u00f3n",
-        "#### Construcci\u00f3n RutaFlow: procesar varias gu\u00edas",
-        "### Tema 4: Funciones y descomposici\u00f3n de problemas",
-        "#### Construcci\u00f3n RutaFlow: separar entrada, regla y salida",
-        "## Construcci\u00f3n guiada del cap\u00edtulo"
+        "# En Windows, si el instalador registr\u00f3 este comando: python tarifa.py"
       ]
     },
     {
@@ -4701,7 +4844,7 @@
     },
     {
       "path": "web/public/content/foundations/modulo-2.md",
-      "lines": 246,
+      "lines": 374,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -4709,20 +4852,20 @@
         "# M\u00f3dulo 2: Estructuras de datos, algoritmos y complejidad",
         "## Aprende construyendo",
         "### Tema 1: Elegir estructuras seg\u00fan las operaciones",
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
+        "#### Paso 2 \u00b7 Contexto y caso real",
+        "#### Paso 3 \u00b7 Teor\u00eda, modelo mental y analog\u00eda",
+        "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
+        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
+        "#### Paso 7 \u00b7 Cierre y evidencia",
         "#### Construcci\u00f3n RutaFlow: \u00edndice de gu\u00edas",
-        "# En Windows: python estructuras.py",
-        "### Tema 2: Pilas, colas y abstracciones de comportamiento",
-        "#### Construcci\u00f3n RutaFlow: cola de entregas y deshacer",
-        "### Tema 3: B\u00fasqueda, precondiciones y demostraci\u00f3n de correcci\u00f3n",
-        "#### Construcci\u00f3n RutaFlow: localizar una gu\u00eda con contrato",
-        "### Tema 4: Complejidad, medici\u00f3n, ordenamiento y recursi\u00f3n",
-        "#### Construcci\u00f3n RutaFlow: medir una decisi\u00f3n completa",
-        "## Construcci\u00f3n guiada del cap\u00edtulo"
+        "# En Windows: python estructuras.py"
       ]
     },
     {
       "path": "web/public/content/foundations/modulo-3.md",
-      "lines": 243,
+      "lines": 371,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -4730,20 +4873,20 @@
         "# M\u00f3dulo 3: Fundamentos de web, redes y accesibilidad",
         "## Aprende construyendo",
         "### Tema 1: De una URL al servidor: red, DNS, IP y puertos",
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
+        "#### Paso 2 \u00b7 Contexto y caso real",
+        "#### Paso 3 \u00b7 Teor\u00eda, modelo mental y analog\u00eda",
+        "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
+        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
+        "#### Paso 7 \u00b7 Cierre y evidencia",
         "#### Construcci\u00f3n RutaFlow: diagnosticar por capas",
-        "### Tema 2: HTTP como contrato observable",
-        "#### Construcci\u00f3n RutaFlow: observar el contrato HTTP",
-        "### Tema 3: HTML sem\u00e1ntico, formularios y el DOM",
-        "#### Construcci\u00f3n RutaFlow: formulario operable sin rat\u00f3n",
-        "### Tema 4: CSS, layout responsive y accesibilidad verificable",
-        "#### Construcci\u00f3n RutaFlow: panel adaptable y verificable",
-        "## Construcci\u00f3n guiada del cap\u00edtulo",
-        "### Proyecto 3: sitio profesional accesible desde carpeta vac\u00eda"
+        "### Tema 2: HTTP como contrato observable"
       ]
     },
     {
       "path": "web/public/content/foundations/modulo-4.md",
-      "lines": 249,
+      "lines": 373,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -4751,20 +4894,20 @@
         "# M\u00f3dulo 4: Modelado de datos, SQL y persistencia",
         "## Aprende construyendo",
         "### Tema 1: Del mundo real al modelo relacional",
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
+        "#### Paso 2 \u00b7 Contexto y caso real",
+        "#### Paso 3 \u00b7 Teor\u00eda, modelo mental y analog\u00eda",
+        "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
+        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
+        "#### Paso 7 \u00b7 Cierre y evidencia",
         "#### Construcci\u00f3n RutaFlow: modelo que protege hechos",
-        "### Tema 2: SQL para definir, escribir, consultar y relacionar",
-        "# Incorrecto: permite alterar la consulta",
-        "# Correcto: el driver separa c\u00f3digo y dato",
-        "#### Construcci\u00f3n RutaFlow: consultar sin concatenar entrada",
-        "### Tema 3: \u00cdndices, restricciones y planes de consulta",
-        "#### Construcci\u00f3n RutaFlow: \u00edndice justificado por plan",
-        "### Tema 4: Transacciones, concurrencia y elecci\u00f3n SQL/NoSQL",
-        "#### Construcci\u00f3n RutaFlow: traslado at\u00f3mico"
+        "### Tema 2: SQL para definir, escribir, consultar y relacionar"
       ]
     },
     {
       "path": "web/public/content/foundations/modulo-5.md",
-      "lines": 229,
+      "lines": 365,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -4772,15 +4915,15 @@
         "# M\u00f3dulo 5: Testing, depuraci\u00f3n, Git y CI",
         "## Aprende construyendo",
         "### Tema 1: Depurar con evidencia, no con cambios aleatorios",
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
+        "#### Paso 2 \u00b7 Contexto y caso real",
+        "#### Paso 3 \u00b7 Teor\u00eda, modelo mental y analog\u00eda",
+        "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
+        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
+        "#### Paso 7 \u00b7 Cierre y evidencia",
         "#### Construcci\u00f3n RutaFlow: corregir con una hip\u00f3tesis falsable",
-        "### Tema 2: Pruebas con prop\u00f3sito y niveles adecuados",
-        "#### Construcci\u00f3n RutaFlow: una prueba por frontera",
-        "### Tema 3: Git como historial de decisiones y colaboraci\u00f3n",
-        "# editar y probar",
-        "#### Construcci\u00f3n RutaFlow: historial que explica el arreglo",
-        "### Tema 4: Calidad est\u00e1tica, revisi\u00f3n e integraci\u00f3n continua",
-        "#### Construcci\u00f3n RutaFlow: pipeline reproducible",
-        "## Construcci\u00f3n guiada del cap\u00edtulo"
+        "### Tema 2: Pruebas con prop\u00f3sito y niveles adecuados"
       ]
     },
     {
@@ -4869,7 +5012,7 @@
     },
     {
       "path": "web/public/content/ios/modulo-0.md",
-      "lines": 273,
+      "lines": 389,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -4880,16 +5023,17 @@
         "### Windows y Linux: etapa de fundamentos",
         "## Aprende construyendo",
         "### Tema 1: Optionals y unwrapping seguro",
-        "### Tema 2: struct vs class",
-        "### Tema 3: Protocolos y enums con valores asociados",
-        "### Tema 4: Closures, colecciones y gen\u00e9ricos con prop\u00f3sito",
-        "## Ruta de proyecto progresivo desde carpeta vac\u00eda",
-        "## Laboratorio pr\u00e1ctico"
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
+        "#### Paso 2 \u00b7 Contexto y caso real",
+        "#### Paso 3 \u00b7 Teor\u00eda, modelo mental y analog\u00eda",
+        "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
+        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente"
       ]
     },
     {
       "path": "web/public/content/ios/modulo-1.md",
-      "lines": 117,
+      "lines": 204,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -4897,14 +5041,20 @@
         "# M\u00f3dulo 1: SwiftUI: vistas y layout declarativo",
         "## Aprende construyendo",
         "### Tema 1: El protocolo View y composici\u00f3n",
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
+        "#### Paso 2 \u00b7 Contexto y caso real",
+        "#### Paso 3 \u00b7 Teor\u00eda, modelo mental y analog\u00eda",
+        "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
+        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
+        "#### Paso 7 \u00b7 Cierre y evidencia",
         "### Tema 2: Orden de modificadores y layout con stacks",
-        "### Tema 3: Previews, LazyVGrid/ScrollView y property wrappers",
-        "## Laboratorio pr\u00e1ctico"
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n"
       ]
     },
     {
       "path": "web/public/content/ios/modulo-10.md",
-      "lines": 235,
+      "lines": 351,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -4912,15 +5062,20 @@
         "# M\u00f3dulo 10: Performance, accesibilidad y HIG",
         "## Aprende construyendo",
         "### Tema 1: Instruments",
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
+        "#### Paso 2 \u00b7 Contexto y caso real",
+        "#### Paso 3 \u00b7 Teor\u00eda, modelo mental y analog\u00eda",
+        "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
+        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
+        "#### Paso 7 \u00b7 Cierre y evidencia",
         "### Tema 2: Accesibilidad con VoiceOver",
-        "### Tema 3: Human Interface Guidelines, Dynamic Type e interop con UIKit",
-        "### Tema 4: UIKit desde cero para mantener aplicaciones reales",
-        "## Laboratorio pr\u00e1ctico"
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n"
       ]
     },
     {
       "path": "web/public/content/ios/modulo-11.md",
-      "lines": 98,
+      "lines": 185,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -4928,14 +5083,20 @@
         "# M\u00f3dulo 11: Publicaci\u00f3n en App Store",
         "## Aprende construyendo",
         "### Tema 1: Certificados y provisioning profiles",
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
+        "#### Paso 2 \u00b7 Contexto y caso real",
+        "#### Paso 3 \u00b7 Teor\u00eda, modelo mental y analog\u00eda",
+        "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
+        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
+        "#### Paso 7 \u00b7 Cierre y evidencia",
         "### Tema 2: Archivar, subir y TestFlight",
-        "### Tema 3: Metadata y versionado",
-        "## Laboratorio pr\u00e1ctico"
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n"
       ]
     },
     {
       "path": "web/public/content/ios/modulo-12.md",
-      "lines": 147,
+      "lines": 234,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -4943,13 +5104,15 @@
         "# M\u00f3dulo 12: Proyecto integrador: app SwiftUI completa",
         "## Aprende construyendo",
         "### Tema 1: Arquitectura del proyecto integrador",
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
+        "#### Paso 2 \u00b7 Contexto y caso real",
+        "#### Paso 3 \u00b7 Teor\u00eda, modelo mental y analog\u00eda",
+        "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
+        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
+        "#### Paso 7 \u00b7 Cierre y evidencia",
         "### Tema 2: Sincronizaci\u00f3n entre red y persistencia local",
-        "### Tema 3: Cierre del track",
-        "## Proyecto transversal RutaFlow: Tracking de ruta y privacidad",
-        "### Capacidad y fundamento",
-        "### Implementaci\u00f3n guiada",
-        "### Verificaci\u00f3n profesional",
-        "## Laboratorio pr\u00e1ctico"
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n"
       ]
     },
     {
@@ -4992,7 +5155,7 @@
     },
     {
       "path": "web/public/content/ios/modulo-2.md",
-      "lines": 143,
+      "lines": 230,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5000,15 +5163,20 @@
         "# M\u00f3dulo 2: Estado y data flow",
         "## Aprende construyendo",
         "### Tema 1: @State y @Binding",
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
+        "#### Paso 2 \u00b7 Contexto y caso real",
+        "#### Paso 3 \u00b7 Teor\u00eda, modelo mental y analog\u00eda",
+        "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
+        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
+        "#### Paso 7 \u00b7 Cierre y evidencia",
         "#### C\u00f3mo leer `@State`, `@Binding` y el prefijo `$`",
-        "### Tema 2: @Observable",
-        "### Tema 3: @Environment y identidad vs valor",
-        "## Laboratorio pr\u00e1ctico"
+        "### Tema 2: @Observable"
       ]
     },
     {
       "path": "web/public/content/ios/modulo-3.md",
-      "lines": 123,
+      "lines": 210,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5016,14 +5184,20 @@
         "# M\u00f3dulo 3: Navegaci\u00f3n",
         "## Aprende construyendo",
         "### Tema 1: NavigationStack y NavigationPath",
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
+        "#### Paso 2 \u00b7 Contexto y caso real",
+        "#### Paso 3 \u00b7 Teor\u00eda, modelo mental y analog\u00eda",
+        "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
+        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
+        "#### Paso 7 \u00b7 Cierre y evidencia",
         "### Tema 2: Sheets, full screen covers y TabView",
-        "### Tema 3: Deep linking y controles de formulario",
-        "## Laboratorio pr\u00e1ctico"
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n"
       ]
     },
     {
       "path": "web/public/content/ios/modulo-4.md",
-      "lines": 134,
+      "lines": 221,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5031,14 +5205,20 @@
         "# M\u00f3dulo 4: Concurrencia moderna: async/await",
         "## Aprende construyendo",
         "### Tema 1: async/await y Task",
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
+        "#### Paso 2 \u00b7 Contexto y caso real",
+        "#### Paso 3 \u00b7 Teor\u00eda, modelo mental y analog\u00eda",
+        "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
+        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
+        "#### Paso 7 \u00b7 Cierre y evidencia",
         "### Tema 2: Actors para estado mutable seguro",
-        "### Tema 3: TaskGroup y MainActor",
-        "## Laboratorio pr\u00e1ctico"
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n"
       ]
     },
     {
       "path": "web/public/content/ios/modulo-5.md",
-      "lines": 133,
+      "lines": 220,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5046,14 +5226,20 @@
         "# M\u00f3dulo 5: Networking con URLSession",
         "## Aprende construyendo",
         "### Tema 1: URLSession con async/await y Codable",
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
+        "#### Paso 2 \u00b7 Contexto y caso real",
+        "#### Paso 3 \u00b7 Teor\u00eda, modelo mental y analog\u00eda",
+        "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
+        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
+        "#### Paso 7 \u00b7 Cierre y evidencia",
         "### Tema 2: Errores tipados",
-        "### Tema 3: Reintentos y cancelaci\u00f3n",
-        "## Laboratorio pr\u00e1ctico"
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n"
       ]
     },
     {
       "path": "web/public/content/ios/modulo-6.md",
-      "lines": 123,
+      "lines": 210,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5061,14 +5247,20 @@
         "# M\u00f3dulo 6: Persistencia con SwiftData",
         "## Aprende construyendo",
         "### Tema 1: @Model y ModelContainer",
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
+        "#### Paso 2 \u00b7 Contexto y caso real",
+        "#### Paso 3 \u00b7 Teor\u00eda, modelo mental y analog\u00eda",
+        "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
+        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
+        "#### Paso 7 \u00b7 Cierre y evidencia",
         "### Tema 2: @Query y operaciones de escritura",
-        "### Tema 3: Migraciones y SwiftData vs Core Data",
-        "## Laboratorio pr\u00e1ctico"
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n"
       ]
     },
     {
       "path": "web/public/content/ios/modulo-7.md",
-      "lines": 111,
+      "lines": 198,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5076,14 +5268,20 @@
         "# M\u00f3dulo 7: Combine y programaci\u00f3n reactiva",
         "## Aprende construyendo",
         "### Tema 1: Publishers y Subscribers",
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
+        "#### Paso 2 \u00b7 Contexto y caso real",
+        "#### Paso 3 \u00b7 Teor\u00eda, modelo mental y analog\u00eda",
+        "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
+        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
+        "#### Paso 7 \u00b7 Cierre y evidencia",
         "### Tema 2: Operadores: debounce y combineLatest",
-        "### Tema 3: Combine vs async/await",
-        "## Laboratorio pr\u00e1ctico"
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n"
       ]
     },
     {
       "path": "web/public/content/ios/modulo-8.md",
-      "lines": 128,
+      "lines": 215,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5091,14 +5289,20 @@
         "# M\u00f3dulo 8: Arquitectura MVVM",
         "## Aprende construyendo",
         "### Tema 1: De una vista \"gorda\" a MVVM",
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
+        "#### Paso 2 \u00b7 Contexto y caso real",
+        "#### Paso 3 \u00b7 Teor\u00eda, modelo mental y analog\u00eda",
+        "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
+        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
+        "#### Paso 7 \u00b7 Cierre y evidencia",
         "### Tema 2: Capas del proyecto e inyecci\u00f3n por inicializador",
-        "### Tema 3: Cu\u00e1ndo MVVM no alcanza",
-        "## Laboratorio pr\u00e1ctico"
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n"
       ]
     },
     {
       "path": "web/public/content/ios/modulo-9.md",
-      "lines": 131,
+      "lines": 218,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5106,14 +5310,20 @@
         "# M\u00f3dulo 9: Testing en iOS",
         "## Aprende construyendo",
         "### Tema 1: XCTest cl\u00e1sico y Swift Testing",
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
+        "#### Paso 2 \u00b7 Contexto y caso real",
+        "#### Paso 3 \u00b7 Teor\u00eda, modelo mental y analog\u00eda",
+        "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
+        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
+        "#### Paso 7 \u00b7 Cierre y evidencia",
         "### Tema 2: Testing de c\u00f3digo async",
-        "### Tema 3: UI Tests con XCUITest",
-        "## Laboratorio pr\u00e1ctico"
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n"
       ]
     },
     {
       "path": "web/public/content/java/modulo-0.md",
-      "lines": 341,
+      "lines": 724,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5122,19 +5332,19 @@
         "## Antes de comenzar: instala Java correctamente",
         "## Aprende construyendo",
         "### Tema 1: Del c\u00f3digo fuente a la JVM",
-        "#### Construcci\u00f3n RutaFlow: primer ejecutable",
-        "### Tema 2: public static void main \u2014 qu\u00e9 significa cada palabra",
-        "#### Construcci\u00f3n RutaFlow: argumentos de inicio",
-        "### Tema 3: JDK, JRE y JVM",
-        "#### Construcci\u00f3n RutaFlow: diagn\u00f3stico del entorno",
-        "### Tema 4: Tipos primitivos vs referencias",
-        "#### Construcci\u00f3n RutaFlow: modelo de un paquete",
-        "### Tema 5: Variables, conversiones y `String`"
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
+        "#### Paso 2 \u00b7 Contexto y caso real",
+        "#### Paso 3 \u00b7 Teor\u00eda, modelo mental y analog\u00eda",
+        "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
+        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
+        "#### Paso 7 \u00b7 Cierre y evidencia",
+        "#### Construcci\u00f3n RutaFlow: primer ejecutable"
       ]
     },
     {
       "path": "web/public/content/java/modulo-1.md",
-      "lines": 216,
+      "lines": 328,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5142,20 +5352,20 @@
         "# M\u00f3dulo 1: Programaci\u00f3n orientada a objetos",
         "## Aprende construyendo",
         "### Tema 1: Clases, objetos, constructores y encapsulaci\u00f3n",
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
+        "#### Paso 2 \u00b7 Contexto y caso real",
+        "#### Paso 3 \u00b7 Teor\u00eda, modelo mental y analog\u00eda",
+        "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
+        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
+        "#### Paso 7 \u00b7 Cierre y evidencia",
         "#### Construcci\u00f3n RutaFlow: una gu\u00eda siempre v\u00e1lida",
-        "### Tema 2: Herencia y sobreescritura",
-        "#### Enfoque t\u00e9cnico: qu\u00e9 significa `@` en Java",
-        "#### Construcci\u00f3n RutaFlow: comportamiento polim\u00f3rfico y anotaciones reales",
-        "### Tema 3: Interfaces, clases abstractas y cu\u00e1ndo usar cada una",
-        "#### Construcci\u00f3n RutaFlow: intercambiar proveedores sin cambiar el caso de uso",
-        "### Tema 4: Sobrecarga vs sobreescritura, y modificadores de acceso",
-        "#### Construcci\u00f3n RutaFlow: una API peque\u00f1a y deliberada",
-        "## Construcci\u00f3n guiada del cap\u00edtulo"
+        "### Tema 2: Herencia y sobreescritura"
       ]
     },
     {
       "path": "web/public/content/java/modulo-10.md",
-      "lines": 117,
+      "lines": 201,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5163,17 +5373,20 @@
         "# M\u00f3dulo 10: M\u00f3dulos (JPMS) y proyectos grandes",
         "## Aprende construyendo",
         "### Tema 1: module-info.java y encapsulaci\u00f3n fuerte",
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
+        "#### Paso 2 \u00b7 Contexto y caso real",
+        "#### Paso 3 \u00b7 Teor\u00eda, modelo mental y analog\u00eda",
+        "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
+        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
+        "#### Paso 7 \u00b7 Cierre y evidencia",
         "#### Construcci\u00f3n RutaFlow: encapsulaci\u00f3n comprobada por el compilador",
-        "### Tema 2: Migraci\u00f3n incremental y cu\u00e1ndo JPMS aporta valor",
-        "#### Construcci\u00f3n RutaFlow: migraci\u00f3n reversible",
-        "### Tema 3: `opens` para acceso reflexivo controlado de frameworks",
-        "#### Construcci\u00f3n RutaFlow: abrir solo para Jackson",
-        "## Construcci\u00f3n guiada del cap\u00edtulo"
+        "### Tema 2: Migraci\u00f3n incremental y cu\u00e1ndo JPMS aporta valor"
       ]
     },
     {
       "path": "web/public/content/java/modulo-11.md",
-      "lines": 116,
+      "lines": 200,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5181,17 +5394,20 @@
         "# M\u00f3dulo 11: JVM interna \u2014 GC, profiling y JIT",
         "## Aprende construyendo",
         "### Tema 1: Generaciones de memoria y recolectores",
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
+        "#### Paso 2 \u00b7 Contexto y caso real",
+        "#### Paso 3 \u00b7 Teor\u00eda, modelo mental y analog\u00eda",
+        "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
+        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
+        "#### Paso 7 \u00b7 Cierre y evidencia",
         "#### Construcci\u00f3n RutaFlow: comparar con la misma carga",
-        "### Tema 2: Java Flight Recorder y JIT compilation",
-        "#### Construcci\u00f3n RutaFlow: perfilar una regla caliente",
-        "### Tema 3: Referencias especiales y heap dumps",
-        "#### Construcci\u00f3n RutaFlow: encontrar una retenci\u00f3n real",
-        "## Construcci\u00f3n guiada del cap\u00edtulo"
+        "### Tema 2: Java Flight Recorder y JIT compilation"
       ]
     },
     {
       "path": "web/public/content/java/modulo-12.md",
-      "lines": 127,
+      "lines": 211,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5199,17 +5415,20 @@
         "# M\u00f3dulo 12: Buenas pr\u00e1cticas y patrones de dise\u00f1o",
         "## Aprende construyendo",
         "### Tema 1: Builder \u2014 constructores con muchos par\u00e1metros opcionales",
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
+        "#### Paso 2 \u00b7 Contexto y caso real",
+        "#### Paso 3 \u00b7 Teor\u00eda, modelo mental y analog\u00eda",
+        "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
+        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
+        "#### Paso 7 \u00b7 Cierre y evidencia",
         "#### Construcci\u00f3n RutaFlow: solicitud legible y v\u00e1lida",
-        "### Tema 2: Factory y Strategy",
-        "#### Construcci\u00f3n RutaFlow: seleccionar transportador y tarifa",
-        "### Tema 3: SOLID y cu\u00e1ndo NO aplicar un patr\u00f3n",
-        "#### Construcci\u00f3n RutaFlow: refactor guiado por razones de cambio",
-        "## Construcci\u00f3n guiada del cap\u00edtulo"
+        "### Tema 2: Factory y Strategy"
       ]
     },
     {
       "path": "web/public/content/java/modulo-13.md",
-      "lines": 141,
+      "lines": 231,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5217,15 +5436,15 @@
         "# M\u00f3dulo 13: Proyecto integrador",
         "## Aprende construyendo",
         "### Tema 1: Arquitectura por capas del proyecto integrador",
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
+        "#### Paso 2 \u00b7 Contexto y caso real",
+        "#### Paso 3 \u00b7 Teor\u00eda, modelo mental y analog\u00eda",
+        "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
+        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
+        "#### Paso 7 \u00b7 Cierre y evidencia",
         "#### Construcci\u00f3n RutaFlow: esqueleto ejecutable",
-        "### Tema 2: Integrando concurrencia, modelado y testing",
-        "#### Construcci\u00f3n RutaFlow: lote parcial y observable",
-        "### Tema 3: Build reproducible y cierre del track",
-        "# cualquier persona clona el repo y ejecuta con un \u00fanico comando",
-        "#### Construcci\u00f3n RutaFlow: clonaci\u00f3n limpia como prueba",
-        "## Proyecto transversal RutaFlow: Motor de tarifas",
-        "### Capacidad y fundamento",
-        "### Implementaci\u00f3n guiada"
+        "### Tema 2: Integrando concurrencia, modelado y testing"
       ]
     },
     {
@@ -5272,7 +5491,7 @@
     },
     {
       "path": "web/public/content/java/modulo-2.md",
-      "lines": 126,
+      "lines": 210,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5280,17 +5499,20 @@
         "# M\u00f3dulo 2: Colecciones y gen\u00e9ricos",
         "## Aprende construyendo",
         "### Tema 1: List, Set, Map y sus implementaciones",
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
+        "#### Paso 2 \u00b7 Contexto y caso real",
+        "#### Paso 3 \u00b7 Teor\u00eda, modelo mental y analog\u00eda",
+        "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
+        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
+        "#### Paso 7 \u00b7 Cierre y evidencia",
         "#### Construcci\u00f3n RutaFlow: paradas, unicidad y b\u00fasqueda",
-        "### Tema 2: Gen\u00e9ricos, wildcards y type erasure",
-        "#### Construcci\u00f3n RutaFlow: repositorio tipado",
-        "### Tema 3: Comparable vs Comparator, e iteraci\u00f3n",
-        "#### Construcci\u00f3n RutaFlow: ordenar entregas sin alterar el dominio",
-        "## Construcci\u00f3n guiada del cap\u00edtulo"
+        "### Tema 2: Gen\u00e9ricos, wildcards y type erasure"
       ]
     },
     {
       "path": "web/public/content/java/modulo-3.md",
-      "lines": 121,
+      "lines": 205,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5298,17 +5520,20 @@
         "# M\u00f3dulo 3: Excepciones y manejo de recursos",
         "## Aprende construyendo",
         "### Tema 1: Checked vs unchecked exceptions",
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
+        "#### Paso 2 \u00b7 Contexto y caso real",
+        "#### Paso 3 \u00b7 Teor\u00eda, modelo mental y analog\u00eda",
+        "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
+        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
+        "#### Paso 7 \u00b7 Cierre y evidencia",
         "#### Construcci\u00f3n RutaFlow: distinguir fallo externo de defecto",
-        "### Tema 2: try-with-resources",
-        "#### Construcci\u00f3n RutaFlow: importar sin filtrar descriptores",
-        "### Tema 3: Excepciones personalizadas y no tragar excepciones",
-        "#### Construcci\u00f3n RutaFlow: error con lenguaje de negocio",
-        "## Construcci\u00f3n guiada del cap\u00edtulo"
+        "### Tema 2: try-with-resources"
       ]
     },
     {
       "path": "web/public/content/java/modulo-4.md",
-      "lines": 119,
+      "lines": 203,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5316,17 +5541,20 @@
         "# M\u00f3dulo 4: Streams y programaci\u00f3n funcional",
         "## Aprende construyendo",
         "### Tema 1: Stream API \u2014 map, filter, reduce, collect",
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
+        "#### Paso 2 \u00b7 Contexto y caso real",
+        "#### Paso 3 \u00b7 Teor\u00eda, modelo mental y analog\u00eda",
+        "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
+        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
+        "#### Paso 7 \u00b7 Cierre y evidencia",
         "#### Construcci\u00f3n RutaFlow: tablero de carga declarativo",
-        "### Tema 2: Optional \u2014 evitar null expl\u00edcitamente",
-        "#### Construcci\u00f3n RutaFlow: b\u00fasqueda expl\u00edcitamente ausente",
-        "### Tema 3: Streams paralelos y referencias a m\u00e9todos",
-        "#### Construcci\u00f3n RutaFlow: medir antes de paralelizar",
-        "## Construcci\u00f3n guiada del cap\u00edtulo"
+        "### Tema 2: Optional \u2014 evitar null expl\u00edcitamente"
       ]
     },
     {
       "path": "web/public/content/java/modulo-5.md",
-      "lines": 137,
+      "lines": 249,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5334,19 +5562,20 @@
         "# M\u00f3dulo 5: Concurrencia \u2014 hilos y virtual threads",
         "## Aprende construyendo",
         "### Tema 1: ExecutorService y gesti\u00f3n de hilos",
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
+        "#### Paso 2 \u00b7 Contexto y caso real",
+        "#### Paso 3 \u00b7 Teor\u00eda, modelo mental y analog\u00eda",
+        "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
+        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
+        "#### Paso 7 \u00b7 Cierre y evidencia",
         "#### Construcci\u00f3n RutaFlow: lote con cierre ordenado",
-        "### Tema 2: CompletableFuture",
-        "#### Construcci\u00f3n RutaFlow: componer consulta y tarifa",
-        "### Tema 3: Virtual threads",
-        "#### Construcci\u00f3n RutaFlow: simular consultas bloqueantes",
-        "### Tema 4: Condiciones de carrera y sincronizaci\u00f3n",
-        "#### Construcci\u00f3n RutaFlow: demostrar una carrera",
-        "## Construcci\u00f3n guiada del cap\u00edtulo"
+        "### Tema 2: CompletableFuture"
       ]
     },
     {
       "path": "web/public/content/java/modulo-6.md",
-      "lines": 119,
+      "lines": 203,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5354,17 +5583,20 @@
         "# M\u00f3dulo 6: I/O, NIO.2 y serializaci\u00f3n",
         "## Aprende construyendo",
         "### Tema 1: NIO.2 \u2014 Path y Files",
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
+        "#### Paso 2 \u00b7 Contexto y caso real",
+        "#### Paso 3 \u00b7 Teor\u00eda, modelo mental y analog\u00eda",
+        "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
+        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
+        "#### Paso 7 \u00b7 Cierre y evidencia",
         "#### Construcci\u00f3n RutaFlow: bandeja de importaci\u00f3n segura",
-        "### Tema 2: Serializaci\u00f3n con Jackson",
-        "#### Construcci\u00f3n RutaFlow: contrato JSON verificable",
-        "### Tema 3: Archivos grandes y recursos del classpath",
-        "#### Construcci\u00f3n RutaFlow: procesar un mill\u00f3n sin cargarlo",
-        "## Construcci\u00f3n guiada del cap\u00edtulo"
+        "### Tema 2: Serializaci\u00f3n con Jackson"
       ]
     },
     {
       "path": "web/public/content/java/modulo-7.md",
-      "lines": 120,
+      "lines": 204,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5372,17 +5604,20 @@
         "# M\u00f3dulo 7: Records, sealed classes y pattern matching",
         "## Aprende construyendo",
         "### Tema 1: record \u2014 modelos inmutables sin boilerplate",
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
+        "#### Paso 2 \u00b7 Contexto y caso real",
+        "#### Paso 3 \u00b7 Teor\u00eda, modelo mental y analog\u00eda",
+        "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
+        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
+        "#### Paso 7 \u00b7 Cierre y evidencia",
         "#### Construcci\u00f3n RutaFlow: eventos inmutables",
-        "### Tema 2: sealed \u2014 jerarqu\u00edas cerradas y exhaustividad",
-        "#### Construcci\u00f3n RutaFlow: resultados cerrados de una entrega",
-        "### Tema 3: Pattern matching exhaustivo y para instanceof",
-        "#### Construcci\u00f3n RutaFlow: presentar todos los resultados",
-        "## Construcci\u00f3n guiada del cap\u00edtulo"
+        "### Tema 2: sealed \u2014 jerarqu\u00edas cerradas y exhaustividad"
       ]
     },
     {
       "path": "web/public/content/java/modulo-8.md",
-      "lines": 120,
+      "lines": 210,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5390,17 +5625,20 @@
         "# M\u00f3dulo 8: Build tools \u2014 Maven y Gradle",
         "## Aprende construyendo",
         "### Tema 1: pom.xml vs build.gradle.kts",
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
+        "#### Paso 2 \u00b7 Contexto y caso real",
+        "#### Paso 3 \u00b7 Teor\u00eda, modelo mental y analog\u00eda",
+        "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
+        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
+        "#### Paso 7 \u00b7 Cierre y evidencia",
         "#### Construcci\u00f3n RutaFlow: elegir y fijar una herramienta",
-        "### Tema 2: Ciclo de vida de build y scopes",
-        "#### Construcci\u00f3n RutaFlow: comprobar el artefacto real",
-        "### Tema 3: Proyectos multi-m\u00f3dulo",
-        "#### Construcci\u00f3n RutaFlow: l\u00edmites compilables",
-        "## Construcci\u00f3n guiada del cap\u00edtulo"
+        "### Tema 2: Ciclo de vida de build y scopes"
       ]
     },
     {
       "path": "web/public/content/java/modulo-9.md",
-      "lines": 130,
+      "lines": 220,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5408,38 +5646,41 @@
         "# M\u00f3dulo 9: Testing con JUnit 5 y Mockito",
         "## Aprende construyendo",
         "### Tema 1: JUnit 5 \u2014 anotaciones y ciclo de vida",
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
+        "#### Paso 2 \u00b7 Contexto y caso real",
+        "#### Paso 3 \u00b7 Teor\u00eda, modelo mental y analog\u00eda",
+        "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
+        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
+        "#### Paso 7 \u00b7 Cierre y evidencia",
         "#### Construcci\u00f3n RutaFlow: probar invariantes sin infraestructura",
-        "### Tema 2: Mockito \u2014 aislar dependencias",
-        "#### Construcci\u00f3n RutaFlow: aislar el puerto de persistencia",
-        "### Tema 3: Tests parametrizados y cobertura",
-        "#### Construcci\u00f3n RutaFlow: tabla de decisiones y cobertura \u00fatil",
-        "## Construcci\u00f3n guiada del cap\u00edtulo"
+        "### Tema 2: Mockito \u2014 aislar dependencias"
       ]
     },
     {
       "path": "web/public/content/javascript/modulo-0.md",
-      "lines": 229,
+      "lines": 373,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
       "headings": [
-        "# M\u00f3dulo 0: Fundamentos del lenguaje y el entorno",
-        "## Antes de comenzar: tu primer entorno de programaci\u00f3n",
+        "# M\u00f3dulo 0: Fundamentos de JavaScript con ejemplos independientes",
         "## Aprende construyendo",
-        "### Tema 1: Variables \u2014 let, const y var",
-        "#### Construcci\u00f3n RutaFlow",
-        "### Tema 2: Tipos primitivos y typeof",
-        "#### Construcci\u00f3n RutaFlow",
-        "### Tema 3: Coerci\u00f3n impl\u00edcita \u2014 == frente a ===",
-        "#### Construcci\u00f3n RutaFlow",
-        "### Tema 4: Template literals",
-        "#### Construcci\u00f3n RutaFlow",
-        "### Tema 5: Entorno \u2014 navegador frente a Node.js"
+        "## Antes de comenzar: preparaci\u00f3n del entorno",
+        "### Tema 1: Variables \u2014 `const`, `let` y `var`",
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
+        "#### Paso 2 \u00b7 Contexto y caso real",
+        "#### Paso 3 \u00b7 Teor\u00eda con analog\u00eda",
+        "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
+        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
+        "#### Paso 7 \u00b7 Cierre y evidencia",
+        "### Tema 2: Tipos primitivos y `typeof`"
       ]
     },
     {
       "path": "web/public/content/javascript/modulo-1.md",
-      "lines": 165,
+      "lines": 497,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5447,16 +5688,20 @@
         "# M\u00f3dulo 1: Operadores, control de flujo y funciones",
         "## Aprende construyendo",
         "### Tema 1: Tres formas de escribir una funci\u00f3n",
-        "### Tema 2: Par\u00e1metros por defecto y rest/spread",
-        "### Tema 3: Funciones de orden superior",
-        "### Tema 4: Control de flujo \u2014 if, switch y loops",
-        "### Tema 5: IIFE y el objeto arguments",
-        "## Laboratorio pr\u00e1ctico"
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
+        "#### Paso 2 \u00b7 Contexto y caso real",
+        "#### Paso 3 \u00b7 Teor\u00eda con analog\u00eda",
+        "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
+        "#### Construcci\u00f3n RutaFlow: funciones con una responsabilidad visible",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
+        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
+        "#### Paso 7 \u00b7 Cierre y evidencia",
+        "### Tema 2: Par\u00e1metros por defecto y rest/spread"
       ]
     },
     {
       "path": "web/public/content/javascript/modulo-10.md",
-      "lines": 168,
+      "lines": 535,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5464,16 +5709,20 @@
         "# M\u00f3dulo 10: Patrones avanzados y rendimiento",
         "## Aprende construyendo",
         "### Tema 1: Debounce y throttle",
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
+        "#### Paso 2 \u00b7 Contexto y caso real",
+        "#### Paso 3 \u00b7 Teor\u00eda, modelo mental y analog\u00eda",
+        "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
+        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
+        "#### Paso 7 \u00b7 Cierre y evidencia",
         "### Tema 2: Memoizaci\u00f3n",
-        "### Tema 3: Web Workers para trabajo pesado",
-        "### Tema 4: Profiling con DevTools",
-        "### Tema 5: Core Web Vitals",
-        "## Laboratorio pr\u00e1ctico"
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n"
       ]
     },
     {
       "path": "web/public/content/javascript/modulo-11.md",
-      "lines": 149,
+      "lines": 452,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5481,15 +5730,20 @@
         "# M\u00f3dulo 11: TypeScript esencial para devs de JavaScript",
         "## Aprende construyendo",
         "### Tema 1: Tipos b\u00e1sicos, interfaces y type aliases",
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
+        "#### Paso 2 \u00b7 Contexto y caso real",
+        "#### Paso 3 \u00b7 Teor\u00eda, modelo mental y analog\u00eda",
+        "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
+        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
+        "#### Paso 7 \u00b7 Cierre y evidencia",
         "### Tema 2: Generics",
-        "### Tema 3: Narrowing y union types",
-        "### Tema 4: tsconfig esencial y modo strict",
-        "## Laboratorio pr\u00e1ctico"
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n"
       ]
     },
     {
       "path": "web/public/content/javascript/modulo-12.md",
-      "lines": 185,
+      "lines": 456,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5497,19 +5751,20 @@
         "# M\u00f3dulo 12: Proyecto integrador \u2014 SPA sin framework",
         "## Aprende construyendo",
         "### Tema 1: Routing manual con History API",
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
+        "#### Paso 2 \u00b7 Contexto y caso real",
+        "#### Paso 3 \u00b7 Teor\u00eda, modelo mental y analog\u00eda",
+        "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
+        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
+        "#### Paso 7 \u00b7 Cierre y evidencia",
         "### Tema 2: Estado de aplicaci\u00f3n con un store propio",
-        "### Tema 3: Consumo de una API real con manejo de errores",
-        "### Tema 4: Conectando todo \u2014 el patr\u00f3n completo de una SPA",
-        "## Proyecto transversal RutaFlow: Widget p\u00fablico de seguimiento",
-        "### Capacidad y fundamento",
-        "### Implementaci\u00f3n guiada",
-        "### Verificaci\u00f3n profesional",
-        "## Laboratorio pr\u00e1ctico"
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n"
       ]
     },
     {
       "path": "web/public/content/javascript/modulo-13.md",
-      "lines": 224,
+      "lines": 500,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5517,20 +5772,20 @@
         "# M\u00f3dulo 13: JavaScript en producci\u00f3n \u2014 seguridad, memoria y compatibilidad",
         "## Aprende construyendo",
         "### Tema 1: Datos no confiables y seguridad en el navegador",
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
+        "#### Paso 2 \u00b7 Contexto y caso real",
+        "#### Paso 3 \u00b7 Teor\u00eda, modelo mental y analog\u00eda",
+        "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
+        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
+        "#### Paso 7 \u00b7 Cierre y evidencia",
         "### Tema 2: Memoria administrada no significa memoria infinita",
-        "### Tema 3: Errores \u00fatiles sin convertir usuarios en sensores involuntarios",
-        "### Tema 4: Compatibilidad, idioma y tiempo son requisitos de datos",
-        "## Revisi\u00f3n oficial de plataforma \u2014 julio de 2026",
-        "### ECMAScript vivo, propuestas y fechas modernas",
-        "## Laboratorio pr\u00e1ctico",
-        "### Proyecto de endurecimiento de la SPA",
-        "## Atlas completo de temas oficiales",
-        "### M\u00e9todo de estudio y proyecto de ampliaci\u00f3n"
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n"
       ]
     },
     {
       "path": "web/public/content/javascript/modulo-14.md",
-      "lines": 290,
+      "lines": 1163,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5538,17 +5793,20 @@
         "# M\u00f3dulo 14: JavaScript Master: TypeScript, WASM y c\u00f3mputo emergente",
         "## Aprende construyendo",
         "### Tema 1: TypeScript avanzado",
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
+        "#### Paso 2 \u00b7 Contexto y caso real",
+        "#### Paso 3 \u00b7 Teor\u00eda, modelo mental y analog\u00eda",
+        "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
+        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
+        "#### Paso 7 \u00b7 Cierre y evidencia",
         "### Tema 2: Workers y ejecuci\u00f3n fuera del hilo principal",
-        "### Tema 3: Bundlers y optimizaci\u00f3n",
-        "### Tema 4: Accesibilidad web",
-        "### Tema 5: WebAssembly con Rust o C",
-        "### Tema 6: Web3 y machine learning en navegador",
-        "## Trazabilidad de la auditor\u00eda original"
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n"
       ]
     },
     {
       "path": "web/public/content/javascript/modulo-2.md",
-      "lines": 207,
+      "lines": 582,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5556,17 +5814,20 @@
         "# M\u00f3dulo 2: Scope, closures y el modelo de ejecuci\u00f3n",
         "## Aprende construyendo",
         "### Tema 1: Scope l\u00e9xico y closures",
-        "### Tema 2: Hoisting y Temporal Dead Zone",
-        "### Tema 3: Call stack y contexto de ejecuci\u00f3n",
-        "### Tema 4: this seg\u00fan el modo de invocaci\u00f3n",
-        "### Tema 5: Module pattern y factory functions",
-        "### Tema 6: Execution Context, Scope Chain y Lexical Environment",
-        "## Laboratorio pr\u00e1ctico"
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
+        "#### Paso 2 \u00b7 Contexto y caso real",
+        "#### Paso 3 \u00b7 Teor\u00eda con analog\u00eda",
+        "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
+        "#### Construcci\u00f3n RutaFlow: estado privado por env\u00edo",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
+        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
+        "#### Paso 7 \u00b7 Cierre y evidencia",
+        "### Tema 2: Hoisting y Temporal Dead Zone"
       ]
     },
     {
       "path": "web/public/content/javascript/modulo-3.md",
-      "lines": 148,
+      "lines": 417,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5574,15 +5835,20 @@
         "# M\u00f3dulo 3: Objetos, prototipos y clases",
         "## Aprende construyendo",
         "### Tema 1: Prototype chain y Object.create",
-        "### Tema 2: class, extends y super",
-        "### Tema 3: Getters, setters y propiedades computadas",
-        "### Tema 4: Encapsulaci\u00f3n con campos privados (#campo)",
-        "## Laboratorio pr\u00e1ctico"
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
+        "#### Paso 2 \u00b7 Contexto y caso real",
+        "#### Paso 3 \u00b7 Teor\u00eda con analog\u00eda",
+        "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
+        "#### Construcci\u00f3n RutaFlow: delegaci\u00f3n visible",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
+        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
+        "#### Paso 7 \u00b7 Cierre y evidencia",
+        "### Tema 2: class, extends y super"
       ]
     },
     {
       "path": "web/public/content/javascript/modulo-4.md",
-      "lines": 159,
+      "lines": 479,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5590,16 +5856,20 @@
         "# M\u00f3dulo 4: Arrays y estructuras de datos funcionales",
         "## Aprende construyendo",
         "### Tema 1: map, filter, reduce, find, some/every",
-        "### Tema 2: Set y Map frente a Array y Object",
-        "### Tema 3: Inmutabilidad y actualizaci\u00f3n de estructuras anidadas",
-        "### Tema 4: WeakMap y WeakSet",
-        "### Tema 5: M\u00e9todos inmutables modernos",
-        "## Laboratorio pr\u00e1ctico"
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
+        "#### Paso 2 \u00b7 Contexto y caso real",
+        "#### Paso 3 \u00b7 Teor\u00eda con analog\u00eda",
+        "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
+        "#### Construcci\u00f3n RutaFlow: calcular la carga activa",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
+        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
+        "#### Paso 7 \u00b7 Cierre y evidencia",
+        "### Tema 2: Set y Map frente a Array y Object"
       ]
     },
     {
       "path": "web/public/content/javascript/modulo-5.md",
-      "lines": 168,
+      "lines": 473,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5607,16 +5877,20 @@
         "# M\u00f3dulo 5: Asincron\u00eda I \u2014 Event Loop y Promesas",
         "## Aprende construyendo",
         "### Tema 1: El Event Loop",
-        "### Tema 2: Promesas",
-        "### Tema 3: Promise.all, allSettled, race y any",
-        "### Tema 4: El motor V8 \u2014 JIT y AST",
-        "### Tema 5: Stack, Heap y Garbage Collection",
-        "## Laboratorio pr\u00e1ctico"
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
+        "#### Paso 2 \u00b7 Contexto y caso real",
+        "#### Paso 3 \u00b7 Teor\u00eda con analog\u00eda",
+        "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
+        "#### Construcci\u00f3n RutaFlow: predecir antes de ejecutar",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
+        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
+        "#### Paso 7 \u00b7 Cierre y evidencia",
+        "### Tema 2: Promesas"
       ]
     },
     {
       "path": "web/public/content/javascript/modulo-6.md",
-      "lines": 217,
+      "lines": 570,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5624,17 +5898,20 @@
         "# M\u00f3dulo 6: Asincron\u00eda II \u2014 async/await y fetch",
         "## Aprende construyendo",
         "### Tema 1: async/await sobre promesas",
-        "### Tema 2: try/catch en flujos as\u00edncronos",
-        "### Tema 3: fetch API y AbortController",
-        "### Tema 4: Reintentos y timeouts manuales",
-        "### Tema 5: Generadores \u2014 function*, yield y yield*",
-        "### Tema 6: Proxies y Reflect",
-        "## Laboratorio pr\u00e1ctico"
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
+        "#### Paso 2 \u00b7 Contexto y caso real",
+        "#### Paso 3 \u00b7 Teor\u00eda con analog\u00eda",
+        "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
+        "#### Construcci\u00f3n RutaFlow: primera consulta secuencial",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
+        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
+        "#### Paso 7 \u00b7 Cierre y evidencia",
+        "### Tema 2: try/catch en flujos as\u00edncronos"
       ]
     },
     {
       "path": "web/public/content/javascript/modulo-7.md",
-      "lines": 192,
+      "lines": 719,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5642,17 +5919,20 @@
         "# M\u00f3dulo 7: M\u00f3dulos modernos y herramientas de build",
         "## Aprende construyendo",
         "### Tema 1: ESM frente a CommonJS",
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
+        "#### Paso 2 \u00b7 Contexto y caso real",
+        "#### Paso 3 \u00b7 Teor\u00eda, modelo mental y analog\u00eda",
+        "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
+        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
+        "#### Paso 7 \u00b7 Cierre y evidencia",
         "### Tema 2: Tree-shaking y code-splitting",
-        "### Tema 3: Vite y esbuild",
-        "### Tema 4: package.json \u2014 exports, type y scripts",
-        "### Tema 5: import() din\u00e1mico e import.meta",
-        "### Tema 6: Webpack, Rollup y Babel/SWC",
-        "## Laboratorio pr\u00e1ctico"
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n"
       ]
     },
     {
       "path": "web/public/content/javascript/modulo-8.md",
-      "lines": 202,
+      "lines": 652,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5660,17 +5940,20 @@
         "# M\u00f3dulo 8: El DOM y eventos del navegador",
         "## Aprende construyendo",
         "### Tema 1: Selecci\u00f3n y manipulaci\u00f3n del DOM",
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
+        "#### Paso 2 \u00b7 Contexto y caso real",
+        "#### Paso 3 \u00b7 Teor\u00eda, modelo mental y analog\u00eda",
+        "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
+        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
+        "#### Paso 7 \u00b7 Cierre y evidencia",
         "### Tema 2: Delegaci\u00f3n de eventos",
-        "### Tema 3: Formularios y validaci\u00f3n nativa",
-        "### Tema 4: Web APIs \u2014 localStorage e IntersectionObserver",
-        "### Tema 5: ResizeObserver y MutationObserver",
-        "### Tema 6: requestAnimationFrame y requestIdleCallback",
-        "## Laboratorio pr\u00e1ctico"
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n"
       ]
     },
     {
       "path": "web/public/content/javascript/modulo-9.md",
-      "lines": 141,
+      "lines": 457,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -5678,11 +5961,15 @@
         "# M\u00f3dulo 9: Testing y calidad de c\u00f3digo",
         "## Aprende construyendo",
         "### Tema 1: Unit testing con Vitest",
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
+        "#### Paso 2 \u00b7 Contexto y caso real",
+        "#### Paso 3 \u00b7 Teor\u00eda, modelo mental y analog\u00eda",
+        "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
+        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
+        "#### Paso 7 \u00b7 Cierre y evidencia",
         "### Tema 2: Mocks, spies y fakes",
-        "### Tema 3: Mockear fetch",
-        "### Tema 4: ESLint, Prettier y cobertura de c\u00f3digo",
-        "# 100% cobertura \u2260 ausencia de bugs; solo significa \"se ejecut\u00f3\", no \"se verific\u00f3 bien\"",
-        "## Laboratorio pr\u00e1ctico"
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n"
       ]
     },
     {
@@ -6300,7 +6587,7 @@
     },
     {
       "path": "web/public/content/node/modulo-0.md",
-      "lines": 171,
+      "lines": 539,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -6309,16 +6596,19 @@
         "## Antes de comenzar: instala Node sin problemas de permisos",
         "## Aprende construyendo",
         "### Tema 1: Node no es \"JavaScript en el servidor\" sin m\u00e1s",
-        "### Tema 2: Fases del Event Loop de Node",
-        "### Tema 3: process, global y m\u00f3dulos core",
-        "### Tema 4: Event-driven architecture y non-blocking I/O",
-        "## Ruta de proyecto progresivo desde carpeta vac\u00eda",
-        "## Laboratorio pr\u00e1ctico"
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
+        "#### Paso 2 \u00b7 Contexto y caso real",
+        "#### Paso 3 \u00b7 Teor\u00eda y analog\u00eda aplicada",
+        "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde carpeta vac\u00eda",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
+        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
+        "#### Paso 7 \u00b7 Cierre y conexi\u00f3n",
+        "### Tema 2: Fases del Event Loop de Node"
       ]
     },
     {
       "path": "web/public/content/node/modulo-1.md",
-      "lines": 138,
+      "lines": 462,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -6326,15 +6616,20 @@
         "# M\u00f3dulo 1: M\u00f3dulos, npm/pnpm y gesti\u00f3n de dependencias",
         "## Aprende construyendo",
         "### Tema 1: package.json y semver",
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
+        "#### Paso 2 \u00b7 Contexto y caso real",
+        "#### Paso 3 \u00b7 Teor\u00eda y analog\u00eda aplicada",
+        "#### Paso 4 \u00b7 Demostraci\u00f3n guiada del manifiesto",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
+        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
+        "#### Paso 7 \u00b7 Cierre y conexi\u00f3n",
         "### Tema 2: Lockfiles e instalaci\u00f3n reproducible",
-        "### Tema 3: Workspaces \u2014 monorepos con npm/pnpm",
-        "### Tema 4: Scripts de ciclo de vida",
-        "## Laboratorio pr\u00e1ctico"
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n"
       ]
     },
     {
       "path": "web/public/content/node/modulo-10.md",
-      "lines": 123,
+      "lines": 329,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -6342,15 +6637,20 @@
         "# M\u00f3dulo 10: Seguridad en Node",
         "## Aprende construyendo",
         "### Tema 1: Cabeceras seguras con helmet",
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
+        "#### Paso 2 \u00b7 Contexto y caso real",
+        "#### Paso 3 \u00b7 Teor\u00eda y analog\u00eda aplicada",
+        "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
+        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
+        "#### Paso 7 \u00b7 Cierre y conexi\u00f3n",
         "### Tema 2: Rate limiting",
-        "### Tema 3: Inyecci\u00f3n SQL y sanitizaci\u00f3n contra XSS",
-        "### Tema 4: OWASP API Security Top 10 y auditor\u00eda de dependencias",
-        "## Laboratorio pr\u00e1ctico"
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n"
       ]
     },
     {
       "path": "web/public/content/node/modulo-11.md",
-      "lines": 140,
+      "lines": 358,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -6358,16 +6658,20 @@
         "# M\u00f3dulo 11: Despliegue y contenedores",
         "## Aprende construyendo",
         "### Tema 1: Dockerfile multi-stage para Node",
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
+        "#### Paso 2 \u00b7 Contexto y caso real",
+        "#### Paso 3 \u00b7 Teor\u00eda y analog\u00eda aplicada",
+        "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
+        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
+        "#### Paso 7 \u00b7 Cierre y conexi\u00f3n",
         "### Tema 2: Variables de entorno por ambiente y healthchecks",
-        "# .env.production          # .env.development",
-        "### Tema 3: PM2, contenedores y zero-downtime deploys",
-        "### Tema 4: Nginx como reverse proxy y serverless",
-        "## Laboratorio pr\u00e1ctico"
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n"
       ]
     },
     {
       "path": "web/public/content/node/modulo-12.md",
-      "lines": 261,
+      "lines": 590,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -6375,20 +6679,20 @@
         "# M\u00f3dulo 12: Proyecto integrador \u2014 API productiva",
         "## Aprende construyendo",
         "### Tema 1: Arquitectura por capas",
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
+        "#### Paso 2 \u00b7 Contexto y caso real",
+        "#### Paso 3 \u00b7 Teor\u00eda y analog\u00eda aplicada",
+        "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
+        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
+        "#### Paso 7 \u00b7 Cierre y conexi\u00f3n",
         "### Tema 2: Uniendo cada m\u00f3dulo del track",
-        "### Tema 3: Qu\u00e9 le falta a esta API para producci\u00f3n real",
-        "### Tema 4: Pr\u00f3ximos pasos \u2014 microservicios, colas de mensajes y TypeScript",
-        "### Tema 5: Posiciones espaciales y Socket.IO con orden recuperable",
-        "### Tema 6: Archivos y notificaciones push sin convertirlos en autorizaci\u00f3n",
-        "## Proyecto transversal RutaFlow: Comando idempotente de entrega",
-        "### Capacidad y fundamento",
-        "### Implementaci\u00f3n guiada",
-        "### Verificaci\u00f3n profesional"
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n"
       ]
     },
     {
       "path": "web/public/content/node/modulo-13.md",
-      "lines": 256,
+      "lines": 512,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -6396,38 +6700,41 @@
         "# M\u00f3dulo 13: TypeScript, contratos e integraciones confiables",
         "## Aprende construyendo",
         "### Tema 1: Tipos est\u00e1ticos dentro, datos desconocidos en la frontera",
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
+        "#### Paso 2 \u00b7 Contexto y caso real",
+        "#### Paso 3 \u00b7 Teor\u00eda, modelo mental y analog\u00eda",
+        "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
+        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
+        "#### Paso 7 \u00b7 Cierre y evidencia",
         "### Tema 2: Un contrato HTTP es comportamiento, no solo documentaci\u00f3n",
-        "### Tema 3: Reintentar sin duplicar el efecto",
-        "### Tema 4: Webhooks verificables y recuperaci\u00f3n por reconciliaci\u00f3n",
-        "## Revisi\u00f3n oficial de plataforma \u2014 julio de 2026",
-        "### L\u00ednea LTS, l\u00ednea Current y APIs del runtime",
-        "## Laboratorio pr\u00e1ctico",
-        "### Proyecto: API contractual con efectos recuperables",
-        "## Atlas completo de temas oficiales",
-        "### M\u00e9todo de estudio y proyecto de ampliaci\u00f3n"
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n"
       ]
     },
     {
       "path": "web/public/content/node/modulo-14.md",
-      "lines": 160,
+      "lines": 273,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
       "headings": [
-        "# M\u00f3dulo 14: Node.js Master: GraphQL, eventos y entrega",
+        "# M\u00f3dulo 14: Node.js avanzado",
         "## Aprende construyendo",
         "### Tema 1: TypeScript en Node.js",
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
+        "#### Paso 2 \u00b7 Contexto y caso real",
+        "#### Paso 3 \u00b7 Teor\u00eda, modelo mental y analog\u00eda",
+        "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
+        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
+        "#### Paso 7 \u00b7 Cierre y evidencia",
         "### Tema 2: GraphQL avanzado y Federation",
-        "### Tema 3: Microservicios, Kafka, RabbitMQ y sagas",
-        "### Tema 4: Serverless multi-cloud",
-        "### Tema 5: Docker productivo con Node",
-        "### Tema 6: CI/CD y promoci\u00f3n de artefactos",
-        "## Trazabilidad de la auditor\u00eda original"
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n"
       ]
     },
     {
       "path": "web/public/content/node/modulo-2.md",
-      "lines": 154,
+      "lines": 784,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -6435,15 +6742,20 @@
         "# M\u00f3dulo 2: Sistema de archivos y streams",
         "## Aprende construyendo",
         "### Tema 1: fs/promises frente a callbacks",
-        "### Tema 2: Streams legibles, escribibles y transform",
-        "### Tema 3: Backpressure",
-        "### Tema 4: pipeline() para componer streams de forma segura",
-        "## Laboratorio pr\u00e1ctico"
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
+        "#### Paso 2 \u00b7 Contexto y caso real",
+        "#### Paso 3 \u00b7 Teor\u00eda y analog\u00eda aplicada",
+        "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
+        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
+        "#### Paso 7 \u00b7 Cierre y conexi\u00f3n",
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
+        "#### Paso 2 \u00b7 Contexto y caso real"
       ]
     },
     {
       "path": "web/public/content/node/modulo-3.md",
-      "lines": 145,
+      "lines": 520,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -6451,15 +6763,20 @@
         "# M\u00f3dulo 3: Servidores HTTP nativos",
         "## Aprende construyendo",
         "### Tema 1: El modelo request/response",
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
+        "#### Paso 2 \u00b7 Contexto y caso real",
+        "#### Paso 3 \u00b7 Teor\u00eda y analog\u00eda aplicada",
+        "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
+        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
+        "#### Paso 7 \u00b7 Cierre y conexi\u00f3n",
         "### Tema 2: Routing manual",
-        "### Tema 3: Parsing de body y headers",
-        "### Tema 4: C\u00f3digos de estado y content negotiation",
-        "## Laboratorio pr\u00e1ctico"
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n"
       ]
     },
     {
       "path": "web/public/content/node/modulo-4.md",
-      "lines": 138,
+      "lines": 544,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -6467,15 +6784,20 @@
         "# M\u00f3dulo 4: Express/Fastify \u2014 routing y middleware",
         "## Aprende construyendo",
         "### Tema 1: Middleware \u2014 orden de ejecuci\u00f3n y next()",
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
+        "#### Paso 2 \u00b7 Contexto y caso real",
+        "#### Paso 3 \u00b7 Teor\u00eda y analog\u00eda aplicada",
+        "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
+        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
+        "#### Paso 7 \u00b7 Cierre y conexi\u00f3n",
         "### Tema 2: Routers anidados",
-        "### Tema 3: Validaci\u00f3n de entrada con Zod y manejo centralizado de errores",
-        "### Tema 4: Express frente a Fastify",
-        "## Laboratorio pr\u00e1ctico"
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n"
       ]
     },
     {
       "path": "web/public/content/node/modulo-5.md",
-      "lines": 147,
+      "lines": 627,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -6483,16 +6805,20 @@
         "# M\u00f3dulo 5: Bases de datos \u2014 drivers y ORMs",
         "## Aprende construyendo",
         "### Tema 1: PostgreSQL desde Node con el driver puro",
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
+        "#### Paso 2 \u00b7 Contexto y caso real",
+        "#### Paso 3 \u00b7 Teor\u00eda y analog\u00eda aplicada",
+        "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
+        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
+        "#### Paso 7 \u00b7 Cierre y conexi\u00f3n",
         "### Tema 2: Prisma \u2014 schema, migraciones y queries tipadas",
-        "#### C\u00f3mo leer `@id`, `@default`, `@relation` y `@@index`",
-        "### Tema 3: Pool de conexiones y transacciones",
-        "### Tema 4: MongoDB con Mongoose y otras alternativas de ORM",
-        "## Laboratorio pr\u00e1ctico"
+        "#### C\u00f3mo leer `@id`, `@default`, `@relation` y `@@index`"
       ]
     },
     {
       "path": "web/public/content/node/modulo-6.md",
-      "lines": 130,
+      "lines": 588,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -6500,15 +6826,20 @@
         "# M\u00f3dulo 6: Autenticaci\u00f3n y autorizaci\u00f3n",
         "## Aprende construyendo",
         "### Tema 1: Hashing de contrase\u00f1as",
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
+        "#### Paso 2 \u00b7 Contexto y caso real",
+        "#### Paso 3 \u00b7 Teor\u00eda y analog\u00eda aplicada",
+        "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
+        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
+        "#### Paso 7 \u00b7 Cierre y conexi\u00f3n",
         "### Tema 2: JWT \u2014 access y refresh tokens",
-        "### Tema 3: Middleware de autenticaci\u00f3n y control de roles",
-        "### Tema 4: OAuth 2.0 y Passport.js",
-        "## Laboratorio pr\u00e1ctico"
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n"
       ]
     },
     {
       "path": "web/public/content/node/modulo-7.md",
-      "lines": 131,
+      "lines": 371,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -6516,18 +6847,20 @@
         "# M\u00f3dulo 7: Testing e integraci\u00f3n continua",
         "## Aprende construyendo",
         "### Tema 1: Vitest y Supertest \u2014 pruebas de integraci\u00f3n HTTP reales",
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
+        "#### Paso 2 \u00b7 Contexto y caso real",
+        "#### Paso 3 \u00b7 Teor\u00eda y analog\u00eda aplicada",
+        "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
+        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
+        "#### Paso 7 \u00b7 Cierre y conexi\u00f3n",
         "### Tema 2: Testcontainers \u2014 bases de datos de prueba reales y ef\u00edmeras",
-        "### Tema 3: Mocks de servicios externos y CI",
-        "# .github/workflows/ci.yml",
-        "### Tema 4: Alternativas de testing y debugging",
-        "# luego, en Chrome: chrome://inspect \u2192 click en \"inspect\" bajo el proceso listado",
-        "# breakpoints, inspecci\u00f3n de variables, step-through, igual que en el navegador",
-        "## Laboratorio pr\u00e1ctico"
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n"
       ]
     },
     {
       "path": "web/public/content/node/modulo-8.md",
-      "lines": 129,
+      "lines": 481,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -6535,17 +6868,20 @@
         "# M\u00f3dulo 8: Patrones as\u00edncronos avanzados",
         "## Aprende construyendo",
         "### Tema 1: Worker Threads para trabajo CPU-bound",
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
+        "#### Paso 2 \u00b7 Contexto y caso real",
+        "#### Paso 3 \u00b7 Teor\u00eda y analog\u00eda aplicada",
+        "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
+        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
+        "#### Paso 7 \u00b7 Cierre y conexi\u00f3n",
         "### Tema 2: Cluster module y balanceo entre procesos",
-        "### Tema 3: Colas de trabajo con BullMQ",
-        "### Tema 4: PM2, memory leaks y heap snapshots",
-        "# Chrome DevTools (--inspect) \u2192 pesta\u00f1a Memory \u2192 tomar snapshot A \u2192 esperar \u2192 snapshot B",
-        "# comparar A vs B: \u00bfqu\u00e9 tipo de objeto creci\u00f3 sospechosamente entre ambos?",
-        "## Laboratorio pr\u00e1ctico"
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n"
       ]
     },
     {
       "path": "web/public/content/node/modulo-9.md",
-      "lines": 128,
+      "lines": 473,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -6553,10 +6889,15 @@
         "# M\u00f3dulo 9: Observabilidad y manejo de errores en producci\u00f3n",
         "## Aprende construyendo",
         "### Tema 1: Logging estructurado",
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
+        "#### Paso 2 \u00b7 Contexto y caso real",
+        "#### Paso 3 \u00b7 Teor\u00eda y analog\u00eda aplicada",
+        "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
+        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
+        "#### Paso 7 \u00b7 Cierre y conexi\u00f3n",
         "### Tema 2: Correlation ID por request",
-        "### Tema 3: Excepciones no capturadas y graceful shutdown",
-        "### Tema 4: REST, GraphQL y gRPC",
-        "## Laboratorio pr\u00e1ctico"
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n"
       ]
     },
     {
@@ -8260,7 +8601,7 @@
     },
     {
       "path": "web/public/content/react/modulo-0.md",
-      "lines": 154,
+      "lines": 278,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -8270,16 +8611,18 @@
         "### Crea tu primera aplicaci\u00f3n",
         "## Aprende construyendo",
         "### Tema 1: JSX es az\u00facar sint\u00e1ctica sobre createElement",
-        "### Tema 2: Listas con key estable",
-        "### Tema 3: Composici\u00f3n sobre herencia, y Fragments",
-        "### Tema 4: Renderizado condicional y estilos",
-        "## Ruta de proyecto progresivo desde carpeta vac\u00eda",
-        "## Laboratorio pr\u00e1ctico"
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
+        "#### Paso 2 \u00b7 Contexto y caso real",
+        "#### Paso 3 \u00b7 Teor\u00eda, modelo mental y analog\u00eda",
+        "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
+        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
+        "#### Paso 7 \u00b7 Cierre y evidencia"
       ]
     },
     {
       "path": "web/public/content/react/modulo-1.md",
-      "lines": 140,
+      "lines": 264,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -8287,16 +8630,20 @@
         "# M\u00f3dulo 1: Estado local y el ciclo de render",
         "## Aprende construyendo",
         "### Tema 1: useState y actualizaciones funcionales",
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
+        "#### Paso 2 \u00b7 Contexto y caso real",
+        "#### Paso 3 \u00b7 Teor\u00eda, modelo mental y analog\u00eda",
+        "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
+        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
+        "#### Paso 7 \u00b7 Cierre y evidencia",
         "#### Por qu\u00e9 los Hooks dependen del orden de llamada",
-        "### Tema 2: Render frente a commit",
-        "### Tema 3: Batching de actualizaciones",
-        "### Tema 4: Componentes controlados",
-        "## Laboratorio pr\u00e1ctico"
+        "### Tema 2: Render frente a commit"
       ]
     },
     {
       "path": "web/public/content/react/modulo-10.md",
-      "lines": 118,
+      "lines": 238,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -8304,15 +8651,20 @@
         "# M\u00f3dulo 10: Server Components y Next.js",
         "## Aprende construyendo",
         "### Tema 1: Server Components por defecto",
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
+        "#### Paso 2 \u00b7 Contexto y caso real",
+        "#### Paso 3 \u00b7 Teor\u00eda, modelo mental y analog\u00eda",
+        "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
+        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
+        "#### Paso 7 \u00b7 Cierre y evidencia",
         "### Tema 2: use client para interactividad",
-        "### Tema 3: Streaming con Suspense en el servidor",
-        "### Tema 4: Server Actions",
-        "## Laboratorio pr\u00e1ctico"
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n"
       ]
     },
     {
       "path": "web/public/content/react/modulo-11.md",
-      "lines": 110,
+      "lines": 203,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -8320,14 +8672,20 @@
         "# M\u00f3dulo 11: TypeScript con React",
         "## Aprende construyendo",
         "### Tema 1: Tipado de props y children",
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
+        "#### Paso 2 \u00b7 Contexto y caso real",
+        "#### Paso 3 \u00b7 Teor\u00eda, modelo mental y analog\u00eda",
+        "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
+        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
+        "#### Paso 7 \u00b7 Cierre y evidencia",
         "### Tema 2: Hooks gen\u00e9ricos",
-        "### Tema 3: Eventos tipados y componentes polim\u00f3rficos",
-        "## Laboratorio pr\u00e1ctico"
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n"
       ]
     },
     {
       "path": "web/public/content/react/modulo-12.md",
-      "lines": 127,
+      "lines": 220,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -8335,18 +8693,20 @@
         "# M\u00f3dulo 12: Proyecto integrador \u2014 SPA con datos reales",
         "## Aprende construyendo",
         "### Tema 1: Estructura del proyecto integrador",
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
+        "#### Paso 2 \u00b7 Contexto y caso real",
+        "#### Paso 3 \u00b7 Teor\u00eda, modelo mental y analog\u00eda",
+        "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
+        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
+        "#### Paso 7 \u00b7 Cierre y evidencia",
         "### Tema 2: Integrando rutas, TanStack Query y Zustand",
-        "### Tema 3: useTareas \u2014 hook dedicado con TanStack Query",
-        "## Proyecto transversal RutaFlow: Seguimiento del cliente",
-        "### Capacidad y fundamento",
-        "### Implementaci\u00f3n guiada",
-        "### Verificaci\u00f3n profesional",
-        "## Laboratorio pr\u00e1ctico"
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n"
       ]
     },
     {
       "path": "web/public/content/react/modulo-13.md",
-      "lines": 249,
+      "lines": 373,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -8354,15 +8714,15 @@
         "# M\u00f3dulo 13: React en producci\u00f3n \u2014 resiliencia, accesibilidad y seguridad",
         "## Aprende construyendo",
         "### Tema 1: Dise\u00f1ar estados de carga, error y recuperaci\u00f3n",
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
+        "#### Paso 2 \u00b7 Contexto y caso real",
+        "#### Paso 3 \u00b7 Teor\u00eda, modelo mental y analog\u00eda",
+        "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
+        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
+        "#### Paso 7 \u00b7 Cierre y evidencia",
         "### Tema 2: La composici\u00f3n visual debe conservar sem\u00e1ntica y foco",
-        "### Tema 3: Cliente y servidor forman una sola frontera de seguridad",
-        "### Tema 4: Hidrataci\u00f3n determinista, idioma y releases medibles",
-        "## Revisi\u00f3n oficial de plataforma \u2014 julio de 2026",
-        "### React 19.2, Compiler y seguridad de Server Components",
-        "## Laboratorio pr\u00e1ctico",
-        "### Proyecto: auditor\u00eda resiliente de la SPA y su versi\u00f3n Next.js",
-        "## Atlas completo de temas oficiales",
-        "### M\u00e9todo de estudio y proyecto de ampliaci\u00f3n"
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n"
       ]
     },
     {
@@ -8385,7 +8745,7 @@
     },
     {
       "path": "web/public/content/react/modulo-2.md",
-      "lines": 118,
+      "lines": 242,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -8393,15 +8753,20 @@
         "# M\u00f3dulo 2: Hooks esenciales",
         "## Aprende construyendo",
         "### Tema 1: useEffect \u2014 dependencias y limpieza",
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
+        "#### Paso 2 \u00b7 Contexto y caso real",
+        "#### Paso 3 \u00b7 Teor\u00eda, modelo mental y analog\u00eda",
+        "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
+        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
+        "#### Paso 7 \u00b7 Cierre y evidencia",
         "### Tema 2: useRef \u2014 valores mutables sin re-render",
-        "### Tema 3: useMemo y useCallback con criterio",
-        "### Tema 4: Reglas de los hooks, useReducer y useImperativeHandle",
-        "## Laboratorio pr\u00e1ctico"
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n"
       ]
     },
     {
       "path": "web/public/content/react/modulo-3.md",
-      "lines": 103,
+      "lines": 196,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -8409,14 +8774,20 @@
         "# M\u00f3dulo 3: Formularios y eventos",
         "## Aprende construyendo",
         "### Tema 1: React Hook Form y el problema del re-render por tecla",
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
+        "#### Paso 2 \u00b7 Contexto y caso real",
+        "#### Paso 3 \u00b7 Teor\u00eda, modelo mental y analog\u00eda",
+        "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
+        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
+        "#### Paso 7 \u00b7 Cierre y evidencia",
         "### Tema 2: Validaci\u00f3n con zod y formularios multi-paso",
-        "### Tema 3: Eventos sint\u00e9ticos",
-        "## Laboratorio pr\u00e1ctico"
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n"
       ]
     },
     {
       "path": "web/public/content/react/modulo-4.md",
-      "lines": 104,
+      "lines": 197,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -8424,14 +8795,20 @@
         "# M\u00f3dulo 4: Context API y composici\u00f3n",
         "## Aprende construyendo",
         "### Tema 1: createContext y useContext",
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
+        "#### Paso 2 \u00b7 Contexto y caso real",
+        "#### Paso 3 \u00b7 Teor\u00eda, modelo mental y analog\u00eda",
+        "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
+        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
+        "#### Paso 7 \u00b7 Cierre y evidencia",
         "### Tema 2: Cu\u00e1ndo Context es suficiente y cu\u00e1ndo no",
-        "### Tema 3: Componentes compuestos, render props y hooks personalizados",
-        "## Laboratorio pr\u00e1ctico"
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n"
       ]
     },
     {
       "path": "web/public/content/react/modulo-5.md",
-      "lines": 108,
+      "lines": 201,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -8439,14 +8816,20 @@
         "# M\u00f3dulo 5: React Router \u2014 navegaci\u00f3n",
         "## Aprende construyendo",
         "### Tema 1: Rutas anidadas y layouts compartidos",
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
+        "#### Paso 2 \u00b7 Contexto y caso real",
+        "#### Paso 3 \u00b7 Teor\u00eda, modelo mental y analog\u00eda",
+        "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
+        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
+        "#### Paso 7 \u00b7 Cierre y evidencia",
         "### Tema 2: Loaders \u2014 datos antes de renderizar",
-        "### Tema 3: Rutas protegidas y code-splitting por ruta",
-        "## Laboratorio pr\u00e1ctico"
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n"
       ]
     },
     {
       "path": "web/public/content/react/modulo-6.md",
-      "lines": 103,
+      "lines": 196,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -8454,14 +8837,20 @@
         "# M\u00f3dulo 6: Data fetching moderno",
         "## Aprende construyendo",
         "### Tema 1: useQuery y el problema que resuelve",
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
+        "#### Paso 2 \u00b7 Contexto y caso real",
+        "#### Paso 3 \u00b7 Teor\u00eda, modelo mental y analog\u00eda",
+        "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
+        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
+        "#### Paso 7 \u00b7 Cierre y evidencia",
         "### Tema 2: Mutations e invalidaci\u00f3n",
-        "### Tema 3: Optimistic updates",
-        "## Laboratorio pr\u00e1ctico"
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n"
       ]
     },
     {
       "path": "web/public/content/react/modulo-7.md",
-      "lines": 123,
+      "lines": 247,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -8469,15 +8858,20 @@
         "# M\u00f3dulo 7: Gesti\u00f3n de estado global",
         "## Aprende construyendo",
         "### Tema 1: Zustand \u2014 stores m\u00ednimos sin boilerplate",
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
+        "#### Paso 2 \u00b7 Contexto y caso real",
+        "#### Paso 3 \u00b7 Teor\u00eda, modelo mental y analog\u00eda",
+        "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
+        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
+        "#### Paso 7 \u00b7 Cierre y evidencia",
         "### Tema 2: Redux Toolkit \u2014 slices y ceremonia",
-        "### Tema 3: Estado de servidor vs estado de cliente, y cu\u00e1ndo no necesitas nada de esto",
-        "### Tema 4: Jotai, Recoil y XState como alternativas",
-        "## Laboratorio pr\u00e1ctico"
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n"
       ]
     },
     {
       "path": "web/public/content/react/modulo-8.md",
-      "lines": 97,
+      "lines": 190,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -8485,14 +8879,20 @@
         "# M\u00f3dulo 8: Testing en React",
         "## Aprende construyendo",
         "### Tema 1: Queries por rol, no por clase CSS",
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
+        "#### Paso 2 \u00b7 Contexto y caso real",
+        "#### Paso 3 \u00b7 Teor\u00eda, modelo mental y analog\u00eda",
+        "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
+        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
+        "#### Paso 7 \u00b7 Cierre y evidencia",
         "### Tema 2: Mock Service Worker (MSW)",
-        "### Tema 3: Testing de hooks personalizados",
-        "## Laboratorio pr\u00e1ctico"
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n"
       ]
     },
     {
       "path": "web/public/content/react/modulo-9.md",
-      "lines": 114,
+      "lines": 238,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -8500,10 +8900,15 @@
         "# M\u00f3dulo 9: Performance en React",
         "## Aprende construyendo",
         "### Tema 1: Medir antes de optimizar",
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
+        "#### Paso 2 \u00b7 Contexto y caso real",
+        "#### Paso 3 \u00b7 Teor\u00eda, modelo mental y analog\u00eda",
+        "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
+        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
+        "#### Paso 7 \u00b7 Cierre y evidencia",
         "### Tema 2: React.memo con criterio",
-        "### Tema 3: Virtualizaci\u00f3n y code-splitting",
-        "### Tema 4: useTransition, useDeferredValue y Fiber",
-        "## Laboratorio pr\u00e1ctico"
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n"
       ]
     },
     {
@@ -8631,7 +9036,7 @@
     },
     {
       "path": "web/public/content/spring-boot/modulo-0.md",
-      "lines": 129,
+      "lines": 244,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -8642,15 +9047,17 @@
         "# Windows PowerShell",
         "## Aprende construyendo",
         "### Tema 1: Inversi\u00f3n de control y el contenedor de Spring",
-        "### Tema 2: Inyecci\u00f3n por constructor vs por campo",
-        "### Tema 3: Estereotipos, autoconfiguraci\u00f3n y scopes",
-        "## Ruta de proyecto progresivo desde carpeta vac\u00eda",
-        "## Laboratorio pr\u00e1ctico"
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
+        "#### Paso 2 \u00b7 Contexto y caso real",
+        "#### Paso 3 \u00b7 Teor\u00eda, modelo mental y analog\u00eda",
+        "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
+        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente"
       ]
     },
     {
       "path": "web/public/content/spring-boot/modulo-1.md",
-      "lines": 105,
+      "lines": 195,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -8658,15 +9065,20 @@
         "# M\u00f3dulo 1: Spring Boot CLI y estructura de proyecto",
         "## Aprende construyendo",
         "### Tema 1: Spring Initializr y starters",
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
+        "#### Paso 2 \u00b7 Contexto y caso real",
+        "#### Paso 3 \u00b7 Teor\u00eda, modelo mental y analog\u00eda",
+        "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
+        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
+        "#### Paso 7 \u00b7 Cierre y evidencia",
         "### Tema 2: application.yml vs application.properties",
-        "### Tema 3: Perfiles y estructura por capas",
-        "# application-dev.yml",
-        "## Laboratorio pr\u00e1ctico"
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n"
       ]
     },
     {
       "path": "web/public/content/spring-boot/modulo-10.md",
-      "lines": 243,
+      "lines": 423,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -8674,17 +9086,20 @@
         "# M\u00f3dulo 10: Microservicios con Spring Cloud",
         "## Aprende construyendo",
         "### Tema 1: Config Server y service discovery",
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
+        "#### Paso 2 \u00b7 Contexto y caso real",
+        "#### Paso 3 \u00b7 Teor\u00eda, modelo mental y analog\u00eda",
+        "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
+        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
+        "#### Paso 7 \u00b7 Cierre y evidencia",
         "### Tema 2: Spring Cloud Gateway",
-        "### Tema 3: Circuit breaker con Resilience4j",
-        "### Tema 4: OAuth2/OIDC, Keycloak y Token Relay sin perder la frontera de autorizaci\u00f3n",
-        "### Tema 5: HTTP Interfaces, deadlines y descubrimiento seg\u00fan el entorno",
-        "### Tema 6: DDD para decidir l\u00edmites y propiedad de datos",
-        "## Laboratorio pr\u00e1ctico"
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n"
       ]
     },
     {
       "path": "web/public/content/spring-boot/modulo-11.md",
-      "lines": 89,
+      "lines": 188,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -8692,14 +9107,20 @@
         "# M\u00f3dulo 11: Empaquetado y despliegue",
         "## Aprende construyendo",
         "### Tema 1: Fat JAR vs capas de Docker",
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
+        "#### Paso 2 \u00b7 Contexto y caso real",
+        "#### Paso 3 \u00b7 Teor\u00eda, modelo mental y analog\u00eda",
+        "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
+        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
+        "#### Paso 7 \u00b7 Cierre y evidencia",
         "### Tema 2: GraalVM native image",
-        "### Tema 3: Health checks para Kubernetes",
-        "## Laboratorio pr\u00e1ctico"
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n"
       ]
     },
     {
       "path": "web/public/content/spring-boot/modulo-12.md",
-      "lines": 126,
+      "lines": 222,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -8707,18 +9128,20 @@
         "# M\u00f3dulo 12: Proyecto integrador \u2014 microservicio productivo",
         "## Aprende construyendo",
         "### Tema 1: Arquitectura del microservicio integrador",
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
+        "#### Paso 2 \u00b7 Contexto y caso real",
+        "#### Paso 3 \u00b7 Teor\u00eda, modelo mental y analog\u00eda",
+        "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
+        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
+        "#### Paso 7 \u00b7 Cierre y evidencia",
         "### Tema 2: Integrando seguridad, persistencia y observabilidad",
-        "### Tema 3: Cierre del track y pr\u00f3ximos pasos",
-        "## Proyecto transversal RutaFlow: Confirmaci\u00f3n transaccional y outbox",
-        "### Capacidad y fundamento",
-        "### Implementaci\u00f3n guiada",
-        "### Verificaci\u00f3n profesional",
-        "## Laboratorio pr\u00e1ctico"
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n"
       ]
     },
     {
       "path": "web/public/content/spring-boot/modulo-13.md",
-      "lines": 236,
+      "lines": 356,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -8726,20 +9149,20 @@
         "# M\u00f3dulo 13: Consistencia, contratos y operaci\u00f3n distribuida",
         "## Aprende construyendo",
         "### Tema 1: `@Transactional` funciona en una frontera, no como encantamiento",
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
+        "#### Paso 2 \u00b7 Contexto y caso real",
+        "#### Paso 3 \u00b7 Teor\u00eda, modelo mental y analog\u00eda",
+        "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
+        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
+        "#### Paso 7 \u00b7 Cierre y evidencia",
         "### Tema 2: Recuperaci\u00f3n implica duplicaci\u00f3n segura",
-        "### Tema 3: Contratos ejecutables protegen despliegues independientes",
-        "### Tema 4: Observabilidad sirve a un objetivo y a una decisi\u00f3n",
-        "## Revisi\u00f3n oficial de plataforma \u2014 julio de 2026",
-        "### Spring Boot 4.1 y actualizaci\u00f3n con compatibilidad comprobada",
-        "## Laboratorio pr\u00e1ctico",
-        "### Proyecto: microservicio comprobado bajo fallos",
-        "## Atlas completo de temas oficiales",
-        "### M\u00e9todo de estudio y proyecto de ampliaci\u00f3n"
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n"
       ]
     },
     {
       "path": "web/public/content/spring-boot/modulo-14.md",
-      "lines": 150,
+      "lines": 330,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -8747,16 +9170,20 @@
         "# M\u00f3dulo 14: Backend de entregas: MySQL espacial, archivos y tiempo real",
         "## Aprende construyendo",
         "### Tema 1: CRUD API y contratos",
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
+        "#### Paso 2 \u00b7 Contexto y caso real",
+        "#### Paso 3 \u00b7 Teor\u00eda, modelo mental y analog\u00eda",
+        "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
+        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
+        "#### Paso 7 \u00b7 Cierre y evidencia",
         "### Tema 2: MySQL y datos espaciales",
-        "### Tema 3: JPA e Hibernate Spatial",
-        "### Tema 4: JWT Bearer y autorizaci\u00f3n por roles",
-        "### Tema 5: Socket.IO y tiempo real",
-        "### Tema 6: Archivos y notificaciones push"
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n"
       ]
     },
     {
       "path": "web/public/content/spring-boot/modulo-15.md",
-      "lines": 159,
+      "lines": 339,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -8764,17 +9191,20 @@
         "# M\u00f3dulo 15: Spring Master: hexagonal, reactivo y microservicios",
         "## Aprende construyendo",
         "### Tema 1: WebFlux, Mono, Flux y Netty",
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
+        "#### Paso 2 \u00b7 Contexto y caso real",
+        "#### Paso 3 \u00b7 Teor\u00eda, modelo mental y analog\u00eda",
+        "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
+        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
+        "#### Paso 7 \u00b7 Cierre y evidencia",
         "### Tema 2: Testing avanzado con slices y Testcontainers",
-        "### Tema 3: Arquitectura hexagonal",
-        "### Tema 4: Spring Cloud y Resilience4j",
-        "### Tema 5: Sagas y CQRS",
-        "### Tema 6: Event Sourcing y Outbox",
-        "## Trazabilidad de la auditor\u00eda original"
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n"
       ]
     },
     {
       "path": "web/public/content/spring-boot/modulo-2.md",
-      "lines": 107,
+      "lines": 197,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -8782,14 +9212,20 @@
         "# M\u00f3dulo 2: REST APIs con Spring Web",
         "## Aprende construyendo",
         "### Tema 1: Por qu\u00e9 DTOs en vez de entidades directamente",
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
+        "#### Paso 2 \u00b7 Contexto y caso real",
+        "#### Paso 3 \u00b7 Teor\u00eda, modelo mental y analog\u00eda",
+        "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
+        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
+        "#### Paso 7 \u00b7 Cierre y evidencia",
         "### Tema 2: Validaci\u00f3n con Bean Validation y ResponseEntity",
-        "### Tema 3: Manejo centralizado de errores con @ControllerAdvice",
-        "## Laboratorio pr\u00e1ctico"
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n"
       ]
     },
     {
       "path": "web/public/content/spring-boot/modulo-3.md",
-      "lines": 102,
+      "lines": 192,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -8797,14 +9233,20 @@
         "# M\u00f3dulo 3: Persistencia con Spring Data JPA",
         "## Aprende construyendo",
         "### Tema 1: Entidades y repositorios derivados",
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
+        "#### Paso 2 \u00b7 Contexto y caso real",
+        "#### Paso 3 \u00b7 Teor\u00eda, modelo mental y analog\u00eda",
+        "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
+        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
+        "#### Paso 7 \u00b7 Cierre y evidencia",
         "### Tema 2: El problema N+1 y su correcci\u00f3n",
-        "### Tema 3: Migraciones con Flyway",
-        "## Laboratorio pr\u00e1ctico"
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n"
       ]
     },
     {
       "path": "web/public/content/spring-boot/modulo-4.md",
-      "lines": 112,
+      "lines": 202,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -8812,14 +9254,20 @@
         "# M\u00f3dulo 4: Spring Security",
         "## Aprende construyendo",
         "### Tema 1: SecurityFilterChain moderno",
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
+        "#### Paso 2 \u00b7 Contexto y caso real",
+        "#### Paso 3 \u00b7 Teor\u00eda, modelo mental y analog\u00eda",
+        "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
+        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
+        "#### Paso 7 \u00b7 Cierre y evidencia",
         "### Tema 2: Filtro JWT y autorizaci\u00f3n por rol",
-        "### Tema 3: CORS y CSRF",
-        "## Laboratorio pr\u00e1ctico"
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n"
       ]
     },
     {
       "path": "web/public/content/spring-boot/modulo-5.md",
-      "lines": 98,
+      "lines": 188,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -8827,14 +9275,20 @@
         "# M\u00f3dulo 5: Configuraci\u00f3n, perfiles y manejo de errores",
         "## Aprende construyendo",
         "### Tema 1: @ConfigurationProperties tipado",
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
+        "#### Paso 2 \u00b7 Contexto y caso real",
+        "#### Paso 3 \u00b7 Teor\u00eda, modelo mental y analog\u00eda",
+        "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
+        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
+        "#### Paso 7 \u00b7 Cierre y evidencia",
         "### Tema 2: Fallar r\u00e1pido al arranque",
-        "### Tema 3: Manejo global de excepciones consistente entre entornos",
-        "## Laboratorio pr\u00e1ctico"
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n"
       ]
     },
     {
       "path": "web/public/content/spring-boot/modulo-6.md",
-      "lines": 108,
+      "lines": 198,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -8842,14 +9296,20 @@
         "# M\u00f3dulo 6: Testing en Spring Boot",
         "## Aprende construyendo",
         "### Tema 1: Slices de testing \u2014 @WebMvcTest",
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
+        "#### Paso 2 \u00b7 Contexto y caso real",
+        "#### Paso 3 \u00b7 Teor\u00eda, modelo mental y analog\u00eda",
+        "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
+        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
+        "#### Paso 7 \u00b7 Cierre y evidencia",
         "### Tema 2: @DataJpaTest con Testcontainers",
-        "### Tema 3: @SpringBootTest completo y estrategia de pir\u00e1mide de tests",
-        "## Laboratorio pr\u00e1ctico"
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n"
       ]
     },
     {
       "path": "web/public/content/spring-boot/modulo-7.md",
-      "lines": 109,
+      "lines": 199,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -8857,14 +9317,20 @@
         "# M\u00f3dulo 7: Observabilidad con Actuator",
         "## Aprende construyendo",
         "### Tema 1: Actuator y health checks personalizados",
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
+        "#### Paso 2 \u00b7 Contexto y caso real",
+        "#### Paso 3 \u00b7 Teor\u00eda, modelo mental y analog\u00eda",
+        "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
+        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
+        "#### Paso 7 \u00b7 Cierre y evidencia",
         "### Tema 2: M\u00e9tricas de negocio con Micrometer",
-        "### Tema 3: Liveness vs readiness",
-        "## Laboratorio pr\u00e1ctico"
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n"
       ]
     },
     {
       "path": "web/public/content/spring-boot/modulo-8.md",
-      "lines": 105,
+      "lines": 195,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -8872,14 +9338,20 @@
         "# M\u00f3dulo 8: Mensajer\u00eda \u2014 Kafka/RabbitMQ",
         "## Aprende construyendo",
         "### Tema 1: Producers y consumers con Spring Kafka",
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
+        "#### Paso 2 \u00b7 Contexto y caso real",
+        "#### Paso 3 \u00b7 Teor\u00eda, modelo mental y analog\u00eda",
+        "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
+        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
+        "#### Paso 7 \u00b7 Cierre y evidencia",
         "### Tema 2: Dead-letter queue",
-        "### Tema 3: Kafka frente a RabbitMQ",
-        "## Laboratorio pr\u00e1ctico"
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n"
       ]
     },
     {
       "path": "web/public/content/spring-boot/modulo-9.md",
-      "lines": 303,
+      "lines": 393,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -8900,9 +9372,26 @@
     },
     {
       "path": "web/public/content/topic-index.json",
-      "lines": 4051,
+      "lines": 4099,
       "kind": "course-content",
       "symbols": [],
+      "imports": [],
+      "headings": []
+    },
+    {
+      "path": "web/public/floci-landing.html",
+      "lines": 734,
+      "kind": "project-file",
+      "symbols": [
+        "menuToggle",
+        "mobileMenu",
+        "inicio",
+        "por-que",
+        "emuladores",
+        "ia",
+        "herramientas",
+        "licencia"
+      ],
       "imports": [],
       "headings": []
     },
@@ -10691,7 +11180,7 @@
     },
     {
       "path": "web/src/app/app.spec.ts",
-      "lines": 141,
+      "lines": 155,
       "kind": "angular-app",
       "symbols": [],
       "imports": [
@@ -10930,7 +11419,7 @@
     },
     {
       "path": "web/src/app/course/lesson-viewer.scss",
-      "lines": 322,
+      "lines": 334,
       "kind": "angular-app",
       "symbols": [],
       "imports": [],
@@ -10938,7 +11427,7 @@
     },
     {
       "path": "web/src/app/course/lesson-viewer.ts",
-      "lines": 627,
+      "lines": 679,
       "kind": "angular-app",
       "symbols": [
         "LessonViewerComponent",
@@ -11074,7 +11563,7 @@
     },
     {
       "path": "web/src/app/progress.service.spec.ts",
-      "lines": 18,
+      "lines": 22,
       "kind": "angular-app",
       "symbols": [],
       "imports": [
@@ -11085,7 +11574,7 @@
     },
     {
       "path": "web/src/app/progress.service.ts",
-      "lines": 77,
+      "lines": 93,
       "kind": "angular-app",
       "symbols": [
         "ProgressService",
@@ -11253,7 +11742,7 @@
     },
     {
       "path": "web/src/app/tracks/node.track.ts",
-      "lines": 212,
+      "lines": 213,
       "kind": "angular-app",
       "symbols": [],
       "imports": [
