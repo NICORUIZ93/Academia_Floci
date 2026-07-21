@@ -25,12 +25,12 @@
     "devops": {
       "topics": 91,
       "code": 85,
-      "commentedCode": 7,
+      "commentedCode": 8,
       "mermaid": 7,
       "asciiVisual": 84,
       "misleadingDiagramLabel": 0,
-      "filePath": 57,
-      "runCommand": 68,
+      "filePath": 64,
+      "runCommand": 74,
       "officialSource": 26
     },
     "javascript": {
@@ -1700,13 +1700,6 @@
       "track": "devops",
       "module": 9,
       "topic": "Tema 4: Alertmanager y reglas de alerta",
-      "missingCode": false,
-      "missingComments": true
-    },
-    {
-      "track": "devops",
-      "module": 9,
-      "topic": "Tema 5: SLI, SLO, SLA",
       "missingCode": false,
       "missingComments": true
     },

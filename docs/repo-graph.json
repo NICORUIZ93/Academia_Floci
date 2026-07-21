@@ -137,7 +137,7 @@
     },
     {
       "path": "docs/code-visual-quality.json",
-      "lines": 4795,
+      "lines": 4788,
       "kind": "project-file",
       "symbols": [],
       "imports": [],
@@ -4371,7 +4371,7 @@
     },
     {
       "path": "web/public/content/devops/modulo-9.md",
-      "lines": 235,
+      "lines": 650,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -4379,13 +4379,15 @@
         "# M\u00f3dulo 9: Observabilidad con Prometheus y Grafana",
         "## Aprende construyendo",
         "### Tema 1: Modelo de m\u00e9tricas de Prometheus \u2014 counter, gauge, histogram",
-        "### Tema 2: PromQL esencial",
-        "### Tema 3: Dashboards en Grafana",
-        "### Tema 4: Alertmanager y reglas de alerta",
-        "### Tema 5: SLI, SLO, SLA",
-        "### Tema 6: OpenTelemetry como est\u00e1ndar de instrumentaci\u00f3n",
-        "### Tema 7: M\u00e9tricas DORA \u2014 Lead Time, Deployment Frequency, MTTR, Change Failure Rate",
-        "## Laboratorio pr\u00e1ctico"
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
+        "#### Paso 2 \u00b7 Contexto y caso real",
+        "#### Paso 3 \u00b7 Teor\u00eda con analog\u00eda",
+        "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
+        "#### Construcci\u00f3n RutaFlow: instrumentaci\u00f3n m\u00ednima del backend",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
+        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
+        "#### Paso 7 \u00b7 Cierre y evidencia",
+        "### Tema 2: PromQL esencial"
       ]
     },
     {
