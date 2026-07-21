@@ -113,13 +113,13 @@
     "android": {
       "topics": 49,
       "code": 43,
-      "commentedCode": 22,
+      "commentedCode": 25,
       "mermaid": 6,
-      "asciiVisual": 34,
+      "asciiVisual": 36,
       "misleadingDiagramLabel": 0,
-      "filePath": 24,
-      "runCommand": 23,
-      "officialSource": 18
+      "filePath": 27,
+      "runCommand": 26,
+      "officialSource": 21
     },
     "ios": {
       "topics": 51,
@@ -3830,27 +3830,6 @@
       "topic": "Tema 6: AnimatedContent y AnimationSpec",
       "missingCode": true,
       "missingComments": false
-    },
-    {
-      "track": "android",
-      "module": 7,
-      "topic": "Tema 1: Configuración básica de Hilt",
-      "missingCode": false,
-      "missingComments": true
-    },
-    {
-      "track": "android",
-      "module": 7,
-      "topic": "Tema 2: @Provides y @Binds",
-      "missingCode": false,
-      "missingComments": true
-    },
-    {
-      "track": "android",
-      "module": 7,
-      "topic": "Tema 3: Scopes y testing con Hilt",
-      "missingCode": false,
-      "missingComments": true
     },
     {
       "track": "android",

@@ -137,7 +137,7 @@
     },
     {
       "path": "docs/code-visual-quality.json",
-      "lines": 4662,
+      "lines": 4641,
       "kind": "project-file",
       "symbols": [],
       "imports": [],
@@ -3079,7 +3079,7 @@
     },
     {
       "path": "web/public/content/android/modulo-7.md",
-      "lines": 142,
+      "lines": 409,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -3087,9 +3087,15 @@
         "# M\u00f3dulo 7: Inyecci\u00f3n de dependencias con Hilt",
         "## Aprende construyendo",
         "### Tema 1: Configuraci\u00f3n b\u00e1sica de Hilt",
-        "### Tema 2: @Provides y @Binds",
-        "### Tema 3: Scopes y testing con Hilt",
-        "## Laboratorio pr\u00e1ctico"
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
+        "#### Paso 2 \u00b7 Contexto y caso real",
+        "#### Paso 3 \u00b7 Teor\u00eda con analog\u00eda",
+        "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
+        "# python modela el mismo grafo de dependencias para verificar el principio",
+        "#### Construcci\u00f3n RutaFlow: contenedor de dependencias del proyecto",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
+        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
+        "#### Paso 7 \u00b7 Cierre y evidencia"
       ]
     },
     {
