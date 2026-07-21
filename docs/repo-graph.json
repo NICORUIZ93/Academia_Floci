@@ -137,7 +137,7 @@
     },
     {
       "path": "docs/code-visual-quality.json",
-      "lines": 4473,
+      "lines": 4459,
       "kind": "project-file",
       "symbols": [],
       "imports": [],
@@ -224,7 +224,7 @@
     },
     {
       "path": "docs/prerequisite-graph.json",
-      "lines": 9974,
+      "lines": 9985,
       "kind": "project-file",
       "symbols": [],
       "imports": [],
@@ -252,7 +252,7 @@
     },
     {
       "path": "docs/seven-step-methodology.json",
-      "lines": 23871,
+      "lines": 23897,
       "kind": "project-file",
       "symbols": [],
       "imports": [],
@@ -308,7 +308,7 @@
     },
     {
       "path": "docs/topic-learning-quality.json",
-      "lines": 19283,
+      "lines": 19304,
       "kind": "project-file",
       "symbols": [],
       "imports": [],
@@ -6125,7 +6125,7 @@
     },
     {
       "path": "web/public/content/kotlin-multiplatform/modulo-1.md",
-      "lines": 119,
+      "lines": 531,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -6133,9 +6133,15 @@
         "# M\u00f3dulo 1: Programaci\u00f3n funcional en Kotlin",
         "## Aprende construyendo",
         "### Tema 1: Funciones de orden superior",
-        "### Tema 2: Scope functions",
-        "### Tema 3: Sealed classes y colecciones funcionales",
-        "## Laboratorio pr\u00e1ctico"
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
+        "#### Paso 2 \u00b7 Contexto y caso real",
+        "#### Paso 3 \u00b7 Teor\u00eda con analog\u00eda",
+        "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
+        "# python reproduce despu\u00e9s el mismo patr\u00f3n de funci\u00f3n de orden superior",
+        "#### Construcci\u00f3n RutaFlow: procesar cada parada de la ruta",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada \u2014 repetici\u00f3n progresiva",
+        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
+        "#### Paso 7 \u00b7 Cierre y evidencia"
       ]
     },
     {
@@ -9506,7 +9512,7 @@
     },
     {
       "path": "web/public/content/topic-index.json",
-      "lines": 4103,
+      "lines": 4107,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -11866,7 +11872,7 @@
     },
     {
       "path": "web/src/app/tracks/kotlin-multiplatform.track.ts",
-      "lines": 182,
+      "lines": 183,
       "kind": "angular-app",
       "symbols": [],
       "imports": [

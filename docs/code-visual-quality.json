@@ -100,15 +100,15 @@
       "officialSource": 58
     },
     "kotlin-multiplatform": {
-      "topics": 47,
-      "code": 41,
-      "commentedCode": 12,
-      "mermaid": 9,
-      "asciiVisual": 10,
+      "topics": 48,
+      "code": 42,
+      "commentedCode": 15,
+      "mermaid": 11,
+      "asciiVisual": 12,
       "misleadingDiagramLabel": 0,
-      "filePath": 9,
-      "runCommand": 18,
-      "officialSource": 4
+      "filePath": 13,
+      "runCommand": 21,
+      "officialSource": 8
     },
     "android": {
       "topics": 49,
@@ -3429,20 +3429,6 @@
       "track": "spring-boot",
       "module": 9,
       "topic": "Tema 3: Cuándo WebFlux vale la complejidad, y R2DBC",
-      "missingCode": false,
-      "missingComments": true
-    },
-    {
-      "track": "kotlin-multiplatform",
-      "module": 1,
-      "topic": "Tema 1: Funciones de orden superior",
-      "missingCode": false,
-      "missingComments": true
-    },
-    {
-      "track": "kotlin-multiplatform",
-      "module": 1,
-      "topic": "Tema 2: Scope functions",
       "missingCode": false,
       "missingComments": true
     },

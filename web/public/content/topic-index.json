@@ -2976,6 +2976,10 @@
       {
         "title": "Sealed classes y colecciones funcionales",
         "fragment": "tema-3-sealed-classes-y-colecciones-funcionales"
+      },
+      {
+        "title": "Lambdas con receptor y builders tipo DSL",
+        "fragment": "tema-4-lambdas-con-receptor-y-builders-tipo-dsl"
       }
     ],
     "10": [

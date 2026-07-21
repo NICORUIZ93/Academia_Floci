@@ -148,18 +148,18 @@
       "genericScaffold": 0
     },
     "kotlin-multiplatform": {
-      "topics": 47,
-      "explanation": 47,
-      "code": 47,
-      "visual": 10,
-      "filePath": 9,
-      "runCommand": 18,
-      "expectedResult": 13,
-      "practice": 19,
-      "project": 10,
-      "modelMental": 47,
-      "limitsDecision": 27,
-      "practicable": 4,
+      "topics": 48,
+      "explanation": 48,
+      "code": 48,
+      "visual": 14,
+      "filePath": 13,
+      "runCommand": 21,
+      "expectedResult": 14,
+      "practice": 20,
+      "project": 14,
+      "modelMental": 48,
+      "limitsDecision": 30,
+      "practicable": 8,
       "genericScaffold": 0
     },
     "node": {
@@ -14067,18 +14067,18 @@
         "criteria": {
           "explanation": true,
           "code": true,
-          "visual": false,
-          "filePath": false,
-          "runCommand": false,
+          "visual": true,
+          "filePath": true,
+          "runCommand": true,
           "expectedResult": true,
           "practice": true,
-          "project": false,
+          "project": true,
           "modelMental": true,
-          "limitsDecision": false
+          "limitsDecision": true
         },
         "classification": {
-          "rubricScore": 7,
-          "practicable": false,
+          "rubricScore": 16,
+          "practicable": true,
           "genericScaffold": false
         }
       },
@@ -14088,18 +14088,18 @@
         "criteria": {
           "explanation": true,
           "code": true,
-          "visual": false,
-          "filePath": false,
-          "runCommand": false,
+          "visual": true,
+          "filePath": true,
+          "runCommand": true,
           "expectedResult": true,
           "practice": true,
-          "project": false,
+          "project": true,
           "modelMental": true,
           "limitsDecision": true
         },
         "classification": {
-          "rubricScore": 8,
-          "practicable": false,
+          "rubricScore": 16,
+          "practicable": true,
           "genericScaffold": false
         }
       },
@@ -14109,18 +14109,39 @@
         "criteria": {
           "explanation": true,
           "code": true,
-          "visual": false,
-          "filePath": false,
+          "visual": true,
+          "filePath": true,
           "runCommand": true,
           "expectedResult": true,
           "practice": true,
-          "project": false,
+          "project": true,
           "modelMental": true,
-          "limitsDecision": false
+          "limitsDecision": true
         },
         "classification": {
-          "rubricScore": 9,
-          "practicable": false,
+          "rubricScore": 16,
+          "practicable": true,
+          "genericScaffold": false
+        }
+      },
+      {
+        "module": 1,
+        "topic": "Tema 4: Lambdas con receptor y builders tipo DSL",
+        "criteria": {
+          "explanation": true,
+          "code": true,
+          "visual": true,
+          "filePath": true,
+          "runCommand": true,
+          "expectedResult": true,
+          "practice": true,
+          "project": true,
+          "modelMental": true,
+          "limitsDecision": true
+        },
+        "classification": {
+          "rubricScore": 16,
+          "practicable": true,
           "genericScaffold": false
         }
       },

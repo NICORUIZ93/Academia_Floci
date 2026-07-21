@@ -1,101 +1,511 @@
 # Módulo 1: Programación funcional en Kotlin
 
+Cada tema de este módulo se practica hasta que la sintaxis sale sin pensarla, con su propia repetición progresiva y su propio reto de memoria — funciones de orden superior, scope functions, sealed classes y lambdas con receptor son patrones que vas a usar en cada línea de código del resto del track.
+
 
 ## Aprende construyendo
 
 ### Tema 1: Funciones de orden superior
 
-**Conceptos clave:** funciones como parámetros, sintaxis de lambda al final.
+#### Paso 1 · Objetivo y preparación
 
-`fun procesarLista(lista: List<Int>, accion: (Int) -> Unit) { lista.forEach { accion(it) } }` declara una función de orden superior que recibe otra función como parámetro (`accion`, de tipo `(Int) -> Unit`, indicando que recibe un `Int` y no devuelve nada relevante), permitiendo que quien invoca `procesarLista` proporcione un comportamiento personalizado para aplicar a cada elemento sin que `procesarLista` en sí necesite conocer de antemano qué acción específica se ejecutará: `procesarLista(listOf(1, 2, 3)) { numero -> println(numero * 2) }` demuestra la sintaxis idiomática de Kotlin donde, si el último parámetro de una función es una lambda, puede escribirse fuera de los paréntesis directamente después de la llamada, produciendo una sintaxis que se lee casi como una construcción de lenguaje nativa en vez de una llamada a función ordinaria.
+Al finalizar podrás declarar una función que recibe otra función como parámetro, y usar la sintaxis de lambda final de Kotlin para invocarla de forma idiomática.
 
-Esta capacidad de tratar funciones como valores de primera clase (que pueden pasarse como argumentos, devolverse como resultados, o almacenarse en variables) es la misma capacidad estudiada de forma más general para JavaScript en el Módulo 4 del track de JavaScript, aquí combinada con el tipado estático de Kotlin: la firma de tipo `(Int) -> Unit` documenta explícitamente, verificado por el compilador, exactamente qué forma debe tener cualquier función pasada como argumento, detectando en tiempo de compilación un error si se intenta pasar una función con una firma incompatible.
+**Conocimiento previo:** Módulo 0 completo (null safety, data class, when, destructuring).
 
-**Analogía:** una función de orden superior es como una máquina de procesamiento genérica que acepta una herramienta intercambiable específica para aplicar a cada pieza que pasa por ella, sin que la máquina misma necesite saber de antemano qué herramienta específica se usará, solo que debe encajar en la ranura de conexión esperada (la firma de tipo de la función).
+#### Paso 2 · Contexto y caso real
 
-**¿Por qué es importante?** Las funciones de orden superior permiten personalizar comportamiento sin que la función que las recibe conozca de antemano ese comportamiento específico, con el compilador verificando que la firma de la función pasada sea compatible.
+**¿Por qué es importante?** Los callbacks `onClick`/`onValueChange` en Jetpack Compose (Módulo 2 del track Android), o una estrategia de reintento configurable al llamar una API, dependen de pasar comportamiento como parámetro sin que la función receptora conozca de antemano qué hará ese comportamiento.
 
-**Casos de uso reales:**
-- Callbacks `onClick`/`onValueChange` en Jetpack Compose (Módulo 2 del track Android): la función del framework no conoce de antemano qué hará tu app al pulsar un botón.
-- Estrategias de reintento configurables al llamar una API: pasar la lógica de backoff como parámetro en vez de repetirla en cada llamada de red.
-- Operaciones de colección personalizadas (`ordenarPor { it.campo }`) reutilizando la misma función base con distintos criterios.
+#### Paso 3 · Teoría con analogía
 
-**Código del ejemplo:**
+**Conceptos clave:** funciones como parámetros, sintaxis de lambda al final, firma de tipo de función.
 
-```kotlin
+`fun procesarLista(lista: List<Int>, accion: (Int) -> Unit) { lista.forEach { accion(it) } }` declara una función de orden superior que recibe `accion: (Int) -> Unit` como parámetro. `procesarLista(listOf(1, 2, 3)) { numero -> println(numero * 2) }` demuestra que si el último parámetro es una lambda, puede escribirse fuera de los paréntesis. La firma de tipo `(Int) -> Unit` es verificada por el compilador: pasar una función con firma incompatible es un error de compilación.
+
+**Analogía:** una función de orden superior es una máquina de procesamiento genérica que acepta una herramienta intercambiable, sin saber de antemano cuál, solo que debe encajar en la ranura esperada (la firma de tipo).
+
+**Diagrama:**
+
+```mermaid
+flowchart LR
+  A["procesarLista(lista, accion)"] --> B["lista.forEach { accion(it) }"]
+  C["accion: (Int) -> Unit"] --> A
+  B --> D[cada elemento pasa por la función recibida]
+```
+
+#### Paso 4 · Demostración guiada desde cero
+
+Desde una carpeta vacía (o continuando en `academia-kmp`, o créala con `mkdir -p academia-kmp` si es tu primera vez), crea `shared/src/commonMain/kotlin/com/academia/kmp/OrdenSuperior.kt`:
+
+```bash
+# python reproduce después el mismo patrón de función de orden superior
+mkdir -p academia-kmp/shared/src/commonMain/kotlin/com/academia/kmp
+cd academia-kmp
+cat > shared/src/commonMain/kotlin/com/academia/kmp/OrdenSuperior.kt <<'EOF'
+package com.academia.kmp
+
 fun procesarLista(lista: List<Int>, accion: (Int) -> Unit) {
     lista.forEach { accion(it) }
 }
-procesarLista(listOf(1, 2, 3)) { numero -> println(numero * 2) }
+EOF
+python3 -c "
+codigo = open('shared/src/commonMain/kotlin/com/academia/kmp/OrdenSuperior.kt').read()
+assert 'accion: (Int) -> Unit' in codigo, 'falta la firma de tipo de función como parámetro'
+assert 'lista.forEach { accion(it) }' in codigo, 'falta invocar la función recibida sobre cada elemento'
+print('OrdenSuperior.kt: procesarLista recibe comportamiento sin conocerlo de antemano')
+"
 ```
+
+**Explicación línea por línea:** `accion: (Int) -> Unit` documenta que el parámetro es una función que recibe un `Int` y no devuelve nada relevante; `lista.forEach { accion(it) }` invoca esa función recibida sobre cada elemento, sin que `procesarLista` sepa qué hace `accion` internamente.
+
+Ejecuta en Python el mismo patrón (funciones como valores de primera clase), pasando comportamiento distinto sin modificar la función que lo recibe:
+
+```bash
+python3 -c "
+def procesar_lista(lista, accion):
+    for elemento in lista:
+        accion(elemento)
+
+resultados = []
+procesar_lista([1, 2, 3], lambda numero: resultados.append(numero * 2))
+print('duplicados:', resultados)
+
+resultados_cuadrado = []
+procesar_lista([1, 2, 3], lambda numero: resultados_cuadrado.append(numero ** 2))
+print('al cuadrado:', resultados_cuadrado)
+"
+```
+
+**Resultado esperado:** `duplicados: [2, 4, 6]` y `al cuadrado: [1, 4, 9]`, confirmando que la misma función `procesar_lista` produce comportamientos completamente distintos según la función recibida, sin ninguna modificación a `procesar_lista` en sí.
+
+**Fallo deliberado:** intenta pasar `accion: (String) -> Unit` en Kotlin donde se espera `(Int) -> Unit` (por ejemplo, `procesarLista(listOf(1,2,3)) { texto: String -> println(texto) }`). El compilador rechaza el código inmediatamente porque la firma de tipo no coincide — diagnostica confirmando que la verificación de tipos de funciones de orden superior ocurre en compilación, no como un error silencioso en tiempo de ejecución (a diferencia de Python, donde `procesar_lista([1,2,3], lambda texto: texto.upper())` fallaría recién al ejecutarse, con un `AttributeError` sobre un `int`).
+
+#### Construcción RutaFlow: procesar cada parada de la ruta
+
+Declara `fun procesarParadas(paradas: List<Parada>, accion: (Parada) -> Unit)` en RutaFlow, reutilizándola tanto para imprimir un log de cada parada como para calcular el tiempo estimado, sin duplicar el recorrido de la lista.
+
+#### Paso 5 · Práctica guiada — repetición progresiva
+
+1. `fun aplicarATodos(lista: List<Int>, f: (Int) -> Int): List<Int> = lista.map(f)` — usa `map` en vez de `forEach` para transformar y devolver.
+2. `procesarLista(listOf(4, 5, 6)) { n -> println(n + 10) }` — el mismo patrón, otra operación.
+3. Declara `fun repetir(veces: Int, accion: () -> Unit)` (sin parámetros) y llama a `repetir(3) { println("hola") }`.
+4. Escribe de memoria (sin mirar) una función de orden superior con una firma `(Double) -> Boolean`.
+
+**Pista:** identifica primero cuántos parámetros recibe la función que vas a pasar y qué devuelve, antes de escribir la firma de tipo completa entre paréntesis.
+
+#### Paso 6 · Práctica independiente
+
+**Completa el código:** rellena el espacio para que `transformar` reciba una función y la aplique al valor:
+
+```kotlin
+fun transformar(valor: Int, f: ____ -> Int): Int = f(valor)
+val resultado = transformar(5) { it * 3 }
+```
+
+**Reto de memoria sin mirar:** cierra este documento y escribe, solo de memoria, una función de orden superior que reciba una lista de `String` y una función `(String) -> Boolean`, devolviendo cuántos elementos cumplen esa condición. Compara después contra el patrón del Paso 4.
+
+#### Paso 7 · Cierre y evidencia
+
+Ya declaras funciones que reciben comportamiento como parámetro, usas la sintaxis de lambda final, y confirmas que el compilador verifica la firma de tipo antes de ejecutar nada. El siguiente tema usa scope functions, frecuentemente combinadas con lambdas pasadas como parámetro. **Evidencia:** entrega el resultado de `duplicados` y `al_cuadrado` del Paso 4, y explica por qué Kotlin rechaza una firma incompatible en compilación mientras Python lo haría en ejecución. Fuente oficial: [Kotlin docs — Higher-order functions and lambdas](https://kotlinlang.org/docs/lambdas.html).
+
+**Errores comunes:** olvidar que si la lambda es el único parámetro, los paréntesis vacíos son opcionales (`repetir(3) { ... }`, no `repetir(3) () { ... }`); declarar la firma de tipo con el orden de parámetros invertido respecto a como realmente se invoca la función.
+
+**Cuándo no usarlo:** para una operación que siempre hace exactamente lo mismo sin ninguna variación posible, una función de orden superior agrega una capa de indirección innecesaria; resérvala para comportamiento genuinamente configurable por quien la invoca.
 
 ### Tema 2: Scope functions
 
-**Conceptos clave:** `let`, `run`, `apply`, `also` y su propósito específico distinto.
+#### Paso 1 · Objetivo y preparación
 
-`usuario?.let { u -> println("Hola ${u.nombre}") }` ejecuta el bloque únicamente si `usuario` no es `null` (Módulo 0), combinando el safe call con una scope function para expresar de forma concisa "si existe, hacer algo con ello", evitando un `if` explícito de verificación de null; `val config = Config().apply { timeout = 30; reintentos = 3 }` configura un objeto recién creado y devuelve ese mismo objeto ya configurado como resultado de la expresión completa, apropiado específicamente para inicialización fluida de un objeto en una única expresión; `val resultado = obtenerDatos().run { procesar(this) }` ejecuta un bloque de código en el contexto del objeto receptor y devuelve el resultado de ese bloque (no el objeto original), apropiado cuando se necesita tanto acceso al receptor como transformarlo en un resultado distinto.
+Al finalizar podrás elegir entre `let`, `run`, `apply` y `also` según qué necesites devolver (el receptor original o el resultado de un bloque) y cómo referenciar el receptor (`this` o `it`).
 
-`also` (no mostrado explícitamente en los ejemplos anteriores pero parte del mismo conjunto) es similar a `apply` en que devuelve el objeto receptor original, pero recibe ese receptor como parámetro explícito (`it`) en vez de como receptor implícito (`this`), apropiado para efectos secundarios como logging que no deberían modificar el objeto en sí (`objeto.also { println("Creado: $it") }`). La diferencia práctica entre las cuatro se resume en dos ejes: qué devuelven (el objeto receptor original, en `apply`/`also`; el resultado del bloque, en `let`/`run`) y cómo se referencia el receptor dentro del bloque (`this` implícito en `run`/`apply`; `it` explícito en `let`/`also`).
+**Conocimiento previo:** Tema 1 de este módulo; null safety (Módulo 0, Tema 1).
 
-**Analogía:** las scope functions son como distintas formas de interactuar brevemente con un objeto para un propósito específico: `apply` es como personalizar un producto y quedarte con el mismo producto ya personalizado; `run` es como consultar algo sobre el producto y quedarte con la respuesta de esa consulta, no con el producto en sí; `let` es como decidir hacer algo con un objeto solo si efectivamente existe; `also` es como registrar de paso una nota sobre el objeto sin alterarlo en absoluto.
+#### Paso 2 · Contexto y caso real
 
-**¿Por qué es importante?** Cada scope function tiene un propósito específico distinto según qué se necesita devolver (el receptor original o el resultado de un bloque) y cómo se referencia el receptor, eligiendo la apropiada según el caso produce código más idiomático y expresivo.
+**¿Por qué es importante?** Configurar un cliente HTTP con varios parámetros, ejecutar lógica solo si un valor nullable de una API existe, o registrar una traza sin alterar un objeto en una cadena de llamadas, son casos cotidianos donde cada scope function resuelve un propósito específico distinto.
 
-**Casos de uso reales:**
-- `apply` para construir objetos de configuración (clientes HTTP, builders de UI) en una sola expresión fluida.
-- `let` para ejecutar lógica solo si un valor nullable proveniente de una API o un formulario efectivamente existe.
-- `also` para logging o analítica de paso, sin alterar el objeto ni interrumpir una cadena de llamadas.
+#### Paso 3 · Teoría con analogía
 
-**Código del ejemplo:**
+**Conceptos clave:** `let` (ejecuta si no-null, devuelve resultado del bloque), `apply` (configura, devuelve el receptor), `run` (ejecuta bloque, devuelve resultado), `also` (efecto secundario, devuelve el receptor).
 
-```kotlin
-usuario?.let { u -> println("Hola ${u.nombre}") }  // solo ejecuta si usuario no es null
-val config = Config().apply {                        // configura y devuelve el mismo objeto
+`usuario?.let { u -> println("Hola ${u.nombre}") }` ejecuta el bloque solo si `usuario` no es `null`. `val config = Config().apply { timeout = 30; reintentos = 3 }` configura y devuelve el mismo objeto configurado. `val resultado = obtenerDatos().run { procesar(this) }` ejecuta un bloque y devuelve el resultado de ESE bloque, no el objeto original. `also` es similar a `apply` (devuelve el receptor) pero recibe el receptor como `it` explícito, apropiado para logging (`objeto.also { println("Creado: $it") }`).
+
+**Analogía:** `apply` es personalizar un producto y quedarte con el mismo producto personalizado; `run` es consultar algo del producto y quedarte con la respuesta, no el producto; `let` es actuar sobre un objeto solo si existe; `also` es anotar algo de paso sin alterarlo.
+
+**Diagrama:**
+
+```
+┌──────────────┬───────────────────────┬───────────────────────────────┐
+│              │ devuelve el RECEPTOR   │ devuelve el RESULTADO del bloque │
+├──────────────┼───────────────────────┼───────────────────────────────┤
+│ this implícito │        apply         │              run                │
+│ it explícito   │        also          │              let                │
+└──────────────┴───────────────────────┴───────────────────────────────┘
+```
+
+#### Paso 4 · Demostración guiada desde cero
+
+Desde una carpeta vacía (o continuando en `academia-kmp`, o créala con `mkdir -p academia-kmp` si es tu primera vez), crea `shared/src/commonMain/kotlin/com/academia/kmp/ScopeFunctions.kt`:
+
+```bash
+# python compara después qué devuelve cada scope function
+mkdir -p academia-kmp/shared/src/commonMain/kotlin/com/academia/kmp
+cd academia-kmp
+cat > shared/src/commonMain/kotlin/com/academia/kmp/ScopeFunctions.kt <<'EOF'
+package com.academia.kmp
+
+data class Config(var timeout: Int = 10, var reintentos: Int = 1)
+
+fun construirConfig(): Config = Config().apply {
     timeout = 30
     reintentos = 3
 }
-val resultado = obtenerDatos().run { procesar(this) } // ejecuta un bloque y devuelve su resultado
+
+fun saludarSiExiste(nombre: String?): String? = nombre?.let { n -> "Hola, $n" }
+EOF
+python3 -c "
+codigo = open('shared/src/commonMain/kotlin/com/academia/kmp/ScopeFunctions.kt').read()
+assert 'Config().apply {' in codigo, 'falta usar apply para configurar y devolver el receptor'
+assert 'nombre?.let' in codigo, 'falta combinar safe call con let para ejecutar solo si existe'
+print('ScopeFunctions.kt: apply devuelve el receptor configurado; let ejecuta solo si no es null')
+"
 ```
+
+**Explicación línea por línea:** `Config().apply { timeout = 30; reintentos = 3 }` configura el objeto recién creado dentro del bloque (usando `this` implícito) y devuelve ESE MISMO objeto como resultado de toda la expresión; `nombre?.let { n -> "Hola, $n" }` ejecuta el bloque solo si `nombre` no es `null`, devolviendo el resultado del bloque (el saludo) en vez del `nombre` original.
+
+Ejecuta en Python el mismo contraste (qué se devuelve: el objeto original o el resultado de un bloque) usando funciones equivalentes:
+
+```bash
+python3 -c "
+class Config:
+    def __init__(self):
+        self.timeout = 10
+        self.reintentos = 1
+    def __repr__(self):
+        return f'Config(timeout={self.timeout}, reintentos={self.reintentos})'
+
+def apply_like(objeto, bloque):
+    bloque(objeto)
+    return objeto  # apply: devuelve el receptor, no el resultado del bloque
+
+def run_like(objeto, bloque):
+    return bloque(objeto)  # run: devuelve el resultado del bloque, no el receptor
+
+config = apply_like(Config(), lambda c: (setattr(c, 'timeout', 30), setattr(c, 'reintentos', 3)))
+print('apply_like devuelve el receptor configurado:', config)
+
+resultado_run = run_like(Config(), lambda c: c.timeout * 2)
+print('run_like devuelve el resultado del bloque (no el objeto):', resultado_run)
+
+def let_like(valor, bloque):
+    if valor is None:
+        return None
+    return bloque(valor)
+
+print('let_like con valor presente:', let_like('Nico', lambda n: f'Hola, {n}'))
+print('let_like con None:', let_like(None, lambda n: f'Hola, {n}'))
+"
+```
+
+**Resultado esperado:** `apply_like` devuelve `Config(timeout=30, reintentos=3)` (el objeto mismo, configurado); `run_like` devuelve `20` (el resultado del bloque sobre un `Config` recién creado con `timeout=10` por defecto, un `int`, no un `Config`); `let_like` devuelve `'Hola, Nico'` cuando el valor existe, y `None` sin ejecutar el bloque cuando es `None`.
+
+**Fallo deliberado:** intercambia las implementaciones de `apply_like` y `run_like` (haz que `apply_like` devuelva `bloque(objeto)` y `run_like` devuelva `objeto`). Ahora `apply_like(Config(), ...)` devolvería `(None, None)` (la tupla que produce la expresión de dos `setattr`, que no devuelven nada útil) en vez del `Config` configurado — diagnostica confirmando que confundir qué devuelve cada scope function (`apply`/`also` el receptor; `run`/`let` el resultado del bloque) produce un tipo de retorno completamente distinto al esperado, un error fácil de cometer si no se memoriza la distinción.
+
+#### Construcción RutaFlow: configuración del cliente de RutaFlow
+
+Usa `apply` para construir `ClienteRutaFlow` con `baseUrl`, `timeout` y `reintentos` configurados en una sola expresión, y `let` para ejecutar el envío de una notificación solo si el token push del dispositivo no es `null`.
+
+#### Paso 5 · Práctica guiada — repetición progresiva
+
+1. `Config().apply { timeout = 5 }` — confirma que el resultado es un `Config`, no un `Unit`.
+2. `usuario?.let { it.nombre.uppercase() }` — confirma que el resultado es un `String?`, no un `Usuario?`.
+3. `objeto.also { println("log: $it") }` — confirma que el resultado sigue siendo `objeto`, no lo que imprime `println`.
+4. Escribe de memoria (sin mirar) un uso de `run` que reciba un objeto y devuelva un `Boolean` calculado a partir de él.
+
+**Pista:** para saber qué devuelve cada scope function, pregúntate: ¿necesito seguir usando el objeto original después, o necesito el resultado de una operación sobre él?
+
+#### Paso 6 · Práctica independiente
+
+**Completa el código:** rellena el espacio para que la función se ejecute solo si `direccion` no es `null`:
+
+```kotlin
+val texto: String? = direccion ____ { d -> "Envía a: $d" }
+```
+
+**Reto de memoria sin mirar:** cierra este documento y escribe, solo de memoria, un ejemplo de `apply` y un ejemplo de `let` sobre el mismo tipo de objeto, explicando en una frase qué diferencia sus resultados. Compara después contra el patrón del Paso 4.
+
+#### Paso 7 · Cierre y evidencia
+
+Ya distingues las cuatro scope functions según qué devuelven y cómo referencian el receptor, confirmando la diferencia en Python con dos implementaciones deliberadamente intercambiadas. El siguiente tema modela estados exhaustivos con sealed classes, frecuentemente construidos dentro de un `apply`. **Evidencia:** entrega los tres resultados del Paso 4 (`apply_like`, `run_like`, `let_like` con y sin valor), y explica qué tipo de dato devolvería cada uno si se intercambiaran sus implementaciones. Fuente oficial: [Kotlin docs — Scope functions](https://kotlinlang.org/docs/scope-functions.html).
+
+**Errores comunes:** usar `apply` cuando en realidad se necesita el resultado de una transformación (debería ser `run` o `let`); anidar múltiples scope functions sin necesidad, dificultando saber a qué objeto se refiere `it`/`this` en cada nivel.
+
+**Cuándo no usarlo:** para una única línea de asignación simple (`val x = 5`), envolverla en una scope function agrega indirección sin beneficio; resérvalas para configuración de múltiples propiedades, manejo de nulls, o efectos secundarios explícitos.
 
 ### Tema 3: Sealed classes y colecciones funcionales
 
-**Conceptos clave:** modelado exhaustivo de estados, transformaciones encadenadas.
+#### Paso 1 · Objetivo y preparación
 
-`sealed class EstadoUI { object Cargando : EstadoUI(); data class Exito(val datos: List<Tarea>) : EstadoUI(); data class Error(val mensaje: String) : EstadoUI() }` modela el conjunto completo y cerrado de estados posibles de una pantalla (cargando, éxito con datos, o error con un mensaje), de forma directamente análoga a las sealed interfaces de Java (Módulo 7 del track de Java), permitiendo que un `when (estado) { is EstadoUI.Cargando -> ...; is EstadoUI.Exito -> ...; is EstadoUI.Error -> ... }` sea verificado exhaustivamente por el compilador sin necesidad de una rama `else`, garantizando que agregar un nuevo estado posible en el futuro y olvidar manejarlo en algún `when` existente produzca un error de compilación inmediato, no un bug silencioso descubierto más tarde.
+Al finalizar podrás modelar un conjunto cerrado de estados con sealed class, y encadenar `filter`/`map`/`fold` para transformar una colección de forma declarativa.
 
-`val nombres = personas.filter { it.edad >= 18 }.map { it.nombre }` encadena transformaciones funcionales sobre una colección de forma declarativa (filtrar primero, transformar después), el mismo estilo de encadenamiento de Streams estudiado en el Módulo 4 del track de Java, aquí con sintaxis nativa de Kotlin sin necesidad de una API de streams separada (las colecciones de Kotlin soportan estas operaciones funcionales directamente); `fold` (`pedidos.fold(0.0) { acumulado, pedido -> acumulado + pedido.monto }`) acumula un resultado combinando cada elemento con un valor inicial explícito, apropiado para agregaciones como sumas o construcciones de resultados complejos a partir de una colección completa.
+**Conocimiento previo:** when como expresión (Módulo 0, Tema 3); Tema 1 de este módulo (funciones de orden superior, base de `filter`/`map`).
 
-**Analogía:** una sealed class para modelar estados es como un semáforo con exactamente tres estados posibles conocidos de antemano, donde cualquier sistema que reaccione a ese semáforo puede garantizar que maneja los tres estados sin dejar ninguno sin cubrir; encadenar `filter`+`map` es como una línea de producción donde primero se descartan las piezas que no cumplen cierto criterio, y luego se transforman las restantes, cada estación con una responsabilidad clara y secuencial.
+#### Paso 2 · Contexto y caso real
 
-**¿Por qué es importante?** Las sealed classes garantizan, verificado por el compilador, que todos los estados posibles de un modelo se manejen exhaustivamente; encadenar operaciones funcionales sobre colecciones expresa transformaciones de datos de forma declarativa y legible.
+**¿Por qué es importante?** Modelar el estado de una pantalla completa (cargando/éxito/error) en apps Android o Compose Multiplatform (Módulo 7), o filtrar y transformar una respuesta de API antes de mostrarla, son casos donde sealed classes y colecciones funcionales se combinan constantemente.
 
-**Casos de uso reales:**
-- Modelar el estado de una pantalla completa (cargando/éxito/error) en apps Android o Compose Multiplatform (Módulo 7).
-- Modelar el resultado de validar un formulario (`Valido`, `ErrorCampo(campo, mensaje)`) manejado exhaustivamente en la UI.
-- Filtrar y transformar una respuesta de API antes de mostrarla (`response.filter { it.activo }.map { it.toUiModel() }`).
+#### Paso 3 · Teoría con analogía
 
-**Código del ejemplo:**
+**Conceptos clave:** sealed class (conjunto cerrado de subtipos), `filter`/`map` encadenados, `fold` para acumular.
+
+`sealed class EstadoUI { object Cargando : EstadoUI(); data class Exito(val datos: List<Tarea>) : EstadoUI(); data class Error(val mensaje: String) : EstadoUI() }` modela el conjunto completo de estados posibles. `val nombres = personas.filter { it.edad >= 18 }.map { it.nombre }` encadena transformaciones: filtrar primero, transformar después. `fold` (`pedidos.fold(0.0) { acumulado, pedido -> acumulado + pedido.monto }`) acumula un resultado combinando cada elemento con un valor inicial explícito.
+
+**Analogía:** una sealed class para modelar estados es un semáforo con exactamente tres estados conocidos de antemano; encadenar `filter`+`map` es una línea de producción donde primero se descartan piezas que no cumplen un criterio y luego se transforman las restantes.
+
+**Diagrama:**
+
+```mermaid
+flowchart LR
+  A[personas] -->|filter edad>=18| B[adultos]
+  B -->|map nombre| C[nombres]
+  D[pedidos] -->|fold suma| E[total acumulado]
+```
+
+#### Paso 4 · Demostración guiada desde cero
+
+Desde una carpeta vacía (o continuando en `academia-kmp`, o créala con `mkdir -p academia-kmp` si es tu primera vez), crea `shared/src/commonMain/kotlin/com/academia/kmp/EstadoYColecciones.kt`:
+
+```bash
+# python reproduce después el filter+map+fold sobre los mismos datos
+mkdir -p academia-kmp/shared/src/commonMain/kotlin/com/academia/kmp
+cd academia-kmp
+cat > shared/src/commonMain/kotlin/com/academia/kmp/EstadoYColecciones.kt <<'EOF'
+package com.academia.kmp
+
+data class Persona(val nombre: String, val edad: Int)
+data class Pedido(val monto: Double)
+
+fun nombresAdultos(personas: List<Persona>): List<String> =
+    personas.filter { it.edad >= 18 }.map { it.nombre }
+
+fun totalPedidos(pedidos: List<Pedido>): Double =
+    pedidos.fold(0.0) { acumulado, pedido -> acumulado + pedido.monto }
+EOF
+python3 -c "
+codigo = open('shared/src/commonMain/kotlin/com/academia/kmp/EstadoYColecciones.kt').read()
+assert '.filter { it.edad >= 18 }.map { it.nombre }' in codigo, 'falta encadenar filter y map'
+assert 'fold(0.0)' in codigo, 'falta usar fold con valor inicial explícito'
+print('EstadoYColecciones.kt: filter+map encadenados; fold acumula con valor inicial')
+"
+```
+
+**Explicación línea por línea:** `personas.filter { it.edad >= 18 }` produce una nueva lista solo con adultos; `.map { it.nombre }` transforma esa lista filtrada extrayendo solo el nombre; `pedidos.fold(0.0) { acumulado, pedido -> acumulado + pedido.monto }` recorre cada pedido acumulando su monto sobre el valor inicial `0.0`.
+
+Ejecuta en Python el mismo encadenamiento sobre datos equivalentes, confirmando el resultado de cada paso:
+
+```bash
+python3 -c "
+from dataclasses import dataclass
+
+@dataclass
+class Persona:
+    nombre: str
+    edad: int
+
+@dataclass
+class Pedido:
+    monto: float
+
+personas = [Persona('Ana', 25), Persona('Leo', 15), Persona('Sofía', 30)]
+adultos = [p for p in personas if p.edad >= 18]
+nombres_adultos = [p.nombre for p in adultos]
+print('adultos (filter):', adultos)
+print('nombres (map):', nombres_adultos)
+
+pedidos = [Pedido(19.99), Pedido(5.50), Pedido(100.0)]
+total = 0.0
+for pedido in pedidos:
+    total = total + pedido.monto  # equivalente exacto a fold(0.0) { acumulado, pedido -> ... }
+print('total (fold):', total)
+"
+```
+
+**Resultado esperado:** `adultos` contiene solo a Ana y Sofía (excluyendo a Leo, de 15 años); `nombres_adultos` es `['Ana', 'Sofía']`; `total` es `125.49`, la suma acumulada de los tres montos.
+
+**Fallo deliberado:** invierte el orden a `map` antes de `filter` (`personas.map { it.nombre }.filter { it.edad >= 18 }` — nota que tras el `map`, ya no existe `edad`, así que esto ni siquiera compilaría en Kotlin real). En Python, simula el error equivalente extrayendo primero solo los nombres y luego intentando filtrar por edad sobre esa lista de strings — diagnostica confirmando que el ORDEN de las operaciones encadenadas importa: una vez que `map` descarta información (aquí, la edad), esa información ya no está disponible para un `filter` posterior; filtra siempre antes de transformar si la transformación descarta datos que el filtro necesita.
+
+#### Construcción RutaFlow: paradas activas ordenadas por prioridad
+
+Encadena `paradas.filter { it.activa }.map { it.direccion }` para obtener las direcciones de las paradas activas de RutaFlow, y usa `fold` para acumular el peso total de los paquetes de una ruta.
+
+#### Paso 5 · Práctica guiada — repetición progresiva
+
+1. `numeros.filter { it % 2 == 0 }.map { it * it }` — filtra pares, eleva al cuadrado.
+2. `palabras.filter { it.length > 3 }.map { it.uppercase() }` — filtra por longitud, transforma mayúsculas.
+3. `productos.fold(0) { acumulado, p -> acumulado + p.cantidad }` — acumula una suma de enteros.
+4. Escribe de memoria (sin mirar) un `filter`+`map` encadenado sobre una lista de tu elección, seguido de un `fold` sobre el resultado.
+
+**Pista:** dibuja mentalmente cada paso como una lista nueva completa antes de encadenar el siguiente; nunca asumas que una operación posterior puede "ver" datos que una anterior ya descartó.
+
+#### Paso 6 · Práctica independiente
+
+**Completa el código:** rellena los espacios para filtrar tareas completadas y sumar sus prioridades:
 
 ```kotlin
-sealed class EstadoUI {
-    object Cargando : EstadoUI()
-    data class Exito(val datos: List<Tarea>) : EstadoUI()
-    data class Error(val mensaje: String) : EstadoUI()
+val completadas = tareas.____ { it.completada }
+val sumaPrioridades = completadas.____(0) { acumulado, t -> acumulado + t.prioridad }
+```
+
+**Reto de memoria sin mirar:** cierra este documento y escribe, solo de memoria, una sealed class de tres estados y un `when` exhaustivo que la maneje, seguido de un `filter`+`map` sobre una lista relacionada. Compara después contra los patrones de este módulo y del Módulo 0.
+
+#### Paso 7 · Cierre y evidencia
+
+Ya modelas estados exhaustivos con sealed classes y encadenas `filter`/`map`/`fold` respetando el orden en que cada operación consume o descarta datos. El siguiente tema extiende las lambdas hacia funciones con receptor, la base de los DSL que verás en Gradle y Compose. **Evidencia:** entrega los resultados de `adultos`, `nombres_adultos` y `total` del Paso 4, y explica por qué invertir `map` antes de `filter` habría roto la compilación en Kotlin real. Fuente oficial: [Kotlin docs — Collection operations](https://kotlinlang.org/docs/collection-operations.html).
+
+**Errores comunes:** encadenar `map` antes de `filter` cuando el `map` descarta información que el `filter` necesita; usar `fold` sin un valor inicial explícito compatible con el tipo acumulado, produciendo un error de tipos.
+
+**Cuándo no usarlo:** para una colección con miles de elementos donde el rendimiento es crítico y se encadenan muchas operaciones, cada `filter`/`map` intermedio crea una lista nueva; considera `asSequence()` para evaluación perezosa en ese caso específico, en vez de encadenar directamente sobre `List`.
+
+### Tema 4: Lambdas con receptor y builders tipo DSL
+
+#### Paso 1 · Objetivo y preparación
+
+Al finalizar podrás escribir una función que reciba una lambda con receptor (`T.() -> Unit`), y explicar por qué esta capacidad es la base de los DSL que usarás en Gradle y Compose Multiplatform.
+
+**Conocimiento previo:** Tema 2 de este módulo (`apply`, que ya usa lambda con receptor internamente); Tema 1 de este módulo (funciones de orden superior).
+
+#### Paso 2 · Contexto y caso real
+
+**¿Por qué es importante?** La sintaxis de `build.gradle.kts` (`dependencies { implementation("...") }`) y de Compose (`Column { Text("hola"); Button { ... } }`, Módulo 7 de este track) no son características especiales del lenguaje: son funciones ordinarias que reciben una lambda con receptor, la misma capacidad que vas a construir aquí desde cero.
+
+#### Paso 3 · Teoría con analogía
+
+**Conceptos clave:** lambda con receptor (`T.() -> Unit`), `this` implícito dentro del bloque, DSL (Domain Specific Language).
+
+Una lambda normal (`(T) -> Unit`) recibe el objeto como parámetro (`it`); una lambda CON RECEPTOR (`T.() -> Unit`) hace que el objeto sea el receptor implícito (`this`) dentro del bloque, permitiendo llamar a sus miembros directamente sin prefijo. `apply` (Tema 2) ya usa esto: `Config().apply { timeout = 30 }` funciona porque `apply` recibe `T.() -> Unit`, no `(T) -> Unit`. Esta capacidad, combinada con funciones que construyen objetos anidados, es la base de cualquier DSL de Kotlin.
+
+**Analogía:** una lambda normal te entrega el objeto para que lo uses explícitamente (`it.nombre`); una lambda con receptor te "transporta dentro" del objeto, como si estuvieras parado adentro de él, pudiendo referirte a sus propiedades directamente sin decir de quién son.
+
+**Diagrama:**
+
+```
+┌── lambda normal ──────────────────────────────────────────┐
+│  (persona) -> println(persona.nombre)   -- "it." explícito │
+└─────────────────────────────────────────────────────────┘
+┌── lambda con receptor ────────────────────────────────────┐
+│  Persona.() -> println(nombre)   -- "this." implícito, se omite │
+└─────────────────────────────────────────────────────────┘
+```
+
+#### Paso 4 · Demostración guiada desde cero
+
+Desde una carpeta vacía (o continuando en `academia-kmp`, o créala con `mkdir -p academia-kmp` si es tu primera vez), crea `shared/src/commonMain/kotlin/com/academia/kmp/DslBuilder.kt`:
+
+```bash
+# python simula después la misma construcción con contexto implícito
+mkdir -p academia-kmp/shared/src/commonMain/kotlin/com/academia/kmp
+cd academia-kmp
+cat > shared/src/commonMain/kotlin/com/academia/kmp/DslBuilder.kt <<'EOF'
+package com.academia.kmp
+
+class RutaBuilder {
+    private val paradas = mutableListOf<String>()
+    fun parada(nombre: String) { paradas.add(nombre) }
+    fun construir(): List<String> = paradas.toList()
 }
-when (estado) {
-    is EstadoUI.Cargando -> mostrarSpinner()
-    is EstadoUI.Exito -> mostrarLista(estado.datos)
-    is EstadoUI.Error -> mostrarError(estado.mensaje)
-    // sin else: el compilador exige cubrir todos los casos de la sealed class
+
+fun ruta(bloque: RutaBuilder.() -> Unit): List<String> {
+    val builder = RutaBuilder()
+    builder.bloque()  // el bloque se ejecuta CON RutaBuilder como receptor implícito
+    return builder.construir()
+}
+
+val miRuta = ruta {
+    parada("Depósito central")  // llamado sin prefijo: "this." implícito es el RutaBuilder
+    parada("Cliente A")
+    parada("Cliente B")
+}
+EOF
+python3 -c "
+codigo = open('shared/src/commonMain/kotlin/com/academia/kmp/DslBuilder.kt').read()
+assert 'bloque: RutaBuilder.() -> Unit' in codigo, 'falta declarar la lambda con receptor RutaBuilder.()'
+assert 'builder.bloque()' in codigo, 'falta invocar el bloque con el builder como receptor'
+print('DslBuilder.kt: ruta {} construye una lista sin exponer RutaBuilder directamente al llamador')
+"
+```
+
+**Explicación línea por línea:** `bloque: RutaBuilder.() -> Unit` declara que `bloque` es una función que, al ejecutarse, tiene `RutaBuilder` como receptor implícito (`this`); `builder.bloque()` ejecuta ese bloque usando `builder` como el `this` dentro de él; dentro de `ruta { parada("Depósito central") }`, `parada(...)` se resuelve como `builder.parada(...)` sin necesitar el prefijo, porque `this` dentro del bloque ES `builder`.
+
+Ejecuta en Python una construcción equivalente (sin lambda con receptor real, que Python no tiene, pero con el mismo efecto de "contexto implícito" logrado pasando el builder explícitamente por claridad del contraste):
+
+```bash
+python3 -c "
+class RutaBuilder:
+    def __init__(self):
+        self.paradas = []
+    def parada(self, nombre):
+        self.paradas.append(nombre)
+    def construir(self):
+        return list(self.paradas)
+
+def ruta(bloque):
+    builder = RutaBuilder()
+    bloque(builder)  # Python siempre necesita el receptor explícito (sin 'this' implícito real)
+    return builder.construir()
+
+mi_ruta = ruta(lambda b: (b.parada('Depósito central'), b.parada('Cliente A'), b.parada('Cliente B')))
+print('ruta construida:', mi_ruta)
+"
+```
+
+**Resultado esperado:** `ruta construida: ['Depósito central', 'Cliente A', 'Cliente B']`; nota que en Python el builder (`b`) debe pasarse y referenciarse EXPLÍCITAMENTE dentro de la lambda (`b.parada(...)`), mientras que en Kotlin real, gracias a la lambda con receptor, `parada(...)` se escribe SIN ningún prefijo — la diferencia central que hace que los DSL de Kotlin luzcan como si fueran una extensión del lenguaje en vez de llamadas a función ordinarias.
+
+**Fallo deliberado:** cambia la firma de `ruta` de `bloque: RutaBuilder.() -> Unit` a `bloque: (RutaBuilder) -> Unit` (lambda normal, sin receptor) sin cambiar el resto. Ahora `ruta { parada("Depósito central") }` no compila, porque dentro de una lambda normal no existe un `this` implícito de tipo `RutaBuilder` — habría que escribir `ruta { it.parada("Depósito central") }` explícitamente — diagnostica confirmando que la diferencia entre `T.() -> Unit` y `(T) -> Unit` no es cosmética: determina si el código dentro del bloque puede omitir el receptor o debe nombrarlo explícitamente en cada llamada.
+
+#### Construcción RutaFlow: builder de configuración de entrega
+
+Escribe `fun entrega(bloque: EntregaBuilder.() -> Unit): Entrega` en RutaFlow, permitiendo declarar una entrega completa (`entrega { destino("Cliente A"); prioridad(Alta) }`) sin prefijos repetidos, igual que se construirá una pantalla completa con Compose Multiplatform en el Módulo 7.
+
+#### Paso 5 · Práctica guiada — repetición progresiva
+
+1. Cambia `parada("Cliente C")` dentro de `miRuta` y confirma que la lista construida incluye el nuevo elemento.
+2. Agrega un segundo método a `RutaBuilder` (`fun prioridad(nivel: Int)`) y llámalo dentro del mismo bloque `ruta { ... }` sin prefijo.
+3. Declara un `PersonaBuilder` con `nombre` y `edad`, y una función `persona(bloque: PersonaBuilder.() -> Unit): Persona`.
+4. Escribe de memoria (sin mirar) una función con lambda con receptor sobre un tipo de tu elección, con al menos dos métodos configurables dentro del bloque.
+
+**Pista:** para saber si necesitas `T.() -> Unit` o `(T) -> Unit`, pregúntate si quieres escribir los métodos del bloque CON o SIN el prefijo del objeto.
+
+#### Paso 6 · Práctica independiente
+
+**Completa el código:** rellena el espacio para que `configurar` reciba una lambda con receptor sobre `Ajustes`:
+
+```kotlin
+class Ajustes { var modoOscuro = false; var idioma = "es" }
+
+fun configurar(bloque: Ajustes.____ Unit): Ajustes {
+    val ajustes = Ajustes()
+    ajustes.bloque()
+    return ajustes
 }
 ```
+
+**Reto de memoria sin mirar:** cierra este documento y escribe, solo de memoria, un builder simple (una clase con dos propiedades configurables) y una función que reciba una lambda con receptor sobre ese builder. Compara después contra el patrón del Paso 4.
+
+#### Paso 7 · Cierre y evidencia
+
+Ya distingues una lambda con receptor de una lambda normal, y construyes una función tipo DSL donde el bloque interno omite el prefijo del receptor. Esto cierra el módulo de programación funcional; el siguiente módulo usa coroutines y Flow, donde varias funciones (`launch { }`, `flow { }`) también reciben lambdas con receptor sobre su scope correspondiente. **Evidencia:** entrega el resultado de `mi_ruta`/`miRuta` construida, y explica qué cambia exactamente al pasar de `T.() -> Unit` a `(T) -> Unit` en la firma de `ruta`. Fuente oficial: [Kotlin docs — Function literals with receiver](https://kotlinlang.org/docs/lambdas.html#function-literals-with-receiver).
+
+**Errores comunes:** confundir cuándo se necesita `T.()` (receptor implícito, sin prefijo) frente a `(T)` (parámetro explícito, con prefijo); anidar builders con receptores del mismo nombre de método, generando ambigüedad sobre a qué nivel de `this` se refiere una llamada.
+
+**Cuándo no usarlo:** para una función que solo necesita leer datos de un objeto sin ninguna intención de ofrecer una sintaxis tipo DSL, una lambda normal (`(T) -> Unit`) es más clara porque hace explícito de qué objeto proviene cada llamada; resérvalo para builders donde la fluidez sintáctica es el objetivo deliberado.
 
 ---
 
 
 ## Laboratorio práctico
 
-**Objetivo del laboratorio:** modelar un estado de UI (loading/success/error) con sealed classes manejado exhaustivamente.
+**Objetivo del laboratorio:** modelar un estado de UI (loading/success/error) con sealed classes manejado exhaustivamente, y construir un builder tipo DSL simple.
 
 **Requisitos previos:** Módulo 0 completado.
 
@@ -106,13 +516,15 @@ when (estado) {
 | 3 | Usar `apply` para configurar un objeto | Ver Tema 2 | En una sola expresión |
 | 4 | Modelar `EstadoUI` con sealed class | Ver Tema 3 | Maneja todos los casos con `when` exhaustivo |
 | 5 | Encadenar `map`/`filter`/`fold` | Ver Tema 3 | En una sola expresión |
+| 6 | Escribir una función con lambda con receptor | Ver Tema 4 | Un builder simple tipo DSL |
 
-**Verificación:** el laboratorio se considera exitoso si el `when` sobre `EstadoUI` compila sin rama `else` y sigue siendo exhaustivo, y si puedes explicar la diferencia práctica entre las cuatro scope functions con un ejemplo propio de cada una.
+**Verificación:** el laboratorio se considera exitoso si el `when` sobre `EstadoUI` compila sin rama `else` y sigue siendo exhaustivo, si puedes explicar la diferencia práctica entre las cuatro scope functions con un ejemplo propio de cada una, y si reproduces de memoria al menos uno de los cuatro patrones sin ver el ejemplo original.
 
 **Errores comunes y soluciones**
 
 - **Confundir cuándo usar `apply` frente a `run`.** `apply` devuelve el receptor original; `run` devuelve el resultado del bloque.
 - **Agregar una rama `else` innecesaria a un `when` exhaustivo sobre sealed class.** Omítela para que el compilador verifique exhaustividad real.
 - **Escribir un bucle manual en vez de `map`/`filter`/`fold`.** Prefiere las operaciones funcionales encadenadas para mayor legibilidad declarativa.
+- **Confundir `T.() -> Unit` con `(T) -> Unit`.** El primero omite el prefijo del receptor dentro del bloque; el segundo lo requiere explícitamente.
 
 ---
