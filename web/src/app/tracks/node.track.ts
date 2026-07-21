@@ -86,7 +86,7 @@ export const NODE_MODULES: CourseModule[] = [
     'API con persistencia real en PostgreSQL usando Prisma y migraciones versionadas.'),
   m(6, 'Autenticación y autorización', 'Auth', 'Integración', '2 h 30 min', '#3c873a',
     'Implementa login seguro sin reinventar criptografía desde cero.',
-    ['Hashing de contraseñas (bcrypt/argon2)', 'JWT: access y refresh tokens', 'Sesiones vs tokens', 'OAuth 2.0 con un proveedor externo', 'Passport.js y sus estrategias de autenticación'],
+    ['Hashing de contraseñas (bcrypt/argon2)', 'JWT: access y refresh tokens', 'Sesiones vs tokens', 'OAuth 2.0 con un proveedor externo', 'Passport.js y sus estrategias de autenticación', 'Cookies seguras, sesiones y protección CSRF'],
     [
       'Implementa registro de usuario con contraseña hasheada usando bcrypt — nunca guardes contraseñas en texto plano',
       'Implementa login que verifica la contraseña con bcrypt.compare y devuelve un access token JWT de corta duración',
@@ -114,7 +114,7 @@ export const NODE_MODULES: CourseModule[] = [
     'Suite de pruebas de integración que levanta la API contra una base de datos real en Docker.'),
   m(8, 'Patrones asíncronos avanzados', 'Async avanzado', 'Experto', '3 h', '#3c873a',
     'Cuando una sola instancia de Node no alcanza: workers, clustering y colas de trabajo.',
-    ['Worker threads para CPU-bound', 'Cluster module y balanceo entre procesos', 'Colas de trabajo con BullMQ + Redis', 'Procesamiento en background', 'pm2 en modo cluster y --max-old-space-size', 'Heap snapshots y detección de memory leaks'],
+    ['Worker threads para CPU-bound', 'Cluster module y balanceo entre procesos', 'Colas de trabajo con BullMQ + Redis', 'Procesamiento en background', 'pm2 en modo cluster y --max-old-space-size', 'Heap snapshots y detección de memory leaks', 'Redis: cache-aside, idempotencia y Pub/Sub'],
     [
       'Identifica una tarea CPU-bound (ej. procesar una imagen grande) y muévela a un worker_thread para no bloquear el event loop principal',
       'Usa el módulo cluster para levantar un proceso por núcleo de CPU y balancear requests entre ellos',
@@ -128,7 +128,7 @@ export const NODE_MODULES: CourseModule[] = [
     'Cola de procesamiento en background (envío de emails) con reintentos y backoff.'),
   m(9, 'Observabilidad y manejo de errores en producción', 'Observabilidad', 'Experto', '2 h 30 min', '#3c873a',
     'Diagnostica un proceso Node en producción sin adivinar.',
-    ['Logging estructurado (pino/winston)', 'Correlation ID por request', 'Manejo de excepciones no capturadas', 'Health checks y graceful shutdown', 'process.on("unhandledRejection") y manejo de promesas sin catch', 'Diseño de APIs: REST vs GraphQL (Apollo Server) vs gRPC'],
+    ['Logging estructurado (pino/winston)', 'Correlation ID por request', 'Manejo de excepciones no capturadas', 'Health checks y graceful shutdown', 'process.on("unhandledRejection") y manejo de promesas sin catch', 'Diseño de APIs: REST vs GraphQL (Apollo Server) vs gRPC', 'Métricas Prometheus y trazas distribuidas con OpenTelemetry'],
     [
       'Reemplaza console.log por pino y configura logs en formato JSON estructurado',
       'Agrega un middleware que genere un correlation ID (uuid) por request y lo incluya en todos los logs de esa request',
@@ -187,6 +187,7 @@ export const NODE_MODULES: CourseModule[] = [
     [
       'TypeScript strict, tipos de dominio, Result y fronteras de datos',
       'OpenAPI, compatibilidad, versionado y contract testing',
+      'OpenAPI como contrato ejecutable y documentación verificable',
       'Idempotency keys, concurrencia, transactional outbox y consumers',
       'Webhooks firmados, reintentos, deduplicación y reconciliación',
     ],

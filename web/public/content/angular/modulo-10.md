@@ -5,6 +5,36 @@
 
 ### Tema 1: TestBed y componentes standalone
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás probar un componente Angular desde cero. Prerrequisitos: Node.js LTS, npm y Angular CLI. Verifica ng version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real, una pantalla de entregas debe probar comportamiento visible, accesibilidad y errores de red sin depender de un backend real.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+TestBed configura un entorno Angular aislado; Testing Library prioriza interacción del usuario; Vitest ejecuta pruebas rápidas. Mockear HttpClient controla respuestas y fallos. La analogía es un simulador: sustituye el clima y mide la conducción que realmente importa.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-angular-m10
+cd ejemplo-angular-m10
+npx -p @angular/cli ng new app --standalone --routing=false --style=css --skip-git
+cd app
+ng test --watch=false
+```
+Crea src/app/delivery.component.spec.ts con TestBed, un componente y una aserción sobre texto visible; explica setup, acción y expectativa.
+
+#### Paso 5 · Práctica guiada
+Pista: cambia deliberadamente el texto esperado para provocar un fallo deliberado de prueba, lee el diff y corrígelo. Resultado esperado: suite verde y mensaje accesible.
+
+#### Paso 6 · Práctica independiente
+Añade prueba de HttpClientTestingController, estado de error y navegación por teclado; compara una prueba de implementación con una de comportamiento.
+
+#### Paso 7 · Cierre y evidencia
+Guarda salida de test, captura y cobertura; como siguiente paso estudia build. Errores comunes: probar detalles privados, mocks que no representan errores, fixtures frágiles y tests con estado compartido. Fuentes oficiales: https://angular.dev/guide/testing y https://testing-library.com/docs/angular-testing-library/intro/.
+**¿Por qué es importante?** Porque una prueba debe proteger la experiencia y no solo la estructura interna.
+**Evidencia de aprendizaje:** entrega suite verde, fallo, caso de error y prueba de accesibilidad.
 **Conceptos clave:** `TestBed.configureTestingModule`, `createComponent`, `componentRef.setInput`.
 
 `TestBed` es el entorno de pruebas de Angular que permite crear una instancia real y renderizada de un componente dentro de un entorno controlado y aislado para pruebas, sin necesidad de arrancar la aplicación completa. `TestBed.configureTestingModule({ imports: [Tarjeta] })` declara qué componente (u otras dependencias) estarán disponibles en ese entorno de prueba específico; al tratarse de un componente standalone (Módulo 0), simplemente se importa directamente, sin necesidad de declarar un `NgModule` de pruebas dedicado como se requería en versiones anteriores de Angular.
@@ -33,6 +63,36 @@ describe('Tarjeta', () => {
 
 ### Tema 2: Angular Testing Library
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás probar un componente Angular desde cero. Prerrequisitos: Node.js LTS, npm y Angular CLI. Verifica ng version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real, una pantalla de entregas debe probar comportamiento visible, accesibilidad y errores de red sin depender de un backend real.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+TestBed configura un entorno Angular aislado; Testing Library prioriza interacción del usuario; Vitest ejecuta pruebas rápidas. Mockear HttpClient controla respuestas y fallos. La analogía es un simulador: sustituye el clima y mide la conducción que realmente importa.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-angular-m10
+cd ejemplo-angular-m10
+npx -p @angular/cli ng new app --standalone --routing=false --style=css --skip-git
+cd app
+ng test --watch=false
+```
+Crea src/app/delivery.component.spec.ts con TestBed, un componente y una aserción sobre texto visible; explica setup, acción y expectativa.
+
+#### Paso 5 · Práctica guiada
+Pista: cambia deliberadamente el texto esperado para provocar un fallo deliberado de prueba, lee el diff y corrígelo. Resultado esperado: suite verde y mensaje accesible.
+
+#### Paso 6 · Práctica independiente
+Añade prueba de HttpClientTestingController, estado de error y navegación por teclado; compara una prueba de implementación con una de comportamiento.
+
+#### Paso 7 · Cierre y evidencia
+Guarda salida de test, captura y cobertura; como siguiente paso estudia build. Errores comunes: probar detalles privados, mocks que no representan errores, fixtures frágiles y tests con estado compartido. Fuentes oficiales: https://angular.dev/guide/testing y https://testing-library.com/docs/angular-testing-library/intro/.
+**¿Por qué es importante?** Porque una prueba debe proteger la experiencia y no solo la estructura interna.
+**Evidencia de aprendizaje:** entrega suite verde, fallo, caso de error y prueba de accesibilidad.
 **Conceptos clave:** consultas orientadas al usuario, `render`, `screen`, `userEvent`.
 
 Angular Testing Library es una capa sobre `TestBed` que promueve un estilo de prueba centrado deliberadamente en cómo un usuario real interactúa con la interfaz, en vez de en detalles internos de implementación: en lugar de acceder a elementos del DOM mediante selectores CSS internos (`fixture.nativeElement.querySelector('.boton-interno')`, que se rompe si el nombre de una clase CSS cambia por razones puramente visuales sin afectar el comportamiento real), se consulta el DOM por texto visible o por rol semántico de accesibilidad (`screen.getByRole('button', { name: /ver más/i })`), exactamente la misma información que un usuario (o una tecnología asistiva como un lector de pantalla) usaría para identificar ese elemento.
@@ -61,6 +121,36 @@ it('emite el evento al hacer click', async () => {
 
 ### Tema 3: Mockear HttpClient y el nuevo builder basado en Vitest
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás probar un componente Angular desde cero. Prerrequisitos: Node.js LTS, npm y Angular CLI. Verifica ng version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real, una pantalla de entregas debe probar comportamiento visible, accesibilidad y errores de red sin depender de un backend real.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+TestBed configura un entorno Angular aislado; Testing Library prioriza interacción del usuario; Vitest ejecuta pruebas rápidas. Mockear HttpClient controla respuestas y fallos. La analogía es un simulador: sustituye el clima y mide la conducción que realmente importa.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-angular-m10
+cd ejemplo-angular-m10
+npx -p @angular/cli ng new app --standalone --routing=false --style=css --skip-git
+cd app
+ng test --watch=false
+```
+Crea src/app/delivery.component.spec.ts con TestBed, un componente y una aserción sobre texto visible; explica setup, acción y expectativa.
+
+#### Paso 5 · Práctica guiada
+Pista: cambia deliberadamente el texto esperado para provocar un fallo deliberado de prueba, lee el diff y corrígelo. Resultado esperado: suite verde y mensaje accesible.
+
+#### Paso 6 · Práctica independiente
+Añade prueba de HttpClientTestingController, estado de error y navegación por teclado; compara una prueba de implementación con una de comportamiento.
+
+#### Paso 7 · Cierre y evidencia
+Guarda salida de test, captura y cobertura; como siguiente paso estudia build. Errores comunes: probar detalles privados, mocks que no representan errores, fixtures frágiles y tests con estado compartido. Fuentes oficiales: https://angular.dev/guide/testing y https://testing-library.com/docs/angular-testing-library/intro/.
+**¿Por qué es importante?** Porque una prueba debe proteger la experiencia y no solo la estructura interna.
+**Evidencia de aprendizaje:** entrega suite verde, fallo, caso de error y prueba de accesibilidad.
 **Conceptos clave:** `HttpTestingController`, aislamiento de pruebas del backend real, migración de Karma a Vitest.
 
 `HttpTestingController` es el mecanismo de Angular para interceptar peticiones HTTP realizadas durante una prueba sin que lleguen a un servidor real: `httpMock.expectOne('/api/usuarios')` verifica que exactamente una petición a esa URL fue realizada por el código bajo prueba, devolviendo un objeto `req` sobre el que se puede llamar `req.flush([{ id: 1, nombre: 'Ana' }])` para simular la respuesta exacta del servidor que la prueba necesita, permitiendo probar cómo el servicio o componente maneja esa respuesta específica (incluyendo casos de error simulados con `req.flush(null, { status: 500, statusText: 'Error' })`) sin ninguna dependencia de un backend real disponible ni de datos reales impredecibles.

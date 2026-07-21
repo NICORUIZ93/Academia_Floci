@@ -7,6 +7,36 @@ Anotar un método con `@Transactional`, publicar en Kafka y exponer Actuator no 
 
 ### Tema 1: `@Transactional` funciona en una frontera, no como encantamiento
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás comprobar este principio desde cero. Prerrequisitos: JDK 21, Maven, Docker y un editor.
+
+#### Paso 2 · Contexto y caso real
+En un caso real de una plataforma de entregas, un fallo de base, red o consumidor puede ocurrir después de una escritura; el diseño debe preservar invariantes.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+Una transacción delimita una frontera de consistencia, no todo el sistema. Reintentos requieren idempotencia; contratos y métricas convierten comportamiento en evidencia. La analogía es una cadena de custodia: cada transferencia tiene límites y un registro verificable.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-spring-m13
+cd ejemplo-spring-m13
+curl -fsSL https://start.spring.io/starter.zip -d dependencies=web,data-jpa,actuator -d javaVersion=21 -o app.zip
+unzip app.zip
+mvn test
+```
+Crea `src/main/java/com/example/demo/InvariantService.java` con una operación mínima y una prueba que compruebe el invariante.
+
+#### Paso 5 · Práctica guiada
+Pista: ejecuta `mvn test`, provoca un fallo deliberado después de la primera operación y diagnostica la inconsistencia; corrige con transacción, deduplicación o evidencia explícita. Resultado esperado: una sola transición observable.
+
+#### Paso 6 · Práctica independiente
+Añade una prueba concurrente, un contrato de error, una métrica y un runbook de recuperación; explica qué no garantiza la solución.
+
+#### Paso 7 · Cierre y evidencia
+Guarda pruebas, logs, métrica y decisión; como siguiente paso revisa el mismo invariante en otro adaptador. Errores comunes: transacción demasiado amplia, asumir exactly-once, métricas sin acción y contratos solo documentales. Fuentes oficiales: https://docs.spring.io/spring-framework/reference/data-access/transaction.html y https://docs.spring.io/spring-boot/reference/actuator/.
+**¿Por qué es importante?** Porque los sistemas distribuidos fallan en los bordes y necesitan garantías demostrables.
+**Evidencia de aprendizaje:** entrega la prueba normal, el fallo diagnosticado y la corrección medida.
 **Conceptos clave:** proxy AOP, interceptor, transaction manager, boundary, propagation, REQUIRED, REQUIRES_NEW, isolation, dirty read, non-repeatable read, phantom, rollback rule, checked exception, self-invocation, optimistic lock y pessimistic lock.
 
 En el modo habitual, Spring envuelve el bean en un proxy. Una llamada que entra por el proxy activa `TransactionInterceptor`, obtiene una transacción y ejecuta el método. Una llamada `this.metodoInterno()` no cruza el proxy; su anotación puede no aplicar. La solución no es “poner `@Transactional` en todo”: ubica el caso de uso público en un bean con límite coherente, o usa `TransactionTemplate` cuando la secuencia dinámica lo exige.
@@ -52,6 +82,36 @@ DB transaction no atraviesa HTTP/Kafka externo
 
 ### Tema 2: Recuperación implica duplicación segura
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás comprobar este principio desde cero. Prerrequisitos: JDK 21, Maven, Docker y un editor.
+
+#### Paso 2 · Contexto y caso real
+En un caso real de una plataforma de entregas, un fallo de base, red o consumidor puede ocurrir después de una escritura; el diseño debe preservar invariantes.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+Una transacción delimita una frontera de consistencia, no todo el sistema. Reintentos requieren idempotencia; contratos y métricas convierten comportamiento en evidencia. La analogía es una cadena de custodia: cada transferencia tiene límites y un registro verificable.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-spring-m13
+cd ejemplo-spring-m13
+curl -fsSL https://start.spring.io/starter.zip -d dependencies=web,data-jpa,actuator -d javaVersion=21 -o app.zip
+unzip app.zip
+mvn test
+```
+Crea `src/main/java/com/example/demo/InvariantService.java` con una operación mínima y una prueba que compruebe el invariante.
+
+#### Paso 5 · Práctica guiada
+Pista: ejecuta `mvn test`, provoca un fallo deliberado después de la primera operación y diagnostica la inconsistencia; corrige con transacción, deduplicación o evidencia explícita. Resultado esperado: una sola transición observable.
+
+#### Paso 6 · Práctica independiente
+Añade una prueba concurrente, un contrato de error, una métrica y un runbook de recuperación; explica qué no garantiza la solución.
+
+#### Paso 7 · Cierre y evidencia
+Guarda pruebas, logs, métrica y decisión; como siguiente paso revisa el mismo invariante en otro adaptador. Errores comunes: transacción demasiado amplia, asumir exactly-once, métricas sin acción y contratos solo documentales. Fuentes oficiales: https://docs.spring.io/spring-framework/reference/data-access/transaction.html y https://docs.spring.io/spring-boot/reference/actuator/.
+**¿Por qué es importante?** Porque los sistemas distribuidos fallan en los bordes y necesitan garantías demostrables.
+**Evidencia de aprendizaje:** entrega la prueba normal, el fallo diagnosticado y la corrección medida.
 **Conceptos clave:** timeout, idempotency key, atomicidad, unique constraint, optimistic locking, double write, transactional outbox, relay, at-least-once, Kafka transaction, offset, deduplication, poison message y reconciliation.
 
 Un timeout después del commit deja resultado ambiguo. El cliente repite; el servidor debe reconocer la misma intención. Guarda clave de idempotencia asociada a principal, operación y hash de request en la misma transacción del efecto. Una restricción única decide carreras; un `find` previo no basta.
@@ -96,6 +156,36 @@ reconciliador: pedidos vs proyección -> reparar
 
 ### Tema 3: Contratos ejecutables protegen despliegues independientes
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás comprobar este principio desde cero. Prerrequisitos: JDK 21, Maven, Docker y un editor.
+
+#### Paso 2 · Contexto y caso real
+En un caso real de una plataforma de entregas, un fallo de base, red o consumidor puede ocurrir después de una escritura; el diseño debe preservar invariantes.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+Una transacción delimita una frontera de consistencia, no todo el sistema. Reintentos requieren idempotencia; contratos y métricas convierten comportamiento en evidencia. La analogía es una cadena de custodia: cada transferencia tiene límites y un registro verificable.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-spring-m13
+cd ejemplo-spring-m13
+curl -fsSL https://start.spring.io/starter.zip -d dependencies=web,data-jpa,actuator -d javaVersion=21 -o app.zip
+unzip app.zip
+mvn test
+```
+Crea `src/main/java/com/example/demo/InvariantService.java` con una operación mínima y una prueba que compruebe el invariante.
+
+#### Paso 5 · Práctica guiada
+Pista: ejecuta `mvn test`, provoca un fallo deliberado después de la primera operación y diagnostica la inconsistencia; corrige con transacción, deduplicación o evidencia explícita. Resultado esperado: una sola transición observable.
+
+#### Paso 6 · Práctica independiente
+Añade una prueba concurrente, un contrato de error, una métrica y un runbook de recuperación; explica qué no garantiza la solución.
+
+#### Paso 7 · Cierre y evidencia
+Guarda pruebas, logs, métrica y decisión; como siguiente paso revisa el mismo invariante en otro adaptador. Errores comunes: transacción demasiado amplia, asumir exactly-once, métricas sin acción y contratos solo documentales. Fuentes oficiales: https://docs.spring.io/spring-framework/reference/data-access/transaction.html y https://docs.spring.io/spring-boot/reference/actuator/.
+**¿Por qué es importante?** Porque los sistemas distribuidos fallan en los bordes y necesitan garantías demostrables.
+**Evidencia de aprendizaje:** entrega la prueba normal, el fallo diagnosticado y la corrección medida.
 **Conceptos clave:** OpenAPI, schema, Problem Details, consumer, provider, contract test, stub, backward compatibility, additive change, enum, deprecation, versioning y semantic change.
 
 OpenAPI documenta request, response, seguridad y errores. Define DTOs públicos, no entidades JPA. Usa `application/problem+json` para errores consistentes con type, title, status, detail e instance/correlation ID sin stack. Verifica el documento contra MockMvc o tráfico de integración; generar una página Swagger no garantiza coincidencia.
@@ -141,6 +231,36 @@ telemetría -> deprecación -> período dual -> sunset
 
 ### Tema 4: Observabilidad sirve a un objetivo y a una decisión
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás comprobar este principio desde cero. Prerrequisitos: JDK 21, Maven, Docker y un editor.
+
+#### Paso 2 · Contexto y caso real
+En un caso real de una plataforma de entregas, un fallo de base, red o consumidor puede ocurrir después de una escritura; el diseño debe preservar invariantes.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+Una transacción delimita una frontera de consistencia, no todo el sistema. Reintentos requieren idempotencia; contratos y métricas convierten comportamiento en evidencia. La analogía es una cadena de custodia: cada transferencia tiene límites y un registro verificable.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-spring-m13
+cd ejemplo-spring-m13
+curl -fsSL https://start.spring.io/starter.zip -d dependencies=web,data-jpa,actuator -d javaVersion=21 -o app.zip
+unzip app.zip
+mvn test
+```
+Crea `src/main/java/com/example/demo/InvariantService.java` con una operación mínima y una prueba que compruebe el invariante.
+
+#### Paso 5 · Práctica guiada
+Pista: ejecuta `mvn test`, provoca un fallo deliberado después de la primera operación y diagnostica la inconsistencia; corrige con transacción, deduplicación o evidencia explícita. Resultado esperado: una sola transición observable.
+
+#### Paso 6 · Práctica independiente
+Añade una prueba concurrente, un contrato de error, una métrica y un runbook de recuperación; explica qué no garantiza la solución.
+
+#### Paso 7 · Cierre y evidencia
+Guarda pruebas, logs, métrica y decisión; como siguiente paso revisa el mismo invariante en otro adaptador. Errores comunes: transacción demasiado amplia, asumir exactly-once, métricas sin acción y contratos solo documentales. Fuentes oficiales: https://docs.spring.io/spring-framework/reference/data-access/transaction.html y https://docs.spring.io/spring-boot/reference/actuator/.
+**¿Por qué es importante?** Porque los sistemas distribuidos fallan en los bordes y necesitan garantías demostrables.
+**Evidencia de aprendizaje:** entrega la prueba normal, el fallo diagnosticado y la corrección medida.
 **Conceptos clave:** Observation, trace, span, metric, log, baggage, cardinality, correlation, OpenTelemetry, SLI, SLO, error budget, timeout, retry, circuit breaker, bulkhead, readiness, incident y postmortem.
 
 Spring Boot usa Micrometer Observation para métricas y trazas. Instrumentación automática cubre HTTP y repositorios; agrega observación de negocio donde responde una pregunta, evitando duplicar la automática con anotaciones. Tags de baja cardinalidad incluyen resultado o tipo de operación; `userId`, orderId y URL cruda pertenecen a logs/traces protegidos, no labels métricos.

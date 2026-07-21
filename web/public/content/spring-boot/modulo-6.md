@@ -5,6 +5,36 @@
 
 ### Tema 1: Slices de testing — @WebMvcTest
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás probar este componente desde cero. Prerrequisitos: JDK 21, Maven, Docker y un editor. Verifica java --version, mvn --version y docker --version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real, una API de entregas necesita detectar rápido si falla el controlador, la persistencia o la integración completa. Cada tipo de prueba responde una pregunta distinta.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+Un slice carga solo la capa necesaria y da feedback rápido; una prueba de integración verifica adaptadores reales; una prueba end-to-end confirma el flujo completo. Testcontainers acerca la base de datos de producción sin instalarla permanentemente. La analogía es revisar una flota: inspección de pieza, prueba de vehículo y recorrido completo tienen costes y coberturas diferentes.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-spring-m6
+cd ejemplo-spring-m6
+curl -fsSL https://start.spring.io/starter.zip -d dependencies=web,test -d javaVersion=21 -o app.zip
+unzip app.zip
+mvn test
+```
+Crea `src/test/java/com/example/demo/DeliveryControllerTest.java` con el slice apropiado y una aserción sobre el status HTTP.
+
+#### Paso 5 · Práctica guiada
+Pista: ejecuta `mvn test`, rompe deliberadamente la ruta para obtener un fallo diagnóstico y restáurala. Resultado esperado: la prueba termina verde y señala la capa comprobada.
+
+#### Paso 6 · Práctica independiente
+Añade una prueba de repositorio con Testcontainers, una prueba de servicio con mock y una integración completa; mide su duración y justifica la pirámide.
+
+#### Paso 7 · Cierre y evidencia
+Guarda salida de Maven, tiempos y cobertura; como siguiente paso configura la ejecución en CI. Errores comunes: cargar el contexto completo para todo, mocks que ocultan SQL, datos compartidos y no limpiar contenedores. Fuentes oficiales: https://docs.spring.io/spring-boot/reference/testing/index.html y https://java.testcontainers.org/.
+**¿Por qué es importante?** Porque una estrategia de pruebas equilibrada entrega confianza sin hacer lento cada cambio.
+**Evidencia de aprendizaje:** entrega tres pruebas, sus tiempos, el fallo diagnosticado y la justificación de alcance.
 **Conceptos clave:** contexto parcial, más rápido que el contexto completo.
 
 `@WebMvcTest(TareaController.class)` levanta únicamente el contexto de Spring necesario para probar la capa web (el controller, sus filtros, y la infraestructura de serialización JSON), mockeando automáticamente cualquier otra capa (como el servicio inyectado, marcado con `@MockBean`), en vez de levantar la aplicación completa con todas sus capas reales, incluyendo persistencia y configuración completa: `@Autowired MockMvc mockMvc; @MockBean TareaService servicio;` permite probar exactamente cómo el controller maneja una petición HTTP (el mapeo de rutas, la serialización de la respuesta, el manejo de validación) sin depender de que el servicio real ni la base de datos real estén disponibles ni configurados para la prueba.
@@ -33,6 +63,36 @@ class TareaControllerTest {
 
 ### Tema 2: @DataJpaTest con Testcontainers
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás probar este componente desde cero. Prerrequisitos: JDK 21, Maven, Docker y un editor. Verifica java --version, mvn --version y docker --version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real, una API de entregas necesita detectar rápido si falla el controlador, la persistencia o la integración completa. Cada tipo de prueba responde una pregunta distinta.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+Un slice carga solo la capa necesaria y da feedback rápido; una prueba de integración verifica adaptadores reales; una prueba end-to-end confirma el flujo completo. Testcontainers acerca la base de datos de producción sin instalarla permanentemente. La analogía es revisar una flota: inspección de pieza, prueba de vehículo y recorrido completo tienen costes y coberturas diferentes.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-spring-m6
+cd ejemplo-spring-m6
+curl -fsSL https://start.spring.io/starter.zip -d dependencies=web,test -d javaVersion=21 -o app.zip
+unzip app.zip
+mvn test
+```
+Crea `src/test/java/com/example/demo/DeliveryControllerTest.java` con el slice apropiado y una aserción sobre el status HTTP.
+
+#### Paso 5 · Práctica guiada
+Pista: ejecuta `mvn test`, rompe deliberadamente la ruta para obtener un fallo diagnóstico y restáurala. Resultado esperado: la prueba termina verde y señala la capa comprobada.
+
+#### Paso 6 · Práctica independiente
+Añade una prueba de repositorio con Testcontainers, una prueba de servicio con mock y una integración completa; mide su duración y justifica la pirámide.
+
+#### Paso 7 · Cierre y evidencia
+Guarda salida de Maven, tiempos y cobertura; como siguiente paso configura la ejecución en CI. Errores comunes: cargar el contexto completo para todo, mocks que ocultan SQL, datos compartidos y no limpiar contenedores. Fuentes oficiales: https://docs.spring.io/spring-boot/reference/testing/index.html y https://java.testcontainers.org/.
+**¿Por qué es importante?** Porque una estrategia de pruebas equilibrada entrega confianza sin hacer lento cada cambio.
+**Evidencia de aprendizaje:** entrega tres pruebas, sus tiempos, el fallo diagnosticado y la justificación de alcance.
 **Conceptos clave:** base de datos real desechable, comportamiento fiel frente a H2 en memoria.
 
 `@DataJpaTest @Testcontainers class TareaRepositoryTest { @Container static PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:16"); @DynamicPropertySource static void propiedades(DynamicPropertyRegistry registry) { registry.add("spring.datasource.url", postgres::getJdbcUrl); } }` levanta un contenedor Docker real de PostgreSQL específicamente para la duración de esta suite de pruebas, configurando dinámicamente la URL de conexión de la aplicación bajo prueba para apuntar hacia ese contenedor efímero, descartado automáticamente al finalizar la suite completa de pruebas.
@@ -61,6 +121,36 @@ class TareaRepositoryTest {
 
 ### Tema 3: @SpringBootTest completo y estrategia de pirámide de tests
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás probar este componente desde cero. Prerrequisitos: JDK 21, Maven, Docker y un editor. Verifica java --version, mvn --version y docker --version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real, una API de entregas necesita detectar rápido si falla el controlador, la persistencia o la integración completa. Cada tipo de prueba responde una pregunta distinta.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+Un slice carga solo la capa necesaria y da feedback rápido; una prueba de integración verifica adaptadores reales; una prueba end-to-end confirma el flujo completo. Testcontainers acerca la base de datos de producción sin instalarla permanentemente. La analogía es revisar una flota: inspección de pieza, prueba de vehículo y recorrido completo tienen costes y coberturas diferentes.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-spring-m6
+cd ejemplo-spring-m6
+curl -fsSL https://start.spring.io/starter.zip -d dependencies=web,test -d javaVersion=21 -o app.zip
+unzip app.zip
+mvn test
+```
+Crea `src/test/java/com/example/demo/DeliveryControllerTest.java` con el slice apropiado y una aserción sobre el status HTTP.
+
+#### Paso 5 · Práctica guiada
+Pista: ejecuta `mvn test`, rompe deliberadamente la ruta para obtener un fallo diagnóstico y restáurala. Resultado esperado: la prueba termina verde y señala la capa comprobada.
+
+#### Paso 6 · Práctica independiente
+Añade una prueba de repositorio con Testcontainers, una prueba de servicio con mock y una integración completa; mide su duración y justifica la pirámide.
+
+#### Paso 7 · Cierre y evidencia
+Guarda salida de Maven, tiempos y cobertura; como siguiente paso configura la ejecución en CI. Errores comunes: cargar el contexto completo para todo, mocks que ocultan SQL, datos compartidos y no limpiar contenedores. Fuentes oficiales: https://docs.spring.io/spring-boot/reference/testing/index.html y https://java.testcontainers.org/.
+**¿Por qué es importante?** Porque una estrategia de pruebas equilibrada entrega confianza sin hacer lento cada cambio.
+**Evidencia de aprendizaje:** entrega tres pruebas, sus tiempos, el fallo diagnosticado y la justificación de alcance.
 **Conceptos clave:** contexto completo, muchos unitarios/pocos de integración completa.
 
 `@SpringBootTest` levanta absolutamente todo el contexto de la aplicación, incluyendo todas las capas reales configuradas exactamente como estarían en producción, apropiado para tests end-to-end que verifican un flujo completo de principio a fin a través de múltiples capas reales interactuando entre sí, pero siendo el nivel de test más lento de arrancar de los tres niveles disponibles (tests unitarios con Mockito puro, slices como `@WebMvcTest`/`@DataJpaTest`, y `@SpringBootTest` completo), dado que inicializa absolutamente todos los componentes de la aplicación, no solo los relevantes para una capa específica.

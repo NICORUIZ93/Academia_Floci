@@ -5,6 +5,61 @@
 
 ### Tema 1: Cabeceras seguras con helmet
 
+#### Paso 1 · Objetivo y preparación
+
+Al finalizar podrás aplicar cabeceras HTTP defensivas y comprobarlas con `curl`. **Prerrequisitos:** Node LTS, Express y terminal; ejemplo independiente desde una carpeta vacía.
+
+#### Paso 2 · Contexto y caso real
+
+Un navegador puede interpretar una respuesta de manera peligrosa si faltan restricciones. Una API pública necesita reducir superficie antes de implementar reglas de negocio.
+
+#### Paso 3 · Teoría y analogía aplicada
+
+Helmet agrupa middleware que establece políticas como CSP, HSTS y `X-Content-Type-Options`. Son señales para el navegador, no un sustituto de autorización; funcionan como barandillas en una carretera.
+
+#### Paso 4 · Demostración guiada desde cero
+
+Implementa `src/audit-notes.md` para registrar la dependencia afectada, severidad, versión corregida y decisión del equipo.
+
+```bash
+mkdir ejemplo-helmet
+cd ejemplo-helmet
+npm init -y
+npm install express helmet
+mkdir src
+```
+
+Crea `src/server.js`:
+
+```js
+import express from "express";
+import helmet from "helmet";
+const app = express();
+app.use(helmet());
+app.get("/", (_req, res) => res.json({ ok: true }));
+app.listen(3000, () => console.log("seguro en 3000"));
+```
+
+Ejecuta `node src/server.js` y `curl -I http://127.0.0.1:3000`. **Resultado esperado:** aparecen `x-content-type-options`, `content-security-policy` y otras cabeceras. **Fallo deliberado y diagnóstico:** elimina `helmet()` y compara; la ausencia demuestra una regresión observable, no un error de Express.
+
+#### Paso 5 · Práctica guiada
+
+Configura una CSP mínima para una respuesta sin scripts. **Pista:** prueba primero en modo reporte para no bloquear contenido legítimo.
+
+#### Paso 6 · Práctica independiente
+
+Documenta qué cabeceras aplican a navegador y cuáles no protegen una llamada server-to-server.
+
+#### Paso 7 · Cierre y conexión
+
+Ya verificas cabeceras desde el cliente. El siguiente tema limitará abuso por IP y usuario.
+
+**Errores comunes:** copiar CSP sin probar; activar HSTS local sin HTTPS; creer que Helmet valida entradas; ocultar cabeceras de diagnóstico.
+
+**Fuentes oficiales:** [Helmet](https://helmetjs.github.io/), [MDN HTTP headers](https://developer.mozilla.org/es/docs/Web/HTTP/Headers) y [OWASP Secure Headers](https://owasp.org/www-project-secure-headers/).
+
+**Evidencia de aprendizaje:** entrega la salida de cabeceras antes y después de retirar Helmet.
+
 **Conceptos clave:** cabeceras HTTP de seguridad, mitigación de ataques comunes del navegador.
 
 `helmet`, un middleware de Express (y también disponible para Fastify), establece automáticamente un conjunto de cabeceras HTTP que mitigan categorías conocidas de ataques del lado del navegador, con una única línea de configuración (`app.use(helmet())`) en vez de requerir que cada desarrollador configure manualmente cada cabecera individual conociendo exactamente su propósito específico. Entre las cabeceras que establece: `X-Content-Type-Options: nosniff` previene que el navegador intente adivinar el tipo de contenido de una respuesta de forma distinta a la declarada explícitamente en `Content-Type`, mitigando ciertos ataques que dependen de esa ambigüedad de interpretación; `Strict-Transport-Security` indica al navegador que solo debe comunicarse con el sitio mediante HTTPS en futuras visitas, incluso si el usuario intenta acceder explícitamente mediante HTTP, previniendo ataques de downgrade de protocolo.
@@ -27,6 +82,59 @@ app.use(helmet()); // agrega X-Content-Type-Options, Strict-Transport-Security, 
 
 ### Tema 2: Rate limiting
 
+#### Paso 1 · Objetivo y preparación
+
+Al finalizar podrás rechazar solicitudes excesivas con un límite explícito. **Prerrequisitos:** Node LTS, Express y npm; ejemplo independiente desde una carpeta vacía.
+
+#### Paso 2 · Contexto y caso real
+
+Login, búsqueda y recuperación de contraseña son objetivos de abuso. Un límite reduce fuerza bruta, aunque no reemplaza autenticación ni protección distribuida.
+
+#### Paso 3 · Teoría y analogía aplicada
+
+Una ventana fija cuenta solicitudes por intervalo; token bucket permite ráfagas controladas. Es el torniquete de una estación: deja pasar un flujo y frena la saturación.
+
+#### Paso 4 · Demostración guiada desde cero
+
+```bash
+mkdir ejemplo-rate-limit
+cd ejemplo-rate-limit
+npm init -y
+npm install express express-rate-limit
+mkdir src
+```
+
+Crea `src/server.js`:
+
+```js
+import express from "express";
+import rateLimit from "express-rate-limit";
+const app = express();
+app.use(rateLimit({ windowMs: 60_000, limit: 3, standardHeaders: true, legacyHeaders: false }));
+app.get("/", (_req, res) => res.send("ok"));
+app.listen(3000, () => console.log("limite 3/min"));
+```
+
+Ejecuta el servidor y cuatro veces `curl -i http://127.0.0.1:3000`. **Resultado esperado:** las primeras tres son 200 y la cuarta 429. **Fallo deliberado y diagnóstico:** elimina el middleware; todas pasan, demostrando una ruta sin límite.
+
+#### Paso 5 · Práctica guiada
+
+Aplica un límite más estricto solo a `/login`. **Pista:** usa un router o middleware por ruta, no un número global para todos los recursos.
+
+#### Paso 6 · Práctica independiente
+
+Compara memoria local con un store Redis para dos procesos y documenta por qué un límite local no es global.
+
+#### Paso 7 · Cierre y conexión
+
+Ya proteges una superficie concreta y conoces sus límites distribuidos. El siguiente tema tratará inyección y XSS.
+
+**Errores comunes:** confiar en IP detrás de proxy sin configurarlo; bloquear usuarios legítimos; no informar `Retry-After`; limitar solo en frontend; usar memoria local en clúster.
+
+**Fuentes oficiales:** [express-rate-limit](https://express-rate-limit.mintlify.app/), [RFC 6585](https://www.rfc-editor.org/rfc/rfc6585) y [OWASP API4](https://owasp.org/API-Security/editions/2023/en/0xa4-unrestricted-resource-consumption/).
+
+**Evidencia de aprendizaje:** entrega la salida de las cuatro respuestas y sus cabeceras de límite.
+
 **Conceptos clave:** límite de peticiones por ventana de tiempo, prevención de abuso y fuerza bruta.
 
 Sin ningún límite en la tasa de peticiones que un cliente puede realizar, un solo cliente (deliberadamente malicioso, o simplemente un bug de un cliente legítimo que reintenta sin control) puede saturar una API con volumen excesivo de peticiones, degradando el servicio para todos los demás usuarios legítimos, o realizar ataques de fuerza bruta contra un endpoint de login (probando sistemáticamente miles de combinaciones de contraseña por segundo contra la misma cuenta) sin ninguna fricción que lo dificulte. `express-rate-limit` (u otras bibliotecas equivalentes) limita el número de peticiones aceptadas desde una misma IP (u otro identificador de cliente) dentro de una ventana de tiempo configurable, respondiendo con `429` (Too Many Requests) una vez que ese límite se excede dentro de la ventana.
@@ -48,6 +156,60 @@ app.use(rateLimit({ windowMs: 60_000, max: 100 })); // máx 100 requests/minuto 
 ```
 
 ### Tema 3: Inyección SQL y sanitización contra XSS
+
+#### Paso 1 · Objetivo y preparación
+
+Al finalizar podrás parametrizar una consulta y escapar texto HTML. **Prerrequisitos:** Node LTS, SQL básico y navegador; ejemplo independiente desde una carpeta vacía.
+
+#### Paso 2 · Contexto y caso real
+
+Una búsqueda con texto del usuario puede alterar una consulta o ejecutar markup. Validar formato y parametrizar son controles diferentes.
+
+#### Paso 3 · Teoría y analogía aplicada
+
+Los parámetros separan datos de instrucciones, como escribir un valor en un formulario en vez de pegarlo en las órdenes. Escapar HTML convierte símbolos peligrosos en texto visible.
+
+#### Paso 4 · Demostración guiada desde cero
+
+```bash
+mkdir ejemplo-inyeccion
+cd ejemplo-inyeccion
+npm init -y
+npm install pg escape-html
+mkdir src
+```
+
+Crea `src/seguro.js`:
+
+```js
+import escapeHtml from "escape-html";
+export function consultaSegura(texto) {
+  const sql = "SELECT id FROM paquetes WHERE codigo = $1";
+  const params = [texto];
+  return { sql, params, html: escapeHtml(texto) };
+}
+console.log(consultaSegura("RF-1' OR '1'='1"));
+```
+
+Ejecuta `node src/seguro.js`. **Resultado esperado:** la cadena queda en `params` y el HTML muestra entidades escapadas. **Fallo deliberado y diagnóstico:** concatena el valor en `sql`; la salida muestra cómo los datos pasan a ser instrucciones, una vulnerabilidad, no una consulta válida.
+
+#### Paso 5 · Práctica guiada
+
+Valida que `codigo` cumpla `/^RF-\d+$/`. **Pista:** rechaza antes de llegar a la base, pero conserva parámetros incluso tras validar.
+
+#### Paso 6 · Práctica independiente
+
+Añade una prueba que intente `<img src=x onerror=alert(1)>` y entrega el texto escapado y la entrada rechazada.
+
+#### Paso 7 · Cierre y conexión
+
+Ya distingues parametrización, validación y escape. El siguiente tema reunirá controles en una auditoría OWASP.
+
+**Errores comunes:** usar blacklist SQL; escapar para SQL en vez de parametrizar; confiar en validación frontend; insertar HTML sin escape; loggear payloads sensibles.
+
+**Fuentes oficiales:** [node-postgres queries](https://node-postgres.com/features/queries), [OWASP SQL Injection](https://owasp.org/www-community/attacks/SQL_Injection) y [OWASP XSS](https://owasp.org/www-community/attacks/xss/).
+
+**Evidencia de aprendizaje:** entrega la salida de una consulta parametrizada y un payload XSS escapado.
 
 **Conceptos clave:** consultas parametrizadas, escape automático, sanitización de HTML.
 
@@ -73,6 +235,50 @@ const { rows } = await pool.query("SELECT * FROM usuarios WHERE email = $1", [em
 ```
 
 ### Tema 4: OWASP API Security Top 10 y auditoría de dependencias
+
+#### Paso 1 · Objetivo y preparación
+
+Al finalizar podrás ejecutar una auditoría de dependencias y priorizar un riesgo API. **Prerrequisitos:** Node LTS, npm y lectura básica de reportes; ejemplo independiente desde una carpeta vacía.
+
+#### Paso 2 · Contexto y caso real
+
+Una API puede estar vulnerable aunque su código propio parezca correcto: dependencia transitoria, autorización por objeto o consumo sin límite también son riesgos.
+
+#### Paso 3 · Teoría y analogía aplicada
+
+OWASP es una lista de clases de fallos, no un certificado. `npm audit` detecta avisos conocidos, pero no reemplaza threat modeling. Es una inspección de extintores, no una garantía de que el edificio sea seguro.
+
+#### Paso 4 · Demostración guiada desde cero
+
+```bash
+mkdir ejemplo-auditoria-api
+cd ejemplo-auditoria-api
+npm init -y
+npm install express
+npm audit --json > audit.json
+```
+
+Crea `audit-notes.md` para registrar dependencia afectada, severidad, versión corregida y decisión del equipo. Ese archivo es la evidencia que acompaña al código de la auditoría.
+
+Abre `audit.json` y ejecuta `npm audit`. **Resultado esperado:** un reporte con vulnerabilidades o el mensaje de árbol limpio; ambos son resultados válidos que debes interpretar. **Fallo deliberado y diagnóstico:** instala una versión vulnerable conocida en un proyecto temporal; `npm audit` marca severidad y dependencia transitiva. No ejecutes exploits.
+
+#### Paso 5 · Práctica guiada
+
+Clasifica un aviso como producción o desarrollo y decide si actualizar, reemplazar o aceptar temporalmente. **Pista:** revisa ruta de dependencia y versión corregida.
+
+#### Paso 6 · Práctica independiente
+
+Construye una matriz con autenticación, autorización por objeto, consumo de recursos y SSRF; entrega amenaza, evidencia y mitigación.
+
+#### Paso 7 · Cierre y conexión
+
+Ya conviertes un reporte técnico en decisiones priorizadas. El siguiente módulo tratará despliegue y contenedores.
+
+**Errores comunes:** ejecutar `npm audit fix --force` sin revisar; ignorar severidad; confundir dependencia dev con runtime; cerrar avisos sin evidencia; publicar el reporte con secretos.
+
+**Fuentes oficiales:** [npm audit](https://docs.npmjs.com/cli/v10/commands/npm-audit), [OWASP API Security Top 10](https://owasp.org/API-Security/) y [Node security](https://nodejs.org/en/learn/getting-started/security-best-practices).
+
+**Evidencia de aprendizaje:** entrega la salida del reporte, una matriz de riesgos y una decisión justificada.
 
 **Conceptos clave:** marco de referencia de vulnerabilidades comunes de APIs, `npm audit`.
 

@@ -64,7 +64,13 @@ const answer = 42;
 
 ## Laboratorio práctico
 
-Construye y verifica el ejemplo.`;
+Construye y verifica el ejemplo.
+
+#### Ejercicio verificable 1
+
+¿Qué valor devuelve el ejemplo?
+
+**Respuesta esperada:** 42|cuarenta y dos`;
     const fetchSpy = vi.spyOn(globalThis, 'fetch').mockImplementation(input => {
       const url = String(input);
       return Promise.resolve(url.includes('topic-index.json')
@@ -124,6 +130,14 @@ Construye y verifica el ejemplo.`;
       expect(text).not.toContain('Ejercicios de evaluación');
       expect(page.querySelector('.module-practice')).toBeFalsy();
       expect(page.querySelector('.module-quiz')).toBeFalsy();
+      const exercise = page.querySelector<HTMLElement>('.verifiable-exercise');
+      const exerciseInput = exercise?.querySelector<HTMLInputElement>('input');
+      const verifyExercise = exercise?.querySelector<HTMLButtonElement>('[data-verify-exercise]');
+      expect(exercise && exerciseInput && verifyExercise).toBeTruthy();
+      exerciseInput!.value = '42';
+      verifyExercise!.click();
+      expect(exercise?.querySelector('.exercise-feedback.correct')?.textContent).toContain('Correcto');
+      expect(verifyExercise?.disabled).toBe(true);
       expect(page.querySelectorAll('.topic-troubleshooting')).toHaveLength(2);
       expect(page.querySelectorAll('.topic-step-navigation')).toHaveLength(2);
       expect(page.querySelector('.topic-step-navigation')?.textContent).toContain('Tema 1 de 2');

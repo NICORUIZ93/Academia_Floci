@@ -5,6 +5,34 @@
 
 ### Tema 1: Checked vs unchecked exceptions
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás manejar fallos de este tema desde cero. Prerrequisitos: JDK 21 y un editor. Comprueba java --version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real de entregas, red, archivos y datos inválidos fallan de maneras distintas; el programa debe decidir qué recuperar, qué informar y qué detener.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+Las checked exceptions obligan a declarar o tratar condiciones recuperables; las unchecked suelen representar errores de programación o precondiciones incumplidas. try-with-resources cierra recursos automáticamente. Una excepción personalizada comunica dominio sin ocultar la causa. La analogía es un protocolo de emergencia: registrar el incidente y liberar la puerta es mejor que fingir que nada ocurrió.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-java-m3
+cd ejemplo-java-m3
+mkdir -p src/main/java/com/example
+```
+Crea src/main/java/com/example/Main.java con una lectura segura y una excepción DeliveryNotFoundException; compila con javac -d out y ejecuta.
+
+#### Paso 5 · Práctica guiada
+Pista: elimina deliberadamente el archivo o lanza una entrada inválida para provocar un fallo deliberado; observa el stack trace, conserva la causa y corrige la ruta. Resultado esperado: error controlado y recurso cerrado.
+
+#### Paso 6 · Práctica independiente
+Añade una política que clasifique errores recuperables y no recuperables, una prueba de mensaje y un log estructurado sin datos sensibles.
+
+#### Paso 7 · Cierre y evidencia
+Guarda comandos, salida y diagnóstico; como siguiente paso prueba errores de red. Errores comunes: catch vacío, capturar Throwable, perder la causa, devolver stack trace al cliente y cerrar recursos manualmente. Fuentes oficiales: https://dev.java/learn/exceptions/ y https://docs.oracle.com/javase/tutorial/essential/exceptions/.
+**¿Por qué es importante?** Porque el manejo de excepciones define cómo se recupera el sistema y qué información recibe el usuario.
+**Evidencia de aprendizaje:** entrega código, fallo reproducido, corrección y prueba de cierre.
 **Conceptos clave:** obligación de manejo verificada en compilación, indicación de bug.
 
 Las excepciones checked (como `IOException`) son verificadas por el compilador: cualquier método que pueda lanzar una excepción checked debe declararlo explícitamente en su firma con `throws` (`void leerArchivo() throws IOException { ... }`), y cualquier código que invoque ese método está obligado, también verificado en tiempo de compilación, a manejar esa excepción con un `try`/`catch` o a propagarla declarándola también con `throws` en su propia firma, sin excepción posible — el código simplemente no compila si se omite ese manejo obligatorio.
@@ -33,6 +61,34 @@ Quita temporalmente `throws IOException` y observa el error de compilación. Des
 
 ### Tema 2: try-with-resources
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás manejar fallos de este tema desde cero. Prerrequisitos: JDK 21 y un editor. Comprueba java --version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real de entregas, red, archivos y datos inválidos fallan de maneras distintas; el programa debe decidir qué recuperar, qué informar y qué detener.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+Las checked exceptions obligan a declarar o tratar condiciones recuperables; las unchecked suelen representar errores de programación o precondiciones incumplidas. try-with-resources cierra recursos automáticamente. Una excepción personalizada comunica dominio sin ocultar la causa. La analogía es un protocolo de emergencia: registrar el incidente y liberar la puerta es mejor que fingir que nada ocurrió.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-java-m3
+cd ejemplo-java-m3
+mkdir -p src/main/java/com/example
+```
+Crea src/main/java/com/example/Main.java con una lectura segura y una excepción DeliveryNotFoundException; compila con javac -d out y ejecuta.
+
+#### Paso 5 · Práctica guiada
+Pista: elimina deliberadamente el archivo o lanza una entrada inválida para provocar un fallo deliberado; observa el stack trace, conserva la causa y corrige la ruta. Resultado esperado: error controlado y recurso cerrado.
+
+#### Paso 6 · Práctica independiente
+Añade una política que clasifique errores recuperables y no recuperables, una prueba de mensaje y un log estructurado sin datos sensibles.
+
+#### Paso 7 · Cierre y evidencia
+Guarda comandos, salida y diagnóstico; como siguiente paso prueba errores de red. Errores comunes: catch vacío, capturar Throwable, perder la causa, devolver stack trace al cliente y cerrar recursos manualmente. Fuentes oficiales: https://dev.java/learn/exceptions/ y https://docs.oracle.com/javase/tutorial/essential/exceptions/.
+**¿Por qué es importante?** Porque el manejo de excepciones define cómo se recupera el sistema y qué información recibe el usuario.
+**Evidencia de aprendizaje:** entrega código, fallo reproducido, corrección y prueba de cierre.
 **Conceptos clave:** `AutoCloseable`, cierre garantizado incluso ante error.
 
 `try (BufferedReader reader = Files.newBufferedReader(ruta)) { String linea = reader.readLine(); }` declara un recurso dentro del propio paréntesis del `try`, garantizando que Java invoque automáticamente `reader.close()` al finalizar el bloque, sin necesidad de un bloque `finally` manual explícito para ese propósito, y crucialmente incluso si ocurre una excepción dentro del bloque `try`: el cierre del recurso está garantizado sin importar cómo se abandone el bloque (normalmente, o mediante una excepción propagada).
@@ -59,6 +115,34 @@ Dentro del bloque lanza deliberadamente `new IllegalStateException("fallo de pru
 
 ### Tema 3: Excepciones personalizadas y no tragar excepciones
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás manejar fallos de este tema desde cero. Prerrequisitos: JDK 21 y un editor. Comprueba java --version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real de entregas, red, archivos y datos inválidos fallan de maneras distintas; el programa debe decidir qué recuperar, qué informar y qué detener.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+Las checked exceptions obligan a declarar o tratar condiciones recuperables; las unchecked suelen representar errores de programación o precondiciones incumplidas. try-with-resources cierra recursos automáticamente. Una excepción personalizada comunica dominio sin ocultar la causa. La analogía es un protocolo de emergencia: registrar el incidente y liberar la puerta es mejor que fingir que nada ocurrió.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-java-m3
+cd ejemplo-java-m3
+mkdir -p src/main/java/com/example
+```
+Crea src/main/java/com/example/Main.java con una lectura segura y una excepción DeliveryNotFoundException; compila con javac -d out y ejecuta.
+
+#### Paso 5 · Práctica guiada
+Pista: elimina deliberadamente el archivo o lanza una entrada inválida para provocar un fallo deliberado; observa el stack trace, conserva la causa y corrige la ruta. Resultado esperado: error controlado y recurso cerrado.
+
+#### Paso 6 · Práctica independiente
+Añade una política que clasifique errores recuperables y no recuperables, una prueba de mensaje y un log estructurado sin datos sensibles.
+
+#### Paso 7 · Cierre y evidencia
+Guarda comandos, salida y diagnóstico; como siguiente paso prueba errores de red. Errores comunes: catch vacío, capturar Throwable, perder la causa, devolver stack trace al cliente y cerrar recursos manualmente. Fuentes oficiales: https://dev.java/learn/exceptions/ y https://docs.oracle.com/javase/tutorial/essential/exceptions/.
+**¿Por qué es importante?** Porque el manejo de excepciones define cómo se recupera el sistema y qué información recibe el usuario.
+**Evidencia de aprendizaje:** entrega código, fallo reproducido, corrección y prueba de cierre.
 **Conceptos clave:** modelar errores de dominio, antipatrón del catch vacío.
 
 Definir una excepción personalizada específica del dominio de la aplicación (`class SaldoInsuficienteException extends RuntimeException { SaldoInsuficienteException(String mensaje) { super(mensaje); } }`) permite comunicar de forma mucho más precisa y expresiva qué condición de error específica ocurrió, en comparación con lanzar una excepción genérica de propósito general (como `RuntimeException` directamente, o `IllegalStateException`), facilitando además que el código que captura esa excepción específica pueda reaccionar de forma diferenciada según el tipo exacto de excepción capturado, en vez de tener que inspeccionar el mensaje de texto de una excepción genérica para determinar qué condición específica ocurrió realmente.

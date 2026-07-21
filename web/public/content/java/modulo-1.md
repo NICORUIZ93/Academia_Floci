@@ -5,6 +5,34 @@
 
 ### Tema 1: Clases, objetos, constructores y encapsulación
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás modelar este concepto desde cero. Prerrequisitos: JDK 21, Maven y un editor. Comprueba java --version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real de entregas, pedidos, conductores y rutas tienen responsabilidades distintas y deben colaborar sin exponer su estado interno.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+Una clase define invariantes; un objeto representa un estado; interfaces expresan capacidades y herencia debe reservarse para una relación verdaderamente sustituible. La encapsulación protege cambios internos. La analogía es una flota: cada vehículo tiene controles propios, pero cumple contratos comunes de operación.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-java-m1
+cd ejemplo-java-m1
+mkdir -p src/main/java/com/example
+```
+Crea src/main/java/com/example/Delivery.java con campos privados, constructor y método de dominio; compila con javac -d out y ejecuta una clase Main.
+
+#### Paso 5 · Práctica guiada
+Pista: ejecuta la clase, intenta modificar directamente un campo privado para provocar un fallo deliberado de compilación y corrígelo mediante un método validado. Resultado esperado: el invariante permanece válido.
+
+#### Paso 6 · Práctica independiente
+Define una interfaz RouteProvider y dos implementaciones; escribe una prueba que demuestre polimorfismo y otra que rechace una entrada inválida.
+
+#### Paso 7 · Cierre y evidencia
+Guarda código, comandos, salida y error; como siguiente paso estudia colecciones. Errores comunes: herencia por reutilización, setters sin reglas, clases gigantes y métodos estáticos globales. Fuentes oficiales: https://dev.java/learn/classes-objects/ y https://docs.oracle.com/javase/tutorial/java/IandI/.
+**¿Por qué es importante?** Porque un modelo orientado a objetos claro reduce acoplamiento y protege reglas del dominio.
+**Evidencia de aprendizaje:** entrega diagrama simple, código, compilación y prueba del invariante.
 **Conceptos clave:** identidad, estado válido, comportamiento y protección de invariantes.
 
 Una clase define el contrato y la implementación de un tipo; un objeto es una instancia concreta creada a partir de esa definición. Los campos representan estado y los métodos representan operaciones válidas sobre ese estado. Encapsular no significa únicamente escribir campos `private` y generar getters/setters: significa impedir que el objeto pueda existir en un estado inválido y exponer operaciones con significado de dominio.
@@ -54,6 +82,34 @@ Provoca dos fallos: número vacío y peso `0`. Debes ver `IllegalArgumentExcepti
 
 ### Tema 2: Herencia y sobreescritura
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás modelar este concepto desde cero. Prerrequisitos: JDK 21, Maven y un editor. Comprueba java --version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real de entregas, pedidos, conductores y rutas tienen responsabilidades distintas y deben colaborar sin exponer su estado interno.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+Una clase define invariantes; un objeto representa un estado; interfaces expresan capacidades y herencia debe reservarse para una relación verdaderamente sustituible. La encapsulación protege cambios internos. La analogía es una flota: cada vehículo tiene controles propios, pero cumple contratos comunes de operación.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-java-m1
+cd ejemplo-java-m1
+mkdir -p src/main/java/com/example
+```
+Crea src/main/java/com/example/Delivery.java con campos privados, constructor y método de dominio; compila con javac -d out y ejecuta una clase Main.
+
+#### Paso 5 · Práctica guiada
+Pista: ejecuta la clase, intenta modificar directamente un campo privado para provocar un fallo deliberado de compilación y corrígelo mediante un método validado. Resultado esperado: el invariante permanece válido.
+
+#### Paso 6 · Práctica independiente
+Define una interfaz RouteProvider y dos implementaciones; escribe una prueba que demuestre polimorfismo y otra que rechace una entrada inválida.
+
+#### Paso 7 · Cierre y evidencia
+Guarda código, comandos, salida y error; como siguiente paso estudia colecciones. Errores comunes: herencia por reutilización, setters sin reglas, clases gigantes y métodos estáticos globales. Fuentes oficiales: https://dev.java/learn/classes-objects/ y https://docs.oracle.com/javase/tutorial/java/IandI/.
+**¿Por qué es importante?** Porque un modelo orientado a objetos claro reduce acoplamiento y protege reglas del dominio.
+**Evidencia de aprendizaje:** entrega diagrama simple, código, compilación y prueba del invariante.
 **Conceptos clave:** `extends`, `@Override`, polimorfismo de subtipo.
 
 `class Perro extends Animal` establece que `Perro` hereda todos los miembros no privados de `Animal`, pudiendo además sobreescribir (`@Override`) el comportamiento de métodos heredados para especializarlo: `Animal` define `hablar()` devolviendo `"..."`, y `Perro` sobreescribe ese mismo método para devolver `"Guau"`, de modo que invocar `hablar()` sobre una referencia de tipo `Animal` que en realidad apunta a un objeto `Perro` en tiempo de ejecución invoca la versión sobreescrita de `Perro`, no la de `Animal`, un comportamiento llamado polimorfismo de subtipo: el método que efectivamente se ejecuta se determina por el tipo real del objeto en tiempo de ejecución, no por el tipo declarado de la variable que lo referencia.
@@ -115,6 +171,34 @@ Escribe mal la firma como `enviar(int guia)` manteniendo `@Override`: el compila
 
 ### Tema 3: Interfaces, clases abstractas y cuándo usar cada una
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás modelar este concepto desde cero. Prerrequisitos: JDK 21, Maven y un editor. Comprueba java --version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real de entregas, pedidos, conductores y rutas tienen responsabilidades distintas y deben colaborar sin exponer su estado interno.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+Una clase define invariantes; un objeto representa un estado; interfaces expresan capacidades y herencia debe reservarse para una relación verdaderamente sustituible. La encapsulación protege cambios internos. La analogía es una flota: cada vehículo tiene controles propios, pero cumple contratos comunes de operación.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-java-m1
+cd ejemplo-java-m1
+mkdir -p src/main/java/com/example
+```
+Crea src/main/java/com/example/Delivery.java con campos privados, constructor y método de dominio; compila con javac -d out y ejecuta una clase Main.
+
+#### Paso 5 · Práctica guiada
+Pista: ejecuta la clase, intenta modificar directamente un campo privado para provocar un fallo deliberado de compilación y corrígelo mediante un método validado. Resultado esperado: el invariante permanece válido.
+
+#### Paso 6 · Práctica independiente
+Define una interfaz RouteProvider y dos implementaciones; escribe una prueba que demuestre polimorfismo y otra que rechace una entrada inválida.
+
+#### Paso 7 · Cierre y evidencia
+Guarda código, comandos, salida y error; como siguiente paso estudia colecciones. Errores comunes: herencia por reutilización, setters sin reglas, clases gigantes y métodos estáticos globales. Fuentes oficiales: https://dev.java/learn/classes-objects/ y https://docs.oracle.com/javase/tutorial/java/IandI/.
+**¿Por qué es importante?** Porque un modelo orientado a objetos claro reduce acoplamiento y protege reglas del dominio.
+**Evidencia de aprendizaje:** entrega diagrama simple, código, compilación y prueba del invariante.
 **Conceptos clave:** contrato sin implementación, comportamiento compartido parcial, múltiple implementación de interfaces.
 
 Una interfaz (`interface Volador { void volar(); }`) define un contrato puro: qué métodos debe tener cualquier clase que la implemente, sin proporcionar ninguna implementación propia por defecto (salvo métodos `default` explícitamente marcados como tales, un caso especial más avanzado), permitiendo que clases completamente no relacionadas entre sí en su jerarquía de herencia (una clase `Pajaro` y una clase `Avion`, por ejemplo, sin ninguna relación de herencia común) implementen el mismo contrato `Volador`, algo que Java permite hacer con múltiples interfaces simultáneamente (`class Pajaro implements Volador, Comestible`), a diferencia de la herencia de clases, donde Java solo permite extender una única superclase.
@@ -161,6 +245,34 @@ Compila los tres archivos y un `PlanificadorDemo.java` con `javac -d out src/mai
 
 ### Tema 4: Sobrecarga vs sobreescritura, y modificadores de acceso
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás modelar este concepto desde cero. Prerrequisitos: JDK 21, Maven y un editor. Comprueba java --version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real de entregas, pedidos, conductores y rutas tienen responsabilidades distintas y deben colaborar sin exponer su estado interno.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+Una clase define invariantes; un objeto representa un estado; interfaces expresan capacidades y herencia debe reservarse para una relación verdaderamente sustituible. La encapsulación protege cambios internos. La analogía es una flota: cada vehículo tiene controles propios, pero cumple contratos comunes de operación.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-java-m1
+cd ejemplo-java-m1
+mkdir -p src/main/java/com/example
+```
+Crea src/main/java/com/example/Delivery.java con campos privados, constructor y método de dominio; compila con javac -d out y ejecuta una clase Main.
+
+#### Paso 5 · Práctica guiada
+Pista: ejecuta la clase, intenta modificar directamente un campo privado para provocar un fallo deliberado de compilación y corrígelo mediante un método validado. Resultado esperado: el invariante permanece válido.
+
+#### Paso 6 · Práctica independiente
+Define una interfaz RouteProvider y dos implementaciones; escribe una prueba que demuestre polimorfismo y otra que rechace una entrada inválida.
+
+#### Paso 7 · Cierre y evidencia
+Guarda código, comandos, salida y error; como siguiente paso estudia colecciones. Errores comunes: herencia por reutilización, setters sin reglas, clases gigantes y métodos estáticos globales. Fuentes oficiales: https://dev.java/learn/classes-objects/ y https://docs.oracle.com/javase/tutorial/java/IandI/.
+**¿Por qué es importante?** Porque un modelo orientado a objetos claro reduce acoplamiento y protege reglas del dominio.
+**Evidencia de aprendizaje:** entrega diagrama simple, código, compilación y prueba del invariante.
 **Conceptos clave:** misma firma vs distintas firmas, niveles de visibilidad.
 
 La sobrecarga (overload) define múltiples métodos con el mismo nombre pero distintas firmas (distinto número o tipo de parámetros) dentro de la misma clase: `int sumar(int a, int b)` y `double sumar(double a, double b)` son dos métodos distintos que el compilador resuelve según los tipos de los argumentos pasados en cada llamada específica, una decisión tomada en tiempo de compilación; la sobreescritura (override, Tema 2) redefine el comportamiento de un método heredado con exactamente la misma firma en una subclase, una decisión resuelta en tiempo de ejecución según el tipo real del objeto.

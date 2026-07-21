@@ -5,6 +5,35 @@
 
 ### Tema 1: URLSession con async/await y Codable
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás consumir una API iOS desde cero. Prerrequisitos: macOS, Xcode y Swift. Verifica swift --version y xcodebuild -version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real de entregas, la app obtiene estados, traduce JSON y debe distinguir error de red, respuesta inválida y cancelación.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+URLSession ejecuta solicitudes; Codable traduce datos; errores tipados comunican causa; retries deben limitarse y respetar cancelación. La analogía es un mensajero: lleva una petición, confirma recepción y no repite indefinidamente si la dirección es inválida.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-ios-m5
+cd ejemplo-ios-m5
+swift package init --type executable
+swift run
+```
+Crea Sources/main.swift con un modelo Codable y una función async que use URLSession; ejecuta swift run y registra status, decodificación y error.
+
+#### Paso 5 · Práctica guiada
+Pista: usa deliberadamente una URL inválida para provocar un fallo deliberado de red; diagnostica el error y corrígela. Resultado esperado: modelo decodificado o error tipado controlado.
+
+#### Paso 6 · Práctica independiente
+Añade timeout, retry con backoff, cancelación al desaparecer la vista y una prueba con JSON corrupto.
+
+#### Paso 7 · Cierre y evidencia
+Guarda request, response, logs y prueba; como siguiente paso estudia persistencia. Errores comunes: ignorar status HTTP, decodificar en MainActor, retry de 4xx y ocultar PII en logs. Fuentes oficiales: https://developer.apple.com/documentation/foundation/urlsession y https://developer.apple.com/documentation/swift/codable.
+**¿Por qué es importante?** Porque la red es una frontera incierta y debe producir resultados explicables.
+**Evidencia de aprendizaje:** entrega cliente, modelo, fallo, retry y cancelación.
 **Conceptos clave:** petición de red como función suspendible, parsing generado automáticamente.
 
 ```swift
@@ -40,6 +69,35 @@ let tareas = try JSONDecoder().decode([Tarea].self, from: datos)
 
 ### Tema 2: Errores tipados
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás consumir una API iOS desde cero. Prerrequisitos: macOS, Xcode y Swift. Verifica swift --version y xcodebuild -version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real de entregas, la app obtiene estados, traduce JSON y debe distinguir error de red, respuesta inválida y cancelación.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+URLSession ejecuta solicitudes; Codable traduce datos; errores tipados comunican causa; retries deben limitarse y respetar cancelación. La analogía es un mensajero: lleva una petición, confirma recepción y no repite indefinidamente si la dirección es inválida.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-ios-m5
+cd ejemplo-ios-m5
+swift package init --type executable
+swift run
+```
+Crea Sources/main.swift con un modelo Codable y una función async que use URLSession; ejecuta swift run y registra status, decodificación y error.
+
+#### Paso 5 · Práctica guiada
+Pista: usa deliberadamente una URL inválida para provocar un fallo deliberado de red; diagnostica el error y corrígela. Resultado esperado: modelo decodificado o error tipado controlado.
+
+#### Paso 6 · Práctica independiente
+Añade timeout, retry con backoff, cancelación al desaparecer la vista y una prueba con JSON corrupto.
+
+#### Paso 7 · Cierre y evidencia
+Guarda request, response, logs y prueba; como siguiente paso estudia persistencia. Errores comunes: ignorar status HTTP, decodificar en MainActor, retry de 4xx y ocultar PII en logs. Fuentes oficiales: https://developer.apple.com/documentation/foundation/urlsession y https://developer.apple.com/documentation/swift/codable.
+**¿Por qué es importante?** Porque la red es una frontera incierta y debe producir resultados explicables.
+**Evidencia de aprendizaje:** entrega cliente, modelo, fallo, retry y cancelación.
 **Conceptos clave:** categorías explícitas de fallo, mensajes específicos por caso.
 
 ```swift
@@ -70,6 +128,35 @@ enum ErrorRed: Error {
 
 ### Tema 3: Reintentos y cancelación
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás consumir una API iOS desde cero. Prerrequisitos: macOS, Xcode y Swift. Verifica swift --version y xcodebuild -version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real de entregas, la app obtiene estados, traduce JSON y debe distinguir error de red, respuesta inválida y cancelación.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+URLSession ejecuta solicitudes; Codable traduce datos; errores tipados comunican causa; retries deben limitarse y respetar cancelación. La analogía es un mensajero: lleva una petición, confirma recepción y no repite indefinidamente si la dirección es inválida.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-ios-m5
+cd ejemplo-ios-m5
+swift package init --type executable
+swift run
+```
+Crea Sources/main.swift con un modelo Codable y una función async que use URLSession; ejecuta swift run y registra status, decodificación y error.
+
+#### Paso 5 · Práctica guiada
+Pista: usa deliberadamente una URL inválida para provocar un fallo deliberado de red; diagnostica el error y corrígela. Resultado esperado: modelo decodificado o error tipado controlado.
+
+#### Paso 6 · Práctica independiente
+Añade timeout, retry con backoff, cancelación al desaparecer la vista y una prueba con JSON corrupto.
+
+#### Paso 7 · Cierre y evidencia
+Guarda request, response, logs y prueba; como siguiente paso estudia persistencia. Errores comunes: ignorar status HTTP, decodificar en MainActor, retry de 4xx y ocultar PII en logs. Fuentes oficiales: https://developer.apple.com/documentation/foundation/urlsession y https://developer.apple.com/documentation/swift/codable.
+**¿Por qué es importante?** Porque la red es una frontera incierta y debe producir resultados explicables.
+**Evidencia de aprendizaje:** entrega cliente, modelo, fallo, retry y cancelación.
 **Conceptos clave:** resiliencia ante fallos transitorios, control explícito del ciclo de vida de una tarea en curso.
 
 ```swift

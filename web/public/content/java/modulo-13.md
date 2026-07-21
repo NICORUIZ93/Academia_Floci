@@ -5,6 +5,36 @@
 
 ### Tema 1: Arquitectura por capas del proyecto integrador
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás ensamblar un proyecto Java desde cero. Prerrequisitos: JDK 21, Maven, Docker y un editor.
+
+#### Paso 2 · Contexto y caso real
+En un caso real, una aplicación de entregas combina dominio, persistencia, concurrencia y pruebas; el estudiante debe saber dónde colocar cada archivo y cómo verificarlo.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+Una arquitectura por capas separa entrada, caso de uso, dominio y adaptadores. Concurrencia exige límites; testing demuestra invariantes; el build fija el artefacto. La analogía es una central completa: recepción, planificación, almacén y salida tienen responsabilidades y métricas distintas.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-java-m13
+cd ejemplo-java-m13
+mvn -B archetype:generate -DgroupId=com.example -DartifactId=delivery -DarchetypeArtifactId=maven-archetype-quickstart -DinteractiveMode=false
+cd delivery
+mvn test
+```
+Crea paquetes domain, application, adapter y una prueba de caso de uso; ejecuta el build.
+
+#### Paso 5 · Práctica guiada
+Pista: rompe deliberadamente la regla de negocio para provocar un fallo deliberado de test, lee la aserción y corrígela. Resultado esperado: build verde y estructura documentada.
+
+#### Paso 6 · Práctica independiente
+Añade persistencia en memoria, un ExecutorService limitado, pruebas unitarias e integración; documenta un escenario de recuperación.
+
+#### Paso 7 · Cierre y evidencia
+Guarda árbol, comandos, pruebas y README; como siguiente paso aplica la revisión a Spring Boot. Errores comunes: lógica en controllers, hilos sin cierre, tests acoplados y dependencias flotantes. Fuentes oficiales: https://maven.apache.org/guides/ y https://dev.java/learn/.
+**¿Por qué es importante?** Porque integrar las piezas demuestra que puedes mantener un sistema y no solo completar ejercicios aislados.
+**Evidencia de aprendizaje:** entrega proyecto, pruebas, build reproducible y retrospectiva.
 **Conceptos clave:** separación dominio/servicio/infraestructura, cohesión por responsabilidad.
 
 El proyecto integrador organiza el código en capas claramente separadas: `dominio/` contiene los modelos de datos inmutables usando records y sealed interfaces (Módulo 7), representando los conceptos centrales del negocio sin ninguna dependencia hacia detalles de infraestructura; `servicio/` contiene la lógica de negocio propiamente dicha, incluyendo el procesamiento concurrente de tareas usando virtual threads (Módulo 5) para operaciones con I/O; `infraestructura/` contiene los detalles concretos de persistencia y clientes externos, la capa más propensa a cambiar según decisiones técnicas específicas (qué base de datos usar, qué API externa consumir) sin que ese cambio deba afectar la lógica de negocio central en `servicio/`.
@@ -33,6 +63,36 @@ Introduce accidentalmente un import de infrastructure en domain y comprueba que 
 
 ### Tema 2: Integrando concurrencia, modelado y testing
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás ensamblar un proyecto Java desde cero. Prerrequisitos: JDK 21, Maven, Docker y un editor.
+
+#### Paso 2 · Contexto y caso real
+En un caso real, una aplicación de entregas combina dominio, persistencia, concurrencia y pruebas; el estudiante debe saber dónde colocar cada archivo y cómo verificarlo.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+Una arquitectura por capas separa entrada, caso de uso, dominio y adaptadores. Concurrencia exige límites; testing demuestra invariantes; el build fija el artefacto. La analogía es una central completa: recepción, planificación, almacén y salida tienen responsabilidades y métricas distintas.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-java-m13
+cd ejemplo-java-m13
+mvn -B archetype:generate -DgroupId=com.example -DartifactId=delivery -DarchetypeArtifactId=maven-archetype-quickstart -DinteractiveMode=false
+cd delivery
+mvn test
+```
+Crea paquetes domain, application, adapter y una prueba de caso de uso; ejecuta el build.
+
+#### Paso 5 · Práctica guiada
+Pista: rompe deliberadamente la regla de negocio para provocar un fallo deliberado de test, lee la aserción y corrígela. Resultado esperado: build verde y estructura documentada.
+
+#### Paso 6 · Práctica independiente
+Añade persistencia en memoria, un ExecutorService limitado, pruebas unitarias e integración; documenta un escenario de recuperación.
+
+#### Paso 7 · Cierre y evidencia
+Guarda árbol, comandos, pruebas y README; como siguiente paso aplica la revisión a Spring Boot. Errores comunes: lógica en controllers, hilos sin cierre, tests acoplados y dependencias flotantes. Fuentes oficiales: https://maven.apache.org/guides/ y https://dev.java/learn/.
+**¿Por qué es importante?** Porque integrar las piezas demuestra que puedes mantener un sistema y no solo completar ejercicios aislados.
+**Evidencia de aprendizaje:** entrega proyecto, pruebas, build reproducible y retrospectiva.
 **Conceptos clave:** procesamiento paralelo con resultado modelado como sealed interface, tests aislados con mocks.
 
 El procesamiento concurrente del proyecto integrador combina virtual threads (Módulo 5) para procesar múltiples tareas en paralelo con un modelo de resultado expresado como sealed interface (Módulo 7): `sealed interface ResultadoProcesamiento permits Exito, Error {}`, con `record Exito(String datos) implements ResultadoProcesamiento {}` y `record Error(String motivo) implements ResultadoProcesamiento {}`, permitiendo que cada tarea procesada concurrentemente devuelva explícitamente si tuvo éxito o falló, sin recurrir a lanzar excepciones para el caso de fallo esperado (un fallo individual de una tarea entre muchas no debería necesariamente interrumpir el procesamiento del resto), y con el compilador garantizando, mediante pattern matching exhaustivo (Módulo 7), que el código que procesa esos resultados maneje explícitamente ambos casos posibles.
@@ -67,6 +127,36 @@ Haz que una tarea lance excepción sin traducirla y observa cómo `Future.get` l
 
 ### Tema 3: Build reproducible y cierre del track
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás ensamblar un proyecto Java desde cero. Prerrequisitos: JDK 21, Maven, Docker y un editor.
+
+#### Paso 2 · Contexto y caso real
+En un caso real, una aplicación de entregas combina dominio, persistencia, concurrencia y pruebas; el estudiante debe saber dónde colocar cada archivo y cómo verificarlo.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+Una arquitectura por capas separa entrada, caso de uso, dominio y adaptadores. Concurrencia exige límites; testing demuestra invariantes; el build fija el artefacto. La analogía es una central completa: recepción, planificación, almacén y salida tienen responsabilidades y métricas distintas.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-java-m13
+cd ejemplo-java-m13
+mvn -B archetype:generate -DgroupId=com.example -DartifactId=delivery -DarchetypeArtifactId=maven-archetype-quickstart -DinteractiveMode=false
+cd delivery
+mvn test
+```
+Crea paquetes domain, application, adapter y una prueba de caso de uso; ejecuta el build.
+
+#### Paso 5 · Práctica guiada
+Pista: rompe deliberadamente la regla de negocio para provocar un fallo deliberado de test, lee la aserción y corrígela. Resultado esperado: build verde y estructura documentada.
+
+#### Paso 6 · Práctica independiente
+Añade persistencia en memoria, un ExecutorService limitado, pruebas unitarias e integración; documenta un escenario de recuperación.
+
+#### Paso 7 · Cierre y evidencia
+Guarda árbol, comandos, pruebas y README; como siguiente paso aplica la revisión a Spring Boot. Errores comunes: lógica en controllers, hilos sin cierre, tests acoplados y dependencias flotantes. Fuentes oficiales: https://maven.apache.org/guides/ y https://dev.java/learn/.
+**¿Por qué es importante?** Porque integrar las piezas demuestra que puedes mantener un sistema y no solo completar ejercicios aislados.
+**Evidencia de aprendizaje:** entrega proyecto, pruebas, build reproducible y retrospectiva.
 **Conceptos clave:** ejecución con un solo comando, Java moderno como reducción de boilerplate.
 
 Configurar el build con Gradle o Maven (Módulo 8) de forma que cualquier persona pueda clonar el repositorio y ejecutar la aplicación completa con un único comando (`./gradlew run` o `mvn compile exec:java`, según la herramienta elegida) elimina la fricción de configuración manual que de otro modo requeriría instrucciones extensas y propensas a desactualizarse sobre cómo preparar el entorno correctamente; declarar explícitamente todas las dependencias necesarias en el archivo de build (en vez de asumir que están disponibles globalmente en el sistema de quien ejecuta el proyecto) garantiza que el build sea reproducible: el mismo resultado exacto sin importar en qué máquina específica se ejecute, siempre que se use la misma versión declarada de cada dependencia.

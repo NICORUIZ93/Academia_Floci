@@ -26,6 +26,36 @@ Selecciona Chrome o un emulador si hay varios dispositivos. Cambia el texto en `
 
 ### Tema 1: Sound null safety
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás ejecutar Dart y Flutter desde cero. Prerrequisitos: Flutter SDK, Dart, Android Studio o Xcode según plataforma. Verifica flutter --version y dart --version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real de entregas, datos ausentes, modelos compartidos y llamadas asíncronas deben expresarse sin crashes ni bloqueos de interfaz.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+Null safety distingue valor y ausencia; clases encapsulan estado; mixins reutilizan capacidades; Future representa un resultado futuro y async/await expresa espera. La analogía es una central: cada paquete tiene etiqueta, cada tarea una promesa y cada ausencia una decisión explícita.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-flutter-m0
+cd ejemplo-flutter-m0
+flutter create app
+cd app
+flutter run
+```
+Crea lib/delivery.dart con modelo nullable y función async; úsalo en lib/main.dart y explica la ruta y la salida en el emulador.
+
+#### Paso 5 · Práctica guiada
+Pista: fuerza deliberadamente un null no validado para provocar un fallo deliberado; lee el stack trace y corrígelo con if/guard. Resultado esperado: pantalla estable y mensaje controlado.
+
+#### Paso 6 · Práctica independiente
+Añade lista de entregas, FutureBuilder, estado loading/error y una prueba de Dart para datos ausentes.
+
+#### Paso 7 · Cierre y evidencia
+Guarda estructura, comandos, captura y log; como siguiente paso estudia widgets. Errores comunes: force unwrap, Future sin manejo de error, lógica de red en build y mixins sin contrato. Fuentes oficiales: https://docs.flutter.dev/get-started/install y https://dart.dev/language.
+**¿Por qué es importante?** Porque Dart y null safety son la base de una app Flutter robusta.
+**Evidencia de aprendizaje:** entrega app, modelo, fallo, corrección y test.
 **Conceptos clave:** garantía verificada en todo el programa, no solo advertencias parciales.
 
 ```dart
@@ -55,6 +85,36 @@ print(apodo ?? "Sin apodo"); // valor por defecto
 
 ### Tema 2: Clases y mixins
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás ejecutar Dart y Flutter desde cero. Prerrequisitos: Flutter SDK, Dart, Android Studio o Xcode según plataforma. Verifica flutter --version y dart --version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real de entregas, datos ausentes, modelos compartidos y llamadas asíncronas deben expresarse sin crashes ni bloqueos de interfaz.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+Null safety distingue valor y ausencia; clases encapsulan estado; mixins reutilizan capacidades; Future representa un resultado futuro y async/await expresa espera. La analogía es una central: cada paquete tiene etiqueta, cada tarea una promesa y cada ausencia una decisión explícita.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-flutter-m0
+cd ejemplo-flutter-m0
+flutter create app
+cd app
+flutter run
+```
+Crea lib/delivery.dart con modelo nullable y función async; úsalo en lib/main.dart y explica la ruta y la salida en el emulador.
+
+#### Paso 5 · Práctica guiada
+Pista: fuerza deliberadamente un null no validado para provocar un fallo deliberado; lee el stack trace y corrígelo con if/guard. Resultado esperado: pantalla estable y mensaje controlado.
+
+#### Paso 6 · Práctica independiente
+Añade lista de entregas, FutureBuilder, estado loading/error y una prueba de Dart para datos ausentes.
+
+#### Paso 7 · Cierre y evidencia
+Guarda estructura, comandos, captura y log; como siguiente paso estudia widgets. Errores comunes: force unwrap, Future sin manejo de error, lógica de red en build y mixins sin contrato. Fuentes oficiales: https://docs.flutter.dev/get-started/install y https://dart.dev/language.
+**¿Por qué es importante?** Porque Dart y null safety son la base de una app Flutter robusta.
+**Evidencia de aprendizaje:** entrega app, modelo, fallo, corrección y test.
 **Conceptos clave:** comportamiento reutilizable sin herencia múltiple tradicional.
 
 #### `extends`, `implements`, `with` y `@override` no significan lo mismo
@@ -98,6 +158,36 @@ class Pajaro extends Animal with Volador {}
 
 ### Tema 3: Futures, async/await y colecciones funcionales
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás ejecutar Dart y Flutter desde cero. Prerrequisitos: Flutter SDK, Dart, Android Studio o Xcode según plataforma. Verifica flutter --version y dart --version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real de entregas, datos ausentes, modelos compartidos y llamadas asíncronas deben expresarse sin crashes ni bloqueos de interfaz.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+Null safety distingue valor y ausencia; clases encapsulan estado; mixins reutilizan capacidades; Future representa un resultado futuro y async/await expresa espera. La analogía es una central: cada paquete tiene etiqueta, cada tarea una promesa y cada ausencia una decisión explícita.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-flutter-m0
+cd ejemplo-flutter-m0
+flutter create app
+cd app
+flutter run
+```
+Crea lib/delivery.dart con modelo nullable y función async; úsalo en lib/main.dart y explica la ruta y la salida en el emulador.
+
+#### Paso 5 · Práctica guiada
+Pista: fuerza deliberadamente un null no validado para provocar un fallo deliberado; lee el stack trace y corrígelo con if/guard. Resultado esperado: pantalla estable y mensaje controlado.
+
+#### Paso 6 · Práctica independiente
+Añade lista de entregas, FutureBuilder, estado loading/error y una prueba de Dart para datos ausentes.
+
+#### Paso 7 · Cierre y evidencia
+Guarda estructura, comandos, captura y log; como siguiente paso estudia widgets. Errores comunes: force unwrap, Future sin manejo de error, lógica de red en build y mixins sin contrato. Fuentes oficiales: https://docs.flutter.dev/get-started/install y https://dart.dev/language.
+**¿Por qué es importante?** Porque Dart y null safety son la base de una app Flutter robusta.
+**Evidencia de aprendizaje:** entrega app, modelo, fallo, corrección y test.
 **Conceptos clave:** operación asíncrona representada como un valor futuro, transformación declarativa de colecciones.
 
 ```dart

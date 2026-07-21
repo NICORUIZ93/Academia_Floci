@@ -5,6 +5,18 @@
 
 ### Tema 1: El Event Loop
 
+#### Paso 1 · Objetivo y preparación
+
+Al finalizar podrás predecir el orden entre código síncrono, microtareas y tareas, y reconocer cuándo una operación bloquea el hilo.
+
+**Conocimiento previo:** call stack, callbacks, temporizadores y funciones.
+
+#### Paso 2 · Contexto y caso real
+
+**¿Por qué es importante?** El proyecto RutaFlow combina confirmaciones de entrega, temporizadores y actualizaciones de pantalla. Sin el modelo del event loop, el orden observado parece aleatorio aunque siga reglas concretas.
+
+#### Paso 3 · Teoría con analogía
+
 **Conceptos clave:** single-threaded, no bloqueante, call stack, task queue, ciclo del Event Loop.
 
 JavaScript ejecuta código en un único hilo: en cualquier instante, solo una pieza de código se está ejecutando activamente en el call stack (visto en el Módulo 2). Sin embargo, JavaScript no es un lenguaje bloqueante a pesar de esta limitación de un solo hilo, gracias al Event Loop: un mecanismo que coordina el call stack con colas de tareas pendientes, permitiendo que operaciones que tardan (peticiones de red, temporizadores, lectura de archivos en Node) se procesen sin congelar la ejecución del resto del programa mientras se espera su resultado.
@@ -21,16 +33,68 @@ Comprender este orden con precisión no es un ejercicio académico abstracto: ex
 
 **Diagrama:**
 
-```
-console.log("1");                              → 1 (síncrono)
-setTimeout(() => console.log("2"), 0);         → se encola como MACROTASK
-Promise.resolve().then(() => console.log("3")); → se encola como MICROTASK
-console.log("4");                              → 4 (síncrono)
-// Orden real de salida: 1, 4, 3, 2
-// (todo el síncrono primero, luego TODAS las microtasks, luego una macrotask)
+```mermaid
+flowchart LR
+    STACK["Call stack: 1, 4"] --> MICRO["Microtasks: 3"] --> MACRO["Macrotask: 2"] --> LOOP["Siguiente ciclo"]
 ```
 
+#### Paso 4 · Demostración guiada desde cero
+
+#### Construcción RutaFlow: predecir antes de ejecutar
+
+Desde una carpeta vacía crea `ejemplo-event-loop`, ejecuta `npm init -y`, crea `src` y después `src/event-loop.js`:
+
+```bash
+mkdir ejemplo-event-loop
+cd ejemplo-event-loop
+npm init -y
+mkdir src
+```
+
+```js
+console.log('A: inicio');
+setTimeout(() => console.log('D: temporizador'), 0);
+Promise.resolve().then(() => console.log('C: confirmación en microtask'));
+console.log('B: fin síncrono');
+```
+
+Escribe primero tu predicción y ejecuta:
+
+```bash
+node src/event-loop.js
+```
+
+**Resultado esperado:** `A, B, C, D`.
+
+**Fallo deliberado:** añade antes del final síncrono un bucle intensivo de dos segundos. El temporizador y la promesa se retrasan porque ninguna cola puede ejecutarse mientras el stack permanezca ocupado; `setTimeout(0)` no significa ejecución inmediata.
+
+#### Paso 5 · Práctica guiada
+
+Añade otro `.then` dentro de la microtarea y una promesa dentro del temporizador. **Pista:** dibuja las colas y vacía todas las microtareas antes de escoger la siguiente tarea.
+
+#### Paso 6 · Práctica independiente
+
+Implementa un procesamiento de 50 000 guías en fragmentos usando `setTimeout` para ceder control. Compara cuánto tarda en responder un temporizador de interfaz con la versión bloqueante.
+
+#### Paso 7 · Cierre y evidencia
+
+Ya predices orden y distingues concurrencia de paralelismo. El siguiente tema representa resultados futuros con promesas. **Evidencia:** demuestra el resultado `A,B,C,D`, el retraso bloqueante, el diagrama y la medición por fragmentos. Fuente oficial: [MDN — event loop](https://developer.mozilla.org/es/docs/Web/JavaScript/Event_loop).
+
+**Errores comunes:** creer que delay cero es inmediato; procesar microtareas infinitas; confundir APIs del entorno con el lenguaje; asumir varios hilos para JavaScript normal.
+
 ### Tema 2: Promesas
+
+#### Paso 1 · Objetivo y preparación
+
+Al finalizar podrás crear y encadenar una promesa con caminos de éxito, rechazo y limpieza, sin ejecutar dos resultados lógicos.
+
+**Conocimiento previo:** event loop, callbacks, errores y retornos tempranos.
+
+#### Paso 2 · Contexto y caso real
+
+**¿Por qué es importante?** Una consulta de entrega en RutaFlow todavía no contiene una guía: contiene el compromiso de producirla o explicar un fallo. Confundir ambos valores genera accesos antes de tiempo y errores sin manejar.
+
+#### Paso 3 · Teoría con analogía
 
 **Conceptos clave:** estados de una promesa (pending/fulfilled/rejected), `new Promise`, `.then`/`.catch`.
 
@@ -48,15 +112,81 @@ Es importante distinguir claramente entre el momento en que se crea una Promesa 
 
 **Diagrama:**
 
-```
-function esperar(ms) {
-  return new Promise(resolve => setTimeout(resolve, ms));
-}
-esperar(1000).then(() => console.log("pasó 1 segundo"));
-// Estados: pending → (tras 1000ms) → fulfilled → callback de .then() ejecutado
+```mermaid
+stateDiagram-v2
+    [*] --> pending
+    pending --> fulfilled: resolve(valor)
+    pending --> rejected: reject(error)
+    fulfilled --> [*]
+    rejected --> [*]
 ```
 
+#### Paso 4 · Demostración guiada desde cero
+
+#### Construcción RutaFlow: promesa con éxito y fallo
+
+Desde una carpeta vacía crea `ejemplo-promesas`, ejecuta `npm init -y`, crea `src` y después `src/promesas.js`:
+
+```bash
+mkdir ejemplo-promesas
+cd ejemplo-promesas
+npm init -y
+mkdir src
+```
+
+```js
+function consultarGuia(numero) {
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
+      if (!numero.startsWith('RF-')) return reject(new Error('Número inválido'));
+      resolve({ numero, estado: 'EN_RUTA' });
+    }, 50);
+  });
+}
+
+consultarGuia('RF-101')
+  .then((guia) => ({ ...guia, consultada: true }))
+  .then(console.log)
+  .catch((error) => console.error('No se pudo consultar:', error.message));
+```
+
+Ejecuta:
+
+```bash
+node src/promesas.js
+```
+
+**Resultado esperado:** imprime `{ numero: 'RF-101', estado: 'EN_RUTA', consultada: true }`.
+
+**Fallo deliberado:** cambia el argumento a `101` y observa `No se pudo consultar: Número inválido`. Si omites `return` tras `reject`, el ejecutor continúa; aunque una promesa solo adopta el primer estado, el código posterior puede producir efectos no deseados.
+
+#### Paso 5 · Práctica guiada
+
+Agrega `.finally(() => console.log('Carga finalizada'))`. **Pista:** debe ejecutarse tanto con `RF-101` como con `101`, sin transformar el valor ni ocultar el error.
+
+#### Paso 6 · Práctica independiente
+
+Envuelve una API de callback `buscar(numero, callback)` en una promesa. Prueba éxito, error y una implementación defectuosa que llama dos veces al callback; protege el contrato.
+
+#### Paso 7 · Cierre y evidencia
+
+Ya modelas una operación futura con estado final inmutable y cadenas claras. El siguiente tema coordina varias promesas. **Evidencia:** demuestra el resultado exitoso, el rechazo, `finally` y la adaptación del callback. Fuente oficial: [MDN — Promise](https://developer.mozilla.org/es/docs/Web/JavaScript/Reference/Global_Objects/Promise).
+
+**Errores comunes:** envolver APIs que ya devuelven promesas; olvidar retornar una promesa dentro de `then`; capturar y ocultar errores; confundir promesa con valor resuelto.
+
 ### Tema 3: Promise.all, allSettled, race y any
+
+#### Paso 1 · Objetivo y preparación
+
+Al finalizar podrás seleccionar el combinador según la política de fallos y construir resultados parciales, timeout y primera respuesta exitosa.
+
+**Conocimiento previo:** promesas, errores, arrays y `async` a nivel superior en módulos.
+
+#### Paso 2 · Contexto y caso real
+
+**¿Por qué es importante?** El proyecto RutaFlow consulta varias transportadoras para una entrega. Un fallo no crítico puede registrarse sin descartar éxitos, mientras una operación transaccional puede exigir que todo se complete.
+
+#### Paso 3 · Teoría con analogía
 
 **Conceptos clave:** combinadores de promesas, fallo total frente a resultados parciales, primera en resolver.
 
@@ -74,14 +204,78 @@ Elegir el combinador correcto según la semántica real del problema —¿necesi
 
 **Diagrama:**
 
-```
-Promise.all([p1,p2,p3])        → todas exitosas o falla completa
-Promise.allSettled([p1,p2,p3]) → siempre resuelve, con status individual de cada una
-Promise.race([p1,p2,p3])       → resuelve/rechaza con la PRIMERA en terminar (éxito o fallo)
-Promise.any([p1,p2,p3])        → resuelve con la primera EXITOSA; falla solo si TODAS fallan
+```mermaid
+flowchart TD
+    ASK{"¿Qué resultado necesita RutaFlow?"}
+    ASK -->|"todos o ninguno"| ALL["Promise.all"]
+    ASK -->|"reporte de cada operación"| SETTLED["Promise.allSettled"]
+    ASK -->|"primera finalizada"| RACE["Promise.race"]
+    ASK -->|"primera exitosa"| ANY["Promise.any"]
 ```
 
+#### Paso 4 · Demostración guiada desde cero
+
+#### Construcción RutaFlow: tolerar fallos parciales
+
+Desde una carpeta vacía crea `ejemplo-promesas-grupo`, ejecuta `npm init -y`, crea `src` y después `src/promesas-grupo.js`:
+
+```bash
+mkdir ejemplo-promesas-grupo
+cd ejemplo-promesas-grupo
+npm init -y
+mkdir src
+```
+
+```js
+const consultar = (numero) =>
+  numero === 'RF-ERROR'
+    ? Promise.reject(new Error('Servicio no disponible'))
+    : Promise.resolve({ numero, estado: 'EN_RUTA' });
+
+const numeros = ['RF-101', 'RF-ERROR', 'RF-103'];
+const resultados = await Promise.allSettled(numeros.map(consultar));
+const exitos = resultados.filter(({ status }) => status === 'fulfilled');
+const fallos = resultados.filter(({ status }) => status === 'rejected');
+console.log({ exitos: exitos.length, fallos: fallos.length });
+```
+
+Ejecuta:
+
+```bash
+node src/promesas-grupo.js
+```
+
+**Resultado esperado:** `{ exitos: 2, fallos: 1 }`.
+
+**Fallo deliberado:** sustituye `allSettled` por `all` sin agregar `catch`. El proceso reporta un rechazo no manejado y se pierde el resumen parcial; el combinador no era compatible con la política del lote.
+
+#### Paso 5 · Práctica guiada
+
+Implementa un timeout con `Promise.race([consulta, timeout])`. **Pista:** que `race` termine no cancela automáticamente la consulta perdedora; documenta esa diferencia.
+
+#### Paso 6 · Práctica independiente
+
+Consulta dos réplicas con `Promise.any`, captura `AggregateError` cuando ambas fallen y registra cada causa. Construye una tabla que justifique qué combinador usarías en cuatro casos de RutaFlow.
+
+#### Paso 7 · Cierre y evidencia
+
+Ya eliges combinadores por semántica de negocio y no por conveniencia. El siguiente tema observa cómo V8 analiza el código sin convertir detalles internos en reglas mágicas. **Evidencia:** demuestra el resultado parcial, el rechazo total, el timeout y `AggregateError`. Fuente oficial: [MDN — Promise concurrency](https://developer.mozilla.org/es/docs/Web/JavaScript/Reference/Global_Objects/Promise#promise_concurrency).
+
+**Errores comunes:** creer que `race` cancela perdedores; usar `all` para tareas independientes; ignorar `AggregateError.errors`; confundir orden de resultados con orden de finalización.
+
 ### Tema 4: El motor V8 — JIT y AST
+
+#### Paso 1 · Objetivo y preparación
+
+Al finalizar podrás reconocer las etapas fuente→AST→bytecode→optimización y obtener evidencia sin asumir que una función fue optimizada.
+
+**Conocimiento previo:** funciones, tipos, medición básica y Node.js.
+
+#### Paso 2 · Contexto y caso real
+
+**¿Por qué es importante?** El proyecto RutaFlow calcula miles de tarifas. Comprender V8 ayuda a medir con criterio, pero la corrección y un contrato estable importan más que perseguir microoptimizaciones no demostradas.
+
+#### Paso 3 · Teoría con analogía
 
 **Conceptos clave:** parseo a AST, compilación JIT, Ignition y TurboFan.
 
@@ -99,20 +293,74 @@ Aunque como desarrollador de aplicaciones rara vez se interactúa directamente c
 
 **Diagrama:**
 
-```
-Código fuente → parseo → AST
-                            │
-                            ▼
-                 Ignition (intérprete, bytecode rápido)
-                            │
-              (función "caliente" detectada por uso frecuente)
-                            ▼
-                 TurboFan (compilador optimizador, código máquina)
-                            │
-              (suposición violada: deoptimización, vuelve a Ignition)
+```mermaid
+flowchart LR
+    SOURCE["Código fuente"] --> AST["Parser y AST"] --> IGNITION["Ignition: bytecode"] --> HOT{"función frecuente"} --> TURBO["TurboFan: código optimizado"]
+    TURBO -->|"suposición invalidada"| IGNITION
 ```
 
+#### Paso 4 · Demostración guiada desde cero
+
+#### Construcción RutaFlow: observar el AST sin adivinar V8
+
+Desde una carpeta vacía crea `ejemplo-v8`, ejecuta `npm init -y`, crea `src` y después `src/calcular-costo.js`:
+
+```bash
+mkdir ejemplo-v8
+cd ejemplo-v8
+npm init -y
+mkdir src
+```
+
+```js
+export function calcularCosto(pesoKg, tarifa) {
+  if (!Number.isFinite(pesoKg) || !Number.isFinite(tarifa)) {
+    throw new TypeError('pesoKg y tarifa deben ser números');
+  }
+  return pesoKg * tarifa;
+}
+
+for (let i = 0; i < 100_000; i += 1) calcularCosto(4, 2500);
+console.log(calcularCosto(4, 2500));
+```
+
+Ejecuta:
+
+```bash
+node src/calcular-costo.js
+```
+
+**Resultado esperado:** `10000`.
+
+**Fallo deliberado:** prueba `calcularCosto('4', 2500)` y conserva el `TypeError`. Quitar la validación produce coerción y oculta un contrato roto; una aparente rapidez no justifica datos ambiguos.
+
+#### Paso 5 · Práctica guiada
+
+Pega solo la función en [AST Explorer](https://astexplorer.net/) y localiza declaración, parámetros, condicional y retorno. **Pista:** cambia `function` por arrow y compara nodos, no resultados.
+
+#### Paso 6 · Práctica independiente
+
+Construye un benchmark con calentamiento, varias muestras y `performance.now()`. Compara entradas consistentes y mixtas sin concluir causalidad sobre TurboFan solo por una medición.
+
+#### Paso 7 · Cierre y evidencia
+
+Ya separas semántica ECMAScript de decisiones internas de V8. El siguiente tema mide objetos retenidos y cachés limitadas. **Evidencia:** demuestra el resultado, el error de tipo, ambos AST y una tabla de mediciones con limitaciones. Fuentes oficiales: [V8 — Ignition and TurboFan](https://v8.dev/docs) y [ESTree](https://github.com/estree/estree).
+
+**Errores comunes:** usar un único tiempo; medir con logs dentro del bucle; atribuir toda diferencia al JIT; sacrificar validación por una optimización supuesta.
+
 ### Tema 5: Stack, Heap y Garbage Collection
+
+#### Paso 1 · Objetivo y preparación
+
+Al finalizar podrás identificar referencias que retienen objetos, implementar una caché limitada y medir memoria sin asumir cuándo se ejecutará el GC.
+
+**Conocimiento previo:** call stack, objetos, `Map`, campos privados y ciclos.
+
+#### Paso 2 · Contexto y caso real
+
+**¿Por qué es importante?** RutaFlow consulta muchas entregas. Una caché sin límite conserva cada objeto y el recolector no puede liberarlo mientras siga siendo alcanzable.
+
+#### Paso 3 · Teoría con analogía
 
 **Conceptos clave:** memoria Stack frente a Heap, Garbage Collection, Mark and Sweep, recolección generacional.
 
@@ -130,17 +378,74 @@ Comprender este modelo, aunque el desarrollador de aplicaciones rara vez interac
 
 **Diagrama:**
 
+```mermaid
+flowchart TD
+    ROOTS["raíces: globales y stack"] --> LIVE["objetos alcanzables en heap"]
+    HEAP["heap"] --> MARK["Mark: marcar alcanzables"] --> SWEEP["Sweep: liberar no marcados"]
+    LIVE --> MARK
 ```
-Stack: primitivos y referencias, ligado al call stack, liberación automática instantánea
-Heap: objetos/arrays/funciones, liberación por Garbage Collection (Mark and Sweep)
-  Generación joven: escaneada frecuentemente (la mayoría muere rápido)
-  Generación vieja: escaneada raramente (sobrevivió varios ciclos ya)
+
+#### Paso 4 · Demostración guiada desde cero
+
+#### Construcción RutaFlow: una caché con límite
+
+Desde una carpeta vacía crea `ejemplo-gc`, ejecuta `npm init -y`, crea `src` y después `src/cache-limitada.js`:
+
+```bash
+mkdir ejemplo-gc
+cd ejemplo-gc
+npm init -y
+mkdir src
 ```
+
+```js
+class CacheGuias {
+  #datos = new Map();
+  constructor(limite = 2) { this.limite = limite; }
+  guardar(guia) {
+    this.#datos.delete(guia.numero);
+    this.#datos.set(guia.numero, guia);
+    if (this.#datos.size > this.limite) {
+      const masAntigua = this.#datos.keys().next().value;
+      this.#datos.delete(masAntigua);
+    }
+  }
+  get size() { return this.#datos.size; }
+}
+
+const cache = new CacheGuias(2);
+for (let i = 1; i <= 10_000; i += 1) cache.guardar({ numero: `RF-${i}` });
+console.log('Entradas retenidas:', cache.size);
+```
+
+Ejecuta:
+
+```bash
+node src/cache-limitada.js
+```
+
+**Resultado esperado:** `Entradas retenidas: 2`, no `10000`.
+
+**Fallo deliberado:** elimina la expulsión, registra `process.memoryUsage().heapUsed` antes y después y observa retención creciente. La cifra es orientativa: el GC decide cuándo ejecutarse y memoria reservada no equivale exactamente a objetos vivos.
+
+#### Paso 5 · Práctica guiada
+
+Añade `obtener(numero)` que refresque el orden LRU. **Pista:** elimina y vuelve a insertar la entrada consultada; comprueba cuál se expulsa después.
+
+#### Paso 6 · Práctica independiente
+
+Implementa límites por cantidad y TTL, limpia el temporizador al cerrar y compara tres escenarios. Documenta referencias retenidas, política de expulsión y mediciones repetidas.
+
+#### Paso 7 · Cierre y evidencia
+
+Completaste asincronía inicial entendiendo ejecución y memoria. El siguiente módulo usa `async`/`await`, cancelación y reintentos. **Evidencia:** demuestra el resultado limitado, el crecimiento sin expulsión, la política LRU y la limpieza de TTL. Fuente oficial: [V8 — garbage collection](https://v8.dev/blog/trash-talk).
+
+**Errores comunes:** creer que GC evita toda fuga; forzar conclusiones con una muestra; guardar listeners sin retirarlos; confundir stack de llamadas con memoria heap.
 
 ---
 
 
-## Laboratorio práctico
+## Construcción guiada del capítulo
 
 **Objetivo del laboratorio:** predecir y verificar experimentalmente el orden exacto de ejecución de un script con código síncrono, microtasks y macrotasks mezclados, y aplicar correctamente los combinadores de Promesas.
 

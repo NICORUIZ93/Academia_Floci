@@ -7,6 +7,40 @@ El proyecto anterior demuestra integración técnica, pero una aplicación produ
 
 ### Tema 1: Accesibilidad es comportamiento, no una puntuación
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás validar este tema Angular desde cero. Prerrequisitos: Node.js LTS, npm, Angular CLI y un editor. Verifica ng version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real, una academia debe ser usable con teclado, proteger datos, mostrar idiomas correctamente y mantener tiempos de respuesta tras actualizar dependencias.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+Accesibilidad se comprueba con interacción y semántica; seguridad necesita servidor y cliente; i18n conserva significado y pluralización; rendimiento se mide con presupuesto y actualización gradual. La analogía es un edificio público: rampas, cerraduras, señalización y mantenimiento resuelven necesidades distintas.
+
+#### Paso 4 · Demostración guiada desde cero
+Implementa src/app/demo.component.ts con el componente mínimo del tema.
+Implementa src/app/demo.component.ts con el componente mínimo del tema.
+Implementa src/app/demo.component.ts con el componente mínimo del tema.
+Implementa src/app/demo.component.ts con el componente mínimo del tema.
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-angular-avanzado
+cd ejemplo-angular-avanzado
+npx -p @angular/cli ng new app --standalone --routing=false --style=css --skip-git
+cd app
+ng build
+```
+Crea un componente con botón semántico, estado de error accesible, traducción y una métrica visible; documenta ruta y resultado.
+
+#### Paso 5 · Práctica guiada
+Pista: elimina deliberadamente el label o introduce una dependencia incompatible para provocar un fallo deliberado; ejecuta auditoría/build, diagnostica y corrige. Resultado esperado: build verde y navegación por teclado.
+
+#### Paso 6 · Práctica independiente
+Añade prueba de contraste, foco, locale, presupuesto de bundle y una actualización en rama con rollback.
+
+#### Paso 7 · Cierre y evidencia
+Guarda capturas, logs, métricas y diff; como siguiente paso revisa producción. Errores comunes: usar score como sustituto de pruebas, confiar en guard cliente, concatenar traducciones y actualizar todo a la vez. Fuentes oficiales: https://angular.dev/guide/accessibility y https://angular.dev/guide/i18n.
+**¿Por qué es importante?** Porque calidad significa que la experiencia funciona para personas, datos y despliegues reales.
+**Evidencia de aprendizaje:** entrega auditoría, build, fallo corregido y mediciones.
 **Conceptos clave:** HTML semántico, nombre accesible, rol, estado, teclado, foco, lector de pantalla, landmark, aria-live, contraste, error de formulario, skip link, CDK a11y, Angular Aria y prueba automatizada.
 
 Empieza por controles nativos. Un `<button>` ya participa en tabulación, responde a Enter y Espacio, expone rol y soporta disabled. Un `<div role="button">` exige reconstruir teclado, foco y estado; olvidar una parte crea una imitación. ARIA describe semántica que HTML no ofrece, pero no agrega comportamiento automáticamente.
@@ -53,6 +87,38 @@ semántica nativa -> teclado -> foco visible -> nombre/estado -> feedback
 
 ### Tema 2: La seguridad automática tiene fronteras explícitas
 
+Implementa src/app/demo.component.ts con el componente mínimo del tema.
+
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás validar este tema Angular desde cero. Prerrequisitos: Node.js LTS, npm, Angular CLI y un editor. Verifica ng version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real, una academia debe ser usable con teclado, proteger datos, mostrar idiomas correctamente y mantener tiempos de respuesta tras actualizar dependencias.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+Accesibilidad se comprueba con interacción y semántica; seguridad necesita servidor y cliente; i18n conserva significado y pluralización; rendimiento se mide con presupuesto y actualización gradual. La analogía es un edificio público: rampas, cerraduras, señalización y mantenimiento resuelven necesidades distintas.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-angular-avanzado
+cd ejemplo-angular-avanzado
+npx -p @angular/cli ng new app --standalone --routing=false --style=css --skip-git
+cd app
+ng build
+```
+Crea un componente con botón semántico, estado de error accesible, traducción y una métrica visible; documenta ruta y resultado.
+
+#### Paso 5 · Práctica guiada
+Pista: elimina deliberadamente el label o introduce una dependencia incompatible para provocar un fallo deliberado; ejecuta auditoría/build, diagnostica y corrige. Resultado esperado: build verde y navegación por teclado.
+
+#### Paso 6 · Práctica independiente
+Añade prueba de contraste, foco, locale, presupuesto de bundle y una actualización en rama con rollback.
+
+#### Paso 7 · Cierre y evidencia
+Guarda capturas, logs, métricas y diff; como siguiente paso revisa producción. Errores comunes: usar score como sustituto de pruebas, confiar en guard cliente, concatenar traducciones y actualizar todo a la vez. Fuentes oficiales: https://angular.dev/guide/accessibility y https://angular.dev/guide/i18n.
+**¿Por qué es importante?** Porque calidad significa que la experiencia funciona para personas, datos y despliegues reales.
+**Evidencia de aprendizaje:** entrega auditoría, build, fallo corregido y mediciones.
 **Conceptos clave:** XSS, template confiable, binding, sanitización, SecurityContext, DomSanitizer, bypass, ElementRef, CSP, nonce, Trusted Types, AOT, token, cookie, CSRF, SSR y host confiable.
 
 Angular trata valores enlazados como no confiables y escapa o sanitiza según contexto HTML y URL. Las plantillas, en cambio, son código confiable; nunca las construyas concatenando entrada. AOT evita compilar templates dinámicos en el navegador y debe usarse en producción.
@@ -88,6 +154,38 @@ scripts/estilos permitidos --------------> CSP con nonce por respuesta
 
 ### Tema 3: Internacionalizar implica significado, no reemplazo de texto
 
+Implementa src/app/demo.component.ts con el componente mínimo del tema.
+
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás validar este tema Angular desde cero. Prerrequisitos: Node.js LTS, npm, Angular CLI y un editor. Verifica ng version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real, una academia debe ser usable con teclado, proteger datos, mostrar idiomas correctamente y mantener tiempos de respuesta tras actualizar dependencias.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+Accesibilidad se comprueba con interacción y semántica; seguridad necesita servidor y cliente; i18n conserva significado y pluralización; rendimiento se mide con presupuesto y actualización gradual. La analogía es un edificio público: rampas, cerraduras, señalización y mantenimiento resuelven necesidades distintas.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-angular-avanzado
+cd ejemplo-angular-avanzado
+npx -p @angular/cli ng new app --standalone --routing=false --style=css --skip-git
+cd app
+ng build
+```
+Crea un componente con botón semántico, estado de error accesible, traducción y una métrica visible; documenta ruta y resultado.
+
+#### Paso 5 · Práctica guiada
+Pista: elimina deliberadamente el label o introduce una dependencia incompatible para provocar un fallo deliberado; ejecuta auditoría/build, diagnostica y corrige. Resultado esperado: build verde y navegación por teclado.
+
+#### Paso 6 · Práctica independiente
+Añade prueba de contraste, foco, locale, presupuesto de bundle y una actualización en rama con rollback.
+
+#### Paso 7 · Cierre y evidencia
+Guarda capturas, logs, métricas y diff; como siguiente paso revisa producción. Errores comunes: usar score como sustituto de pruebas, confiar en guard cliente, concatenar traducciones y actualizar todo a la vez. Fuentes oficiales: https://angular.dev/guide/accessibility y https://angular.dev/guide/i18n.
+**¿Por qué es importante?** Porque calidad significa que la experiencia funciona para personas, datos y despliegues reales.
+**Evidencia de aprendizaje:** entrega auditoría, build, fallo corregido y mediciones.
 **Conceptos clave:** i18n, l10n, locale, mensaje, contexto, ID estable, XLIFF, ICU, plural, género, número, moneda, zona horaria, RTL, pseudo-localización y fallback.
 
 Angular reconoce `i18n` en templates, `i18n-*` para atributos y `$localize` en código. Añade significado y descripción para quien traduce; “Save” puede ser verbo o sustantivo. IDs estables ayudan a conservar traducciones durante refactors, pero deben representar el mismo significado.
@@ -127,6 +225,38 @@ layout lógico + dir -> LTR/RTL probado
 
 ### Tema 4: Rendimiento y actualización son contratos de experiencia
 
+Implementa src/app/demo.component.ts con el componente mínimo del tema.
+
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás validar este tema Angular desde cero. Prerrequisitos: Node.js LTS, npm, Angular CLI y un editor. Verifica ng version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real, una academia debe ser usable con teclado, proteger datos, mostrar idiomas correctamente y mantener tiempos de respuesta tras actualizar dependencias.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+Accesibilidad se comprueba con interacción y semántica; seguridad necesita servidor y cliente; i18n conserva significado y pluralización; rendimiento se mide con presupuesto y actualización gradual. La analogía es un edificio público: rampas, cerraduras, señalización y mantenimiento resuelven necesidades distintas.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-angular-avanzado
+cd ejemplo-angular-avanzado
+npx -p @angular/cli ng new app --standalone --routing=false --style=css --skip-git
+cd app
+ng build
+```
+Crea un componente con botón semántico, estado de error accesible, traducción y una métrica visible; documenta ruta y resultado.
+
+#### Paso 5 · Práctica guiada
+Pista: elimina deliberadamente el label o introduce una dependencia incompatible para provocar un fallo deliberado; ejecuta auditoría/build, diagnostica y corrige. Resultado esperado: build verde y navegación por teclado.
+
+#### Paso 6 · Práctica independiente
+Añade prueba de contraste, foco, locale, presupuesto de bundle y una actualización en rama con rollback.
+
+#### Paso 7 · Cierre y evidencia
+Guarda capturas, logs, métricas y diff; como siguiente paso revisa producción. Errores comunes: usar score como sustituto de pruebas, confiar en guard cliente, concatenar traducciones y actualizar todo a la vez. Fuentes oficiales: https://angular.dev/guide/accessibility y https://angular.dev/guide/i18n.
+**¿Por qué es importante?** Porque calidad significa que la experiencia funciona para personas, datos y despliegues reales.
+**Evidencia de aprendizaje:** entrega auditoría, build, fallo corregido y mediciones.
 **Conceptos clave:** bundle budget, lazy route, @defer, SSR, hydration, Core Web Vitals, LCP, INP, CLS, RUM, cache, service worker, app shell, update, rollback y source map.
 
 El build puede imponer límites en `angular.json`. Un presupuesto inicial evita que una dependencia grande entre sin discusión; presupuestos por componente detectan CSS descontrolado. Establece umbrales desde una línea base y objetivo de usuario, no números copiados. Un warning que nadie atiende no es control: para límites críticos usa error en CI.

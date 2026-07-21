@@ -1,228 +1,372 @@
-# Módulo 0: Fundamentos del lenguaje y el entorno
+# Módulo 0: Fundamentos de JavaScript con ejemplos independientes
 
-
-## Antes de comenzar: tu primer entorno de programación
-
-Para comenzar solo necesitas un navegador moderno y Visual Studio Code. También instalaremos Node.js LTS para ejecutar JavaScript fuera del navegador y Git para guardar la historia de tu trabajo.
-
-| Sistema | Pasos |
-|---|---|
-| Windows | Instala VS Code, Git y Node.js LTS con sus instaladores oficiales; usa PowerShell en la terminal de VS Code |
-| macOS | Instala VS Code; usa Homebrew para `node` y `git`, o sus instaladores oficiales |
-| Ubuntu/Debian | Instala Git con `apt`, Node LTS con `nvm` y VS Code desde su repositorio oficial |
-
-Comprueba `node -v` y `git --version`. Crea una carpeta `primer-js`, ábrela en VS Code y guarda `index.html`:
-
-```html
-<!doctype html>
-<html lang="es">
-  <body>
-    <h1 id="saludo">Hola</h1>
-    <script>document.querySelector('#saludo').textContent = 'JavaScript funciona';</script>
-  </body>
-</html>
-```
-
-Ábrelo en el navegador y usa `F12` → **Console** para ver errores. Crea también `hola.js` con `console.log('Hola')` y ejecuta `node hola.js`. Así distingues desde el primer día los dos entornos: navegador (DOM) y Node.js (sistema operativo/servidor).
+Cada tema comienza en su propia carpeta vacía. El proyecto integrador existe aparte y no es requisito para estudiar estas lecciones.
 
 ## Aprende construyendo
 
-### Tema 1: Variables — let, const y var
+## Antes de comenzar: preparación del entorno
 
-**Conceptos clave:** scope de función frente a scope de bloque, hoisting, Temporal Dead Zone (TDZ), reasignación frente a mutación.
+Instala [Node.js LTS](https://nodejs.org/en/download), [Visual Studio Code](https://code.visualstudio.com/) y [Git](https://git-scm.com/downloads). En Windows abre PowerShell; en macOS o Linux abre Terminal. Verifica:
 
-JavaScript ofrece tres formas de declarar variables, y entender sus diferencias es el primer paso ineludible antes de escribir cualquier línea de código seria. `var`, la forma original del lenguaje, tiene scope de función: una variable declarada con `var` dentro de un bloque `if` o un bucle `for` es visible en toda la función que la contiene, no solo dentro de ese bloque, lo que históricamente causó numerosos bugs sutiles. Además, `var` se "hoistea" (se eleva) al inicio de su función con un valor inicial de `undefined`, de modo que referenciarla antes de su línea de declaración no lanza un error, sino que simplemente devuelve `undefined`, un comportamiento que oculta silenciosamente errores de orden en el código.
-
-`let` y `const`, introducidas en ES6 (2015), resuelven este problema adoptando scope de bloque: una variable declarada con `let` dentro de un `if {}` o un `for {}` solo existe dentro de ese bloque específico delimitado por las llaves. Ambas también se hoistean, pero a diferencia de `var`, quedan en lo que se llama la Temporal Dead Zone (zona muerta temporal): existen en memoria pero acceder a ellas antes de su línea de declaración lanza un `ReferenceError` explícito, en vez de devolver silenciosamente `undefined`. Este comportamiento, aparentemente más estricto, es en realidad una mejora deliberada: convierte errores de orden de código, que antes fallaban silenciosamente, en errores explícitos y fáciles de detectar durante el desarrollo.
-
-La diferencia entre `let` y `const` no es "variable" frente a "constante" en el sentido matemático estricto, sino reasignación frente a mutación: `const` impide reasignar el identificador a un valor completamente distinto (`const x = 5; x = 6;` lanza error), pero si el valor es un objeto o un array, sus propiedades internas sí pueden modificarse (`const arr = [1,2]; arr.push(3);` es perfectamente válido, porque no se está reasignando `arr` a un array distinto, sino mutando el array existente al que `arr` apunta). Esta distinción entre "no se puede reasignar el identificador" y "no se puede modificar el contenido" es una fuente frecuente de confusión para quienes recién llegan al lenguaje, y merece practicarse deliberadamente hasta interiorizarse.
-
-La recomendación ampliamente adoptada en la industria moderna es usar `const` por defecto para toda variable que no necesite reasignarse, reservar `let` únicamente para las que sí lo necesiten, y evitar `var` completamente en código nuevo, salvo en contextos muy específicos de compatibilidad con código legado extremadamente antiguo. Esta disciplina no es un capricho estilístico: declarar con `const` comunica una intención explícita al resto del equipo ("este valor no debería cambiar"), y el motor de JavaScript refuerza esa intención lanzando un error si alguien intenta violarla accidentalmente.
-
-**Analogía:** `var` es como una nota adhesiva pegada en el pasillo compartido de toda una oficina (visible y modificable desde cualquier escritorio de esa oficina); `let` y `const` son como una nota adhesiva pegada dentro de una sala de reuniones específica, visible solo mientras estás dentro de esa sala concreta, y desaparece en cuanto sales de ella.
-
-**¿Por qué es importante?** El scope de bloque de `let`/`const` y la protección de la Temporal Dead Zone eliminan de raíz una categoría entera de bugs sutiles relacionados con el orden y el alcance de las variables que fueron endémicos en JavaScript durante sus primeros veinte años de existencia, antes de ES6.
-
-**Diagrama:**
-
-```
-var (scope de función):          let/const (scope de bloque):
-function f() {                    function f() {
-  if (true) {                       if (true) {
-    var x = 1;                        let x = 1;
-  }                                  }
-  console.log(x); // 1 (visible)     console.log(x); // ReferenceError
-}                                  }
+```bash
+node --version
+npm --version
+git --version
 ```
 
-#### Construcción RutaFlow
+Las tres instrucciones deben mostrar una versión. Si `node` no se reconoce, cierra y abre la terminal; si continúa, reinstala Node.js LTS y permite que el instalador actualice `PATH`.
 
-Crea `academia-javascript/src/envio.js` y modela `const guia = 'RF-001'`, `let estado = 'creado'` y un objeto `envio` cuyo peso pueda cambiar sin reasignar el objeto. Ejecuta `node src/envio.js`. Debe mostrar `RF-001 creado`; intenta reasignar `guia` y diagnostica el `TypeError`. Después modifica solo `estado` a `en-ruta` y explica por qué `const` sigue siendo la opción correcta para `envio`.
+Crea el proyecto exactamente así:
 
-### Tema 2: Tipos primitivos y typeof
-
-**Conceptos clave:** los 7 tipos primitivos, `typeof`, el caso especial de `null`.
-
-JavaScript define exactamente 7 tipos primitivos: `string`, `number`, `boolean`, `null`, `undefined`, `symbol` (introducido en ES6, para crear identificadores únicos) y `bigint` (introducido más recientemente, para enteros de precisión arbitraria que exceden el rango seguro de `number`). Todo lo demás en el lenguaje —arrays, objetos literales, funciones, fechas— es, técnicamente, de tipo `object` (con la particularidad de que `typeof` sobre una función devuelve `"function"` como una conveniencia práctica del operador, aunque internamente una función es un objeto invocable).
-
-El operador `typeof` permite inspeccionar en tiempo de ejecución el tipo de cualquier valor, y es una herramienta fundamental de depuración y de narrowing (el proceso de restringir el tipo posible de una variable dentro de una rama condicional). Sin embargo, `typeof` tiene un caso especial ampliamente conocido que conviene memorizar explícitamente: `typeof null` devuelve `"object"`, no `"null"`. Este es un bug histórico del lenguaje, presente desde su primera implementación en 1995, que nunca se corrigió porque hacerlo habría roto una enorme cantidad de código existente en la web que dependía (a veces sin saberlo) de ese comportamiento específico.
-
-Distinguir `null` de `undefined` es otra fuente frecuente de confusión: `undefined` es el valor que JavaScript asigna automáticamente a una variable declarada pero no inicializada, o a un parámetro de función no proporcionado; `null` es un valor que un desarrollador asigna deliberadamente para representar "la ausencia intencional de un valor". Esta distinción semántica —"nadie lo inicializó" frente a "alguien decidió explícitamente que no hay valor aquí"— es útil mantenerla consistentemente en el propio código, aunque el lenguaje no la impone de forma estricta.
-
-Practicar `typeof` sobre cada uno de los 7 tipos primitivos, además de sobre un array y un objeto literal, es un ejercicio de calibración importante antes de avanzar: quien puede predecir correctamente el resultado de `typeof` sobre cualquier valor tiene una base sólida para razonar sobre el sistema de tipos dinámico de JavaScript en el resto del track.
-
-**Analogía:** los tipos primitivos son como las unidades de medida básicas de un sistema (metro, kilogramo, segundo): un número limitado de categorías fundamentales sobre las que se construye todo lo demás; que `typeof null` devuelva `"object"` es como si, por un error histórico de definición nunca corregido, una "ausencia de longitud" se catalogara bajo la unidad "longitud" en vez de tener su propia categoría, un detalle que hay que simplemente recordar como excepción.
-
-**¿Por qué es importante?** Entender los tipos primitivos y sus peculiaridades (como el caso de `null`) es la base para razonar correctamente sobre coerción, comparaciones e incluso sobre por qué TypeScript (Módulo 11) existe como una capa adicional de seguridad sobre este sistema de tipos dinámico.
-
-**Diagrama:**
-
-```
-typeof "hola"      → "string"
-typeof 42          → "number"
-typeof true        → "boolean"
-typeof null        → "object"   ← caso especial, bug histórico
-typeof undefined   → "undefined"
-typeof Symbol()    → "symbol"
-typeof 10n         → "bigint"
-typeof {}          → "object"
-typeof []          → "object"
-typeof function(){} → "function" (conveniencia del operador)
+```bash
+mkdir academia-javascript
+cd academia-javascript
+npm init -y
+mkdir src
 ```
 
-#### Construcción RutaFlow
-
-Amplía `src/envio.js` con `pesoKg`, `entregado`, `conductor`, `fechaEntrega`, un `Symbol` interno y un contador `bigint`. Imprime `typeof` de cada valor con `node src/envio.js`; la salida debe incluir los siete tipos primitivos y el caso histórico `typeof null === 'object'`. Cambia `fechaEntrega` de `null` a una cadena y predice qué validación del dominio debe actualizarse.
-
-### Tema 3: Coerción implícita — == frente a ===
-
-**Conceptos clave:** coerción de tipos, igualdad estricta, reglas impredecibles de `==`.
-
-El operador `==` (igualdad "suelta") convierte automáticamente los operandos a un tipo común antes de compararlos, siguiendo un conjunto de reglas de coerción que, aunque están formalmente especificadas, producen resultados que sorprenden incluso a desarrolladores experimentados si no se han memorizado explícitamente: `0 == "0"` es `true` (el string se convierte a número), `"" == 0` es también `true` (el string vacío se convierte a `0`), pero `"" == "0"` es `false` (ninguno se convierte, se comparan como strings directamente, y son distintos). Esta inconsistencia aparente —cuándo exactamente ocurre la coerción y hacia qué tipo— es precisamente lo que hace que depender de `==` sea propenso a errores difíciles de predecir sin memorizar la tabla completa de reglas de coerción.
-
-El operador `===` (igualdad estricta) no realiza ninguna conversión: si los operandos son de tipos distintos, la comparación es directamente `false`, sin excepciones ni casos especiales que memorizar. Por esta razón, la recomendación prácticamente universal en JavaScript moderno es usar siempre `===` (y su contraparte `!==`) por defecto, reservando `==` únicamente para el caso idiomático específico y ampliamente reconocido de comparar contra `null` de forma laxa (`valor == null` es `true` tanto si `valor` es `null` como si es `undefined`, lo cual es, en ocasiones, una comprobación deliberada y útil).
-
-Esta preferencia por `===` no es un dogma arbitrario de estilo: es una decisión pragmática basada en que la coerción implícita rara vez expresa una intención real del desarrollador, y con mucha más frecuencia enmascara un bug (comparar un string que llegó de un formulario HTML contra un número, sin haberlo convertido explícitamente primero). Convertir explícitamente los tipos antes de comparar (`Number(valorDelFormulario) === 5`) hace la intención del código visible y verificable, en vez de delegar esa conversión a las reglas implícitas y menos legibles del operador `==`.
-
-Herramientas de linting como ESLint (que se estudiará en el Módulo 9) suelen incluir una regla (`eqeqeq`) que directamente prohíbe el uso de `==` salvo en el caso explícito de comparación contra `null`, formalizando en el propio proceso de desarrollo esta práctica recomendada, de modo que el equipo completo la siga de forma consistente sin depender de la disciplina individual de cada desarrollador.
-
-**Analogía:** `==` es como un cajero de tienda que acepta pagos en cualquier moneda extranjera, convirtiéndola mentalmente y de forma aproximada al momento del cobro, con reglas de conversión que no siempre son obvias para el cliente; `===` es un cajero que solo acepta exactamente la moneda local, sin conversión alguna, eliminando cualquier ambigüedad sobre cuánto se está cobrando realmente.
-
-**¿Por qué es importante?** Preferir `===` elimina una categoría entera de bugs sutiles relacionados con comparaciones inesperadas entre tipos distintos, haciendo el comportamiento del código predecible sin necesidad de memorizar la tabla completa de reglas de coerción de `==`.
-
-**Diagrama:**
-
-```
-0 == "0"        → true   (coerción: "0" se convierte a 0)
-0 === "0"       → false  (tipos distintos, sin conversión)
-null == undefined  → true   (caso especial reconocido de ==)
-null === undefined → false  (tipos distintos)
-"" == 0         → true   (coerción: "" se convierte a 0)
-"" == "0"       → false  (ambos strings, sin conversión, distintos)
+```text
+academia-javascript/
+├── package.json
+└── src/
 ```
 
-#### Construcción RutaFlow
+### Tema 1: Variables — `const`, `let` y `var`
 
-Simula que el identificador llega desde HTTP como texto: `const idSolicitado = '101'`, mientras el registro conserva `id: 101`. En `src/envio.js` compara con `==` y `===`, ejecuta `node src/envio.js` y documenta ambos resultados. **Modifica** la frontera para convertir con `Number(idSolicitado)` y mantener `===`; provoca `Number('RF-101')`, verifica `NaN` y recházalo con `Number.isNaN`.
+#### Paso 1 · Objetivo y preparación
 
-### Tema 4: Template literals
+Al finalizar podrás elegir `const` o `let`, explicar alcance, reasignación y mutación, y reconocer por qué `var` causa errores difíciles de ver.
 
-**Conceptos clave:** interpolación de expresiones, strings multilínea, backticks.
+**Conocimiento previo:** abrir una terminal, crear un archivo y ejecutar `node archivo.js`.
 
-Los template literals, delimitados por backticks (`` ` ``) en vez de comillas simples o dobles, permiten interpolar directamente variables y expresiones arbitrarias dentro de un string usando la sintaxis `${expresión}`, evitando la concatenación manual con el operador `+` que dominaba el código JavaScript anterior a ES6. Dentro de `${}` se puede colocar cualquier expresión válida de JavaScript, no solo una variable simple: una operación aritmética, una llamada a función, o incluso una expresión condicional ternaria, y el resultado se convierte automáticamente a string e se inserta en la posición correspondiente del template.
+#### Paso 2 · Contexto y caso real
 
-Además de la interpolación, los template literals soportan strings multilínea de forma nativa, sin necesidad de caracteres de escape especiales (`\n`) ni de concatenar múltiples líneas con `+`: cualquier salto de línea real dentro de los backticks se preserva literalmente en el string resultante, lo cual es particularmente útil para generar bloques de HTML, mensajes de correo, o cualquier texto estructurado de múltiples líneas directamente desde JavaScript.
+**¿Por qué es importante?** Un servicio necesita conservar una guía, cambiar el estado de una entrega y actualizar algunos datos. Si todos los valores pudieran cambiar desde cualquier lugar, sería difícil saber quién produjo un error. Declarar una variable expresa tanto un dato como la intención de modificarlo.
 
-Una capacidad más avanzada, menos usada en el día a día pero importante de conocer, son los "tagged templates" (templates etiquetados): anteponer una función antes de los backticks (`miFuncion\`texto ${variable}\``) permite que esa función procese el string y sus interpolaciones de forma personalizada antes de producir el resultado final, una técnica que bibliotecas como `styled-components` (en el ecosistema React) usan internamente para permitir escribir CSS dentro de JavaScript de forma natural.
+#### Paso 3 · Teoría con analogía
 
-Adoptar template literals de forma consistente en vez de concatenación con `+` no es solo una cuestión de preferencia estética: mejora directamente la legibilidad del código al mantener el texto y las variables interpoladas en su posición visual natural dentro de la frase, en vez de fragmentarlos en múltiples piezas concatenadas que el lector debe recomponer mentalmente para entender el mensaje final.
+Una variable es una etiqueta que permite encontrar un valor. `const` fija la etiqueta al mismo valor; `let` permite reemplazar el valor asociado; `var` usa alcance de función y puede escapar de un bloque. Imagina casilleros: `const` impide cambiar de casillero, aunque un objeto guardado dentro todavía pueda actualizarse.
 
-**Analogía:** concatenar strings con `+` es como escribir una carta pegando recortes de papel de distintas fuentes uno junto a otro; un template literal es como escribir la misma carta directamente a mano, dejando huecos marcados donde se insertan los datos variables, con el texto completo legible de corrido en su forma natural.
+**Conceptos clave:** `const` no permite reasignación; `let` sí; ambas tienen alcance de bloque y zona muerta temporal. `var` tiene alcance de función y se inicializa como `undefined` durante el *hoisting*. Usa `const` por defecto y `let` solo cuando exista una reasignación deliberada.
 
-**¿Por qué es importante?** Los template literals son la forma idiomática y ampliamente adoptada de construir strings dinámicos en JavaScript moderno, y se usan constantemente en prácticamente cualquier código real, desde mensajes de log hasta la generación de HTML dinámico.
-
-**Diagrama:**
-
-```
-Concatenación clásica:                Template literal:
-"Hola " + nombre + ", tienes " +      `Hola ${nombre}, tienes
-  edad + " años"                       ${edad} años`
+```mermaid
+flowchart LR
+  D["¿El identificador cambiará?"] -->|"no"| C["const"]
+  D -->|"sí"| L["let"]
+  V["var"] --> X["Solo para comprender código legado"]
 ```
 
-#### Construcción RutaFlow
+#### Paso 4 · Demostración guiada desde cero
 
-Crea una función `resumenEnvio(envio)` dentro de `src/envio.js` que devuelva ``Guía ${envio.guia}: ${envio.estado} (${envio.pesoKg} kg)``. Ejecuta `node src/envio.js`. **Resultado esperado:** `Guía RF-001: en-ruta (2 kg)`. **Modifica** el modelo agregando una dirección opcional con `?? 'sin dirección'` y comprueba que el valor numérico `0` no sea reemplazado accidentalmente como ocurriría con `||`.
+Crea desde una carpeta vacía `ejemplo-variables/src/01-variables.js`:
 
-### Tema 5: Entorno — navegador frente a Node.js
-
-**Conceptos clave:** motor JavaScript compartido (V8), APIs específicas del entorno, `window` frente a `process`.
-
-Un punto de confusión frecuente para quien empieza en JavaScript es no distinguir claramente entre "el lenguaje JavaScript" y "el entorno en el que ese lenguaje se ejecuta". El lenguaje en sí —su sintaxis, sus tipos, sus reglas de scope, los closures— es exactamente el mismo tanto si el código corre en la consola de Chrome como si corre en un script de Node.js ejecutado desde la terminal: ambos entornos, de hecho, ejecutan el mismo motor subyacente, V8 (el motor de Google que impulsa Chrome y que Node adoptó como su núcleo de ejecución).
-
-Lo que cambia radicalmente entre ambos entornos son las APIs adicionales que cada uno expone por encima del lenguaje base. El navegador expone `window` como objeto global, junto con `document` y toda la API del DOM (que se estudiará en profundidad en el Módulo 8) para manipular una página web, además de APIs específicas del navegador como `localStorage`, `fetch`, o `IntersectionObserver`. Node.js, en cambio, no tiene ni `window` ni `document` (no hay una página web que manipular), pero expone `process` (para leer variables de entorno, argumentos de línea de comandos, y controlar el ciclo de vida del proceso), el módulo `fs` (para leer y escribir archivos del sistema), y un sistema de módulos propio para organizar código en archivos separados.
-
-Esta distinción tiene una consecuencia práctica inmediata al escribir código: una función que use `document.querySelector(...)` funcionará perfectamente en el navegador pero lanzará un `ReferenceError` en Node (porque `document` simplemente no existe ahí), y de forma simétrica, código que use `require("fs")` o `process.argv` fallará si se intenta ejecutar directamente en la consola del navegador. Escribir código verdaderamente "isomórfico" (que funcione en ambos entornos sin cambios) requiere evitar deliberadamente las APIs específicas de cada entorno, o detectar en tiempo de ejecución en cuál se está ejecutando antes de usar la API correspondiente.
-
-Node.js fue, históricamente, lo que permitió a JavaScript salir del navegador y convertirse en un lenguaje de propósito general capaz de escribir servidores backend completos (tema central del track de Node.js), scripts de automatización, y herramientas de línea de comandos, expandiendo enormemente el alcance práctico de un lenguaje que originalmente se diseñó únicamente para añadir interactividad a páginas web estáticas.
-
-**Analogía:** el lenguaje JavaScript es como el idioma español hablado; el navegador y Node.js son como dos países distintos donde se habla ese mismo idioma, pero cada uno con su propio vocabulario técnico local específico de su industria dominante (términos marítimos en un país costero, términos agrícolas en otro): el idioma base es idéntico y mutuamente inteligible, pero cada contexto tiene vocabulario adicional que no tiene sentido fuera de ese contexto específico.
-
-**¿Por qué es importante?** Distinguir claramente "lenguaje" de "entorno" evita la confusión frecuente de intentar usar `document` en Node o `fs` en el navegador, y sienta las bases para entender, más adelante en el curso, por qué frameworks como Angular o React corren en el navegador mientras que Node.js es la base típica de un servidor backend.
-
-**Diagrama:**
-
-```
-              JavaScript (el lenguaje: sintaxis, tipos, closures)
-                              │
-            ┌─────────────────┴─────────────────┐
-            ▼                                     ▼
-       Navegador (V8 en Chrome)              Node.js (V8 embebido)
-       window, document, DOM,                process, fs, require,
-       fetch, localStorage                    módulos del sistema
+```bash
+mkdir ejemplo-variables
+cd ejemplo-variables
+npm init -y
+mkdir src
 ```
 
----
+```javascript
+// La guía identifica siempre la misma entrega: no se reasigna.
+const guia = 'RF-001';
 
-#### Construcción RutaFlow
+// El estado sí avanza durante el recorrido.
+let estado = 'creado';
 
-Importa `resumenEnvio` desde `src/envio.js` en `src/cli.js` y ejecútalo con Node. Luego crea `web/index.html` y `web/app.js` para mostrar el mismo resumen en un elemento `<output id="estado">`. `node src/cli.js` debe funcionar; abrir `web/index.html` debe actualizar el DOM. Intenta usar `document` desde Node y diagnostica `ReferenceError`: el lenguaje es el mismo, pero las APIs disponibles dependen del entorno.
+// const protege la referencia, no congela el objeto.
+const envio = { guia, pesoKg: 2 };
+envio.pesoKg = 2.5;
+estado = 'en-ruta';
+
+console.log(`${envio.guia} | ${estado} | ${envio.pesoKg} kg`);
+```
+
+Ejecuta desde `ejemplo-variables/`:
+
+```bash
+node src/01-variables.js
+```
+
+**Resultado esperado:** `RF-001 | en-ruta | 2.5 kg`.
+
+**Fallo deliberado:** añade `guia = 'RF-002'`. Node mostrará `TypeError: Assignment to constant variable`. El error indica que intentaste cambiar la referencia protegida; no significa que `const` vuelva inmutable un objeto.
+
+#### Paso 5 · Práctica guiada
+
+Agrega `let intentos = 0`, increméntalo dos veces e inclúyelo en la salida. **Pista:** usa `intentos += 1`. Antes de ejecutar, predice el número final.
+
+#### Paso 6 · Práctica independiente
+
+Crea `const conductor = { nombre: 'Ana', disponible: true }`; cambia únicamente `disponible` y muestra el objeto. Después intenta reasignar `conductor` y explica con tus palabras por qué una operación funciona y la otra falla.
+
+#### Paso 7 · Cierre y evidencia
+
+Aprendiste a comunicar intención con `const` y `let`. El próximo tema explica qué clases de valores guardan esas variables. Demuestra el aprendizaje entregando la salida correcta, el `TypeError` provocado y una explicación de dos frases. Fuente oficial: [MDN — declaraciones y variables](https://developer.mozilla.org/es/docs/Web/JavaScript/Guide/Grammar_and_types#declaraciones).
+
+**Errores comunes:** creer que `const` congela objetos; usar `let` para todo; declarar `var` dentro de un `if` esperando alcance de bloque.
+
+### Tema 2: Tipos primitivos y `typeof`
+
+#### Paso 1 · Objetivo y preparación
+
+Al finalizar podrás reconocer los siete tipos primitivos, inspeccionarlos con `typeof` y validar correctamente `null`, arrays y números inválidos.
+
+**Conocimiento previo:** variables con `const` y `let`.
+
+#### Paso 2 · Contexto y caso real
+
+**¿Por qué es importante?** En una aplicación una guía es texto, un peso es número y una entrega puede no tener conductor. Confundir esas categorías produce cálculos incorrectos y validaciones que aceptan datos imposibles.
+
+#### Paso 3 · Teoría con analogía
+
+Los tipos son categorías de equipaje: cada una admite operaciones diferentes. JavaScript tiene `string`, `number`, `boolean`, `undefined`, `null`, `symbol` y `bigint`. Objetos, arrays y funciones no son primitivos. `typeof null` devuelve históricamente `'object'`; por eso `null` se comprueba directamente. Para arrays usa `Array.isArray` y para `NaN`, `Number.isNaN`.
+
+#### Paso 4 · Demostración guiada desde cero
+
+Desde una carpeta vacía crea `ejemplo-tipos` y `src/02-tipos.js`:
+
+```bash
+mkdir ejemplo-tipos
+cd ejemplo-tipos
+npm init -y
+mkdir src
+```
+
+```javascript
+const envio = {
+  guia: 'RF-001',                 // string
+  pesoKg: 2.5,                    // number
+  entregado: false,               // boolean
+  conductor: null,                // ausencia intencional
+  observacion: undefined,         // todavía no asignada
+  idInterno: Symbol('envio'),      // identificador único
+  eventos: 9_007_199_254_740_993n // bigint
+};
+
+for (const [campo, valor] of Object.entries(envio)) {
+  console.log(campo, typeof valor);
+}
+console.log('conductor ausente:', envio.conductor === null);
+```
+
+```bash
+node src/02-tipos.js
+```
+
+**Resultado esperado:** aparecen `string`, `number`, `boolean`, `object`, `undefined`, `symbol` y `bigint`; la última línea dice `true`.
+
+**Fallo deliberado:** añade `console.log(JSON.stringify(envio))`. Obtendrás `TypeError: Do not know how to serialize a BigInt`. El diagnóstico es que JSON no representa `bigint`; convierte ese campo conscientemente a texto antes de serializar.
+
+#### Paso 5 · Práctica guiada
+
+Agrega `paradas: []` y predice `typeof envio.paradas`. **Pista:** después comprueba `Array.isArray(envio.paradas)`.
+
+#### Paso 6 · Práctica independiente
+
+Escribe `describirTipo(valor)` para distinguir `null`, array y los resultados normales de `typeof`. Prueba al menos nueve valores sin copiar una tabla de respuestas.
+
+#### Paso 7 · Cierre y evidencia
+
+Ya puedes inspeccionar un dato antes de operar con él. El siguiente tema muestra por qué JavaScript a veces convierte tipos automáticamente. Entrega la salida, el fallo de `BigInt` y los nueve casos de tu función. Fuente oficial: [MDN — tipos y estructuras](https://developer.mozilla.org/es/docs/Web/JavaScript/Guide/Data_structures).
+
+**Errores comunes:** asumir que `typeof null` es `'null'`; detectar arrays con `typeof`; mezclar `number` y `bigint` en una operación.
+
+### Tema 3: Conversión, coerción e igualdad
+
+#### Paso 1 · Objetivo y preparación
+
+Al finalizar convertirás datos externos explícitamente y elegirás `===` para evitar decisiones ocultas.
+
+**Conocimiento previo:** tipos primitivos y `Number.isNaN`.
+
+#### Paso 2 · Contexto y caso real
+
+**¿Por qué es importante?** Los campos HTML y muchos parámetros HTTP llegan como texto. RutaFlow puede recibir `'101'` aunque el identificador interno sea el número `101`. Compararlos sin una frontera clara puede encontrar la entrega equivocada.
+
+#### Paso 3 · Teoría con analogía
+
+La coerción implícita es un traductor que interviene sin que se lo pidas. `==` puede convertir operandos antes de comparar; `===` exige tipo y valor iguales. En código profesional convierte una vez al entrar (`Number`, `String`, `Boolean`) y luego opera con tipos conocidos.
+
+#### Paso 4 · Demostración guiada desde cero
+
+Desde una carpeta vacía crea `ejemplo-conversion` y `src/03-conversion.js`:
+
+```bash
+mkdir ejemplo-conversion
+cd ejemplo-conversion
+npm init -y
+mkdir src
+```
+
+```javascript
+function convertirId(texto) {
+  const id = Number(texto);
+  if (!Number.isInteger(id) || id <= 0) {
+    throw new TypeError(`ID inválido: ${texto}`);
+  }
+  return id;
+}
+
+const idHttp = '101';
+const idGuardado = 101;
+console.log('sin convertir:', idHttp === idGuardado);
+console.log('convertido:', convertirId(idHttp) === idGuardado);
+```
+
+```bash
+node src/03-conversion.js
+```
+
+**Resultado esperado:** `sin convertir: false` y `convertido: true`.
+
+**Fallo deliberado:** llama `convertirId('RF-101')`. El error debe conservar el dato rechazado. No lo “corrijas” usando `parseInt`, porque aceptaría parcialmente textos como `'101abc'`.
+
+#### Paso 5 · Práctica guiada
+
+Prueba `''`, `'0'`, `'7'` y `'7.5'`. **Pista:** escribe primero tu predicción y luego registra éxito o mensaje de error.
+
+#### Paso 6 · Práctica independiente
+
+Crea `convertirPeso(texto)` que acepte decimales positivos y rechace vacío, `NaN`, cero e infinito. Integra la función en el objeto de entrega del Tema 1.
+
+#### Paso 7 · Cierre y evidencia
+
+Aprendiste a validar en la frontera y mantener comparaciones predecibles. El siguiente tema construye mensajes legibles usando plantillas. Evidencia: tabla de cinco entradas con predicción y resultado. Fuente oficial: [MDN — igualdad estricta](https://developer.mozilla.org/es/docs/Web/JavaScript/Reference/Operators/Strict_equality).
+
+**Errores comunes:** usar `==` para evitar convertir; aceptar el resultado `NaN`; confundir `Number('')`, que produce cero, con una entrada válida.
+
+### Tema 4: Template literals y mensajes seguros
+
+#### Paso 1 · Objetivo y preparación
+
+Al finalizar construirás mensajes legibles con interpolación, valores opcionales y funciones pequeñas.
+
+**Conocimiento previo:** objetos, conversión y funciones básicas.
+
+#### Paso 2 · Contexto y caso real
+
+**¿Por qué es importante?** Los conductores y operadores de RutaFlow necesitan mensajes claros sobre cada entrega. Concatenar muchas piezas con `+` dificulta ver espacios, unidades y valores faltantes.
+
+#### Paso 3 · Teoría con analogía
+
+Un template literal es una plantilla de etiqueta con espacios reservados. Usa acentos graves y `${expresión}`. Puede ocupar varias líneas. La interpolación convierte valores a texto, pero no escapa HTML automáticamente: para insertar datos de usuarios en una página usa `textContent`, no `innerHTML`.
+
+#### Paso 4 · Demostración guiada desde cero
+
+Desde una carpeta vacía crea `ejemplo-template` y `src/04-resumen.js`:
+
+```bash
+mkdir ejemplo-template
+cd ejemplo-template
+npm init -y
+mkdir src
+```
+
+```javascript
+function resumenEnvio(envio) {
+  const destino = envio.destino ?? 'sin destino';
+  return `Guía ${envio.guia}: ${envio.estado}\nDestino: ${destino}\nPeso: ${envio.pesoKg} kg`;
+}
+
+console.log(resumenEnvio({ guia: 'RF-001', estado: 'en-ruta', pesoKg: 2.5 }));
+```
+
+```bash
+node src/04-resumen.js
+```
+
+**Resultado esperado:** tres líneas; la segunda termina en `sin destino`.
+
+**Fallo deliberado:** reemplaza `??` por `||` y prueba un valor permitido igual a `0`. Observa que `||` también reemplaza valores *falsy* válidos; restaura `??` cuando solo quieras tratar `null` o `undefined`.
+
+#### Paso 5 · Práctica guiada
+
+Agrega conductor opcional. **Pista:** usa `envio.conductor?.nombre ?? 'sin asignar'` y prueba con y sin objeto.
+
+#### Paso 6 · Práctica independiente
+
+Construye `resumenRuta` con número de paradas, distancia y conductor. Luego muestra el resultado en un `<output>` usando `textContent` y explica por qué no elegiste `innerHTML`.
+
+#### Paso 7 · Cierre y evidencia
+
+Ahora puedes presentar datos sin perder legibilidad ni confundir ausencia con cero. El siguiente tema separa el lenguaje de las APIs de cada entorno. Evidencia: salidas con destino ausente, vacío y definido. Fuente oficial: [MDN — template literals](https://developer.mozilla.org/es/docs/Web/JavaScript/Reference/Template_literals).
+
+**Errores comunes:** usar comillas normales; asumir que interpolar hace seguro el HTML; emplear `||` cuando cero o cadena vacía son datos válidos.
+
+### Tema 5: JavaScript en navegador y Node.js
+
+#### Paso 1 · Objetivo y preparación
+
+Al finalizar distinguirás el lenguaje de su entorno y ejecutarás la misma regla de RutaFlow desde terminal y navegador.
+
+**Conocimiento previo:** módulos, funciones y DOM básico; si aún no conoces DOM, sigue literalmente la demostración.
+
+#### Paso 2 · Contexto y caso real
+
+**¿Por qué es importante?** JavaScript puede calcular el resumen tanto en backend como en frontend, pero `document` solo existe en navegador y `process` pertenece a Node.js. Saber dónde vive una API evita copiar código que nunca podrá ejecutarse en ese entorno.
+
+#### Paso 3 · Teoría con analogía
+
+JavaScript es el idioma; navegador y Node.js son lugares donde se habla. Comparten sintaxis y objetos estándar, pero el navegador aporta DOM y almacenamiento web, mientras Node aporta archivos, procesos y red del servidor. Una regla pura puede compartirse; un adaptador dependiente del entorno debe permanecer en el borde.
+
+```mermaid
+flowchart TB
+  R["regla pura resumenEnvio"] --> N["CLI de Node.js"]
+  R --> B["interfaz del navegador"]
+  N --> P["process y sistema operativo"]
+  B --> D["document y DOM"]
+```
+
+#### Paso 4 · Demostración guiada desde cero
+
+Desde una carpeta vacía crea `ejemplo-entorno-js`, ejecuta `npm init -y`, crea `src` y `web`, y añade `"type": "module"` a `package.json`. Mueve y exporta la función desde `src/resumen.js`, y crea `src/cli.js`:
+
+```bash
+mkdir ejemplo-entorno-js
+cd ejemplo-entorno-js
+npm init -y
+mkdir src web
+```
+
+```javascript
+import { resumenEnvio } from './resumen.js';
+console.log(resumenEnvio({ guia: 'RF-001', estado: 'en-ruta', pesoKg: 2.5 }));
+```
+
+Crea también `web/index.html` y `web/app.js`:
+
+```javascript
+import { resumenEnvio } from '../src/resumen.js';
+const salida = document.querySelector('#estado');
+salida.textContent = resumenEnvio({ guia: 'RF-001', estado: 'en-ruta', pesoKg: 2.5 });
+```
+
+Sirve la carpeta —no abras el HTML con doble clic—:
+
+```bash
+node src/cli.js
+npx serve .
+```
+
+**Resultado esperado:** terminal y `<output id="estado">` muestran el mismo resumen.
+
+**Fallo deliberado:** escribe `document.querySelector` en `src/cli.js`; Node informa `ReferenceError: document is not defined`. El cálculo no falla: el adaptador está en el entorno incorrecto.
+
+#### Paso 5 · Práctica guiada
+
+Recibe la guía mediante `process.argv[2]` en la CLI. **Pista:** valida ausencia antes de llamar la función y muestra `Uso: node src/cli.js <guía>`.
+
+#### Paso 6 · Práctica independiente
+
+Agrega un formulario web que reciba guía y estado, pero conserva `resumenEnvio` sin referencias a `document` ni `process`. Demuestra la misma regla con una prueba de Node.
+
+#### Paso 7 · Cierre y evidencia
+
+Completaste un primer incremento de RutaFlow ejecutable en dos entornos. **Evidencia:** demuestra ambos resultados y el fallo deliberado; después explica qué parte es dominio y qué parte adaptador. El siguiente módulo introduce funciones y control de flujo. Fuentes oficiales: [Node.js ECMAScript modules](https://nodejs.org/api/esm.html) y [MDN — DOM](https://developer.mozilla.org/es/docs/Web/API/Document_Object_Model).
+
+**Errores comunes:** abrir módulos con `file://`; importar una ruta incorrecta; usar `document` en Node; mezclar reglas del dominio con la actualización del DOM.
 
 ## Ruta de proyecto progresivo desde carpeta vacía
 
-No crees un proyecto desechable por módulo. Conserva un único repositorio que evoluciona durante todo el track y etiqueta cada hito (`git tag modulo-N`). Empieza con `mkdir academia-javascript && cd academia-javascript && git init && npm init -y`. Ejecuta el comando paso a paso, inspecciona los archivos generados y registra versiones y precondiciones en el README.
-
-| Hito | Evolución acumulativa | Evidencia antes de avanzar |
-|---|---|---|
-| Base | HTML/DOM. | Arranque reproducible, commit limpio y prueba mínima. |
-| Aplicación | API y persistencia. | Casos normales, límite y error automatizados. |
-| Integración | Conecta capas y reemplaza dobles por infraestructura controlada. | Diagrama, contratos y prueba de integración. |
-| Experto | calidad, seguridad y rendimiento. | Perfil o threat model, telemetría y runbook de recuperación. |
-
-Al iniciar cada laboratorio crea una rama `modulo-N`, implementa el incremento, verifica el criterio de éxito y fusiona solo con pruebas verdes. Si un módulo necesita un experimento aislado, colócalo en `experiments/modulo-N/`; el producto acumulativo permanece ejecutable. Al terminar, otra persona debe poder clonar el repositorio y reproducir el último hito siguiendo únicamente el README.
-
-
-## Construcción guiada del capítulo
-
-**Objetivo del laboratorio:** ejecutar el mismo código base en el navegador y en Node.js, demostrando dominio de variables, tipos, coerción, template literals y scope.
-
-**Requisitos previos:** un navegador moderno con herramientas de desarrollador, Node.js instalado (verificar con `node --version`), un editor de texto.
-
-| Paso | Acción | Comando/Código | Explicación |
-|---|---|---|---|
-| 1 | Abrir la consola del navegador | F12 → pestaña Console | Entorno interactivo para experimentar rápido |
-| 2 | Declarar variables con let y const | `let contador = 0; const PI = 3.1416; contador = 1;` intenta `PI = 3;` | Observa el `TypeError` al reasignar `const` |
-| 3 | Crear el archivo `fundamentos.mjs` | Declarar una variable de cada uno de los 7 tipos primitivos | La extensión `.mjs` fuerza a Node a interpretar el archivo como ESM |
-| 4 | Ejecutar el script en Node | `node fundamentos.mjs` | Verifica que Node ejecuta el mismo JavaScript que el navegador |
-| 5 | Comparar `==` frente a `===` | `console.log(1 == "1", 1 === "1")` en ambos entornos | Debe imprimir `true false` idéntico en navegador y Node |
-| 6 | Probar `typeof` sobre los 7 tipos | `typeof null`, `typeof undefined`, etc. | Anota especialmente el resultado de `typeof null` |
-| 7 | Demostrar scope de bloque | Declarar la misma variable `let` dentro de dos bloques `{}` distintos sin conflicto | Confirma que no hay colisión entre scopes de bloque separados |
-
-**Verificación:** el laboratorio se considera exitoso si el script `fundamentos.mjs` ejecuta sin errores tanto pegado en la consola del navegador (ajustando la sintaxis de módulos si es necesario) como con `node fundamentos.mjs`, produciendo exactamente la misma salida en ambos casos.
-
-**Errores comunes y soluciones**
-
-- **`SyntaxError: Cannot use import statement outside a module` al ejecutar con Node.** Asegúrate de que el archivo tenga extensión `.mjs`, o que el `package.json` del proyecto tenga `"type": "module"`.
-- **Confundir `null` y `undefined` en las comparaciones.** Recuerda: `undefined` es lo que JavaScript asigna automáticamente; `null` es lo que un desarrollador asigna deliberadamente para indicar ausencia intencional de valor.
-- **Usar `==` sin darse cuenta y obtener un resultado "raro".** Si una comparación da un resultado inesperado, la primera pregunta a hacerse es si se usó `==` en vez de `===`; reemplázalo y observa si el resultado cambia.
-
----
+Conserva `academia-javascript/` para los siguientes módulos. Cada tema agrega una capacidad al mismo RutaFlow; no vuelvas a ejecutar `npm init` ni crees proyectos desechables. Antes de avanzar confirma que `node src/cli.js` y la interfaz web siguen mostrando el mismo resultado. Guarda el hito con Git solo cuando puedas reproducir éxito y fallo desde una terminal nueva.

@@ -5,6 +5,35 @@
 
 ### Tema 1: Certificados y provisioning profiles
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás preparar una distribución iOS desde cero. Prerrequisitos: macOS, Xcode, Apple Developer y un proyecto SwiftUI. Verifica xcodebuild -version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real, una app de entregas debe firmarse, probarse con usuarios y publicar metadata coherente sin exponer certificados ni secretos.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+Certificado identifica al firmante y provisioning profile autoriza combinación de equipo, bundle y capacidades. Archive produce un artefacto; TestFlight distribuye una versión; metadata comunica cambios y privacidad. La analogía es una cadena de custodia: identidad, permiso, paquete y registro son controles distintos.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-ios-m11
+cd ejemplo-ios-m11
+swift package init --type executable
+swift test
+```
+En Xcode crea una app iOS, configura bundle identifier, firma automática y ejecuta Product > Archive; documenta el esquema y versión.
+
+#### Paso 5 · Práctica guiada
+Pista: cambia deliberadamente el bundle identifier o capability para provocar un fallo deliberado de firma; lee el diagnóstico y corrígelo. Resultado esperado: archive válido y exportable.
+
+#### Paso 6 · Práctica independiente
+Añade build number, changelog, privacidad, grupo TestFlight y checklist de rollback; valida que no haya secretos en el repositorio.
+
+#### Paso 7 · Cierre y evidencia
+Guarda archive, logs, metadata y checklist; como siguiente paso estudia automatización CI. Errores comunes: certificados compartidos, versionar secretos, olvidar privacy manifest y subir sin probar restore. Fuentes oficiales: https://developer.apple.com/help/account/ y https://developer.apple.com/testflight/.
+**¿Por qué es importante?** Porque una aplicación no termina al compilar: debe poder firmarse, distribuirse y explicarse.
+**Evidencia de aprendizaje:** entrega archive, diagnóstico, metadata y checklist.
 **Conceptos clave:** distinción entre desarrollo y distribución, vínculo entre identidad, app y dispositivos autorizados.
 
 Un certificado de **desarrollo** firma builds destinados a correr en dispositivos físicos específicamente registrados durante el desarrollo activo, permitiendo probar la app en un iPhone o iPad real del propio equipo antes de cualquier distribución más amplia; un certificado de **distribución** firma builds destinados a TestFlight y a la App Store, un nivel de firma distinto que autoriza la distribución más allá del círculo cerrado de dispositivos de desarrollo registrados manualmente. El provisioning profile vincula estos tres elementos en un único artefacto: el certificado (la identidad criptográfica del desarrollador o la organización), el App ID (el identificador único de la app específica), y, en el caso de perfiles de desarrollo, la lista explícita de dispositivos físicos autorizados a instalar ese build.
@@ -25,6 +54,35 @@ Provisioning profile        → vincula certificado + App ID + dispositivos auto
 
 ### Tema 2: Archivar, subir y TestFlight
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás preparar una distribución iOS desde cero. Prerrequisitos: macOS, Xcode, Apple Developer y un proyecto SwiftUI. Verifica xcodebuild -version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real, una app de entregas debe firmarse, probarse con usuarios y publicar metadata coherente sin exponer certificados ni secretos.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+Certificado identifica al firmante y provisioning profile autoriza combinación de equipo, bundle y capacidades. Archive produce un artefacto; TestFlight distribuye una versión; metadata comunica cambios y privacidad. La analogía es una cadena de custodia: identidad, permiso, paquete y registro son controles distintos.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-ios-m11
+cd ejemplo-ios-m11
+swift package init --type executable
+swift test
+```
+En Xcode crea una app iOS, configura bundle identifier, firma automática y ejecuta Product > Archive; documenta el esquema y versión.
+
+#### Paso 5 · Práctica guiada
+Pista: cambia deliberadamente el bundle identifier o capability para provocar un fallo deliberado de firma; lee el diagnóstico y corrígelo. Resultado esperado: archive válido y exportable.
+
+#### Paso 6 · Práctica independiente
+Añade build number, changelog, privacidad, grupo TestFlight y checklist de rollback; valida que no haya secretos en el repositorio.
+
+#### Paso 7 · Cierre y evidencia
+Guarda archive, logs, metadata y checklist; como siguiente paso estudia automatización CI. Errores comunes: certificados compartidos, versionar secretos, olvidar privacy manifest y subir sin probar restore. Fuentes oficiales: https://developer.apple.com/help/account/ y https://developer.apple.com/testflight/.
+**¿Por qué es importante?** Porque una aplicación no termina al compilar: debe poder firmarse, distribuirse y explicarse.
+**Evidencia de aprendizaje:** entrega archive, diagnóstico, metadata y checklist.
 **Conceptos clave:** proceso formal de empaquetado, validación beta con impacto limitado antes de producción.
 
 ```
@@ -47,6 +105,35 @@ Xcode Archive → App Store Connect → TestFlight (testers internos/externos) �
 
 ### Tema 3: Metadata y versionado
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás preparar una distribución iOS desde cero. Prerrequisitos: macOS, Xcode, Apple Developer y un proyecto SwiftUI. Verifica xcodebuild -version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real, una app de entregas debe firmarse, probarse con usuarios y publicar metadata coherente sin exponer certificados ni secretos.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+Certificado identifica al firmante y provisioning profile autoriza combinación de equipo, bundle y capacidades. Archive produce un artefacto; TestFlight distribuye una versión; metadata comunica cambios y privacidad. La analogía es una cadena de custodia: identidad, permiso, paquete y registro son controles distintos.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-ios-m11
+cd ejemplo-ios-m11
+swift package init --type executable
+swift test
+```
+En Xcode crea una app iOS, configura bundle identifier, firma automática y ejecuta Product > Archive; documenta el esquema y versión.
+
+#### Paso 5 · Práctica guiada
+Pista: cambia deliberadamente el bundle identifier o capability para provocar un fallo deliberado de firma; lee el diagnóstico y corrígelo. Resultado esperado: archive válido y exportable.
+
+#### Paso 6 · Práctica independiente
+Añade build number, changelog, privacidad, grupo TestFlight y checklist de rollback; valida que no haya secretos en el repositorio.
+
+#### Paso 7 · Cierre y evidencia
+Guarda archive, logs, metadata y checklist; como siguiente paso estudia automatización CI. Errores comunes: certificados compartidos, versionar secretos, olvidar privacy manifest y subir sin probar restore. Fuentes oficiales: https://developer.apple.com/help/account/ y https://developer.apple.com/testflight/.
+**¿Por qué es importante?** Porque una aplicación no termina al compilar: debe poder firmarse, distribuirse y explicarse.
+**Evidencia de aprendizaje:** entrega archive, diagnóstico, metadata y checklist.
 **Conceptos clave:** información obligatoria para la revisión, dos identificadores con propósitos distintos.
 
 App Store Connect requiere completar metadata específica antes de que Apple revise la app: descripción y palabras clave (relevantes para el descubrimiento en la búsqueda de la App Store), capturas de pantalla por cada tamaño de dispositivo soportado, una política de privacidad (obligatoria sin excepción para cualquier app publicada), y la clasificación de edad junto con las respuestas del cuestionario de privacidad que declara explícitamente qué datos recolecta la app y con qué propósito, información que Apple usa para mostrar la etiqueta de privacidad visible a los usuarios antes de descargar la app.

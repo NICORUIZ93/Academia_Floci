@@ -5,6 +5,38 @@
 
 ### Tema 1: Elegir estructuras según las operaciones
 
+Ejecuta node --version para comprobar el entorno antes de continuar. **Evidencia de aprendizaje:** conserva la salida y explica qué verificaste.
+
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás elegir una estructura de datos desde cero. Prerrequisitos: terminal, editor y un lenguaje instalado; verifica su versión.
+
+#### Paso 2 · Contexto y caso real
+En un caso real, una plataforma consulta por ID, procesa eventos por orden y calcula rutas; cada operación exige una estructura distinta.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+Una estructura define operaciones y costes: pila es LIFO, cola FIFO, mapa asocia claves y un árbol organiza búsquedas. Complejidad ayuda a anticipar crecimiento, pero debe confirmarse con medición. La analogía es un almacén: el orden de entrada y el modo de localizar cajas cambian el tiempo total.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-fundamentos-m2
+cd ejemplo-fundamentos-m2
+mkdir src
+printf "cola FIFO\n" > src/estructura.txt
+cat src/estructura.txt
+```
+Implementa una operación enqueue/dequeue y documenta invariante, entrada y salida.
+
+#### Paso 5 · Práctica guiada
+Pista: extrae un elemento en orden incorrecto para provocar un fallo deliberado de invariante, observa el resultado y corrígelo. Resultado esperado: la estructura conserva su contrato.
+
+#### Paso 6 · Práctica independiente
+Compara búsqueda lineal y mapa con 10, 1000 y 100000 elementos; añade una prueba de límite y anota complejidad temporal y espacial.
+
+#### Paso 7 · Cierre y evidencia
+Guarda tabla de operaciones, mediciones y código; como siguiente paso estudia persistencia. Errores comunes: elegir por moda, confundir promedio con peor caso, mutar mientras se itera y no definir invariantes. Fuentes oficiales: https://opendsa-server.cs.vt.edu/ y https://visualgo.net/en.
+**¿Por qué es importante?** Porque la estructura adecuada hace visible el comportamiento y evita costes ocultos.
+**Evidencia de aprendizaje:** entrega comparación, pruebas de invariante y mediciones.
 **Conceptos clave:** lista, tupla, conjunto, diccionario, orden, duplicados, clave, acceso, inserción y mutabilidad.
 
 Una estructura de datos organiza valores para facilitar ciertas operaciones. No existe una estructura universalmente mejor. Una lista conserva orden y permite duplicados; un conjunto representa pertenencia sin duplicados; un diccionario relaciona claves únicas con valores; una tupla expresa una agrupación fija que no se modifica.
@@ -55,6 +87,38 @@ El resultado esperado conserva tres paradas, elimina un escaneo duplicado y recu
 
 ### Tema 2: Pilas, colas y abstracciones de comportamiento
 
+Ejecuta node --version para comprobar el entorno antes de continuar. **Evidencia de aprendizaje:** conserva la salida y explica qué verificaste.
+
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás elegir una estructura de datos desde cero. Prerrequisitos: terminal, editor y un lenguaje instalado; verifica su versión.
+
+#### Paso 2 · Contexto y caso real
+En un caso real, una plataforma consulta por ID, procesa eventos por orden y calcula rutas; cada operación exige una estructura distinta.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+Una estructura define operaciones y costes: pila es LIFO, cola FIFO, mapa asocia claves y un árbol organiza búsquedas. Complejidad ayuda a anticipar crecimiento, pero debe confirmarse con medición. La analogía es un almacén: el orden de entrada y el modo de localizar cajas cambian el tiempo total.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-fundamentos-m2
+cd ejemplo-fundamentos-m2
+mkdir src
+printf "cola FIFO\n" > src/estructura.txt
+cat src/estructura.txt
+```
+Implementa una operación enqueue/dequeue y documenta invariante, entrada y salida.
+
+#### Paso 5 · Práctica guiada
+Pista: extrae un elemento en orden incorrecto para provocar un fallo deliberado de invariante, observa el resultado y corrígelo. Resultado esperado: la estructura conserva su contrato.
+
+#### Paso 6 · Práctica independiente
+Compara búsqueda lineal y mapa con 10, 1000 y 100000 elementos; añade una prueba de límite y anota complejidad temporal y espacial.
+
+#### Paso 7 · Cierre y evidencia
+Guarda tabla de operaciones, mediciones y código; como siguiente paso estudia persistencia. Errores comunes: elegir por moda, confundir promedio con peor caso, mutar mientras se itera y no definir invariantes. Fuentes oficiales: https://opendsa-server.cs.vt.edu/ y https://visualgo.net/en.
+**¿Por qué es importante?** Porque la estructura adecuada hace visible el comportamiento y evita costes ocultos.
+**Evidencia de aprendizaje:** entrega comparación, pruebas de invariante y mediciones.
 **Conceptos clave:** tipo abstracto de datos, pila, cola, LIFO, FIFO, push, pop, enqueue y dequeue.
 
 Una estructura también puede definirse por las operaciones permitidas, no por su implementación concreta. Una **pila** sigue LIFO: el último elemento agregado sale primero. Una **cola** sigue FIFO: el primero en entrar sale primero. Python puede representarlas con listas o `deque`, pero el comportamiento conceptual es independiente del lenguaje.
@@ -103,6 +167,38 @@ Llama `popleft()` sobre una cola vacía para observar `IndexError`; corrige con 
 
 ### Tema 3: Búsqueda, precondiciones y demostración de corrección
 
+Ejecuta node --version para comprobar el entorno antes de continuar. **Evidencia de aprendizaje:** conserva la salida y explica qué verificaste.
+
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás elegir una estructura de datos desde cero. Prerrequisitos: terminal, editor y un lenguaje instalado; verifica su versión.
+
+#### Paso 2 · Contexto y caso real
+En un caso real, una plataforma consulta por ID, procesa eventos por orden y calcula rutas; cada operación exige una estructura distinta.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+Una estructura define operaciones y costes: pila es LIFO, cola FIFO, mapa asocia claves y un árbol organiza búsquedas. Complejidad ayuda a anticipar crecimiento, pero debe confirmarse con medición. La analogía es un almacén: el orden de entrada y el modo de localizar cajas cambian el tiempo total.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-fundamentos-m2
+cd ejemplo-fundamentos-m2
+mkdir src
+printf "cola FIFO\n" > src/estructura.txt
+cat src/estructura.txt
+```
+Implementa una operación enqueue/dequeue y documenta invariante, entrada y salida.
+
+#### Paso 5 · Práctica guiada
+Pista: extrae un elemento en orden incorrecto para provocar un fallo deliberado de invariante, observa el resultado y corrígelo. Resultado esperado: la estructura conserva su contrato.
+
+#### Paso 6 · Práctica independiente
+Compara búsqueda lineal y mapa con 10, 1000 y 100000 elementos; añade una prueba de límite y anota complejidad temporal y espacial.
+
+#### Paso 7 · Cierre y evidencia
+Guarda tabla de operaciones, mediciones y código; como siguiente paso estudia persistencia. Errores comunes: elegir por moda, confundir promedio con peor caso, mutar mientras se itera y no definir invariantes. Fuentes oficiales: https://opendsa-server.cs.vt.edu/ y https://visualgo.net/en.
+**¿Por qué es importante?** Porque la estructura adecuada hace visible el comportamiento y evita costes ocultos.
+**Evidencia de aprendizaje:** entrega comparación, pruebas de invariante y mediciones.
 **Conceptos clave:** búsqueda lineal, búsqueda binaria, precondición, invariante, corrección y caso ausente.
 
 La búsqueda lineal revisa elementos hasta encontrar el objetivo o terminar. Funciona aunque los datos no estén ordenados.
@@ -159,6 +255,38 @@ Pasa una lista desordenada a la binaria y comprueba que puede devolver un result
 
 ### Tema 4: Complejidad, medición, ordenamiento y recursión
 
+Ejecuta node --version para comprobar el entorno antes de continuar. **Evidencia de aprendizaje:** conserva la salida y explica qué verificaste.
+
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás elegir una estructura de datos desde cero. Prerrequisitos: terminal, editor y un lenguaje instalado; verifica su versión.
+
+#### Paso 2 · Contexto y caso real
+En un caso real, una plataforma consulta por ID, procesa eventos por orden y calcula rutas; cada operación exige una estructura distinta.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+Una estructura define operaciones y costes: pila es LIFO, cola FIFO, mapa asocia claves y un árbol organiza búsquedas. Complejidad ayuda a anticipar crecimiento, pero debe confirmarse con medición. La analogía es un almacén: el orden de entrada y el modo de localizar cajas cambian el tiempo total.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-fundamentos-m2
+cd ejemplo-fundamentos-m2
+mkdir src
+printf "cola FIFO\n" > src/estructura.txt
+cat src/estructura.txt
+```
+Implementa una operación enqueue/dequeue y documenta invariante, entrada y salida.
+
+#### Paso 5 · Práctica guiada
+Pista: extrae un elemento en orden incorrecto para provocar un fallo deliberado de invariante, observa el resultado y corrígelo. Resultado esperado: la estructura conserva su contrato.
+
+#### Paso 6 · Práctica independiente
+Compara búsqueda lineal y mapa con 10, 1000 y 100000 elementos; añade una prueba de límite y anota complejidad temporal y espacial.
+
+#### Paso 7 · Cierre y evidencia
+Guarda tabla de operaciones, mediciones y código; como siguiente paso estudia persistencia. Errores comunes: elegir por moda, confundir promedio con peor caso, mutar mientras se itera y no definir invariantes. Fuentes oficiales: https://opendsa-server.cs.vt.edu/ y https://visualgo.net/en.
+**¿Por qué es importante?** Porque la estructura adecuada hace visible el comportamiento y evita costes ocultos.
+**Evidencia de aprendizaje:** entrega comparación, pruebas de invariante y mediciones.
 **Conceptos clave:** tamaño de entrada, Big O, tiempo, espacio, O(1), O(log n), O(n), O(n²), ordenamiento y recursión.
 
 Big O describe cómo crece el trabajo cuando crece la entrada; no es un cronómetro. Una búsqueda lineal es O(n): duplicar elementos puede duplicar comparaciones. La binaria es O(log n): duplicar el tamaño añade aproximadamente un paso. Dos bucles anidados sobre la entrada suelen sugerir O(n²).

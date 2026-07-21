@@ -144,6 +144,18 @@
 .lesson-markdown ::ng-deep .technical-term:hover::after,
 .lesson-markdown ::ng-deep .technical-term:focus-visible::after { opacity:1; transform:translate(-50%,0); }
 .lesson-markdown ::ng-deep .technical-term:focus-visible { outline:2px solid var(--track-color); outline-offset:3px; border-radius:3px; }
+.lesson-markdown ::ng-deep .verifiable-exercise { margin:28px 0; padding:20px; border:1px solid color-mix(in srgb,var(--track-color) 28%,#{$bd}); border-radius:16px; background:color-mix(in srgb,var(--track-color) 5%,#{$wh}); font-family:Inter,sans-serif; }
+.lesson-markdown ::ng-deep .verifiable-exercise h4 { margin:0 0 12px; color:$ink; font-size:16px; }
+.lesson-markdown ::ng-deep .exercise-controls { display:grid; gap:8px; margin-top:16px; }
+.lesson-markdown ::ng-deep .exercise-controls label { color:$ink; font:700 12px/1.3 Inter,sans-serif; }
+.lesson-markdown ::ng-deep .exercise-controls > div { display:grid; grid-template-columns:minmax(0,1fr) auto; gap:9px; }
+.lesson-markdown ::ng-deep .exercise-controls input { min-height:44px; padding:0 13px; border:1px solid $bd2; border-radius:10px; color:$ink; background:$wh; font:500 14px/1 Inter,sans-serif; }
+.lesson-markdown ::ng-deep .exercise-controls input:focus-visible { outline:3px solid color-mix(in srgb,var(--track-color) 35%,transparent); border-color:var(--track-color); }
+.lesson-markdown ::ng-deep .exercise-controls button { min-height:44px; padding:0 17px; border:0; border-radius:10px; color:white; background:var(--track-color); font:750 12px/1 Inter,sans-serif; }
+.lesson-markdown ::ng-deep .exercise-controls button:disabled { opacity:.62; cursor:default; }
+.lesson-markdown ::ng-deep .exercise-feedback { margin:0; color:$mu; font:600 12px/1.5 Inter,sans-serif; }
+.lesson-markdown ::ng-deep .exercise-feedback.correct { color:$g; }
+.lesson-markdown ::ng-deep .exercise-feedback.incorrect { color:var(--error); }
 .lesson-markdown ::ng-deep .learning-contract { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:1px; margin:0 0 26px; overflow:hidden; border:1px solid $bd; border-radius:12px; background:$bd; }
 .lesson-markdown ::ng-deep .learning-contract div { display:grid; align-content:start; gap:5px; padding:13px; background:$bg2; }
 .lesson-markdown ::ng-deep .learning-contract small { color:$p; font:800 9px Inter,sans-serif; letter-spacing:.06em; text-transform:uppercase; }

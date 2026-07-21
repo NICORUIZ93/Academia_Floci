@@ -92,8 +92,8 @@ function escapeHtml(text: string): string {
 
 /**
  * Vista de lectura tipo libro: título, teoría y navegación simple al
- * capítulo/módulo anterior y siguiente. Sin retos, preguntas ni paneles
- * de gamificación.
+ * capítulo/módulo anterior y siguiente. Las prácticas verificables ofrecen
+ * feedback local, sin quizzes ni paneles de gamificación.
  */
 @Component({
   selector: 'app-lesson-viewer',
@@ -124,7 +124,7 @@ export class LessonViewerComponent implements OnDestroy {
   readonly track = computed(() => findTrack(this.trackId()));
   readonly module = computed(() => this.track()?.modules.find(m => m.id === this.moduleId()));
   readonly officialSource = computed(() => this.trackId() === 'cloud'
-    ? (CLOUD_MODULE_SOURCES[this.moduleId()] ?? TRACK_OFFICIAL_SOURCES.cloud)
+    ? (CLOUD_MODULE_SOURCES[this.moduleId()] ?? TRACK_OFFICIAL_SOURCES['cloud'])
     : TRACK_OFFICIAL_SOURCES[this.trackId()]);
   readonly projectBootstrap = computed(() => findProjectBootstrap(this.trackId()));
   readonly trackProject = computed(() => projectFor(this.trackId()));
@@ -268,6 +268,7 @@ export class LessonViewerComponent implements OnDestroy {
     }
 
     this.enhanceEducationalContent(container);
+    this.enhanceVerifiableExercises(container);
     this.buildTableOfContents(container);
     this.addTopicNavigation(Array.from(container.querySelectorAll<HTMLHeadingElement>('h3.topic-heading')));
     const fragment = this.requestedFragment();
@@ -321,7 +322,8 @@ export class LessonViewerComponent implements OnDestroy {
       const languageClass = Array.from(code?.classList ?? []).find(name => name.startsWith('language-'));
       const language = languageClass?.replace('language-', '') || 'código';
       const isTerminal = /^(bash|sh|shell|console|powershell|zsh)$/i.test(language);
-      const previousText = pre.previousElementSibling?.textContent?.trim() ?? '';
+      const previous = pre.previousElementSibling;
+      const previousText = previous?.matches('p, li') ? previous.textContent?.trim() ?? '' : '';
       const path = previousText.match(/(?:[\w.-]+\/)+(?:[\w.-]+\.[a-z0-9]+|[\w.-]+)/i)?.[0];
       const label = path ?? (isTerminal ? 'Terminal' : language);
       const languageLabels: Record<string, string> = {
@@ -344,6 +346,53 @@ export class LessonViewerComponent implements OnDestroy {
 
     this.groupTopics(container);
     this.annotateTechnicalTerms(container);
+  }
+
+  private enhanceVerifiableExercises(container: HTMLElement): void {
+    const headings = Array.from(container.querySelectorAll<HTMLHeadingElement>('h4'))
+      .filter(heading => /^Ejercicio verificable\s+\d+/i.test(heading.textContent?.trim() ?? ''));
+    headings.forEach((heading, index) => {
+      if (heading.closest('.verifiable-exercise')) return;
+      const answerParagraph = this.findExerciseAnswer(heading);
+      const answerText = answerParagraph?.textContent?.replace(/^Respuesta esperada:\s*/i, '').trim();
+      if (!answerParagraph || !answerText) return;
+
+      const exerciseId = heading.id || `ejercicio-${index + 1}`;
+      heading.id = exerciseId;
+      const card = document.createElement('section');
+      card.className = 'verifiable-exercise';
+      card.dataset['exerciseId'] = exerciseId;
+      card.dataset['answers'] = answerText;
+      heading.parentNode?.insertBefore(card, heading);
+      let node: Node | null = heading;
+      while (node && (node === heading || !(node instanceof HTMLHeadingElement && ['H2', 'H3', 'H4'].includes(node.tagName)))) {
+        const next: Node | null = node.nextSibling;
+        card.appendChild(node);
+        node = next;
+      }
+      answerParagraph.hidden = true;
+      const completed = this.progressService.isExerciseComplete(this.trackId(), this.moduleId(), exerciseId);
+      const controls = document.createElement('div');
+      controls.className = 'exercise-controls';
+      controls.innerHTML = `
+        <label for="answer-${escapeHtml(exerciseId)}">Tu respuesta</label>
+        <div><input id="answer-${escapeHtml(exerciseId)}" type="text" autocomplete="off" spellcheck="false" ${completed ? 'disabled' : ''}><button type="button" data-verify-exercise ${completed ? 'disabled' : ''}>${completed ? 'Completado' : 'Verificar'}</button></div>
+        <p class="exercise-feedback ${completed ? 'correct' : ''}" role="status" aria-live="polite">${completed ? 'Correcto. Esta práctica ya quedó guardada.' : 'Escribe la salida o concepto solicitado y compruébalo.'}</p>`;
+      card.appendChild(controls);
+    });
+  }
+
+  private findExerciseAnswer(heading: HTMLHeadingElement): HTMLParagraphElement | null {
+    let node = heading.nextElementSibling;
+    while (node && !/^H[234]$/.test(node.tagName)) {
+      if (node instanceof HTMLParagraphElement && /^Respuesta esperada:/i.test(node.textContent?.trim() ?? '')) return node;
+      node = node.nextElementSibling;
+    }
+    return null;
+  }
+
+  private normalizeExerciseAnswer(value: string): string {
+    return value.normalize('NFD').replace(/\p{Diacritic}/gu, '').toLocaleLowerCase().replace(/["'`]/g, '').replace(/\s+/g, ' ').trim();
   }
 
   private addSectionGuides(container: HTMLElement): void {
@@ -404,7 +453,6 @@ export class LessonViewerComponent implements OnDestroy {
       }
       card.classList.toggle('expanded', index === 0);
       card.appendChild(body);
-      this.prioritizeFirstCodeExample(body);
       this.addTopicLearningSupport(body, heading);
     });
   }
@@ -484,26 +532,30 @@ export class LessonViewerComponent implements OnDestroy {
     body.appendChild(details);
   }
 
-  /**
-   * Mantiene el modelo mental inicial y acerca el primer ejemplo ejecutable.
-   * El resto de la explicación permanece después del código para que el lector
-   * pueda contrastarla con algo concreto en lugar de atravesar varios párrafos
-   * antes de ver qué está construyendo.
-   */
-  private prioritizeFirstCodeExample(body: HTMLElement): void {
-    const example = body.querySelector<HTMLElement>('.code-example');
-    if (!example) return;
-    const paragraphs = Array.from(body.children).filter(
-      (element): element is HTMLParagraphElement => element instanceof HTMLParagraphElement
-        && !element.classList.contains('concept-keyline'),
-    );
-    const anchor = paragraphs[0] ?? body.querySelector<HTMLElement>('.concept-keyline');
-    if (!anchor || anchor.nextElementSibling === example) return;
-    anchor.insertAdjacentElement('afterend', example);
-    example.classList.add('primary-code-example');
-  }
-
   async copyCode(event: Event): Promise<void> {
+    const verifyButton = (event.target as HTMLElement).closest<HTMLButtonElement>('[data-verify-exercise]');
+    if (verifyButton) {
+      const card = verifyButton.closest<HTMLElement>('.verifiable-exercise');
+      const input = card?.querySelector<HTMLInputElement>('input');
+      const feedback = card?.querySelector<HTMLElement>('.exercise-feedback');
+      const accepted = (card?.dataset['answers'] ?? '').split('|').map(answer => this.normalizeExerciseAnswer(answer));
+      const response = this.normalizeExerciseAnswer(input?.value ?? '');
+      const correct = Boolean(response) && accepted.includes(response);
+      if (feedback) {
+        feedback.classList.toggle('correct', correct);
+        feedback.classList.toggle('incorrect', !correct);
+        feedback.textContent = correct
+          ? 'Correcto. Compara tu respuesta con la ejecución y continúa.'
+          : 'Todavía no coincide. Ejecuta el ejemplo, observa la salida y vuelve a intentarlo.';
+      }
+      if (correct && card && input) {
+        this.progressService.completeExercise(this.trackId(), this.moduleId(), card.dataset['exerciseId'] ?? 'ejercicio');
+        input.disabled = true;
+        verifyButton.disabled = true;
+        verifyButton.textContent = 'Completado';
+      }
+      return;
+    }
     const topicDestination = (event.target as HTMLElement).closest<HTMLAnchorElement>('[data-topic-destination]');
     if (topicDestination) {
       event.preventDefault();

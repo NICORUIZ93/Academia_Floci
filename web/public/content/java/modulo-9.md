@@ -5,6 +5,36 @@
 
 ### Tema 1: JUnit 5 — anotaciones y ciclo de vida
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás probar una unidad Java desde cero. Prerrequisitos: JDK 21, Maven y un editor. Verifica java --version y mvn --version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real de entregas, una regla de tarifa debe poder probarse sin levantar servicios externos y una regresión debe fallar cerca de su causa.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+JUnit organiza casos y ciclo de vida; Mockito sustituye colaboradores para observar interacción; parametrized tests cubren una matriz de entradas. Cobertura mide líneas, no calidad por sí sola. La analogía es un simulador de conducción: aísla una maniobra antes de probar la ruta completa.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-java-m9
+cd ejemplo-java-m9
+mvn -q archetype:generate -DgroupId=com.example -DartifactId=app -DarchetypeArtifactId=maven-archetype-quickstart -DinteractiveMode=false
+cd app
+mvn test
+```
+Crea src/test/java/com/example/DeliveryServiceTest.java con una prueba JUnit y una dependencia simulada; ejecuta Maven.
+
+#### Paso 5 · Práctica guiada
+Pista: cambia deliberadamente una expectativa para provocar un fallo deliberado, lee la aserción y corrígela. Resultado esperado: prueba verde con mensaje claro.
+
+#### Paso 6 · Práctica independiente
+Añade casos parametrizados para distancia, peso y zona; mide cobertura y escribe una prueba que detecte una interacción inesperada.
+
+#### Paso 7 · Cierre y evidencia
+Guarda salida, cobertura y diagnóstico; como siguiente paso crea una prueba de integración. Errores comunes: mockear la clase bajo prueba, aserciones débiles, depender del orden y perseguir 100% sin riesgo. Fuentes oficiales: https://junit.org/junit5/docs/current/user-guide/ y https://site.mockito.org/.
+**¿Por qué es importante?** Porque las pruebas rápidas permiten cambiar el diseño con confianza.
+**Evidencia de aprendizaje:** entrega suite verde, fallo reproducido, cobertura y justificación de casos.
 **Conceptos clave:** `@Test`, `@BeforeEach`, aserciones.
 
 `@Test` marca un método como un caso de prueba ejecutable independientemente por el runner de JUnit 5, dentro del cual las aserciones (`assertEquals(5, new Calculadora().sumar(2, 3))`) verifican que el resultado real coincide con el resultado esperado, fallando la prueba con un mensaje descriptivo si no coinciden; `@BeforeEach` marca un método que se ejecuta automáticamente antes de cada prueba individual de la clase, apropiado para inicializar objetos compartidos en un estado conocido y limpio antes de cada prueba, evitando que el estado dejado por una prueba anterior afecte accidentalmente el resultado de la siguiente (cada prueba debe ser independiente y capaz de ejecutarse en cualquier orden sin afectar ni verse afectada por otras).
@@ -36,6 +66,36 @@ Cambia temporalmente el límite de peso para hacer fallar una prueba y lee esper
 
 ### Tema 2: Mockito — aislar dependencias
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás probar una unidad Java desde cero. Prerrequisitos: JDK 21, Maven y un editor. Verifica java --version y mvn --version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real de entregas, una regla de tarifa debe poder probarse sin levantar servicios externos y una regresión debe fallar cerca de su causa.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+JUnit organiza casos y ciclo de vida; Mockito sustituye colaboradores para observar interacción; parametrized tests cubren una matriz de entradas. Cobertura mide líneas, no calidad por sí sola. La analogía es un simulador de conducción: aísla una maniobra antes de probar la ruta completa.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-java-m9
+cd ejemplo-java-m9
+mvn -q archetype:generate -DgroupId=com.example -DartifactId=app -DarchetypeArtifactId=maven-archetype-quickstart -DinteractiveMode=false
+cd app
+mvn test
+```
+Crea src/test/java/com/example/DeliveryServiceTest.java con una prueba JUnit y una dependencia simulada; ejecuta Maven.
+
+#### Paso 5 · Práctica guiada
+Pista: cambia deliberadamente una expectativa para provocar un fallo deliberado, lee la aserción y corrígela. Resultado esperado: prueba verde con mensaje claro.
+
+#### Paso 6 · Práctica independiente
+Añade casos parametrizados para distancia, peso y zona; mide cobertura y escribe una prueba que detecte una interacción inesperada.
+
+#### Paso 7 · Cierre y evidencia
+Guarda salida, cobertura y diagnóstico; como siguiente paso crea una prueba de integración. Errores comunes: mockear la clase bajo prueba, aserciones débiles, depender del orden y perseguir 100% sin riesgo. Fuentes oficiales: https://junit.org/junit5/docs/current/user-guide/ y https://site.mockito.org/.
+**¿Por qué es importante?** Porque las pruebas rápidas permiten cambiar el diseño con confianza.
+**Evidencia de aprendizaje:** entrega suite verde, fallo reproducido, cobertura y justificación de casos.
 **Conceptos clave:** `@Mock`, `@InjectMocks`, `when`/`verify`.
 
 Mockito permite reemplazar las dependencias reales de la clase bajo prueba por objetos simulados (mocks) cuyo comportamiento se controla completamente desde la propia prueba: `@Mock RepositorioPedidos repositorio; @InjectMocks ServicioPedidos servicio;` crea un mock de `RepositorioPedidos` y lo inyecta automáticamente en una instancia real de `ServicioPedidos`, permitiendo probar la lógica de negocio de `ServicioPedidos` de forma completamente aislada, sin depender de una base de datos real ni de ninguna otra infraestructura externa que `RepositorioPedidos` normalmente requeriría en producción.
@@ -72,6 +132,36 @@ Configura luego `existe` como `true` y usa `verify(repositorio, never()).guardar
 
 ### Tema 3: Tests parametrizados y cobertura
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás probar una unidad Java desde cero. Prerrequisitos: JDK 21, Maven y un editor. Verifica java --version y mvn --version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real de entregas, una regla de tarifa debe poder probarse sin levantar servicios externos y una regresión debe fallar cerca de su causa.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+JUnit organiza casos y ciclo de vida; Mockito sustituye colaboradores para observar interacción; parametrized tests cubren una matriz de entradas. Cobertura mide líneas, no calidad por sí sola. La analogía es un simulador de conducción: aísla una maniobra antes de probar la ruta completa.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-java-m9
+cd ejemplo-java-m9
+mvn -q archetype:generate -DgroupId=com.example -DartifactId=app -DarchetypeArtifactId=maven-archetype-quickstart -DinteractiveMode=false
+cd app
+mvn test
+```
+Crea src/test/java/com/example/DeliveryServiceTest.java con una prueba JUnit y una dependencia simulada; ejecuta Maven.
+
+#### Paso 5 · Práctica guiada
+Pista: cambia deliberadamente una expectativa para provocar un fallo deliberado, lee la aserción y corrígela. Resultado esperado: prueba verde con mensaje claro.
+
+#### Paso 6 · Práctica independiente
+Añade casos parametrizados para distancia, peso y zona; mide cobertura y escribe una prueba que detecte una interacción inesperada.
+
+#### Paso 7 · Cierre y evidencia
+Guarda salida, cobertura y diagnóstico; como siguiente paso crea una prueba de integración. Errores comunes: mockear la clase bajo prueba, aserciones débiles, depender del orden y perseguir 100% sin riesgo. Fuentes oficiales: https://junit.org/junit5/docs/current/user-guide/ y https://site.mockito.org/.
+**¿Por qué es importante?** Porque las pruebas rápidas permiten cambiar el diseño con confianza.
+**Evidencia de aprendizaje:** entrega suite verde, fallo reproducido, cobertura y justificación de casos.
 **Conceptos clave:** una única prueba con múltiples conjuntos de datos, `@CsvSource`/`@MethodSource`, cobertura de líneas/ramas.
 
 `@ParameterizedTest @ValueSource(ints = {1, 2, 3, 5, 8}) void esFibonacci(int numero) { assertTrue(esFibonacci(numero)); }` ejecuta la misma lógica de prueba una vez por cada valor proporcionado en la fuente de datos, evitando duplicar manualmente el mismo cuerpo de prueba una vez por cada caso individual que se desea verificar; `@CsvSource` permite proporcionar conjuntos de valores múltiples por ejecución (para probar métodos con más de un parámetro), y `@MethodSource` permite generar la fuente de datos mediante un método propio cuando los valores necesarios son demasiado complejos para expresarse directamente como una anotación simple; `@TestFactory` habilita la generación dinámica y programática de un conjunto variable de pruebas en tiempo de ejecución, para casos donde ni siquiera el número de pruebas necesarias se conoce de antemano de forma estática.

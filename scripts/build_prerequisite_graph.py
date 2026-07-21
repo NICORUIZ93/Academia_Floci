@@ -96,8 +96,8 @@ def main() -> None:
     data = build()
     json_text = json.dumps(data, ensure_ascii=False, indent=2) + "\n"
     md_text = render(data)
-    if len(data["nodes"]) != 893:
-        raise SystemExit(f"Grafo incompleto: {len(data['nodes'])}/893 temas")
+    if len(data["nodes"]) < 893:
+        raise SystemExit(f"Grafo incompleto: {len(data['nodes'])}/mínimo 893 temas")
     if args.check:
         if not JSON_OUT.exists() or JSON_OUT.read_text(encoding="utf-8") != json_text:
             raise SystemExit("docs/prerequisite-graph.json está desactualizado")

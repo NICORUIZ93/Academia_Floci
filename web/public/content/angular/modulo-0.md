@@ -38,6 +38,36 @@ Si ves la aplicación en `http://localhost:4200`, el entorno funciona. Detén el
 
 ### Tema 1: El CLI ya no genera NgModules
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás construir este concepto Angular desde cero. Prerrequisitos: Node.js LTS, npm y editor. Verifica node --version, npm --version y ng version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real de una app de entregas, componentes, plantillas y tipos deben coordinarse sin que el estudiante adivine dónde colocar cada archivo.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+Angular CLI crea una estructura reproducible; componentes encapsulan vista y lógica; TypeScript protege el código; AOT compila antes de servir. La analogía es una fábrica: el molde, la materia prima y la inspección ocurren en etapas observables.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-angular-m0
+cd ejemplo-angular-m0
+npx -p @angular/cli ng new app --standalone --routing=false --style=css --skip-git
+cd app
+ng serve --open
+```
+Crea src/app/status.component.ts y úsalo en la plantilla; explica la ruta exacta y el resultado en el navegador.
+
+#### Paso 5 · Práctica guiada
+Pista: cambia deliberadamente el nombre de una propiedad para provocar un fallo deliberado de compilación, lee el diagnóstico de Angular y corrígelo. Resultado esperado: ng serve compila y muestra la vista.
+
+#### Paso 6 · Práctica independiente
+Añade un componente de entrega con input tipado, estado vacío y error visible; ejecuta ng test o una prueba manual de teclado.
+
+#### Paso 7 · Cierre y evidencia
+Guarda árbol, comandos, captura y log; como siguiente paso estudia eventos y bindings. Errores comunes: editar generated files sin entenderlos, usar any, ignorar standalone y ocultar errores de plantilla. Fuentes oficiales: https://angular.dev/overview y https://angular.dev/cli.
+**¿Por qué es importante?** Porque entender la estructura inicial evita bloquearse al comenzar cualquier aplicación Angular.
+**Evidencia de aprendizaje:** entrega proyecto, vista funcionando, error corregido y explicación de archivos.
 **Conceptos clave:** standalone por defecto, `ng new`, `ng generate`.
 
 Desde Angular 17, `ng new mi-app` genera un proyecto completamente standalone por defecto: no existe ningún `AppModule`, ni ningún archivo `declarations`/`imports` de módulo tradicional. Cada componente declara directamente, en su propio decorador `@Component`, qué otras piezas (otros componentes, directivas, pipes) necesita importar para funcionar, eliminando por completo la capa intermedia de organización que los `NgModule` representaban durante los primeros años de vida del framework. Esta es, posiblemente, la diferencia más visible e inmediata para cualquiera que haya aprendido Angular antes de esta transición y vuelva a un proyecto generado hoy: la estructura de carpetas es más simple, y no hay que rastrear en qué módulo está declarado un componente para entender si es utilizable en cierto contexto.
@@ -64,6 +94,36 @@ export class Tarjeta { titulo = 'Hola Angular'; }
 
 ### Tema 2: Interpolación y property binding
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás construir este concepto Angular desde cero. Prerrequisitos: Node.js LTS, npm y editor. Verifica node --version, npm --version y ng version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real de una app de entregas, componentes, plantillas y tipos deben coordinarse sin que el estudiante adivine dónde colocar cada archivo.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+Angular CLI crea una estructura reproducible; componentes encapsulan vista y lógica; TypeScript protege el código; AOT compila antes de servir. La analogía es una fábrica: el molde, la materia prima y la inspección ocurren en etapas observables.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-angular-m0
+cd ejemplo-angular-m0
+npx -p @angular/cli ng new app --standalone --routing=false --style=css --skip-git
+cd app
+ng serve --open
+```
+Crea src/app/status.component.ts y úsalo en la plantilla; explica la ruta exacta y el resultado en el navegador.
+
+#### Paso 5 · Práctica guiada
+Pista: cambia deliberadamente el nombre de una propiedad para provocar un fallo deliberado de compilación, lee el diagnóstico de Angular y corrígelo. Resultado esperado: ng serve compila y muestra la vista.
+
+#### Paso 6 · Práctica independiente
+Añade un componente de entrega con input tipado, estado vacío y error visible; ejecuta ng test o una prueba manual de teclado.
+
+#### Paso 7 · Cierre y evidencia
+Guarda árbol, comandos, captura y log; como siguiente paso estudia eventos y bindings. Errores comunes: editar generated files sin entenderlos, usar any, ignorar standalone y ocultar errores de plantilla. Fuentes oficiales: https://angular.dev/overview y https://angular.dev/cli.
+**¿Por qué es importante?** Porque entender la estructura inicial evita bloquearse al comenzar cualquier aplicación Angular.
+**Evidencia de aprendizaje:** entrega proyecto, vista funcionando, error corregido y explicación de archivos.
 **Conceptos clave:** `{{ }}` frente a `[propiedad]`, texto frente a propiedad del DOM real.
 
 La interpolación (`{{ expresion }}`) siempre produce texto: Angular evalúa la expresión y la inserta como contenido textual en el lugar donde aparece dentro de la plantilla, apropiada para mostrar valores dentro del contenido visible de un elemento. El property binding (`[propiedad]="expresion"`) es conceptualmente distinto: enlaza directamente con una propiedad real del objeto DOM subyacente (no con un atributo HTML del marcado), una distinción que en la mayoría de casos simples es invisible pero que importa concretamente en casos como `[disabled]` o `[value]` de un input, donde la propiedad del DOM y el atributo HTML original pueden desincronizarse en tiempo de ejecución (por ejemplo, el atributo HTML `value` refleja el valor inicial con el que se cargó la página, mientras que la propiedad `value` del DOM refleja el valor actual real, que puede haber cambiado desde entonces por interacción del usuario).
@@ -86,6 +146,36 @@ Elegir correctamente entre interpolación y property binding no es una cuestión
 
 ### Tema 3: TypeScript a fondo — unknown, any, never y utility types
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás construir este concepto Angular desde cero. Prerrequisitos: Node.js LTS, npm y editor. Verifica node --version, npm --version y ng version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real de una app de entregas, componentes, plantillas y tipos deben coordinarse sin que el estudiante adivine dónde colocar cada archivo.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+Angular CLI crea una estructura reproducible; componentes encapsulan vista y lógica; TypeScript protege el código; AOT compila antes de servir. La analogía es una fábrica: el molde, la materia prima y la inspección ocurren en etapas observables.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-angular-m0
+cd ejemplo-angular-m0
+npx -p @angular/cli ng new app --standalone --routing=false --style=css --skip-git
+cd app
+ng serve --open
+```
+Crea src/app/status.component.ts y úsalo en la plantilla; explica la ruta exacta y el resultado en el navegador.
+
+#### Paso 5 · Práctica guiada
+Pista: cambia deliberadamente el nombre de una propiedad para provocar un fallo deliberado de compilación, lee el diagnóstico de Angular y corrígelo. Resultado esperado: ng serve compila y muestra la vista.
+
+#### Paso 6 · Práctica independiente
+Añade un componente de entrega con input tipado, estado vacío y error visible; ejecuta ng test o una prueba manual de teclado.
+
+#### Paso 7 · Cierre y evidencia
+Guarda árbol, comandos, captura y log; como siguiente paso estudia eventos y bindings. Errores comunes: editar generated files sin entenderlos, usar any, ignorar standalone y ocultar errores de plantilla. Fuentes oficiales: https://angular.dev/overview y https://angular.dev/cli.
+**¿Por qué es importante?** Porque entender la estructura inicial evita bloquearse al comenzar cualquier aplicación Angular.
+**Evidencia de aprendizaje:** entrega proyecto, vista funcionando, error corregido y explicación de archivos.
 **Conceptos clave:** `unknown` frente a `any`, `never` como tipo vacío, tipos utilitarios integrados.
 
 `any` (estudiado ya como antipatrón en el Módulo 11 del track de JavaScript) desactiva completamente la verificación de tipos sobre un valor; `unknown` es la alternativa segura para representar un valor cuyo tipo genuinamente no se conoce de antemano (por ejemplo, el resultado de `JSON.parse()`, cuyo tipo real depende del contenido del string parseado): a diferencia de `any`, TypeScript exige realizar narrowing explícito (verificar el tipo real con `typeof`, `instanceof`, o un type guard personalizado, como se estudió en el Módulo 11 del track de JavaScript) antes de permitir cualquier operación específica sobre un valor de tipo `unknown`, preservando así la seguridad de tipos incluso para valores genuinamente inciertos en su origen.
@@ -111,6 +201,36 @@ type ContadorPorEstado = Record<"pendiente"|"hecha", number>;
 
 ### Tema 4: Compilador AOT frente a JIT
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás construir este concepto Angular desde cero. Prerrequisitos: Node.js LTS, npm y editor. Verifica node --version, npm --version y ng version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real de una app de entregas, componentes, plantillas y tipos deben coordinarse sin que el estudiante adivine dónde colocar cada archivo.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+Angular CLI crea una estructura reproducible; componentes encapsulan vista y lógica; TypeScript protege el código; AOT compila antes de servir. La analogía es una fábrica: el molde, la materia prima y la inspección ocurren en etapas observables.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-angular-m0
+cd ejemplo-angular-m0
+npx -p @angular/cli ng new app --standalone --routing=false --style=css --skip-git
+cd app
+ng serve --open
+```
+Crea src/app/status.component.ts y úsalo en la plantilla; explica la ruta exacta y el resultado en el navegador.
+
+#### Paso 5 · Práctica guiada
+Pista: cambia deliberadamente el nombre de una propiedad para provocar un fallo deliberado de compilación, lee el diagnóstico de Angular y corrígelo. Resultado esperado: ng serve compila y muestra la vista.
+
+#### Paso 6 · Práctica independiente
+Añade un componente de entrega con input tipado, estado vacío y error visible; ejecuta ng test o una prueba manual de teclado.
+
+#### Paso 7 · Cierre y evidencia
+Guarda árbol, comandos, captura y log; como siguiente paso estudia eventos y bindings. Errores comunes: editar generated files sin entenderlos, usar any, ignorar standalone y ocultar errores de plantilla. Fuentes oficiales: https://angular.dev/overview y https://angular.dev/cli.
+**¿Por qué es importante?** Porque entender la estructura inicial evita bloquearse al comenzar cualquier aplicación Angular.
+**Evidencia de aprendizaje:** entrega proyecto, vista funcionando, error corregido y explicación de archivos.
 **Conceptos clave:** Ahead-of-Time frente a Just-in-Time, compilación de plantillas.
 
 Angular compila las plantillas HTML de los componentes (con su sintaxis específica de interpolación, bindings y control de flujo) hacia código JavaScript ejecutable, y este proceso de compilación puede ocurrir en dos momentos distintos. AOT (Ahead-of-Time) compila las plantillas durante el proceso de build, antes de que la aplicación se despliegue, produciendo un bundle que ya contiene JavaScript puro listo para ejecutarse directamente en el navegador sin ningún paso adicional de compilación en tiempo de ejecución. JIT (Just-in-Time), el modo histórico y ahora prácticamente en desuso para producción, compilaba las plantillas directamente en el navegador del usuario, en el momento en que la aplicación arrancaba, añadiendo el compilador completo de Angular al bundle final y un coste de tiempo de arranque adicional en cada carga de la aplicación.

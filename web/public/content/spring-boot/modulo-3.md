@@ -5,6 +5,36 @@
 
 ### Tema 1: Entidades y repositorios derivados
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás implementar persistencia segura desde cero. Prerrequisitos: JDK 21, Maven, Docker y un editor.
+
+#### Paso 2 · Contexto y caso real
+En un caso real de entregas, las consultas deben devolver paquetes y rutas sin duplicar filas ni perder datos al actualizar el esquema.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+JPA traduce entidades a filas, pero una abstracción no elimina coste SQL. Los repositorios derivados deben inspeccionarse; N+1 ocurre cuando una lista dispara una consulta por cada relación. Flyway versiona cambios como una cadena ordenada. La analogía es un inventario: leer una caja por vez es lento y cambiar etiquetas sin registro rompe auditoría.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-spring-m3
+cd ejemplo-spring-m3
+curl -fsSL https://start.spring.io/starter.zip -d dependencies=data-jpa,h2,flyway -d javaVersion=21 -o app.zip
+unzip app.zip
+mvn test
+```
+Crea `src/main/resources/db/migration/V1__create_delivery.sql` y una entidad `Delivery`; observa el SQL generado y la migración aplicada.
+
+#### Paso 5 · Práctica guiada
+Pista: ejecuta `mvn test`, crea una relación que provoque N+1 como fallo deliberado, observa el log de consultas y corrígela con una consulta proyectada. Resultado esperado: una consulta acotada y migración verde.
+
+#### Paso 6 · Práctica independiente
+Añade V2 con un índice, una prueba de rollback documentada y una consulta paginada; compara número de queries antes y después.
+
+#### Paso 7 · Cierre y evidencia
+Guarda migraciones, logs SQL y medición; como siguiente paso añade Testcontainers. Errores comunes: editar tablas manualmente, usar `EAGER` indiscriminado, ignorar índices y devolver entidades completas. Fuentes oficiales: https://docs.spring.io/spring-data/jpa/reference/ y https://documentation.red-gate.com/flyway/.
+**¿Por qué es importante?** Porque el rendimiento y la evolución de la base forman parte del contrato de la API.
+**Evidencia de aprendizaje:** entrega consultas, migraciones, salida de pruebas y comparación de rendimiento.
 **Conceptos clave:** mapeo objeto-relacional, generación de queries a partir del nombre del método.
 
 `@Entity public class Tarea { @Id @GeneratedValue private Long id; private String titulo; private boolean completada; }` mapea una clase Java a una tabla de base de datos, con Hibernate (la implementación de JPA usada por Spring Data JPA) traduciendo automáticamente entre instancias de esta clase y filas de la tabla correspondiente, gestionando la generación de identificadores (`@GeneratedValue`), y sincronizando cambios en memoria con la base de datos según el ciclo de vida gestionado de cada entidad.
@@ -33,6 +63,36 @@ public interface TareaRepository extends JpaRepository<Tarea, Long> {
 
 ### Tema 2: El problema N+1 y su corrección
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás implementar persistencia segura desde cero. Prerrequisitos: JDK 21, Maven, Docker y un editor.
+
+#### Paso 2 · Contexto y caso real
+En un caso real de entregas, las consultas deben devolver paquetes y rutas sin duplicar filas ni perder datos al actualizar el esquema.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+JPA traduce entidades a filas, pero una abstracción no elimina coste SQL. Los repositorios derivados deben inspeccionarse; N+1 ocurre cuando una lista dispara una consulta por cada relación. Flyway versiona cambios como una cadena ordenada. La analogía es un inventario: leer una caja por vez es lento y cambiar etiquetas sin registro rompe auditoría.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-spring-m3
+cd ejemplo-spring-m3
+curl -fsSL https://start.spring.io/starter.zip -d dependencies=data-jpa,h2,flyway -d javaVersion=21 -o app.zip
+unzip app.zip
+mvn test
+```
+Crea `src/main/resources/db/migration/V1__create_delivery.sql` y una entidad `Delivery`; observa el SQL generado y la migración aplicada.
+
+#### Paso 5 · Práctica guiada
+Pista: ejecuta `mvn test`, crea una relación que provoque N+1 como fallo deliberado, observa el log de consultas y corrígela con una consulta proyectada. Resultado esperado: una consulta acotada y migración verde.
+
+#### Paso 6 · Práctica independiente
+Añade V2 con un índice, una prueba de rollback documentada y una consulta paginada; compara número de queries antes y después.
+
+#### Paso 7 · Cierre y evidencia
+Guarda migraciones, logs SQL y medición; como siguiente paso añade Testcontainers. Errores comunes: editar tablas manualmente, usar `EAGER` indiscriminado, ignorar índices y devolver entidades completas. Fuentes oficiales: https://docs.spring.io/spring-data/jpa/reference/ y https://documentation.red-gate.com/flyway/.
+**¿Por qué es importante?** Porque el rendimiento y la evolución de la base forman parte del contrato de la API.
+**Evidencia de aprendizaje:** entrega consultas, migraciones, salida de pruebas y comparación de rendimiento.
 **Conceptos clave:** carga perezosa, una query adicional por cada elemento de una colección.
 
 `@OneToMany(mappedBy = "usuario") private List<Tarea> tareas;` mapea una relación uno-a-muchos, típicamente configurada con carga perezosa (lazy) por defecto: la lista de tareas de un usuario no se carga desde la base de datos hasta que efectivamente se accede a ella (`u.getTareas().size()`), un comportamiento generalmente deseable para evitar cargar datos innecesarios que nunca se van a usar, pero que se vuelve problemático cuando se itera sobre una colección de usuarios accediendo a las tareas de cada uno: por cada usuario individual en el bucle, Hibernate ejecuta una query SQL completamente separada para cargar sus tareas correspondientes, resultando en N queries adicionales (una por cada uno de los N usuarios) más la query original que cargó la lista de usuarios, de ahí el nombre "N+1" para este problema de rendimiento.
@@ -56,6 +116,36 @@ List<Usuario> buscarConTareas();
 
 ### Tema 3: Migraciones con Flyway
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás implementar persistencia segura desde cero. Prerrequisitos: JDK 21, Maven, Docker y un editor.
+
+#### Paso 2 · Contexto y caso real
+En un caso real de entregas, las consultas deben devolver paquetes y rutas sin duplicar filas ni perder datos al actualizar el esquema.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+JPA traduce entidades a filas, pero una abstracción no elimina coste SQL. Los repositorios derivados deben inspeccionarse; N+1 ocurre cuando una lista dispara una consulta por cada relación. Flyway versiona cambios como una cadena ordenada. La analogía es un inventario: leer una caja por vez es lento y cambiar etiquetas sin registro rompe auditoría.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-spring-m3
+cd ejemplo-spring-m3
+curl -fsSL https://start.spring.io/starter.zip -d dependencies=data-jpa,h2,flyway -d javaVersion=21 -o app.zip
+unzip app.zip
+mvn test
+```
+Crea `src/main/resources/db/migration/V1__create_delivery.sql` y una entidad `Delivery`; observa el SQL generado y la migración aplicada.
+
+#### Paso 5 · Práctica guiada
+Pista: ejecuta `mvn test`, crea una relación que provoque N+1 como fallo deliberado, observa el log de consultas y corrígela con una consulta proyectada. Resultado esperado: una consulta acotada y migración verde.
+
+#### Paso 6 · Práctica independiente
+Añade V2 con un índice, una prueba de rollback documentada y una consulta paginada; compara número de queries antes y después.
+
+#### Paso 7 · Cierre y evidencia
+Guarda migraciones, logs SQL y medición; como siguiente paso añade Testcontainers. Errores comunes: editar tablas manualmente, usar `EAGER` indiscriminado, ignorar índices y devolver entidades completas. Fuentes oficiales: https://docs.spring.io/spring-data/jpa/reference/ y https://documentation.red-gate.com/flyway/.
+**¿Por qué es importante?** Porque el rendimiento y la evolución de la base forman parte del contrato de la API.
+**Evidencia de aprendizaje:** entrega consultas, migraciones, salida de pruebas y comparación de rendimiento.
 **Conceptos clave:** esquema versionado y revisable, riesgo de `ddl-auto` en producción.
 
 `hibernate.ddl-auto=update` permite que Hibernate genere y actualice automáticamente el esquema de la base de datos basándose en las entidades declaradas en el código, una comodidad conveniente durante desarrollo temprano pero riesgosa en producción: Hibernate podría inferir un cambio de esquema distinto al que el desarrollador realmente pretendía (por ejemplo, ante un cambio de tipo de un campo, podría intentar una migración de columna no siempre segura o predecible), y ese cambio no queda registrado en ningún historial versionado ni revisable en un proceso de code review antes de aplicarse.

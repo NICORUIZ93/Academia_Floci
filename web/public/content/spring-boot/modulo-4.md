@@ -5,6 +5,36 @@
 
 ### Tema 1: SecurityFilterChain moderno
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás configurar seguridad para este caso desde cero. Prerrequisitos: JDK 21, Maven y un editor. Verifica java --version y mvn --version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real, clientes, conductores y operadores consultan rutas distintas. La autenticación identifica a la persona; la autorización limita cada operación y no debe confiar en el cliente.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+Spring Security compone filtros que transforman una petición en una identidad y una decisión. SecurityFilterChain declara reglas explícitas; JWT transporta claims firmados, no secretos; roles deben verificarse en servidor. CORS controla orígenes del navegador y CSRF protege sesiones basadas en cookies. La analogía es el control de acceso de una bodega: credencial, permiso de zona y registro de entrada son controles diferentes.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-spring-m4
+cd ejemplo-spring-m4
+curl -fsSL https://start.spring.io/starter.zip -d dependencies=web,security -d javaVersion=21 -o app.zip
+unzip app.zip
+mvn test
+```
+Crea src/main/java/com/example/demo/SecurityConfig.java con una cadena que permita /health y autentique /deliveries/**; crea un endpoint mínimo para probarla.
+
+#### Paso 5 · Práctica guiada
+Pista: ejecuta mvn spring-boot:run, consulta sin credencial para provocar un fallo deliberado 401 y luego agrega una credencial de prueba. Resultado esperado: /health responde 200 y la ruta protegida exige identidad.
+
+#### Paso 6 · Práctica independiente
+Añade roles DRIVER y OPERATOR, una prueba de acceso permitido y otra denegada, y documenta por qué CORS no reemplaza autorización.
+
+#### Paso 7 · Cierre y evidencia
+Guarda configuración, requests, respuestas y log; como siguiente paso integra un proveedor de identidad. Errores comunes: desactivar CSRF sin entender el transporte, permitir todo, guardar JWT en logs y confundir 401 con 403. Fuentes oficiales: https://docs.spring.io/spring-security/reference/ y https://owasp.org/www-project-top-ten/.
+**¿Por qué es importante?** Porque un endpoint funcional sin una frontera de seguridad clara expone datos y operaciones críticas.
+**Evidencia de aprendizaje:** entrega pruebas 200/401/403 y una explicación de cada filtro.
 **Conceptos clave:** configuración declarativa vía `@Bean`, reglas de autorización por ruta.
 
 La configuración moderna de Spring Security (reemplazando el patrón anterior basado en extender `WebSecurityConfigurerAdapter`, ahora deprecado) declara la cadena de filtros de seguridad directamente como un `@Bean`: `@Bean SecurityFilterChain filterChain(HttpSecurity http) throws Exception { return http.csrf(csrf -> csrf.disable()).authorizeHttpRequests(auth -> auth.requestMatchers("/public/**").permitAll().anyRequest().authenticated()).addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class).build(); }`, configurando de forma fluida y declarativa qué rutas requieren autenticación (`anyRequest().authenticated()`), cuáles están explícitamente permitidas sin autenticación (`requestMatchers("/public/**").permitAll()`), y en qué punto de la cadena se inserta el filtro JWT personalizado (Tema 2).
@@ -32,6 +62,36 @@ SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
 ### Tema 2: Filtro JWT y autorización por rol
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás configurar seguridad para este caso desde cero. Prerrequisitos: JDK 21, Maven y un editor. Verifica java --version y mvn --version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real, clientes, conductores y operadores consultan rutas distintas. La autenticación identifica a la persona; la autorización limita cada operación y no debe confiar en el cliente.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+Spring Security compone filtros que transforman una petición en una identidad y una decisión. SecurityFilterChain declara reglas explícitas; JWT transporta claims firmados, no secretos; roles deben verificarse en servidor. CORS controla orígenes del navegador y CSRF protege sesiones basadas en cookies. La analogía es el control de acceso de una bodega: credencial, permiso de zona y registro de entrada son controles diferentes.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-spring-m4
+cd ejemplo-spring-m4
+curl -fsSL https://start.spring.io/starter.zip -d dependencies=web,security -d javaVersion=21 -o app.zip
+unzip app.zip
+mvn test
+```
+Crea src/main/java/com/example/demo/SecurityConfig.java con una cadena que permita /health y autentique /deliveries/**; crea un endpoint mínimo para probarla.
+
+#### Paso 5 · Práctica guiada
+Pista: ejecuta mvn spring-boot:run, consulta sin credencial para provocar un fallo deliberado 401 y luego agrega una credencial de prueba. Resultado esperado: /health responde 200 y la ruta protegida exige identidad.
+
+#### Paso 6 · Práctica independiente
+Añade roles DRIVER y OPERATOR, una prueba de acceso permitido y otra denegada, y documenta por qué CORS no reemplaza autorización.
+
+#### Paso 7 · Cierre y evidencia
+Guarda configuración, requests, respuestas y log; como siguiente paso integra un proveedor de identidad. Errores comunes: desactivar CSRF sin entender el transporte, permitir todo, guardar JWT en logs y confundir 401 con 403. Fuentes oficiales: https://docs.spring.io/spring-security/reference/ y https://owasp.org/www-project-top-ten/.
+**¿Por qué es importante?** Porque un endpoint funcional sin una frontera de seguridad clara expone datos y operaciones críticas.
+**Evidencia de aprendizaje:** entrega pruebas 200/401/403 y una explicación de cada filtro.
 **Conceptos clave:** validación de token en cada request, `SecurityContextHolder`, `@PreAuthorize`.
 
 `public class JwtFilter extends OncePerRequestFilter { protected void doFilterInternal(...) { String token = extraerToken(req); if (token != null && jwtService.esValido(token)) { var auth = new UsernamePasswordAuthenticationToken(...); SecurityContextHolder.getContext().setAuthentication(auth); } chain.doFilter(req, res); } }` extiende `OncePerRequestFilter` (garantizando que se ejecute exactamente una vez por petición, sin duplicaciones en cadenas de filtros anidadas) para extraer y validar el token JWT del header `Authorization` en cada petición entrante, y, si es válido, establecer explícitamente la identidad autenticada correspondiente en el `SecurityContextHolder`, el mecanismo central de Spring Security que el resto del framework consulta para saber quién es el usuario actualmente autenticado durante el procesamiento de esa petición específica.
@@ -62,6 +122,36 @@ public void eliminar(@PathVariable Long id) { ... }
 
 ### Tema 3: CORS y CSRF
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás configurar seguridad para este caso desde cero. Prerrequisitos: JDK 21, Maven y un editor. Verifica java --version y mvn --version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real, clientes, conductores y operadores consultan rutas distintas. La autenticación identifica a la persona; la autorización limita cada operación y no debe confiar en el cliente.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+Spring Security compone filtros que transforman una petición en una identidad y una decisión. SecurityFilterChain declara reglas explícitas; JWT transporta claims firmados, no secretos; roles deben verificarse en servidor. CORS controla orígenes del navegador y CSRF protege sesiones basadas en cookies. La analogía es el control de acceso de una bodega: credencial, permiso de zona y registro de entrada son controles diferentes.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-spring-m4
+cd ejemplo-spring-m4
+curl -fsSL https://start.spring.io/starter.zip -d dependencies=web,security -d javaVersion=21 -o app.zip
+unzip app.zip
+mvn test
+```
+Crea src/main/java/com/example/demo/SecurityConfig.java con una cadena que permita /health y autentique /deliveries/**; crea un endpoint mínimo para probarla.
+
+#### Paso 5 · Práctica guiada
+Pista: ejecuta mvn spring-boot:run, consulta sin credencial para provocar un fallo deliberado 401 y luego agrega una credencial de prueba. Resultado esperado: /health responde 200 y la ruta protegida exige identidad.
+
+#### Paso 6 · Práctica independiente
+Añade roles DRIVER y OPERATOR, una prueba de acceso permitido y otra denegada, y documenta por qué CORS no reemplaza autorización.
+
+#### Paso 7 · Cierre y evidencia
+Guarda configuración, requests, respuestas y log; como siguiente paso integra un proveedor de identidad. Errores comunes: desactivar CSRF sin entender el transporte, permitir todo, guardar JWT en logs y confundir 401 con 403. Fuentes oficiales: https://docs.spring.io/spring-security/reference/ y https://owasp.org/www-project-top-ten/.
+**¿Por qué es importante?** Porque un endpoint funcional sin una frontera de seguridad clara expone datos y operaciones críticas.
+**Evidencia de aprendizaje:** entrega pruebas 200/401/403 y una explicación de cada filtro.
 **Conceptos clave:** origen distinto del navegador, protección específica de sesiones basadas en cookies.
 
 CORS (Cross-Origin Resource Sharing) controla qué orígenes (combinaciones de protocolo, dominio y puerto) tienen permitido, desde el navegador del usuario, realizar peticiones hacia la API desde un origen distinto al que sirve la propia API: `config.setAllowedOrigins(List.of("https://miapp.com"))` restringe explícitamente qué frontends específicos pueden consumir la API desde un navegador, una protección relevante específicamente para peticiones iniciadas desde JavaScript ejecutándose en un navegador, no para llamadas directas entre servidores (que no están sujetas a la política del mismo origen que los navegadores imponen).

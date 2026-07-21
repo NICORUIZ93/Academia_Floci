@@ -5,6 +5,36 @@
 
 ### Tema 1: MediaQuery vs LayoutBuilder
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás diseñar layouts Flutter adaptables desde cero. Prerrequisitos: Flutter SDK y emulador. Verifica flutter doctor.
+
+#### Paso 2 · Contexto y caso real
+En un caso real, una app de entregas debe funcionar en teléfonos, tabletas y orientación horizontal sin contenido cortado.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+MediaQuery describe entorno global; LayoutBuilder responde al espacio del padre; constraints fluyen de arriba abajo y sizes de abajo arriba. SafeArea respeta zonas del sistema. La analogía es amueblar una habitación: primero conoces límites, después eliges distribución.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-flutter-m2
+cd ejemplo-flutter-m2
+flutter create app
+cd app
+flutter run
+```
+Crea lib/responsive_delivery.dart con MediaQuery, LayoutBuilder y breakpoint; pruébalo en dos tamaños de emulador.
+
+#### Paso 5 · Práctica guiada
+Pista: fuerza deliberadamente un ancho infinito para provocar un fallo deliberado de constraints; lee el error y corrígelo con Expanded o límites. Resultado esperado: layout estable.
+
+#### Paso 6 · Práctica independiente
+Añade SafeArea, orientación, texto grande y una prueba golden o captura comparativa.
+
+#### Paso 7 · Cierre y evidencia
+Guarda capturas de tamaños, código y diagnóstico; como siguiente paso estudia navegación. Errores comunes: Expanded fuera de Flex, MediaQuery en exceso, hardcodear píxeles y olvidar SafeArea. Fuentes oficiales: https://docs.flutter.dev/ui/layout/constraints y https://api.flutter.dev/flutter/widgets/LayoutBuilder-class.html.
+**¿Por qué es importante?** Porque responsive es una propiedad funcional, no un ajuste final.
+**Evidencia de aprendizaje:** entrega layouts, fallo de constraints, corrección y comparativa.
 **Conceptos clave:** tamaño de la pantalla completa frente a espacio disponible para un widget específico.
 
 ```dart
@@ -34,6 +64,36 @@ LayoutBuilder(builder: (context, constraints) => ...)  // espacio disponible par
 
 ### Tema 2: Cómo Flutter calcula tamaños
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás diseñar layouts Flutter adaptables desde cero. Prerrequisitos: Flutter SDK y emulador. Verifica flutter doctor.
+
+#### Paso 2 · Contexto y caso real
+En un caso real, una app de entregas debe funcionar en teléfonos, tabletas y orientación horizontal sin contenido cortado.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+MediaQuery describe entorno global; LayoutBuilder responde al espacio del padre; constraints fluyen de arriba abajo y sizes de abajo arriba. SafeArea respeta zonas del sistema. La analogía es amueblar una habitación: primero conoces límites, después eliges distribución.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-flutter-m2
+cd ejemplo-flutter-m2
+flutter create app
+cd app
+flutter run
+```
+Crea lib/responsive_delivery.dart con MediaQuery, LayoutBuilder y breakpoint; pruébalo en dos tamaños de emulador.
+
+#### Paso 5 · Práctica guiada
+Pista: fuerza deliberadamente un ancho infinito para provocar un fallo deliberado de constraints; lee el error y corrígelo con Expanded o límites. Resultado esperado: layout estable.
+
+#### Paso 6 · Práctica independiente
+Añade SafeArea, orientación, texto grande y una prueba golden o captura comparativa.
+
+#### Paso 7 · Cierre y evidencia
+Guarda capturas de tamaños, código y diagnóstico; como siguiente paso estudia navegación. Errores comunes: Expanded fuera de Flex, MediaQuery en exceso, hardcodear píxeles y olvidar SafeArea. Fuentes oficiales: https://docs.flutter.dev/ui/layout/constraints y https://api.flutter.dev/flutter/widgets/LayoutBuilder-class.html.
+**¿Por qué es importante?** Porque responsive es una propiedad funcional, no un ajuste final.
+**Evidencia de aprendizaje:** entrega layouts, fallo de constraints, corrección y comparativa.
 **Conceptos clave:** constraints fluyen hacia abajo, tamaños fluyen hacia arriba.
 
 Flutter resuelve el layout de todo el árbol de widgets siguiendo un protocolo estricto conocido como "constraints go down, sizes go up": un widget padre le comunica a cada hijo el rango de tamaños permitido (mínimo y máximo de ancho y alto, las "constraints"), y cada hijo, dentro de ese rango permitido, decide su propio tamaño final y se lo informa de vuelta a su padre; el padre nunca dicta directamente el tamaño exacto de un hijo (salvo que las constraints mínima y máxima coincidan exactamente), y un hijo nunca puede ignorar las constraints recibidas de su padre para elegir un tamaño fuera de ese rango permitido.
@@ -53,6 +113,36 @@ Hijo → tamaño final elegido dentro de esas constraints → Padre
 
 ### Tema 3: Breakpoints propios y SafeArea
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás diseñar layouts Flutter adaptables desde cero. Prerrequisitos: Flutter SDK y emulador. Verifica flutter doctor.
+
+#### Paso 2 · Contexto y caso real
+En un caso real, una app de entregas debe funcionar en teléfonos, tabletas y orientación horizontal sin contenido cortado.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+MediaQuery describe entorno global; LayoutBuilder responde al espacio del padre; constraints fluyen de arriba abajo y sizes de abajo arriba. SafeArea respeta zonas del sistema. La analogía es amueblar una habitación: primero conoces límites, después eliges distribución.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-flutter-m2
+cd ejemplo-flutter-m2
+flutter create app
+cd app
+flutter run
+```
+Crea lib/responsive_delivery.dart con MediaQuery, LayoutBuilder y breakpoint; pruébalo en dos tamaños de emulador.
+
+#### Paso 5 · Práctica guiada
+Pista: fuerza deliberadamente un ancho infinito para provocar un fallo deliberado de constraints; lee el error y corrígelo con Expanded o límites. Resultado esperado: layout estable.
+
+#### Paso 6 · Práctica independiente
+Añade SafeArea, orientación, texto grande y una prueba golden o captura comparativa.
+
+#### Paso 7 · Cierre y evidencia
+Guarda capturas de tamaños, código y diagnóstico; como siguiente paso estudia navegación. Errores comunes: Expanded fuera de Flex, MediaQuery en exceso, hardcodear píxeles y olvidar SafeArea. Fuentes oficiales: https://docs.flutter.dev/ui/layout/constraints y https://api.flutter.dev/flutter/widgets/LayoutBuilder-class.html.
+**¿Por qué es importante?** Porque responsive es una propiedad funcional, no un ajuste final.
+**Evidencia de aprendizaje:** entrega layouts, fallo de constraints, corrección y comparativa.
 **Conceptos clave:** categorización explícita de rangos de pantalla, protección contra elementos físicos del dispositivo.
 
 ```dart

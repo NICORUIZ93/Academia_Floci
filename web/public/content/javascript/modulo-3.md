@@ -5,6 +5,18 @@
 
 ### Tema 1: Prototype chain y Object.create
 
+#### Paso 1 · Objetivo y preparación
+
+Al finalizar podrás crear objetos que delegan métodos, recorrer su cadena y distinguir propiedades propias, heredadas y sombreadas.
+
+**Conocimiento previo:** objetos, funciones, `this` y lectura de diagramas.
+
+#### Paso 2 · Contexto y caso real
+
+**¿Por qué es importante?** Varias entregas de RutaFlow comparten comportamiento. La delegación evita copiar el mismo método y explica el mecanismo real que después utiliza `class`.
+
+#### Paso 3 · Teoría con analogía
+
 **Conceptos clave:** prototipo, cadena de prototipos, herencia por delegación, `Object.create`.
 
 Todo objeto en JavaScript tiene un enlace interno (accesible mediante `Object.getPrototypeOf()`, e internamente conocido como `[[Prototype]]`) hacia otro objeto, llamado su prototipo, del cual hereda propiedades y métodos por delegación: cuando se accede a una propiedad que no existe directamente en el objeto, el motor de JavaScript busca automáticamente en su prototipo, y si tampoco está ahí, continúa subiendo por la cadena de prototipos hasta llegar a `Object.prototype` (el prototipo raíz de prácticamente todos los objetos), o hasta encontrar la propiedad, o hasta llegar a `null` (el final de la cadena) sin encontrarla, devolviendo entonces `undefined`.
@@ -21,15 +33,79 @@ Este modelo de "herencia por delegación" es fundamentalmente distinto del model
 
 **Diagrama:**
 
-```
-const animalProto = { hablar() { return `${this.nombre} hace un sonido`; } };
-const perro = Object.create(animalProto);
-perro.nombre = "Rex";
-perro.hablar(); // busca hablar en perro (no está) → sube a animalProto (está) → delega
-Object.getPrototypeOf(perro) === animalProto; // true
+```mermaid
+flowchart LR
+    GUIA["guia (propiedades propias)"] --> PROTO["guiaProto (métodos compartidos)"] --> OBJECT["Object.prototype"] --> NULL["null"]
 ```
 
+#### Paso 4 · Demostración guiada desde cero
+
+Desde una carpeta vacía crea `ejemplo-prototipos`, ejecuta `npm init -y`, crea `src` y después `src/prototipos.js`:
+
+```bash
+mkdir ejemplo-prototipos
+cd ejemplo-prototipos
+npm init -y
+mkdir src
+```
+
+```javascript
+const guiaProto = {
+  describir() { // se comparte y usa la instancia receptora
+    return `${this.numero}: ${this.estado}`;
+  },
+};
+
+const guia = Object.create(guiaProto);
+guia.numero = 'RF-40';
+guia.estado = 'creado';
+
+console.log(guia.describir());
+console.log(Object.hasOwn(guia, 'describir'));
+console.log(Object.getPrototypeOf(guia) === guiaProto);
+```
+
+```bash
+node src/prototipos.js
+```
+
+**Resultado esperado:** `RF-40: creado`, `false` y `true`.
+
+**Fallo deliberado:** asigna `guia.describir = 'texto'` y vuelve a invocarla. El `TypeError` ocurre porque una propiedad propia sombrea el método heredado; elimina esa propiedad para recuperar la delegación.
+
+#### Construcción RutaFlow: delegación visible
+
+Crea `academia-javascript/src/prototipos.js` con `guiaProto.describir` y dos objetos creados mediante `Object.create`. Ejecuta `node src/prototipos.js`; verifica con `hasOwn`, `Object.getPrototypeOf` y conteo que el método vive una sola vez en el prototipo.
+
+Asigna `describir` solo a una instancia para observar *shadowing* sin modificar el prototipo. Después cambia el método compartido y comprueba que la otra instancia delega a la nueva versión. Recorre la cadena hasta `null`. RutaFlow usa prototipos para comprender el lenguaje, no para mutar prototipos globales ni extender `Object.prototype`.
+
+#### Paso 5 · Práctica guiada
+
+Crea dos guías y modifica `guiaProto.describir`. **Pista:** predice cuáles observan el cambio si una de ellas tiene un método propio.
+
+#### Paso 6 · Práctica independiente
+
+Implementa `imprimirCadena(objeto)` que liste cada nivel hasta `null`, sin usar `__proto__`. Explica en qué nivel vive `toString`.
+
+#### Paso 7 · Cierre y evidencia
+
+Ya entiendes herencia como delegación dinámica. El siguiente tema expresa el mismo mecanismo con sintaxis de clases. **Evidencia:** demuestra el resultado inicial, el shadowing, el cambio compartido y la cadena completa. Fuente oficial: [MDN — inheritance and prototype chain](https://developer.mozilla.org/es/docs/Web/JavaScript/Inheritance_and_the_prototype_chain).
+
+**Errores comunes:** confundir delegación con copia; modificar `Object.prototype`; usar `__proto__`; asumir que escribir una propiedad cambia el prototipo.
+
 ### Tema 2: class, extends y super
+
+#### Paso 1 · Objetivo y preparación
+
+Al finalizar podrás implementar una jerarquía pequeña con `class`, `extends` y `super`, y decidir cuándo composición representa mejor el dominio.
+
+**Conocimiento previo:** prototype chain, `this`, constructores y validación.
+
+#### Paso 2 · Contexto y caso real
+
+**¿Por qué es importante?** RutaFlow posee envíos normales y expresos. Heredar solo es correcto si el subtipo conserva todo el contrato del envío base; una característica opcional suele modelarse mejor con composición.
+
+#### Paso 3 · Teoría con analogía
 
 **Conceptos clave:** azúcar sintáctica sobre prototipos, herencia con `extends`, `super`.
 
@@ -47,20 +123,91 @@ Comparar la implementación de una jerarquía `Animal`/`Perro` usando funciones 
 
 **Diagrama:**
 
-```
-class Animal {
-  constructor(nombre) { this.nombre = nombre; }
-  hablar() { return `${this.nombre} hace un sonido`; }
-}
-class Perro extends Animal {
-  hablar() { return `${super.hablar()} — ¡y ladra!`; }
-}
-new Perro("Rex").hablar();
-// "Rex hace un sonido — ¡y ladra!"
-// Perro.prototype.__proto__ === Animal.prototype (cadena de 2 niveles)
+```mermaid
+classDiagram
+    class Envio {
+      +numero
+      +describir()
+    }
+    class EnvioExpress {
+      +prioridad
+      +describir()
+    }
+    Envio <|-- EnvioExpress
 ```
 
+#### Paso 4 · Demostración guiada desde cero
+
+Desde una carpeta vacía crea `ejemplo-clases`, ejecuta `npm init -y`, crea `src` y después `src/clases.js`:
+
+```bash
+mkdir ejemplo-clases
+cd ejemplo-clases
+npm init -y
+mkdir src
+```
+
+```javascript
+class Envio {
+  constructor(numero) {
+    if (!numero) throw new TypeError('Número requerido');
+    this.numero = numero;
+  }
+  describir() { return `Envío ${this.numero}`; }
+}
+
+class EnvioExpress extends Envio {
+  constructor(numero, prioridad) {
+    super(numero); // inicializa this mediante el constructor base
+    this.prioridad = prioridad;
+  }
+  describir() { return `${super.describir()} · prioridad ${this.prioridad}`; }
+}
+
+console.log(new EnvioExpress('RF-41', 'alta').describir());
+```
+
+```bash
+node src/clases.js
+```
+
+**Resultado esperado:** `Envío RF-41 · prioridad alta`.
+
+**Fallo deliberado:** usa `this.prioridad` antes de `super(numero)`. JavaScript lanza `ReferenceError` porque una clase derivada no dispone de `this` hasta ejecutar el constructor base.
+
+#### Construcción RutaFlow: herencia con contrato real
+
+Crea `academia-javascript/src/clases.js` con `Envio` y `EnvioExpress extends Envio`; usa `super` para validar número y ampliar `describir`. Ejecuta `node src/clases.js`; el resultado esperado incluye la descripción base y prioridad, y confirma que el método está en `Envio.prototype`.
+
+Usa `this` antes de `super()` para reproducir `ReferenceError`; corrige el orden. Reemplaza herencia por composición de una política de prioridad y compara cuál modela mejor “tiene” frente a “es”. RutaFlow no crea jerarquías profundas: `extends` se usa solo cuando el subtipo respeta el contrato completo.
+
+#### Paso 5 · Práctica guiada
+
+Agrega `EnvioRefrigerado` con temperatura y extiende la descripción. **Pista:** llama `super` antes de tocar `this` y conserva la validación base.
+
+#### Paso 6 · Práctica independiente
+
+Refactoriza prioridad como objeto `politicaEntrega` inyectado en `Envio`. Compara pruebas, extensión y posibilidad de combinar refrigeración con prioridad; justifica herencia o composición.
+
+#### Paso 7 · Cierre y evidencia
+
+Ya sabes que `class` organiza prototipos y que `extends` expresa un contrato fuerte. El siguiente tema presenta valores derivados con getters. **Evidencia:** demuestra el resultado, el fallo antes de `super` y ambas alternativas de diseño. Fuente oficial: [MDN — classes](https://developer.mozilla.org/es/docs/Web/JavaScript/Reference/Classes).
+
+**Errores comunes:** usar `this` antes de `super`; construir jerarquías profundas; confundir “tiene” con “es”; olvidar que los métodos continúan en el prototipo.
+
 ### Tema 3: Getters, setters y propiedades computadas
+
+#### Paso 1 · Objetivo y preparación
+
+Al finalizar podrás exponer valores derivados con getters, validar escrituras deliberadas y construir claves dinámicas sin duplicar estado.
+
+**Conocimiento previo:** clases, arrays, objetos y métodos de transformación.
+
+#### Paso 2 · Contexto y caso real
+
+**¿Por qué es importante?** RutaFlow calcula peso total desde paquetes. Guardar simultáneamente paquetes y total permite que se contradigan; un getter deriva el valor desde una única fuente de verdad.
+
+#### Paso 3 · Teoría con analogía
 
 **Conceptos clave:** propiedades de acceso, `get`/`set`, claves computadas.
 
@@ -78,17 +225,86 @@ Combinar destructuring anidado con estas herramientas permite extraer directamen
 
 **Diagrama:**
 
-```
-class CuentaBancaria {
-  #saldo = 0;
-  get saldo() { return this.#saldo; }        ← lectura controlada
-  depositar(m) { if (m>0) this.#saldo += m; } ← única forma de modificar
-}
-const clave = "total";
-const obj = { [clave]: 100 };  // { total: 100 }, no { clave: 100 }
+```mermaid
+flowchart LR
+    INPUT["movimientos"] --> GETTER["get total: cálculo derivado"] --> VIEW["lectura como propiedad"]
+    KEY["estado dinámico"] --> COMPUTED["{ [estado]: cantidad }"]
 ```
 
+#### Paso 4 · Demostración guiada desde cero
+
+Desde una carpeta vacía crea `ejemplo-propiedades`, ejecuta `npm init -y`, crea `src` y después `src/propiedades.js`:
+
+```bash
+mkdir ejemplo-propiedades
+cd ejemplo-propiedades
+npm init -y
+mkdir src
+```
+
+```javascript
+class Manifiesto {
+  #paquetes = [];
+
+  agregar(paquete) {
+    if (!Number.isFinite(paquete.pesoKg) || paquete.pesoKg <= 0) {
+      throw new TypeError('Peso positivo requerido');
+    }
+    this.#paquetes.push({ ...paquete });
+  }
+
+  get pesoTotal() { // se calcula al leer; no se almacena otra copia
+    return this.#paquetes.reduce((total, paquete) => total + paquete.pesoKg, 0);
+  }
+}
+
+const manifiesto = new Manifiesto();
+manifiesto.agregar({ guia: 'RF-42', pesoKg: 2 });
+manifiesto.agregar({ guia: 'RF-43', pesoKg: 1.5 });
+console.log(manifiesto.pesoTotal);
+```
+
+```bash
+node src/propiedades.js
+```
+
+**Resultado esperado:** `3.5`.
+
+**Fallo deliberado:** agrega un setter `pesoTotal` que guarde otro valor y asigna `100`. Ahora paquetes y total pueden contradecirse. Elimina el setter: un dato derivado no debe admitir una escritura sin significado de dominio.
+
+#### Construcción RutaFlow: valores derivados sin duplicación
+
+Crea `academia-javascript/src/propiedades.js` con una clase `Manifiesto` cuyo getter `pesoTotal` calcule desde movimientos y un método validado para agregar. Agrupa guías por estado con claves computadas. Ejecuta `node src/propiedades.js`; el total debe actualizarse sin almacenar una segunda copia desincronizable.
+
+Agrega un setter que acepte peso negativo para observar una invariante rota; elimínalo o valida mediante operación de dominio con nombre. Transforma entradas con `Object.entries`/`fromEntries` sin mutar el original. RutaFlow evita getters costosos o con efectos ocultos: leer una propiedad no debería realizar red ni escritura.
+
+#### Paso 5 · Práctica guiada
+
+Agrega el getter `cantidadPaquetes`. **Pista:** derívalo de `#paquetes.length`; no mantengas un contador adicional.
+
+#### Paso 6 · Práctica independiente
+
+Agrupa entregas por estado usando `{ [estado]: cantidad }` o `Object.groupBy` si tu runtime lo soporta. Implementa una alternativa compatible y compara el resultado sin mutar entradas.
+
+#### Paso 7 · Cierre y evidencia
+
+Ya distingues propiedades derivadas de operaciones que cambian estado. El siguiente tema impone esa frontera con campos privados. **Evidencia:** demuestra el resultado `3.5`, la contradicción deliberada, su corrección y la agrupación. Fuente oficial: [MDN — getters](https://developer.mozilla.org/es/docs/Web/JavaScript/Reference/Functions/get).
+
+**Errores comunes:** ejecutar red dentro de un getter; almacenar un valor derivado; crear setters genéricos sin invariantes; asumir soporte universal de APIs recientes.
+
 ### Tema 4: Encapsulación con campos privados (#campo)
+
+#### Paso 1 · Objetivo y preparación
+
+Al finalizar podrás proteger una transición con `#campo`, exponer lectura controlada y diferenciar privacidad real de la convención `_campo`.
+
+**Conocimiento previo:** clases, getters, errores y máquina de estados.
+
+#### Paso 2 · Contexto y caso real
+
+**¿Por qué es importante?** Una entrega de RutaFlow no debe convertirse en entregada dos veces ni saltarse reglas mediante asignación directa. El motor puede impedir el acceso al estado y obligar a usar operaciones válidas.
+
+#### Paso 3 · Teoría con analogía
 
 **Conceptos clave:** campos privados reales, diferencia con convención `_campo`, encapsulación impuesta por el motor.
 
@@ -106,22 +322,75 @@ Combinar campos privados con getters (Tema 3) es un patrón extremadamente comú
 
 **Diagrama:**
 
+```mermaid
+flowchart LR
+    CALLER["consumidor"] --> API["métodos públicos validados"] --> PRIVATE["#estado privado"]
+    CALLER -. "acceso directo rechazado" .-> PRIVATE
 ```
-class CuentaBancaria {
-  #saldo = 0;                    ← privado real, impuesto por el motor
-  depositar(m) {
-    if (m <= 0) throw new Error("Monto inválido");
-    this.#saldo += m;             ← única forma válida de modificarlo
+
+#### Paso 4 · Demostración guiada desde cero
+
+Desde una carpeta vacía crea `ejemplo-encapsulacion`, ejecuta `npm init -y`, crea `src` y después `src/encapsulacion.js`:
+
+```bash
+mkdir ejemplo-encapsulacion
+cd ejemplo-encapsulacion
+npm init -y
+mkdir src
+```
+
+```javascript
+class Entrega {
+  #estado;
+
+  constructor(estado = 'EN_RUTA') { this.#estado = estado; }
+  get estado() { return this.#estado; }
+
+  confirmar() {
+    if (this.#estado !== 'EN_RUTA') {
+      throw new Error(`No se puede confirmar desde ${this.#estado}`);
+    }
+    this.#estado = 'ENTREGADA';
   }
-  get saldo() { return this.#saldo; }
 }
-// cuenta.#saldo;  → SyntaxError fuera de la clase, ni siquiera se ejecuta
+
+const entrega = new Entrega();
+entrega.confirmar();
+console.log(entrega.estado);
 ```
+
+```bash
+node src/encapsulacion.js
+```
+
+**Resultado esperado:** `ENTREGADA`.
+
+**Fallo deliberado:** llama `confirmar()` por segunda vez; recibe `No se puede confirmar desde ENTREGADA`. En `src/acceso-privado.js` intenta `entrega.#estado`: el archivo ni siquiera se analiza y produce `SyntaxError`.
+
+#### Construcción RutaFlow: transición protegida por el motor
+
+Crea `academia-javascript/src/encapsulacion.js` con `Entrega`, campo `#estado`, getter y método `confirmar` que valide la transición. Ejecuta `node src/encapsulacion.js`; debe pasar de `EN_RUTA` a `ENTREGADA` y rechazar una segunda confirmación.
+
+En un archivo separado intenta `entrega.#estado` para observar `SyntaxError` durante análisis; no pongas ese acceso en el script principal porque impediría ejecutar todo. Compara `_estado` y demuestra que sí puede corromperse externamente. RutaFlow expone operaciones con lenguaje de dominio, no setters genéricos que evadan invariantes.
+
+#### Paso 5 · Práctica guiada
+
+Agrega `cancelar()` permitido solo desde `EN_RUTA`. **Pista:** concentra la transición dentro de la clase y prueba confirmar después de cancelar.
+
+#### Paso 6 · Práctica independiente
+
+Modela `CREADA → ASIGNADA → EN_RUTA → ENTREGADA` con métodos de dominio. Prueba cada transición válida y dos saltos inválidos sin añadir un setter público.
+
+#### Paso 7 · Cierre y evidencia
+
+Completaste objetos y clases con invariantes impuestas por el motor. El siguiente módulo transforma colecciones de entregas. **Evidencia:** demuestra el resultado, la segunda confirmación, el `SyntaxError`, la corrupción de `_estado` y la máquina completa. Fuente oficial: [MDN — private elements](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Classes/Private_elements).
+
+**Errores comunes:** confundir `_` con privacidad; probar sintaxis privada en el mismo archivo principal; exponer setters que evaden reglas; intentar acceder a privados desde subclases.
 
 ---
 
 
-## Laboratorio práctico
+## Construcción guiada del capítulo
 
 **Objetivo del laboratorio:** construir una jerarquía de clases con herencia real y encapsulación mediante campos privados, comparándola explícitamente con el modelo de prototipos subyacente.
 

@@ -5,6 +5,36 @@
 
 ### Tema 1: pom.xml vs build.gradle.kts
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás crear un build reproducible desde cero. Prerrequisitos: JDK 21, Maven o Gradle y un editor. Comprueba java --version y mvn --version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real, un equipo necesita compilar, probar y publicar el mismo artefacto en local y CI con dependencias verificables.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+Maven y Gradle describen tareas, dependencias y plugins; scopes separan lo necesario en compilación de lo necesario en runtime. Un multi-módulo explicita límites y orden de construcción. La analogía es una línea de producción: cada estación tiene insumos y un resultado versionado.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-java-m8
+cd ejemplo-java-m8
+mvn -B archetype:generate -DgroupId=com.example -DartifactId=app -DarchetypeArtifactId=maven-archetype-quickstart -DinteractiveMode=false
+cd app
+mvn test
+```
+Revisa pom.xml, añade una dependencia fijada y ejecuta el ciclo completo.
+
+#### Paso 5 · Práctica guiada
+Pista: cambia deliberadamente una versión inexistente para provocar un fallo deliberado de resolución; lee el diagnóstico y corrígela. Resultado esperado: build verde y dependencia reproducible.
+
+#### Paso 6 · Práctica independiente
+Divide dominio y API en dos módulos, añade una prueba por módulo y documenta qué dependencias no deben cruzar la frontera.
+
+#### Paso 7 · Cierre y evidencia
+Guarda árbol, logs y archivo de dependencias; como siguiente paso conecta el build a CI. Errores comunes: versiones flotantes, scopes incorrectos, plugin sin fijar y módulos acoplados circularmente. Fuentes oficiales: https://maven.apache.org/guides/ y https://docs.gradle.org/current/userguide/.
+**¿Por qué es importante?** Porque un build reproducible es parte del producto y de la cadena de suministro.
+**Evidencia de aprendizaje:** entrega build verde, fallo corregido, árbol multi-módulo y explicación.
 **Conceptos clave:** declaración de dependencias, XML declarativo frente a DSL de Kotlin.
 
 Maven declara dependencias en un archivo `pom.xml` estructurado en XML: `<dependency><groupId>com.fasterxml.jackson.core</groupId><artifactId>jackson-databind</artifactId><version>2.17.0</version></dependency>`, un formato completamente declarativo donde el orden de las secciones sigue una convención estricta impuesta por Maven, con relativamente poca flexibilidad para lógica de configuración condicional o dinámica dentro del propio archivo de configuración.
@@ -41,6 +71,36 @@ Quita la versión de una dependencia y observa el error de resolución; restáur
 
 ### Tema 2: Ciclo de vida de build y scopes
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás crear un build reproducible desde cero. Prerrequisitos: JDK 21, Maven o Gradle y un editor. Comprueba java --version y mvn --version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real, un equipo necesita compilar, probar y publicar el mismo artefacto en local y CI con dependencias verificables.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+Maven y Gradle describen tareas, dependencias y plugins; scopes separan lo necesario en compilación de lo necesario en runtime. Un multi-módulo explicita límites y orden de construcción. La analogía es una línea de producción: cada estación tiene insumos y un resultado versionado.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-java-m8
+cd ejemplo-java-m8
+mvn -B archetype:generate -DgroupId=com.example -DartifactId=app -DarchetypeArtifactId=maven-archetype-quickstart -DinteractiveMode=false
+cd app
+mvn test
+```
+Revisa pom.xml, añade una dependencia fijada y ejecuta el ciclo completo.
+
+#### Paso 5 · Práctica guiada
+Pista: cambia deliberadamente una versión inexistente para provocar un fallo deliberado de resolución; lee el diagnóstico y corrígela. Resultado esperado: build verde y dependencia reproducible.
+
+#### Paso 6 · Práctica independiente
+Divide dominio y API en dos módulos, añade una prueba por módulo y documenta qué dependencias no deben cruzar la frontera.
+
+#### Paso 7 · Cierre y evidencia
+Guarda árbol, logs y archivo de dependencias; como siguiente paso conecta el build a CI. Errores comunes: versiones flotantes, scopes incorrectos, plugin sin fijar y módulos acoplados circularmente. Fuentes oficiales: https://maven.apache.org/guides/ y https://docs.gradle.org/current/userguide/.
+**¿Por qué es importante?** Porque un build reproducible es parte del producto y de la cadena de suministro.
+**Evidencia de aprendizaje:** entrega build verde, fallo corregido, árbol multi-módulo y explicación.
 **Conceptos clave:** fases secuenciales, `mvn clean compile test package`, dependencias por scope.
 
 Maven define un ciclo de vida de build compuesto por fases secuenciales estándar y predefinidas: `mvn clean compile test package` ejecuta, en orden, la limpieza de artefactos de builds anteriores, la compilación del código fuente, la ejecución de las pruebas, y el empaquetado del resultado final (típicamente un `.jar`), donde cada fase posterior implica automáticamente la ejecución de todas las fases anteriores necesarias (invocar `package` directamente ejecuta también `compile` y `test` primero, sin necesidad de invocarlas explícitamente por separado).
@@ -65,6 +125,36 @@ Mueve JUnit de `testImplementation` a `implementation`, vuelve a inspeccionar de
 
 ### Tema 3: Proyectos multi-módulo
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás crear un build reproducible desde cero. Prerrequisitos: JDK 21, Maven o Gradle y un editor. Comprueba java --version y mvn --version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real, un equipo necesita compilar, probar y publicar el mismo artefacto en local y CI con dependencias verificables.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+Maven y Gradle describen tareas, dependencias y plugins; scopes separan lo necesario en compilación de lo necesario en runtime. Un multi-módulo explicita límites y orden de construcción. La analogía es una línea de producción: cada estación tiene insumos y un resultado versionado.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-java-m8
+cd ejemplo-java-m8
+mvn -B archetype:generate -DgroupId=com.example -DartifactId=app -DarchetypeArtifactId=maven-archetype-quickstart -DinteractiveMode=false
+cd app
+mvn test
+```
+Revisa pom.xml, añade una dependencia fijada y ejecuta el ciclo completo.
+
+#### Paso 5 · Práctica guiada
+Pista: cambia deliberadamente una versión inexistente para provocar un fallo deliberado de resolución; lee el diagnóstico y corrígela. Resultado esperado: build verde y dependencia reproducible.
+
+#### Paso 6 · Práctica independiente
+Divide dominio y API en dos módulos, añade una prueba por módulo y documenta qué dependencias no deben cruzar la frontera.
+
+#### Paso 7 · Cierre y evidencia
+Guarda árbol, logs y archivo de dependencias; como siguiente paso conecta el build a CI. Errores comunes: versiones flotantes, scopes incorrectos, plugin sin fijar y módulos acoplados circularmente. Fuentes oficiales: https://maven.apache.org/guides/ y https://docs.gradle.org/current/userguide/.
+**¿Por qué es importante?** Porque un build reproducible es parte del producto y de la cadena de suministro.
+**Evidencia de aprendizaje:** entrega build verde, fallo corregido, árbol multi-módulo y explicación.
 **Conceptos clave:** separación de responsabilidades entre módulos, dependencias explícitas entre ellos.
 
 Un proyecto multi-módulo divide una aplicación grande en subproyectos independientes que se compilan como parte de un mismo build coordinado, pero con límites explícitos entre ellos: un módulo `core` conteniendo la lógica de dominio central, y un módulo `api` que depende de `core` para exponer esa lógica a través de HTTP, con la configuración raíz compartida (`build.gradle.kts` en la raíz del proyecto) coordinando cómo se construyen ambos módulos juntos, mientras cada módulo mantiene su propio conjunto de dependencias específicas, declaradas explícitamente según lo que ese módulo particular efectivamente necesita, sin heredar automáticamente dependencias de otros módulos que no declaró explícitamente requerir.

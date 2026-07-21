@@ -5,6 +5,38 @@
 
 ### Tema 1: Del problema al algoritmo y a los casos de prueba
 
+Ejecuta node --version para comprobar el entorno antes de continuar. **Evidencia de aprendizaje:** conserva la salida y explica qué verificaste.
+
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás resolver este problema desde cero. Prerrequisitos: terminal, editor y un lenguaje instalado; verifica su versión.
+
+#### Paso 2 · Contexto y caso real
+En un caso real de entregas, una regla de tarifa o estado debe poder explicarse, probarse y modificarse sin adivinar qué ocurre.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+Un algoritmo transforma entradas en salidas mediante pasos finitos. Variables guardan estado, decisiones eligen caminos, bucles repiten y funciones encapsulan una responsabilidad. La analogía es una receta con medidas: cambiar un ingrediente debe dejar claro qué resultado cambia.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-fundamentos-m1
+cd ejemplo-fundamentos-m1
+mkdir src
+printf "resultado\n" > src/algoritmo.txt
+cat src/algoritmo.txt
+```
+Escribe el pseudocódigo del caso, implementa el camino feliz y anota la entrada y salida.
+
+#### Paso 5 · Práctica guiada
+Pista: usa una entrada límite para provocar un fallo deliberado de lógica, traza cada paso y corrígelo. Resultado esperado: salida coherente con la regla escrita.
+
+#### Paso 6 · Práctica independiente
+Añade tres casos normales, uno límite y uno inválido; separa una función pura y documenta su complejidad.
+
+#### Paso 7 · Cierre y evidencia
+Guarda algoritmo, tabla de casos, código y salida; como siguiente paso estudia estructuras de datos. Errores comunes: programar antes de definir entrada, bucles sin condición, funciones gigantes y pruebas solo felices. Fuentes oficiales: https://www.cs.cmu.edu/~15110/ y https://developer.mozilla.org/es/docs/Learn.
+**¿Por qué es importante?** Porque una solución clara se puede revisar antes de convertirla en código.
+**Evidencia de aprendizaje:** entrega pseudocódigo, casos, implementación y diagnóstico.
 **Conceptos clave:** problema, requisito, entrada, proceso, salida, algoritmo, precondición, caso normal, caso límite y caso inválido.
 
 Programar no comienza escribiendo sintaxis. Comienza definiendo con precisión qué problema se resolverá. “Haz una calculadora” es ambiguo: ¿qué operaciones admite?, ¿acepta decimales?, ¿qué ocurre si el usuario escribe texto?, ¿cómo se informa una división por cero? Un **requisito** elimina ambigüedad al describir comportamiento observable.
@@ -55,6 +87,40 @@ Cambia “al menos 10 km” de `>=` a `>` y comprueba que el caso de frontera fa
 
 ### Tema 2: Variables, tipos, expresiones y cambios de estado
 
+Ejecuta node --version para comprobar el entorno antes de continuar. **Evidencia de aprendizaje:** conserva la salida y explica qué verificaste.
+
+Ejecuta node --version antes de probar la expresión.
+
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás resolver este problema desde cero. Prerrequisitos: terminal, editor y un lenguaje instalado; verifica su versión.
+
+#### Paso 2 · Contexto y caso real
+En un caso real de entregas, una regla de tarifa o estado debe poder explicarse, probarse y modificarse sin adivinar qué ocurre.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+Un algoritmo transforma entradas en salidas mediante pasos finitos. Variables guardan estado, decisiones eligen caminos, bucles repiten y funciones encapsulan una responsabilidad. La analogía es una receta con medidas: cambiar un ingrediente debe dejar claro qué resultado cambia.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-fundamentos-m1
+cd ejemplo-fundamentos-m1
+mkdir src
+printf "resultado\n" > src/algoritmo.txt
+cat src/algoritmo.txt
+```
+Escribe el pseudocódigo del caso, implementa el camino feliz y anota la entrada y salida.
+
+#### Paso 5 · Práctica guiada
+Pista: usa una entrada límite para provocar un fallo deliberado de lógica, traza cada paso y corrígelo. Resultado esperado: salida coherente con la regla escrita.
+
+#### Paso 6 · Práctica independiente
+Añade tres casos normales, uno límite y uno inválido; separa una función pura y documenta su complejidad.
+
+#### Paso 7 · Cierre y evidencia
+Guarda algoritmo, tabla de casos, código y salida; como siguiente paso estudia estructuras de datos. Errores comunes: programar antes de definir entrada, bucles sin condición, funciones gigantes y pruebas solo felices. Fuentes oficiales: https://www.cs.cmu.edu/~15110/ y https://developer.mozilla.org/es/docs/Learn.
+**¿Por qué es importante?** Porque una solución clara se puede revisar antes de convertirla en código.
+**Evidencia de aprendizaje:** entrega pseudocódigo, casos, implementación y diagnóstico.
 **Conceptos clave:** valor, variable, asignación, tipo, expresión, conversión y estado.
 
 Un valor es información concreta, como `25`, `3.14`, `"Ana"` o `True`. Una variable asocia un nombre con un valor para poder usarlo posteriormente. El tipo determina qué representa el valor y qué operaciones tienen sentido: sumar números es distinto de concatenar textos.
@@ -101,6 +167,40 @@ Captura solo el error de conversión en la frontera y muestra qué formato se es
 
 ### Tema 3: Decisiones, repeticiones y trazado de ejecución
 
+Ejecuta node --version para comprobar el entorno antes de continuar. **Evidencia de aprendizaje:** conserva la salida y explica qué verificaste.
+
+Ejecuta node --version antes de trazar el flujo.
+
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás resolver este problema desde cero. Prerrequisitos: terminal, editor y un lenguaje instalado; verifica su versión.
+
+#### Paso 2 · Contexto y caso real
+En un caso real de entregas, una regla de tarifa o estado debe poder explicarse, probarse y modificarse sin adivinar qué ocurre.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+Un algoritmo transforma entradas en salidas mediante pasos finitos. Variables guardan estado, decisiones eligen caminos, bucles repiten y funciones encapsulan una responsabilidad. La analogía es una receta con medidas: cambiar un ingrediente debe dejar claro qué resultado cambia.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-fundamentos-m1
+cd ejemplo-fundamentos-m1
+mkdir src
+printf "resultado\n" > src/algoritmo.txt
+cat src/algoritmo.txt
+```
+Escribe el pseudocódigo del caso, implementa el camino feliz y anota la entrada y salida.
+
+#### Paso 5 · Práctica guiada
+Pista: usa una entrada límite para provocar un fallo deliberado de lógica, traza cada paso y corrígelo. Resultado esperado: salida coherente con la regla escrita.
+
+#### Paso 6 · Práctica independiente
+Añade tres casos normales, uno límite y uno inválido; separa una función pura y documenta su complejidad.
+
+#### Paso 7 · Cierre y evidencia
+Guarda algoritmo, tabla de casos, código y salida; como siguiente paso estudia estructuras de datos. Errores comunes: programar antes de definir entrada, bucles sin condición, funciones gigantes y pruebas solo felices. Fuentes oficiales: https://www.cs.cmu.edu/~15110/ y https://developer.mozilla.org/es/docs/Learn.
+**¿Por qué es importante?** Porque una solución clara se puede revisar antes de convertirla en código.
+**Evidencia de aprendizaje:** entrega pseudocódigo, casos, implementación y diagnóstico.
 **Conceptos clave:** booleano, comparación, condición, rama, bucle, iteración, acumulador e invariante.
 
 Una condición produce `True` o `False`. `if` selecciona una rama; `for` o `while` repite trabajo. Estas herramientas son suficientes para expresar gran cantidad de algoritmos, pero también permiten bucles infinitos y ramas imposibles si no se razona con cuidado.
@@ -152,6 +252,40 @@ Mueve por error el acumulador dentro del bucle y usa el trazado para explicar po
 
 ### Tema 4: Funciones y descomposición de problemas
 
+Ejecuta node --version para comprobar el entorno antes de continuar. **Evidencia de aprendizaje:** conserva la salida y explica qué verificaste.
+
+Ejecuta node --version antes de llamar la función.
+
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás resolver este problema desde cero. Prerrequisitos: terminal, editor y un lenguaje instalado; verifica su versión.
+
+#### Paso 2 · Contexto y caso real
+En un caso real de entregas, una regla de tarifa o estado debe poder explicarse, probarse y modificarse sin adivinar qué ocurre.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+Un algoritmo transforma entradas en salidas mediante pasos finitos. Variables guardan estado, decisiones eligen caminos, bucles repiten y funciones encapsulan una responsabilidad. La analogía es una receta con medidas: cambiar un ingrediente debe dejar claro qué resultado cambia.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-fundamentos-m1
+cd ejemplo-fundamentos-m1
+mkdir src
+printf "resultado\n" > src/algoritmo.txt
+cat src/algoritmo.txt
+```
+Escribe el pseudocódigo del caso, implementa el camino feliz y anota la entrada y salida.
+
+#### Paso 5 · Práctica guiada
+Pista: usa una entrada límite para provocar un fallo deliberado de lógica, traza cada paso y corrígelo. Resultado esperado: salida coherente con la regla escrita.
+
+#### Paso 6 · Práctica independiente
+Añade tres casos normales, uno límite y uno inválido; separa una función pura y documenta su complejidad.
+
+#### Paso 7 · Cierre y evidencia
+Guarda algoritmo, tabla de casos, código y salida; como siguiente paso estudia estructuras de datos. Errores comunes: programar antes de definir entrada, bucles sin condición, funciones gigantes y pruebas solo felices. Fuentes oficiales: https://www.cs.cmu.edu/~15110/ y https://developer.mozilla.org/es/docs/Learn.
+**¿Por qué es importante?** Porque una solución clara se puede revisar antes de convertirla en código.
+**Evidencia de aprendizaje:** entrega pseudocódigo, casos, implementación y diagnóstico.
 **Conceptos clave:** función, parámetro, argumento, retorno, alcance, contrato, responsabilidad y composición.
 
 Una función nombra una operación y permite utilizarla con datos distintos. Sus parámetros son entradas; `return` produce una salida. Una función pequeña puede comprobarse de manera aislada.

@@ -5,6 +5,34 @@
 
 ### Tema 1: NIO.2 — Path y Files
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás leer y escribir datos de forma segura desde cero. Prerrequisitos: JDK 21, Maven y un editor. Comprueba java --version y mvn --version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real, una plataforma procesa comprobantes y configuraciones sin permitir rutas arbitrarias ni cargar archivos grandes completos en memoria.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+Path representa una ubicación y Files ofrece operaciones explícitas; validar normalización evita traversal. Jackson convierte JSON, pero los datos externos deben validarse. Streams permiten procesar archivos grandes y classpath empaqueta recursos de solo lectura. La analogía es un archivador con permisos: conocer el nombre no autoriza abrir cualquier cajón.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-java-m6
+cd ejemplo-java-m6
+mkdir -p src/main/java/com/example
+```
+Crea src/main/java/com/example/Main.java que use Path.resolve dentro de un directorio permitido y try-with-resources; compila con javac -d out y ejecuta.
+
+#### Paso 5 · Práctica guiada
+Pista: pasa deliberadamente una ruta con .. para provocar un fallo deliberado de validación; observa el diagnóstico y corrígela. Resultado esperado: solo se lee dentro del directorio permitido.
+
+#### Paso 6 · Práctica independiente
+Añade lectura línea a línea, un DTO JSON con Jackson y una prueba de archivo ausente; mide memoria con un archivo grande.
+
+#### Paso 7 · Cierre y evidencia
+Guarda árbol de archivos, salida y medición; como siguiente paso estudia persistencia. Errores comunes: concatenar rutas, confiar en extensión, cerrar streams manualmente y leer todo con readAllBytes sin límite. Fuentes oficiales: https://dev.java/learn/java-io/file-system/ y https://github.com/FasterXML/jackson-docs.
+**¿Por qué es importante?** Porque el manejo de archivos combina seguridad, rendimiento y corrección de recursos.
+**Evidencia de aprendizaje:** entrega código, prueba de traversal, archivo JSON y medición.
 **Conceptos clave:** API moderna frente a la clase File legada, operaciones expresivas.
 
 `Path ruta = Path.of("datos.txt"); String contenido = Files.readString(ruta);` representa la API moderna de manejo de archivos introducida en Java 7 (NIO.2), reemplazando gradualmente a la antigua clase `File` (presente desde las primeras versiones de Java), que tenía limitaciones notables: métodos que devolvían simplemente `false` ante un error sin indicar la causa específica (en vez de lanzar una excepción descriptiva), y una API considerablemente menos expresiva para operaciones comunes como copiar, mover, o recorrer directorios recursivamente.
@@ -31,6 +59,34 @@ Ejecuta una segunda vez sin política de reemplazo y diagnostica `FileAlreadyExi
 
 ### Tema 2: Serialización con Jackson
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás leer y escribir datos de forma segura desde cero. Prerrequisitos: JDK 21, Maven y un editor. Comprueba java --version y mvn --version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real, una plataforma procesa comprobantes y configuraciones sin permitir rutas arbitrarias ni cargar archivos grandes completos en memoria.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+Path representa una ubicación y Files ofrece operaciones explícitas; validar normalización evita traversal. Jackson convierte JSON, pero los datos externos deben validarse. Streams permiten procesar archivos grandes y classpath empaqueta recursos de solo lectura. La analogía es un archivador con permisos: conocer el nombre no autoriza abrir cualquier cajón.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-java-m6
+cd ejemplo-java-m6
+mkdir -p src/main/java/com/example
+```
+Crea src/main/java/com/example/Main.java que use Path.resolve dentro de un directorio permitido y try-with-resources; compila con javac -d out y ejecuta.
+
+#### Paso 5 · Práctica guiada
+Pista: pasa deliberadamente una ruta con .. para provocar un fallo deliberado de validación; observa el diagnóstico y corrígela. Resultado esperado: solo se lee dentro del directorio permitido.
+
+#### Paso 6 · Práctica independiente
+Añade lectura línea a línea, un DTO JSON con Jackson y una prueba de archivo ausente; mide memoria con un archivo grande.
+
+#### Paso 7 · Cierre y evidencia
+Guarda árbol de archivos, salida y medición; como siguiente paso estudia persistencia. Errores comunes: concatenar rutas, confiar en extensión, cerrar streams manualmente y leer todo con readAllBytes sin límite. Fuentes oficiales: https://dev.java/learn/java-io/file-system/ y https://github.com/FasterXML/jackson-docs.
+**¿Por qué es importante?** Porque el manejo de archivos combina seguridad, rendimiento y corrección de recursos.
+**Evidencia de aprendizaje:** entrega código, prueba de traversal, archivo JSON y medición.
 **Conceptos clave:** `ObjectMapper`, serializar/deserializar, records como modelos de datos.
 
 Jackson es la librería estándar de facto para convertir objetos Java a JSON y viceversa: `ObjectMapper mapper = new ObjectMapper(); String json = mapper.writeValueAsString(new Persona("Ana", 28));` serializa un objeto Java (aquí, un `record Persona(String nombre, int edad) {}`, Módulo 7) a su representación JSON equivalente, mientras `mapper.readValue(json, Persona.class)` realiza la operación inversa, reconstruyendo un objeto Java a partir de una cadena JSON, inspeccionando por reflexión la estructura de la clase de destino para determinar cómo mapear cada campo del JSON a su propiedad correspondiente.
@@ -59,6 +115,34 @@ Elimina `pesoKg` del JSON y decide si es obligatorio: configura validación desp
 
 ### Tema 3: Archivos grandes y recursos del classpath
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás leer y escribir datos de forma segura desde cero. Prerrequisitos: JDK 21, Maven y un editor. Comprueba java --version y mvn --version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real, una plataforma procesa comprobantes y configuraciones sin permitir rutas arbitrarias ni cargar archivos grandes completos en memoria.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+Path representa una ubicación y Files ofrece operaciones explícitas; validar normalización evita traversal. Jackson convierte JSON, pero los datos externos deben validarse. Streams permiten procesar archivos grandes y classpath empaqueta recursos de solo lectura. La analogía es un archivador con permisos: conocer el nombre no autoriza abrir cualquier cajón.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-java-m6
+cd ejemplo-java-m6
+mkdir -p src/main/java/com/example
+```
+Crea src/main/java/com/example/Main.java que use Path.resolve dentro de un directorio permitido y try-with-resources; compila con javac -d out y ejecuta.
+
+#### Paso 5 · Práctica guiada
+Pista: pasa deliberadamente una ruta con .. para provocar un fallo deliberado de validación; observa el diagnóstico y corrígela. Resultado esperado: solo se lee dentro del directorio permitido.
+
+#### Paso 6 · Práctica independiente
+Añade lectura línea a línea, un DTO JSON con Jackson y una prueba de archivo ausente; mide memoria con un archivo grande.
+
+#### Paso 7 · Cierre y evidencia
+Guarda árbol de archivos, salida y medición; como siguiente paso estudia persistencia. Errores comunes: concatenar rutas, confiar en extensión, cerrar streams manualmente y leer todo con readAllBytes sin límite. Fuentes oficiales: https://dev.java/learn/java-io/file-system/ y https://github.com/FasterXML/jackson-docs.
+**¿Por qué es importante?** Porque el manejo de archivos combina seguridad, rendimiento y corrección de recursos.
+**Evidencia de aprendizaje:** entrega código, prueba de traversal, archivo JSON y medición.
 **Conceptos clave:** procesamiento línea por línea, evitar cargar todo en memoria, `getResourceAsStream`.
 
 Leer un archivo grande completo de una sola vez (con `Files.readAllBytes` o `Files.readString`, apropiados para archivos pequeños) carga necesariamente el contenido completo en memoria simultáneamente, un enfoque que se vuelve problemático o directamente inviable para archivos cuyo tamaño se acerca o supera la memoria disponible; `try (BufferedReader reader = Files.newBufferedReader(rutaGrande)) { String linea; while ((linea = reader.readLine()) != null) { procesar(linea); } }` procesa el archivo línea por línea, manteniendo en memoria en cualquier momento dado únicamente la línea actual (más el buffer interno de lectura), sin importar cuán grande sea el archivo completo en su totalidad.

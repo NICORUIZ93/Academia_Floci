@@ -5,6 +5,36 @@
 
 ### Tema 1: Config Server y service discovery
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás probar este patrón desde cero. Prerrequisitos: JDK 21, Maven, Docker y un editor.
+
+#### Paso 2 · Contexto y caso real
+En un caso real de entregas, varios servicios necesitan descubrirse, protegerse y fallar de forma controlada sin ocultar el dueño de cada dato.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+Este patrón distribuye responsabilidades, pero añade red, latencia y fallos parciales. Define contratos, timeouts, autorización y propiedad de datos antes de extraer servicios. La analogía es una red de sucursales: una dirección central ayuda, pero cada oficina necesita límites y plan de contingencia.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-spring-m10
+cd ejemplo-spring-m10
+curl -fsSL https://start.spring.io/starter.zip -d dependencies=web,actuator -d javaVersion=21 -o app.zip
+unzip app.zip
+mvn test
+```
+Crea src/main/java/com/example/demo/Config.java y un endpoint que exponga la decisión del patrón; documenta entrada, salida y timeout.
+
+#### Paso 5 · Práctica guiada
+Pista: ejecuta mvn test, detén la dependencia para provocar un fallo deliberado y corrige con fallback o respuesta explícita. Resultado esperado: el servicio no queda bloqueado indefinidamente.
+
+#### Paso 6 · Práctica independiente
+Añade una prueba de contrato, una métrica de latencia y una matriz de error 401/403/404/5xx; justifica qué responsabilidad permanece en cada servicio.
+
+#### Paso 7 · Cierre y evidencia
+Guarda código, pruebas, logs y diagrama; como siguiente paso automatiza una prueba de caída. Errores comunes: timeouts infinitos, gateway con lógica de negocio, permisos heredados y bases compartidas sin dueño. Fuentes oficiales: https://spring.io/projects/spring-cloud y https://docs.spring.io/spring-security/reference/.
+**¿Por qué es importante?** Porque distribuir código sin límites claros multiplica los fallos y el coste operativo.
+**Evidencia de aprendizaje:** entrega una ejecución normal, una caída diagnosticada y la decisión arquitectónica.
 **Conceptos clave:** configuración centralizada respaldada por Git, resolución por nombre en vez de URL fija.
 
 En un sistema con muchos microservicios independientes, cada uno manteniendo su propio `application.yml` local, cambiar un valor de configuración compartido entre varios servicios (una URL de un servicio externo común, por ejemplo) requeriría modificar y redesplegar cada servicio individual que use ese valor; un Config Server centraliza la configuración de todos los microservicios en un único lugar (típicamente respaldado por un repositorio Git, permitiendo versionar y revisar cambios de configuración como cualquier otro cambio de código), de modo que cambiar un valor compartido en el Config Server puede propagarse a todos los servicios que lo consumen sin necesidad de redesplegar cada uno individualmente.
@@ -27,6 +57,36 @@ interface PedidosClient { @GetMapping("/pedidos/{id}") Pedido obtener(@PathVaria
 
 ### Tema 2: Spring Cloud Gateway
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás probar este patrón desde cero. Prerrequisitos: JDK 21, Maven, Docker y un editor.
+
+#### Paso 2 · Contexto y caso real
+En un caso real de entregas, varios servicios necesitan descubrirse, protegerse y fallar de forma controlada sin ocultar el dueño de cada dato.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+Este patrón distribuye responsabilidades, pero añade red, latencia y fallos parciales. Define contratos, timeouts, autorización y propiedad de datos antes de extraer servicios. La analogía es una red de sucursales: una dirección central ayuda, pero cada oficina necesita límites y plan de contingencia.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-spring-m10
+cd ejemplo-spring-m10
+curl -fsSL https://start.spring.io/starter.zip -d dependencies=web,actuator -d javaVersion=21 -o app.zip
+unzip app.zip
+mvn test
+```
+Crea src/main/java/com/example/demo/Config.java y un endpoint que exponga la decisión del patrón; documenta entrada, salida y timeout.
+
+#### Paso 5 · Práctica guiada
+Pista: ejecuta mvn test, detén la dependencia para provocar un fallo deliberado y corrige con fallback o respuesta explícita. Resultado esperado: el servicio no queda bloqueado indefinidamente.
+
+#### Paso 6 · Práctica independiente
+Añade una prueba de contrato, una métrica de latencia y una matriz de error 401/403/404/5xx; justifica qué responsabilidad permanece en cada servicio.
+
+#### Paso 7 · Cierre y evidencia
+Guarda código, pruebas, logs y diagrama; como siguiente paso automatiza una prueba de caída. Errores comunes: timeouts infinitos, gateway con lógica de negocio, permisos heredados y bases compartidas sin dueño. Fuentes oficiales: https://spring.io/projects/spring-cloud y https://docs.spring.io/spring-security/reference/.
+**¿Por qué es importante?** Porque distribuir código sin límites claros multiplica los fallos y el coste operativo.
+**Evidencia de aprendizaje:** entrega una ejecución normal, una caída diagnosticada y la decisión arquitectónica.
 **Conceptos clave:** punto de entrada único, enrutamiento centralizado.
 
 `spring: cloud: gateway: routes: - id: pedidos uri: lb://servicio-pedidos predicates: [Path=/api/pedidos/**]` configura un único punto de entrada para todo el sistema de microservicios, enrutando cada petición entrante hacia el microservicio correcto según el patrón de la ruta solicitada (`/api/pedidos/**` dirigiéndose específicamente hacia `servicio-pedidos`, resuelto a su vez por service discovery mediante el prefijo `lb://`, indicando balanceo de carga entre las instancias disponibles de ese servicio).
@@ -51,6 +111,36 @@ spring:
 
 ### Tema 3: Circuit breaker con Resilience4j
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás probar este patrón desde cero. Prerrequisitos: JDK 21, Maven, Docker y un editor.
+
+#### Paso 2 · Contexto y caso real
+En un caso real de entregas, varios servicios necesitan descubrirse, protegerse y fallar de forma controlada sin ocultar el dueño de cada dato.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+Este patrón distribuye responsabilidades, pero añade red, latencia y fallos parciales. Define contratos, timeouts, autorización y propiedad de datos antes de extraer servicios. La analogía es una red de sucursales: una dirección central ayuda, pero cada oficina necesita límites y plan de contingencia.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-spring-m10
+cd ejemplo-spring-m10
+curl -fsSL https://start.spring.io/starter.zip -d dependencies=web,actuator -d javaVersion=21 -o app.zip
+unzip app.zip
+mvn test
+```
+Crea src/main/java/com/example/demo/Config.java y un endpoint que exponga la decisión del patrón; documenta entrada, salida y timeout.
+
+#### Paso 5 · Práctica guiada
+Pista: ejecuta mvn test, detén la dependencia para provocar un fallo deliberado y corrige con fallback o respuesta explícita. Resultado esperado: el servicio no queda bloqueado indefinidamente.
+
+#### Paso 6 · Práctica independiente
+Añade una prueba de contrato, una métrica de latencia y una matriz de error 401/403/404/5xx; justifica qué responsabilidad permanece en cada servicio.
+
+#### Paso 7 · Cierre y evidencia
+Guarda código, pruebas, logs y diagrama; como siguiente paso automatiza una prueba de caída. Errores comunes: timeouts infinitos, gateway con lógica de negocio, permisos heredados y bases compartidas sin dueño. Fuentes oficiales: https://spring.io/projects/spring-cloud y https://docs.spring.io/spring-security/reference/.
+**¿Por qué es importante?** Porque distribuir código sin límites claros multiplica los fallos y el coste operativo.
+**Evidencia de aprendizaje:** entrega una ejecución normal, una caída diagnosticada y la decisión arquitectónica.
 **Conceptos clave:** abrir el circuito ante fallos repetidos, fallback inmediato.
 
 `@CircuitBreaker(name = "servicioPedidos", fallbackMethod = "fallbackPedidos") public Pedido obtenerPedido(Long id) { return pedidosClient.obtener(id); } public Pedido fallbackPedidos(Long id, Exception e) { return Pedido.vacio(); }` protege una llamada a un servicio externo (o a otro microservicio) contra fallos repetidos y sostenidos: si `servicio-pedidos` comienza a fallar consistentemente (superando un umbral configurable de tasa de fallo), el circuit breaker "abre el circuito", dejando de intentar realizar la llamada real hacia ese servicio caído durante un período configurable, y en su lugar invocando inmediatamente el método de fallback (`fallbackPedidos`, devolviendo un resultado por defecto razonable), evitando que las peticiones se acumulen esperando indefinidamente una respuesta de un servicio que sabe, con alta probabilidad, que actualmente no va a responder exitosamente.
@@ -71,6 +161,36 @@ public Pedido fallbackPedidos(Long id, Exception e) { return Pedido.vacio(); }
 
 ### Tema 4: OAuth2/OIDC, Keycloak y Token Relay sin perder la frontera de autorización
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás probar este patrón desde cero. Prerrequisitos: JDK 21, Maven, Docker y un editor.
+
+#### Paso 2 · Contexto y caso real
+En un caso real de entregas, varios servicios necesitan descubrirse, protegerse y fallar de forma controlada sin ocultar el dueño de cada dato.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+Este patrón distribuye responsabilidades, pero añade red, latencia y fallos parciales. Define contratos, timeouts, autorización y propiedad de datos antes de extraer servicios. La analogía es una red de sucursales: una dirección central ayuda, pero cada oficina necesita límites y plan de contingencia.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-spring-m10
+cd ejemplo-spring-m10
+curl -fsSL https://start.spring.io/starter.zip -d dependencies=web,actuator -d javaVersion=21 -o app.zip
+unzip app.zip
+mvn test
+```
+Crea src/main/java/com/example/demo/Config.java y un endpoint que exponga la decisión del patrón; documenta entrada, salida y timeout.
+
+#### Paso 5 · Práctica guiada
+Pista: ejecuta mvn test, detén la dependencia para provocar un fallo deliberado y corrige con fallback o respuesta explícita. Resultado esperado: el servicio no queda bloqueado indefinidamente.
+
+#### Paso 6 · Práctica independiente
+Añade una prueba de contrato, una métrica de latencia y una matriz de error 401/403/404/5xx; justifica qué responsabilidad permanece en cada servicio.
+
+#### Paso 7 · Cierre y evidencia
+Guarda código, pruebas, logs y diagrama; como siguiente paso automatiza una prueba de caída. Errores comunes: timeouts infinitos, gateway con lógica de negocio, permisos heredados y bases compartidas sin dueño. Fuentes oficiales: https://spring.io/projects/spring-cloud y https://docs.spring.io/spring-security/reference/.
+**¿Por qué es importante?** Porque distribuir código sin límites claros multiplica los fallos y el coste operativo.
+**Evidencia de aprendizaje:** entrega una ejecución normal, una caída diagnosticada y la decisión arquitectónica.
 **Conceptos clave:** Identity Provider, issuer, audience, scopes, roles, Resource Server, JWKS, token relay y service account.
 
 Keycloak actúa como proveedor de identidad: autentica al usuario y emite un access token firmado. Spring Cloud Gateway y cada API protegida se configuran como **Resource Servers** usando el `issuer-uri`; Spring Security obtiene y rota las claves públicas mediante JWKS, valida firma, emisor y expiración. También debes comprobar que la audiencia corresponde a tu API: un token legítimo emitido para otro recurso no debería aceptarse automáticamente.
@@ -110,6 +230,36 @@ Token Relay reenvía el token del usuario a un servicio downstream cuando este n
 
 ### Tema 5: HTTP Interfaces, deadlines y descubrimiento según el entorno
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás probar este patrón desde cero. Prerrequisitos: JDK 21, Maven, Docker y un editor.
+
+#### Paso 2 · Contexto y caso real
+En un caso real de entregas, varios servicios necesitan descubrirse, protegerse y fallar de forma controlada sin ocultar el dueño de cada dato.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+Este patrón distribuye responsabilidades, pero añade red, latencia y fallos parciales. Define contratos, timeouts, autorización y propiedad de datos antes de extraer servicios. La analogía es una red de sucursales: una dirección central ayuda, pero cada oficina necesita límites y plan de contingencia.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-spring-m10
+cd ejemplo-spring-m10
+curl -fsSL https://start.spring.io/starter.zip -d dependencies=web,actuator -d javaVersion=21 -o app.zip
+unzip app.zip
+mvn test
+```
+Crea src/main/java/com/example/demo/Config.java y un endpoint que exponga la decisión del patrón; documenta entrada, salida y timeout.
+
+#### Paso 5 · Práctica guiada
+Pista: ejecuta mvn test, detén la dependencia para provocar un fallo deliberado y corrige con fallback o respuesta explícita. Resultado esperado: el servicio no queda bloqueado indefinidamente.
+
+#### Paso 6 · Práctica independiente
+Añade una prueba de contrato, una métrica de latencia y una matriz de error 401/403/404/5xx; justifica qué responsabilidad permanece en cada servicio.
+
+#### Paso 7 · Cierre y evidencia
+Guarda código, pruebas, logs y diagrama; como siguiente paso automatiza una prueba de caída. Errores comunes: timeouts infinitos, gateway con lógica de negocio, permisos heredados y bases compartidas sin dueño. Fuentes oficiales: https://spring.io/projects/spring-cloud y https://docs.spring.io/spring-security/reference/.
+**¿Por qué es importante?** Porque distribuir código sin límites claros multiplica los fallos y el coste operativo.
+**Evidencia de aprendizaje:** entrega una ejecución normal, una caída diagnosticada y la decisión arquitectónica.
 **Conceptos clave:** contrato cliente, WebClient, RestClient, HTTP Service Interface, timeout, deadline, load balancing, DNS y Kubernetes Service.
 
 Una interfaz HTTP declarativa describe el contrato de la dependencia sin mezclarlo con la regla de negocio. Spring crea un proxy cliente sobre `RestClient` o `WebClient`; eso reduce código repetitivo, pero no elimina fallos de red, compatibilidad ni la necesidad de pruebas de contrato.
@@ -151,6 +301,36 @@ flowchart TD
 
 ### Tema 6: DDD para decidir límites y propiedad de datos
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás probar este patrón desde cero. Prerrequisitos: JDK 21, Maven, Docker y un editor.
+
+#### Paso 2 · Contexto y caso real
+En un caso real de entregas, varios servicios necesitan descubrirse, protegerse y fallar de forma controlada sin ocultar el dueño de cada dato.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+Este patrón distribuye responsabilidades, pero añade red, latencia y fallos parciales. Define contratos, timeouts, autorización y propiedad de datos antes de extraer servicios. La analogía es una red de sucursales: una dirección central ayuda, pero cada oficina necesita límites y plan de contingencia.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-spring-m10
+cd ejemplo-spring-m10
+curl -fsSL https://start.spring.io/starter.zip -d dependencies=web,actuator -d javaVersion=21 -o app.zip
+unzip app.zip
+mvn test
+```
+Crea src/main/java/com/example/demo/Config.java y un endpoint que exponga la decisión del patrón; documenta entrada, salida y timeout.
+
+#### Paso 5 · Práctica guiada
+Pista: ejecuta mvn test, detén la dependencia para provocar un fallo deliberado y corrige con fallback o respuesta explícita. Resultado esperado: el servicio no queda bloqueado indefinidamente.
+
+#### Paso 6 · Práctica independiente
+Añade una prueba de contrato, una métrica de latencia y una matriz de error 401/403/404/5xx; justifica qué responsabilidad permanece en cada servicio.
+
+#### Paso 7 · Cierre y evidencia
+Guarda código, pruebas, logs y diagrama; como siguiente paso automatiza una prueba de caída. Errores comunes: timeouts infinitos, gateway con lógica de negocio, permisos heredados y bases compartidas sin dueño. Fuentes oficiales: https://spring.io/projects/spring-cloud y https://docs.spring.io/spring-security/reference/.
+**¿Por qué es importante?** Porque distribuir código sin límites claros multiplica los fallos y el coste operativo.
+**Evidencia de aprendizaje:** entrega una ejecución normal, una caída diagnosticada y la decisión arquitectónica.
 **Conceptos clave:** capacidad de negocio, contexto delimitado, lenguaje ubicuo, agregado, invariante, propiedad de datos y monolito modular.
 
 Un microservicio no es una capa técnica ni una tabla aislada. En RutaFlow, `Journey` pertenece al contexto **Operación de entregas** porque allí viven reglas como «una jornada cerrada no acepta nuevas posiciones». `Invoice` pertenece a **Facturación**, donde las reglas hablan de impuestos, conceptos y asientos. Que ambos conceptos compartan el identificador del envío no significa que deban compartir modelo, repositorio ni tablas.

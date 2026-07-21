@@ -5,6 +5,36 @@
 
 ### Tema 1: @ConfigurationProperties tipado
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás configurar este comportamiento desde cero. Prerrequisitos: JDK 21, Maven y un editor.
+
+#### Paso 2 · Contexto y caso real
+En un caso real, una API de entregas cambia URLs, límites y credenciales entre local, pruebas y producción sin recompilar el dominio.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+La configuración externa debe validarse al iniciar y exponerse mediante tipos, no leerse con strings dispersos. Fallar rápido evita aceptar un proceso que luego no puede operar. Las excepciones globales deben mantener el mismo contrato en cada entorno. La analogía es revisar el manifiesto antes de salir del almacén: una caja sin dirección detiene la salida, no se descubre en carretera.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-spring-m5
+cd ejemplo-spring-m5
+curl -fsSL https://start.spring.io/starter.zip -d dependencies=web,actuator -d javaVersion=21 -o app.zip
+unzip app.zip
+mvn test
+```
+Crea src/main/java/com/example/demo/AppProperties.java con ConfigurationProperties y una restricción de validación; crea application.yml con un valor obligatorio.
+
+#### Paso 5 · Práctica guiada
+Pista: ejecuta mvn spring-boot:run sin la propiedad para provocar un fallo deliberado de arranque; lee el diagnóstico y corrígela. Resultado esperado: el contexto inicia y health responde 200.
+
+#### Paso 6 · Práctica independiente
+Define perfiles local y prod, una excepción de dominio y una respuesta Problem Details idéntica en ambos perfiles; prueba una configuración inválida.
+
+#### Paso 7 · Cierre y evidencia
+Guarda logs, configuración de ejemplo sin secretos y respuesta; como siguiente paso añade un chequeo de configuración en CI. Errores comunes: incluir secretos en Git, valores por defecto inseguros, capturar excepciones sin trazabilidad y diferencias entre perfiles. Fuentes oficiales: https://docs.spring.io/spring-boot/reference/features/external-config.html y https://docs.spring.io/spring-boot/reference/actuator/index.html.
+**¿Por qué es importante?** Porque una aplicación que inicia con configuración inválida falla tarde y de forma costosa.
+**Evidencia de aprendizaje:** entrega el log de fallo, la corrección y una respuesta de health.
 **Conceptos clave:** agrupación de configuración relacionada, frente a `@Value` disperso.
 
 `@ConfigurationProperties("app.jwt") @Validated public record JwtConfig(@NotBlank String secreto, @Min(60) long expiracionSegundos) {}` mapea un grupo completo de configuración relacionada (todo lo bajo el prefijo `app.jwt` en `application.yml`) hacia un único tipo fuertemente tipado, en vez de leer cada valor individual disperso con `@Value("${app.jwt.secreto}")` repetido en cada clase que necesita alguno de esos valores: esta agrupación centralizada ofrece autocompletado del IDE sobre la estructura completa de esa configuración, verificación de tipos en tiempo de compilación (un valor numérico mal configurado como texto se detecta al mapear, no en tiempo de ejecución al intentar usarlo), y validación centralizada de todo el grupo relacionado en un único lugar.
@@ -34,6 +64,36 @@ app:
 
 ### Tema 2: Fallar rápido al arranque
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás configurar este comportamiento desde cero. Prerrequisitos: JDK 21, Maven y un editor.
+
+#### Paso 2 · Contexto y caso real
+En un caso real, una API de entregas cambia URLs, límites y credenciales entre local, pruebas y producción sin recompilar el dominio.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+La configuración externa debe validarse al iniciar y exponerse mediante tipos, no leerse con strings dispersos. Fallar rápido evita aceptar un proceso que luego no puede operar. Las excepciones globales deben mantener el mismo contrato en cada entorno. La analogía es revisar el manifiesto antes de salir del almacén: una caja sin dirección detiene la salida, no se descubre en carretera.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-spring-m5
+cd ejemplo-spring-m5
+curl -fsSL https://start.spring.io/starter.zip -d dependencies=web,actuator -d javaVersion=21 -o app.zip
+unzip app.zip
+mvn test
+```
+Crea src/main/java/com/example/demo/AppProperties.java con ConfigurationProperties y una restricción de validación; crea application.yml con un valor obligatorio.
+
+#### Paso 5 · Práctica guiada
+Pista: ejecuta mvn spring-boot:run sin la propiedad para provocar un fallo deliberado de arranque; lee el diagnóstico y corrígela. Resultado esperado: el contexto inicia y health responde 200.
+
+#### Paso 6 · Práctica independiente
+Define perfiles local y prod, una excepción de dominio y una respuesta Problem Details idéntica en ambos perfiles; prueba una configuración inválida.
+
+#### Paso 7 · Cierre y evidencia
+Guarda logs, configuración de ejemplo sin secretos y respuesta; como siguiente paso añade un chequeo de configuración en CI. Errores comunes: incluir secretos en Git, valores por defecto inseguros, capturar excepciones sin trazabilidad y diferencias entre perfiles. Fuentes oficiales: https://docs.spring.io/spring-boot/reference/features/external-config.html y https://docs.spring.io/spring-boot/reference/actuator/index.html.
+**¿Por qué es importante?** Porque una aplicación que inicia con configuración inválida falla tarde y de forma costosa.
+**Evidencia de aprendizaje:** entrega el log de fallo, la corrección y una respuesta de health.
 **Conceptos clave:** validación temprana, evitar fallas silenciosas tardías en producción.
 
 Con `@Validated` aplicado a una clase de `@ConfigurationProperties`, si falta un valor obligatorio (como `app.jwt.secreto` en el ejemplo del Tema 1, marcado `@NotBlank`), la aplicación no arranca en absoluto: falla inmediatamente durante el proceso de arranque con un mensaje de error claro y específico indicando exactamente qué valor de configuración falta o es inválido, en vez de arrancar aparentemente con éxito y fallar mucho más tarde, potencialmente ya en producción y bajo tráfico real, cuando algún código intente efectivamente usar ese valor faltante (que en ese punto sería `null` o un valor por defecto inesperado), produciendo un error considerablemente más difícil de diagnosticar porque ocurre en un momento y contexto completamente distinto de donde realmente se originó el problema (la configuración faltante desde el inicio).
@@ -53,6 +113,36 @@ Con @Validated: falta app.jwt.secreto → app NO arranca → error claro inmedia
 
 ### Tema 3: Manejo global de excepciones consistente entre entornos
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás configurar este comportamiento desde cero. Prerrequisitos: JDK 21, Maven y un editor.
+
+#### Paso 2 · Contexto y caso real
+En un caso real, una API de entregas cambia URLs, límites y credenciales entre local, pruebas y producción sin recompilar el dominio.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+La configuración externa debe validarse al iniciar y exponerse mediante tipos, no leerse con strings dispersos. Fallar rápido evita aceptar un proceso que luego no puede operar. Las excepciones globales deben mantener el mismo contrato en cada entorno. La analogía es revisar el manifiesto antes de salir del almacén: una caja sin dirección detiene la salida, no se descubre en carretera.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-spring-m5
+cd ejemplo-spring-m5
+curl -fsSL https://start.spring.io/starter.zip -d dependencies=web,actuator -d javaVersion=21 -o app.zip
+unzip app.zip
+mvn test
+```
+Crea src/main/java/com/example/demo/AppProperties.java con ConfigurationProperties y una restricción de validación; crea application.yml con un valor obligatorio.
+
+#### Paso 5 · Práctica guiada
+Pista: ejecuta mvn spring-boot:run sin la propiedad para provocar un fallo deliberado de arranque; lee el diagnóstico y corrígela. Resultado esperado: el contexto inicia y health responde 200.
+
+#### Paso 6 · Práctica independiente
+Define perfiles local y prod, una excepción de dominio y una respuesta Problem Details idéntica en ambos perfiles; prueba una configuración inválida.
+
+#### Paso 7 · Cierre y evidencia
+Guarda logs, configuración de ejemplo sin secretos y respuesta; como siguiente paso añade un chequeo de configuración en CI. Errores comunes: incluir secretos en Git, valores por defecto inseguros, capturar excepciones sin trazabilidad y diferencias entre perfiles. Fuentes oficiales: https://docs.spring.io/spring-boot/reference/features/external-config.html y https://docs.spring.io/spring-boot/reference/actuator/index.html.
+**¿Por qué es importante?** Porque una aplicación que inicia con configuración inválida falla tarde y de forma costosa.
+**Evidencia de aprendizaje:** entrega el log de fallo, la corrección y una respuesta de health.
 **Conceptos clave:** el mismo `@ControllerAdvice` extendido, formato uniforme sin importar el entorno.
 
 El manejo global de excepciones, ya cubierto en el Módulo 2 con `@RestControllerAdvice`, se extiende naturalmente para mapear cualquier excepción de negocio adicional que surja durante el desarrollo continuo de la aplicación hacia una respuesta HTTP consistente, en un único lugar centralizado del código, garantizando que el formato de error permanezca exactamente el mismo sin importar en qué entorno específico (desarrollo, pruebas, producción) se ejecute la aplicación, ni qué endpoint particular haya originado el error.

@@ -5,6 +5,35 @@
 
 ### Tema 1: XCTest clásico y Swift Testing
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás probar una app Swift desde cero. Prerrequisitos: macOS, Xcode y Swift. Verifica xcodebuild -version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real, reglas de entrega deben probarse rápido y una pantalla debe validarse como la usaría una persona, sin red real.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+XCTest y Swift Testing organizan aserciones; async tests esperan tareas; XCUITest interactúa con accesibilidad en UI. La analogía es una inspección: prueba pieza, flujo y recorrido real con costes distintos.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-ios-m9
+cd ejemplo-ios-m9
+swift package init --type executable
+swift test
+```
+Crea Tests/DeliveryTests.swift con un test de regla y en Xcode añade un UI test que busque un botón por accessibility identifier.
+
+#### Paso 5 · Práctica guiada
+Pista: cambia deliberadamente una expectativa para provocar un fallo deliberado; lee la aserción y corrígela. Resultado esperado: tests verdes con mensajes claros.
+
+#### Paso 6 · Práctica independiente
+Añade test async con timeout, mock de repositorio, caso offline y recorrido XCUITest de formulario.
+
+#### Paso 7 · Cierre y evidencia
+Guarda salida, capturas y logs; como siguiente paso estudia CI. Errores comunes: sleeps fijos, selectores visuales, datos compartidos y tests que dependen de red. Fuentes oficiales: https://developer.apple.com/documentation/xctest y https://developer.apple.com/documentation/testing.
+**¿Por qué es importante?** Porque la confianza en una app móvil depende de evidencias repetibles en dispositivos y simuladores.
+**Evidencia de aprendizaje:** entrega tests, fallo, corrección y recorrido UI.
 **Conceptos clave:** sintaxis más concisa y expresiva, misma capacidad fundamental de verificación.
 
 ```swift
@@ -47,6 +76,35 @@ XCTAssertEqual(Calculadora().sumar(2, 3), 5)
 
 ### Tema 2: Testing de código async
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás probar una app Swift desde cero. Prerrequisitos: macOS, Xcode y Swift. Verifica xcodebuild -version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real, reglas de entrega deben probarse rápido y una pantalla debe validarse como la usaría una persona, sin red real.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+XCTest y Swift Testing organizan aserciones; async tests esperan tareas; XCUITest interactúa con accesibilidad en UI. La analogía es una inspección: prueba pieza, flujo y recorrido real con costes distintos.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-ios-m9
+cd ejemplo-ios-m9
+swift package init --type executable
+swift test
+```
+Crea Tests/DeliveryTests.swift con un test de regla y en Xcode añade un UI test que busque un botón por accessibility identifier.
+
+#### Paso 5 · Práctica guiada
+Pista: cambia deliberadamente una expectativa para provocar un fallo deliberado; lee la aserción y corrígela. Resultado esperado: tests verdes con mensajes claros.
+
+#### Paso 6 · Práctica independiente
+Añade test async con timeout, mock de repositorio, caso offline y recorrido XCUITest de formulario.
+
+#### Paso 7 · Cierre y evidencia
+Guarda salida, capturas y logs; como siguiente paso estudia CI. Errores comunes: sleeps fijos, selectores visuales, datos compartidos y tests que dependen de red. Fuentes oficiales: https://developer.apple.com/documentation/xctest y https://developer.apple.com/documentation/testing.
+**¿Por qué es importante?** Porque la confianza en una app móvil depende de evidencias repetibles en dispositivos y simuladores.
+**Evidencia de aprendizaje:** entrega tests, fallo, corrección y recorrido UI.
 **Conceptos clave:** el test mismo puede ser una función suspendible, sin expectativas manuales.
 
 ```swift
@@ -75,6 +133,35 @@ Esta simplificación de testing async es directamente análoga a `runTest` en Ko
 
 ### Tema 3: UI Tests con XCUITest
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás probar una app Swift desde cero. Prerrequisitos: macOS, Xcode y Swift. Verifica xcodebuild -version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real, reglas de entrega deben probarse rápido y una pantalla debe validarse como la usaría una persona, sin red real.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+XCTest y Swift Testing organizan aserciones; async tests esperan tareas; XCUITest interactúa con accesibilidad en UI. La analogía es una inspección: prueba pieza, flujo y recorrido real con costes distintos.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-ios-m9
+cd ejemplo-ios-m9
+swift package init --type executable
+swift test
+```
+Crea Tests/DeliveryTests.swift con un test de regla y en Xcode añade un UI test que busque un botón por accessibility identifier.
+
+#### Paso 5 · Práctica guiada
+Pista: cambia deliberadamente una expectativa para provocar un fallo deliberado; lee la aserción y corrígela. Resultado esperado: tests verdes con mensajes claros.
+
+#### Paso 6 · Práctica independiente
+Añade test async con timeout, mock de repositorio, caso offline y recorrido XCUITest de formulario.
+
+#### Paso 7 · Cierre y evidencia
+Guarda salida, capturas y logs; como siguiente paso estudia CI. Errores comunes: sleeps fijos, selectores visuales, datos compartidos y tests que dependen de red. Fuentes oficiales: https://developer.apple.com/documentation/xctest y https://developer.apple.com/documentation/testing.
+**¿Por qué es importante?** Porque la confianza en una app móvil depende de evidencias repetibles en dispositivos y simuladores.
+**Evidencia de aprendizaje:** entrega tests, fallo, corrección y recorrido UI.
 **Conceptos clave:** simulación de interacciones reales, más lento pero valida el flujo completo end-to-end.
 
 ```swift

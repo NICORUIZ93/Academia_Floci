@@ -5,6 +5,34 @@
 
 ### Tema 1: Generaciones de memoria y recolectores
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás investigar rendimiento de una aplicación Java desde cero. Prerrequisitos: JDK 21, Maven y un editor. Comprueba java --version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real, una API de entregas puede sufrir pausas, consumo de heap o latencia creciente; medir primero evita optimizaciones imaginarias.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+El heap y el recolector gestionan objetos; el JIT optimiza código caliente; JFR registra eventos con bajo impacto. Un heap dump permite investigar retención, no probar causalidad solo. La analogía es revisar una flota con telemetría: el ruido no se corrige cambiando piezas sin identificar el síntoma.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-java-m11
+cd ejemplo-java-m11
+mkdir -p src/main/java/com/example
+```
+Crea src/main/java/com/example/Load.java que genere trabajo medible; compila con javac -d out y ejecuta con jcmd o JFR.
+
+#### Paso 5 · Práctica guiada
+Pista: crea deliberadamente una retención de objetos para provocar un fallo deliberado de memoria; captura el diagnóstico y corrígelo liberando referencias. Resultado esperado: memoria estable bajo la misma carga.
+
+#### Paso 6 · Práctica independiente
+Compara dos recolectores, graba un perfil JFR, identifica el método caliente y documenta una optimización con medición antes/después.
+
+#### Paso 7 · Cierre y evidencia
+Guarda comandos, perfil y métricas; como siguiente paso automatiza un presupuesto de latencia. Errores comunes: tunear sin baseline, confundir heap con native memory, analizar solo promedios y capturar secretos en dumps. Fuentes oficiales: https://docs.oracle.com/en/java/javase/21/gctuning/ y https://docs.oracle.com/en/java/javase/21/docs/specs/man/jfr.html.
+**¿Por qué es importante?** Porque el rendimiento se mejora con evidencia reproducible, no con intuición.
+**Evidencia de aprendizaje:** entrega baseline, perfil, fallo, corrección y comparación.
 **Conceptos clave:** generación joven vs vieja, G1 frente a ZGC.
 
 La heap de la JVM se divide típicamente en una generación joven (donde se crean los objetos recién instanciados, recolectada frecuentemente y de forma rápida) y una generación vieja (donde terminan los objetos que sobrevivieron varias rondas de recolección de la generación joven, recolectada con menor frecuencia pero de forma más costosa), una división basada en la observación empírica conocida como "hipótesis generacional débil": la gran mayoría de los objetos creados en cualquier programa mueren jóvenes (dejan de ser referenciados poco después de crearse), por lo que concentrar el esfuerzo de recolección frecuente específicamente en esa generación joven, donde efectivamente se encuentra la mayoría de la basura recolectable, es considerablemente más eficiente que recorrer la heap completa con la misma frecuencia sin distinción.
@@ -34,6 +62,34 @@ Reduce el heap hasta provocar presión y compara pausas, throughput y memoria, n
 
 ### Tema 2: Java Flight Recorder y JIT compilation
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás investigar rendimiento de una aplicación Java desde cero. Prerrequisitos: JDK 21, Maven y un editor. Comprueba java --version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real, una API de entregas puede sufrir pausas, consumo de heap o latencia creciente; medir primero evita optimizaciones imaginarias.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+El heap y el recolector gestionan objetos; el JIT optimiza código caliente; JFR registra eventos con bajo impacto. Un heap dump permite investigar retención, no probar causalidad solo. La analogía es revisar una flota con telemetría: el ruido no se corrige cambiando piezas sin identificar el síntoma.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-java-m11
+cd ejemplo-java-m11
+mkdir -p src/main/java/com/example
+```
+Crea src/main/java/com/example/Load.java que genere trabajo medible; compila con javac -d out y ejecuta con jcmd o JFR.
+
+#### Paso 5 · Práctica guiada
+Pista: crea deliberadamente una retención de objetos para provocar un fallo deliberado de memoria; captura el diagnóstico y corrígelo liberando referencias. Resultado esperado: memoria estable bajo la misma carga.
+
+#### Paso 6 · Práctica independiente
+Compara dos recolectores, graba un perfil JFR, identifica el método caliente y documenta una optimización con medición antes/después.
+
+#### Paso 7 · Cierre y evidencia
+Guarda comandos, perfil y métricas; como siguiente paso automatiza un presupuesto de latencia. Errores comunes: tunear sin baseline, confundir heap con native memory, analizar solo promedios y capturar secretos en dumps. Fuentes oficiales: https://docs.oracle.com/en/java/javase/21/gctuning/ y https://docs.oracle.com/en/java/javase/21/docs/specs/man/jfr.html.
+**¿Por qué es importante?** Porque el rendimiento se mejora con evidencia reproducible, no con intuición.
+**Evidencia de aprendizaje:** entrega baseline, perfil, fallo, corrección y comparación.
 **Conceptos clave:** perfilado de bajo overhead en producción, compilación en caliente.
 
 Java Flight Recorder (JFR) graba eventos detallados de la JVM (uso de CPU por método, actividad de memoria, contención de locks) con un overhead deliberadamente mínimo, diseñado específicamente para poder usarse de forma segura en producción sin degradar significativamente el rendimiento de la aplicación mientras se graba: `java -XX:StartFlightRecording=filename=perfil.jfr -jar mi-app.jar` inicia una grabación que produce un archivo `.jfr` analizable posteriormente, permitiendo diagnosticar problemas reales de rendimiento observados directamente en producción bajo carga real, en vez de tener que intentar reproducir artificialmente esas condiciones en un entorno de pruebas separado, que frecuentemente no logra replicar exactamente las condiciones específicas que causan el problema real observado.
@@ -62,6 +118,34 @@ Mide una sola iteración y compara el resultado inestable con varias rondas; lue
 
 ### Tema 3: Referencias especiales y heap dumps
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás investigar rendimiento de una aplicación Java desde cero. Prerrequisitos: JDK 21, Maven y un editor. Comprueba java --version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real, una API de entregas puede sufrir pausas, consumo de heap o latencia creciente; medir primero evita optimizaciones imaginarias.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+El heap y el recolector gestionan objetos; el JIT optimiza código caliente; JFR registra eventos con bajo impacto. Un heap dump permite investigar retención, no probar causalidad solo. La analogía es revisar una flota con telemetría: el ruido no se corrige cambiando piezas sin identificar el síntoma.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-java-m11
+cd ejemplo-java-m11
+mkdir -p src/main/java/com/example
+```
+Crea src/main/java/com/example/Load.java que genere trabajo medible; compila con javac -d out y ejecuta con jcmd o JFR.
+
+#### Paso 5 · Práctica guiada
+Pista: crea deliberadamente una retención de objetos para provocar un fallo deliberado de memoria; captura el diagnóstico y corrígelo liberando referencias. Resultado esperado: memoria estable bajo la misma carga.
+
+#### Paso 6 · Práctica independiente
+Compara dos recolectores, graba un perfil JFR, identifica el método caliente y documenta una optimización con medición antes/después.
+
+#### Paso 7 · Cierre y evidencia
+Guarda comandos, perfil y métricas; como siguiente paso automatiza un presupuesto de latencia. Errores comunes: tunear sin baseline, confundir heap con native memory, analizar solo promedios y capturar secretos en dumps. Fuentes oficiales: https://docs.oracle.com/en/java/javase/21/gctuning/ y https://docs.oracle.com/en/java/javase/21/docs/specs/man/jfr.html.
+**¿Por qué es importante?** Porque el rendimiento se mejora con evidencia reproducible, no con intuición.
+**Evidencia de aprendizaje:** entrega baseline, perfil, fallo, corrección y comparación.
 **Conceptos clave:** `WeakReference`/`SoftReference`/`PhantomReference`, análisis de un heap dump.
 
 `WeakReference` permite mantener una referencia a un objeto sin impedir que el recolector de basura lo elimine si esa es la única referencia restante hacia él (a diferencia de una referencia normal, "fuerte", que sí impide la recolección mientras exista), apropiada para estructuras como cachés donde se desea que ciertos objetos puedan liberarse automáticamente si la memoria se vuelve escasa y ya no hay otras referencias reales activas hacia ellos; `SoftReference` es similar pero más conservadora, permitiendo que el recolector la elimine solo bajo presión real de memoria, no tan agresivamente como una `WeakReference`; `PhantomReference`, junto con una `ReferenceQueue` asociada, permite ejecutar cierta lógica de limpieza específica justo después de que un objeto ha sido efectivamente finalizado por el recolector, un mecanismo más avanzado y de uso considerablemente menos común que los dos anteriores.

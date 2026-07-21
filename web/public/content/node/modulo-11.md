@@ -5,6 +5,68 @@
 
 ### Tema 1: Dockerfile multi-stage para Node
 
+#### Paso 1 · Objetivo y preparación
+
+Al finalizar podrás construir una imagen Node pequeña separando dependencias de desarrollo. **Prerrequisitos:** Node LTS, Docker y terminal; ejemplo independiente desde una carpeta vacía.
+
+#### Paso 2 · Contexto y caso real
+
+Una imagen de producción no debe contener tests, caches ni herramientas innecesarias. Reducir superficie acelera despliegues y limita vulnerabilidades.
+
+#### Paso 3 · Teoría y analogía aplicada
+
+Multi-stage usa una etapa para compilar y otra para ejecutar. Es como construir un mueble en un taller y llevar solo el resultado, no todas las herramientas.
+
+#### Paso 4 · Demostración guiada desde cero
+
+```bash
+mkdir ejemplo-docker-node
+cd ejemplo-docker-node
+npm init -y
+mkdir src
+```
+
+Crea `src/server.js` y `Dockerfile`:
+
+```js
+import http from "node:http";
+http.createServer((_req, res) => res.end("ok")).listen(3000, "0.0.0.0");
+```
+
+```dockerfile
+FROM node:22-alpine AS deps
+WORKDIR /app
+COPY package*.json ./
+RUN npm ci --omit=dev
+FROM node:22-alpine
+WORKDIR /app
+COPY --from=deps /app/node_modules ./node_modules
+COPY src ./src
+USER node
+EXPOSE 3000
+CMD ["node", "src/server.js"]
+```
+
+Ejecuta `npm install`, `docker build -t ejemplo-node .` y `docker run --rm -p 3000:3000 ejemplo-node`. **Resultado esperado:** `curl http://127.0.0.1:3000` devuelve `ok`. **Fallo deliberado y diagnóstico:** elimina `COPY src ./src`; el contenedor termina con módulo inexistente, señalando un artefacto ausente.
+
+#### Paso 5 · Práctica guiada
+
+Añade `.dockerignore` para excluir `node_modules` y `.git`. **Pista:** compara el contexto enviado con y sin el archivo.
+
+#### Paso 6 · Práctica independiente
+
+Ejecuta como usuario no root y entrega `docker inspect` con puerto y usuario.
+
+#### Paso 7 · Cierre y conexión
+
+Ya construyes una imagen reproducible. El siguiente tema separará configuración y healthchecks.
+
+**Errores comunes:** copiar secretos; usar `latest`; ejecutar como root; incluir `node_modules` local; no fijar lockfile.
+
+**Fuentes oficiales:** [Docker multi-stage](https://docs.docker.com/build/building/multi-stage/), [Node Docker](https://github.com/nodejs/docker-node) y [Dockerfile reference](https://docs.docker.com/reference/dockerfile/).
+
+**Evidencia de aprendizaje:** entrega el build, la respuesta `ok` y el fallo de archivo ausente.
+
 **Conceptos clave:** etapa de build frente a etapa final, exclusión de devDependencies.
 
 Un Dockerfile multi-stage (concepto introducido en profundidad en el Módulo 2 del track DevOps) separa el proceso de construcción de una imagen en etapas distintas, cada una con su propio propósito: una etapa de "build" instala todas las dependencias (incluyendo `devDependencies` necesarias para compilar TypeScript o ejecutar un bundler), copia el código fuente completo, y ejecuta el proceso de compilación; una etapa final, considerablemente más ligera, copia únicamente el resultado ya compilado de la etapa de build (`COPY --from=build /app/dist ./dist`) e instala solo las dependencias de producción (`npm ci --omit=dev`, aprovechando la distinción entre `dependencies` y `devDependencies` estudiada en el Módulo 1), sin incluir nunca en la imagen final el código fuente sin compilar, las herramientas de build, ni ninguna dependencia exclusiva de desarrollo.
@@ -37,6 +99,60 @@ CMD ["node", "dist/index.js"]
 
 ### Tema 2: Variables de entorno por ambiente y healthchecks
 
+#### Paso 1 · Objetivo y preparación
+
+Al finalizar podrás validar configuración y exponer un endpoint de salud útil para un orquestador. **Prerrequisitos:** Node LTS, Docker y terminal; ejemplo desde una carpeta vacía.
+
+#### Paso 2 · Contexto y caso real
+
+Desarrollo, staging y producción usan puertos y dependencias distintas. Un healthcheck debe indicar si el proceso vive y, opcionalmente, si sus dependencias están listas.
+
+#### Paso 3 · Teoría y analogía aplicada
+
+Variables configuran sin recompilar; readiness decide si recibir tráfico. Es un hospital: estar vivo no significa estar listo para atender.
+
+#### Paso 4 · Demostración guiada desde cero
+
+```bash
+mkdir ejemplo-env-health
+cd ejemplo-env-health
+npm init -y
+mkdir src
+```
+
+Crea `src/server.js`:
+
+```js
+import http from "node:http";
+const port = Number(process.env.PORT ?? 3000);
+if (!Number.isInteger(port)) throw new Error("PORT inválido");
+http.createServer((req, res) => {
+  if (req.url === "/live") return res.end("live");
+  if (req.url === "/ready") return res.end(process.env.READY === "true" ? "ready" : "not-ready");
+  res.statusCode = 404; res.end("not-found");
+}).listen(port, () => console.log(`puerto ${port}`));
+```
+
+Ejecuta `PORT=3100 READY=true node src/server.js` (en PowerShell usa `$env:PORT=3100; $env:READY="true"; node src/server.js`) y consulta `/live` y `/ready`. **Resultado esperado:** `live` y `ready`. **Fallo deliberado y diagnóstico:** usa `PORT=texto`; el proceso falla antes de escuchar, evitando un despliegue mal configurado.
+
+#### Paso 5 · Práctica guiada
+
+Añade timeout para una dependencia lenta. **Pista:** readiness debe fallar rápido y no bloquear el endpoint de vida.
+
+#### Paso 6 · Práctica independiente
+
+Escribe un `HEALTHCHECK` Docker que consulte `/live` y documenta por qué no debe incluir secretos.
+
+#### Paso 7 · Cierre y conexión
+
+Ya separas liveness, readiness y configuración. El siguiente tema tratará procesos y despliegue sin interrupción.
+
+**Errores comunes:** hornear secretos en imagen; usar readiness como liveness; devolver siempre 200; no validar tipos; imprimir todo `process.env`.
+
+**Fuentes oficiales:** [Docker HEALTHCHECK](https://docs.docker.com/reference/dockerfile/#healthcheck), [Kubernetes probes](https://kubernetes.io/docs/concepts/configuration/liveness-readiness-startup-probes/) y [Node process.env](https://nodejs.org/api/process.html#processenv).
+
+**Evidencia de aprendizaje:** entrega las salidas live/ready y el error de `PORT` inválido.
+
 **Conceptos clave:** configuración externalizada, misma imagen en todos los entornos, `HEALTHCHECK`.
 
 Un principio fundamental de despliegue reproducible (conectado directamente con la práctica de configuración externalizada estudiada en el Módulo 12 del track DevOps) es que la imagen de contenedor debe ser idéntica en todos los entornos (desarrollo, staging, producción); lo único que debería cambiar entre entornos son las variables de entorno inyectadas al arrancar el contenedor (`DATABASE_URL`, `LOG_LEVEL`, entre otras), nunca el código o la configuración hardcodeada dentro de la imagen misma. Mantener archivos `.env` separados por ambiente (`.env.production`, `.env.development`) como referencia de qué variables se necesitan, sin que ninguno de esos archivos con valores sensibles reales se incluya dentro de la imagen de Docker construida, es la práctica correcta.
@@ -61,6 +177,56 @@ LOG_LEVEL=info               LOG_LEVEL=debug
 ```
 
 ### Tema 3: PM2, contenedores y zero-downtime deploys
+
+#### Paso 1 · Objetivo y preparación
+
+Al finalizar podrás explicar un reemplazo gradual de procesos y sus límites. **Prerrequisitos:** Node LTS, Docker y PM2 opcional; ejemplo independiente desde una carpeta vacía.
+
+#### Paso 2 · Contexto y caso real
+
+Una API de entregas no puede detenerse para cada versión. Un supervisor inicia la nueva instancia, comprueba salud y retira la anterior.
+
+#### Paso 3 · Teoría y analogía aplicada
+
+Zero-downtime depende de readiness, conexiones drenadas y rollback; PM2 solo supervisa procesos. Es cambiar una ventanilla cuando la siguiente ya está abierta.
+
+#### Paso 4 · Demostración guiada desde cero
+
+```bash
+mkdir ejemplo-zero-downtime
+cd ejemplo-zero-downtime
+npm init -y
+npm install pm2
+mkdir src
+```
+
+Crea `src/server.js`:
+
+```js
+import http from "node:http";
+const version = process.env.VERSION ?? "v1";
+http.createServer((_req, res) => res.end(version)).listen(3000, "0.0.0.0");
+```
+
+Ejecuta `VERSION=v1 npx pm2 start src/server.js --name demo` y consulta; cambia a `VERSION=v2 npx pm2 reload demo --update-env`. **Resultado esperado:** el proceso termina sirviendo `v2` sin que PM2 pierda supervisión. **Fallo deliberado y diagnóstico:** cambia el puerto ocupado; el reload falla y conserva la versión anterior, mostrando por qué se necesita rollback.
+
+#### Paso 5 · Práctica guiada
+
+Añade `ecosystem.config.cjs` con `instances: 2` y `exec_mode: "cluster"`. **Pista:** no compartas memoria entre instancias.
+
+#### Paso 6 · Práctica independiente
+
+Simula una versión que responde 500 y documenta el procedimiento de rollback.
+
+#### Paso 7 · Cierre y conexión
+
+Ya entiendes que zero-downtime es un protocolo completo, no un comando aislado. El siguiente tema introducirá reverse proxy.
+
+**Errores comunes:** recargar sin healthcheck; olvidar migraciones compatibles; asumir estado local; no drenar sockets; no conservar versión anterior.
+
+**Fuentes oficiales:** [PM2 reload](https://pm2.keymetrics.io/docs/usage/cluster-mode/), [Docker restart](https://docs.docker.com/engine/containers/start-containers-automatically/) y [12-factor disposability](https://12factor.net/disposability).
+
+**Evidencia de aprendizaje:** entrega la salida v1/v2 y un rollback provocado.
 
 **Conceptos clave:** responsabilidades desplazadas al orquestador, rolling update.
 
@@ -87,6 +253,58 @@ Instancia B (v1) ── activa ──┼── balanceador dirige tráfico
 ```
 
 ### Tema 4: Nginx como reverse proxy y serverless
+
+#### Paso 1 · Objetivo y preparación
+
+Al finalizar podrás explicar qué termina TLS, qué enruta Nginx y qué ejecuta una función serverless. **Prerrequisitos:** Docker, HTTP y Node LTS; ejemplo independiente desde una carpeta vacía.
+
+#### Paso 2 · Contexto y caso real
+
+El proxy oculta puertos internos, centraliza TLS y balancea; una función serverless delega escalado al proveedor. Son despliegues con costos y límites distintos.
+
+#### Paso 3 · Teoría y analogía aplicada
+
+Nginx es la recepción que dirige visitantes; la función es un trabajador convocado por evento. El proxy mantiene conexión; serverless puede arrancar en frío.
+
+#### Paso 4 · Demostración guiada desde cero
+
+```bash
+mkdir ejemplo-nginx
+cd ejemplo-nginx
+mkdir app
+```
+
+Crea `app/server.js` y `nginx.conf`:
+
+```js
+import http from "node:http";
+http.createServer((_req, res) => res.end("backend")).listen(3000, "0.0.0.0");
+```
+
+```nginx
+events {}
+http { server { listen 8080; location / { proxy_pass http://host.docker.internal:3000; } } }
+```
+
+Ejecuta `node app/server.js` y `docker run --rm --add-host=host.docker.internal:host-gateway -p 8080:8080 -v "$PWD/nginx.conf:/etc/nginx/nginx.conf:ro" nginx:alpine`; consulta `curl http://127.0.0.1:8080`. **Resultado esperado:** `backend`. **Fallo deliberado y diagnóstico:** cambia el puerto upstream; Nginx devuelve 502 porque el backend no está disponible.
+
+#### Paso 5 · Práctica guiada
+
+Añade un header `X-Request-ID` en proxy y backend. **Pista:** preserva el valor recibido.
+
+#### Paso 6 · Práctica independiente
+
+Escribe una función serverless que reciba `{ name }` y devuelva 400 si falta; entrega el contrato y una comparación de cold start.
+
+#### Paso 7 · Cierre y conexión
+
+Ya distingues proxy, backend y función bajo demanda. El siguiente módulo cerrará Node con un proyecto de producción independiente.
+
+**Errores comunes:** exponer backend directamente; confiar en headers sin proxy confiable; olvidar timeouts; usar serverless para procesos largos; no medir cold starts.
+
+**Fuentes oficiales:** [Nginx reverse proxy](https://docs.nginx.com/nginx/admin-guide/web-server/reverse-proxy/), [AWS Lambda handler](https://docs.aws.amazon.com/lambda/latest/dg/nodejs-handler.html) y [Docker networking](https://docs.docker.com/engine/network/).
+
+**Evidencia de aprendizaje:** entrega la salida de respuesta por proxy, error 502 diagnosticado y contrato serverless.
 
 **Conceptos clave:** reverse proxy, balanceo de carga con Nginx, funciones serverless.
 

@@ -5,6 +5,37 @@
 
 ### Tema 1: Los saltos que importan
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás planear una actualización Angular desde cero. Prerrequisitos: Node.js LTS, npm, Angular CLI y Git. Verifica node --version, ng version y git status.
+
+#### Paso 2 · Contexto y caso real
+En un caso real, una academia debe mantener Angular actualizado sin romper rutas, build, tests ni accesibilidad; la migración necesita evidencia y rollback.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+Una actualización mayor puede cambiar APIs, compilador, builder o navegador soportado. El Update Guide ordena pasos; migrar una versión a la vez reduce el espacio de diagnóstico. La analogía es cruzar puentes consecutivos: si saltas varios, no sabes cuál tablero falló.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-angular-m12
+cd ejemplo-angular-m12
+npx -p @angular/cli ng new app --standalone --routing=false --style=css --skip-git
+cd app
+ng version
+ng build
+```
+Crea un commit inicial, consulta el Update Guide y aplica una actualización menor en una rama; registra cambios y build.
+
+#### Paso 5 · Práctica guiada
+Pista: cambia deliberadamente una dependencia incompatible para provocar un fallo deliberado de build, lee el diagnóstico y revierte con Git. Resultado esperado: versión conocida y build verde.
+
+#### Paso 6 · Práctica independiente
+Simula una migración mayor, ejecuta tests y auditorías de accesibilidad, documenta breaking changes y prepara rollback.
+
+#### Paso 7 · Cierre y evidencia
+Guarda diff, logs, guía consultada y decisión; como siguiente paso automatiza dependabot. Errores comunes: actualizar todo a latest, ignorar peer dependencies, no leer changelog y no probar producción. Fuentes oficiales: https://angular.dev/update-guide y https://angular.dev/reference/releases.
+**¿Por qué es importante?** Porque la actualización controlada mantiene seguridad y evita bloqueos prolongados.
+**Evidencia de aprendizaje:** entrega baseline, diff, fallo, rollback y build final.
 **Conceptos clave:** reescritura completa, motor Ivy, standalone, Signals.
 
 El salto de AngularJS (la versión 1.x original, basada en un modelo completamente distinto de controllers y `$scope`) a Angular 2 en 2016 no fue una actualización incremental sino una reescritura completa del framework desde cero, sin ninguna compatibilidad hacia atrás con el código de AngularJS: los conceptos, la sintaxis y la arquitectura entera cambiaron, siendo esta la razón por la que "Angular" (sin el "JS") y "AngularJS" se consideran hoy proyectos esencialmente distintos, con Angular siendo el sucesor moderno mantenido activamente y AngularJS considerado legado en proceso de retiro definitivo desde hace años.
@@ -29,6 +60,37 @@ Angular 17+: control de flujo nativo, @defer, SSR de primera clase
 
 ### Tema 2: Cómo leer un Angular Update Guide
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás planear una actualización Angular desde cero. Prerrequisitos: Node.js LTS, npm, Angular CLI y Git. Verifica node --version, ng version y git status.
+
+#### Paso 2 · Contexto y caso real
+En un caso real, una academia debe mantener Angular actualizado sin romper rutas, build, tests ni accesibilidad; la migración necesita evidencia y rollback.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+Una actualización mayor puede cambiar APIs, compilador, builder o navegador soportado. El Update Guide ordena pasos; migrar una versión a la vez reduce el espacio de diagnóstico. La analogía es cruzar puentes consecutivos: si saltas varios, no sabes cuál tablero falló.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-angular-m12
+cd ejemplo-angular-m12
+npx -p @angular/cli ng new app --standalone --routing=false --style=css --skip-git
+cd app
+ng version
+ng build
+```
+Crea un commit inicial, consulta el Update Guide y aplica una actualización menor en una rama; registra cambios y build.
+
+#### Paso 5 · Práctica guiada
+Pista: cambia deliberadamente una dependencia incompatible para provocar un fallo deliberado de build, lee el diagnóstico y revierte con Git. Resultado esperado: versión conocida y build verde.
+
+#### Paso 6 · Práctica independiente
+Simula una migración mayor, ejecuta tests y auditorías de accesibilidad, documenta breaking changes y prepara rollback.
+
+#### Paso 7 · Cierre y evidencia
+Guarda diff, logs, guía consultada y decisión; como siguiente paso automatiza dependabot. Errores comunes: actualizar todo a latest, ignorar peer dependencies, no leer changelog y no probar producción. Fuentes oficiales: https://angular.dev/update-guide y https://angular.dev/reference/releases.
+**¿Por qué es importante?** Porque la actualización controlada mantiene seguridad y evita bloqueos prolongados.
+**Evidencia de aprendizaje:** entrega baseline, diff, fallo, rollback y build final.
 **Conceptos clave:** update.angular.io, checklist específica entre versiones, `ng update`.
 
 [update.angular.io](https://update.angular.io) es una herramienta oficial que, dadas una versión de origen y una versión de destino concretas (por ejemplo, de Angular 16 a Angular 17), genera una checklist específica y personalizada de exactamente qué pasos son necesarios para esa migración particular: qué APIs cambiaron o se volvieron obsoletas, qué comandos automáticos de `ng update` están disponibles para automatizar partes de la migración, y qué pasos, si los hay, requieren intervención manual porque no pueden automatizarse de forma segura.
@@ -50,6 +112,37 @@ ng update @angular/core@18 @angular/cli@18 → ejecuta codemods automáticos dis
 
 ### Tema 3: Por qué migrar una versión mayor a la vez
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás planear una actualización Angular desde cero. Prerrequisitos: Node.js LTS, npm, Angular CLI y Git. Verifica node --version, ng version y git status.
+
+#### Paso 2 · Contexto y caso real
+En un caso real, una academia debe mantener Angular actualizado sin romper rutas, build, tests ni accesibilidad; la migración necesita evidencia y rollback.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+Una actualización mayor puede cambiar APIs, compilador, builder o navegador soportado. El Update Guide ordena pasos; migrar una versión a la vez reduce el espacio de diagnóstico. La analogía es cruzar puentes consecutivos: si saltas varios, no sabes cuál tablero falló.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-angular-m12
+cd ejemplo-angular-m12
+npx -p @angular/cli ng new app --standalone --routing=false --style=css --skip-git
+cd app
+ng version
+ng build
+```
+Crea un commit inicial, consulta el Update Guide y aplica una actualización menor en una rama; registra cambios y build.
+
+#### Paso 5 · Práctica guiada
+Pista: cambia deliberadamente una dependencia incompatible para provocar un fallo deliberado de build, lee el diagnóstico y revierte con Git. Resultado esperado: versión conocida y build verde.
+
+#### Paso 6 · Práctica independiente
+Simula una migración mayor, ejecuta tests y auditorías de accesibilidad, documenta breaking changes y prepara rollback.
+
+#### Paso 7 · Cierre y evidencia
+Guarda diff, logs, guía consultada y decisión; como siguiente paso automatiza dependabot. Errores comunes: actualizar todo a latest, ignorar peer dependencies, no leer changelog y no probar producción. Fuentes oficiales: https://angular.dev/update-guide y https://angular.dev/reference/releases.
+**¿Por qué es importante?** Porque la actualización controlada mantiene seguridad y evita bloqueos prolongados.
+**Evidencia de aprendizaje:** entrega baseline, diff, fallo, rollback y build final.
 **Conceptos clave:** rutas de migración soportadas, riesgo acumulado, verificación incremental.
 
 Angular publica y mantiene `ng update` con migraciones automáticas diseñadas y probadas específicamente para saltos de una única versión mayor consecutiva (de la versión N a la versión N+1); intentar saltar directamente de una versión considerablemente más antigua a una mucho más reciente (por ejemplo, de Angular 10 directamente a Angular 17) no tiene una ruta de migración automática confiable ni soportada oficialmente, dado que las migraciones automáticas de versiones intermedias nunca se ejecutarían, dejando el proyecto en un estado potencialmente inconsistente entre APIs de épocas muy distintas del framework.

@@ -5,6 +5,40 @@
 
 ### Tema 1: Depurar con evidencia, no con cambios aleatorios
 
+Ejecuta node --version para comprobar el entorno antes de continuar. **Evidencia de aprendizaje:** conserva la salida y explica qué verificaste.
+
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás investigar y mejorar un proyecto desde cero. Prerrequisitos: Git, terminal, editor y un lenguaje instalado. Verifica git --version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real, un bug de entregas debe reproducirse, aislarse y corregirse sin perder historial ni introducir una regresión.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+Depurar significa observar, formular hipótesis, cambiar una variable y medir. Las pruebas unitarias, integración y extremo a extremo cubren preguntas distintas. Git registra decisiones y CI automatiza controles. La analogía es una investigación: evidencia antes de conclusión, y una bitácora para que otra persona repita el análisis.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-fundamentos-m5
+cd ejemplo-fundamentos-m5
+git init
+printf "ok\n" > README.md
+git add README.md
+git commit -m "inicio"
+git log --oneline
+```
+Crea src/bug.txt con un caso reproducible y documenta la hipótesis.
+
+#### Paso 5 · Práctica guiada
+Pista: introduce deliberadamente una línea incorrecta para provocar un fallo deliberado de prueba o comando; usa git diff y el log para diagnosticar y corregir. Resultado esperado: historial claro y verificación verde.
+
+#### Paso 6 · Práctica independiente
+Añade una prueba automatizada, un lint, una revisión simulada y un workflow CI que ejecute los controles.
+
+#### Paso 7 · Cierre y evidencia
+Guarda commits, salida de CI y diagnóstico; como siguiente paso estudia despliegue. Errores comunes: editar sin reproducir, commits gigantes, ignorar fallos intermitentes y confiar solo en cobertura. Fuentes oficiales: https://git-scm.com/book/es/v2 y https://docs.github.com/actions.
+**¿Por qué es importante?** Porque la calidad es un proceso observable, no una impresión subjetiva.
+**Evidencia de aprendizaje:** entrega historial, prueba, fallo corregido y checklist de revisión.
 **Conceptos clave:** síntoma, causa, reproducción, hipótesis, experimento, debugger, breakpoint, stack trace, log y regresión.
 
 Un síntoma observable —“el stock queda negativo”— no identifica automáticamente la causa. Depurar consiste en reducir incertidumbre. Primero captura entrada, salida, versión y pasos. Después encuentra la reproducción mínima. Formula una hipótesis que pueda resultar falsa y cambia una sola variable.
@@ -48,6 +82,40 @@ Provoca después un error dentro de tres funciones y lee el stack trace desde el
 
 ### Tema 2: Pruebas con propósito y niveles adecuados
 
+Ejecuta node --version para comprobar el entorno antes de continuar. **Evidencia de aprendizaje:** conserva la salida y explica qué verificaste.
+
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás investigar y mejorar un proyecto desde cero. Prerrequisitos: Git, terminal, editor y un lenguaje instalado. Verifica git --version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real, un bug de entregas debe reproducirse, aislarse y corregirse sin perder historial ni introducir una regresión.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+Depurar significa observar, formular hipótesis, cambiar una variable y medir. Las pruebas unitarias, integración y extremo a extremo cubren preguntas distintas. Git registra decisiones y CI automatiza controles. La analogía es una investigación: evidencia antes de conclusión, y una bitácora para que otra persona repita el análisis.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-fundamentos-m5
+cd ejemplo-fundamentos-m5
+git init
+printf "ok\n" > README.md
+git add README.md
+git commit -m "inicio"
+git log --oneline
+```
+Crea src/bug.txt con un caso reproducible y documenta la hipótesis.
+
+#### Paso 5 · Práctica guiada
+Pista: introduce deliberadamente una línea incorrecta para provocar un fallo deliberado de prueba o comando; usa git diff y el log para diagnosticar y corregir. Resultado esperado: historial claro y verificación verde.
+
+#### Paso 6 · Práctica independiente
+Añade una prueba automatizada, un lint, una revisión simulada y un workflow CI que ejecute los controles.
+
+#### Paso 7 · Cierre y evidencia
+Guarda commits, salida de CI y diagnóstico; como siguiente paso estudia despliegue. Errores comunes: editar sin reproducir, commits gigantes, ignorar fallos intermitentes y confiar solo en cobertura. Fuentes oficiales: https://git-scm.com/book/es/v2 y https://docs.github.com/actions.
+**¿Por qué es importante?** Porque la calidad es un proceso observable, no una impresión subjetiva.
+**Evidencia de aprendizaje:** entrega historial, prueba, fallo corregido y checklist de revisión.
 **Conceptos clave:** prueba unitaria, integración, end-to-end, arrange-act-assert, fixture, fake, stub, mock, determinismo, cobertura y regresión.
 
 Una prueba es evidencia ejecutable de comportamiento. Una unidad prueba una pieza aislada y rápida; integración comprueba colaboración real —por ejemplo repositorio y SQLite—; E2E atraviesa el sistema desde interfaz hasta persistencia. No todo debe ser E2E ni todo debe simularse.
@@ -94,6 +162,40 @@ Congela una fecha mediante parámetro y semilla en vez de usar reloj/azar global
 
 ### Tema 3: Git como historial de decisiones y colaboración
 
+Ejecuta node --version para comprobar el entorno antes de continuar. **Evidencia de aprendizaje:** conserva la salida y explica qué verificaste.
+
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás investigar y mejorar un proyecto desde cero. Prerrequisitos: Git, terminal, editor y un lenguaje instalado. Verifica git --version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real, un bug de entregas debe reproducirse, aislarse y corregirse sin perder historial ni introducir una regresión.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+Depurar significa observar, formular hipótesis, cambiar una variable y medir. Las pruebas unitarias, integración y extremo a extremo cubren preguntas distintas. Git registra decisiones y CI automatiza controles. La analogía es una investigación: evidencia antes de conclusión, y una bitácora para que otra persona repita el análisis.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-fundamentos-m5
+cd ejemplo-fundamentos-m5
+git init
+printf "ok\n" > README.md
+git add README.md
+git commit -m "inicio"
+git log --oneline
+```
+Crea src/bug.txt con un caso reproducible y documenta la hipótesis.
+
+#### Paso 5 · Práctica guiada
+Pista: introduce deliberadamente una línea incorrecta para provocar un fallo deliberado de prueba o comando; usa git diff y el log para diagnosticar y corregir. Resultado esperado: historial claro y verificación verde.
+
+#### Paso 6 · Práctica independiente
+Añade una prueba automatizada, un lint, una revisión simulada y un workflow CI que ejecute los controles.
+
+#### Paso 7 · Cierre y evidencia
+Guarda commits, salida de CI y diagnóstico; como siguiente paso estudia despliegue. Errores comunes: editar sin reproducir, commits gigantes, ignorar fallos intermitentes y confiar solo en cobertura. Fuentes oficiales: https://git-scm.com/book/es/v2 y https://docs.github.com/actions.
+**¿Por qué es importante?** Porque la calidad es un proceso observable, no una impresión subjetiva.
+**Evidencia de aprendizaje:** entrega historial, prueba, fallo corregido y checklist de revisión.
 **Conceptos clave:** repositorio, commit, diff, branch, merge, conflicto, remoto, pull request, revisión y trazabilidad.
 
 Git almacena snapshots conectados. Un commit profesional representa una intención coherente y explica por qué. Antes de confirmar revisa:
@@ -148,6 +250,40 @@ Modifica la misma línea de README en main y feature para provocar un conflicto;
 
 ### Tema 4: Calidad estática, revisión e integración continua
 
+Ejecuta node --version para comprobar el entorno antes de continuar. **Evidencia de aprendizaje:** conserva la salida y explica qué verificaste.
+
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás investigar y mejorar un proyecto desde cero. Prerrequisitos: Git, terminal, editor y un lenguaje instalado. Verifica git --version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real, un bug de entregas debe reproducirse, aislarse y corregirse sin perder historial ni introducir una regresión.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+Depurar significa observar, formular hipótesis, cambiar una variable y medir. Las pruebas unitarias, integración y extremo a extremo cubren preguntas distintas. Git registra decisiones y CI automatiza controles. La analogía es una investigación: evidencia antes de conclusión, y una bitácora para que otra persona repita el análisis.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-fundamentos-m5
+cd ejemplo-fundamentos-m5
+git init
+printf "ok\n" > README.md
+git add README.md
+git commit -m "inicio"
+git log --oneline
+```
+Crea src/bug.txt con un caso reproducible y documenta la hipótesis.
+
+#### Paso 5 · Práctica guiada
+Pista: introduce deliberadamente una línea incorrecta para provocar un fallo deliberado de prueba o comando; usa git diff y el log para diagnosticar y corregir. Resultado esperado: historial claro y verificación verde.
+
+#### Paso 6 · Práctica independiente
+Añade una prueba automatizada, un lint, una revisión simulada y un workflow CI que ejecute los controles.
+
+#### Paso 7 · Cierre y evidencia
+Guarda commits, salida de CI y diagnóstico; como siguiente paso estudia despliegue. Errores comunes: editar sin reproducir, commits gigantes, ignorar fallos intermitentes y confiar solo en cobertura. Fuentes oficiales: https://git-scm.com/book/es/v2 y https://docs.github.com/actions.
+**¿Por qué es importante?** Porque la calidad es un proceso observable, no una impresión subjetiva.
+**Evidencia de aprendizaje:** entrega historial, prueba, fallo corregido y checklist de revisión.
 **Conceptos clave:** formatter, linter, análisis estático, type checking, pipeline, job, step, artefacto, CI, feedback y calidad continua.
 
 Herramientas estáticas detectan problemas sin ejecutar todos los caminos. Un formatter elimina discusiones de estilo; un linter encuentra patrones riesgosos; type checking detecta incompatibilidades; análisis de dependencias descubre vulnerabilidades conocidas. Ninguna sustituye pruebas.

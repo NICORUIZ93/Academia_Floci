@@ -5,6 +5,60 @@
 
 ### Tema 1: Worker Threads para trabajo CPU-bound
 
+#### Paso 1 · Objetivo y preparación
+
+Al finalizar podrás mover un cálculo CPU-bound fuera del hilo principal. **Prerrequisitos:** Node LTS y módulos ES; ejemplo independiente desde una carpeta vacía.
+
+#### Paso 2 · Contexto y caso real
+
+Una API que calcula rutas o genera un informe puede bloquear todas las solicitudes mientras procesa. Un Worker conserva receptivo el servidor.
+
+#### Paso 3 · Teoría y analogía aplicada
+
+El hilo principal coordina; un Worker ejecuta JavaScript en otro hilo con memoria aislada. Es como entregar una tarea pesada a otro especialista y recibir un resultado por mensajería, no compartir variables mágicamente.
+
+#### Paso 4 · Demostración guiada desde cero
+
+```bash
+mkdir ejemplo-worker
+cd ejemplo-worker
+npm init -y
+mkdir src
+```
+
+Crea `src/calcular.js`:
+
+```js
+import { Worker, isMainThread, parentPort, workerData } from "node:worker_threads";
+function fibonacci(n) { return n < 2 ? n : fibonacci(n - 1) + fibonacci(n - 2); }
+if (!isMainThread) parentPort.postMessage(fibonacci(workerData.n));
+else {
+  const worker = new Worker(new URL(import.meta.url), { workerData: { n: 35 } });
+  worker.on("message", (resultado) => console.log({ resultado }));
+  worker.on("error", (error) => console.error("Worker falló:", error.message));
+}
+```
+
+Ejecuta `node src/calcular.js`. **Resultado esperado:** `{ resultado: 9227465 }`. **Fallo deliberado y diagnóstico:** pasa `n: -1`; la función devuelve un valor inválido, demostrando que el Worker no reemplaza validación de entrada.
+
+#### Paso 5 · Práctica guiada
+
+Envía dos números al Worker y valida que sean enteros positivos. **Pista:** usa `workerData` como entrada inmutable.
+
+#### Paso 6 · Práctica independiente
+
+Mide un cálculo en el hilo principal y otro en Worker, entregando duración y capacidad de atender un timer durante el trabajo.
+
+#### Paso 7 · Cierre y conexión
+
+Ya separas I/O de CPU. El siguiente tema distribuirá procesos completos con `cluster` desde otra carpeta.
+
+**Errores comunes:** crear un Worker por petición sin límite; compartir estado como si fuera global; olvidar escuchar `error`; enviar objetos enormes; usar Worker para I/O simple.
+
+**Fuentes oficiales:** [Worker Threads](https://nodejs.org/api/worker_threads.html) y [no bloquear el Event Loop](https://nodejs.org/en/learn/asynchronous-work/dont-block-the-event-loop).
+
+**Evidencia de aprendizaje:** entrega la salida del Worker, un input rechazado y la comparación de tiempos.
+
 **Conceptos clave:** hilo separado con su propia instancia de V8, `workerData`, paso de mensajes.
 
 Un Worker Thread de Node ejecuta JavaScript en un hilo genuinamente separado, cada uno con su propia instancia completa de V8 (a diferencia de los Web Workers del navegador estudiados en el Módulo 10 del track de JavaScript, que comparten conceptualmente el mismo principio de aislamiento pero en un contexto distinto), permitiendo ejecutar cómputo intensivo de CPU (procesar una imagen grande, realizar cálculos matemáticos pesados, comprimir datos) sin bloquear el Event Loop del hilo principal, que permanece libre para seguir atendiendo otras peticiones concurrentes de la aplicación mientras el Worker procesa en paralelo.
@@ -27,6 +81,62 @@ worker.on("message", (resultado) => console.log("listo:", resultado));
 ```
 
 ### Tema 2: Cluster module y balanceo entre procesos
+
+#### Paso 1 · Objetivo y preparación
+
+Al finalizar podrás iniciar procesos Worker y repartir conexiones HTTP. **Prerrequisitos:** Node LTS y HTTP básico; ejemplo independiente desde una carpeta vacía.
+
+#### Paso 2 · Contexto y caso real
+
+Un servidor necesita aprovechar varios núcleos y aislar un fallo de proceso. `cluster` permite varios procesos escuchando el mismo puerto, con complejidad operativa adicional.
+
+#### Paso 3 · Teoría y analogía aplicada
+
+El proceso primario coordina; cada worker tiene memoria y event loop propios. Es un equipo de ventanillas: una caída no comparte variables con las demás, y el balanceo debe observarse.
+
+#### Paso 4 · Demostración guiada desde cero
+
+```bash
+mkdir ejemplo-cluster
+cd ejemplo-cluster
+npm init -y
+mkdir src
+```
+
+Crea `src/server.js`:
+
+```js
+import cluster from "node:cluster";
+import http from "node:http";
+import os from "node:os";
+if (cluster.isPrimary) {
+  const cantidad = Math.min(2, os.availableParallelism());
+  for (let i = 0; i < cantidad; i += 1) cluster.fork();
+  console.log(`Primary ${process.pid}: ${cantidad} workers`);
+} else {
+  http.createServer((_req, res) => res.end(`worker=${process.pid}\n`)).listen(3000);
+}
+```
+
+Ejecuta `node src/server.js` y realiza varias peticiones con `curl`. **Resultado esperado:** responde más de un PID. **Fallo deliberado y diagnóstico:** mata un worker; el primario detecta su salida, pero las solicitudes en curso de ese proceso se pierden: necesitas supervisión y reintentos.
+
+#### Paso 5 · Práctica guiada
+
+Registra `cluster.on("exit")` y crea un reemplazo limitado. **Pista:** evita un bucle infinito si el código falla al iniciar.
+
+#### Paso 6 · Práctica independiente
+
+Compara una instancia y dos workers bajo carga ligera; entrega PIDs y latencia, sin afirmar que más procesos siempre es mejor.
+
+#### Paso 7 · Cierre y conexión
+
+Ya entiendes memoria aislada y balanceo básico. El siguiente tema usará una cola para desacoplar trabajos.
+
+**Errores comunes:** compartir estado en memoria; multiplicar workers sin medir; no cerrar conexiones; reiniciar fallos infinitamente; confundir cluster con threads.
+
+**Fuentes oficiales:** [`cluster`](https://nodejs.org/api/cluster.html) y [`os.availableParallelism`](https://nodejs.org/api/os.html#osavailableparallelism).
+
+**Evidencia de aprendizaje:** entrega la salida con PIDs de dos respuestas y el diagnóstico de un worker detenido.
 
 **Conceptos clave:** un proceso por núcleo, memoria aislada, balanceo automático de conexiones.
 
@@ -55,6 +165,64 @@ if (cluster.isPrimary) {
 
 ### Tema 3: Colas de trabajo con BullMQ
 
+#### Paso 1 · Objetivo y preparación
+
+Al finalizar podrás publicar y consumir un trabajo con reintento. **Prerrequisitos:** Node LTS, Docker y Redis; ejemplo independiente desde una carpeta vacía.
+
+#### Paso 2 · Contexto y caso real
+
+Generar una etiqueta o enviar una notificación no debe mantener abierta la petición HTTP. Una cola permite responder pronto y procesar después.
+
+#### Paso 3 · Teoría y analogía aplicada
+
+Productor publica, worker consume y Redis conserva el estado. Es una bandeja numerada: si un operador falla, el trabajo puede reintentarse sin duplicar el efecto.
+
+#### Paso 4 · Demostración guiada desde cero
+
+```bash
+mkdir ejemplo-bullmq
+cd ejemplo-bullmq
+npm init -y
+npm install bullmq
+mkdir src
+docker run --name redis-academia -p 6379:6379 -d redis:7-alpine
+```
+
+Crea `src/cola.js`:
+
+```js
+import { Queue, Worker } from "bullmq";
+const connection = { host: "127.0.0.1", port: 6379 };
+const queue = new Queue("etiquetas", { connection });
+const worker = new Worker("etiquetas", async (job) => {
+  console.log("procesando", job.id, job.data.guia);
+}, { connection });
+await queue.add("generar", { guia: "RF-100" }, { attempts: 2 });
+await new Promise((resolve) => worker.on("completed", resolve));
+await worker.close(); await queue.close();
+console.log("trabajo completado");
+```
+
+Ejecuta `node src/cola.js`. **Resultado esperado:** procesamiento y completado. **Fallo deliberado y diagnóstico:** detén Redis antes de ejecutar; aparece un error de conexión, no una etiqueta “completada”. Elimina con `docker rm -f redis-academia`.
+
+#### Paso 5 · Práctica guiada
+
+Haz que el worker falle una vez y reintente. **Pista:** cuenta intentos por `job.attemptsMade`.
+
+#### Paso 6 · Práctica independiente
+
+Añade idempotencia por `jobId` y entrega evidencia de que publicar dos veces no duplica el efecto.
+
+#### Paso 7 · Cierre y conexión
+
+Ya desacoplas solicitudes y trabajos lentos. El siguiente tema observará procesos y memoria.
+
+**Errores comunes:** no cerrar workers; repetir efectos sin idempotencia; usar Redis sin persistencia para datos críticos; ocultar fallos en un catch vacío.
+
+**Fuentes oficiales:** [BullMQ](https://docs.bullmq.io/), [Redis](https://redis.io/docs/latest/) y [reintentos](https://docs.bullmq.io/guide/retrying-failing-jobs).
+
+**Evidencia de aprendizaje:** entrega la salida de éxito, conexión fallida y reintento.
+
 **Conceptos clave:** desacoplar trabajo pesado del ciclo request-response, jobs, reintentos con backoff.
 
 Una cola de trabajo desacopla el procesamiento de una tarea potencialmente lenta o costosa (enviar un email, generar un reporte, procesar un pago) del ciclo síncrono de request-response de una petición HTTP: en vez de que el manejador de la ruta ejecute directamente esa tarea lenta (haciendo que el cliente espere todo ese tiempo antes de recibir una respuesta), el manejador simplemente encola un "job" describiendo el trabajo a realizar, y responde inmediatamente al cliente confirmando que la solicitud fue recibida, mientras el procesamiento real ocurre de forma completamente asíncrona en un proceso worker separado que consume jobs de la cola a su propio ritmo.
@@ -79,6 +247,58 @@ await colaEmails.add("bienvenida", { destinatario: "ana@ejemplo.com" }, {
 
 ### Tema 4: PM2, memory leaks y heap snapshots
 
+#### Paso 1 · Objetivo y preparación
+
+Al finalizar podrás observar crecimiento de heap y obtener un snapshot. **Prerrequisitos:** Node LTS, Chrome DevTools opcional y una carpeta vacía.
+
+#### Paso 2 · Contexto y caso real
+
+Una API que retiene arrays por cada solicitud se degrada lentamente. Reiniciar el proceso oculta el síntoma; medir heap permite encontrar la referencia retenida.
+
+#### Paso 3 · Teoría y analogía aplicada
+
+El garbage collector libera objetos sin referencias. Una fuga conserva referencias vivas innecesarias, como guardar todas las cajas entregadas en una bodega “temporal”.
+
+#### Paso 4 · Demostración guiada desde cero
+
+```bash
+mkdir ejemplo-memory-leak
+cd ejemplo-memory-leak
+npm init -y
+mkdir src
+```
+
+Crea `src/leak.js`:
+
+```js
+const retenidos = [];
+setInterval(() => {
+  retenidos.push(Buffer.alloc(1024 * 100));
+  const { heapUsed } = process.memoryUsage();
+  console.log(`objetos=${retenidos.length} heap=${Math.round(heapUsed / 1024)}KB`);
+}, 100);
+```
+
+Ejecuta `node --inspect=0.0.0.0:9229 src/leak.js` y observa memoria. **Resultado esperado:** la cantidad retenida crece. **Fallo deliberado y diagnóstico:** comenta la referencia `retenidos`; el heap deja de crecer de la misma forma. Detén con `Ctrl+C`.
+
+#### Paso 5 · Práctica guiada
+
+Captura un snapshot con `node --heapsnapshot-signal=SIGUSR2` en macOS/Linux. **Pista:** realiza la captura solo en un proceso de prueba.
+
+#### Paso 6 · Práctica independiente
+
+Reescribe el ejemplo con una caché de tamaño limitado y entrega una comparación antes/después.
+
+#### Paso 7 · Cierre y conexión
+
+Ya puedes observar una fuga en vez de reiniciar a ciegas. El siguiente tema usará Redis para caché e idempotencia.
+
+**Errores comunes:** medir solo RSS; tomar snapshots en producción sin plan; cachear sin límite; confundir Buffer externo con heap; reiniciar sin corregir.
+
+**Fuentes oficiales:** [diagnóstico de memoria Node](https://nodejs.org/en/learn/diagnostics/memory/using-heap-snapshot), [inspector](https://nodejs.org/api/inspector.html) y [PM2](https://pm2.keymetrics.io/docs/usage/quick-start/).
+
+**Evidencia de aprendizaje:** entrega dos salidas de memoria y la explicación de la referencia retenida.
+
 **Conceptos clave:** gestión de procesos, `--max-old-space-size`, snapshots de heap.
 
 PM2 es un gestor de procesos para aplicaciones Node que, en un modelo de despliegue previo a la adopción generalizada de contenedores y orquestadores, proporcionaba reinicio automático ante fallos, logs centralizados y su propia forma de clustering integrado directamente sobre un servidor. En un mundo con Docker y Kubernetes (estudiados en el track DevOps), muchas de estas responsabilidades las asume el propio orquestador (`restart: always` en Kubernetes reemplaza gran parte de lo que PM2 gestionaba antes directamente sobre el sistema operativo), aunque PM2 sigue siendo relevante en despliegues que no usan contenedores, o como herramienta de desarrollo local para gestionar múltiples procesos fácilmente.
@@ -98,6 +318,138 @@ node --max-old-space-size=4096 servidor.js   # ajusta el límite de memoria de V
 # Chrome DevTools (--inspect) → pestaña Memory → tomar snapshot A → esperar → snapshot B
 # comparar A vs B: ¿qué tipo de objeto creció sospechosamente entre ambos?
 ```
+
+---
+
+### Tema 5: Redis para caché, idempotencia y Pub/Sub
+
+#### Paso 1 · Objetivo y preparación
+
+Al finalizar podrás guardar una respuesta temporal y rechazar un mensaje duplicado. **Prerrequisitos:** Node LTS, Docker y Redis; ejemplo desde una carpeta vacía.
+
+#### Paso 2 · Contexto y caso real
+
+Una consulta de tarifas repetida puede saturar un servicio externo; una orden duplicada puede cobrar dos veces. Caché e idempotencia resuelven problemas distintos.
+
+#### Paso 3 · Teoría y analogía aplicada
+
+TTL expira datos; una clave idempotente registra que un comando ya fue procesado. Pub/Sub notifica en vivo pero no es una cola durable. Son notas con caducidad, recibos únicos y anuncios separados.
+
+#### Paso 4 · Demostración guiada desde cero
+
+```bash
+mkdir ejemplo-redis
+cd ejemplo-redis
+npm init -y
+npm install redis
+mkdir src
+docker run --name redis-demo -p 6379:6379 -d redis:7-alpine
+```
+
+Crea `src/app.js`:
+
+```js
+import { createClient } from "redis";
+const redis = createClient({ url: "redis://127.0.0.1:6379" });
+await redis.connect();
+await redis.set("tarifa:co", "12500", { EX: 30 });
+const primera = await redis.set("orden:RF-100", "procesada", { NX: true, EX: 3600 });
+const segunda = await redis.set("orden:RF-100", "procesada", { NX: true, EX: 3600 });
+console.log({ tarifa: await redis.get("tarifa:co"), primera, segunda });
+await redis.quit();
+```
+
+Ejecuta `node src/app.js`. **Resultado esperado:** primera operación `OK`, segunda `null`. **Fallo deliberado y diagnóstico:** elimina `NX: true`; ambas escrituras devuelven `OK`, demostrando el riesgo de duplicación. Detén con `docker rm -f redis-demo`.
+
+#### Paso 5 · Práctica guiada
+
+Añade TTL de 2 segundos y comprueba que la tarifa desaparece. **Pista:** mide el valor antes y después de esperar.
+
+#### Paso 6 · Práctica independiente
+
+Publica un evento con Pub/Sub y documenta qué ocurre si el suscriptor está desconectado; no lo presentes como persistencia.
+
+#### Paso 7 · Cierre y conexión
+
+Ya distingues caché, idempotencia y notificación. El siguiente módulo abordará observabilidad desde una carpeta nueva.
+
+**Errores comunes:** cachear sin TTL; usar `SET` sin NX para comandos únicos; confundir Pub/Sub con cola durable; no cerrar cliente; guardar secretos en URL.
+
+**Fuentes oficiales:** [node-redis](https://github.com/redis/node-redis), [`SET` options](https://redis.io/docs/latest/commands/set/) y [Pub/Sub](https://redis.io/docs/latest/develop/pubsub/).
+
+**Evidencia de aprendizaje:** entrega la salida `OK/null`, la expiración y una prueba de evento perdido.
+
+**Objetivo:** reducir lecturas repetidas de entregas, impedir comandos duplicados y comunicar cambios efímeros entre procesos de RutaFlow con Redis.
+
+**¿Por qué es importante?** Redis mantiene datos en memoria y ofrece operaciones atómicas. Eso lo hace útil como caché y coordinador de claves de idempotencia, pero no convierte Pub/Sub en una cola durable: un suscriptor desconectado pierde los mensajes. Elegir correctamente cada uso evita datos obsoletos y falsas garantías de entrega.
+
+**Contexto RutaFlow:** miles de conductores consultan el mismo detalle de ruta, mientras la confirmación de una entrega puede repetirse por mala señal. La caché reduce carga sobre PostgreSQL; una clave atómica evita aplicar dos veces el mismo evento; Pub/Sub actualiza paneles en vivo cuando perder una notificación temporal es aceptable.
+
+**Analogía:** la caché es una pizarra con una copia temporal del horario. La base de datos sigue siendo el registro oficial. `SET NX` es un sello que solo puede colocarse una vez, y Pub/Sub es un anuncio por altavoz: quien no estaba presente no lo escucha.
+
+**Conceptos clave**
+
+- Cache-aside: consultar Redis, acudir a la base ante un fallo de caché y guardar con TTL.
+- Invalidación: después de modificar la fuente oficial, borrar la copia relacionada.
+- `SET key value NX EX seconds` combina exclusión y expiración de forma atómica.
+- Pub/Sub entrega a suscriptores conectados; Streams o una cola sirven para procesamiento recuperable.
+
+**Demostración guiada:** crea `rutaflow-api/packages/api/src/infrastructure/redis-delivery-cache.js`.
+
+```js
+import { createClient } from 'redis';
+
+export const redis = createClient({ url: process.env.REDIS_URL });
+redis.on('error', (error) => console.error({ error }, 'redis_error'));
+
+export async function findDeliveryCached(id, repository) {
+  const key = `delivery:${id}`;
+  const cached = await redis.get(key);
+  if (cached) return JSON.parse(cached);
+
+  const delivery = await repository.findById(id);
+  if (delivery) await redis.set(key, JSON.stringify(delivery), { EX: 60 });
+  return delivery;
+}
+
+export async function reserveCommand(commandId) {
+  const result = await redis.set(`command:${commandId}`, 'processing', {
+    NX: true,
+    EX: 300,
+  });
+  return result === 'OK';
+}
+
+export async function invalidateDelivery(id) {
+  await redis.del(`delivery:${id}`);
+  await redis.publish('delivery.changed', JSON.stringify({ id }));
+}
+```
+
+Ejecuta desde `rutaflow-api/packages/api`:
+
+```bash
+docker run --name rutaflow-redis -p 6379:6379 redis:7-alpine
+npm install redis
+REDIS_URL='redis://localhost:6379' npm test -- redis-cache
+```
+
+**Resultado esperado:** la primera consulta llama al repositorio y la segunda usa Redis; después de invalidar vuelve a consultar. Dos reservas con el mismo `commandId` producen `true` y `false`, nunca dos `true`.
+
+**Práctica guiada:** añade un contador al repositorio falso y verifica que dos lecturas consecutivas solo lo incrementan una vez. Actualiza la entrega, ejecuta `invalidateDelivery` y comprueba que la siguiente lectura refleja el nuevo estado.
+
+**Pista:** prueba comportamiento, no detalles internos: observa llamadas al repositorio, resultado retornado y expiración. Usa claves con prefijos estables.
+
+**Práctica independiente:** crea un suscriptor para `delivery.changed`, desconéctalo durante una publicación y documenta la pérdida. Repite el caso con Redis Streams y explica por qué el segundo puede recuperarse.
+
+**Errores comunes**
+
+1. Tratar Redis como única fuente de verdad sin estrategia de persistencia.
+2. Usar Pub/Sub para pagos o contabilidad: no conserva mensajes para consumidores ausentes.
+3. Crear claves sin TTL: acumulan memoria indefinidamente.
+4. Actualizar la base sin invalidar la caché: entrega información obsoleta.
+
+**Cierre:** aprendiste tres capacidades distintas de Redis y sus límites. El siguiente paso es medir si la caché realmente mejora latencia y observar el flujo completo con métricas y trazas. Recurso oficial: [Redis para Node.js](https://redis.io/docs/latest/develop/clients/nodejs/).
 
 ---
 

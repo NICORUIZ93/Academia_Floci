@@ -5,6 +5,37 @@
 
 ### Tema 1: Queries por rol, no por clase CSS
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás probar React como usuario desde cero. Prerrequisitos: Node.js LTS, npm, editor y Vite. Verifica npm --version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real, una pantalla de entregas debe conservar comportamiento visible aunque cambie su implementación interna y debe simular red sin backend real.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+Testing Library consulta por rol y nombre accesible; MSW intercepta red en el borde; hooks se prueban mediante un componente consumidor. La analogía es una inspección de calidad: se verifica la puerta que usa la persona, no el color interno de la bisagra.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-react-m8
+cd ejemplo-react-m8
+npm create vite@latest app -- --template react-ts
+cd app
+npm install -D vitest @testing-library/react @testing-library/jest-dom msw
+npm run test
+```
+Crea src/components/DeliveryStatus.test.tsx con una consulta por role y un handler MSW; documenta setup y respuesta.
+
+#### Paso 5 · Práctica guiada
+Pista: cambia deliberadamente el role o respuesta para provocar un fallo deliberado de test; lee el diagnóstico y corrígelo. Resultado esperado: prueba verde y mensaje accesible.
+
+#### Paso 6 · Práctica independiente
+Añade caso 500, loading, hook personalizado y prueba de teclado; evita selectores de clase y esperas arbitrarias.
+
+#### Paso 7 · Cierre y evidencia
+Guarda suite, logs y captura; como siguiente paso estudia CI. Errores comunes: testear implementación, MSW sin reset, assertions demasiado amplias y ocultar errores de accesibilidad. Fuentes oficiales: https://testing-library.com/docs/react-testing-library/intro/ y https://mswjs.io/docs/.
+**¿Por qué es importante?** Porque las pruebas orientadas al usuario sobreviven refactors y detectan regresiones reales.
+**Evidencia de aprendizaje:** entrega test normal, test de error, handler y fallo corregido.
 **Conceptos clave:** `getByRole`, `getByText`, resiliencia a refactors.
 
 React Testing Library promueve deliberadamente consultar el DOM renderizado de la misma forma en que un usuario real (o una tecnología asistiva como un lector de pantalla) identificaría un elemento: por su rol semántico de accesibilidad (`screen.getByRole('button', { name: /enviar/i })`) o por el texto visible que muestra (`screen.getByText(/enviado con éxito/i)`), evitando deliberadamente consultas basadas en detalles internos de implementación como nombres de clases CSS o la estructura exacta del árbol DOM interno (`getByClassName`, deliberadamente no ofrecido como API principal por la librería), un principio de diseño idéntico al estudiado para Angular Testing Library en el Módulo 10 del track de Angular.
@@ -26,6 +57,37 @@ expect(screen.getByText(/enviado con éxito/i)).toBeInTheDocument();
 
 ### Tema 2: Mock Service Worker (MSW)
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás probar React como usuario desde cero. Prerrequisitos: Node.js LTS, npm, editor y Vite. Verifica npm --version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real, una pantalla de entregas debe conservar comportamiento visible aunque cambie su implementación interna y debe simular red sin backend real.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+Testing Library consulta por rol y nombre accesible; MSW intercepta red en el borde; hooks se prueban mediante un componente consumidor. La analogía es una inspección de calidad: se verifica la puerta que usa la persona, no el color interno de la bisagra.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-react-m8
+cd ejemplo-react-m8
+npm create vite@latest app -- --template react-ts
+cd app
+npm install -D vitest @testing-library/react @testing-library/jest-dom msw
+npm run test
+```
+Crea src/components/DeliveryStatus.test.tsx con una consulta por role y un handler MSW; documenta setup y respuesta.
+
+#### Paso 5 · Práctica guiada
+Pista: cambia deliberadamente el role o respuesta para provocar un fallo deliberado de test; lee el diagnóstico y corrígelo. Resultado esperado: prueba verde y mensaje accesible.
+
+#### Paso 6 · Práctica independiente
+Añade caso 500, loading, hook personalizado y prueba de teclado; evita selectores de clase y esperas arbitrarias.
+
+#### Paso 7 · Cierre y evidencia
+Guarda suite, logs y captura; como siguiente paso estudia CI. Errores comunes: testear implementación, MSW sin reset, assertions demasiado amplias y ocultar errores de accesibilidad. Fuentes oficiales: https://testing-library.com/docs/react-testing-library/intro/ y https://mswjs.io/docs/.
+**¿Por qué es importante?** Porque las pruebas orientadas al usuario sobreviven refactors y detectan regresiones reales.
+**Evidencia de aprendizaje:** entrega test normal, test de error, handler y fallo corregido.
 **Conceptos clave:** interceptación a nivel de red, sin conocimiento del código de producción.
 
 MSW intercepta peticiones HTTP a nivel de red (registrando un service worker o, en entornos de prueba, interceptando directamente las llamadas de red del entorno de ejecución) en vez de parchear directamente la función `fetch` global del código de la aplicación (`vi.fn()` o un mock manual de `fetch`, un enfoque alternativo pero más frágil, dado que requiere que el mock replique exactamente la forma en que el código de producción invoca `fetch`); con MSW, el código de producción realiza sus peticiones exactamente igual que en producción real, sin ninguna modificación ni conocimiento de que está siendo interceptado, siendo el propio MSW el que intercepta esas peticiones a nivel de red antes de que lleguen a un servidor real.
@@ -50,6 +112,37 @@ afterAll(() => server.close());
 
 ### Tema 3: Testing de hooks personalizados
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás probar React como usuario desde cero. Prerrequisitos: Node.js LTS, npm, editor y Vite. Verifica npm --version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real, una pantalla de entregas debe conservar comportamiento visible aunque cambie su implementación interna y debe simular red sin backend real.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+Testing Library consulta por rol y nombre accesible; MSW intercepta red en el borde; hooks se prueban mediante un componente consumidor. La analogía es una inspección de calidad: se verifica la puerta que usa la persona, no el color interno de la bisagra.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-react-m8
+cd ejemplo-react-m8
+npm create vite@latest app -- --template react-ts
+cd app
+npm install -D vitest @testing-library/react @testing-library/jest-dom msw
+npm run test
+```
+Crea src/components/DeliveryStatus.test.tsx con una consulta por role y un handler MSW; documenta setup y respuesta.
+
+#### Paso 5 · Práctica guiada
+Pista: cambia deliberadamente el role o respuesta para provocar un fallo deliberado de test; lee el diagnóstico y corrígelo. Resultado esperado: prueba verde y mensaje accesible.
+
+#### Paso 6 · Práctica independiente
+Añade caso 500, loading, hook personalizado y prueba de teclado; evita selectores de clase y esperas arbitrarias.
+
+#### Paso 7 · Cierre y evidencia
+Guarda suite, logs y captura; como siguiente paso estudia CI. Errores comunes: testear implementación, MSW sin reset, assertions demasiado amplias y ocultar errores de accesibilidad. Fuentes oficiales: https://testing-library.com/docs/react-testing-library/intro/ y https://mswjs.io/docs/.
+**¿Por qué es importante?** Porque las pruebas orientadas al usuario sobreviven refactors y detectan regresiones reales.
+**Evidencia de aprendizaje:** entrega test normal, test de error, handler y fallo corregido.
 **Conceptos clave:** `renderHook`, `act`, aislar la lógica del hook de un componente visual.
 
 `renderHook(() => useContador())` permite probar un hook personalizado de forma aislada, sin necesidad de crear un componente de prueba dedicado únicamente para invocar ese hook y exponer indirectamente su resultado; el `result` devuelto expone `.current` con el valor actual retornado por el hook, actualizándose automáticamente entre renders sucesivos provocados dentro de la prueba. `act(() => result.current.incrementar())` envuelve cualquier interacción que dispare una actualización de estado dentro del hook, garantizando que React procese completamente esa actualización (incluyendo cualquier efecto asociado) antes de que la aserción siguiente se ejecute, de forma análoga en propósito a `await fixture.whenStable()` en las pruebas de Angular (Módulo 10 del track de Angular).

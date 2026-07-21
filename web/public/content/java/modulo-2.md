@@ -5,6 +5,34 @@
 
 ### Tema 1: List, Set, Map y sus implementaciones
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás elegir una colección desde cero. Prerrequisitos: JDK 21 y un editor. Comprueba java --version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real, una API agrupa entregas por estado, elimina duplicados y conserva un orden; elegir la estructura equivocada degrada claridad y coste.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+List conserva orden y permite repetidos, Set prioriza unicidad y Map relaciona clave con valor. Los genéricos expresan qué tipo viaja y los wildcards controlan lectura/escritura. La analogía es un almacén con estantes: cada estante tiene reglas de acceso y no conviene buscar una caja recorriendo todos.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-java-m2
+cd ejemplo-java-m2
+mkdir -p src/main/java/com/example
+```
+Crea src/main/java/com/example/Main.java con List, Set y Map, compila con javac -d out y muestra el resultado.
+
+#### Paso 5 · Práctica guiada
+Pista: ejecuta el programa, añade un duplicado para provocar un fallo deliberado de expectativa y corrige usando Set o una regla explícita. Resultado esperado: la colección refleja la invariante elegida.
+
+#### Paso 6 · Práctica independiente
+Ordena entregas con Comparator, usa un Map de estados y escribe un método genérico que no acepte tipos incompatibles.
+
+#### Paso 7 · Cierre y evidencia
+Guarda código, salida y decisión de complejidad; como siguiente paso estudia streams. Errores comunes: usar List para unicidad, claves mutables, raw types y confundir orden con clasificación. Fuentes oficiales: https://dev.java/learn/api/collections-framework/ y https://docs.oracle.com/javase/tutorial/java/generics/.
+**¿Por qué es importante?** Porque las colecciones representan reglas de negocio y afectan rendimiento y errores.
+**Evidencia de aprendizaje:** entrega tabla de elección, código compilado y resultado ordenado.
 **Conceptos clave:** acceso indexado vs inserción eficiente, unicidad, orden.
 
 `ArrayList` implementa `List` respaldado por un arreglo redimensionable internamente, ofreciendo acceso indexado rápido (`O(1)`, acceder a cualquier posición por su índice es prácticamente instantáneo) e inserción eficiente al final, pero inserción o eliminación costosa al inicio o en medio (`O(n)`, dado que todos los elementos posteriores deben desplazarse una posición); `LinkedList` implementa la misma interfaz `List` respaldada internamente por una lista doblemente enlazada de nodos, ofreciendo inserción y eliminación eficiente al inicio o en medio (sin necesidad de desplazar elementos, solo reenlazar referencias), a costa de acceso indexado más lento (`O(n)`, dado que acceder a una posición arbitraria requiere recorrer la lista nodo por nodo desde uno de los extremos).
@@ -38,6 +66,34 @@ Intenta leer una posición igual a `paradas.size()` y diagnostica `IndexOutOfBou
 
 ### Tema 2: Genéricos, wildcards y type erasure
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás elegir una colección desde cero. Prerrequisitos: JDK 21 y un editor. Comprueba java --version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real, una API agrupa entregas por estado, elimina duplicados y conserva un orden; elegir la estructura equivocada degrada claridad y coste.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+List conserva orden y permite repetidos, Set prioriza unicidad y Map relaciona clave con valor. Los genéricos expresan qué tipo viaja y los wildcards controlan lectura/escritura. La analogía es un almacén con estantes: cada estante tiene reglas de acceso y no conviene buscar una caja recorriendo todos.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-java-m2
+cd ejemplo-java-m2
+mkdir -p src/main/java/com/example
+```
+Crea src/main/java/com/example/Main.java con List, Set y Map, compila con javac -d out y muestra el resultado.
+
+#### Paso 5 · Práctica guiada
+Pista: ejecuta el programa, añade un duplicado para provocar un fallo deliberado de expectativa y corrige usando Set o una regla explícita. Resultado esperado: la colección refleja la invariante elegida.
+
+#### Paso 6 · Práctica independiente
+Ordena entregas con Comparator, usa un Map de estados y escribe un método genérico que no acepte tipos incompatibles.
+
+#### Paso 7 · Cierre y evidencia
+Guarda código, salida y decisión de complejidad; como siguiente paso estudia streams. Errores comunes: usar List para unicidad, claves mutables, raw types y confundir orden con clasificación. Fuentes oficiales: https://dev.java/learn/api/collections-framework/ y https://docs.oracle.com/javase/tutorial/java/generics/.
+**¿Por qué es importante?** Porque las colecciones representan reglas de negocio y afectan rendimiento y errores.
+**Evidencia de aprendizaje:** entrega tabla de elección, código compilado y resultado ordenado.
 **Conceptos clave:** `<T>`, seguridad de tipos en compilación, borrado de tipos en tiempo de ejecución.
 
 `class Caja<T> { private T contenido; void guardar(T valor) { this.contenido = valor; } T obtener() { return contenido; } }` define una clase genérica capaz de almacenar y devolver un valor de cualquier tipo concreto que se especifique al instanciarla (`Caja<String> cajaTexto = new Caja<>();`), con el compilador verificando en tiempo de compilación que solo se guarden y recuperen valores del tipo `String` para esa instancia específica, sin necesidad de castear manualmente el valor recuperado (como sí sería necesario si `Caja` almacenara internamente un `Object` genérico sin parametrizar).
@@ -68,6 +124,34 @@ Elimina `<Guia>` y usa el tipo crudo: `-Xlint:all` advertirá pérdida de seguri
 
 ### Tema 3: Comparable vs Comparator, e iteración
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás elegir una colección desde cero. Prerrequisitos: JDK 21 y un editor. Comprueba java --version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real, una API agrupa entregas por estado, elimina duplicados y conserva un orden; elegir la estructura equivocada degrada claridad y coste.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+List conserva orden y permite repetidos, Set prioriza unicidad y Map relaciona clave con valor. Los genéricos expresan qué tipo viaja y los wildcards controlan lectura/escritura. La analogía es un almacén con estantes: cada estante tiene reglas de acceso y no conviene buscar una caja recorriendo todos.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-java-m2
+cd ejemplo-java-m2
+mkdir -p src/main/java/com/example
+```
+Crea src/main/java/com/example/Main.java con List, Set y Map, compila con javac -d out y muestra el resultado.
+
+#### Paso 5 · Práctica guiada
+Pista: ejecuta el programa, añade un duplicado para provocar un fallo deliberado de expectativa y corrige usando Set o una regla explícita. Resultado esperado: la colección refleja la invariante elegida.
+
+#### Paso 6 · Práctica independiente
+Ordena entregas con Comparator, usa un Map de estados y escribe un método genérico que no acepte tipos incompatibles.
+
+#### Paso 7 · Cierre y evidencia
+Guarda código, salida y decisión de complejidad; como siguiente paso estudia streams. Errores comunes: usar List para unicidad, claves mutables, raw types y confundir orden con clasificación. Fuentes oficiales: https://dev.java/learn/api/collections-framework/ y https://docs.oracle.com/javase/tutorial/java/generics/.
+**¿Por qué es importante?** Porque las colecciones representan reglas de negocio y afectan rendimiento y errores.
+**Evidencia de aprendizaje:** entrega tabla de elección, código compilado y resultado ordenado.
 **Conceptos clave:** orden natural único frente a órdenes alternativos externos, `entrySet()`.
 
 `Comparable<Persona>` (implementado directamente por la clase `Persona`, definiendo `compareTo`) establece el único orden "natural" de esa clase, apropiado cuando existe una forma canónica y única de ordenar objetos de ese tipo (por ejemplo, ordenar personas por edad como su criterio de orden natural más obvio y común); `Comparator` (una función o clase externa a `Persona`, pasada explícitamente a métodos de ordenamiento como `sort`) permite definir órdenes alternativos adicionales sin modificar la clase original (`personas.sort(Comparator.comparing(Persona::getNombre))`, ordenando por nombre sin tocar la implementación de `compareTo` que ya ordena por edad), apropiado cuando se necesitan múltiples criterios de orden distintos según el contexto específico de cada uso.

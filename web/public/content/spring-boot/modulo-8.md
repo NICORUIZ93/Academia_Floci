@@ -5,6 +5,36 @@
 
 ### Tema 1: Producers y consumers con Spring Kafka
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás enviar y consumir eventos desde cero. Prerrequisitos: JDK 21, Maven, Docker y un editor.
+
+#### Paso 2 · Contexto y caso real
+En un caso real, la asignación de un conductor y las notificaciones no deben bloquear el request HTTP. Un evento desacopla productores y consumidores, pero exige idempotencia y observabilidad.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+Kafka conserva eventos en particiones y permite releerlos; una DLQ aparta mensajes que no pueden procesarse; RabbitMQ enruta mensajes a colas con confirmaciones. Elige según retención, orden, fan-out y latencia. La analogía es una banda transportadora: el registro permite volver a inspeccionar un paquete y la zona de rechazo evita detener toda la línea.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-spring-m8
+cd ejemplo-spring-m8
+curl -fsSL https://start.spring.io/starter.zip -d dependencies=web,kafka -d javaVersion=21 -o app.zip
+unzip app.zip
+mvn test
+```
+Crea `src/main/java/com/example/demo/DeliveryEvent.java` y un producer con clave estable; ejecuta el broker local definido en Docker Compose.
+
+#### Paso 5 · Práctica guiada
+Pista: publica un evento, fuerza un fallo deliberado en el consumer y verifica que termina en la DLQ; corrige el payload. Resultado esperado: el evento válido se procesa una vez y el inválido queda trazable.
+
+#### Paso 6 · Práctica independiente
+Añade reintentos con backoff, deduplicación por eventId y una métrica de lag; compara Kafka y RabbitMQ para el mismo flujo.
+
+#### Paso 7 · Cierre y evidencia
+Guarda logs de publish/consume, DLQ y métrica; como siguiente paso automatiza un test de contrato de evento. Errores comunes: asumir exactly-once global, ignorar orden por clave, DLQ sin dueño y mensajes sin versión. Fuentes oficiales: https://docs.spring.io/spring-kafka/reference/ y https://kafka.apache.org/documentation/.
+**¿Por qué es importante?** Porque los eventos permiten resiliencia, pero un consumidor sin política de repetición solo desplaza el fallo.
+**Evidencia de aprendizaje:** entrega evento, consumer, fallo en DLQ y tabla de decisión.
 **Conceptos clave:** desacoplamiento vía topic, `@KafkaListener`.
 
 `@Service public class EventoPublisher { private final KafkaTemplate<String, TareaCreadaEvent> kafka; void publicar(TareaCreadaEvent evento) { kafka.send("tareas.creadas", evento); } }` publica un evento hacia un topic específico de Kafka sin que el código publicador conozca ni le importe quién, si acaso alguien, está consumiendo ese evento en este momento: `@KafkaListener(topics = "tareas.creadas", groupId = "notificaciones") public void escuchar(TareaCreadaEvent evento) { enviarNotificacion(evento); }` define un consumidor completamente independiente que escucha ese mismo topic y reacciona a cada evento recibido, sin ninguna dependencia directa (ni de compilación, ni de conocimiento en tiempo de ejecución) entre el publicador y el consumidor.
@@ -33,6 +63,36 @@ public void escuchar(TareaCreadaEvent evento) {
 
 ### Tema 2: Dead-letter queue
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás enviar y consumir eventos desde cero. Prerrequisitos: JDK 21, Maven, Docker y un editor.
+
+#### Paso 2 · Contexto y caso real
+En un caso real, la asignación de un conductor y las notificaciones no deben bloquear el request HTTP. Un evento desacopla productores y consumidores, pero exige idempotencia y observabilidad.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+Kafka conserva eventos en particiones y permite releerlos; una DLQ aparta mensajes que no pueden procesarse; RabbitMQ enruta mensajes a colas con confirmaciones. Elige según retención, orden, fan-out y latencia. La analogía es una banda transportadora: el registro permite volver a inspeccionar un paquete y la zona de rechazo evita detener toda la línea.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-spring-m8
+cd ejemplo-spring-m8
+curl -fsSL https://start.spring.io/starter.zip -d dependencies=web,kafka -d javaVersion=21 -o app.zip
+unzip app.zip
+mvn test
+```
+Crea `src/main/java/com/example/demo/DeliveryEvent.java` y un producer con clave estable; ejecuta el broker local definido en Docker Compose.
+
+#### Paso 5 · Práctica guiada
+Pista: publica un evento, fuerza un fallo deliberado en el consumer y verifica que termina en la DLQ; corrige el payload. Resultado esperado: el evento válido se procesa una vez y el inválido queda trazable.
+
+#### Paso 6 · Práctica independiente
+Añade reintentos con backoff, deduplicación por eventId y una métrica de lag; compara Kafka y RabbitMQ para el mismo flujo.
+
+#### Paso 7 · Cierre y evidencia
+Guarda logs de publish/consume, DLQ y métrica; como siguiente paso automatiza un test de contrato de evento. Errores comunes: asumir exactly-once global, ignorar orden por clave, DLQ sin dueño y mensajes sin versión. Fuentes oficiales: https://docs.spring.io/spring-kafka/reference/ y https://kafka.apache.org/documentation/.
+**¿Por qué es importante?** Porque los eventos permiten resiliencia, pero un consumidor sin política de repetición solo desplaza el fallo.
+**Evidencia de aprendizaje:** entrega evento, consumer, fallo en DLQ y tabla de decisión.
 **Conceptos clave:** reintentos limitados, destino final para mensajes que fallan repetidamente.
 
 `@Bean DefaultErrorHandler errorHandler(KafkaTemplate<Object, Object> template) { var recoverer = new DeadLetterPublishingRecoverer(template); return new DefaultErrorHandler(recoverer, new FixedBackOff(1000L, 3)); }` configura una estrategia donde, si el procesamiento de un mensaje falla, se reintenta un número limitado de veces (3 reintentos, con 1 segundo de espera entre cada uno en este ejemplo), y si todos los reintentos agotados también fallan, el mensaje se redirige automáticamente hacia una dead-letter queue (una cola separada específicamente destinada a mensajes que no pudieron procesarse exitosamente), en vez de perderse silenciosamente o bloquear indefinidamente el procesamiento de los mensajes siguientes en la cola original.
@@ -55,6 +115,36 @@ DefaultErrorHandler errorHandler(KafkaTemplate<Object, Object> template) {
 
 ### Tema 3: Kafka frente a RabbitMQ
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás enviar y consumir eventos desde cero. Prerrequisitos: JDK 21, Maven, Docker y un editor.
+
+#### Paso 2 · Contexto y caso real
+En un caso real, la asignación de un conductor y las notificaciones no deben bloquear el request HTTP. Un evento desacopla productores y consumidores, pero exige idempotencia y observabilidad.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+Kafka conserva eventos en particiones y permite releerlos; una DLQ aparta mensajes que no pueden procesarse; RabbitMQ enruta mensajes a colas con confirmaciones. Elige según retención, orden, fan-out y latencia. La analogía es una banda transportadora: el registro permite volver a inspeccionar un paquete y la zona de rechazo evita detener toda la línea.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-spring-m8
+cd ejemplo-spring-m8
+curl -fsSL https://start.spring.io/starter.zip -d dependencies=web,kafka -d javaVersion=21 -o app.zip
+unzip app.zip
+mvn test
+```
+Crea `src/main/java/com/example/demo/DeliveryEvent.java` y un producer con clave estable; ejecuta el broker local definido en Docker Compose.
+
+#### Paso 5 · Práctica guiada
+Pista: publica un evento, fuerza un fallo deliberado en el consumer y verifica que termina en la DLQ; corrige el payload. Resultado esperado: el evento válido se procesa una vez y el inválido queda trazable.
+
+#### Paso 6 · Práctica independiente
+Añade reintentos con backoff, deduplicación por eventId y una métrica de lag; compara Kafka y RabbitMQ para el mismo flujo.
+
+#### Paso 7 · Cierre y evidencia
+Guarda logs de publish/consume, DLQ y métrica; como siguiente paso automatiza un test de contrato de evento. Errores comunes: asumir exactly-once global, ignorar orden por clave, DLQ sin dueño y mensajes sin versión. Fuentes oficiales: https://docs.spring.io/spring-kafka/reference/ y https://kafka.apache.org/documentation/.
+**¿Por qué es importante?** Porque los eventos permiten resiliencia, pero un consumidor sin política de repetición solo desplaza el fallo.
+**Evidencia de aprendizaje:** entrega evento, consumer, fallo en DLQ y tabla de decisión.
 **Conceptos clave:** log distribuido retenido frente a broker de colas tradicional.
 
 `@RabbitListener(queues = "tareas.creadas") public void escuchar(TareaCreadaEvent evento) { ... }` demuestra que el patrón de consumo desacoplado con Spring AMQP (para RabbitMQ) es sintácticamente muy similar al de Spring Kafka, pero los modelos subyacentes de entrega de mensajes de ambas tecnologías son conceptualmente distintos: Kafka es fundamentalmente un log distribuido que retiene mensajes durante un período configurable (independientemente de si ya fueron consumidos o no), permitiendo que múltiples consumidores distintos (o el mismo consumidor releyendo desde un punto anterior) lean el mismo stream completo de eventos históricos de forma independiente; RabbitMQ es un broker de colas tradicional, donde un mensaje típicamente se entrega y se elimina de la cola una vez consumido exitosamente (en el patrón punto-a-punto más común), un modelo más simple y directo para casos donde no se necesita retener ni releer el historial completo de mensajes.

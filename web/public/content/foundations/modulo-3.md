@@ -5,6 +5,38 @@
 
 ### Tema 1: De una URL al servidor: red, DNS, IP y puertos
 
+Ejecuta node --version para comprobar el entorno antes de continuar. **Evidencia de aprendizaje:** conserva la salida y explica qué verificaste.
+
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás construir esta base web desde cero. Prerrequisitos: navegador, terminal y editor. Comprueba que puedes abrir localhost.
+
+#### Paso 2 · Contexto y caso real
+En un caso real de entregas, una persona consulta un estado desde móvil y escritorio; red, contrato HTTP y interfaz deben cooperar sin ocultar errores.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+DNS encuentra una dirección, TCP conecta puertos y HTTP intercambia mensajes con método, estado y representación. HTML expresa estructura, CSS presentación y el DOM permite interacción. La analogía es una oficina: dirección, protocolo de recepción, formulario y señalización cumplen funciones distintas.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-fundamentos-m3
+cd ejemplo-fundamentos-m3
+mkdir src
+printf '<!doctype html><html lang="es"><main><h1>Estado</h1><p id="result">Listo</p></main></html>' > src/index.html
+python3 -m http.server 8000 --directory src
+```
+Abre http://localhost:8000, inspecciona el DOM y explica qué devuelve el servidor.
+
+#### Paso 5 · Práctica guiada
+Pista: cambia deliberadamente el puerto o elimina un elemento para provocar un fallo deliberado; observa el error de conexión o accesibilidad y corrígelo. Resultado esperado: página accesible y cargada.
+
+#### Paso 6 · Práctica independiente
+Añade formulario con label, estilos responsive, un estado de error y una prueba manual con teclado y lector de contraste.
+
+#### Paso 7 · Cierre y evidencia
+Guarda HTML, CSS, captura y comprobación de teclado; como siguiente paso estudia JavaScript. Errores comunes: divs sin semántica, inputs sin label, depender solo de color y asumir que localhost es producción. Fuentes oficiales: https://developer.mozilla.org/es/docs/Learn y https://www.w3.org/WAI/fundamentals/accessibility-intro/es.
+**¿Por qué es importante?** Porque comprender cada capa hace diagnosticable una pantalla que no carga o no puede utilizarse.
+**Evidencia de aprendizaje:** entrega estructura, URL, captura y lista de comprobaciones.
 **Conceptos clave:** cliente, servidor, protocolo, URL, dominio, DNS, dirección IP, puerto, TCP y localhost.
 
 Un **cliente** inicia una comunicación y un **servidor** escucha solicitudes. Son roles, no necesariamente máquinas distintas: tu navegador puede ser cliente y un proceso Python en el mismo equipo puede ser servidor. `localhost` se refiere al propio computador y normalmente se resuelve como `127.0.0.1` o `::1`.
@@ -49,6 +81,38 @@ Provoca “address already in use” iniciando un segundo servidor en 8000; loca
 
 ### Tema 2: HTTP como contrato observable
 
+Ejecuta node --version para comprobar el entorno antes de continuar. **Evidencia de aprendizaje:** conserva la salida y explica qué verificaste.
+
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás construir esta base web desde cero. Prerrequisitos: navegador, terminal y editor. Comprueba que puedes abrir localhost.
+
+#### Paso 2 · Contexto y caso real
+En un caso real de entregas, una persona consulta un estado desde móvil y escritorio; red, contrato HTTP y interfaz deben cooperar sin ocultar errores.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+DNS encuentra una dirección, TCP conecta puertos y HTTP intercambia mensajes con método, estado y representación. HTML expresa estructura, CSS presentación y el DOM permite interacción. La analogía es una oficina: dirección, protocolo de recepción, formulario y señalización cumplen funciones distintas.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-fundamentos-m3
+cd ejemplo-fundamentos-m3
+mkdir src
+printf '<!doctype html><html lang="es"><main><h1>Estado</h1><p id="result">Listo</p></main></html>' > src/index.html
+python3 -m http.server 8000 --directory src
+```
+Abre http://localhost:8000, inspecciona el DOM y explica qué devuelve el servidor.
+
+#### Paso 5 · Práctica guiada
+Pista: cambia deliberadamente el puerto o elimina un elemento para provocar un fallo deliberado; observa el error de conexión o accesibilidad y corrígelo. Resultado esperado: página accesible y cargada.
+
+#### Paso 6 · Práctica independiente
+Añade formulario con label, estilos responsive, un estado de error y una prueba manual con teclado y lector de contraste.
+
+#### Paso 7 · Cierre y evidencia
+Guarda HTML, CSS, captura y comprobación de teclado; como siguiente paso estudia JavaScript. Errores comunes: divs sin semántica, inputs sin label, depender solo de color y asumir que localhost es producción. Fuentes oficiales: https://developer.mozilla.org/es/docs/Learn y https://www.w3.org/WAI/fundamentals/accessibility-intro/es.
+**¿Por qué es importante?** Porque comprender cada capa hace diagnosticable una pantalla que no carga o no puede utilizarse.
+**Evidencia de aprendizaje:** entrega estructura, URL, captura y lista de comprobaciones.
 **Conceptos clave:** petición, respuesta, método, ruta, header, body, código de estado, idempotencia, caché y TLS.
 
 HTTP intercambia mensajes. Una petición contiene método, destino, headers y quizá cuerpo. Una respuesta contiene estado, headers y quizá cuerpo.
@@ -101,6 +165,38 @@ Devuelve deliberadamente JSON con `Content-Type: text/plain` y observa la incong
 
 ### Tema 3: HTML semántico, formularios y el DOM
 
+Ejecuta node --version para comprobar el entorno antes de continuar. **Evidencia de aprendizaje:** conserva la salida y explica qué verificaste.
+
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás construir esta base web desde cero. Prerrequisitos: navegador, terminal y editor. Comprueba que puedes abrir localhost.
+
+#### Paso 2 · Contexto y caso real
+En un caso real de entregas, una persona consulta un estado desde móvil y escritorio; red, contrato HTTP y interfaz deben cooperar sin ocultar errores.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+DNS encuentra una dirección, TCP conecta puertos y HTTP intercambia mensajes con método, estado y representación. HTML expresa estructura, CSS presentación y el DOM permite interacción. La analogía es una oficina: dirección, protocolo de recepción, formulario y señalización cumplen funciones distintas.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-fundamentos-m3
+cd ejemplo-fundamentos-m3
+mkdir src
+printf '<!doctype html><html lang="es"><main><h1>Estado</h1><p id="result">Listo</p></main></html>' > src/index.html
+python3 -m http.server 8000 --directory src
+```
+Abre http://localhost:8000, inspecciona el DOM y explica qué devuelve el servidor.
+
+#### Paso 5 · Práctica guiada
+Pista: cambia deliberadamente el puerto o elimina un elemento para provocar un fallo deliberado; observa el error de conexión o accesibilidad y corrígelo. Resultado esperado: página accesible y cargada.
+
+#### Paso 6 · Práctica independiente
+Añade formulario con label, estilos responsive, un estado de error y una prueba manual con teclado y lector de contraste.
+
+#### Paso 7 · Cierre y evidencia
+Guarda HTML, CSS, captura y comprobación de teclado; como siguiente paso estudia JavaScript. Errores comunes: divs sin semántica, inputs sin label, depender solo de color y asumir que localhost es producción. Fuentes oficiales: https://developer.mozilla.org/es/docs/Learn y https://www.w3.org/WAI/fundamentals/accessibility-intro/es.
+**¿Por qué es importante?** Porque comprender cada capa hace diagnosticable una pantalla que no carga o no puede utilizarse.
+**Evidencia de aprendizaje:** entrega estructura, URL, captura y lista de comprobaciones.
 **Conceptos clave:** elemento, atributo, documento, semántica, jerarquía, formulario, etiqueta, validación y DOM.
 
 HTML describe estructura y significado. El navegador lo analiza y construye el DOM, un árbol que JavaScript puede consultar o modificar. HTML no es “decoración”: comunica relaciones a navegadores, buscadores y tecnologías de asistencia.
@@ -163,6 +259,38 @@ Reemplaza temporalmente el botón por un `div` con clic y observa que pierde sem
 
 ### Tema 4: CSS, layout responsive y accesibilidad verificable
 
+Ejecuta node --version para comprobar el entorno antes de continuar. **Evidencia de aprendizaje:** conserva la salida y explica qué verificaste.
+
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás construir esta base web desde cero. Prerrequisitos: navegador, terminal y editor. Comprueba que puedes abrir localhost.
+
+#### Paso 2 · Contexto y caso real
+En un caso real de entregas, una persona consulta un estado desde móvil y escritorio; red, contrato HTTP y interfaz deben cooperar sin ocultar errores.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+DNS encuentra una dirección, TCP conecta puertos y HTTP intercambia mensajes con método, estado y representación. HTML expresa estructura, CSS presentación y el DOM permite interacción. La analogía es una oficina: dirección, protocolo de recepción, formulario y señalización cumplen funciones distintas.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-fundamentos-m3
+cd ejemplo-fundamentos-m3
+mkdir src
+printf '<!doctype html><html lang="es"><main><h1>Estado</h1><p id="result">Listo</p></main></html>' > src/index.html
+python3 -m http.server 8000 --directory src
+```
+Abre http://localhost:8000, inspecciona el DOM y explica qué devuelve el servidor.
+
+#### Paso 5 · Práctica guiada
+Pista: cambia deliberadamente el puerto o elimina un elemento para provocar un fallo deliberado; observa el error de conexión o accesibilidad y corrígelo. Resultado esperado: página accesible y cargada.
+
+#### Paso 6 · Práctica independiente
+Añade formulario con label, estilos responsive, un estado de error y una prueba manual con teclado y lector de contraste.
+
+#### Paso 7 · Cierre y evidencia
+Guarda HTML, CSS, captura y comprobación de teclado; como siguiente paso estudia JavaScript. Errores comunes: divs sin semántica, inputs sin label, depender solo de color y asumir que localhost es producción. Fuentes oficiales: https://developer.mozilla.org/es/docs/Learn y https://www.w3.org/WAI/fundamentals/accessibility-intro/es.
+**¿Por qué es importante?** Porque comprender cada capa hace diagnosticable una pantalla que no carga o no puede utilizarse.
+**Evidencia de aprendizaje:** entrega estructura, URL, captura y lista de comprobaciones.
 **Conceptos clave:** selector, cascada, especificidad, herencia, box model, Flexbox, Grid, media query, foco, contraste y responsive.
 
 CSS aplica reglas a elementos. La **cascada** decide qué declaración gana según origen, importancia, especificidad y orden. Aumentar selectores hasta “ganar” crea deuda; comprende primero por qué una regla fue sobrescrita usando el panel Styles.

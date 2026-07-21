@@ -5,6 +5,36 @@
 
 ### Tema 1: Spring Initializr y starters
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás aplicar este tema desde cero. Prerrequisitos: JDK 21, Maven y un editor. Comprueba `java --version` y `mvn --version`.
+
+#### Paso 2 · Contexto y caso real
+En un caso real de entregas, el servicio necesita dependencias, configuración y capas separadas para cambiar de ambiente sin modificar el código.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+Spring Boot automatiza configuración razonable, pero cada starter añade responsabilidades y debe revisarse. YAML y properties representan configuración tipada; los perfiles seleccionan valores por ambiente. La analogía es preparar una ruta con un vehículo y combustible adecuados: el destino no cambia, los recursos sí.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-spring-m1
+cd ejemplo-spring-m1
+curl -fsSL https://start.spring.io/starter.zip -d dependencies=web -d javaVersion=21 -o app.zip
+unzip app.zip
+mvn spring-boot:run
+```
+Crea `src/main/resources/application.yml` y un endpoint `/health`; explica qué starter, propiedad y capa intervienen.
+
+#### Paso 5 · Práctica guiada
+Pista: ejecuta `mvn spring-boot:run`, consulta `curl http://localhost:8080/health`, cambia una propiedad para provocar un fallo deliberado y corrígela. Resultado esperado: respuesta HTTP 200.
+
+#### Paso 6 · Práctica independiente
+Crea perfiles `local` y `test`, mueve el puerto y el nivel de logs, y demuestra qué archivo gana cuando ambos existen.
+
+#### Paso 7 · Cierre y evidencia
+Entrega estructura, comandos, respuesta y log; como siguiente paso añade una prueba de contexto. Errores comunes: mezclar secretos en YAML, duplicar propiedades, crear starters innecesarios y acoplar capas. Fuentes oficiales: https://docs.spring.io/spring-boot/docs/current/reference/html/ y https://start.spring.io/.
+**¿Por qué es importante?** Porque una configuración reproducible evita que el mismo código funcione solo en el ordenador del autor.
+**Evidencia de aprendizaje:** conserva la salida de Maven, el endpoint y la comparación de perfiles.
 **Conceptos clave:** dependencias preconfiguradas por starter, generación de la estructura base.
 
 [start.spring.io](https://start.spring.io) genera la estructura base de un proyecto Spring Boot a partir de un conjunto de starters seleccionados (`web`, `data-jpa`, `security`, `postgresql`, etc.), donde cada starter es en realidad un conjunto curado de dependencias preconfiguradas que trabajan juntas de forma coherente para un propósito específico: `spring-boot-starter-web` trae todo lo necesario para exponer APIs HTTP (Módulo 0), `spring-boot-starter-data-jpa` trae Hibernate y la infraestructura de Spring Data para persistencia, sin que el desarrollador tenga que investigar y ensamblar manualmente cada dependencia individual compatible entre sí (una tarea considerablemente más propensa a errores de versión incompatible que confiar en un starter ya curado y probado para esa combinación específica).
@@ -24,6 +54,36 @@ genera estructura base con dependencias preconfiguradas y compatibles entre sí
 
 ### Tema 2: application.yml vs application.properties
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás aplicar este tema desde cero. Prerrequisitos: JDK 21, Maven y un editor. Comprueba `java --version` y `mvn --version`.
+
+#### Paso 2 · Contexto y caso real
+En un caso real de entregas, el servicio necesita dependencias, configuración y capas separadas para cambiar de ambiente sin modificar el código.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+Spring Boot automatiza configuración razonable, pero cada starter añade responsabilidades y debe revisarse. YAML y properties representan configuración tipada; los perfiles seleccionan valores por ambiente. La analogía es preparar una ruta con un vehículo y combustible adecuados: el destino no cambia, los recursos sí.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-spring-m1
+cd ejemplo-spring-m1
+curl -fsSL https://start.spring.io/starter.zip -d dependencies=web -d javaVersion=21 -o app.zip
+unzip app.zip
+mvn spring-boot:run
+```
+Crea `src/main/resources/application.yml` y un endpoint `/health`; explica qué starter, propiedad y capa intervienen.
+
+#### Paso 5 · Práctica guiada
+Pista: ejecuta `mvn spring-boot:run`, consulta `curl http://localhost:8080/health`, cambia una propiedad para provocar un fallo deliberado y corrígela. Resultado esperado: respuesta HTTP 200.
+
+#### Paso 6 · Práctica independiente
+Crea perfiles `local` y `test`, mueve el puerto y el nivel de logs, y demuestra qué archivo gana cuando ambos existen.
+
+#### Paso 7 · Cierre y evidencia
+Entrega estructura, comandos, respuesta y log; como siguiente paso añade una prueba de contexto. Errores comunes: mezclar secretos en YAML, duplicar propiedades, crear starters innecesarios y acoplar capas. Fuentes oficiales: https://docs.spring.io/spring-boot/docs/current/reference/html/ y https://start.spring.io/.
+**¿Por qué es importante?** Porque una configuración reproducible evita que el mismo código funcione solo en el ordenador del autor.
+**Evidencia de aprendizaje:** conserva la salida de Maven, el endpoint y la comparación de perfiles.
 **Conceptos clave:** legibilidad para configuración anidada, jerarquía visual.
 
 `application.properties` expresa configuración como pares clave-valor planos con notación de puntos (`spring.datasource.url=jdbc:postgresql://localhost:5432/app`), un formato simple pero que se vuelve visualmente repetitivo cuando existe configuración anidada extensa, donde el mismo prefijo se repite en cada línea sin ninguna indicación visual de jerarquía; `application.yml` expresa la misma configuración usando indentación jerárquica (`spring: datasource: url: jdbc:postgresql://localhost:5432/app`), agrupando visualmente las claves relacionadas bajo su nodo padre común, generalmente más legible cuanto más profunda y extensa es la configuración anidada del proyecto.
@@ -46,6 +106,36 @@ server:
 
 ### Tema 3: Perfiles y estructura por capas
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás aplicar este tema desde cero. Prerrequisitos: JDK 21, Maven y un editor. Comprueba `java --version` y `mvn --version`.
+
+#### Paso 2 · Contexto y caso real
+En un caso real de entregas, el servicio necesita dependencias, configuración y capas separadas para cambiar de ambiente sin modificar el código.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+Spring Boot automatiza configuración razonable, pero cada starter añade responsabilidades y debe revisarse. YAML y properties representan configuración tipada; los perfiles seleccionan valores por ambiente. La analogía es preparar una ruta con un vehículo y combustible adecuados: el destino no cambia, los recursos sí.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-spring-m1
+cd ejemplo-spring-m1
+curl -fsSL https://start.spring.io/starter.zip -d dependencies=web -d javaVersion=21 -o app.zip
+unzip app.zip
+mvn spring-boot:run
+```
+Crea `src/main/resources/application.yml` y un endpoint `/health`; explica qué starter, propiedad y capa intervienen.
+
+#### Paso 5 · Práctica guiada
+Pista: ejecuta `mvn spring-boot:run`, consulta `curl http://localhost:8080/health`, cambia una propiedad para provocar un fallo deliberado y corrígela. Resultado esperado: respuesta HTTP 200.
+
+#### Paso 6 · Práctica independiente
+Crea perfiles `local` y `test`, mueve el puerto y el nivel de logs, y demuestra qué archivo gana cuando ambos existen.
+
+#### Paso 7 · Cierre y evidencia
+Entrega estructura, comandos, respuesta y log; como siguiente paso añade una prueba de contexto. Errores comunes: mezclar secretos en YAML, duplicar propiedades, crear starters innecesarios y acoplar capas. Fuentes oficiales: https://docs.spring.io/spring-boot/docs/current/reference/html/ y https://start.spring.io/.
+**¿Por qué es importante?** Porque una configuración reproducible evita que el mismo código funcione solo en el ordenador del autor.
+**Evidencia de aprendizaje:** conserva la salida de Maven, el endpoint y la comparación de perfiles.
 **Conceptos clave:** configuración específica por entorno, separación controller/service/repository.
 
 Un perfil (`application-dev.yml`, `application-prod.yml`) sobreescribe únicamente los valores específicos que declara explícitamente, manteniendo intacto el resto de la configuración base definida en `application.yml`, permitiendo que valores como la URL de la base de datos difieran entre entornos (desarrollo apuntando a una base local, producción apuntando a la base real) sin necesidad de mantener archivos de configuración completos y duplicados por entorno; `java -jar app.jar --spring.profiles.active=dev` activa el perfil correspondiente en el momento del arranque, seleccionando qué configuración específica de entorno aplicar sin necesidad de recompilar la aplicación para cada entorno distinto.

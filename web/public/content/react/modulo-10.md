@@ -5,6 +5,36 @@
 
 ### Tema 1: Server Components por defecto
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás evaluar React Server Components desde cero. Prerrequisitos: Node.js LTS, npm y editor. Verifica node --version y npm --version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real, una página de seguimiento debe enviar poco JavaScript, mostrar datos rápido y reservar interactividad para controles que realmente la necesitan.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+Un Server Component se ejecuta en servidor y no añade código interactivo al cliente; use client marca una frontera; Suspense permite streaming; Server Actions ejecutan mutaciones en servidor con validación. La analogía es un restaurante: cocina lo estático antes de servir y envía solo la estación que requiere interacción.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-react-m10
+cd ejemplo-react-m10
+npx create-next-app@latest app --ts --eslint --app --src-dir --no-tailwind --use-npm
+cd app
+npm run dev
+```
+Crea src/app/deliveries/page.tsx como Server Component y src/app/deliveries/DeliveryButton.tsx con use client; explica la frontera y el resultado.
+
+#### Paso 5 · Práctica guiada
+Pista: importa deliberadamente un hook en un componente servidor para provocar un fallo deliberado de compilación; lee el mensaje y mueve la frontera correcta. Resultado esperado: build estable.
+
+#### Paso 6 · Práctica independiente
+Añade Suspense, una Server Action con validación, estado pending y una medición del JavaScript enviado al cliente.
+
+#### Paso 7 · Cierre y evidencia
+Guarda build, capturas y métricas; como siguiente paso estudia despliegue. Errores comunes: enviar secretos al cliente, usar hooks en servidor, mutar sin autorización y asumir que streaming arregla consultas lentas. Fuentes oficiales: https://nextjs.org/docs/app y https://react.dev/reference/rsc/server-components.
+**¿Por qué es importante?** Porque separar servidor y cliente mejora rendimiento, seguridad y claridad de responsabilidades.
+**Evidencia de aprendizaje:** entrega árbol, frontera client/server, fallo, acción y medición.
 **Conceptos clave:** ejecución exclusiva en servidor, acceso directo a recursos del backend, sin JavaScript enviado al cliente.
 
 Un Server Component (`async function PaginaTareas() { const tareas = await db.tarea.findMany(); return <ListaTareas tareas={tareas} />; }`, sin la directiva `"use client"`) se ejecuta exclusivamente en el servidor: puede acceder directamente a una base de datos, al sistema de archivos, o a cualquier recurso disponible únicamente en el entorno del servidor, sin necesidad de exponer un endpoint API intermedio para obtener esos datos, dado que el propio componente ya se ejecuta en ese entorno con acceso directo.
@@ -27,6 +57,36 @@ async function PaginaTareas() {
 
 ### Tema 2: use client para interactividad
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás evaluar React Server Components desde cero. Prerrequisitos: Node.js LTS, npm y editor. Verifica node --version y npm --version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real, una página de seguimiento debe enviar poco JavaScript, mostrar datos rápido y reservar interactividad para controles que realmente la necesitan.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+Un Server Component se ejecuta en servidor y no añade código interactivo al cliente; use client marca una frontera; Suspense permite streaming; Server Actions ejecutan mutaciones en servidor con validación. La analogía es un restaurante: cocina lo estático antes de servir y envía solo la estación que requiere interacción.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-react-m10
+cd ejemplo-react-m10
+npx create-next-app@latest app --ts --eslint --app --src-dir --no-tailwind --use-npm
+cd app
+npm run dev
+```
+Crea src/app/deliveries/page.tsx como Server Component y src/app/deliveries/DeliveryButton.tsx con use client; explica la frontera y el resultado.
+
+#### Paso 5 · Práctica guiada
+Pista: importa deliberadamente un hook en un componente servidor para provocar un fallo deliberado de compilación; lee el mensaje y mueve la frontera correcta. Resultado esperado: build estable.
+
+#### Paso 6 · Práctica independiente
+Añade Suspense, una Server Action con validación, estado pending y una medición del JavaScript enviado al cliente.
+
+#### Paso 7 · Cierre y evidencia
+Guarda build, capturas y métricas; como siguiente paso estudia despliegue. Errores comunes: enviar secretos al cliente, usar hooks en servidor, mutar sin autorización y asumir que streaming arregla consultas lentas. Fuentes oficiales: https://nextjs.org/docs/app y https://react.dev/reference/rsc/server-components.
+**¿Por qué es importante?** Porque separar servidor y cliente mejora rendimiento, seguridad y claridad de responsabilidades.
+**Evidencia de aprendizaje:** entrega árbol, frontera client/server, fallo, acción y medición.
 **Conceptos clave:** hooks de estado solo en Client Components, límite explícito entre servidor y cliente.
 
 Cualquier componente que necesite interactividad basada en hooks de estado (`useState`, `useEffect`, manejadores de eventos como `onClick`) debe marcarse explícitamente con la directiva `"use client"` al inicio del archivo, indicando a Next.js que ese componente (y todo lo que importe transitivamente desde ese punto) debe compilarse también para ejecutarse en el navegador, no únicamente en el servidor: `"use client"; function BotonLike() { const [likes, setLikes] = useState(0); return <button onClick={() => setLikes(l => l + 1)}>{likes} likes</button>; }`, dado que `useState` y los manejadores de eventos interactivos requieren un entorno de ejecución en el navegador donde el JavaScript del componente efectivamente corre después de la carga inicial, algo que un Server Component, por definición, no ofrece.
@@ -49,6 +109,36 @@ function BotonLike() {
 
 ### Tema 3: Streaming con Suspense en el servidor
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás evaluar React Server Components desde cero. Prerrequisitos: Node.js LTS, npm y editor. Verifica node --version y npm --version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real, una página de seguimiento debe enviar poco JavaScript, mostrar datos rápido y reservar interactividad para controles que realmente la necesitan.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+Un Server Component se ejecuta en servidor y no añade código interactivo al cliente; use client marca una frontera; Suspense permite streaming; Server Actions ejecutan mutaciones en servidor con validación. La analogía es un restaurante: cocina lo estático antes de servir y envía solo la estación que requiere interacción.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-react-m10
+cd ejemplo-react-m10
+npx create-next-app@latest app --ts --eslint --app --src-dir --no-tailwind --use-npm
+cd app
+npm run dev
+```
+Crea src/app/deliveries/page.tsx como Server Component y src/app/deliveries/DeliveryButton.tsx con use client; explica la frontera y el resultado.
+
+#### Paso 5 · Práctica guiada
+Pista: importa deliberadamente un hook en un componente servidor para provocar un fallo deliberado de compilación; lee el mensaje y mueve la frontera correcta. Resultado esperado: build estable.
+
+#### Paso 6 · Práctica independiente
+Añade Suspense, una Server Action con validación, estado pending y una medición del JavaScript enviado al cliente.
+
+#### Paso 7 · Cierre y evidencia
+Guarda build, capturas y métricas; como siguiente paso estudia despliegue. Errores comunes: enviar secretos al cliente, usar hooks en servidor, mutar sin autorización y asumir que streaming arregla consultas lentas. Fuentes oficiales: https://nextjs.org/docs/app y https://react.dev/reference/rsc/server-components.
+**¿Por qué es importante?** Porque separar servidor y cliente mejora rendimiento, seguridad y claridad de responsabilidades.
+**Evidencia de aprendizaje:** entrega árbol, frontera client/server, fallo, acción y medición.
 **Conceptos clave:** enviar el HTML disponible primero, no bloquear toda la página por una sección lenta.
 
 El streaming del lado del servidor permite que Next.js envíe al navegador el HTML de las partes de una página que ya están listas, sin esperar a que absolutamente todas las secciones de esa página (incluyendo alguna sección particularmente lenta, como una consulta a una base de datos que tarda varios segundos) completen su renderizado: `<Suspense fallback={<Spinner />}><SeccionLenta /></Suspense>` permite que el resto de la página se envíe y se muestre inmediatamente, mientras `SeccionLenta` continúa renderizándose en el servidor, enviándose y reemplazando el `fallback` correspondiente en cuanto efectivamente completa, sin bloquear el resto de la página mientras tanto.
@@ -69,6 +159,36 @@ Este mismo `Suspense` que en el Módulo 5 se usaba para mostrar un `fallback` mi
 
 ### Tema 4: Server Actions
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás evaluar React Server Components desde cero. Prerrequisitos: Node.js LTS, npm y editor. Verifica node --version y npm --version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real, una página de seguimiento debe enviar poco JavaScript, mostrar datos rápido y reservar interactividad para controles que realmente la necesitan.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+Un Server Component se ejecuta en servidor y no añade código interactivo al cliente; use client marca una frontera; Suspense permite streaming; Server Actions ejecutan mutaciones en servidor con validación. La analogía es un restaurante: cocina lo estático antes de servir y envía solo la estación que requiere interacción.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-react-m10
+cd ejemplo-react-m10
+npx create-next-app@latest app --ts --eslint --app --src-dir --no-tailwind --use-npm
+cd app
+npm run dev
+```
+Crea src/app/deliveries/page.tsx como Server Component y src/app/deliveries/DeliveryButton.tsx con use client; explica la frontera y el resultado.
+
+#### Paso 5 · Práctica guiada
+Pista: importa deliberadamente un hook en un componente servidor para provocar un fallo deliberado de compilación; lee el mensaje y mueve la frontera correcta. Resultado esperado: build estable.
+
+#### Paso 6 · Práctica independiente
+Añade Suspense, una Server Action con validación, estado pending y una medición del JavaScript enviado al cliente.
+
+#### Paso 7 · Cierre y evidencia
+Guarda build, capturas y métricas; como siguiente paso estudia despliegue. Errores comunes: enviar secretos al cliente, usar hooks en servidor, mutar sin autorización y asumir que streaming arregla consultas lentas. Fuentes oficiales: https://nextjs.org/docs/app y https://react.dev/reference/rsc/server-components.
+**¿Por qué es importante?** Porque separar servidor y cliente mejora rendimiento, seguridad y claridad de responsabilidades.
+**Evidencia de aprendizaje:** entrega árbol, frontera client/server, fallo, acción y medición.
 **Conceptos clave:** procesar formularios en el servidor sin un endpoint API separado.
 
 Una Server Action (`async function crearTarea(formData) { "use server"; await db.tarea.create({ data: { titulo: formData.get('titulo') } }); }`) es una función marcada explícitamente con `"use server"` que se ejecuta en el servidor pero que puede invocarse directamente desde un formulario del lado del cliente (`<form action={crearTarea}>`), sin necesidad de crear manualmente un endpoint API dedicado (una ruta HTTP separada que reciba la petición, la parsee, y la procese) que el formulario tendría que invocar explícitamente mediante `fetch`.

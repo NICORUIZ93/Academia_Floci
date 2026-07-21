@@ -5,6 +5,18 @@
 
 ### Tema 1: ESM frente a CommonJS
 
+#### Paso 1 · Objetivo y preparación
+
+Al finalizar podrás crear y ejecutar un proyecto modular con ESM, reconocer un módulo CommonJS y diagnosticar el error que aparece al mezclar ambos formatos. Separarás el dominio de entregas de RutaFlow de su punto de entrada mediante exports nombrados.
+
+**Conocimiento previo:** funciones, objetos, rutas relativas y uso básico de la terminal. Necesitas Node.js 20 o posterior; compruébalo con `node --version`. Si el comando no existe, instala la versión LTS desde la fuente oficial antes de continuar.
+
+#### Paso 2 · Contexto y caso real
+
+Cuando toda la aplicación vive en un solo archivo, una modificación en reportes puede romper la creación de entregas. En este incremento del proyecto RutaFlow, `guia.js` será responsable del dominio y `main.js` de iniciar el programa. El contrato entre ambos será visible mediante `export` e `import`.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+
 **Conceptos clave:** análisis estático frente a resolución dinámica, `import`/`export`, `require`/`module.exports`.
 
 ESM (ECMAScript Modules, la sintaxis `import`/`export`) es el sistema de módulos estandarizado como parte del propio lenguaje JavaScript desde ES6, y tiene una propiedad fundamental que lo distingue de CommonJS: es estático y analizable en tiempo de build, sin necesidad de ejecutar el código. Las declaraciones `import`/`export` deben aparecer en el nivel superior de un módulo (no dentro de un `if` o una función condicional), lo que permite que una herramienta externa (como un bundler) analice el árbol completo de dependencias del proyecto sin ejecutar ni una sola línea de código, simplemente inspeccionando la estructura sintáctica de los `import`/`export`.
@@ -21,14 +33,107 @@ Aunque ambos sistemas coexisten en el ecosistema JavaScript actual (gran cantida
 
 **Diagrama:**
 
-```
-ESM (estático, analizable sin ejecutar):    CommonJS (dinámico, en tiempo de ejecución):
-export function sumar(a,b) { return a+b; }   function sumar(a,b) { return a+b; }
-import { sumar } from "./math.mjs";           const { sumar } = require("./math.cjs");
-// import/export: nivel superior siempre     // require: puede estar dentro de un if
+```mermaid
+flowchart LR
+    ESM["ESM: import/export estático"] --> GRAPH["grafo analizable"] --> SHAKE["tree-shaking"]
+    CJS["CommonJS: require dinámico"] --> RUNTIME["resolución al ejecutar"]
 ```
 
+#### Paso 4 · Demostración guiada desde cero
+
+Desde una carpeta vacía crea `ejemplo-esm-cjs` y su estructura:
+
+```bash
+mkdir ejemplo-esm-cjs
+cd ejemplo-esm-cjs
+npm init -y
+mkdir src
+```
+
+Crea esta estructura; la extensión `.js` del import es obligatoria para que Node resuelva el archivo de forma inequívoca:
+
+```text
+rutaflow-web/
+├── package.json
+└── src/
+    ├── dominio/
+    │   └── guia.js
+    └── main.js
+```
+
+Guarda en `rutaflow-web/package.json`:
+
+```json
+{
+  "name": "rutaflow-web",
+  "private": true,
+  "type": "module",
+  "scripts": { "start": "node src/main.js" }
+}
+```
+
+Guarda en `rutaflow-web/src/dominio/guia.js`:
+
+```js
+// Export nombrado: el consumidor conoce el nombre del contrato.
+export const ESTADOS = Object.freeze({ CREADA: "CREADA" });
+
+export function crearGuia(numero) {
+  // El dominio construye un objeto válido; no imprime ni lee la terminal.
+  if (!numero?.trim()) throw new TypeError("numero es obligatorio");
+  return { numero, estado: ESTADOS.CREADA };
+}
+```
+
+Guarda en `rutaflow-web/src/main.js`:
+
+```js
+// La ruta incluye la extensión porque este archivo se ejecuta directamente en Node.
+import { crearGuia } from "./dominio/guia.js";
+
+const guia = crearGuia("RF-101");
+console.log(guia);
+```
+
+Ejecuta desde `rutaflow-web`:
+
+```bash
+npm start
+```
+
+**Resultado esperado:** `{ numero: 'RF-101', estado: 'CREADA' }`. `main.js` conoce el contrato público, pero no necesita saber cómo se valida o construye la guía.
+
+**Fallo deliberado:** reemplaza el `import` por `const { crearGuia } = require("./dominio/guia.js")`. Node mostrará `ReferenceError: require is not defined in ES module scope`, porque `"type": "module"` define el formato de todos los `.js`. Restaura el import y confirma que el programa vuelve a funcionar.
+
+#### Paso 5 · Práctica guiada
+
+Crea `src/dominio/ruta.js`, exporta `calcularParadas(entregas)` e impórtala desde `main.js`. **Pista:** usa un export nombrado y una ruta relativa que termine en `.js`; no agregues un export `default` solo para evitar escribir llaves.
+
+#### Paso 6 · Práctica independiente
+
+Reproduce el mismo dominio en una carpeta separada `comparacion-cjs/` con `module.exports` y `require`, sin mezclarlo con ESM. Ejecuta ambos programas y escribe una comparación de cuándo se conocen sus dependencias y qué formato escogerías para código nuevo.
+
+#### Paso 7 · Cierre y evidencia
+
+Ya puedes dividir responsabilidades con el formato estándar del lenguaje y diagnosticar incompatibilidades con CommonJS. El siguiente tema aprovechará el análisis estático de ESM para reducir y dividir el bundle. **Evidencia:** entrega la estructura, demuestra la salida correcta y el fallo deliberado, y explica por qué `import` debe permanecer en el nivel superior.
+
+**Errores comunes:** omitir `"type": "module"`; olvidar `.js` en imports ejecutados por Node; mezclar `require` e `import` en el mismo archivo; confundir export nombrado con default; crear dependencias circulares entre dominio y entrada.
+
+**Fuentes oficiales:** [Node.js — ECMAScript modules](https://nodejs.org/api/esm.html) y [MDN — JavaScript modules](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Modules).
+
 ### Tema 2: Tree-shaking y code-splitting
+
+#### Paso 1 · Objetivo y preparación
+
+Al finalizar podrás diferenciar eliminación de código no usado y carga bajo demanda, generar un bundle de producción y comprobar ambos efectos inspeccionando artefactos reales. Optimizarás el reporte de entregas de RutaFlow con evidencia, no por suposición.
+
+**Prerrequisitos:** haber completado ESM frente a CommonJS, tener el proyecto `rutaflow-web` funcionando y disponer de Node.js y npm. Debes poder explicar qué es un export nombrado antes de continuar.
+
+#### Paso 2 · Contexto y caso real
+
+Los operadores usan la lista de entregas en cada sesión, pero abren el reporte de auditoría solo ocasionalmente. El proyecto RutaFlow debe enviar lo esencial al inicio, eliminar una función que nadie consume y descargar la auditoría únicamente cuando se solicite.
+
+#### Paso 3 · Teoría, modelo mental y analogía
 
 **Conceptos clave:** eliminación de código muerto, división en chunks, carga bajo demanda.
 
@@ -46,15 +151,107 @@ Vite (Tema 3), en su modo de producción, aplica ambas técnicas de forma autom�
 
 **Diagrama:**
 
+```mermaid
+flowchart LR
+    SOURCE["módulos fuente"] --> SHAKE["eliminar exports no usados"] --> MAIN["chunk inicial"]
+    SOURCE --> SPLIT["import dinámico"] --> LAZY["chunk bajo demanda"]
 ```
-import { debounce } from "lodash-es";  // SOLO debounce entra al bundle final
-import _ from "lodash";                // la biblioteca COMPLETA entra (peor caso)
 
-const Modulo = await import("./ruta-pesada.js"); // code-splitting:
-// este código solo se descarga cuando esta línea se ejecuta realmente
+#### Paso 4 · Demostración guiada desde cero
+
+Desde una carpeta vacía crea `ejemplo-code-splitting`:
+
+```bash
+mkdir ejemplo-code-splitting
+cd ejemplo-code-splitting
+npm init -y
+mkdir src
 ```
+
+Instala Vite en el proyecto existente y añade los scripts de construcción:
+
+```bash
+npm install --save-dev vite
+npm pkg set scripts.dev="vite" scripts.build="vite build"
+```
+
+Crea `rutaflow-web/index.html` con `<button id="auditoria">Abrir auditoría</button><script type="module" src="/src/main.js"></script>` y guarda en `src/reportes.js`:
+
+```js
+export function resumenDiario(entregas) {
+  // Este export sí se usa y debe permanecer en el chunk inicial.
+  return `Entregas del día: ${entregas.length}`;
+}
+
+export function reporteNuncaUsado() {
+  // Al no importarse y no tener efectos laterales, Rollup puede eliminarlo.
+  return "MARCADOR_ELIMINADO";
+}
+```
+
+Crea `rutaflow-web/src/auditoria.js`:
+
+```js
+export function abrirAuditoria() {
+  // Este texto permite localizar el módulo en el chunk diferido.
+  console.log("AUDITORIA_CARGADA");
+}
+```
+
+Actualiza `rutaflow-web/src/main.js`:
+
+```js
+import { resumenDiario } from "./reportes.js";
+
+console.log(resumenDiario([{ numero: "RF-101" }]));
+
+document.querySelector("#auditoria").addEventListener("click", async () => {
+  // import() crea un límite de carga bajo demanda para el bundler.
+  const { abrirAuditoria } = await import("./auditoria.js");
+  abrirAuditoria();
+});
+```
+
+Genera producción e inspecciona los artefactos:
+
+```bash
+npm run build
+grep -R "MARCADOR_ELIMINADO\|AUDITORIA_CARGADA" dist/assets
+```
+
+**Resultado esperado:** Vite crea al menos un archivo principal y un chunk de auditoría. `MARCADOR_ELIMINADO` no aparece; `AUDITORIA_CARGADA` aparece en el chunk diferido. Esa diferencia demuestra tree-shaking y code-splitting respectivamente.
+
+**Fallo deliberado:** añade `console.log("efecto")` en el nivel superior de `reportes.js` y vuelve a construir. Aunque un export no se use, el módulo con efectos laterales puede tener que conservarse. El diagnóstico no es “Vite falló”: el código dejó de ser eliminable con seguridad.
+
+#### Paso 5 · Práctica guiada
+
+Abre las herramientas de red del navegador, recarga y verifica que el chunk de auditoría no se descarga hasta pulsar el botón. **Pista:** filtra por `JS`, conserva el registro y compara las solicitudes antes y después del clic.
+
+#### Paso 6 · Práctica independiente
+
+Mide tamaño del chunk inicial, cantidad de solicitudes y tiempo de carga antes y después de mover un reporte pesado a `import()`. Conserva la división solamente si la medición mejora la experiencia; documenta también el coste de una solicitud adicional.
+
+#### Paso 7 · Cierre y evidencia
+
+Ahora diferencias quitar código imposible de alcanzar de aplazar código que sí se utilizará. El siguiente tema explica cómo Vite sirve módulos en desarrollo y cómo produce estos artefactos con Rollup. **Evidencia:** entrega la lista de archivos de `dist/assets`, la salida de búsqueda que prueba eliminación y carga diferida, y explica el resultado del fallo con efectos laterales.
+
+**Errores comunes:** creer que minificación y tree-shaking son lo mismo; esperar eliminación fiable de CommonJS dinámico; introducir efectos laterales al importar; dividir funciones diminutas sin medir; validar solo el servidor de desarrollo y no el build.
+
+**Fuentes oficiales:** [Vite — Features: dynamic import](https://vite.dev/guide/features.html#dynamic-import) y [Rollup — Tree-shaking](https://rollupjs.org/introduction/#tree-shaking).
 
 ### Tema 3: Vite y esbuild
+
+#### Paso 1 · Objetivo y preparación
+
+Al finalizar podrás crear desde una carpeta vacía una aplicación con Vite, explicar qué ocurre durante desarrollo y producción, ejecutar ambos modos e interpretar un error de resolución. El resultado será la primera interfaz web ejecutable del proyecto RutaFlow.
+
+**Conocimiento previo:** ESM, terminal, HTML básico y los conceptos de tree-shaking y code-splitting. Comprueba `node --version` y `npm --version`; usa una versión LTS activa de Node.js para evitar incompatibilidades con la versión actual de Vite.
+
+#### Paso 2 · Contexto y caso real
+
+RutaFlow necesita ciclos de desarrollo rápidos, pero también artefactos optimizados para producción. Vite servirá los módulos mientras programamos y generará una carpeta `dist/` desplegable. No trataremos `npm run dev` como prueba suficiente: el incremento se completa solamente cuando el build y su vista previa funcionan.
+
+#### Paso 3 · Teoría, modelo mental y analogía
 
 **Conceptos clave:** servidor de desarrollo con ESM nativo, esbuild, build de producción con Rollup.
 
@@ -72,14 +269,104 @@ Inspeccionar el resultado de `npm run build` —abriendo los archivos generados 
 
 **Diagrama:**
 
-```
-npm create vite@latest mi-app -- --template vanilla
-cd mi-app && npm install
-npm run dev     # ESM nativo servido directo, esbuild bajo demanda, arranque instantáneo
-npm run build   # Rollup: tree-shaking + code-splitting + minificación + hashing
+```mermaid
+flowchart LR
+    DEV["npm run dev"] --> NATIVE["ESM nativo + transformaciones esbuild"]
+    BUILD["npm run build"] --> ROLLUP["Rollup"] --> DIST["dist: chunks, hash y minificación"]
 ```
 
+#### Paso 4 · Demostración guiada desde cero
+
+Desde una carpeta vacía crea `ejemplo-vite`:
+
+```bash
+mkdir ejemplo-vite
+cd ejemplo-vite
+npm init -y
+npm install -D vite
+mkdir src
+```
+
+Implementa la pantalla creando `rutaflow-web/src/main.js`; antes prepara el proyecto con estos comandos.
+
+Si todavía no creaste el proyecto del tema anterior, ejecuta desde tu carpeta de trabajo:
+
+```bash
+npm create vite@latest rutaflow-web -- --template vanilla
+cd rutaflow-web
+npm install
+```
+
+Reemplaza `rutaflow-web/src/main.js` por:
+
+```js
+import "./style.css";
+
+const entregas = [
+  { numero: "RF-101", estado: "CREADA" },
+  { numero: "RF-102", estado: "EN_RUTA" },
+];
+
+// map transforma datos del dominio en elementos visuales independientes.
+const elementos = entregas
+  .map(({ numero, estado }) => `<li><strong>${numero}</strong> — ${estado}</li>`)
+  .join("");
+
+document.querySelector("#app").innerHTML = `
+  <main>
+    <h1>RutaFlow</h1>
+    <p>Entregas activas</p>
+    <ul>${elementos}</ul>
+  </main>
+`;
+```
+
+Inicia desarrollo y abre la dirección que imprime Vite:
+
+```bash
+npm run dev
+```
+
+Detén el servidor con `Ctrl+C`, genera producción y sirve el resultado:
+
+```bash
+npm run build
+npm run preview
+```
+
+**Resultado esperado:** desarrollo muestra dos entregas; el build crea `dist/index.html` y assets con hash; la vista previa reproduce la misma interfaz desde los artefactos de producción.
+
+**Fallo deliberado:** cambia `import "./style.css"` por `import "./styles.css"` sin crear ese archivo. Vite informa `Failed to resolve import`, junto con archivo, línea y ruta buscada. Restaura el nombre real y comprueba de nuevo desarrollo y build.
+
+#### Paso 5 · Práctica guiada
+
+Añade una tercera entrega y un estilo distinto para `ENTREGADA`. **Pista:** primero conserva el estado como dato, luego deriva una clase CSS segura; evita insertar texto recibido de un usuario directamente con `innerHTML`.
+
+#### Paso 6 · Práctica independiente
+
+Mide cuánto tarda el arranque de desarrollo y cuánto ocupa `dist/assets`. Cambia código, reconstruye y explica por qué cambia el hash del archivo afectado. Conserva captura o salida de terminal como comparación reproducible.
+
+#### Paso 7 · Cierre y evidencia
+
+Ya puedes distinguir el servidor ágil de desarrollo del artefacto optimizado de producción. El siguiente tema formaliza formato de módulos, API pública y comandos repetibles en `package.json`. **Evidencia:** demuestra la interfaz, la estructura de `dist/`, el fallo de importación diagnosticado y explica qué responsabilidades cumplen esbuild y Rollup dentro de Vite.
+
+**Errores comunes:** ejecutar Vite con una versión de Node incompatible; editar archivos dentro de `dist`; desplegar el servidor de desarrollo; ignorar errores del build porque desarrollo funciona; asumir que esbuild produce el bundle final de Vite.
+
+**Fuentes oficiales:** [Vite — Getting Started](https://vite.dev/guide/) y [Vite — Why Vite](https://vite.dev/guide/why.html).
+
 ### Tema 4: package.json — exports, type y scripts
+
+#### Paso 1 · Objetivo y preparación
+
+Al finalizar podrás configurar `type`, `scripts` y `exports` con una intención concreta, ejecutar el contrato operativo del proyecto y diagnosticar JSON inválido o una exportación no autorizada. Dejarás el proyecto RutaFlow reproducible para otra persona.
+
+**Prerrequisitos:** proyecto Vite funcionando, ESM y terminal. Debes distinguir una aplicación privada de una biblioteca publicada: `exports` define la API de un paquete consumible, no las rutas del navegador.
+
+#### Paso 2 · Contexto y caso real
+
+Si cada integrante inicia RutaFlow con un comando diferente, el entorno deja de ser reproducible. `package.json` será el manifiesto del proyecto: declara su formato, fija tareas comunes y, en el paquete de dominio, limita qué contratos pueden consumir otras aplicaciones.
+
+#### Paso 3 · Teoría, modelo mental y analogía
 
 **Conceptos clave:** punto de entrada de un paquete, `exports` map, `type`, scripts npm.
 
@@ -95,21 +382,93 @@ Entender estos tres campos —`type`, `exports`, `scripts`— es esencial no sol
 
 **¿Por qué es importante?** Configurar correctamente estos campos evita problemas de compatibilidad frecuentes al integrar bibliotecas de terceros, y hace que un proyecto sea más fácil de entender y operar para cualquier nuevo colaborador.
 
-**Configuración del ejemplo:**
+#### Paso 4 · Demostración guiada desde cero
+
+Desde una carpeta vacía crea `ejemplo-package-exports`:
+
+```bash
+mkdir ejemplo-package-exports
+cd ejemplo-package-exports
+npm init -y
+mkdir src
+```
+
+Actualiza `rutaflow-web/package.json`. No copies comentarios dentro del JSON porque el formato no los admite:
 
 ```json
 {
+  "name": "rutaflow-web",
+  "private": true,
   "type": "module",
-  "exports": { ".": "./dist/index.js" },
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "test": "vitest"
+    "preview": "vite preview",
+    "check": "npm run build"
+  },
+  "devDependencies": { "vite": "^7.0.0" }
+}
+```
+
+```mermaid
+flowchart LR
+    TYPE["type: formato de módulos"] --> NODE["interpretación de .js"]
+    EXPORTS["exports: API pública"] --> CONSUMER["consumidores permitidos"]
+    SCRIPTS["scripts: tareas repetibles"] --> TEAM["equipo y CI"]
+```
+
+En un paquete independiente `rutaflow-dominio/package.json`, sí puedes definir una API pública:
+
+```json
+{
+  "name": "@rutaflow/dominio",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.js",
+    "./estados": "./src/estados.js"
   }
 }
 ```
 
+Ejecuta el contrato de verificación de la aplicación:
+
+```bash
+npm run check
+```
+
+**Resultado esperado:** npm encuentra el script, Vite termina sin errores y crea `dist/`. La aplicación privada no publica `exports`; el paquete de dominio solo permite importar la raíz y `@rutaflow/dominio/estados`.
+
+**Fallo deliberado:** elimina la coma después de `"private": true` y ejecuta `npm run check`. npm informa un error `EJSONPARSE` con la zona inválida. Restaura la coma; después intenta importar una ruta interna no declarada en `exports` y observa `ERR_PACKAGE_PATH_NOT_EXPORTED`.
+
+#### Paso 5 · Práctica guiada
+
+Añade scripts `lint` y `test` únicamente si instalaste herramientas reales para ejecutarlos; luego crea `verify` que encadene tareas existentes. **Pista:** un script que apunta a un comando ausente no documenta el proyecto: crea una falsa promesa.
+
+#### Paso 6 · Práctica independiente
+
+Entrega el repositorio a otra persona o a una carpeta limpia y comprueba que puede ejecutar instalación, `npm run dev` y `npm run check` leyendo solo README y scripts. Registra cualquier conocimiento implícito y conviértelo en requisito o comando explícito.
+
+#### Paso 7 · Cierre y evidencia
+
+Ya puedes leer `package.json` como contrato técnico y no como archivo incidental. El siguiente tema cargará una capacidad opcional mediante `import()` y usará `import.meta` para resolver recursos. **Evidencia:** entrega ambos manifiestos, demuestra build correcto, `EJSONPARSE` y ruta no exportada, y explica por qué la aplicación y la biblioteca no necesitan el mismo mapa `exports`.
+
+**Errores comunes:** poner comentarios o comas finales en JSON; usar rangos de dependencias sin lockfile; exponer todos los archivos internos; confundir `exports` con un alias del bundler; declarar scripts que no funcionan en una instalación limpia.
+
+**Fuentes oficiales:** [Node.js — Packages](https://nodejs.org/api/packages.html) y [npm — package.json](https://docs.npmjs.com/cli/configuring-npm/package-json).
+
 ### Tema 5: import() dinámico e import.meta
+
+#### Paso 1 · Objetivo y preparación
+
+Al finalizar podrás cargar un módulo solo cuando el usuario lo solicite, manejar el rechazo de esa carga y resolver un recurso relativo con `import.meta.url`. Integrarás una auditoría diferida en RutaFlow sin bloquear la experiencia principal.
+
+**Conocimiento previo:** Promesas, `async`/`await`, eventos del DOM, ESM y build con Vite. Mantén abierto el panel Network del navegador para observar cuándo se descarga cada chunk.
+
+#### Paso 2 · Contexto y caso real
+
+La pantalla de entregas es esencial; el visor avanzado de auditoría es opcional y pesado. En este incremento del proyecto RutaFlow, el código principal mostrará la operación diaria y descargará auditoría después de un clic, con un mensaje comprensible si la red impide obtener el chunk.
+
+#### Paso 3 · Teoría, modelo mental y analogía
 
 **Conceptos clave:** importación dinámica, code-splitting basado en `import()`, metadatos del módulo.
 
@@ -125,18 +484,90 @@ Combinar `import()` dinámico con un framework de routing (como el router manual
 
 **¿Por qué es importante?** `import()` dinámico es la base técnica del lazy loading de rutas y funcionalidades, una de las optimizaciones de rendimiento más directamente impactantes y ampliamente adoptadas en aplicaciones web modernas de cualquier escala no trivial.
 
-**Código del ejemplo:**
+#### Paso 4 · Demostración guiada desde cero
 
-```js
-boton.addEventListener("click", async () => {
-  const { abrirModal } = await import("./modal.js"); // se descarga SOLO al hacer click
-  abrirModal();
-});
+Desde una carpeta vacía crea `ejemplo-import-dinamico`:
 
-console.log(import.meta.url); // URL completa de este propio archivo módulo
+```bash
+mkdir ejemplo-import-dinamico
+cd ejemplo-import-dinamico
+npm init -y
+mkdir src
 ```
 
+Crea `rutaflow-web/src/auditoria.js`:
+
+```js
+export function abrirAuditoria(contenedor) {
+  // El módulo opcional recibe explícitamente el nodo donde debe renderizar.
+  contenedor.textContent = "Auditoría cargada para RF-101";
+}
+
+export const rutaCatalogo = new URL("./datos/catalogo.json", import.meta.url);
+```
+
+Actualiza `rutaflow-web/src/main.js`:
+
+```js
+const boton = document.querySelector("#auditoria");
+const estado = document.querySelector("#estado-auditoria");
+
+boton.addEventListener("click", async () => {
+  boton.disabled = true;
+  estado.textContent = "Cargando auditoría…";
+
+  try {
+    // El navegador solicita este chunk únicamente al ejecutar import().
+    const { abrirAuditoria } = await import("./auditoria.js");
+    abrirAuditoria(estado);
+  } catch (error) {
+    console.error("No se pudo cargar auditoría", error);
+    estado.textContent = "Auditoría no disponible. Intenta de nuevo.";
+    boton.disabled = false;
+  }
+});
+```
+
+El HTML debe incluir `<button id="auditoria">Abrir auditoría</button>` y `<p id="estado-auditoria"></p>`. Ejecuta:
+
+```bash
+npm run dev
+npm run build
+```
+
+**Resultado esperado:** al recargar, Network no muestra el chunk de auditoría; al pulsar aparece una nueva solicitud y el texto `Auditoría cargada para RF-101`. El build contiene un asset adicional asociado al módulo dinámico.
+
+**Fallo deliberado:** cambia la ruta a `./auditoria-inexistente.js`. Vite detectará la ruta literal durante build o la Promesa rechazará si falta el chunk en ejecución. El `catch` debe mostrar un estado recuperable; lee el diagnóstico y restaura la ruta.
+
+#### Paso 5 · Práctica guiada
+
+Añade un botón “Reintentar” y evita imports simultáneos con un estado `cargando`. **Pista:** deshabilita durante la espera y restablece solo en `catch`; un módulo cargado correctamente queda en caché.
+
+#### Paso 6 · Práctica independiente
+
+Carga bajo demanda un visor de mapa simulado, mide el chunk inicial y el diferido y diseña estados de cargando, listo y error accesibles. Prueba navegación lenta y documenta si la división aporta valor frente a incluir el código inicialmente.
+
+#### Paso 7 · Cierre y evidencia
+
+Ya puedes convertir una capacidad opcional en un límite de carga observable y recuperable. El siguiente tema compara bundlers y transformadores para elegir herramientas por restricciones reales. **Evidencia:** demuestra la red antes y después del clic, la salida correcta, el fallo manejado y explica qué representa `import.meta.url`.
+
+**Errores comunes:** olvidar que `import()` devuelve una Promesa; no mostrar estado de carga; construir rutas imposibles de analizar; confundir `import.meta.url` con la URL de la página; crear chunks minúsculos sin medir.
+
+**Fuentes oficiales:** [MDN — import()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/import) y [MDN — import.meta](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/import.meta).
+
 ### Tema 6: Webpack, Rollup y Babel/SWC
+
+#### Paso 1 · Objetivo y preparación
+
+Al finalizar podrás separar las responsabilidades de servidor de desarrollo, bundler y transformador, comparar alternativas con criterios medibles y registrar una decisión técnica. Mantendrás Vite en RutaFlow o justificarás un cambio con evidencia reproducible.
+
+**Prerrequisitos:** build de Vite funcionando, ESM, `package.json` e inspección de `dist`. No necesitas dominar configuraciones avanzadas de Webpack: necesitas reconocer qué problema resuelve cada herramienta.
+
+#### Paso 2 · Contexto y caso real
+
+El equipo de RutaFlow propone migrar porque otra herramienta “es más rápida”. Cambiar el pipeline afecta desarrollo, pruebas, plugins, despliegue y mantenimiento. Este tema convierte la preferencia en una decisión del proyecto basada en restricciones, mediciones y consecuencias.
+
+#### Paso 3 · Teoría, modelo mental y analogía
 
 **Conceptos clave:** panorama de herramientas de build, cuándo cada una es apropiada.
 
@@ -154,18 +585,94 @@ Elegir entre estas herramientas en un proyecto nuevo, en la práctica actual de 
 
 **Diagrama:**
 
+```mermaid
+flowchart TD
+    NEED{"Necesidad principal"}
+    NEED -->|"aplicación nueva"| VITE["Vite: desarrollo + build"]
+    NEED -->|"biblioteca"| ROLLUP["Rollup"]
+    NEED -->|"proyecto legado configurable"| WEBPACK["Webpack"]
+    NEED -->|"transformar sintaxis"| TRANSFORM["Babel / SWC / esbuild"]
 ```
-Webpack: máxima flexibilidad, configuración más compleja, dominante en proyectos legados
-Rollup: especializado en bundles pequeños y limpios, ideal para bibliotecas
-Babel: transformación de sintaxis, escrito en JS, más lento
-SWC/esbuild: transformación de sintaxis, escritos en Rust/Go, mucho más rápidos
-Vite = esbuild (desarrollo) + Rollup (producción), preconfigurado sensatamente
+
+#### Paso 4 · Demostración guiada desde cero
+
+Desde una carpeta vacía crea `ejemplo-build-tools`:
+
+```bash
+mkdir ejemplo-build-tools
+cd ejemplo-build-tools
+npm init -y
+mkdir src
 ```
+
+Crea primero el medidor ejecutable `rutaflow-web/scripts/medir-build.js` y acompáñalo con el registro de decisión descrito a continuación.
+
+Crea `rutaflow-web/docs/adr/001-herramienta-build.md`:
+
+```md
+# ADR-001: herramienta de build de RutaFlow
+
+## Contexto
+La aplicación usa ESM, carga diferida y necesita desarrollo rápido.
+
+## Alternativas
+- Vite: servidor de desarrollo y build de aplicación.
+- Webpack: ecosistema maduro y configuración granular.
+- Rollup directo: control fino para bibliotecas.
+
+## Decisión
+Mantener Vite mientras soporte navegadores, plugins y despliegue requeridos.
+
+## Consecuencias
+Aceptamos su convención y mediremos build, chunks y compatibilidad en CI.
+```
+
+Crea `rutaflow-web/scripts/medir-build.js`:
+
+```js
+import { readdir, stat } from "node:fs/promises";
+
+const carpeta = new URL("../dist/assets/", import.meta.url);
+const archivos = await readdir(carpeta);
+const tamanos = await Promise.all(
+  archivos.map(async (archivo) => (await stat(new URL(archivo, carpeta))).size),
+);
+
+// Una medición repetible es evidencia; una impresión subjetiva no lo es.
+console.log({ chunks: archivos.length, bytes: tamanos.reduce((a, b) => a + b, 0) });
+```
+
+Ejecuta build y medición:
+
+```bash
+npm run build
+node scripts/medir-build.js
+```
+
+**Resultado esperado:** aparece un objeto con número de chunks y bytes mayor que cero; el ADR relaciona esos datos con restricciones del proyecto, no con popularidad.
+
+**Fallo deliberado:** ejecuta la medición antes del build o renombra `dist/assets`. Node muestra `ENOENT`, indicando que falta el artefacto previo. No ocultes el error: agrega al proceso la dependencia explícita `npm run build` antes de medir.
+
+#### Paso 5 · Práctica guiada
+
+Añade al ADR una matriz con compatibilidad de plugins, tiempo de build, tamaño, experiencia del equipo y coste de migración. **Pista:** define cómo verificar cada criterio; “mejor” o “moderno” no son métricas.
+
+#### Paso 6 · Práctica independiente
+
+Transforma un archivo pequeño con Babel o SWC y con esbuild en una carpeta experimental, registra comandos, tiempo y resultado, pero no migres RutaFlow. Decide si la diferencia observada justifica complejidad adicional en este proyecto concreto.
+
+#### Paso 7 · Cierre y evidencia
+
+Ahora puedes distinguir bundling de transformación y defender una herramienta mediante una decisión reversible. El próximo módulo aplicará pruebas automatizadas al código construido. **Evidencia:** entrega ADR, comando y salida de medición, fallo `ENOENT` diagnosticado y explica por qué Rollup, Babel y Webpack no son sustitutos equivalentes en todos los contextos.
+
+**Errores comunes:** migrar por tendencia; comparar desarrollo de una herramienta con producción de otra; ignorar plugins y navegadores objetivo; medir una sola ejecución sin entorno comparable; confundir transpilación con empaquetado.
+
+**Fuentes oficiales:** [Webpack — Concepts](https://webpack.js.org/concepts/), [Rollup — Introduction](https://rollupjs.org/introduction/), [Babel — Learn](https://babeljs.io/docs/) y [SWC — Getting Started](https://swc.rs/docs/getting-started/).
 
 ---
 
 
-## Laboratorio práctico
+## Construcción guiada del capítulo
 
 **Objetivo del laboratorio:** construir un proyecto multi-módulo con Vite, comparar ESM con CommonJS, y auditar el bundle de producción resultante.
 
@@ -181,6 +688,26 @@ Vite = esbuild (desarrollo) + Rollup (producción), preconfigurado sensatamente
 | 6 | Configurar un alias de import | `@/utils` en `vite.config` | Úsalo en vez de rutas relativas largas |
 
 **Verificación:** el laboratorio se considera exitoso si el bundle de producción generado en el paso 4 es sustancialmente más pequeño que la suma del código fuente sin procesar, y si el paso 5 confirma visualmente (con un analizador de bundle) que solo la función importada de `lodash-es` entra al resultado final, no la biblioteca completa.
+
+### Comprueba lo construido
+
+#### Ejercicio verificable 1
+
+Escribe el valor de `type` que hace que Node interprete los archivos `.js` como ESM.
+
+**Respuesta esperada:** module
+
+#### Ejercicio verificable 2
+
+Escribe el nombre de la técnica que elimina exports no utilizados del bundle.
+
+**Respuesta esperada:** tree-shaking|tree shaking
+
+#### Ejercicio verificable 3
+
+¿Qué comando genera el bundle de producción definido por Vite?
+
+**Respuesta esperada:** npm run build
 
 **Errores comunes y soluciones**
 

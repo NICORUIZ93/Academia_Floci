@@ -210,6 +210,36 @@ Con esto tienes un proyecto mínimo reproducible. Ahora sí tiene sentido estudi
 
 ### Tema 1: Mono y Flux
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás construir este flujo reactivo desde cero. Prerrequisitos: JDK 21, Maven y un editor. Verifica java --version y mvn --version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real de entregas, una API combina ubicación, tarifa y disponibilidad sin bloquear un hilo por cada espera de red. El objetivo es medir si la complejidad mejora el caso real.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+Mono representa cero o un valor y Flux una secuencia; operadores describen una tubería perezosa. Backpressure permite que el consumidor marque su capacidad. WebClient compone llamadas no bloqueantes; R2DBC adapta persistencia reactiva. La analogía es una cinta transportadora que regula su velocidad: no acumula cajas infinitamente ni confunde preparar una ruta con ejecutarla.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-spring-m9
+cd ejemplo-spring-m9
+curl -fsSL https://start.spring.io/starter.zip -d dependencies=webflux -d javaVersion=21 -o app.zip
+unzip app.zip
+mvn test
+```
+Crea src/main/java/com/example/demo/DeliveryHandler.java con un Flux de estados y un endpoint WebFlux; explica cada operador y sus límites.
+
+#### Paso 5 · Práctica guiada
+Pista: ejecuta mvn test, añade un retraso para provocar un fallo deliberado de timeout y corrígelo con timeout y fallback. Resultado esperado: la secuencia termina controladamente y no bloquea el hilo.
+
+#### Paso 6 · Práctica independiente
+Compón dos WebClient con zip, propaga un error de proveedor, registra latencia y compara la solución con una implementación bloqueante.
+
+#### Paso 7 · Cierre y evidencia
+Guarda código, pruebas, tiempos y logs; como siguiente paso estudia R2DBC solo si el perfil de carga lo justifica. Errores comunes: usar block dentro del flujo, ignorar cancelación, no limitar concurrencia y migrar sin medir. Fuentes oficiales: https://docs.spring.io/spring-framework/reference/web/webflux.html y https://projectreactor.io/docs/core/release/reference/.
+**¿Por qué es importante?** Porque el modelo reactivo resuelve esperas concurrentes, pero solo aporta valor cuando se mantiene no bloqueante de extremo a extremo.
+**Evidencia de aprendizaje:** entrega el flujo, el fallo de timeout, la corrección y una comparación medida.
 **Conceptos clave:** 0 o 1 elemento frente a 0 a N elementos, evaluación perezosa con suscripción.
 
 `Mono<Tarea> tarea = repositorio.findById(id);` representa un flujo reactivo de cero o un elemento (análogo conceptualmente a un `Optional` asíncrono, Módulo 4 del track de Java, pero para un valor que llegará en el futuro, no uno ya disponible); `Flux<Tarea> tareas = repositorio.findAll();` representa un flujo de cero a N elementos, análogo conceptualmente a un `Stream` (Módulo 4 del track de Java) pero para una secuencia de valores que llega de forma asíncrona a lo largo del tiempo, no una colección ya completamente disponible en memoria.
@@ -229,6 +259,36 @@ Flux<Tarea> tareas = repositorio.findAll();        // 0 a N elementos
 
 ### Tema 2: WebClient y composición no bloqueante
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás construir este flujo reactivo desde cero. Prerrequisitos: JDK 21, Maven y un editor. Verifica java --version y mvn --version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real de entregas, una API combina ubicación, tarifa y disponibilidad sin bloquear un hilo por cada espera de red. El objetivo es medir si la complejidad mejora el caso real.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+Mono representa cero o un valor y Flux una secuencia; operadores describen una tubería perezosa. Backpressure permite que el consumidor marque su capacidad. WebClient compone llamadas no bloqueantes; R2DBC adapta persistencia reactiva. La analogía es una cinta transportadora que regula su velocidad: no acumula cajas infinitamente ni confunde preparar una ruta con ejecutarla.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-spring-m9
+cd ejemplo-spring-m9
+curl -fsSL https://start.spring.io/starter.zip -d dependencies=webflux -d javaVersion=21 -o app.zip
+unzip app.zip
+mvn test
+```
+Crea src/main/java/com/example/demo/DeliveryHandler.java con un Flux de estados y un endpoint WebFlux; explica cada operador y sus límites.
+
+#### Paso 5 · Práctica guiada
+Pista: ejecuta mvn test, añade un retraso para provocar un fallo deliberado de timeout y corrígelo con timeout y fallback. Resultado esperado: la secuencia termina controladamente y no bloquea el hilo.
+
+#### Paso 6 · Práctica independiente
+Compón dos WebClient con zip, propaga un error de proveedor, registra latencia y compara la solución con una implementación bloqueante.
+
+#### Paso 7 · Cierre y evidencia
+Guarda código, pruebas, tiempos y logs; como siguiente paso estudia R2DBC solo si el perfil de carga lo justifica. Errores comunes: usar block dentro del flujo, ignorar cancelación, no limitar concurrencia y migrar sin medir. Fuentes oficiales: https://docs.spring.io/spring-framework/reference/web/webflux.html y https://projectreactor.io/docs/core/release/reference/.
+**¿Por qué es importante?** Porque el modelo reactivo resuelve esperas concurrentes, pero solo aporta valor cuando se mantiene no bloqueante de extremo a extremo.
+**Evidencia de aprendizaje:** entrega el flujo, el fallo de timeout, la corrección y una comparación medida.
 **Conceptos clave:** thread libre mientras espera I/O, composición con `flatMap`.
 
 `WebClient` reemplaza al histórico `RestTemplate` (ahora considerado legado) para realizar llamadas HTTP salientes de forma completamente no bloqueante: `Mono<Usuario> usuario = webClient.get().uri("/usuarios/{id}", id).retrieve().bodyToMono(Usuario.class);` inicia la petición sin bloquear el thread actual esperando la respuesta, liberando ese thread para atender otras peticiones concurrentes mientras la respuesta de la llamada externa todavía está en tránsito, un modelo fundamentalmente distinto al de `RestTemplate` (o cualquier cliente HTTP bloqueante tradicional), que mantendría el thread ocupado y esperando activamente durante toda la duración de la llamada de red.
@@ -254,6 +314,36 @@ Mono<Resultado> resultado = usuario.flatMap(u -> webClient.get()
 
 ### Tema 3: Cuándo WebFlux vale la complejidad, y R2DBC
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás construir este flujo reactivo desde cero. Prerrequisitos: JDK 21, Maven y un editor. Verifica java --version y mvn --version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real de entregas, una API combina ubicación, tarifa y disponibilidad sin bloquear un hilo por cada espera de red. El objetivo es medir si la complejidad mejora el caso real.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+Mono representa cero o un valor y Flux una secuencia; operadores describen una tubería perezosa. Backpressure permite que el consumidor marque su capacidad. WebClient compone llamadas no bloqueantes; R2DBC adapta persistencia reactiva. La analogía es una cinta transportadora que regula su velocidad: no acumula cajas infinitamente ni confunde preparar una ruta con ejecutarla.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-spring-m9
+cd ejemplo-spring-m9
+curl -fsSL https://start.spring.io/starter.zip -d dependencies=webflux -d javaVersion=21 -o app.zip
+unzip app.zip
+mvn test
+```
+Crea src/main/java/com/example/demo/DeliveryHandler.java con un Flux de estados y un endpoint WebFlux; explica cada operador y sus límites.
+
+#### Paso 5 · Práctica guiada
+Pista: ejecuta mvn test, añade un retraso para provocar un fallo deliberado de timeout y corrígelo con timeout y fallback. Resultado esperado: la secuencia termina controladamente y no bloquea el hilo.
+
+#### Paso 6 · Práctica independiente
+Compón dos WebClient con zip, propaga un error de proveedor, registra latencia y compara la solución con una implementación bloqueante.
+
+#### Paso 7 · Cierre y evidencia
+Guarda código, pruebas, tiempos y logs; como siguiente paso estudia R2DBC solo si el perfil de carga lo justifica. Errores comunes: usar block dentro del flujo, ignorar cancelación, no limitar concurrencia y migrar sin medir. Fuentes oficiales: https://docs.spring.io/spring-framework/reference/web/webflux.html y https://projectreactor.io/docs/core/release/reference/.
+**¿Por qué es importante?** Porque el modelo reactivo resuelve esperas concurrentes, pero solo aporta valor cuando se mantiene no bloqueante de extremo a extremo.
+**Evidencia de aprendizaje:** entrega el flujo, el fallo de timeout, la corrección y una comparación medida.
 **Conceptos clave:** alta concurrencia con recursos limitados frente a CRUD simple, JDBC bloqueante en un pipeline reactivo.
 
 WebFlux brilla específicamente en sistemas con muchas conexiones concurrentes dominadas por I/O (llamadas hacia otros servicios, streaming de datos) donde los recursos de threads son limitados y se desea evitar el costo de mantener un thread bloqueado por conexión activa esperando I/O; para CRUDs simples con concurrencia moderada, Spring MVC tradicional (bloqueante, pero con un modelo de programación considerablemente más simple de razonar, con stack traces lineales y legibles, en vez del flujo de ejecución más difícil de seguir de una cadena reactiva) suele ser suficiente, un balance que se ha vuelto todavía más relevante desde la introducción de los virtual threads de Java 21 (Módulo 5 del track de Java), que cubren buena parte del mismo problema original de WebFlux (muchas conexiones concurrentes con I/O bloqueante) pero con un modelo de programación síncrono y considerablemente más simple de escribir y depurar.

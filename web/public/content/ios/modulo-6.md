@@ -5,6 +5,35 @@
 
 ### Tema 1: @Model y ModelContainer
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás persistir datos SwiftUI desde cero. Prerrequisitos: macOS, Xcode y Swift. Verifica xcodebuild -version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real, la app guarda borradores y estados offline, pero debe migrar el esquema sin perder entregas.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+SwiftData usa @Model para describir persistencia, ModelContainer para contexto y @Query para lecturas reactivas. Migraciones deben versionarse; Core Data ofrece control más antiguo y amplio. La analogía es un archivo histórico: cada cambio de formato conserva datos y deja registro.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-ios-m6
+cd ejemplo-ios-m6
+swift package init --type executable
+swift run
+```
+Crea un proyecto SwiftUI en Xcode con modelo Delivery @Model, ModelContainer y una vista que inserte y consulte; documenta contexto y persistencia.
+
+#### Paso 5 · Práctica guiada
+Pista: cambia deliberadamente un campo requerido para provocar un fallo deliberado de migración o guardado; observa el error y corrígelo con una versión compatible. Resultado esperado: datos persistidos y consulta estable.
+
+#### Paso 6 · Práctica independiente
+Añade relación Driver-Delivery, borrador offline, migración versionada y una comparación con Core Data.
+
+#### Paso 7 · Cierre y evidencia
+Guarda modelo, capturas, logs y migración; como siguiente paso estudia notificaciones. Errores comunes: guardar UI en modelo, cambios destructivos, contexto en hilo incorrecto y no probar datos antiguos. Fuentes oficiales: https://developer.apple.com/documentation/swiftdata y https://developer.apple.com/documentation/coredata.
+**¿Por qué es importante?** Porque persistencia transforma decisiones temporales en datos que deben sobrevivir actualizaciones.
+**Evidencia de aprendizaje:** entrega modelo, inserción, migración, fallo y consulta.
 **Conceptos clave:** declaración de esquema mediante macros, sin configuración manual de `NSManagedObject`.
 
 ```swift
@@ -44,6 +73,35 @@ class Tarea {
 
 ### Tema 2: @Query y operaciones de escritura
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás persistir datos SwiftUI desde cero. Prerrequisitos: macOS, Xcode y Swift. Verifica xcodebuild -version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real, la app guarda borradores y estados offline, pero debe migrar el esquema sin perder entregas.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+SwiftData usa @Model para describir persistencia, ModelContainer para contexto y @Query para lecturas reactivas. Migraciones deben versionarse; Core Data ofrece control más antiguo y amplio. La analogía es un archivo histórico: cada cambio de formato conserva datos y deja registro.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-ios-m6
+cd ejemplo-ios-m6
+swift package init --type executable
+swift run
+```
+Crea un proyecto SwiftUI en Xcode con modelo Delivery @Model, ModelContainer y una vista que inserte y consulte; documenta contexto y persistencia.
+
+#### Paso 5 · Práctica guiada
+Pista: cambia deliberadamente un campo requerido para provocar un fallo deliberado de migración o guardado; observa el error y corrígelo con una versión compatible. Resultado esperado: datos persistidos y consulta estable.
+
+#### Paso 6 · Práctica independiente
+Añade relación Driver-Delivery, borrador offline, migración versionada y una comparación con Core Data.
+
+#### Paso 7 · Cierre y evidencia
+Guarda modelo, capturas, logs y migración; como siguiente paso estudia notificaciones. Errores comunes: guardar UI en modelo, cambios destructivos, contexto en hilo incorrecto y no probar datos antiguos. Fuentes oficiales: https://developer.apple.com/documentation/swiftdata y https://developer.apple.com/documentation/coredata.
+**¿Por qué es importante?** Porque persistencia transforma decisiones temporales en datos que deben sobrevivir actualizaciones.
+**Evidencia de aprendizaje:** entrega modelo, inserción, migración, fallo y consulta.
 **Conceptos clave:** observación automática de la fuente de verdad persistida.
 
 ```swift
@@ -77,6 +135,35 @@ SwiftData datos cambian → @Query re-evalúa automáticamente → la vista se a
 
 ### Tema 3: Migraciones y SwiftData vs Core Data
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás persistir datos SwiftUI desde cero. Prerrequisitos: macOS, Xcode y Swift. Verifica xcodebuild -version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real, la app guarda borradores y estados offline, pero debe migrar el esquema sin perder entregas.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+SwiftData usa @Model para describir persistencia, ModelContainer para contexto y @Query para lecturas reactivas. Migraciones deben versionarse; Core Data ofrece control más antiguo y amplio. La analogía es un archivo histórico: cada cambio de formato conserva datos y deja registro.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-ios-m6
+cd ejemplo-ios-m6
+swift package init --type executable
+swift run
+```
+Crea un proyecto SwiftUI en Xcode con modelo Delivery @Model, ModelContainer y una vista que inserte y consulte; documenta contexto y persistencia.
+
+#### Paso 5 · Práctica guiada
+Pista: cambia deliberadamente un campo requerido para provocar un fallo deliberado de migración o guardado; observa el error y corrígelo con una versión compatible. Resultado esperado: datos persistidos y consulta estable.
+
+#### Paso 6 · Práctica independiente
+Añade relación Driver-Delivery, borrador offline, migración versionada y una comparación con Core Data.
+
+#### Paso 7 · Cierre y evidencia
+Guarda modelo, capturas, logs y migración; como siguiente paso estudia notificaciones. Errores comunes: guardar UI en modelo, cambios destructivos, contexto en hilo incorrecto y no probar datos antiguos. Fuentes oficiales: https://developer.apple.com/documentation/swiftdata y https://developer.apple.com/documentation/coredata.
+**¿Por qué es importante?** Porque persistencia transforma decisiones temporales en datos que deben sobrevivir actualizaciones.
+**Evidencia de aprendizaje:** entrega modelo, inserción, migración, fallo y consulta.
 **Conceptos clave:** capa moderna sobre el mismo motor probado, elección según necesidad de control fino.
 
 SwiftData es una capa moderna construida directamente sobre el mismo motor subyacente de Core Data (probado en producción durante más de una década en el ecosistema Apple), reemplazando la sintaxis imperativa y verbosa de `NSManagedObject`/`NSFetchRequest` por macros declarativas de Swift (`@Model`, `@Query`); para proyectos nuevos, SwiftData es generalmente la opción recomendada, dado que ofrece la misma robustez del motor subyacente con una experiencia de desarrollo considerablemente más simple y menos propensa a errores de configuración manual.

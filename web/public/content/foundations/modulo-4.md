@@ -5,6 +5,37 @@
 
 ### Tema 1: Del mundo real al modelo relacional
 
+Ejecuta node --version para comprobar el entorno antes de continuar. **Evidencia de aprendizaje:** conserva la salida y explica qué verificaste.
+
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás diseñar y consultar datos desde cero. Prerrequisitos: Docker o SQLite, terminal y editor. Comprueba sqlite3 --version o docker --version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real de entregas, pedidos, usuarios y ubicaciones deben conservar identidad, relaciones e historial sin duplicar información.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+Un modelo relacional separa entidades y relaciones; SQL define, consulta y protege datos. Restricciones expresan invariantes, índices aceleran lecturas con coste de escritura y transacciones coordinan cambios. La analogía es un registro contable: cada asiento tiene clave, regla y confirmación.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-fundamentos-m4
+cd ejemplo-fundamentos-m4
+sqlite3 deliveries.db "create table delivery(id text primary key, status text not null);"
+sqlite3 deliveries.db "insert into delivery values('d-1','ready'); select * from delivery;"
+```
+Crea schema.sql con una restricción y explica cada sentencia y resultado.
+
+#### Paso 5 · Práctica guiada
+Pista: inserta deliberadamente un estado inválido para provocar un fallo deliberado de restricción; lee el mensaje y corrígelo. Resultado esperado: solo datos válidos persistidos.
+
+#### Paso 6 · Práctica independiente
+Añade relación usuario-entrega, índice para búsqueda por estado, transacción de actualización y una comparación documentada con un almacén NoSQL.
+
+#### Paso 7 · Cierre y evidencia
+Guarda schema, consultas, logs y plan; como siguiente paso estudia APIs. Errores comunes: concatenar SQL, omitir claves, indexar todo, transacciones demasiado largas y elegir NoSQL sin requisito. Fuentes oficiales: https://www.sqlite.org/docs.html y https://www.postgresql.org/docs/current/.
+**¿Por qué es importante?** Porque los datos persisten más que una función y necesitan invariantes explícitos.
+**Evidencia de aprendizaje:** entrega esquema, consulta, fallo de restricción y medición.
 **Conceptos clave:** entidad, atributo, fila, tabla, clave primaria, clave foránea, relación, cardinalidad, restricción y normalización.
 
 Persistir no significa “guardar un objeto como sea”. Primero se modela qué hechos existen y qué reglas deben permanecer verdaderas. En un inventario hay productos, categorías y movimientos. Un producto tiene SKU único; un movimiento pertenece a un producto y registra cantidad, tipo y fecha.
@@ -56,6 +87,37 @@ Inserta una guía con centro inexistente y verifica el fallo tras habilitar `PRA
 
 ### Tema 2: SQL para definir, escribir, consultar y relacionar
 
+Ejecuta node --version para comprobar el entorno antes de continuar. **Evidencia de aprendizaje:** conserva la salida y explica qué verificaste.
+
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás diseñar y consultar datos desde cero. Prerrequisitos: Docker o SQLite, terminal y editor. Comprueba sqlite3 --version o docker --version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real de entregas, pedidos, usuarios y ubicaciones deben conservar identidad, relaciones e historial sin duplicar información.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+Un modelo relacional separa entidades y relaciones; SQL define, consulta y protege datos. Restricciones expresan invariantes, índices aceleran lecturas con coste de escritura y transacciones coordinan cambios. La analogía es un registro contable: cada asiento tiene clave, regla y confirmación.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-fundamentos-m4
+cd ejemplo-fundamentos-m4
+sqlite3 deliveries.db "create table delivery(id text primary key, status text not null);"
+sqlite3 deliveries.db "insert into delivery values('d-1','ready'); select * from delivery;"
+```
+Crea schema.sql con una restricción y explica cada sentencia y resultado.
+
+#### Paso 5 · Práctica guiada
+Pista: inserta deliberadamente un estado inválido para provocar un fallo deliberado de restricción; lee el mensaje y corrígelo. Resultado esperado: solo datos válidos persistidos.
+
+#### Paso 6 · Práctica independiente
+Añade relación usuario-entrega, índice para búsqueda por estado, transacción de actualización y una comparación documentada con un almacén NoSQL.
+
+#### Paso 7 · Cierre y evidencia
+Guarda schema, consultas, logs y plan; como siguiente paso estudia APIs. Errores comunes: concatenar SQL, omitir claves, indexar todo, transacciones demasiado largas y elegir NoSQL sin requisito. Fuentes oficiales: https://www.sqlite.org/docs.html y https://www.postgresql.org/docs/current/.
+**¿Por qué es importante?** Porque los datos persisten más que una función y necesitan invariantes explícitos.
+**Evidencia de aprendizaje:** entrega esquema, consulta, fallo de restricción y medición.
 **Conceptos clave:** DDL, DML, SELECT, INSERT, UPDATE, DELETE, WHERE, ORDER BY, GROUP BY, agregación, JOIN y parámetro.
 
 SQL es declarativo: expresas el resultado, no el recorrido exacto. DDL define estructura; DML consulta y modifica datos.
@@ -119,6 +181,37 @@ Concatena deliberadamente un filtro recibido como `"' OR 1=1 --"` y observa cóm
 
 ### Tema 3: Índices, restricciones y planes de consulta
 
+Ejecuta node --version para comprobar el entorno antes de continuar. **Evidencia de aprendizaje:** conserva la salida y explica qué verificaste.
+
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás diseñar y consultar datos desde cero. Prerrequisitos: Docker o SQLite, terminal y editor. Comprueba sqlite3 --version o docker --version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real de entregas, pedidos, usuarios y ubicaciones deben conservar identidad, relaciones e historial sin duplicar información.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+Un modelo relacional separa entidades y relaciones; SQL define, consulta y protege datos. Restricciones expresan invariantes, índices aceleran lecturas con coste de escritura y transacciones coordinan cambios. La analogía es un registro contable: cada asiento tiene clave, regla y confirmación.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-fundamentos-m4
+cd ejemplo-fundamentos-m4
+sqlite3 deliveries.db "create table delivery(id text primary key, status text not null);"
+sqlite3 deliveries.db "insert into delivery values('d-1','ready'); select * from delivery;"
+```
+Crea schema.sql con una restricción y explica cada sentencia y resultado.
+
+#### Paso 5 · Práctica guiada
+Pista: inserta deliberadamente un estado inválido para provocar un fallo deliberado de restricción; lee el mensaje y corrígelo. Resultado esperado: solo datos válidos persistidos.
+
+#### Paso 6 · Práctica independiente
+Añade relación usuario-entrega, índice para búsqueda por estado, transacción de actualización y una comparación documentada con un almacén NoSQL.
+
+#### Paso 7 · Cierre y evidencia
+Guarda schema, consultas, logs y plan; como siguiente paso estudia APIs. Errores comunes: concatenar SQL, omitir claves, indexar todo, transacciones demasiado largas y elegir NoSQL sin requisito. Fuentes oficiales: https://www.sqlite.org/docs.html y https://www.postgresql.org/docs/current/.
+**¿Por qué es importante?** Porque los datos persisten más que una función y necesitan invariantes explícitos.
+**Evidencia de aprendizaje:** entrega esquema, consulta, fallo de restricción y medición.
 **Conceptos clave:** índice, escaneo, búsqueda, selectividad, índice compuesto, plan de consulta, coste de escritura y constraint.
 
 Un índice mantiene una estructura auxiliar ordenada para localizar filas sin recorrer toda la tabla. No es gratuito: ocupa espacio y debe actualizarse en cada escritura.
@@ -166,6 +259,37 @@ Invierte el orden de columnas del índice y comprueba qué consultas dejan de ap
 
 ### Tema 4: Transacciones, concurrencia y elección SQL/NoSQL
 
+Ejecuta node --version para comprobar el entorno antes de continuar. **Evidencia de aprendizaje:** conserva la salida y explica qué verificaste.
+
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás diseñar y consultar datos desde cero. Prerrequisitos: Docker o SQLite, terminal y editor. Comprueba sqlite3 --version o docker --version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real de entregas, pedidos, usuarios y ubicaciones deben conservar identidad, relaciones e historial sin duplicar información.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+Un modelo relacional separa entidades y relaciones; SQL define, consulta y protege datos. Restricciones expresan invariantes, índices aceleran lecturas con coste de escritura y transacciones coordinan cambios. La analogía es un registro contable: cada asiento tiene clave, regla y confirmación.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-fundamentos-m4
+cd ejemplo-fundamentos-m4
+sqlite3 deliveries.db "create table delivery(id text primary key, status text not null);"
+sqlite3 deliveries.db "insert into delivery values('d-1','ready'); select * from delivery;"
+```
+Crea schema.sql con una restricción y explica cada sentencia y resultado.
+
+#### Paso 5 · Práctica guiada
+Pista: inserta deliberadamente un estado inválido para provocar un fallo deliberado de restricción; lee el mensaje y corrígelo. Resultado esperado: solo datos válidos persistidos.
+
+#### Paso 6 · Práctica independiente
+Añade relación usuario-entrega, índice para búsqueda por estado, transacción de actualización y una comparación documentada con un almacén NoSQL.
+
+#### Paso 7 · Cierre y evidencia
+Guarda schema, consultas, logs y plan; como siguiente paso estudia APIs. Errores comunes: concatenar SQL, omitir claves, indexar todo, transacciones demasiado largas y elegir NoSQL sin requisito. Fuentes oficiales: https://www.sqlite.org/docs.html y https://www.postgresql.org/docs/current/.
+**¿Por qué es importante?** Porque los datos persisten más que una función y necesitan invariantes explícitos.
+**Evidencia de aprendizaje:** entrega esquema, consulta, fallo de restricción y medición.
 **Conceptos clave:** transacción, ACID, atomicidad, consistencia, aislamiento, durabilidad, commit, rollback, concurrencia, documento y patrón de acceso.
 
 Una transacción agrupa operaciones como unidad. Transferir stock entre ubicaciones requiere restar y sumar; si solo ocurre una, el sistema queda inconsistente.

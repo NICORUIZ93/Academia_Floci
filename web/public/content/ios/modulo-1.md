@@ -5,6 +5,35 @@
 
 ### Tema 1: El protocolo View y composición
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás crear una vista SwiftUI desde cero. Prerrequisitos: macOS, Xcode y Swift. Verifica xcodebuild -version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real, una app de entregas muestra lista, detalle y estados adaptables a iPhone y iPad.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+View describe una función de UI; modifiers construyen una cadena; stacks organizan espacio; LazyVGrid difiere trabajo; property wrappers conectan estado. La analogía es un plano de interiores: orden, jerarquía y materiales producen la misma función en tamaños distintos.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-ios-m1
+cd ejemplo-ios-m1
+swift package init --type executable
+swift run
+```
+Crea Sources/main.swift con una vista conceptual y un modelo Delivery; en Xcode crea un proyecto iOS SwiftUI y replica la composición.
+
+#### Paso 5 · Práctica guiada
+Pista: aplica deliberadamente un modifier en orden incorrecto para provocar un fallo deliberado de layout; observa la vista y corrígelo. Resultado esperado: jerarquía y padding consistentes.
+
+#### Paso 6 · Práctica independiente
+Añade ScrollView, LazyVGrid, preview con datos de muestra y estados loading/error; valida Dynamic Type.
+
+#### Paso 7 · Cierre y evidencia
+Guarda captura de preview, árbol y explicación; como siguiente paso estudia estado. Errores comunes: View enorme, modifier perdido, índices inestables y preview con red real. Fuentes oficiales: https://developer.apple.com/tutorials/swiftui y https://developer.apple.com/documentation/swiftui.
+**¿Por qué es importante?** Porque composición declarativa y accesibilidad deben diseñarse juntas.
+**Evidencia de aprendizaje:** entrega vista, preview, fallo visual y corrección.
 **Conceptos clave:** cualquier tipo que describe su UI mediante `body` es componible en cualquier lugar.
 
 ```swift
@@ -37,6 +66,35 @@ struct TarjetaTarea: View {
 
 ### Tema 2: Orden de modificadores y layout con stacks
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás crear una vista SwiftUI desde cero. Prerrequisitos: macOS, Xcode y Swift. Verifica xcodebuild -version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real, una app de entregas muestra lista, detalle y estados adaptables a iPhone y iPad.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+View describe una función de UI; modifiers construyen una cadena; stacks organizan espacio; LazyVGrid difiere trabajo; property wrappers conectan estado. La analogía es un plano de interiores: orden, jerarquía y materiales producen la misma función en tamaños distintos.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-ios-m1
+cd ejemplo-ios-m1
+swift package init --type executable
+swift run
+```
+Crea Sources/main.swift con una vista conceptual y un modelo Delivery; en Xcode crea un proyecto iOS SwiftUI y replica la composición.
+
+#### Paso 5 · Práctica guiada
+Pista: aplica deliberadamente un modifier en orden incorrecto para provocar un fallo deliberado de layout; observa la vista y corrígelo. Resultado esperado: jerarquía y padding consistentes.
+
+#### Paso 6 · Práctica independiente
+Añade ScrollView, LazyVGrid, preview con datos de muestra y estados loading/error; valida Dynamic Type.
+
+#### Paso 7 · Cierre y evidencia
+Guarda captura de preview, árbol y explicación; como siguiente paso estudia estado. Errores comunes: View enorme, modifier perdido, índices inestables y preview con red real. Fuentes oficiales: https://developer.apple.com/tutorials/swiftui y https://developer.apple.com/documentation/swiftui.
+**¿Por qué es importante?** Porque composición declarativa y accesibilidad deben diseñarse juntas.
+**Evidencia de aprendizaje:** entrega vista, preview, fallo visual y corrección.
 **Conceptos clave:** cada modificador envuelve la vista anterior en una nueva vista, el orden determina el resultado.
 
 ```swift
@@ -63,6 +121,35 @@ VStack(spacing: 8) {
 
 ### Tema 3: Previews, LazyVGrid/ScrollView y property wrappers
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás crear una vista SwiftUI desde cero. Prerrequisitos: macOS, Xcode y Swift. Verifica xcodebuild -version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real, una app de entregas muestra lista, detalle y estados adaptables a iPhone y iPad.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+View describe una función de UI; modifiers construyen una cadena; stacks organizan espacio; LazyVGrid difiere trabajo; property wrappers conectan estado. La analogía es un plano de interiores: orden, jerarquía y materiales producen la misma función en tamaños distintos.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-ios-m1
+cd ejemplo-ios-m1
+swift package init --type executable
+swift run
+```
+Crea Sources/main.swift con una vista conceptual y un modelo Delivery; en Xcode crea un proyecto iOS SwiftUI y replica la composición.
+
+#### Paso 5 · Práctica guiada
+Pista: aplica deliberadamente un modifier en orden incorrecto para provocar un fallo deliberado de layout; observa la vista y corrígelo. Resultado esperado: jerarquía y padding consistentes.
+
+#### Paso 6 · Práctica independiente
+Añade ScrollView, LazyVGrid, preview con datos de muestra y estados loading/error; valida Dynamic Type.
+
+#### Paso 7 · Cierre y evidencia
+Guarda captura de preview, árbol y explicación; como siguiente paso estudia estado. Errores comunes: View enorme, modifier perdido, índices inestables y preview con red real. Fuentes oficiales: https://developer.apple.com/tutorials/swiftui y https://developer.apple.com/documentation/swiftui.
+**¿Por qué es importante?** Porque composición declarativa y accesibilidad deben diseñarse juntas.
+**Evidencia de aprendizaje:** entrega vista, preview, fallo visual y corrección.
 **Conceptos clave:** iteración casi instantánea sin recompilar la app completa.
 
 ```swift

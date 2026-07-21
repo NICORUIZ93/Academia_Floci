@@ -5,6 +5,62 @@
 
 ### Tema 1: Arquitectura por capas
 
+#### Paso 1 · Objetivo y preparación
+
+Al finalizar podrás separar entrada HTTP, casos de uso y persistencia. **Prerrequisitos:** Node LTS, módulos y HTTP; ejemplo independiente desde una carpeta vacía.
+
+#### Paso 2 · Contexto y caso real
+
+Una API de entregas cambia su base o proveedor de mapas con frecuencia. Si la ruta contiene toda la lógica, cada cambio multiplica el riesgo.
+
+#### Paso 3 · Teoría y analogía aplicada
+
+La capa de entrada traduce HTTP, la aplicación coordina y la infraestructura persiste. Es un edificio con recepción, oficinas y almacén: cada zona tiene responsabilidades y puertas claras.
+
+#### Paso 4 · Demostración guiada desde cero
+
+```bash
+mkdir ejemplo-capas
+cd ejemplo-capas
+npm init -y
+mkdir -p src/{http,application,infrastructure}
+```
+
+Crea `src/application/crear.js`, `src/infrastructure/memoria.js` y `src/http/server.js`:
+
+```js
+export function crearEntrega(repo, datos) { if (!datos.codigo) throw new Error("codigo requerido"); return repo.guardar(datos); }
+```
+
+```js
+export function memoria() { const datos = []; return { guardar(item) { datos.push(item); return item; } }; }
+```
+
+```js
+import http from "node:http"; import { crearEntrega } from "../application/crear.js"; import { memoria } from "../infrastructure/memoria.js";
+const repo = memoria(); http.createServer((_req, res) => { try { res.end(JSON.stringify(crearEntrega(repo, { codigo: "RF-1" }))); } catch { res.statusCode = 400; res.end("bad"); } }).listen(3000);
+```
+
+Ejecuta `node src/http/server.js`. **Resultado esperado:** el servidor responde el objeto creado. **Fallo deliberado y diagnóstico:** elimina `codigo`; la aplicación devuelve 400, sin que la infraestructura valide HTTP.
+
+#### Paso 5 · Práctica guiada
+
+Inyecta un repositorio falso que registre llamadas. **Pista:** el caso de uso no debe importar Express ni `http`.
+
+#### Paso 6 · Práctica independiente
+
+Reemplaza memoria por un adaptador de archivo y entrega pruebas de ambos sin modificar la aplicación.
+
+#### Paso 7 · Cierre y conexión
+
+Ya tienes límites visibles entre capas. El siguiente tema conectará los conceptos del track en otro proyecto.
+
+**Errores comunes:** capas por carpetas sin contratos; dominio importando infraestructura; controladores con SQL; mocks que no respetan interfaz.
+
+**Fuentes oficiales:** [Node modules](https://nodejs.org/api/esm.html) y [Clean Architecture, Martin](https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html).
+
+**Evidencia de aprendizaje:** entrega la salida 200, el fallo 400 y un adaptador sustituido.
+
 **Conceptos clave:** separación de responsabilidades, rutas, controladores, servicios, repositorio.
 
 Una arquitectura por capas organiza el código de una API en niveles con responsabilidades claramente delimitadas y sin superposición: las rutas (estudiadas en el Módulo 4) definen únicamente los endpoints HTTP y delegan inmediatamente hacia los controladores, sin contener ninguna lógica de negocio propia; los controladores traducen entre el mundo HTTP (extraer parámetros de la petición, formatear la respuesta) y el mundo de la lógica de negocio, invocando a los servicios correspondientes; los servicios contienen la lógica de negocio real (reglas de validación de dominio, cálculos, orquestación de múltiples operaciones), completamente ajenos a los detalles de HTTP o de la base de datos específica usada; y el repositorio encapsula el acceso a los datos (usando Prisma, estudiado en el Módulo 5, o cualquier otro mecanismo de persistencia), sin contener ninguna lógica de negocio propia más allá de las operaciones de acceso a datos mismas.
@@ -27,6 +83,56 @@ repositorios/   → acceso a datos (Prisma/SQL), sin lógica de negocio
 ```
 
 ### Tema 2: Uniendo cada módulo del track
+
+#### Paso 1 · Objetivo y preparación
+
+Al finalizar podrás integrar configuración, HTTP, persistencia, pruebas y observabilidad en un servicio pequeño. **Prerrequisitos:** Node LTS; ejemplo independiente desde una carpeta vacía.
+
+#### Paso 2 · Contexto y caso real
+
+Un producto no se entrega por conceptos aislados: necesita un flujo reproducible que arranque, pruebe y exponga salud.
+
+#### Paso 3 · Teoría y analogía aplicada
+
+Integrar no significa mezclar responsabilidades; significa conectar contratos. Es ensamblar piezas con conectores definidos, no pegar todo en un archivo.
+
+#### Paso 4 · Demostración guiada desde cero
+
+```bash
+mkdir ejemplo-integrador-node
+cd ejemplo-integrador-node
+npm init -y
+mkdir src
+```
+
+Crea `src/app.js`:
+
+```js
+import http from "node:http";
+const config = Object.freeze({ port: Number(process.env.PORT ?? 3000) });
+const app = http.createServer((_req, res) => { res.setHeader("content-type", "application/json"); res.end(JSON.stringify({ ok: true, service: "demo" })); });
+app.listen(config.port, () => console.log(`listo:${config.port}`));
+```
+
+Ejecuta `PORT=3100 node src/app.js` y consulta con curl. **Resultado esperado:** JSON `ok`. **Fallo deliberado y diagnóstico:** usa un puerto inválido; la configuración falla antes de iniciar, evitando un servicio ambiguo.
+
+#### Paso 5 · Práctica guiada
+
+Añade `/health` y una prueba de contrato. **Pista:** la prueba no debe iniciar un puerto en cada caso.
+
+#### Paso 6 · Práctica independiente
+
+Escribe README con instalación, prueba, variables y apagado; otra persona debe reproducir el resultado desde cero.
+
+#### Paso 7 · Cierre y conexión
+
+Ya integraste un servicio mínimo reproducible. El siguiente tema hará una revisión de producción y sus límites.
+
+**Errores comunes:** saltar validación; no documentar puertos; integrar sin prueba; compartir estado global; confundir demo con producción.
+
+**Fuentes oficiales:** [Node HTTP](https://nodejs.org/api/http.html), [npm scripts](https://docs.npmjs.com/cli/using-npm/scripts) y [12-factor](https://12factor.net/).
+
+**Evidencia de aprendizaje:** entrega README, salida de arranque y prueba de configuración inválida.
 
 **Conceptos clave:** integración horizontal de todo el track en un único proyecto coherente.
 
@@ -53,6 +159,61 @@ Dockerfile multi-stage (M11) → empaquetado final de producción
 
 ### Tema 3: Qué le falta a esta API para producción real
 
+#### Paso 1 · Objetivo y preparación
+
+Al finalizar podrás hacer un checklist técnico antes de publicar una API. **Prerrequisitos:** Node LTS y HTTP; ejemplo independiente desde una carpeta vacía.
+
+#### Paso 2 · Contexto y caso real
+
+Una demo puede responder 200 y aun así carecer de autenticación, límites, backups, alertas y recuperación. La revisión convierte “funciona” en evidencia operativa.
+
+#### Paso 3 · Teoría y analogía aplicada
+
+Producción requiere seguridad, resiliencia, observabilidad, datos y operación. Es la inspección de una aeronave: no basta con que el motor arranque.
+
+#### Paso 4 · Demostración guiada desde cero
+
+```bash
+mkdir ejemplo-readiness-produccion
+cd ejemplo-readiness-produccion
+npm init -y
+mkdir docs
+```
+
+Crea `docs/checklist.md` con columnas `riesgo|evidencia|responsable|estado` y registra autenticación, backup, límites, healthcheck y rollback. Ejecuta `git diff --check` y revisa que cada fila tenga evidencia. **Resultado esperado:** checklist sin estados vacíos. **Fallo deliberado y diagnóstico:** deja una fila sin evidencia; la revisión debe marcarla pendiente, no asumir que está cubierta.
+
+Crea también `src/checklist.js` para validar filas:
+
+```js
+const filas = [{ riesgo: "credenciales", evidencia: "rotación probada" }];
+if (filas.some((fila) => !fila.evidencia)) throw new Error("falta evidencia");
+console.log("checklist válido");
+```
+
+```md
+| riesgo | evidencia | responsable | estado |
+|---|---|---|---|
+| credenciales | rotación probada | backend | pendiente |
+```
+
+#### Paso 5 · Práctica guiada
+
+Añade una matriz de impacto/probabilidad. **Pista:** prioriza riesgos que pueden perder datos o exponer credenciales.
+
+#### Paso 6 · Práctica independiente
+
+Escribe un runbook de incidente con detección, mitigación, rollback y aprendizaje posterior.
+
+#### Paso 7 · Cierre y conexión
+
+Ya conviertes arquitectura en criterios operables. El siguiente tema comparará evoluciones tecnológicas.
+
+**Errores comunes:** checklist sin evidencia; medir solo cobertura; omitir recuperación; no asignar responsables; llamar “producción” a un entorno sin alertas.
+
+**Fuentes oficiales:** [SRE workbook](https://sre.google/workbook/), [OWASP ASVS](https://owasp.org/www-project-application-security-verification-standard/) y [12-factor](https://12factor.net/).
+
+**Evidencia de aprendizaje:** entrega checklist completo y un runbook con un fallo simulado.
+
 **Conceptos clave:** honestidad sobre las limitaciones del proyecto, próximos pasos de aprendizaje.
 
 Una API "completa" en el contexto de este curso, aunque integra correctamente todos los módulos estudiados, todavía carece de varios elementos que un sistema de producción real y maduro necesitaría, y reconocer honestamente estas limitaciones es parte del ejercicio de madurez profesional que este proyecto busca fomentar. Monitoreo activo con alertas (no solo logs pasivos que alguien debe revisar manualmente) sobre métricas clave del servicio, en la línea de lo estudiado en el Módulo 9 del track DevOps (Prometheus/Grafana con reglas de alerta reales), es necesario para detectar proactivamente problemas antes de que un usuario los reporte, en vez de depender exclusivamente de logs que solo se consultan reactivamente después de que algo ya falló visiblemente.
@@ -78,6 +239,61 @@ Este proyecto integrador incluye:          Producción real adicionalmente neces
 
 ### Tema 4: Próximos pasos — microservicios, colas de mensajes y TypeScript
 
+#### Paso 1 · Objetivo y preparación
+
+Al finalizar podrás escoger un siguiente paso sin convertir complejidad en objetivo. **Prerrequisitos:** Node LTS y lectura de arquitectura; ejemplo independiente desde una carpeta vacía.
+
+#### Paso 2 · Contexto y caso real
+
+Un monolito pequeño puede ser más operable que muchos servicios. La decisión depende de límites de equipo, despliegue, datos y fallos.
+
+#### Paso 3 · Teoría y analogía aplicada
+
+Microservicios añaden red y observabilidad; colas añaden eventual consistency; TypeScript añade verificación estática. Son herramientas, no niveles obligatorios.
+
+#### Paso 4 · Demostración guiada desde cero
+
+```bash
+mkdir ejemplo-decision-arquitectura
+cd ejemplo-decision-arquitectura
+npm init -y
+mkdir docs
+```
+
+Crea `docs/decision.md` con opciones monolito, servicio separado y cola, y columnas `beneficio|costo|riesgo|evidencia`. Ejecuta `git diff --check`. **Resultado esperado:** una decisión trazable. **Fallo deliberado y diagnóstico:** elimina la columna de costo; la revisión debe rechazar la decisión por evidencia incompleta.
+
+Crea `src/decision.js` para comprobar que no falta una columna:
+
+```js
+const decision = { opcion: "monolito", beneficio: "simple", costo: "bajo", riesgo: "escala", evidencia: "carga medida" };
+for (const campo of ["beneficio", "costo", "riesgo", "evidencia"]) if (!decision[campo]) throw new Error(`falta ${campo}`);
+console.log("decisión trazable");
+```
+
+```md
+| opción | beneficio | costo | riesgo | evidencia |
+|---|---|---|---|---|
+| monolito | simple | bajo | escala | carga medida |
+```
+
+#### Paso 5 · Práctica guiada
+
+Añade una métrica de volumen y equipo que cambie la recomendación. **Pista:** no elijas tecnología antes de escribir restricciones.
+
+#### Paso 6 · Práctica independiente
+
+Propón una migración incremental con un límite reversible y entrega el criterio de rollback.
+
+#### Paso 7 · Cierre y conexión
+
+Ya puedes elegir evolución por evidencia. El siguiente tema profundizará geolocalización y tiempo real.
+
+**Errores comunes:** microservicios por moda; ignorar consistencia; adoptar TypeScript sin plan; colas sin idempotencia; no medir costo operativo.
+
+**Fuentes oficiales:** [TypeScript handbook](https://www.typescriptlang.org/docs/handbook/intro.html), [microservices](https://martinfowler.com/articles/microservices.html) y [messaging patterns](https://www.enterpriseintegrationpatterns.com/).
+
+**Evidencia de aprendizaje:** entrega una matriz comparativa y una decisión reversible.
+
 **Conceptos clave:** descomposición en servicios, Kafka/RabbitMQ, tipado estático en Node.
 
 Más allá de este track, un camino natural de profundización es la arquitectura de microservicios: descomponer una API monolítica (como la construida en este proyecto) en servicios más pequeños e independientes, cada uno responsable de un dominio de negocio específico, comunicándose entre sí mediante APIs síncronas (REST o gRPC, estudiados en el Módulo 9) o mediante colas de mensajes asíncronas. Kafka y RabbitMQ son las dos tecnologías de mensajería más ampliamente adoptadas para este propósito: RabbitMQ implementa un modelo de colas de mensajes más tradicional orientado a tareas discretas (con cierto parentesco conceptual con BullMQ del Módulo 8, aunque a una escala y con garantías distintas), mientras que Kafka está diseñado específicamente para flujos de eventos de alto volumen y sostenido, con la capacidad distintiva de retener el historial completo de eventos durante un período configurable, permitiendo que múltiples consumidores distintos procesen el mismo flujo de eventos de forma independiente y en momentos distintos.
@@ -102,6 +318,62 @@ TypeScript + tsx/ts-node → mismos beneficios de tipos del track de JavaScript,
 ```
 
 ### Tema 5: Posiciones espaciales y Socket.IO con orden recuperable
+
+#### Paso 1 · Objetivo y preparación
+
+Al finalizar podrás validar coordenadas y emitir una actualización con secuencia. **Prerrequisitos:** Node LTS, HTTP y JSON; ejemplo independiente desde una carpeta vacía.
+
+#### Paso 2 · Contexto y caso real
+
+Un conductor envía GPS con retrasos y duplicados. El cliente necesita descartar posiciones antiguas y solicitar recuperación tras reconectar.
+
+#### Paso 3 · Teoría y analogía aplicada
+
+Latitud y longitud tienen rangos; una secuencia ordena eventos, pero no garantiza que el transporte sea durable. Es una pizarra numerada: si pierdes una hoja, pides las faltantes.
+
+#### Paso 4 · Demostración guiada desde cero
+
+```bash
+mkdir ejemplo-gps-socket
+cd ejemplo-gps-socket
+npm init -y
+npm install socket.io
+mkdir src
+```
+
+Crea `src/server.js`:
+
+```js
+import { createServer } from "node:http";
+import { Server } from "socket.io";
+const http = createServer(); const io = new Server(http, { cors: { origin: "*" } });
+let secuencia = 0;
+io.on("connection", (socket) => socket.on("location", (p) => {
+  if (p.lat < -90 || p.lat > 90 || p.lng < -180 || p.lng > 180) return socket.emit("error", "coordenada inválida");
+  io.emit("location", { ...p, seq: ++secuencia });
+}));
+http.listen(3000, () => console.log("socket listo"));
+```
+
+Ejecuta `node src/server.js` con un cliente Socket.IO. **Resultado esperado:** cada posición válida recibe `seq` creciente. **Fallo deliberado y diagnóstico:** envía `lat: 200`; el servidor emite error y no incrementa secuencia.
+
+#### Paso 5 · Práctica guiada
+
+Guarda las últimas 20 posiciones para recuperar desde una secuencia. **Pista:** limita el arreglo para no convertirlo en almacenamiento infinito.
+
+#### Paso 6 · Práctica independiente
+
+Simula reconexión y entrega eventos recuperados y una posición descartada por secuencia antigua.
+
+#### Paso 7 · Cierre y conexión
+
+Ya validas geodatos y orden lógico. El siguiente tema tratará archivos y push sin confundirlos con autorización.
+
+**Errores comunes:** aceptar coordenadas sin rango; confiar en orden de llegada; guardar historial infinito; usar socket como base durable; mezclar identidad con ubicación.
+
+**Fuentes oficiales:** [Socket.IO](https://socket.io/docs/v4/), [RFC 7946 GeoJSON](https://www.rfc-editor.org/rfc/rfc7946) y [Node events](https://nodejs.org/api/events.html).
+
+**Evidencia de aprendizaje:** entrega la salida de una secuencia válida, un error de coordenadas y recuperación simulada.
 
 **Conceptos clave:** validación geográfica, SRID, índice espacial, autorización por recurso, secuencia y reanudación.
 
@@ -178,6 +450,63 @@ sequenceDiagram
 ```
 
 ### Tema 6: Archivos y notificaciones push sin convertirlos en autorización
+
+#### Paso 1 · Objetivo y preparación
+
+Al finalizar podrás guardar un archivo con nombre controlado y enviar una notificación sin tratarla como permiso. **Prerrequisitos:** Node LTS, HTTP y seguridad básica; ejemplo independiente desde una carpeta vacía.
+
+#### Paso 2 · Contexto y caso real
+
+Una entrega puede adjuntar comprobante y avisar al cliente. El archivo debe aislarse del path traversal y el push debe ser un efecto posterior a una autorización ya verificada.
+
+#### Paso 3 · Teoría y analogía aplicada
+
+Normalizar rutas limita dónde escribir; el proveedor push transporta mensajes, no decide quién puede descargar. Es el mensajero de una oficina: entrega lo que le autorizan, no valida el expediente.
+
+#### Paso 4 · Demostración guiada desde cero
+
+```bash
+mkdir ejemplo-archivos-push
+cd ejemplo-archivos-push
+npm init -y
+mkdir src uploads
+```
+
+Crea `src/guardar.js`:
+
+```js
+import path from "node:path";
+import { mkdir, writeFile } from "node:fs/promises";
+const base = path.resolve("uploads");
+export async function guardar(nombre, contenido) {
+  const seguro = path.basename(nombre);
+  const destino = path.join(base, seguro);
+  if (!destino.startsWith(`${base}${path.sep}`)) throw new Error("ruta no permitida");
+  await mkdir(base, { recursive: true }); await writeFile(destino, contenido, { flag: "wx" });
+  return destino;
+}
+console.log(await guardar("comprobante.txt", "entrega confirmada"));
+```
+
+Ejecuta `node src/guardar.js`. **Resultado esperado:** crea solo `uploads/comprobante.txt`. **Fallo deliberado y diagnóstico:** intenta `../../secreto`; `basename` evita salir del directorio y el archivo queda dentro de uploads. Un push real requerirá proveedor y credenciales fuera del código.
+
+#### Paso 5 · Práctica guiada
+
+Limita tamaño y extensión permitida. **Pista:** valida bytes antes de escribir y no confíes en la extensión para contenido ejecutable.
+
+#### Paso 6 · Práctica independiente
+
+Diseña una cola de notificación posterior al guardado y entrega el caso donde el push falla sin deshacer el archivo.
+
+#### Paso 7 · Cierre y siguiente paso
+
+Ya separas almacenamiento, autorización y notificación. Este cierre deja preparado el paso hacia servicios externos y móviles.
+
+**Errores comunes:** concatenar paths; sobrescribir archivos; servir uploads como código; guardar tokens push como permisos; no limpiar temporales.
+
+**Fuentes oficiales:** [Node path](https://nodejs.org/api/path.html), [fs promises](https://nodejs.org/api/fs.html#promises-api) y [OWASP File Upload](https://owasp.org/www-community/vulnerabilities/Unrestricted_File_Upload).
+
+**Evidencia de aprendizaje:** entrega la salida de archivo válido, path rechazado y flujo de push fallido sin pérdida de autorización.
 
 **Conceptos clave:** carga multipart, límites, almacenamiento de objetos, metadatos mínimos, Firebase Admin y fuente de verdad.
 

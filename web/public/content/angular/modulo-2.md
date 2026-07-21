@@ -5,6 +5,36 @@
 
 ### Tema 1: signal(), computed() y effect()
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás elegir y probar una estrategia de estado Angular desde cero. Prerrequisitos: Node.js LTS, npm y Angular CLI. Verifica ng version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real, el estado de una entrega cambia con eventos de red y debe actualizar la interfaz sin efectos duplicados ni datos obsoletos.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+signal guarda estado, computed deriva valores y effect sincroniza efectos externos; las actualizaciones inmutables facilitan detectar cambios. Signals y Observables resuelven problemas relacionados pero con modelos distintos. La analogía es un tablero: una cifra derivada se recalcula, un mensaje externo llega por canal y una acción secundaria se registra aparte.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-angular-m2
+cd ejemplo-angular-m2
+npx -p @angular/cli ng new app --standalone --routing=false --style=css --skip-git
+cd app
+ng serve
+```
+Crea src/app/delivery-state.ts con signal y computed; muestra una plantilla que reaccione al cambio y explica cada escritura.
+
+#### Paso 5 · Práctica guiada
+Pista: muta deliberadamente un objeto compartido para provocar un fallo deliberado de actualización; observa la vista y corrígelo con una nueva referencia. Resultado esperado: estado consistente.
+
+#### Paso 6 · Práctica independiente
+Integra un Observable de eventos, convierte a signal, añade cleanup y prueba el modo zoneless en una rama experimental.
+
+#### Paso 7 · Cierre y evidencia
+Guarda código, captura y comparación; como siguiente paso estudia HTTP. Errores comunes: effect para derivar datos, mutar referencias, suscripciones sin cleanup y mezclar modelos sin frontera. Fuentes oficiales: https://angular.dev/guide/signals y https://angular.dev/guide/zoneless.
+**¿Por qué es importante?** Porque una política de estado coherente evita renders inesperados y carreras.
+**Evidencia de aprendizaje:** entrega estado, derivación, evento, fallo y corrección.
 **Conceptos clave:** estado reactivo síncrono, derivación memoizada, efectos secundarios.
 
 Un signal es un contenedor de valor reactivo: `signal(0)` crea un signal con valor inicial `0`, leído invocándolo como función (`contador()`), y actualizado con `.set(nuevoValor)` (reemplazo directo) o `.update(actual => nuevoValor)` (calculado a partir del valor actual). A diferencia de una variable de clase ordinaria, leer un signal dentro de un contexto reactivo (una plantilla, un `computed()`, un `effect()`) registra automáticamente una dependencia: Angular sabe exactamente qué partes de la aplicación dependen de ese signal específico, y puede notificarlas de forma precisa y eficiente cuando cambia, sin necesidad de revisar exhaustivamente toda la aplicación en busca de cambios potenciales.
@@ -29,6 +59,36 @@ effect(() => console.log('contador cambió a', contador())); // efecto secundari
 
 ### Tema 2: Mutación frente a actualización inmutable
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás elegir y probar una estrategia de estado Angular desde cero. Prerrequisitos: Node.js LTS, npm y Angular CLI. Verifica ng version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real, el estado de una entrega cambia con eventos de red y debe actualizar la interfaz sin efectos duplicados ni datos obsoletos.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+signal guarda estado, computed deriva valores y effect sincroniza efectos externos; las actualizaciones inmutables facilitan detectar cambios. Signals y Observables resuelven problemas relacionados pero con modelos distintos. La analogía es un tablero: una cifra derivada se recalcula, un mensaje externo llega por canal y una acción secundaria se registra aparte.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-angular-m2
+cd ejemplo-angular-m2
+npx -p @angular/cli ng new app --standalone --routing=false --style=css --skip-git
+cd app
+ng serve
+```
+Crea src/app/delivery-state.ts con signal y computed; muestra una plantilla que reaccione al cambio y explica cada escritura.
+
+#### Paso 5 · Práctica guiada
+Pista: muta deliberadamente un objeto compartido para provocar un fallo deliberado de actualización; observa la vista y corrígelo con una nueva referencia. Resultado esperado: estado consistente.
+
+#### Paso 6 · Práctica independiente
+Integra un Observable de eventos, convierte a signal, añade cleanup y prueba el modo zoneless en una rama experimental.
+
+#### Paso 7 · Cierre y evidencia
+Guarda código, captura y comparación; como siguiente paso estudia HTTP. Errores comunes: effect para derivar datos, mutar referencias, suscripciones sin cleanup y mezclar modelos sin frontera. Fuentes oficiales: https://angular.dev/guide/signals y https://angular.dev/guide/zoneless.
+**¿Por qué es importante?** Porque una política de estado coherente evita renders inesperados y carreras.
+**Evidencia de aprendizaje:** entrega estado, derivación, evento, fallo y corrección.
 **Conceptos clave:** por qué mutar in-place no notifica cambios, `update()` con nueva referencia.
 
 Un signal detecta cambios comparando referencias (de forma similar al mecanismo de detección de cambios por referencia estudiado conceptualmente en el Módulo 4 del track de JavaScript al hablar de inmutabilidad): si el valor almacenado en un signal es un array o un objeto, y se muta directamente ese array u objeto sin reemplazarlo por una referencia nueva (`tareas().push(nuevaTarea)`, modificando el array existente in-place), el signal no detecta ningún cambio, porque la referencia al array sigue siendo exactamente la misma antes y después de la mutación, y Angular (y cualquier `computed()`/`effect()` que dependa de ese signal) nunca se entera de que su contenido interno cambió.
@@ -53,6 +113,36 @@ tareas.update(lista => [...lista, nuevaTarea]);
 
 ### Tema 3: Signals frente a Observables
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás elegir y probar una estrategia de estado Angular desde cero. Prerrequisitos: Node.js LTS, npm y Angular CLI. Verifica ng version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real, el estado de una entrega cambia con eventos de red y debe actualizar la interfaz sin efectos duplicados ni datos obsoletos.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+signal guarda estado, computed deriva valores y effect sincroniza efectos externos; las actualizaciones inmutables facilitan detectar cambios. Signals y Observables resuelven problemas relacionados pero con modelos distintos. La analogía es un tablero: una cifra derivada se recalcula, un mensaje externo llega por canal y una acción secundaria se registra aparte.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-angular-m2
+cd ejemplo-angular-m2
+npx -p @angular/cli ng new app --standalone --routing=false --style=css --skip-git
+cd app
+ng serve
+```
+Crea src/app/delivery-state.ts con signal y computed; muestra una plantilla que reaccione al cambio y explica cada escritura.
+
+#### Paso 5 · Práctica guiada
+Pista: muta deliberadamente un objeto compartido para provocar un fallo deliberado de actualización; observa la vista y corrígelo con una nueva referencia. Resultado esperado: estado consistente.
+
+#### Paso 6 · Práctica independiente
+Integra un Observable de eventos, convierte a signal, añade cleanup y prueba el modo zoneless en una rama experimental.
+
+#### Paso 7 · Cierre y evidencia
+Guarda código, captura y comparación; como siguiente paso estudia HTTP. Errores comunes: effect para derivar datos, mutar referencias, suscripciones sin cleanup y mezclar modelos sin frontera. Fuentes oficiales: https://angular.dev/guide/signals y https://angular.dev/guide/zoneless.
+**¿Por qué es importante?** Porque una política de estado coherente evita renders inesperados y carreras.
+**Evidencia de aprendizaje:** entrega estado, derivación, evento, fallo y corrección.
 **Conceptos clave:** estado síncrono frente a flujos asíncronos complejos, `toSignal`/`toObservable`.
 
 Signals están diseñados específicamente para modelar estado síncrono: un valor concreto que existe en un momento dado y que se lee directamente, sin necesidad de suscribirse explícitamente ni de gestionar manualmente el ciclo de vida de esa suscripción. RxJS (estudiado en profundidad en el Módulo 6) sigue siendo la herramienta correcta y necesaria para flujos verdaderamente asíncronos y complejos: combinar múltiples fuentes de datos que emiten a lo largo del tiempo, cancelar una petición en curso cuando llega una nueva (`switchMap`), o aplicar debounce sobre eventos de entrada del usuario, capacidades de composición temporal que el modelo de signals, deliberadamente más simple y síncrono, no está diseñado para cubrir directamente.
@@ -81,6 +171,36 @@ const observableDeVuelta = toObservable(unSignal);
 
 ### Tema 4: Hacia zoneless change detection
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás elegir y probar una estrategia de estado Angular desde cero. Prerrequisitos: Node.js LTS, npm y Angular CLI. Verifica ng version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real, el estado de una entrega cambia con eventos de red y debe actualizar la interfaz sin efectos duplicados ni datos obsoletos.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+signal guarda estado, computed deriva valores y effect sincroniza efectos externos; las actualizaciones inmutables facilitan detectar cambios. Signals y Observables resuelven problemas relacionados pero con modelos distintos. La analogía es un tablero: una cifra derivada se recalcula, un mensaje externo llega por canal y una acción secundaria se registra aparte.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-angular-m2
+cd ejemplo-angular-m2
+npx -p @angular/cli ng new app --standalone --routing=false --style=css --skip-git
+cd app
+ng serve
+```
+Crea src/app/delivery-state.ts con signal y computed; muestra una plantilla que reaccione al cambio y explica cada escritura.
+
+#### Paso 5 · Práctica guiada
+Pista: muta deliberadamente un objeto compartido para provocar un fallo deliberado de actualización; observa la vista y corrígelo con una nueva referencia. Resultado esperado: estado consistente.
+
+#### Paso 6 · Práctica independiente
+Integra un Observable de eventos, convierte a signal, añade cleanup y prueba el modo zoneless en una rama experimental.
+
+#### Paso 7 · Cierre y evidencia
+Guarda código, captura y comparación; como siguiente paso estudia HTTP. Errores comunes: effect para derivar datos, mutar referencias, suscripciones sin cleanup y mezclar modelos sin frontera. Fuentes oficiales: https://angular.dev/guide/signals y https://angular.dev/guide/zoneless.
+**¿Por qué es importante?** Porque una política de estado coherente evita renders inesperados y carreras.
+**Evidencia de aprendizaje:** entrega estado, derivación, evento, fallo y corrección.
 **Conceptos clave:** Zone.js histórico, detección de cambios basada en signals, precisión frente a fuerza bruta.
 
 Angular tradicionalmente dependía de Zone.js, una biblioteca que "parchaba" (intercepta) prácticamente cualquier API asíncrona del navegador (eventos, `setTimeout`, promesas, peticiones HTTP) para que Angular pudiera saber que "algo pudo haber cambiado" cada vez que cualquiera de esas operaciones asíncronas se completaba, disparando entonces una revisión completa de detección de cambios sobre toda la aplicación (o una porción significativa de ella) para verificar qué, si acaso, efectivamente cambió como resultado. Este enfoque, aunque funcional y responsable en gran medida del éxito histórico de Angular en simplificar la detección de cambios sin requerir gestión manual explícita, es deliberadamente de "fuerza bruta": revisa mucho más de lo estrictamente necesario en cada ciclo, porque Zone.js solo sabe que "algo asíncrono ocurrió en algún lugar", no exactamente qué cambió específicamente ni qué partes concretas de la interfaz dependen de ese cambio específico.

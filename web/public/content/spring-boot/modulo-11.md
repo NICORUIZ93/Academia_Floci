@@ -5,6 +5,39 @@
 
 ### Tema 1: Fat JAR vs capas de Docker
 
+Fallo deliberado: interrumpe la dependencia descrita y registra el diagnóstico antes de corregirla.
+
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás empaquetar y operar este servicio desde cero. Prerrequisitos: JDK 21, Maven, Docker y un editor. Comprueba java --version, mvn --version y docker --version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real, una API de entregas debe arrancar rápido, producir imágenes pequeñas y dejar claro cuándo puede recibir tráfico en Kubernetes.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+Un fat JAR simplifica distribución; las capas de Docker permiten reutilizar dependencias y acelerar builds. GraalVM reduce memoria y arranque a cambio de restricciones de reflexión y compilación. Health checks separan proceso vivo de proceso listo. La analogía es preparar una mochila: reutilizar lo pesado ahorra tiempo, pero hay que verificar que cada herramienta esté disponible antes de salir.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-spring-m11
+cd ejemplo-spring-m11
+curl -fsSL https://start.spring.io/starter.zip -d dependencies=web,actuator -d javaVersion=21 -o app.zip
+unzip app.zip
+mvn package
+docker build -t ejemplo-spring .
+```
+Crea Dockerfile y manifiestos de health en `src/main/resources/application.yml`; documenta cada capa y endpoint.
+
+#### Paso 5 · Práctica guiada
+Pista: ejecuta `mvn package`, rompe deliberadamente el endpoint readiness para observar un fallo de despliegue y corrígelo. Resultado esperado: imagen construida y readiness HTTP 200.
+
+#### Paso 6 · Práctica independiente
+Compara tamaño y tiempo de arranque entre JAR, imagen por capas y native image; añade límites de CPU/memoria y un rollback documentado.
+
+#### Paso 7 · Cierre y evidencia
+Guarda logs, tamaños, tiempos y YAML; como siguiente paso prueba el contenedor en un clúster local. Errores comunes: usar latest, ejecutar como root, health que depende de toda la red y asumir que native image acepta toda reflexión. Fuentes oficiales: https://docs.spring.io/spring-boot/reference/packaging/container-images/ y https://graalvm.org/latest/reference-manual/native-image/.
+**¿Por qué es importante?** Porque el empaquetado y las señales operativas determinan si una aplicación puede recuperarse en producción.
+**Evidencia de aprendizaje:** entrega artefactos, comparación medida, health 200 y diagnóstico del fallo.
 **Conceptos clave:** empaquetado por capas, reducir el tamaño de actualizaciones de imagen.
 
 Un fat JAR (generado con `./mvnw package`, ejecutable directamente con `java -jar`) empaqueta la aplicación completa junto con todas sus dependencias en un único archivo autocontenible, simple de generar y distribuir, pero problemático como base directa de una imagen Docker: cada cambio de código, sin importar cuán pequeño sea, produce un JAR completo distinto, y si ese JAR se coloca como una única capa en un Dockerfile, Docker tendría que re-subir la imagen completa en cada deploy, incluyendo las dependencias que en realidad no cambiaron en absoluto respecto al deploy anterior.
@@ -27,6 +60,39 @@ ENTRYPOINT ["java", "-cp", ".", "com.miapp.Main"]
 
 ### Tema 2: GraalVM native image
 
+Fallo deliberado: interrumpe la dependencia descrita y registra el diagnóstico antes de corregirla.
+
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás empaquetar y operar este servicio desde cero. Prerrequisitos: JDK 21, Maven, Docker y un editor. Comprueba java --version, mvn --version y docker --version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real, una API de entregas debe arrancar rápido, producir imágenes pequeñas y dejar claro cuándo puede recibir tráfico en Kubernetes.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+Un fat JAR simplifica distribución; las capas de Docker permiten reutilizar dependencias y acelerar builds. GraalVM reduce memoria y arranque a cambio de restricciones de reflexión y compilación. Health checks separan proceso vivo de proceso listo. La analogía es preparar una mochila: reutilizar lo pesado ahorra tiempo, pero hay que verificar que cada herramienta esté disponible antes de salir.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-spring-m11
+cd ejemplo-spring-m11
+curl -fsSL https://start.spring.io/starter.zip -d dependencies=web,actuator -d javaVersion=21 -o app.zip
+unzip app.zip
+mvn package
+docker build -t ejemplo-spring .
+```
+Crea Dockerfile y manifiestos de health en `src/main/resources/application.yml`; documenta cada capa y endpoint.
+
+#### Paso 5 · Práctica guiada
+Pista: ejecuta `mvn package`, rompe deliberadamente el endpoint readiness para observar un fallo de despliegue y corrígelo. Resultado esperado: imagen construida y readiness HTTP 200.
+
+#### Paso 6 · Práctica independiente
+Compara tamaño y tiempo de arranque entre JAR, imagen por capas y native image; añade límites de CPU/memoria y un rollback documentado.
+
+#### Paso 7 · Cierre y evidencia
+Guarda logs, tamaños, tiempos y YAML; como siguiente paso prueba el contenedor en un clúster local. Errores comunes: usar latest, ejecutar como root, health que depende de toda la red y asumir que native image acepta toda reflexión. Fuentes oficiales: https://docs.spring.io/spring-boot/reference/packaging/container-images/ y https://graalvm.org/latest/reference-manual/native-image/.
+**¿Por qué es importante?** Porque el empaquetado y las señales operativas determinan si una aplicación puede recuperarse en producción.
+**Evidencia de aprendizaje:** entrega artefactos, comparación medida, health 200 y diagnóstico del fallo.
 **Conceptos clave:** compilación ahead-of-time a binario nativo, arranque casi instantáneo.
 
 `./mvnw -Pnative native:compile` compila la aplicación Spring Boot a un binario nativo ejecutable directamente por el sistema operativo, en vez de bytecode interpretado/compilado JIT por la JVM tradicional (Módulo 11 del track de Java): esta compilación ahead-of-time (realizada completamente antes de la ejecución, en vez de la compilación JIT en caliente durante la ejecución real) produce un binario con un tiempo de arranque casi instantáneo (milisegundos, en vez de los segundos típicos de arranque de una aplicación Spring Boot sobre la JVM tradicional) y un footprint de memoria considerablemente menor, a cambio de un tiempo de build significativamente más lento, y ciertas limitaciones concretas: el uso de reflexión (una técnica que muchas librerías Java, incluyendo partes de Spring, usan internamente) requiere configuración explícita adicional para que el compilador nativo pueda saber de antemano qué clases y métodos necesitan permanecer accesibles vía reflexión en el binario final, dado que el compilador ahead-of-time no puede inferir dinámicamente ese uso como sí lo haría la JVM tradicional en tiempo de ejecución.
@@ -46,6 +112,39 @@ Un arranque en milisegundos aporta un valor real y concreto específicamente par
 
 ### Tema 3: Health checks para Kubernetes
 
+Fallo deliberado: interrumpe la dependencia descrita y registra el diagnóstico antes de corregirla.
+
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás empaquetar y operar este servicio desde cero. Prerrequisitos: JDK 21, Maven, Docker y un editor. Comprueba java --version, mvn --version y docker --version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real, una API de entregas debe arrancar rápido, producir imágenes pequeñas y dejar claro cuándo puede recibir tráfico en Kubernetes.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+Un fat JAR simplifica distribución; las capas de Docker permiten reutilizar dependencias y acelerar builds. GraalVM reduce memoria y arranque a cambio de restricciones de reflexión y compilación. Health checks separan proceso vivo de proceso listo. La analogía es preparar una mochila: reutilizar lo pesado ahorra tiempo, pero hay que verificar que cada herramienta esté disponible antes de salir.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-spring-m11
+cd ejemplo-spring-m11
+curl -fsSL https://start.spring.io/starter.zip -d dependencies=web,actuator -d javaVersion=21 -o app.zip
+unzip app.zip
+mvn package
+docker build -t ejemplo-spring .
+```
+Crea Dockerfile y manifiestos de health en `src/main/resources/application.yml`; documenta cada capa y endpoint.
+
+#### Paso 5 · Práctica guiada
+Pista: ejecuta `mvn package`, rompe deliberadamente el endpoint readiness para observar un fallo de despliegue y corrígelo. Resultado esperado: imagen construida y readiness HTTP 200.
+
+#### Paso 6 · Práctica independiente
+Compara tamaño y tiempo de arranque entre JAR, imagen por capas y native image; añade límites de CPU/memoria y un rollback documentado.
+
+#### Paso 7 · Cierre y evidencia
+Guarda logs, tamaños, tiempos y YAML; como siguiente paso prueba el contenedor en un clúster local. Errores comunes: usar latest, ejecutar como root, health que depende de toda la red y asumir que native image acepta toda reflexión. Fuentes oficiales: https://docs.spring.io/spring-boot/reference/packaging/container-images/ y https://graalvm.org/latest/reference-manual/native-image/.
+**¿Por qué es importante?** Porque el empaquetado y las señales operativas determinan si una aplicación puede recuperarse en producción.
+**Evidencia de aprendizaje:** entrega artefactos, comparación medida, health 200 y diagnóstico del fallo.
 **Conceptos clave:** liveness/readiness probes conectados a Actuator.
 
 Configurar los health checks de Actuator (Módulo 7) como probes explícitos de un manifiesto de Kubernetes (`livenessProbe: { httpGet: { path: /actuator/health/liveness, port: 8080 } }`, `readinessProbe: { httpGet: { path: /actuator/health/readiness, port: 8080 } }`) conecta directamente la observabilidad interna ya construida en la aplicación (Módulo 7) con las decisiones operativas reales que Kubernetes toma sobre esa aplicación desplegada: cuándo reiniciar un pod que dejó de responder correctamente (liveness), y cuándo un pod está genuinamente en condiciones de recibir tráfico real (readiness), decisiones automatizadas y continuas que de otro modo requerirían intervención manual constante de un operador humano monitoreando el sistema.

@@ -5,6 +5,38 @@
 
 ### Tema 1: Arquitectura del microservicio integrador
 
+Fallo deliberado: interrumpe la dependencia descrita y registra el diagnóstico antes de corregirla.
+
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás ensamblar este proyecto desde cero. Prerrequisitos: JDK 21, Maven, Docker y un editor. Comprueba java --version, mvn --version y docker --version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real, un servicio de entregas debe integrar HTTP, base de datos, identidad, eventos y métricas sin esconder responsabilidades ni fallos parciales.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+La arquitectura integra capas, contratos y operaciones; no es pegar fragmentos. Define un caso de uso, sus puertos y adaptadores, y una ruta de evolución. La analogía es coordinar una central logística: cada estación tiene dueño, entradas, salida y protocolo de emergencia.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-spring-m12
+cd ejemplo-spring-m12
+curl -fsSL https://start.spring.io/starter.zip -d dependencies=web,data-jpa,security,actuator -d javaVersion=21 -o app.zip
+unzip app.zip
+mvn test
+```
+Crea `src/main/java/com/example/demo/DeliveryApplication.java` y conecta una ruta, persistencia simulada, seguridad y health; documenta el flujo completo.
+
+#### Paso 5 · Práctica guiada
+Pista: ejecuta `mvn test`, desactiva deliberadamente una dependencia para observar el fallo y corrígela. Resultado esperado: pruebas verdes, health claro y respuesta autorizada.
+
+#### Paso 6 · Práctica independiente
+Añade idempotencia, evento outbox, métrica de negocio y un escenario de rollback; escribe un README con estructura de carpetas y decisiones.
+
+#### Paso 7 · Cierre y evidencia
+Guarda código, pruebas, logs, diagrama y decisiones; como siguiente paso aplica la misma revisión a otro track. Errores comunes: mezclar capas, no definir ownership, ignorar seguridad y no medir. Fuentes oficiales: https://docs.spring.io/spring-boot/reference/ y https://12factor.net/.
+**¿Por qué es importante?** Porque integrar conceptos demuestra comprensión transferible y revela huecos que una lectura aislada oculta.
+**Evidencia de aprendizaje:** entrega el proyecto ejecutable, pruebas, health, diagrama y retrospectiva técnica.
 **Conceptos clave:** capas completas del track combinadas, separación clara de responsabilidades.
 
 El proyecto integrador combina en una única aplicación todas las capas estudiadas a lo largo del track, cada una con su responsabilidad delimitada: `controller/` (`TareaController`, recibiendo peticiones HTTP y traduciendo hacia/desde DTOs, Módulo 2), `service/` (`TareaService`, con la lógica de negocio sin ningún conocimiento de HTTP), `repository/` (`TareaRepository`, acceso a datos vía Spring Data JPA, Módulo 3), `security/` (`SecurityFilterChain`, `JwtFilter`, Módulo 4), y `config/` (clases de `@ConfigurationProperties` tipadas, Módulo 5), con `db/migration/` conteniendo los scripts versionados de Flyway (Módulo 3) que gestionan el esquema real de la base de datos.
@@ -29,6 +61,38 @@ db/migration/    ← scripts Flyway versionados
 
 ### Tema 2: Integrando seguridad, persistencia y observabilidad
 
+Fallo deliberado: interrumpe la dependencia descrita y registra el diagnóstico antes de corregirla.
+
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás ensamblar este proyecto desde cero. Prerrequisitos: JDK 21, Maven, Docker y un editor. Comprueba java --version, mvn --version y docker --version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real, un servicio de entregas debe integrar HTTP, base de datos, identidad, eventos y métricas sin esconder responsabilidades ni fallos parciales.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+La arquitectura integra capas, contratos y operaciones; no es pegar fragmentos. Define un caso de uso, sus puertos y adaptadores, y una ruta de evolución. La analogía es coordinar una central logística: cada estación tiene dueño, entradas, salida y protocolo de emergencia.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-spring-m12
+cd ejemplo-spring-m12
+curl -fsSL https://start.spring.io/starter.zip -d dependencies=web,data-jpa,security,actuator -d javaVersion=21 -o app.zip
+unzip app.zip
+mvn test
+```
+Crea `src/main/java/com/example/demo/DeliveryApplication.java` y conecta una ruta, persistencia simulada, seguridad y health; documenta el flujo completo.
+
+#### Paso 5 · Práctica guiada
+Pista: ejecuta `mvn test`, desactiva deliberadamente una dependencia para observar el fallo y corrígela. Resultado esperado: pruebas verdes, health claro y respuesta autorizada.
+
+#### Paso 6 · Práctica independiente
+Añade idempotencia, evento outbox, métrica de negocio y un escenario de rollback; escribe un README con estructura de carpetas y decisiones.
+
+#### Paso 7 · Cierre y evidencia
+Guarda código, pruebas, logs, diagrama y decisiones; como siguiente paso aplica la misma revisión a otro track. Errores comunes: mezclar capas, no definir ownership, ignorar seguridad y no medir. Fuentes oficiales: https://docs.spring.io/spring-boot/reference/ y https://12factor.net/.
+**¿Por qué es importante?** Porque integrar conceptos demuestra comprensión transferible y revela huecos que una lectura aislada oculta.
+**Evidencia de aprendizaje:** entrega el proyecto ejecutable, pruebas, health, diagrama y retrospectiva técnica.
 **Conceptos clave:** autorización combinada con lógica de negocio, endpoint protegido por rol.
 
 `@RestController @RequestMapping("/api/tareas") public class TareaController { @PostMapping @PreAuthorize("hasRole('USER')") public ResponseEntity<TareaDTO> crear(@Valid @RequestBody CrearTareaRequest req, Authentication auth) { Tarea tarea = servicio.crear(req, auth.getName()); return ResponseEntity.status(201).body(TareaDTO.from(tarea)); } }` demuestra la integración concreta de múltiples módulos en un único endpoint: `@PreAuthorize` (Módulo 4) protege el endpoint según el rol del usuario autenticado, `@Valid` (Módulo 2) valida el DTO de entrada, `Authentication auth` (inyectado automáticamente por Spring Security tras la validación del filtro JWT) proporciona la identidad del usuario autenticado para asociarla a la tarea creada, y el servicio subyacente persiste esa tarea usando Spring Data JPA (Módulo 3), con el esquema de la tabla correspondiente ya gestionado por una migración versionada de Flyway.
@@ -56,6 +120,38 @@ public class TareaController {
 
 ### Tema 3: Cierre del track y próximos pasos
 
+Fallo deliberado: interrumpe la dependencia descrita y registra el diagnóstico antes de corregirla.
+
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás ensamblar este proyecto desde cero. Prerrequisitos: JDK 21, Maven, Docker y un editor. Comprueba java --version, mvn --version y docker --version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real, un servicio de entregas debe integrar HTTP, base de datos, identidad, eventos y métricas sin esconder responsabilidades ni fallos parciales.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+La arquitectura integra capas, contratos y operaciones; no es pegar fragmentos. Define un caso de uso, sus puertos y adaptadores, y una ruta de evolución. La analogía es coordinar una central logística: cada estación tiene dueño, entradas, salida y protocolo de emergencia.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-spring-m12
+cd ejemplo-spring-m12
+curl -fsSL https://start.spring.io/starter.zip -d dependencies=web,data-jpa,security,actuator -d javaVersion=21 -o app.zip
+unzip app.zip
+mvn test
+```
+Crea `src/main/java/com/example/demo/DeliveryApplication.java` y conecta una ruta, persistencia simulada, seguridad y health; documenta el flujo completo.
+
+#### Paso 5 · Práctica guiada
+Pista: ejecuta `mvn test`, desactiva deliberadamente una dependencia para observar el fallo y corrígela. Resultado esperado: pruebas verdes, health claro y respuesta autorizada.
+
+#### Paso 6 · Práctica independiente
+Añade idempotencia, evento outbox, métrica de negocio y un escenario de rollback; escribe un README con estructura de carpetas y decisiones.
+
+#### Paso 7 · Cierre y evidencia
+Guarda código, pruebas, logs, diagrama y decisiones; como siguiente paso aplica la misma revisión a otro track. Errores comunes: mezclar capas, no definir ownership, ignorar seguridad y no medir. Fuentes oficiales: https://docs.spring.io/spring-boot/reference/ y https://12factor.net/.
+**¿Por qué es importante?** Porque integrar conceptos demuestra comprensión transferible y revela huecos que una lectura aislada oculta.
+**Evidencia de aprendizaje:** entrega el proyecto ejecutable, pruebas, health, diagrama y retrospectiva técnica.
 **Conceptos clave:** microservicio productivo frente a CRUD funcional, arquitecturas avanzadas como siguiente paso.
 
 Un microservicio Spring Boot "productivo" no se define únicamente por tener un CRUD funcional: es la combinación de seguridad declarativa protegiendo los endpoints sensibles, persistencia versionada mediante migraciones revisables (en vez de esquemas inferidos automáticamente), observabilidad expuesta desde el primer día (health checks y métricas, no agregadas como una idea tardía tras un incidente en producción), y una suite de tests que da confianza real para desplegar sin temor, verificando el flujo crítico de principio a fin contra infraestructura real mediante Testcontainers — exactamente el conjunto de prácticas que distingue un proyecto de portafolio simple de uno genuinamente listo para un equipo de ingeniería real operando en producción.

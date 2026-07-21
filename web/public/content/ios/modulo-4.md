@@ -5,6 +5,35 @@
 
 ### Tema 1: async/await y Task
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás ejecutar concurrencia Swift desde cero. Prerrequisitos: macOS, Xcode y Swift. Verifica swift --version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real, la app consulta rutas y tarifas sin bloquear la interfaz, cancela tareas al salir y protege estado compartido.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+async/await expresa espera; Task gestiona una unidad cancelable; Actor serializa acceso a estado mutable; TaskGroup coordina tareas hijas; MainActor protege UI. La analogía es una central con operadores y una única pizarra protegida: cada trabajador entrega resultado y respeta cancelación.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-ios-m4
+cd ejemplo-ios-m4
+swift package init --type executable
+swift run
+```
+Crea Sources/main.swift con una función async, un actor contador y TaskGroup; ejecuta swift run y explica cada await.
+
+#### Paso 5 · Práctica guiada
+Pista: omite deliberadamente la cancelación para provocar un fallo deliberado de tarea que sigue después de cerrar la vista; observa el log y corrígelo. Resultado esperado: tarea cancelada y UI segura.
+
+#### Paso 6 · Práctica independiente
+Añade timeout, error de red simulado, prioridad y una prueba de concurrencia con 100 operaciones.
+
+#### Paso 7 · Cierre y evidencia
+Guarda salida, logs y mediciones; como siguiente paso estudia networking. Errores comunes: bloquear MainActor, ignorar cancellation, compartir clase mutable y capturar self fuerte. Fuentes oficiales: https://developer.apple.com/documentation/swift/concurrency y https://docs.swift.org/swift-book/documentation/the-swift-programming-language/concurrency/.
+**¿Por qué es importante?** Porque las apps móviles deben seguir respondiendo mientras esperan red, disco o sensores.
+**Evidencia de aprendizaje:** entrega actor, tareas, cancelación, fallo y medición.
 **Conceptos clave:** código asíncrono que se lee como si fuera síncrono, cancelación automática vinculada al ciclo de vida.
 
 ```swift
@@ -41,6 +70,35 @@ func obtenerUsuario(id: String) async throws -> Usuario {
 
 ### Tema 2: Actors para estado mutable seguro
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás ejecutar concurrencia Swift desde cero. Prerrequisitos: macOS, Xcode y Swift. Verifica swift --version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real, la app consulta rutas y tarifas sin bloquear la interfaz, cancela tareas al salir y protege estado compartido.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+async/await expresa espera; Task gestiona una unidad cancelable; Actor serializa acceso a estado mutable; TaskGroup coordina tareas hijas; MainActor protege UI. La analogía es una central con operadores y una única pizarra protegida: cada trabajador entrega resultado y respeta cancelación.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-ios-m4
+cd ejemplo-ios-m4
+swift package init --type executable
+swift run
+```
+Crea Sources/main.swift con una función async, un actor contador y TaskGroup; ejecuta swift run y explica cada await.
+
+#### Paso 5 · Práctica guiada
+Pista: omite deliberadamente la cancelación para provocar un fallo deliberado de tarea que sigue después de cerrar la vista; observa el log y corrígelo. Resultado esperado: tarea cancelada y UI segura.
+
+#### Paso 6 · Práctica independiente
+Añade timeout, error de red simulado, prioridad y una prueba de concurrencia con 100 operaciones.
+
+#### Paso 7 · Cierre y evidencia
+Guarda salida, logs y mediciones; como siguiente paso estudia networking. Errores comunes: bloquear MainActor, ignorar cancellation, compartir clase mutable y capturar self fuerte. Fuentes oficiales: https://developer.apple.com/documentation/swift/concurrency y https://docs.swift.org/swift-book/documentation/the-swift-programming-language/concurrency/.
+**¿Por qué es importante?** Porque las apps móviles deben seguir respondiendo mientras esperan red, disco o sensores.
+**Evidencia de aprendizaje:** entrega actor, tareas, cancelación, fallo y medición.
 **Conceptos clave:** acceso serializado garantizado por el compilador, sin locks manuales.
 
 ```swift
@@ -70,6 +128,35 @@ actor CacheTareas {
 
 ### Tema 3: TaskGroup y MainActor
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás ejecutar concurrencia Swift desde cero. Prerrequisitos: macOS, Xcode y Swift. Verifica swift --version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real, la app consulta rutas y tarifas sin bloquear la interfaz, cancela tareas al salir y protege estado compartido.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+async/await expresa espera; Task gestiona una unidad cancelable; Actor serializa acceso a estado mutable; TaskGroup coordina tareas hijas; MainActor protege UI. La analogía es una central con operadores y una única pizarra protegida: cada trabajador entrega resultado y respeta cancelación.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-ios-m4
+cd ejemplo-ios-m4
+swift package init --type executable
+swift run
+```
+Crea Sources/main.swift con una función async, un actor contador y TaskGroup; ejecuta swift run y explica cada await.
+
+#### Paso 5 · Práctica guiada
+Pista: omite deliberadamente la cancelación para provocar un fallo deliberado de tarea que sigue después de cerrar la vista; observa el log y corrígelo. Resultado esperado: tarea cancelada y UI segura.
+
+#### Paso 6 · Práctica independiente
+Añade timeout, error de red simulado, prioridad y una prueba de concurrencia con 100 operaciones.
+
+#### Paso 7 · Cierre y evidencia
+Guarda salida, logs y mediciones; como siguiente paso estudia networking. Errores comunes: bloquear MainActor, ignorar cancellation, compartir clase mutable y capturar self fuerte. Fuentes oficiales: https://developer.apple.com/documentation/swift/concurrency y https://docs.swift.org/swift-book/documentation/the-swift-programming-language/concurrency/.
+**¿Por qué es importante?** Porque las apps móviles deben seguir respondiendo mientras esperan red, disco o sensores.
+**Evidencia de aprendizaje:** entrega actor, tareas, cancelación, fallo y medición.
 **Conceptos clave:** concurrencia estructurada con recolección de resultados en paralelo, aislamiento garantizado al hilo principal.
 
 ```swift

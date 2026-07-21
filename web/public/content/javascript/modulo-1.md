@@ -5,6 +5,18 @@
 
 ### Tema 1: Tres formas de escribir una función
 
+#### Paso 1 · Objetivo y preparación
+
+Al finalizar podrás elegir declaración, expresión o función flecha según hoisting y `this`.
+
+**Conocimiento previo:** variables, alcance y ejecución con Node.js.
+
+#### Paso 2 · Contexto y caso real
+
+**¿Por qué es importante?** Una aplicación calcula tarifas, formatea resultados y transforma entregas. Una sintaxis mal elegida puede ejecutarse antes de inicializarse o perder el receptor de `this`.
+
+#### Paso 3 · Teoría con analogía
+
 **Conceptos clave:** function declaration, function expression, arrow function, hoisting de funciones.
 
 JavaScript ofrece tres sintaxis distintas para crear una función, y cada una tiene un comportamiento ligeramente distinto que conviene dominar con precisión. La function declaration (`function sumar(a, b) { return a + b; }`) se hoistea completa, no solo su nombre: esto significa que se puede invocar `sumar(2, 3)` en una línea de código anterior a donde está escrita la declaración, porque el motor de JavaScript procesa y registra la función completa antes de ejecutar el resto del script línea por línea. Esta propiedad permite, por ejemplo, organizar un archivo con la función principal al inicio y sus funciones auxiliares debajo, sin que el orden de lectura importe para la ejecución.
@@ -21,13 +33,80 @@ Elegir entre las tres formas no es arbitrario: usar function declarations para f
 
 **Diagrama:**
 
-```
-function sumar(a,b){}     ← hoisteada completa, disponible desde el inicio
-const s2 = function(a,b){} ← disponible solo tras esta línea (TDZ si const/let)
-const s3 = (a,b) => a+b    ← disponible tras esta línea; SIN this propio
+```mermaid
+flowchart TD
+    CALL["momento de invocación"] --> DECL["declaration: disponible por hoisting"]
+    CALL --> EXPR["expression: disponible tras asignación"]
+    CALL --> ARROW["arrow: this léxico y disponible tras asignación"]
 ```
 
+#### Paso 4 · Demostración guiada desde cero
+
+Desde una carpeta vacía crea `ejemplo-funciones`, ejecuta `npm init -y`, crea `src` y después `src/funciones.js`:
+
+```bash
+mkdir ejemplo-funciones
+cd ejemplo-funciones
+npm init -y
+mkdir src
+```
+
+```javascript
+function calcularTarifa(pesoKg) { // declaración: disponible por hoisting
+  return pesoKg * 7.4;
+}
+const formatearDinero = function (valor) { // expresión: disponible tras asignación
+  return `$${valor.toFixed(2)}`;
+};
+const presentar = (envio) => // flecha: útil para transformar cada elemento
+  `${envio.guia}: ${formatearDinero(calcularTarifa(envio.pesoKg))}`;
+
+console.log(presentar({ guia: 'RF-1', pesoKg: 2.5 }));
+```
+
+Ejecuta desde la raíz del proyecto:
+
+```bash
+node src/funciones.js
+```
+
+**Resultado esperado:** `RF-1: $18.50`.
+
+**Fallo deliberado:** invoca `formatearDinero(10)` antes de declararla. El `ReferenceError` señala la zona muerta temporal; no lo ocultes cambiando arbitrariamente la sintaxis.
+
+#### Construcción RutaFlow: funciones con una responsabilidad visible
+
+Crea `academia-javascript/src/funciones.js` con `calcularTarifa` como declaración, `formatearDinero` como expresión y una arrow para transformar una lista de envíos. Ejecuta `node src/funciones.js`; el resultado esperado muestra `RF-1: $18.50` y explica cuál función puede invocarse antes de su definición.
+
+Invoca la expression antes de inicializarla para observar `ReferenceError`; después usa una arrow como método que intenta leer `this.centro` y comprueba que no recibe el objeto. Corrige con método abreviado. RutaFlow usa arrows en callbacks y métodos normales cuando el receptor dinámico forma parte del contrato.
+
+#### Paso 5 · Práctica guiada
+
+Transforma dos entregas con `envios.map(presentar)`. **Pista:** `presentar` ya recibe cada elemento; predice ambas líneas antes de ejecutar.
+
+#### Paso 6 · Práctica independiente
+
+Crea un objeto `centro` con propiedad `nombre` y método `describir`. Provoca el fallo usando una flecha y corrígelo con método abreviado. Explica por qué las transformaciones sí conservan flechas.
+
+#### Paso 7 · Cierre y evidencia
+
+Ya eliges sintaxis por comportamiento. El siguiente tema combina parámetros por defecto con rest y spread. **Evidencia:** demuestra la salida, el `ReferenceError`, el fallo de `this` y sus correcciones. Fuente oficial: [MDN — funciones](https://developer.mozilla.org/es/docs/Web/JavaScript/Guide/Functions).
+
+**Errores comunes:** usar flechas como métodos con `this` dinámico; invocar una expresión antes de inicializarla; escoger sintaxis solo por brevedad.
+
 ### Tema 2: Parámetros por defecto y rest/spread
+
+#### Paso 1 · Objetivo y preparación
+
+Al finalizar podrás definir valores opcionales, recolectar argumentos con rest y expandir arrays u objetos con spread sin confundir copia superficial con clonación profunda.
+
+**Conocimiento previo:** funciones, arrays, objetos y diferencia entre reasignación y mutación.
+
+#### Paso 2 · Contexto y caso real
+
+**¿Por qué es importante?** Una tarifa combina cargos variables y una moneda predeterminada. Además, el estado de una entrega debe actualizarse sin alterar accidentalmente el objeto recibido por otra parte de la aplicación.
+
+#### Paso 3 · Teoría con analogía
 
 **Conceptos clave:** valores por defecto, rest para recolectar argumentos, spread para expandir.
 
@@ -45,14 +124,82 @@ Combinar parámetros por defecto con rest en la misma función es perfectamente 
 
 **Diagrama:**
 
-```
-Definición (rest):           Llamada/literal (spread):
-function f(...args) {}        f(...[1,2,3])       // expande el array en argumentos
-  args = [1,2,3]               [...[1,2], ...[3,4]] // combina: [1,2,3,4]
-  (recolecta en un array)       {...obj, x: 1}        // clona y extiende
+```mermaid
+flowchart LR
+    VALUES["valores separados"] -->|"rest recolecta"| ARRAY["array"]
+    ARRAY -->|"spread expande"| VALUES2["valores separados"]
 ```
 
+#### Paso 4 · Demostración guiada desde cero
+
+Desde una carpeta vacía crea `ejemplo-parametros`, ejecuta `npm init -y`, crea `src` y después `src/parametros.js`:
+
+```bash
+mkdir ejemplo-parametros
+cd ejemplo-parametros
+npm init -y
+mkdir src
+```
+
+```javascript
+// Rest reúne todos los cargos restantes en un array real.
+function calcularTotal(moneda = 'COP', ...cargos) {
+  const total = cargos.reduce((acumulado, cargo) => acumulado + cargo, 0);
+  return { moneda, total };
+}
+
+const envioOriginal = { guia: 'RF-2', estado: 'creado' };
+const tarifa = calcularTotal(undefined, ...[12_000, 3_500, 1_000]);
+
+// Spread crea otro objeto de primer nivel; el original permanece igual.
+const envioActualizado = { ...envioOriginal, tarifa };
+console.log(envioOriginal);
+console.log(envioActualizado);
+```
+
+Ejecuta desde `academia-javascript/`:
+
+```bash
+node src/parametros.js
+```
+
+**Resultado esperado:** el objeto original no contiene `tarifa`; el nuevo muestra `{ moneda: 'COP', total: 16500 }`.
+
+**Fallo deliberado:** reemplaza `undefined` por `null`. El valor por defecto no se activa y la moneda queda `null`. Esto no es un error del motor: los parámetros por defecto solo sustituyen ausencia o `undefined`.
+
+#### Construcción RutaFlow: tarifa compuesta sin mutación accidental
+
+Crea `academia-javascript/src/parametros.js` con `calcularTotal(moneda = 'COP', ...cargos)` y una actualización de envío mediante `{ ...envio, total }`. Ejecuta `node src/parametros.js`; debes ver suma correcta, moneda por defecto y el objeto original sin propiedad `total`.
+
+Pasa `undefined` y luego `null` como moneda para observar que solo el primero activa el valor por defecto. Haz una copia superficial de un objeto con dirección anidada, muta la dirección y comprueba que ambas referencias cambian. RutaFlow usa spread para actualizaciones pequeñas, no como clonación profunda universal.
+
+#### Paso 5 · Práctica guiada
+
+Agrega un cargo opcional por seguro y calcula de nuevo el total. **Pista:** prepara un array `cargos` y expándelo al llamar la función; no pases el array como un único cargo. Predice el resultado antes de ejecutar.
+
+#### Paso 6 · Práctica independiente
+
+Añade `direccion: { ciudad: 'Bogotá' }`, copia el envío con spread y cambia la ciudad en la copia. Explica por qué también cambia el original y corrige copiando explícitamente `direccion`. Demuestra ambos comportamientos con salidas diferentes.
+
+#### Paso 7 · Cierre y evidencia
+
+Ahora distingues rest —recolecta— de spread —expande o copia un nivel— y sabes cuándo actúa un valor por defecto. El siguiente tema usa funciones como datos para componer reglas. **Evidencia:** conserva la salida inicial, el caso `null`, la mutación anidada y su corrección. Fuente oficial: [MDN — rest parameters](https://developer.mozilla.org/es/docs/Web/JavaScript/Reference/Functions/rest_parameters) y [spread syntax](https://developer.mozilla.org/es/docs/Web/JavaScript/Reference/Operators/Spread_syntax).
+
+**Errores comunes:** colocar rest antes del último parámetro; pasar un array sin expandir; creer que spread clona todos los niveles; esperar que `null` active el valor por defecto.
+
 ### Tema 3: Funciones de orden superior
+
+#### Paso 1 · Objetivo y preparación
+
+Al finalizar podrás recibir y devolver funciones para componer reglas pequeñas, y separar reglas puras de controles temporales como `debounce`.
+
+**Conocimiento previo:** callbacks, rest parameters, arrays y manejo básico de errores.
+
+#### Paso 2 · Contexto y caso real
+
+**¿Por qué es importante?** Una aplicación calcula una tarifa en etapas: validar, calcular base, aplicar recargo y formatear. Una función monolítica dificulta identificar qué etapa falló; una composición muestra el recorrido del dato.
+
+#### Paso 3 · Teoría con analogía
 
 **Conceptos clave:** función que recibe función, función que devuelve función, composición.
 
@@ -70,17 +217,81 @@ El valor real de las funciones de orden superior no está en su elegancia sintá
 
 **Diagrama:**
 
+```mermaid
+flowchart LR
+    X["entrada"] --> F["validar"] --> G["calcular"] --> H["formatear"] --> RESULT["resultado"]
 ```
-debounce(fn, ms) → nueva función
-  cada llamada: cancela el temporizador anterior,
-  programa uno nuevo; fn solo se ejecuta si pasan
-  ms ms sin una nueva llamada
 
-pipe(f, g, h)(x) === h(g(f(x)))
-  x → f → resultado1 → g → resultado2 → h → resultado final
+#### Paso 4 · Demostración guiada desde cero
+
+Desde una carpeta vacía crea `ejemplo-composicion`, ejecuta `npm init -y`, crea `src` y después `src/composicion.js`:
+
+```bash
+mkdir ejemplo-composicion
+cd ejemplo-composicion
+npm init -y
+mkdir src
 ```
+
+```javascript
+// Recibe funciones y devuelve otra función: es de orden superior.
+const pipe = (...pasos) => (entrada) =>
+  pasos.reduce((resultado, paso) => paso(resultado), entrada);
+
+const validarPeso = (pesoKg) => {
+  if (!Number.isFinite(pesoKg) || pesoKg <= 0) {
+    throw new TypeError('El peso debe ser positivo');
+  }
+  return pesoKg;
+};
+const calcularBase = (pesoKg) => pesoKg * 7.4;
+const aplicarRecargo = (total) => total * 1.1;
+
+const calcularTarifa = pipe(validarPeso, calcularBase, aplicarRecargo);
+console.log(calcularTarifa(2.5).toFixed(2));
+```
+
+```bash
+node src/composicion.js
+```
+
+**Resultado esperado:** `20.35`.
+
+**Fallo deliberado:** invierte `validarPeso` y `calcularBase`, y ejecuta con `-1`. El error aparece después de calcular un dato inválido; con efectos externos ese orden sería peligroso. Valida antes de transformar.
+
+#### Construcción RutaFlow: componer reglas pequeñas
+
+Crea `academia-javascript/src/composicion.js` con `pipe`, `validarPeso`, `calcularBase` y `aplicarRecargo`. Ejecuta `node src/composicion.js`; el resultado esperado es una tarifa reproducible y un error tipado para peso negativo. Cada función recibe un valor y devuelve otro sin leer variables globales.
+
+Invierte el orden de dos pasos y observa una cifra distinta o un contrato roto. Después implementa un debounce pequeño, invócalo cinco veces y verifica una sola ejecución mediante contador. RutaFlow compone transformaciones puras; debounce pertenece al borde de interacción y no oculta reglas de negocio.
+
+#### Paso 5 · Práctica guiada
+
+Agrega `redondear = total => Math.round(total)` al final. **Pista:** predice la diferencia entre redondear antes y después del recargo; ejecuta ambos órdenes.
+
+#### Paso 6 · Práctica independiente
+
+Implementa `debounce(fn, 100)` en `src/interaccion.js`, llámalo cinco veces y demuestra con un contador que ejecuta una sola vez. Añade `cancel()` y prueba que una búsqueda cancelada no cambia el contador.
+
+#### Paso 7 · Cierre y evidencia
+
+Ya compones transformaciones puras y mantienes temporizadores en el borde. El siguiente tema modela decisiones y estados. **Evidencia:** demuestra el resultado de la tarifa, el peso rechazado, los órdenes comparados y las pruebas de ejecutar/cancelar debounce. Fuente oficial: [MDN — funciones de primera clase](https://developer.mozilla.org/es/docs/Glossary/First-class_Function).
+
+**Errores comunes:** componer al revés; devolver un tipo incompatible; esconder efectos dentro de una regla; probar debounce sin controlar el tiempo.
 
 ### Tema 4: Control de flujo — if, switch y loops
+
+#### Paso 1 · Objetivo y preparación
+
+Al finalizar podrás elegir entre `if`, `switch`, tablas de funciones y bucles para expresar reglas sin ramas ocultas.
+
+**Conocimiento previo:** objetos, funciones, arrays y operadores de comparación estricta.
+
+#### Paso 2 · Contexto y caso real
+
+**¿Por qué es importante?** Una aplicación debe impedir transiciones inválidas, como pasar una entrega cancelada a entregada. La estructura de control debe mostrar las reglas permitidas y fallar de forma explícita ante una acción desconocida.
+
+#### Paso 3 · Teoría con analogía
 
 **Conceptos clave:** `if/else`, `switch`, bucles, objetos de mapeo como alternativa a `switch`.
 
@@ -98,17 +309,85 @@ Aunque los bucles siguen siendo necesarios en muchos contextos (especialmente cu
 
 **Diagrama:**
 
-```
-switch extenso:                    Objeto de mapeo equivalente:
-switch (tipoAccion) {               const acciones = {
-  case "crear": ...; break;           crear: () => {...},
-  case "borrar": ...; break;           borrar: () => {...},
-  case "editar": ...; break;           editar: () => {...},
-  default: ...;                      };
-}                                    (acciones[tipoAccion] ?? default)();
+```mermaid
+flowchart LR
+    ACTION["tipo de acción"] --> LOOKUP["tabla de handlers"] --> HANDLER["función seleccionada"]
+    LOOKUP -->|"clave ausente"| ERROR["error de dominio"]
 ```
 
+#### Paso 4 · Demostración guiada desde cero
+
+Desde una carpeta vacía crea `ejemplo-estados`, ejecuta `npm init -y`, crea `src` y después `src/estados.js`:
+
+```bash
+mkdir ejemplo-estados
+cd ejemplo-estados
+npm init -y
+mkdir src
+```
+
+```javascript
+const transiciones = {
+  creado: { asignar: 'asignado', cancelar: 'cancelado' },
+  asignado: { iniciar: 'en-ruta', cancelar: 'cancelado' },
+  'en-ruta': { entregar: 'entregado' },
+};
+
+function aplicar(estado, accion) {
+  // ?. evita leer una acción sobre un estado sin transiciones.
+  const siguiente = transiciones[estado]?.[accion];
+  if (!siguiente) throw new Error(`Transición inválida: ${estado} -> ${accion}`);
+  return siguiente;
+}
+
+let estado = 'creado';
+for (const accion of ['asignar', 'iniciar', 'entregar']) {
+  estado = aplicar(estado, accion);
+  console.log(estado);
+}
+```
+
+```bash
+node src/estados.js
+```
+
+**Resultado esperado:** `asignado`, `en-ruta` y `entregado`, en ese orden.
+
+**Fallo deliberado:** agrega `cancelar` después de `entregar`. El error debe indicar `entregado -> cancelar`; no agregues una transición solo para silenciarlo, porque el estado final es una regla del dominio.
+
+#### Construcción RutaFlow: máquina de estados explícita
+
+Crea `academia-javascript/src/estados.js` con handlers para `CREADA`, `EN_RUTA`, `ENTREGADA` y `CANCELADA`, y recorre una lista de eventos con `for...of`. Ejecuta `node src/estados.js`; la salida esperada muestra cada transición válida y rechaza una acción desconocida.
+
+Elimina un `break` de una versión con switch para observar *fall-through* y luego reemplázala por tabla cuando los casos sean funciones intercambiables. Añade una transición y sus casos límite sin cambiar el despachador. RutaFlow no reemplaza todo switch por objetos: un switch pequeño y exhaustivo puede comunicar mejor un conjunto cerrado.
+
+#### Paso 5 · Práctica guiada
+
+Agrega el estado `en-bodega` entre `asignado` y `en-ruta`. **Pista:** modifica datos de la tabla, no la función `aplicar`; predice qué secuencia anterior dejará de ser válida.
+
+#### Paso 6 · Práctica independiente
+
+Implementa `procesarAcciones(estadoInicial, acciones)` que devuelva todos los estados visitados sin mutar el array recibido. Prueba camino feliz, acción desconocida y acción válida desde estado incorrecto.
+
+#### Paso 7 · Cierre y evidencia
+
+Ya puedes convertir reglas de transición en datos verificables. El siguiente tema reconoce patrones antiguos y los migra a módulos modernos. **Evidencia:** demuestra el resultado correcto, el fallo deliberado y tres pruebas de `procesarAcciones`. Fuente oficial: [MDN — control flow](https://developer.mozilla.org/es/docs/Web/JavaScript/Guide/Control_flow_and_error_handling).
+
+**Errores comunes:** olvidar `break`; usar `for...in` para valores de un array; aceptar silenciosamente claves desconocidas; mezclar reglas con impresión en consola.
+
 ### Tema 5: IIFE y el objeto arguments
+
+#### Paso 1 · Objetivo y preparación
+
+Al finalizar podrás leer una IIFE y `arguments` en código legado, explicar sus límites y migrarlos a módulos ESM y parámetros rest.
+
+**Conocimiento previo:** scope, funciones, rest y configuración `type: module`.
+
+#### Paso 2 · Contexto y caso real
+
+**¿Por qué es importante?** Una aplicación puede integrar bibliotecas antiguas que protegen variables con IIFE o reciben argumentos mediante `arguments`. Comprenderlas permite migrar sin romper comportamiento, pero no obliga a repetir esos patrones en código nuevo.
+
+#### Paso 3 · Teoría con analogía
 
 **Conceptos clave:** Immediately Invoked Function Expression, encapsulación, `arguments` frente a rest.
 
@@ -126,19 +405,72 @@ En JavaScript moderno, el operador rest (Tema 2) ha reemplazado prácticamente p
 
 **Diagrama:**
 
+```mermaid
+flowchart LR
+    GLOBAL["scope global"] --> IIFE["IIFE: scope temporal privado"]
+    MODULE["ES module: scope de archivo"] --> EXPORTS["exports explícitos"]
 ```
-IIFE:                              arguments (dentro de function):
-(function() {                      function f(a, b) {
-  let privado = "oculto";            console.log(arguments.length);
-  console.log(privado);              console.log(arguments[0]); // = a
-})();                              }
-// privado no existe aquí afuera   f(1, 2, 3); // arguments = {0:1,1:2,2:3,length:3}
+
+#### Paso 4 · Demostración guiada desde cero
+
+Desde una carpeta vacía crea `ejemplo-legado`, ejecuta `npm init -y`, crea `src` y después `src/legado.cjs`:
+
+```bash
+mkdir ejemplo-legado
+cd ejemplo-legado
+npm init -y
+mkdir src
 ```
+
+```javascript
+const tarifas = (function () {
+  let consultas = 0; // queda encerrada en el scope de la IIFE
+  return {
+    total: function () {
+      consultas += 1;
+      const cargos = Array.from(arguments); // arguments no es un array real
+      return cargos.reduce((suma, cargo) => suma + cargo, 0);
+    },
+    consultas: () => consultas,
+  };
+})();
+
+console.log(tarifas.total(10, 20, 5));
+console.log(tarifas.consultas());
+```
+
+```bash
+node src/legado.cjs
+```
+
+**Resultado esperado:** `35` y `1`; `consultas` no existe en el scope global.
+
+**Fallo deliberado:** reemplaza `Array.from(arguments)` por `arguments.map(...)`. Aparece `TypeError` porque `arguments` es similar a un array, pero no hereda sus métodos. Rest crea un array real y evita la conversión.
+
+#### Construcción RutaFlow: reconocer legado y migrarlo
+
+Crea `academia-javascript/src/legado.cjs` con una IIFE que exponga únicamente `crearContador`, y compara `arguments` con rest dentro de dos funciones. Ejecuta `node src/legado.cjs`; el resultado esperado mantiene la variable interna inaccesible y muestra que rest sí es un array real.
+
+Intenta usar `arguments.map` para provocar `TypeError`; corrige convirtiendo o, preferiblemente, usando rest. Migra la IIFE a `src/contador.js` con ESM y export nombrado, actualizando `package.json` con `type: module`. RutaFlow aprende IIFE para mantener legado, pero el código nuevo usa módulos y contratos explícitos.
+
+#### Paso 5 · Práctica guiada
+
+Reemplaza `function () { ...arguments }` por `(...cargos) =>`. **Pista:** conserva primero las mismas salidas; separar refactorización y cambio de comportamiento facilita detectar una regresión.
+
+#### Paso 6 · Práctica independiente
+
+Crea `src/tarifas.js` con export nombrado `crearCalculadoraTarifas`, estado privado mediante closure y rest. Escribe un import en `src/usar-tarifas.js` y demuestra que dos calculadoras mantienen contadores independientes.
+
+#### Paso 7 · Cierre y evidencia
+
+Completaste funciones y control de flujo distinguiendo patrones vigentes de legado. El siguiente módulo profundiza en closures, `this` y prototipos. **Evidencia:** conserva las salidas antiguas, el `TypeError`, la versión ESM y la prueba de dos contadores. Fuentes oficiales: [MDN — IIFE](https://developer.mozilla.org/en-US/docs/Glossary/IIFE) y [`arguments`](https://developer.mozilla.org/es/docs/Web/JavaScript/Reference/Functions/arguments).
+
+**Errores comunes:** creer que `arguments` es un array; buscarlo dentro de una arrow; migrar sintaxis y comportamiento a la vez; usar IIFE donde un módulo ya proporciona aislamiento.
 
 ---
 
 
-## Laboratorio práctico
+## Construcción guiada del capítulo
 
 **Objetivo del laboratorio:** construir una pequeña biblioteca de funciones utilitarias de orden superior, aplicando las tres formas de función, parámetros modernos y composición.
 

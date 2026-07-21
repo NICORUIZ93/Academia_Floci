@@ -5,6 +5,34 @@
 
 ### Tema 1: record — modelos inmutables sin boilerplate
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás modelar datos modernos de Java desde cero. Prerrequisitos: JDK 21 y un editor. Comprueba java --version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real, estados de una entrega deben ser explícitos, inmutables y exhaustivos para que un cambio no quede sin manejar.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+record expresa datos con igualdad y acceso definidos; sealed limita extensiones; pattern matching acerca la comprobación al uso y permite exhaustividad. La analogía es un formulario oficial con opciones cerradas: facilita validar y hace visible una opción nueva.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-java-m7
+cd ejemplo-java-m7
+mkdir -p src/main/java/com/example
+```
+Crea src/main/java/com/example/Main.java con un record Delivery y una jerarquía sealed; compila con javac --release 21 -d out y ejecuta.
+
+#### Paso 5 · Práctica guiada
+Pista: añade deliberadamente una variante sin manejar para provocar un fallo deliberado de compilación; lee el diagnóstico y completa el switch. Resultado esperado: compilación exhaustiva.
+
+#### Paso 6 · Práctica independiente
+Añade un estado de cancelación, valida el constructor del record y escribe una prueba que demuestre igualdad por valor.
+
+#### Paso 7 · Cierre y evidencia
+Guarda código, compilación y diagnóstico; como siguiente paso estudia módulos y API. Errores comunes: usar records para entidades mutables, abrir jerarquías por comodidad y ocultar un default que traga estados. Fuentes oficiales: https://dev.java/learn/classes-objects/records/ y https://openjdk.org/jeps/409.
+**¿Por qué es importante?** Porque el lenguaje puede hacer que estados imposibles sean difíciles de representar.
+**Evidencia de aprendizaje:** entrega jerarquía, switch exhaustivo, fallo y corrección.
 **Conceptos clave:** generación automática de constructor/getters/equals/hashCode/toString, inmutabilidad.
 
 `record Punto(int x, int y) {}` declara una clase inmutable completa en una única línea: el compilador genera automáticamente un constructor que acepta ambos componentes, métodos de acceso con el mismo nombre que cada componente (`p.x()`, `p.y()`, en vez de la convención `getX()`/`getY()` de una clase tradicional), y sobreescribe `equals()`, `hashCode()` y `toString()` basándose en el valor de todos los componentes declarados, reemplazando por completo el boilerplate que una clase POJO (Plain Old Java Object) tradicional requeriría escribir manualmente (o generar con un IDE, o delegar a una librería externa como Lombok) para lograr exactamente el mismo resultado.
@@ -33,6 +61,34 @@ Intenta asignar `evento.tipo = "OTRO"`: el compilador impide mutar el componente
 
 ### Tema 2: sealed — jerarquías cerradas y exhaustividad
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás modelar datos modernos de Java desde cero. Prerrequisitos: JDK 21 y un editor. Comprueba java --version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real, estados de una entrega deben ser explícitos, inmutables y exhaustivos para que un cambio no quede sin manejar.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+record expresa datos con igualdad y acceso definidos; sealed limita extensiones; pattern matching acerca la comprobación al uso y permite exhaustividad. La analogía es un formulario oficial con opciones cerradas: facilita validar y hace visible una opción nueva.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-java-m7
+cd ejemplo-java-m7
+mkdir -p src/main/java/com/example
+```
+Crea src/main/java/com/example/Main.java con un record Delivery y una jerarquía sealed; compila con javac --release 21 -d out y ejecuta.
+
+#### Paso 5 · Práctica guiada
+Pista: añade deliberadamente una variante sin manejar para provocar un fallo deliberado de compilación; lee el diagnóstico y completa el switch. Resultado esperado: compilación exhaustiva.
+
+#### Paso 6 · Práctica independiente
+Añade un estado de cancelación, valida el constructor del record y escribe una prueba que demuestre igualdad por valor.
+
+#### Paso 7 · Cierre y evidencia
+Guarda código, compilación y diagnóstico; como siguiente paso estudia módulos y API. Errores comunes: usar records para entidades mutables, abrir jerarquías por comodidad y ocultar un default que traga estados. Fuentes oficiales: https://dev.java/learn/classes-objects/records/ y https://openjdk.org/jeps/409.
+**¿Por qué es importante?** Porque el lenguaje puede hacer que estados imposibles sean difíciles de representar.
+**Evidencia de aprendizaje:** entrega jerarquía, switch exhaustivo, fallo y corrección.
 **Conceptos clave:** `permits`, lista explícita de implementaciones válidas, verificación de exhaustividad.
 
 `sealed interface Forma permits Circulo, Cuadrado {}` declara explícitamente, mediante la cláusula `permits`, exactamente qué clases o interfaces tienen permitido implementar o extender `Forma`, una restricción verificada por el compilador: ningún otro código, en ningún otro lugar del proyecto, puede crear una implementación adicional no listada en esa cláusula `permits`, a diferencia de una interfaz normal sin `sealed`, que cualquier clase en cualquier lugar puede implementar libremente sin ninguna restricción del compilador.
@@ -59,6 +115,34 @@ Declara `ResultadoDesconocido implements ResultadoEntrega` sin añadirlo a `perm
 
 ### Tema 3: Pattern matching exhaustivo y para instanceof
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás modelar datos modernos de Java desde cero. Prerrequisitos: JDK 21 y un editor. Comprueba java --version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real, estados de una entrega deben ser explícitos, inmutables y exhaustivos para que un cambio no quede sin manejar.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+record expresa datos con igualdad y acceso definidos; sealed limita extensiones; pattern matching acerca la comprobación al uso y permite exhaustividad. La analogía es un formulario oficial con opciones cerradas: facilita validar y hace visible una opción nueva.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-java-m7
+cd ejemplo-java-m7
+mkdir -p src/main/java/com/example
+```
+Crea src/main/java/com/example/Main.java con un record Delivery y una jerarquía sealed; compila con javac --release 21 -d out y ejecuta.
+
+#### Paso 5 · Práctica guiada
+Pista: añade deliberadamente una variante sin manejar para provocar un fallo deliberado de compilación; lee el diagnóstico y completa el switch. Resultado esperado: compilación exhaustiva.
+
+#### Paso 6 · Práctica independiente
+Añade un estado de cancelación, valida el constructor del record y escribe una prueba que demuestre igualdad por valor.
+
+#### Paso 7 · Cierre y evidencia
+Guarda código, compilación y diagnóstico; como siguiente paso estudia módulos y API. Errores comunes: usar records para entidades mutables, abrir jerarquías por comodidad y ocultar un default que traga estados. Fuentes oficiales: https://dev.java/learn/classes-objects/records/ y https://openjdk.org/jeps/409.
+**¿Por qué es importante?** Porque el lenguaje puede hacer que estados imposibles sean difíciles de representar.
+**Evidencia de aprendizaje:** entrega jerarquía, switch exhaustivo, fallo y corrección.
 **Conceptos clave:** switch sin default verificado, eliminación del casteo manual clásico.
 
 `double area(Forma forma) { return switch (forma) { case Circulo c -> Math.PI * c.radio() * c.radio(); case Cuadrado q -> q.lado() * q.lado(); }; }` combina pattern matching (extrayendo directamente `c`/`q` ya tipados correctamente según cada caso, sin casteo manual explícito) con la verificación de exhaustividad habilitada por `sealed` (Tema 2): el compilador verifica que este switch efectivamente cubre absolutamente todos los casos posibles de la sealed interface `Forma` (`Circulo` y `Cuadrado`, y ningún otro caso posible dado que `permits` los restringe exactamente a esos dos), permitiendo omitir por completo una rama `default`, dado que no existe ningún caso adicional posible que esa rama tendría que cubrir.

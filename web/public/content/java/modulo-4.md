@@ -5,6 +5,34 @@
 
 ### Tema 1: Stream API — map, filter, reduce, collect
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás transformar colecciones con este enfoque desde cero. Prerrequisitos: JDK 21 y un editor. Comprueba java --version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real, se filtran entregas activas, se calculan tarifas y se agrupan resultados; una tubería clara debe preservar orden, tipos y reglas.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+Un stream describe una operación perezosa sobre datos; map transforma, filter conserva y reduce combina. Optional expresa ausencia sin usar null como señal ambigua. El paralelismo solo conviene con trabajo independiente medido. La analogía es una línea de clasificación: cada estación transforma o descarta y el resultado final debe poder explicar sus pasos.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-java-m4
+cd ejemplo-java-m4
+mkdir -p src/main/java/com/example
+```
+Crea src/main/java/com/example/Main.java con una lista de entregas, un stream y un Optional; compila con javac -d out y ejecuta.
+
+#### Paso 5 · Práctica guiada
+Pista: ejecuta el programa, cambia la lista a vacía para provocar un fallo deliberado de resultado ausente y corrígelo con Optional. Resultado esperado: mensaje explícito, sin NullPointerException.
+
+#### Paso 6 · Práctica independiente
+Añade una agrupación por estado, una medición secuencial/paralela y una prueba que demuestre que la operación es asociativa.
+
+#### Paso 7 · Cierre y evidencia
+Guarda salida y mediciones; como siguiente paso estudia concurrencia. Errores comunes: efectos secundarios dentro del stream, usar paralelismo por defecto, llamar get() sin alternativa y streams consumidos dos veces. Fuentes oficiales: https://dev.java/learn/api/streams/ y https://docs.oracle.com/javase/8/docs/api/java/util/stream/Stream.html.
+**¿Por qué es importante?** Porque una transformación declarativa puede hacer visible la regla, pero solo si se controlan ausencia y efectos secundarios.
+**Evidencia de aprendizaje:** entrega pipeline, prueba vacía, medición y explicación de complejidad.
 **Conceptos clave:** pipeline declarativo, operaciones intermedias vs terminales.
 
 Un stream describe una secuencia de operaciones a aplicar sobre una colección de forma declarativa: `personas.stream().filter(p -> p.getEdad() >= 18).map(Persona::getNombre).collect(Collectors.toList())` expresa directamente "filtra las personas mayores de edad, transforma cada una a su nombre, y recolecta el resultado en una lista", en vez de escribir manualmente un bucle imperativo con una lista auxiliar acumulando resultados paso a paso, un estilo que se enfoca en describir qué transformación se desea, no en los detalles mecánicos de cómo iterar y acumular.
@@ -36,6 +64,34 @@ Elimina la operación terminal y añade un `peek`: no se imprime nada porque el 
 
 ### Tema 2: Optional — evitar null explícitamente
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás transformar colecciones con este enfoque desde cero. Prerrequisitos: JDK 21 y un editor. Comprueba java --version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real, se filtran entregas activas, se calculan tarifas y se agrupan resultados; una tubería clara debe preservar orden, tipos y reglas.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+Un stream describe una operación perezosa sobre datos; map transforma, filter conserva y reduce combina. Optional expresa ausencia sin usar null como señal ambigua. El paralelismo solo conviene con trabajo independiente medido. La analogía es una línea de clasificación: cada estación transforma o descarta y el resultado final debe poder explicar sus pasos.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-java-m4
+cd ejemplo-java-m4
+mkdir -p src/main/java/com/example
+```
+Crea src/main/java/com/example/Main.java con una lista de entregas, un stream y un Optional; compila con javac -d out y ejecuta.
+
+#### Paso 5 · Práctica guiada
+Pista: ejecuta el programa, cambia la lista a vacía para provocar un fallo deliberado de resultado ausente y corrígelo con Optional. Resultado esperado: mensaje explícito, sin NullPointerException.
+
+#### Paso 6 · Práctica independiente
+Añade una agrupación por estado, una medición secuencial/paralela y una prueba que demuestre que la operación es asociativa.
+
+#### Paso 7 · Cierre y evidencia
+Guarda salida y mediciones; como siguiente paso estudia concurrencia. Errores comunes: efectos secundarios dentro del stream, usar paralelismo por defecto, llamar get() sin alternativa y streams consumidos dos veces. Fuentes oficiales: https://dev.java/learn/api/streams/ y https://docs.oracle.com/javase/8/docs/api/java/util/stream/Stream.html.
+**¿Por qué es importante?** Porque una transformación declarativa puede hacer visible la regla, pero solo si se controlan ausencia y efectos secundarios.
+**Evidencia de aprendizaje:** entrega pipeline, prueba vacía, medición y explicación de complejidad.
 **Conceptos clave:** ausencia de valor explícita en el tipo, `orElseThrow`.
 
 `Optional<Persona> buscarPorId(int id) { return personas.stream().filter(p -> p.getId() == id).findFirst(); }` devuelve un `Optional<Persona>` en vez de devolver directamente `Persona` (que podría ser `null` si no se encuentra ningún resultado): esta diferencia en el tipo de retorno obliga, en el propio sistema de tipos, a que cualquier código que invoque este método considere explícitamente el caso "no hay valor", en vez de descubrir esa ausencia únicamente en producción mediante un `NullPointerException` inesperado al intentar usar un valor que resultó ser `null` sin haberlo verificado previamente.
@@ -63,6 +119,34 @@ Provoca el antipatrón `Optional.of(null)` y observa `NullPointerException`; cua
 
 ### Tema 3: Streams paralelos y referencias a métodos
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás transformar colecciones con este enfoque desde cero. Prerrequisitos: JDK 21 y un editor. Comprueba java --version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real, se filtran entregas activas, se calculan tarifas y se agrupan resultados; una tubería clara debe preservar orden, tipos y reglas.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+Un stream describe una operación perezosa sobre datos; map transforma, filter conserva y reduce combina. Optional expresa ausencia sin usar null como señal ambigua. El paralelismo solo conviene con trabajo independiente medido. La analogía es una línea de clasificación: cada estación transforma o descarta y el resultado final debe poder explicar sus pasos.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-java-m4
+cd ejemplo-java-m4
+mkdir -p src/main/java/com/example
+```
+Crea src/main/java/com/example/Main.java con una lista de entregas, un stream y un Optional; compila con javac -d out y ejecuta.
+
+#### Paso 5 · Práctica guiada
+Pista: ejecuta el programa, cambia la lista a vacía para provocar un fallo deliberado de resultado ausente y corrígelo con Optional. Resultado esperado: mensaje explícito, sin NullPointerException.
+
+#### Paso 6 · Práctica independiente
+Añade una agrupación por estado, una medición secuencial/paralela y una prueba que demuestre que la operación es asociativa.
+
+#### Paso 7 · Cierre y evidencia
+Guarda salida y mediciones; como siguiente paso estudia concurrencia. Errores comunes: efectos secundarios dentro del stream, usar paralelismo por defecto, llamar get() sin alternativa y streams consumidos dos veces. Fuentes oficiales: https://dev.java/learn/api/streams/ y https://docs.oracle.com/javase/8/docs/api/java/util/stream/Stream.html.
+**¿Por qué es importante?** Porque una transformación declarativa puede hacer visible la regla, pero solo si se controlan ausencia y efectos secundarios.
+**Evidencia de aprendizaje:** entrega pipeline, prueba vacía, medición y explicación de complejidad.
 **Conceptos clave:** `parallelStream()`, overhead de paralelización, `Clase::metodo`.
 
 `numeros.parallelStream().filter(this::esPrimo).count()` divide el procesamiento del stream entre múltiples hilos automáticamente gestionados por el framework de streams (usando internamente el mismo pool de hilos compartido `ForkJoinPool.commonPool()`), apropiado específicamente para datasets grandes combinados con operaciones genuinamente intensivas en CPU y sin efectos secundarios compartidos entre los elementos procesados (dado que la paralelización introduce el riesgo de condiciones de carrera si las operaciones del stream modifican estado compartido mutable, Módulo 5).

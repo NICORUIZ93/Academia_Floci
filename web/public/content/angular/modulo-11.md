@@ -5,6 +5,37 @@
 
 ### Tema 1: Server-Side Rendering
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás evaluar renderizado Angular desde cero. Prerrequisitos: Node.js LTS, npm y Angular CLI. Verifica ng version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real, una página de seguimiento debe mostrar contenido rápido, ser indexable y no duplicar eventos al hidratar en el navegador.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+SSR genera HTML en servidor; hidratación reutiliza ese DOM; @defer carga una vista cuando se necesita; zoneless reduce trabajo de detección. La analogía es entregar un catálogo preimpreso y activar solo las páginas que el lector abre.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-angular-m11
+cd ejemplo-angular-m11
+npx -p @angular/cli ng new app --standalone --routing=true --style=css --ssr --skip-git
+cd app
+npm run build
+npm run serve:ssr
+```
+Crea una ruta con contenido diferible y observa HTML inicial, hidratación y chunk cargado.
+
+#### Paso 5 · Práctica guiada
+Pista: introduce deliberadamente una diferencia entre servidor y navegador para provocar un fallo deliberado de hidratación; lee el warning y corrígelo. Resultado esperado: HTML estable sin mismatch.
+
+#### Paso 6 · Práctica independiente
+Añade @defer con placeholder/error/loading, mide LCP y comprueba navegación con JavaScript desactivado.
+
+#### Paso 7 · Cierre y evidencia
+Guarda build, capturas y métricas; como siguiente paso estudia despliegue. Errores comunes: acceder a window en servidor, efectos duplicados, contenido no determinista y diferir contenido esencial. Fuentes oficiales: https://angular.dev/guide/ssr y https://angular.dev/guide/templates/defer.
+**¿Por qué es importante?** Porque rendimiento e indexación dependen de cuándo y dónde se genera cada píxel.
+**Evidencia de aprendizaje:** entrega HTML servidor, hidratación, chunk y diagnóstico.
 **Conceptos clave:** `ng add @angular/ssr`, tiempo hasta el primer contenido visible, SEO.
 
 Server-Side Rendering (SSR) traslada la generación inicial del HTML de una aplicación Angular desde el navegador del usuario hacia el servidor: en vez de que el navegador reciba un documento HTML prácticamente vacío que debe ejecutar JavaScript para recién entonces construir y mostrar el contenido real (el enfoque tradicional de una Single Page Application), el servidor ejecuta Angular por su cuenta, genera el HTML completo de la vista inicial con todos sus datos ya presentes, y envía ese HTML ya completo directamente al navegador, que puede mostrarlo inmediatamente sin esperar a que ningún JavaScript se descargue ni se ejecute primero.
@@ -29,6 +60,37 @@ Con SSR: servidor renderiza HTML completo → navegador lo muestra inmediatament
 
 ### Tema 2: Hidratación
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás evaluar renderizado Angular desde cero. Prerrequisitos: Node.js LTS, npm y Angular CLI. Verifica ng version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real, una página de seguimiento debe mostrar contenido rápido, ser indexable y no duplicar eventos al hidratar en el navegador.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+SSR genera HTML en servidor; hidratación reutiliza ese DOM; @defer carga una vista cuando se necesita; zoneless reduce trabajo de detección. La analogía es entregar un catálogo preimpreso y activar solo las páginas que el lector abre.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-angular-m11
+cd ejemplo-angular-m11
+npx -p @angular/cli ng new app --standalone --routing=true --style=css --ssr --skip-git
+cd app
+npm run build
+npm run serve:ssr
+```
+Crea una ruta con contenido diferible y observa HTML inicial, hidratación y chunk cargado.
+
+#### Paso 5 · Práctica guiada
+Pista: introduce deliberadamente una diferencia entre servidor y navegador para provocar un fallo deliberado de hidratación; lee el warning y corrígelo. Resultado esperado: HTML estable sin mismatch.
+
+#### Paso 6 · Práctica independiente
+Añade @defer con placeholder/error/loading, mide LCP y comprueba navegación con JavaScript desactivado.
+
+#### Paso 7 · Cierre y evidencia
+Guarda build, capturas y métricas; como siguiente paso estudia despliegue. Errores comunes: acceder a window en servidor, efectos duplicados, contenido no determinista y diferir contenido esencial. Fuentes oficiales: https://angular.dev/guide/ssr y https://angular.dev/guide/templates/defer.
+**¿Por qué es importante?** Porque rendimiento e indexación dependen de cuándo y dónde se genera cada píxel.
+**Evidencia de aprendizaje:** entrega HTML servidor, hidratación, chunk y diagnóstico.
 **Conceptos clave:** reutilización del DOM existente, adjuntar listeners sin re-renderizar.
 
 Una vez que el HTML generado por el servidor (Tema 1) llega al navegador y se muestra, la aplicación todavía no es interactiva: los botones no responden a clics, los formularios no reaccionan a la entrada del usuario, porque toda esa lógica vive en el JavaScript de Angular, que todavía no ha tomado control de esa página. La "hidratación" es el proceso mediante el cual Angular, una vez que su JavaScript efectivamente carga en el navegador, "toma posesión" de ese HTML ya existente: adjunta los listeners de eventos necesarios y activa toda la reactividad de signals y detección de cambios correspondiente, pero crucialmente sin destruir y volver a construir ese DOM desde cero, reutilizando directamente los elementos DOM que el servidor ya generó.
@@ -50,6 +112,37 @@ Esta reutilización del DOM existente (en vez de descartarlo y volver a renderiz
 
 ### Tema 3: @defer — carga diferida de vistas
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás evaluar renderizado Angular desde cero. Prerrequisitos: Node.js LTS, npm y Angular CLI. Verifica ng version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real, una página de seguimiento debe mostrar contenido rápido, ser indexable y no duplicar eventos al hidratar en el navegador.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+SSR genera HTML en servidor; hidratación reutiliza ese DOM; @defer carga una vista cuando se necesita; zoneless reduce trabajo de detección. La analogía es entregar un catálogo preimpreso y activar solo las páginas que el lector abre.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-angular-m11
+cd ejemplo-angular-m11
+npx -p @angular/cli ng new app --standalone --routing=true --style=css --ssr --skip-git
+cd app
+npm run build
+npm run serve:ssr
+```
+Crea una ruta con contenido diferible y observa HTML inicial, hidratación y chunk cargado.
+
+#### Paso 5 · Práctica guiada
+Pista: introduce deliberadamente una diferencia entre servidor y navegador para provocar un fallo deliberado de hidratación; lee el warning y corrígelo. Resultado esperado: HTML estable sin mismatch.
+
+#### Paso 6 · Práctica independiente
+Añade @defer con placeholder/error/loading, mide LCP y comprueba navegación con JavaScript desactivado.
+
+#### Paso 7 · Cierre y evidencia
+Guarda build, capturas y métricas; como siguiente paso estudia despliegue. Errores comunes: acceder a window en servidor, efectos duplicados, contenido no determinista y diferir contenido esencial. Fuentes oficiales: https://angular.dev/guide/ssr y https://angular.dev/guide/templates/defer.
+**¿Por qué es importante?** Porque rendimiento e indexación dependen de cuándo y dónde se genera cada píxel.
+**Evidencia de aprendizaje:** entrega HTML servidor, hidratación, chunk y diagnóstico.
 **Conceptos clave:** triggers (`on viewport`, `on interaction`, `on idle`), `@placeholder`, `@loading`.
 
 El bloque `@defer` (Módulo 1) marca una porción de la plantilla cuyo código correspondiente se compila en un chunk de JavaScript separado del bundle principal, que solo se descarga y se renderiza cuando se cumple una condición de disparo (trigger) explícita: `on viewport` dispara la carga cuando el bloque entra en el área visible de la pantalla del usuario (apropiado para contenido que está más abajo en la página y que el usuario podría nunca llegar a ver si no hace scroll), `on interaction` dispara ante un clic o teclado del usuario sobre un elemento específico (apropiado para contenido que solo es necesario tras una acción explícita, como abrir un panel), y `on idle` dispara cuando el navegador queda inactivo tras el renderizado inicial (apropiado para contenido de prioridad baja que conviene cargar eventualmente pero sin competir con recursos más urgentes de la carga inicial).
@@ -76,6 +169,37 @@ Reducir el bundle inicial descargado mediante `@defer` mejora directamente el ti
 
 ### Tema 4: Zoneless
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás evaluar renderizado Angular desde cero. Prerrequisitos: Node.js LTS, npm y Angular CLI. Verifica ng version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real, una página de seguimiento debe mostrar contenido rápido, ser indexable y no duplicar eventos al hidratar en el navegador.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+SSR genera HTML en servidor; hidratación reutiliza ese DOM; @defer carga una vista cuando se necesita; zoneless reduce trabajo de detección. La analogía es entregar un catálogo preimpreso y activar solo las páginas que el lector abre.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-angular-m11
+cd ejemplo-angular-m11
+npx -p @angular/cli ng new app --standalone --routing=true --style=css --ssr --skip-git
+cd app
+npm run build
+npm run serve:ssr
+```
+Crea una ruta con contenido diferible y observa HTML inicial, hidratación y chunk cargado.
+
+#### Paso 5 · Práctica guiada
+Pista: introduce deliberadamente una diferencia entre servidor y navegador para provocar un fallo deliberado de hidratación; lee el warning y corrígelo. Resultado esperado: HTML estable sin mismatch.
+
+#### Paso 6 · Práctica independiente
+Añade @defer con placeholder/error/loading, mide LCP y comprueba navegación con JavaScript desactivado.
+
+#### Paso 7 · Cierre y evidencia
+Guarda build, capturas y métricas; como siguiente paso estudia despliegue. Errores comunes: acceder a window en servidor, efectos duplicados, contenido no determinista y diferir contenido esencial. Fuentes oficiales: https://angular.dev/guide/ssr y https://angular.dev/guide/templates/defer.
+**¿Por qué es importante?** Porque rendimiento e indexación dependen de cuándo y dónde se genera cada píxel.
+**Evidencia de aprendizaje:** entrega HTML servidor, hidratación, chunk y diagnóstico.
 **Conceptos clave:** detección de cambios sin Zone.js, precisión de signals.
 
 Tradicionalmente, Angular ha dependido de Zone.js para saber cuándo revisar si algo cambió en la aplicación y potencialmente necesita re-renderizar: Zone.js intercepta prácticamente cualquier operación asíncrona del navegador (eventos del DOM, temporizadores, peticiones de red), y tras cada una de ellas, Angular ejecuta una revisión de detección de cambios sobre toda o gran parte del árbol de componentes para determinar qué, si acaso algo, necesita actualizarse visualmente, un enfoque funcional pero inherentemente impreciso: Angular no sabe realmente qué cambió específicamente, solo que "algo pudo haber cambiado" tras cierta operación asíncrona, y por tanto debe revisar más de lo estrictamente necesario para estar seguro.

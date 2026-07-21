@@ -5,6 +5,36 @@
 
 ### Tema 1: Por qué DTOs en vez de entidades directamente
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás implementar este concepto desde cero. Prerrequisitos: JDK 21, Maven y un editor.
+
+#### Paso 2 · Contexto y caso real
+En un caso real, una API de paquetes recibe datos de clientes y no debe exponer columnas internas ni aceptar valores imposibles.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+Un DTO representa el contrato de transporte y una entidad representa persistencia; separarlos evita filtraciones y cambios acoplados. Bean Validation declara restricciones y ControllerAdvice transforma excepciones en respuestas consistentes. La analogía es una ventanilla: valida el formulario antes de entregarlo al archivo interno.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-spring-m2
+cd ejemplo-spring-m2
+curl -fsSL https://start.spring.io/starter.zip -d dependencies=web,validation -d javaVersion=21 -o app.zip
+unzip app.zip
+mvn test
+```
+Crea `src/main/java/com/example/demo/DeliveryRequest.java` con `@NotBlank` y un controlador que devuelva `ResponseEntity`.
+
+#### Paso 5 · Práctica guiada
+Pista: ejecuta `mvn test`, envía un campo vacío para provocar un fallo deliberado de validación y corrige la petición. Resultado esperado: HTTP 400 con detalle legible.
+
+#### Paso 6 · Práctica independiente
+Añade un DTO de respuesta sin el campo interno `cost`, una excepción de dominio y un `@ControllerAdvice` que produzca Problem Details.
+
+#### Paso 7 · Cierre y evidencia
+Conserva prueba, request inválido y respuesta; como siguiente paso añade una prueba de contrato. Errores comunes: devolver entidades, validar solo en frontend, capturar `Exception` sin contexto y filtrar stack traces. Fuentes oficiales: https://docs.spring.io/spring-framework/reference/web/webmvc/mvc-controller/ann-validation.html y https://jakarta.ee/specifications/bean-validation/.
+**¿Por qué es importante?** Porque una frontera explícita protege datos y hace que los errores sean accionables.
+**Evidencia de aprendizaje:** entrega código, prueba verde, respuesta 400 y explicación de la separación DTO-entidad.
 **Conceptos clave:** desacoplar el contrato HTTP de la persistencia, evitar filtrar detalles internos.
 
 `@RestController @RequestMapping("/api/tareas") public class TareaController { @PostMapping public ResponseEntity<TareaDTO> crear(@Valid @RequestBody CrearTareaRequest request) {...} }` recibe y devuelve DTOs (Data Transfer Objects) específicamente diseñados para el contrato HTTP, en vez de exponer directamente las entidades JPA (Módulo 3) que representan el modelo de persistencia interno: exponer entidades directamente filtraría detalles internos de la capa de persistencia hacia el contrato público de la API (campos que existen únicamente por razones de mapeo relacional, o relaciones internas que no deberían ser visibles ni modificables desde fuera), y además puede producir errores de serialización concretos con relaciones marcadas como `lazy` (Módulo 3), donde Jackson (Módulo 6 del track de Java) podría intentar serializar una relación que Hibernate todavía no cargó, produciendo una excepción en tiempo de ejecución.
@@ -31,6 +61,36 @@ public class TareaController {
 
 ### Tema 2: Validación con Bean Validation y ResponseEntity
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás implementar este concepto desde cero. Prerrequisitos: JDK 21, Maven y un editor.
+
+#### Paso 2 · Contexto y caso real
+En un caso real, una API de paquetes recibe datos de clientes y no debe exponer columnas internas ni aceptar valores imposibles.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+Un DTO representa el contrato de transporte y una entidad representa persistencia; separarlos evita filtraciones y cambios acoplados. Bean Validation declara restricciones y ControllerAdvice transforma excepciones en respuestas consistentes. La analogía es una ventanilla: valida el formulario antes de entregarlo al archivo interno.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-spring-m2
+cd ejemplo-spring-m2
+curl -fsSL https://start.spring.io/starter.zip -d dependencies=web,validation -d javaVersion=21 -o app.zip
+unzip app.zip
+mvn test
+```
+Crea `src/main/java/com/example/demo/DeliveryRequest.java` con `@NotBlank` y un controlador que devuelva `ResponseEntity`.
+
+#### Paso 5 · Práctica guiada
+Pista: ejecuta `mvn test`, envía un campo vacío para provocar un fallo deliberado de validación y corrige la petición. Resultado esperado: HTTP 400 con detalle legible.
+
+#### Paso 6 · Práctica independiente
+Añade un DTO de respuesta sin el campo interno `cost`, una excepción de dominio y un `@ControllerAdvice` que produzca Problem Details.
+
+#### Paso 7 · Cierre y evidencia
+Conserva prueba, request inválido y respuesta; como siguiente paso añade una prueba de contrato. Errores comunes: devolver entidades, validar solo en frontend, capturar `Exception` sin contexto y filtrar stack traces. Fuentes oficiales: https://docs.spring.io/spring-framework/reference/web/webmvc/mvc-controller/ann-validation.html y https://jakarta.ee/specifications/bean-validation/.
+**¿Por qué es importante?** Porque una frontera explícita protege datos y hace que los errores sean accionables.
+**Evidencia de aprendizaje:** entrega código, prueba verde, respuesta 400 y explicación de la separación DTO-entidad.
 **Conceptos clave:** anotaciones declarativas de validación, códigos de estado explícitos.
 
 `public record CrearTareaRequest(@NotBlank String titulo, @Min(1) int prioridad) {}` declara restricciones de validación directamente sobre los campos del DTO de entrada mediante anotaciones de Bean Validation (`@NotBlank`, `@Min`, y otras similares como `@Size`, `@Email`), verificadas automáticamente por Spring cuando el parámetro correspondiente del controller se marca con `@Valid`, sin necesidad de escribir manualmente código de validación imperativo repetido en cada endpoint: si la validación falla, Spring lanza automáticamente una `MethodArgumentNotValidException` antes de que el código del método del controller siquiera se ejecute, deteniendo la petición inválida en ese punto.
@@ -52,6 +112,36 @@ public record CrearTareaRequest(
 
 ### Tema 3: Manejo centralizado de errores con @ControllerAdvice
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás implementar este concepto desde cero. Prerrequisitos: JDK 21, Maven y un editor.
+
+#### Paso 2 · Contexto y caso real
+En un caso real, una API de paquetes recibe datos de clientes y no debe exponer columnas internas ni aceptar valores imposibles.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+Un DTO representa el contrato de transporte y una entidad representa persistencia; separarlos evita filtraciones y cambios acoplados. Bean Validation declara restricciones y ControllerAdvice transforma excepciones en respuestas consistentes. La analogía es una ventanilla: valida el formulario antes de entregarlo al archivo interno.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-spring-m2
+cd ejemplo-spring-m2
+curl -fsSL https://start.spring.io/starter.zip -d dependencies=web,validation -d javaVersion=21 -o app.zip
+unzip app.zip
+mvn test
+```
+Crea `src/main/java/com/example/demo/DeliveryRequest.java` con `@NotBlank` y un controlador que devuelva `ResponseEntity`.
+
+#### Paso 5 · Práctica guiada
+Pista: ejecuta `mvn test`, envía un campo vacío para provocar un fallo deliberado de validación y corrige la petición. Resultado esperado: HTTP 400 con detalle legible.
+
+#### Paso 6 · Práctica independiente
+Añade un DTO de respuesta sin el campo interno `cost`, una excepción de dominio y un `@ControllerAdvice` que produzca Problem Details.
+
+#### Paso 7 · Cierre y evidencia
+Conserva prueba, request inválido y respuesta; como siguiente paso añade una prueba de contrato. Errores comunes: devolver entidades, validar solo en frontend, capturar `Exception` sin contexto y filtrar stack traces. Fuentes oficiales: https://docs.spring.io/spring-framework/reference/web/webmvc/mvc-controller/ann-validation.html y https://jakarta.ee/specifications/bean-validation/.
+**¿Por qué es importante?** Porque una frontera explícita protege datos y hace que los errores sean accionables.
+**Evidencia de aprendizaje:** entrega código, prueba verde, respuesta 400 y explicación de la separación DTO-entidad.
 **Conceptos clave:** `@ExceptionHandler`, formato de error consistente, sin try/catch repetido.
 
 `@RestControllerAdvice public class GlobalExceptionHandler { @ExceptionHandler(MethodArgumentNotValidException.class) public ResponseEntity<ErrorResponse> manejarValidacion(...) {...} @ExceptionHandler(RecursoNoEncontradoException.class) public ResponseEntity<ErrorResponse> manejarNoEncontrado(...) {...} }` centraliza en una única clase el manejo de excepciones específicas que pueden ocurrir en cualquier controller de la aplicación, mapeando cada tipo de excepción a una respuesta HTTP consistente y con un formato de error uniforme, en vez de que cada método individual de cada controller tenga que envolver su propia lógica en bloques `try`/`catch` repetidos que traducen manualmente cada excepción a su respuesta HTTP correspondiente.

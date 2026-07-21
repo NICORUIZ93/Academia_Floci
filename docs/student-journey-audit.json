@@ -31,55 +31,25 @@
       "labs": 0,
       "verifiableLabs": 0,
       "states": {
-        "explained": 49,
-        "practicable": 1
+        "explained": 47,
+        "practicable": 3
       },
       "criteria": {
-        "goal": 10,
+        "goal": 32,
         "prerequisites": 2,
         "terms": 50,
         "code": 50,
         "location": 50,
         "execution": 50,
-        "expected": 41,
+        "expected": 45,
         "failure": 6,
-        "diagnosis": 22,
-        "practice": 47,
+        "diagnosis": 34,
+        "practice": 50,
         "project": 50,
-        "proof": 24,
+        "proof": 38,
         "transition": 0
       },
       "blockers": [
-        {
-          "module": 1,
-          "title": "Tema 2: Variables, tipos, expresiones y cambios de estado",
-          "state": "explained",
-          "score": 6,
-          "missing": [
-            "goal",
-            "prerequisites",
-            "expected",
-            "failure",
-            "diagnosis",
-            "proof",
-            "transition"
-          ]
-        },
-        {
-          "module": 1,
-          "title": "Tema 4: Funciones y descomposición de problemas",
-          "state": "explained",
-          "score": 6,
-          "missing": [
-            "goal",
-            "prerequisites",
-            "expected",
-            "failure",
-            "diagnosis",
-            "proof",
-            "transition"
-          ]
-        },
         {
           "module": 9,
           "title": "Tema 3: Conteo, grafos y estructuras conectadas",
@@ -92,118 +62,6 @@
             "failure",
             "diagnosis",
             "proof",
-            "transition"
-          ]
-        },
-        {
-          "module": 0,
-          "title": "Tema 1: Del hardware al programa en ejecución",
-          "state": "explained",
-          "score": 7,
-          "missing": [
-            "goal",
-            "prerequisites",
-            "expected",
-            "failure",
-            "proof",
-            "transition"
-          ]
-        },
-        {
-          "module": 0,
-          "title": "Tema 2: Archivos, carpetas y rutas sin perderse",
-          "state": "explained",
-          "score": 7,
-          "missing": [
-            "goal",
-            "prerequisites",
-            "failure",
-            "diagnosis",
-            "practice",
-            "transition"
-          ]
-        },
-        {
-          "module": 3,
-          "title": "Tema 2: HTTP como contrato observable",
-          "state": "explained",
-          "score": 7,
-          "missing": [
-            "goal",
-            "prerequisites",
-            "failure",
-            "diagnosis",
-            "proof",
-            "transition"
-          ]
-        },
-        {
-          "module": 3,
-          "title": "Tema 4: CSS, layout responsive y accesibilidad verificable",
-          "state": "explained",
-          "score": 7,
-          "missing": [
-            "goal",
-            "prerequisites",
-            "failure",
-            "diagnosis",
-            "proof",
-            "transition"
-          ]
-        },
-        {
-          "module": 4,
-          "title": "Tema 1: Del mundo real al modelo relacional",
-          "state": "explained",
-          "score": 7,
-          "missing": [
-            "goal",
-            "prerequisites",
-            "failure",
-            "diagnosis",
-            "proof",
-            "transition"
-          ]
-        },
-        {
-          "module": 4,
-          "title": "Tema 2: SQL para definir, escribir, consultar y relacionar",
-          "state": "explained",
-          "score": 7,
-          "missing": [
-            "goal",
-            "prerequisites",
-            "failure",
-            "diagnosis",
-            "proof",
-            "transition"
-          ]
-        },
-        {
-          "module": 4,
-          "title": "Tema 4: Transacciones, concurrencia y elección SQL/NoSQL",
-          "state": "explained",
-          "score": 7,
-          "missing": [
-            "goal",
-            "prerequisites",
-            "failure",
-            "diagnosis",
-            "proof",
-            "transition"
-          ]
-        },
-        {
-          "module": 5,
-          "title": "Tema 1: Depurar con evidencia, no con cambios aleatorios",
-          "state": "explained",
-          "score": 7,
-          "missing": [
-            "goal",
-            "prerequisites",
-            "expected",
-            "failure",
-            "diagnosis",
             "transition"
           ]
         },
@@ -259,6 +117,138 @@
             "prerequisites",
             "expected",
             "failure",
+            "proof",
+            "transition"
+          ]
+        },
+        {
+          "module": 9,
+          "title": "Tema 1: Lógica para especificar antes de programar",
+          "state": "explained",
+          "score": 7,
+          "missing": [
+            "goal",
+            "prerequisites",
+            "expected",
+            "failure",
+            "proof",
+            "transition"
+          ]
+        },
+        {
+          "module": 10,
+          "title": "Tema 1: La red convierte el resultado en una incertidumbre",
+          "state": "explained",
+          "score": 7,
+          "missing": [
+            "goal",
+            "prerequisites",
+            "failure",
+            "diagnosis",
+            "proof",
+            "transition"
+          ]
+        },
+        {
+          "module": 8,
+          "title": "Tema 3: Linux como entorno observable",
+          "state": "explained",
+          "score": 8,
+          "missing": [
+            "goal",
+            "prerequisites",
+            "expected",
+            "failure",
+            "transition"
+          ]
+        },
+        {
+          "module": 8,
+          "title": "Tema 4: Contenedores: aislamiento reproducible",
+          "state": "explained",
+          "score": 8,
+          "missing": [
+            "goal",
+            "prerequisites",
+            "failure",
+            "proof",
+            "transition"
+          ]
+        },
+        {
+          "module": 9,
+          "title": "Tema 2: Conjuntos, relaciones, funciones e inducción",
+          "state": "explained",
+          "score": 8,
+          "missing": [
+            "goal",
+            "prerequisites",
+            "failure",
+            "diagnosis",
+            "transition"
+          ]
+        },
+        {
+          "module": 9,
+          "title": "Tema 4: Probabilidad y evidencia para decisiones técnicas",
+          "state": "explained",
+          "score": 8,
+          "missing": [
+            "goal",
+            "prerequisites",
+            "failure",
+            "diagnosis",
+            "transition"
+          ]
+        },
+        {
+          "module": 10,
+          "title": "Tema 2: Replicación, consistencia y decisiones explícitas",
+          "state": "explained",
+          "score": 8,
+          "missing": [
+            "goal",
+            "prerequisites",
+            "failure",
+            "diagnosis",
+            "transition"
+          ]
+        },
+        {
+          "module": 10,
+          "title": "Tema 4: Resiliencia y observabilidad orientadas a objetivos",
+          "state": "explained",
+          "score": 8,
+          "missing": [
+            "prerequisites",
+            "failure",
+            "diagnosis",
+            "proof",
+            "transition"
+          ]
+        },
+        {
+          "module": 11,
+          "title": "Tema 2: Algoritmos, autómatas, lenguajes y compiladores",
+          "state": "explained",
+          "score": 8,
+          "missing": [
+            "prerequisites",
+            "failure",
+            "diagnosis",
+            "proof",
+            "transition"
+          ]
+        },
+        {
+          "module": 11,
+          "title": "Tema 4: Inteligencia artificial, aprendizaje automático y visión",
+          "state": "explained",
+          "score": 8,
+          "missing": [
+            "prerequisites",
+            "failure",
+            "diagnosis",
             "proof",
             "transition"
           ]
@@ -915,120 +905,72 @@
         "firstRun": true,
         "installRecovery": true
       },
-      "topics": 75,
-      "labs": 13,
-      "verifiableLabs": 13,
+      "topics": 83,
+      "labs": 0,
+      "verifiableLabs": 0,
       "states": {
-        "explained": 75
+        "explained": 58,
+        "practicable": 25
       },
       "criteria": {
-        "goal": 9,
-        "prerequisites": 1,
-        "terms": 75,
-        "code": 75,
-        "location": 28,
-        "execution": 22,
-        "expected": 29,
-        "failure": 2,
-        "diagnosis": 13,
-        "practice": 56,
-        "project": 12,
-        "proof": 8,
-        "transition": 1
+        "goal": 83,
+        "prerequisites": 12,
+        "terms": 83,
+        "code": 83,
+        "location": 83,
+        "execution": 83,
+        "expected": 83,
+        "failure": 10,
+        "diagnosis": 83,
+        "practice": 83,
+        "project": 81,
+        "proof": 83,
+        "transition": 9
       },
       "blockers": [
         {
-          "module": 4,
-          "title": "Tema 2: Set y Map frente a Array y Object",
+          "module": 0,
+          "title": "Tema 1: Variables — `const`, `let` y `var`",
           "state": "explained",
-          "score": 2,
+          "score": 9,
           "missing": [
-            "goal",
             "prerequisites",
-            "location",
-            "execution",
-            "expected",
             "failure",
-            "diagnosis",
-            "practice",
             "project",
-            "proof",
             "transition"
           ]
         },
         {
-          "module": 6,
-          "title": "Tema 5: Generadores — function*, yield y yield*",
+          "module": 0,
+          "title": "Tema 2: Tipos primitivos y `typeof`",
           "state": "explained",
-          "score": 2,
+          "score": 9,
           "missing": [
-            "goal",
             "prerequisites",
-            "location",
-            "execution",
-            "expected",
             "failure",
-            "diagnosis",
-            "practice",
             "project",
-            "proof",
             "transition"
           ]
         },
         {
-          "module": 8,
-          "title": "Tema 4: Web APIs — localStorage e IntersectionObserver",
+          "module": 0,
+          "title": "Tema 3: Conversión, coerción e igualdad",
           "state": "explained",
-          "score": 2,
+          "score": 10,
           "missing": [
-            "goal",
             "prerequisites",
-            "location",
-            "execution",
-            "expected",
             "failure",
-            "diagnosis",
-            "practice",
-            "project",
-            "proof",
             "transition"
           ]
         },
         {
-          "module": 8,
-          "title": "Tema 6: requestAnimationFrame y requestIdleCallback",
+          "module": 0,
+          "title": "Tema 4: Template literals y mensajes seguros",
           "state": "explained",
-          "score": 2,
+          "score": 10,
           "missing": [
-            "goal",
             "prerequisites",
-            "location",
-            "execution",
-            "expected",
             "failure",
-            "diagnosis",
-            "practice",
-            "project",
-            "proof",
-            "transition"
-          ]
-        },
-        {
-          "module": 13,
-          "title": "Tema 2: Memoria administrada no significa memoria infinita",
-          "state": "explained",
-          "score": 2,
-          "missing": [
-            "goal",
-            "prerequisites",
-            "location",
-            "execution",
-            "expected",
-            "failure",
-            "diagnosis",
-            "practice",
-            "project",
-            "proof",
             "transition"
           ]
         },
@@ -1036,17 +978,32 @@
           "module": 1,
           "title": "Tema 1: Tres formas de escribir una función",
           "state": "explained",
-          "score": 3,
+          "score": 10,
           "missing": [
-            "goal",
             "prerequisites",
-            "location",
-            "execution",
-            "expected",
             "failure",
-            "diagnosis",
-            "project",
-            "proof",
+            "transition"
+          ]
+        },
+        {
+          "module": 1,
+          "title": "Tema 2: Parámetros por defecto y rest/spread",
+          "state": "explained",
+          "score": 10,
+          "missing": [
+            "prerequisites",
+            "failure",
+            "transition"
+          ]
+        },
+        {
+          "module": 1,
+          "title": "Tema 3: Funciones de orden superior",
+          "state": "explained",
+          "score": 10,
+          "missing": [
+            "prerequisites",
+            "failure",
             "transition"
           ]
         },
@@ -1054,35 +1011,10 @@
           "module": 1,
           "title": "Tema 4: Control de flujo — if, switch y loops",
           "state": "explained",
-          "score": 3,
+          "score": 10,
           "missing": [
-            "goal",
             "prerequisites",
-            "location",
-            "execution",
-            "expected",
             "failure",
-            "diagnosis",
-            "project",
-            "proof",
-            "transition"
-          ]
-        },
-        {
-          "module": 1,
-          "title": "Tema 5: IIFE y el objeto arguments",
-          "state": "explained",
-          "score": 3,
-          "missing": [
-            "goal",
-            "prerequisites",
-            "location",
-            "execution",
-            "expected",
-            "failure",
-            "diagnosis",
-            "project",
-            "proof",
             "transition"
           ]
         },
@@ -1090,17 +1022,21 @@
           "module": 2,
           "title": "Tema 1: Scope léxico y closures",
           "state": "explained",
-          "score": 3,
+          "score": 10,
           "missing": [
-            "goal",
             "prerequisites",
-            "location",
-            "execution",
-            "expected",
             "failure",
-            "diagnosis",
-            "project",
-            "proof",
+            "transition"
+          ]
+        },
+        {
+          "module": 2,
+          "title": "Tema 2: Hoisting y Temporal Dead Zone",
+          "state": "explained",
+          "score": 10,
+          "missing": [
+            "prerequisites",
+            "failure",
             "transition"
           ]
         },
@@ -1108,35 +1044,10 @@
           "module": 2,
           "title": "Tema 3: Call stack y contexto de ejecución",
           "state": "explained",
-          "score": 3,
+          "score": 10,
           "missing": [
-            "goal",
             "prerequisites",
-            "location",
-            "execution",
-            "expected",
             "failure",
-            "diagnosis",
-            "project",
-            "proof",
-            "transition"
-          ]
-        },
-        {
-          "module": 2,
-          "title": "Tema 4: this según el modo de invocación",
-          "state": "explained",
-          "score": 3,
-          "missing": [
-            "goal",
-            "prerequisites",
-            "location",
-            "execution",
-            "expected",
-            "diagnosis",
-            "practice",
-            "project",
-            "proof",
             "transition"
           ]
         },
@@ -1144,17 +1055,32 @@
           "module": 2,
           "title": "Tema 5: Module pattern y factory functions",
           "state": "explained",
-          "score": 3,
+          "score": 10,
           "missing": [
-            "goal",
             "prerequisites",
-            "location",
-            "execution",
-            "expected",
             "failure",
-            "diagnosis",
-            "project",
-            "proof",
+            "transition"
+          ]
+        },
+        {
+          "module": 3,
+          "title": "Tema 1: Prototype chain y Object.create",
+          "state": "explained",
+          "score": 10,
+          "missing": [
+            "prerequisites",
+            "failure",
+            "transition"
+          ]
+        },
+        {
+          "module": 3,
+          "title": "Tema 2: class, extends y super",
+          "state": "explained",
+          "score": 10,
+          "missing": [
+            "prerequisites",
+            "failure",
             "transition"
           ]
         },
@@ -1162,53 +1088,10 @@
           "module": 3,
           "title": "Tema 3: Getters, setters y propiedades computadas",
           "state": "explained",
-          "score": 3,
+          "score": 10,
           "missing": [
-            "goal",
             "prerequisites",
-            "location",
-            "execution",
-            "expected",
             "failure",
-            "diagnosis",
-            "project",
-            "proof",
-            "transition"
-          ]
-        },
-        {
-          "module": 4,
-          "title": "Tema 1: map, filter, reduce, find, some/every",
-          "state": "explained",
-          "score": 3,
-          "missing": [
-            "goal",
-            "prerequisites",
-            "location",
-            "execution",
-            "expected",
-            "failure",
-            "diagnosis",
-            "project",
-            "proof",
-            "transition"
-          ]
-        },
-        {
-          "module": 4,
-          "title": "Tema 3: Inmutabilidad y actualización de estructuras anidadas",
-          "state": "explained",
-          "score": 3,
-          "missing": [
-            "goal",
-            "prerequisites",
-            "location",
-            "execution",
-            "expected",
-            "failure",
-            "diagnosis",
-            "project",
-            "proof",
             "transition"
           ]
         }
@@ -1226,78 +1109,63 @@
         "firstRun": true,
         "installRecovery": true
       },
-      "topics": 64,
-      "labs": 14,
-      "verifiableLabs": 14,
+      "topics": 68,
+      "labs": 11,
+      "verifiableLabs": 11,
       "states": {
-        "explained": 64
+        "explained": 62,
+        "practicable": 6
       },
       "criteria": {
-        "goal": 1,
-        "prerequisites": 0,
-        "terms": 64,
-        "code": 64,
-        "location": 21,
-        "execution": 41,
-        "expected": 25,
-        "failure": 3,
-        "diagnosis": 10,
-        "practice": 37,
-        "project": 9,
-        "proof": 10,
-        "transition": 2
+        "goal": 68,
+        "prerequisites": 7,
+        "terms": 68,
+        "code": 68,
+        "location": 68,
+        "execution": 68,
+        "expected": 68,
+        "failure": 4,
+        "diagnosis": 68,
+        "practice": 68,
+        "project": 7,
+        "proof": 53,
+        "transition": 14
       },
       "blockers": [
         {
-          "module": 10,
-          "title": "Tema 3: Inyección SQL y sanitización contra XSS",
+          "module": 3,
+          "title": "Tema 2: Routing manual",
           "state": "explained",
-          "score": 2,
+          "score": 8,
           "missing": [
-            "goal",
             "prerequisites",
-            "location",
-            "execution",
-            "expected",
             "failure",
-            "diagnosis",
-            "practice",
             "project",
             "proof",
             "transition"
           ]
         },
         {
-          "module": 0,
-          "title": "Tema 3: process, global y módulos core",
+          "module": 3,
+          "title": "Tema 3: Parsing de body y headers",
           "state": "explained",
-          "score": 3,
+          "score": 8,
           "missing": [
-            "goal",
             "prerequisites",
-            "location",
-            "expected",
             "failure",
-            "diagnosis",
-            "practice",
             "project",
             "proof",
             "transition"
           ]
         },
         {
-          "module": 2,
-          "title": "Tema 2: Streams legibles, escribibles y transform",
+          "module": 3,
+          "title": "Tema 4: Códigos de estado y content negotiation",
           "state": "explained",
-          "score": 3,
+          "score": 8,
           "missing": [
-            "goal",
             "prerequisites",
-            "location",
-            "expected",
             "failure",
-            "diagnosis",
-            "practice",
             "project",
             "proof",
             "transition"
@@ -1305,17 +1173,25 @@
         },
         {
           "module": 4,
-          "title": "Tema 4: Express frente a Fastify",
+          "title": "Tema 1: Middleware — orden de ejecución y next()",
           "state": "explained",
-          "score": 3,
+          "score": 8,
           "missing": [
-            "goal",
             "prerequisites",
-            "location",
-            "execution",
-            "expected",
             "failure",
-            "diagnosis",
+            "project",
+            "proof",
+            "transition"
+          ]
+        },
+        {
+          "module": 4,
+          "title": "Tema 2: Routers anidados",
+          "state": "explained",
+          "score": 8,
+          "missing": [
+            "prerequisites",
+            "failure",
             "project",
             "proof",
             "transition"
@@ -1325,197 +1201,121 @@
           "module": 5,
           "title": "Tema 1: PostgreSQL desde Node con el driver puro",
           "state": "explained",
-          "score": 3,
+          "score": 8,
           "missing": [
-            "goal",
             "prerequisites",
-            "location",
-            "expected",
             "failure",
-            "diagnosis",
-            "practice",
             "project",
             "proof",
             "transition"
           ]
         },
         {
-          "module": 8,
-          "title": "Tema 2: Cluster module y balanceo entre procesos",
+          "module": 6,
+          "title": "Tema 1: Hashing de contraseñas",
           "state": "explained",
-          "score": 3,
+          "score": 8,
           "missing": [
-            "goal",
             "prerequisites",
-            "location",
-            "expected",
             "failure",
-            "diagnosis",
-            "practice",
             "project",
             "proof",
             "transition"
           ]
         },
         {
-          "module": 8,
-          "title": "Tema 3: Colas de trabajo con BullMQ",
+          "module": 0,
+          "title": "Tema 2: Fases del Event Loop de Node",
           "state": "explained",
-          "score": 3,
+          "score": 9,
           "missing": [
-            "goal",
             "prerequisites",
-            "location",
-            "expected",
             "failure",
-            "diagnosis",
-            "practice",
+            "project",
+            "transition"
+          ]
+        },
+        {
+          "module": 0,
+          "title": "Tema 3: process, global y módulos core",
+          "state": "explained",
+          "score": 9,
+          "missing": [
+            "prerequisites",
+            "failure",
+            "project",
+            "transition"
+          ]
+        },
+        {
+          "module": 1,
+          "title": "Tema 3: Workspaces — monorepos con npm/pnpm",
+          "state": "explained",
+          "score": 9,
+          "missing": [
+            "prerequisites",
+            "failure",
+            "project",
+            "transition"
+          ]
+        },
+        {
+          "module": 1,
+          "title": "Tema 4: Scripts de ciclo de vida",
+          "state": "explained",
+          "score": 9,
+          "missing": [
+            "prerequisites",
+            "failure",
+            "project",
+            "proof"
+          ]
+        },
+        {
+          "module": 2,
+          "title": "Tema 1: fs/promises frente a callbacks",
+          "state": "explained",
+          "score": 9,
+          "missing": [
+            "failure",
             "project",
             "proof",
             "transition"
           ]
         },
         {
-          "module": 9,
-          "title": "Tema 2: Correlation ID por request",
+          "module": 2,
+          "title": "Tema 2: Streams legibles, escribibles y transform",
           "state": "explained",
-          "score": 3,
+          "score": 9,
           "missing": [
-            "goal",
-            "prerequisites",
-            "location",
-            "execution",
-            "expected",
             "failure",
-            "practice",
             "project",
             "proof",
             "transition"
           ]
         },
         {
-          "module": 9,
-          "title": "Tema 4: REST, GraphQL y gRPC",
+          "module": 2,
+          "title": "Tema 4: pipeline() para componer streams de forma segura",
           "state": "explained",
-          "score": 3,
+          "score": 9,
           "missing": [
-            "goal",
             "prerequisites",
-            "location",
-            "expected",
             "failure",
-            "diagnosis",
-            "practice",
+            "project",
+            "proof"
+          ]
+        },
+        {
+          "module": 3,
+          "title": "Tema 1: El modelo request/response",
+          "state": "explained",
+          "score": 9,
+          "missing": [
+            "failure",
             "project",
             "proof",
-            "transition"
-          ]
-        },
-        {
-          "module": 10,
-          "title": "Tema 2: Rate limiting",
-          "state": "explained",
-          "score": 3,
-          "missing": [
-            "goal",
-            "prerequisites",
-            "location",
-            "execution",
-            "expected",
-            "failure",
-            "diagnosis",
-            "project",
-            "proof",
-            "transition"
-          ]
-        },
-        {
-          "module": 11,
-          "title": "Tema 3: PM2, contenedores y zero-downtime deploys",
-          "state": "explained",
-          "score": 3,
-          "missing": [
-            "goal",
-            "prerequisites",
-            "location",
-            "expected",
-            "failure",
-            "diagnosis",
-            "practice",
-            "project",
-            "proof",
-            "transition"
-          ]
-        },
-        {
-          "module": 11,
-          "title": "Tema 4: Nginx como reverse proxy y serverless",
-          "state": "explained",
-          "score": 3,
-          "missing": [
-            "goal",
-            "prerequisites",
-            "location",
-            "expected",
-            "failure",
-            "diagnosis",
-            "practice",
-            "project",
-            "proof",
-            "transition"
-          ]
-        },
-        {
-          "module": 12,
-          "title": "Tema 1: Arquitectura por capas",
-          "state": "explained",
-          "score": 3,
-          "missing": [
-            "goal",
-            "prerequisites",
-            "location",
-            "execution",
-            "expected",
-            "failure",
-            "diagnosis",
-            "project",
-            "proof",
-            "transition"
-          ]
-        },
-        {
-          "module": 13,
-          "title": "Tema 1: Tipos estáticos dentro, datos desconocidos en la frontera",
-          "state": "explained",
-          "score": 3,
-          "missing": [
-            "goal",
-            "prerequisites",
-            "location",
-            "execution",
-            "expected",
-            "failure",
-            "diagnosis",
-            "practice",
-            "project",
-            "transition"
-          ]
-        },
-        {
-          "module": 13,
-          "title": "Tema 3: Reintentar sin duplicar el efecto",
-          "state": "explained",
-          "score": 3,
-          "missing": [
-            "goal",
-            "prerequisites",
-            "location",
-            "execution",
-            "expected",
-            "failure",
-            "diagnosis",
-            "practice",
-            "project",
             "transition"
           ]
         }
@@ -1537,211 +1337,154 @@
       "labs": 15,
       "verifiableLabs": 15,
       "states": {
-        "explained": 61
+        "explained": 57,
+        "practicable": 4
       },
       "criteria": {
-        "goal": 3,
+        "goal": 55,
         "prerequisites": 3,
         "terms": 61,
         "code": 61,
-        "location": 14,
-        "execution": 4,
-        "expected": 17,
-        "failure": 3,
-        "diagnosis": 4,
-        "practice": 39,
-        "project": 9,
-        "proof": 8,
+        "location": 55,
+        "execution": 55,
+        "expected": 55,
+        "failure": 12,
+        "diagnosis": 55,
+        "practice": 61,
+        "project": 10,
+        "proof": 61,
         "transition": 0
       },
       "blockers": [
         {
+          "module": 15,
+          "title": "Tema 1: TestBed y ComponentFixture",
+          "state": "explained",
+          "score": 5,
+          "missing": [
+            "goal",
+            "prerequisites",
+            "location",
+            "execution",
+            "expected",
+            "failure",
+            "diagnosis",
+            "transition"
+          ]
+        },
+        {
+          "module": 15,
+          "title": "Tema 2: Pruebas de Signals",
+          "state": "explained",
+          "score": 5,
+          "missing": [
+            "goal",
+            "prerequisites",
+            "location",
+            "execution",
+            "expected",
+            "failure",
+            "diagnosis",
+            "transition"
+          ]
+        },
+        {
+          "module": 15,
+          "title": "Tema 3: Cypress y Playwright",
+          "state": "explained",
+          "score": 5,
+          "missing": [
+            "goal",
+            "prerequisites",
+            "location",
+            "execution",
+            "expected",
+            "failure",
+            "diagnosis",
+            "transition"
+          ]
+        },
+        {
+          "module": 15,
+          "title": "Tema 4: Animaciones accesibles",
+          "state": "explained",
+          "score": 5,
+          "missing": [
+            "goal",
+            "prerequisites",
+            "location",
+            "execution",
+            "expected",
+            "failure",
+            "diagnosis",
+            "transition"
+          ]
+        },
+        {
+          "module": 15,
+          "title": "Tema 5: SSR y TransferState",
+          "state": "explained",
+          "score": 5,
+          "missing": [
+            "goal",
+            "prerequisites",
+            "location",
+            "execution",
+            "expected",
+            "failure",
+            "diagnosis",
+            "transition"
+          ]
+        },
+        {
+          "module": 15,
+          "title": "Tema 6: Hidratación y provideServerRendering",
+          "state": "explained",
+          "score": 5,
+          "missing": [
+            "goal",
+            "prerequisites",
+            "location",
+            "execution",
+            "expected",
+            "failure",
+            "diagnosis",
+            "transition"
+          ]
+        },
+        {
+          "module": 0,
+          "title": "Tema 1: El CLI ya no genera NgModules",
+          "state": "explained",
+          "score": 9,
+          "missing": [
+            "prerequisites",
+            "failure",
+            "project",
+            "transition"
+          ]
+        },
+        {
           "module": 0,
           "title": "Tema 2: Interpolación y property binding",
           "state": "explained",
-          "score": 2,
+          "score": 9,
           "missing": [
-            "goal",
             "prerequisites",
-            "location",
-            "execution",
-            "expected",
             "failure",
-            "diagnosis",
-            "practice",
             "project",
-            "proof",
             "transition"
           ]
         },
         {
-          "module": 1,
-          "title": "Tema 1: input()/output() basados en signals",
+          "module": 0,
+          "title": "Tema 3: TypeScript a fondo — unknown, any, never y utility types",
           "state": "explained",
-          "score": 2,
+          "score": 9,
           "missing": [
-            "goal",
             "prerequisites",
-            "location",
-            "execution",
-            "expected",
             "failure",
-            "diagnosis",
-            "practice",
             "project",
-            "proof",
-            "transition"
-          ]
-        },
-        {
-          "module": 2,
-          "title": "Tema 1: signal(), computed() y effect()",
-          "state": "explained",
-          "score": 2,
-          "missing": [
-            "goal",
-            "prerequisites",
-            "location",
-            "execution",
-            "expected",
-            "failure",
-            "diagnosis",
-            "practice",
-            "project",
-            "proof",
-            "transition"
-          ]
-        },
-        {
-          "module": 3,
-          "title": "Tema 3: Jerarquía de inyectores",
-          "state": "explained",
-          "score": 2,
-          "missing": [
-            "goal",
-            "prerequisites",
-            "location",
-            "execution",
-            "expected",
-            "failure",
-            "diagnosis",
-            "practice",
-            "project",
-            "proof",
-            "transition"
-          ]
-        },
-        {
-          "module": 6,
-          "title": "Tema 1: Observable frente a Promise",
-          "state": "explained",
-          "score": 2,
-          "missing": [
-            "goal",
-            "prerequisites",
-            "location",
-            "execution",
-            "expected",
-            "failure",
-            "diagnosis",
-            "practice",
-            "project",
-            "proof",
-            "transition"
-          ]
-        },
-        {
-          "module": 6,
-          "title": "Tema 2: Operadores clave — debounceTime, distinctUntilChanged, switchMap, combineLatest",
-          "state": "explained",
-          "score": 2,
-          "missing": [
-            "goal",
-            "prerequisites",
-            "location",
-            "execution",
-            "expected",
-            "failure",
-            "diagnosis",
-            "practice",
-            "project",
-            "proof",
-            "transition"
-          ]
-        },
-        {
-          "module": 6,
-          "title": "Tema 3: Manejo de suscripciones sin fugas de memoria",
-          "state": "explained",
-          "score": 2,
-          "missing": [
-            "goal",
-            "prerequisites",
-            "location",
-            "execution",
-            "expected",
-            "failure",
-            "diagnosis",
-            "practice",
-            "project",
-            "proof",
-            "transition"
-          ]
-        },
-        {
-          "module": 6,
-          "title": "Tema 4: Subjects y operadores de aplanamiento avanzados",
-          "state": "explained",
-          "score": 2,
-          "missing": [
-            "goal",
-            "prerequisites",
-            "location",
-            "execution",
-            "expected",
-            "failure",
-            "diagnosis",
-            "practice",
-            "project",
-            "proof",
-            "transition"
-          ]
-        },
-        {
-          "module": 8,
-          "title": "Tema 3: Migración desde NgModules",
-          "state": "explained",
-          "score": 2,
-          "missing": [
-            "goal",
-            "prerequisites",
-            "location",
-            "execution",
-            "expected",
-            "failure",
-            "diagnosis",
-            "practice",
-            "project",
-            "proof",
-            "transition"
-          ]
-        },
-        {
-          "module": 11,
-          "title": "Tema 2: Hidratación",
-          "state": "explained",
-          "score": 2,
-          "missing": [
-            "goal",
-            "prerequisites",
-            "location",
-            "execution",
-            "expected",
-            "failure",
-            "diagnosis",
-            "practice",
-            "project",
-            "proof",
             "transition"
           ]
         },
@@ -1749,17 +1492,23 @@
           "module": 0,
           "title": "Tema 4: Compilador AOT frente a JIT",
           "state": "explained",
-          "score": 3,
+          "score": 9,
           "missing": [
-            "goal",
             "prerequisites",
-            "location",
-            "execution",
-            "expected",
             "failure",
-            "diagnosis",
             "project",
-            "proof",
+            "transition"
+          ]
+        },
+        {
+          "module": 1,
+          "title": "Tema 1: input()/output() basados en signals",
+          "state": "explained",
+          "score": 9,
+          "missing": [
+            "prerequisites",
+            "failure",
+            "project",
             "transition"
           ]
         },
@@ -1767,17 +1516,11 @@
           "module": 1,
           "title": "Tema 2: Control de flujo nativo — @if, @for, @switch",
           "state": "explained",
-          "score": 3,
+          "score": 9,
           "missing": [
-            "goal",
             "prerequisites",
-            "location",
-            "execution",
-            "expected",
             "failure",
-            "diagnosis",
             "project",
-            "proof",
             "transition"
           ]
         },
@@ -1785,53 +1528,35 @@
           "module": 1,
           "title": "Tema 3: Content projection con ng-content",
           "state": "explained",
-          "score": 3,
+          "score": 9,
           "missing": [
-            "goal",
             "prerequisites",
-            "location",
-            "execution",
-            "expected",
             "failure",
-            "diagnosis",
             "project",
-            "proof",
+            "transition"
+          ]
+        },
+        {
+          "module": 1,
+          "title": "Tema 4: Ciclo de vida completo de un componente",
+          "state": "explained",
+          "score": 9,
+          "missing": [
+            "prerequisites",
+            "failure",
+            "project",
             "transition"
           ]
         },
         {
           "module": 2,
-          "title": "Tema 2: Mutación frente a actualización inmutable",
+          "title": "Tema 1: signal(), computed() y effect()",
           "state": "explained",
-          "score": 3,
+          "score": 9,
           "missing": [
-            "goal",
             "prerequisites",
-            "location",
-            "execution",
-            "expected",
             "failure",
-            "diagnosis",
             "project",
-            "proof",
-            "transition"
-          ]
-        },
-        {
-          "module": 2,
-          "title": "Tema 3: Signals frente a Observables",
-          "state": "explained",
-          "score": 3,
-          "missing": [
-            "goal",
-            "prerequisites",
-            "location",
-            "execution",
-            "expected",
-            "failure",
-            "diagnosis",
-            "project",
-            "proof",
             "transition"
           ]
         }
@@ -1853,29 +1578,30 @@
       "labs": 14,
       "verifiableLabs": 14,
       "states": {
-        "explained": 55
+        "explained": 54,
+        "practicable": 1
       },
       "criteria": {
-        "goal": 3,
+        "goal": 50,
         "prerequisites": 1,
         "terms": 55,
         "code": 55,
-        "location": 11,
-        "execution": 1,
-        "expected": 8,
-        "failure": 2,
-        "diagnosis": 3,
-        "practice": 25,
+        "location": 50,
+        "execution": 49,
+        "expected": 49,
+        "failure": 9,
+        "diagnosis": 49,
+        "practice": 55,
         "project": 7,
-        "proof": 9,
+        "proof": 55,
         "transition": 0
       },
       "blockers": [
         {
-          "module": 0,
-          "title": "Tema 1: JSX es azúcar sintáctica sobre createElement",
+          "module": 14,
+          "title": "Tema 1: Server Components y streaming",
           "state": "explained",
-          "score": 2,
+          "score": 5,
           "missing": [
             "goal",
             "prerequisites",
@@ -1884,9 +1610,108 @@
             "expected",
             "failure",
             "diagnosis",
-            "practice",
+            "transition"
+          ]
+        },
+        {
+          "module": 14,
+          "title": "Tema 2: Server Actions y seguridad",
+          "state": "explained",
+          "score": 5,
+          "missing": [
+            "goal",
+            "prerequisites",
+            "location",
+            "execution",
+            "expected",
+            "failure",
+            "diagnosis",
+            "transition"
+          ]
+        },
+        {
+          "module": 14,
+          "title": "Tema 4: Optimización de imágenes y fuentes",
+          "state": "explained",
+          "score": 5,
+          "missing": [
+            "goal",
+            "prerequisites",
+            "location",
+            "execution",
+            "expected",
+            "failure",
+            "diagnosis",
+            "transition"
+          ]
+        },
+        {
+          "module": 14,
+          "title": "Tema 5: Accesibilidad y React Aria",
+          "state": "explained",
+          "score": 5,
+          "missing": [
+            "goal",
+            "prerequisites",
+            "location",
+            "execution",
+            "expected",
+            "failure",
+            "diagnosis",
+            "transition"
+          ]
+        },
+        {
+          "module": 14,
+          "title": "Tema 6: i18n, pluralización y RTL",
+          "state": "explained",
+          "score": 5,
+          "missing": [
+            "goal",
+            "prerequisites",
+            "location",
+            "execution",
+            "expected",
+            "failure",
+            "diagnosis",
+            "transition"
+          ]
+        },
+        {
+          "module": 14,
+          "title": "Tema 3: Next.js ISR, Metadata y Middleware",
+          "state": "explained",
+          "score": 7,
+          "missing": [
+            "prerequisites",
+            "execution",
+            "expected",
+            "failure",
+            "diagnosis",
+            "transition"
+          ]
+        },
+        {
+          "module": 0,
+          "title": "Tema 1: JSX es azúcar sintáctica sobre createElement",
+          "state": "explained",
+          "score": 9,
+          "missing": [
+            "prerequisites",
+            "failure",
             "project",
-            "proof",
+            "transition"
+          ]
+        },
+        {
+          "module": 0,
+          "title": "Tema 2: Listas con key estable",
+          "state": "explained",
+          "score": 9,
+          "missing": [
+            "prerequisites",
+            "failure",
+            "project",
             "transition"
           ]
         },
@@ -1894,18 +1719,35 @@
           "module": 0,
           "title": "Tema 3: Composición sobre herencia, y Fragments",
           "state": "explained",
-          "score": 2,
+          "score": 9,
           "missing": [
-            "goal",
             "prerequisites",
-            "location",
-            "execution",
-            "expected",
             "failure",
-            "diagnosis",
-            "practice",
             "project",
-            "proof",
+            "transition"
+          ]
+        },
+        {
+          "module": 0,
+          "title": "Tema 4: Renderizado condicional y estilos",
+          "state": "explained",
+          "score": 9,
+          "missing": [
+            "prerequisites",
+            "failure",
+            "project",
+            "transition"
+          ]
+        },
+        {
+          "module": 1,
+          "title": "Tema 1: useState y actualizaciones funcionales",
+          "state": "explained",
+          "score": 9,
+          "missing": [
+            "prerequisites",
+            "failure",
+            "project",
             "transition"
           ]
         },
@@ -1913,18 +1755,23 @@
           "module": 1,
           "title": "Tema 2: Render frente a commit",
           "state": "explained",
-          "score": 2,
+          "score": 9,
           "missing": [
-            "goal",
             "prerequisites",
-            "location",
-            "execution",
-            "expected",
             "failure",
-            "diagnosis",
-            "practice",
             "project",
-            "proof",
+            "transition"
+          ]
+        },
+        {
+          "module": 1,
+          "title": "Tema 3: Batching de actualizaciones",
+          "state": "explained",
+          "score": 9,
+          "missing": [
+            "prerequisites",
+            "failure",
+            "project",
             "transition"
           ]
         },
@@ -1932,18 +1779,11 @@
           "module": 1,
           "title": "Tema 4: Componentes controlados",
           "state": "explained",
-          "score": 2,
+          "score": 9,
           "missing": [
-            "goal",
             "prerequisites",
-            "location",
-            "execution",
-            "expected",
             "failure",
-            "diagnosis",
-            "practice",
             "project",
-            "proof",
             "transition"
           ]
         },
@@ -1951,208 +1791,11 @@
           "module": 2,
           "title": "Tema 1: useEffect — dependencias y limpieza",
           "state": "explained",
-          "score": 2,
+          "score": 9,
           "missing": [
-            "goal",
             "prerequisites",
-            "location",
-            "execution",
-            "expected",
             "failure",
-            "diagnosis",
-            "practice",
             "project",
-            "proof",
-            "transition"
-          ]
-        },
-        {
-          "module": 3,
-          "title": "Tema 1: React Hook Form y el problema del re-render por tecla",
-          "state": "explained",
-          "score": 2,
-          "missing": [
-            "goal",
-            "prerequisites",
-            "location",
-            "execution",
-            "expected",
-            "failure",
-            "diagnosis",
-            "practice",
-            "project",
-            "proof",
-            "transition"
-          ]
-        },
-        {
-          "module": 3,
-          "title": "Tema 3: Eventos sintéticos",
-          "state": "explained",
-          "score": 2,
-          "missing": [
-            "goal",
-            "prerequisites",
-            "location",
-            "execution",
-            "expected",
-            "failure",
-            "diagnosis",
-            "practice",
-            "project",
-            "proof",
-            "transition"
-          ]
-        },
-        {
-          "module": 4,
-          "title": "Tema 3: Componentes compuestos, render props y hooks personalizados",
-          "state": "explained",
-          "score": 2,
-          "missing": [
-            "goal",
-            "prerequisites",
-            "location",
-            "execution",
-            "expected",
-            "failure",
-            "diagnosis",
-            "practice",
-            "project",
-            "proof",
-            "transition"
-          ]
-        },
-        {
-          "module": 5,
-          "title": "Tema 1: Rutas anidadas y layouts compartidos",
-          "state": "explained",
-          "score": 2,
-          "missing": [
-            "goal",
-            "prerequisites",
-            "location",
-            "execution",
-            "expected",
-            "failure",
-            "diagnosis",
-            "practice",
-            "project",
-            "proof",
-            "transition"
-          ]
-        },
-        {
-          "module": 5,
-          "title": "Tema 2: Loaders — datos antes de renderizar",
-          "state": "explained",
-          "score": 2,
-          "missing": [
-            "goal",
-            "prerequisites",
-            "location",
-            "execution",
-            "expected",
-            "failure",
-            "diagnosis",
-            "practice",
-            "project",
-            "proof",
-            "transition"
-          ]
-        },
-        {
-          "module": 7,
-          "title": "Tema 1: Zustand — stores mínimos sin boilerplate",
-          "state": "explained",
-          "score": 2,
-          "missing": [
-            "goal",
-            "prerequisites",
-            "location",
-            "execution",
-            "expected",
-            "failure",
-            "diagnosis",
-            "practice",
-            "project",
-            "proof",
-            "transition"
-          ]
-        },
-        {
-          "module": 7,
-          "title": "Tema 2: Redux Toolkit — slices y ceremonia",
-          "state": "explained",
-          "score": 2,
-          "missing": [
-            "goal",
-            "prerequisites",
-            "location",
-            "execution",
-            "expected",
-            "failure",
-            "diagnosis",
-            "practice",
-            "project",
-            "proof",
-            "transition"
-          ]
-        },
-        {
-          "module": 7,
-          "title": "Tema 4: Jotai, Recoil y XState como alternativas",
-          "state": "explained",
-          "score": 2,
-          "missing": [
-            "goal",
-            "prerequisites",
-            "location",
-            "execution",
-            "expected",
-            "failure",
-            "diagnosis",
-            "practice",
-            "project",
-            "proof",
-            "transition"
-          ]
-        },
-        {
-          "module": 9,
-          "title": "Tema 3: Virtualización y code-splitting",
-          "state": "explained",
-          "score": 2,
-          "missing": [
-            "goal",
-            "prerequisites",
-            "location",
-            "execution",
-            "expected",
-            "failure",
-            "diagnosis",
-            "practice",
-            "project",
-            "proof",
-            "transition"
-          ]
-        },
-        {
-          "module": 11,
-          "title": "Tema 3: Eventos tipados y componentes polimórficos",
-          "state": "explained",
-          "score": 2,
-          "missing": [
-            "goal",
-            "prerequisites",
-            "location",
-            "execution",
-            "expected",
-            "failure",
-            "diagnosis",
-            "practice",
-            "project",
-            "proof",
             "transition"
           ]
         }
@@ -2174,39 +1817,25 @@
       "labs": 0,
       "verifiableLabs": 0,
       "states": {
-        "explained": 59
+        "explained": 51,
+        "practicable": 8
       },
       "criteria": {
-        "goal": 6,
+        "goal": 51,
         "prerequisites": 1,
         "terms": 59,
         "code": 59,
         "location": 59,
         "execution": 59,
-        "expected": 50,
-        "failure": 4,
-        "diagnosis": 27,
-        "practice": 57,
+        "expected": 57,
+        "failure": 7,
+        "diagnosis": 54,
+        "practice": 59,
         "project": 59,
-        "proof": 12,
-        "transition": 1
+        "proof": 53,
+        "transition": 2
       },
       "blockers": [
-        {
-          "module": 3,
-          "title": "Tema 2: try-with-resources",
-          "state": "explained",
-          "score": 6,
-          "missing": [
-            "goal",
-            "prerequisites",
-            "failure",
-            "diagnosis",
-            "practice",
-            "proof",
-            "transition"
-          ]
-        },
         {
           "module": 15,
           "title": "Tema 3: Proyectos multi-módulo sin ciclos",
@@ -2223,44 +1852,149 @@
           ]
         },
         {
-          "module": 0,
-          "title": "Tema 1: Del código fuente a la JVM",
+          "module": 14,
+          "title": "Tema 2: La JVM optimiza y puede invalidar un cronómetro ingenuo",
           "state": "explained",
           "score": 7,
           "missing": [
+            "goal",
             "prerequisites",
             "failure",
             "diagnosis",
-            "practice",
             "proof",
             "transition"
           ]
         },
         {
-          "module": 0,
-          "title": "Tema 2: public static void main — qué significa cada palabra",
+          "module": 15,
+          "title": "Tema 6: SLF4J, Logback, MDC y logging estructurado",
           "state": "explained",
           "score": 7,
+          "missing": [
+            "goal",
+            "prerequisites",
+            "failure",
+            "diagnosis",
+            "proof",
+            "transition"
+          ]
+        },
+        {
+          "module": 14,
+          "title": "Tema 1: Compartir memoria requiere orden y visibilidad",
+          "state": "explained",
+          "score": 8,
           "missing": [
             "goal",
             "prerequisites",
             "expected",
             "failure",
+            "transition"
+          ]
+        },
+        {
+          "module": 14,
+          "title": "Tema 3: Deserializar es permitir construcción y comportamiento",
+          "state": "explained",
+          "score": 8,
+          "missing": [
+            "goal",
+            "prerequisites",
+            "failure",
+            "diagnosis",
+            "transition"
+          ]
+        },
+        {
+          "module": 15,
+          "title": "Tema 1: Maven avanzado",
+          "state": "explained",
+          "score": 8,
+          "missing": [
+            "goal",
+            "prerequisites",
+            "failure",
+            "proof",
+            "transition"
+          ]
+        },
+        {
+          "module": 14,
+          "title": "Tema 4: El runtime es parte del artefacto y necesita ciclo de vida",
+          "state": "explained",
+          "score": 9,
+          "missing": [
+            "prerequisites",
+            "failure",
+            "proof",
+            "transition"
+          ]
+        },
+        {
+          "module": 15,
+          "title": "Tema 2: Gradle y builds reproducibles",
+          "state": "explained",
+          "score": 9,
+          "missing": [
+            "prerequisites",
+            "failure",
+            "proof",
+            "transition"
+          ]
+        },
+        {
+          "module": 15,
+          "title": "Tema 4: JUnit 5, Mockito y assertions expresivas",
+          "state": "explained",
+          "score": 9,
+          "missing": [
+            "goal",
+            "prerequisites",
             "diagnosis",
             "transition"
           ]
         },
         {
           "module": 0,
-          "title": "Tema 6: Operadores, precedencia y control de flujo",
+          "title": "Tema 1: Del código fuente a la JVM",
           "state": "explained",
-          "score": 7,
+          "score": 10,
           "missing": [
-            "goal",
             "prerequisites",
             "failure",
-            "diagnosis",
-            "proof",
+            "transition"
+          ]
+        },
+        {
+          "module": 0,
+          "title": "Tema 3: JDK, JRE y JVM",
+          "state": "explained",
+          "score": 10,
+          "missing": [
+            "prerequisites",
+            "failure",
+            "transition"
+          ]
+        },
+        {
+          "module": 0,
+          "title": "Tema 4: Tipos primitivos vs referencias",
+          "state": "explained",
+          "score": 10,
+          "missing": [
+            "prerequisites",
+            "failure",
+            "transition"
+          ]
+        },
+        {
+          "module": 0,
+          "title": "Tema 5: Variables, conversiones y `String`",
+          "state": "explained",
+          "score": 10,
+          "missing": [
+            "prerequisites",
+            "failure",
             "transition"
           ]
         },
@@ -2268,13 +2002,10 @@
           "module": 0,
           "title": "Tema 8: Entrada y APIs estándar sin aprender APIs obsoletas como modelo principal",
           "state": "explained",
-          "score": 7,
+          "score": 10,
           "missing": [
-            "goal",
             "prerequisites",
             "failure",
-            "diagnosis",
-            "proof",
             "transition"
           ]
         },
@@ -2282,125 +2013,10 @@
           "module": 1,
           "title": "Tema 1: Clases, objetos, constructores y encapsulación",
           "state": "explained",
-          "score": 7,
+          "score": 10,
           "missing": [
-            "goal",
             "prerequisites",
             "failure",
-            "diagnosis",
-            "proof",
-            "transition"
-          ]
-        },
-        {
-          "module": 1,
-          "title": "Tema 3: Interfaces, clases abstractas y cuándo usar cada una",
-          "state": "explained",
-          "score": 7,
-          "missing": [
-            "goal",
-            "prerequisites",
-            "failure",
-            "diagnosis",
-            "proof",
-            "transition"
-          ]
-        },
-        {
-          "module": 2,
-          "title": "Tema 2: Genéricos, wildcards y type erasure",
-          "state": "explained",
-          "score": 7,
-          "missing": [
-            "goal",
-            "prerequisites",
-            "failure",
-            "diagnosis",
-            "proof",
-            "transition"
-          ]
-        },
-        {
-          "module": 4,
-          "title": "Tema 1: Stream API — map, filter, reduce, collect",
-          "state": "explained",
-          "score": 7,
-          "missing": [
-            "goal",
-            "prerequisites",
-            "failure",
-            "diagnosis",
-            "proof",
-            "transition"
-          ]
-        },
-        {
-          "module": 4,
-          "title": "Tema 2: Optional — evitar null explícitamente",
-          "state": "explained",
-          "score": 7,
-          "missing": [
-            "goal",
-            "prerequisites",
-            "failure",
-            "diagnosis",
-            "proof",
-            "transition"
-          ]
-        },
-        {
-          "module": 5,
-          "title": "Tema 1: ExecutorService y gestión de hilos",
-          "state": "explained",
-          "score": 7,
-          "missing": [
-            "goal",
-            "prerequisites",
-            "expected",
-            "failure",
-            "proof",
-            "transition"
-          ]
-        },
-        {
-          "module": 5,
-          "title": "Tema 2: CompletableFuture",
-          "state": "explained",
-          "score": 7,
-          "missing": [
-            "goal",
-            "prerequisites",
-            "failure",
-            "diagnosis",
-            "proof",
-            "transition"
-          ]
-        },
-        {
-          "module": 5,
-          "title": "Tema 4: Condiciones de carrera y sincronización",
-          "state": "explained",
-          "score": 7,
-          "missing": [
-            "goal",
-            "prerequisites",
-            "failure",
-            "diagnosis",
-            "proof",
-            "transition"
-          ]
-        },
-        {
-          "module": 6,
-          "title": "Tema 2: Serialización con Jackson",
-          "state": "explained",
-          "score": 7,
-          "missing": [
-            "goal",
-            "prerequisites",
-            "failure",
-            "diagnosis",
-            "proof",
             "transition"
           ]
         }
@@ -2422,78 +2038,58 @@
       "labs": 14,
       "verifiableLabs": 14,
       "states": {
-        "explained": 58
+        "explained": 56,
+        "practicable": 2
       },
       "criteria": {
-        "goal": 4,
+        "goal": 58,
         "prerequisites": 1,
         "terms": 58,
         "code": 58,
-        "location": 7,
-        "execution": 35,
-        "expected": 25,
-        "failure": 3,
-        "diagnosis": 3,
-        "practice": 23,
+        "location": 58,
+        "execution": 58,
+        "expected": 58,
+        "failure": 12,
+        "diagnosis": 58,
+        "practice": 58,
         "project": 15,
-        "proof": 17,
+        "proof": 58,
         "transition": 1
       },
       "blockers": [
         {
           "module": 0,
+          "title": "Tema 1: Inversión de control y el contenedor de Spring",
+          "state": "explained",
+          "score": 9,
+          "missing": [
+            "prerequisites",
+            "failure",
+            "project",
+            "transition"
+          ]
+        },
+        {
+          "module": 0,
+          "title": "Tema 2: Inyección por constructor vs por campo",
+          "state": "explained",
+          "score": 9,
+          "missing": [
+            "prerequisites",
+            "failure",
+            "project",
+            "transition"
+          ]
+        },
+        {
+          "module": 0,
           "title": "Tema 3: Estereotipos, autoconfiguración y scopes",
           "state": "explained",
-          "score": 2,
+          "score": 9,
           "missing": [
-            "goal",
             "prerequisites",
-            "location",
-            "execution",
-            "expected",
             "failure",
-            "diagnosis",
-            "practice",
             "project",
-            "proof",
-            "transition"
-          ]
-        },
-        {
-          "module": 3,
-          "title": "Tema 3: Migraciones con Flyway",
-          "state": "explained",
-          "score": 2,
-          "missing": [
-            "goal",
-            "prerequisites",
-            "location",
-            "execution",
-            "expected",
-            "failure",
-            "diagnosis",
-            "practice",
-            "project",
-            "proof",
-            "transition"
-          ]
-        },
-        {
-          "module": 11,
-          "title": "Tema 3: Health checks para Kubernetes",
-          "state": "explained",
-          "score": 2,
-          "missing": [
-            "goal",
-            "prerequisites",
-            "location",
-            "execution",
-            "expected",
-            "failure",
-            "diagnosis",
-            "practice",
-            "project",
-            "proof",
             "transition"
           ]
         },
@@ -2501,17 +2097,47 @@
           "module": 1,
           "title": "Tema 1: Spring Initializr y starters",
           "state": "explained",
-          "score": 3,
+          "score": 9,
           "missing": [
-            "goal",
             "prerequisites",
-            "location",
-            "execution",
             "failure",
-            "diagnosis",
-            "practice",
             "project",
-            "proof",
+            "transition"
+          ]
+        },
+        {
+          "module": 1,
+          "title": "Tema 2: application.yml vs application.properties",
+          "state": "explained",
+          "score": 9,
+          "missing": [
+            "prerequisites",
+            "failure",
+            "project",
+            "transition"
+          ]
+        },
+        {
+          "module": 1,
+          "title": "Tema 3: Perfiles y estructura por capas",
+          "state": "explained",
+          "score": 9,
+          "missing": [
+            "prerequisites",
+            "failure",
+            "project",
+            "transition"
+          ]
+        },
+        {
+          "module": 2,
+          "title": "Tema 2: Validación con Bean Validation y ResponseEntity",
+          "state": "explained",
+          "score": 9,
+          "missing": [
+            "prerequisites",
+            "failure",
+            "project",
             "transition"
           ]
         },
@@ -2519,17 +2145,71 @@
           "module": 2,
           "title": "Tema 3: Manejo centralizado de errores con @ControllerAdvice",
           "state": "explained",
-          "score": 3,
+          "score": 9,
           "missing": [
-            "goal",
             "prerequisites",
-            "location",
-            "expected",
             "failure",
-            "diagnosis",
-            "practice",
             "project",
-            "proof",
+            "transition"
+          ]
+        },
+        {
+          "module": 4,
+          "title": "Tema 1: SecurityFilterChain moderno",
+          "state": "explained",
+          "score": 9,
+          "missing": [
+            "prerequisites",
+            "failure",
+            "project",
+            "transition"
+          ]
+        },
+        {
+          "module": 4,
+          "title": "Tema 2: Filtro JWT y autorización por rol",
+          "state": "explained",
+          "score": 9,
+          "missing": [
+            "prerequisites",
+            "failure",
+            "project",
+            "transition"
+          ]
+        },
+        {
+          "module": 4,
+          "title": "Tema 3: CORS y CSRF",
+          "state": "explained",
+          "score": 9,
+          "missing": [
+            "prerequisites",
+            "failure",
+            "project",
+            "transition"
+          ]
+        },
+        {
+          "module": 5,
+          "title": "Tema 1: @ConfigurationProperties tipado",
+          "state": "explained",
+          "score": 9,
+          "missing": [
+            "prerequisites",
+            "failure",
+            "project",
+            "transition"
+          ]
+        },
+        {
+          "module": 5,
+          "title": "Tema 2: Fallar rápido al arranque",
+          "state": "explained",
+          "score": 9,
+          "missing": [
+            "prerequisites",
+            "failure",
+            "project",
             "transition"
           ]
         },
@@ -2537,179 +2217,23 @@
           "module": 5,
           "title": "Tema 3: Manejo global de excepciones consistente entre entornos",
           "state": "explained",
-          "score": 3,
+          "score": 9,
           "missing": [
-            "goal",
             "prerequisites",
-            "execution",
-            "expected",
             "failure",
-            "diagnosis",
-            "practice",
             "project",
-            "proof",
-            "transition"
-          ]
-        },
-        {
-          "module": 6,
-          "title": "Tema 2: @DataJpaTest con Testcontainers",
-          "state": "explained",
-          "score": 3,
-          "missing": [
-            "goal",
-            "prerequisites",
-            "location",
-            "expected",
-            "failure",
-            "diagnosis",
-            "practice",
-            "project",
-            "proof",
             "transition"
           ]
         },
         {
           "module": 7,
-          "title": "Tema 2: Métricas de negocio con Micrometer",
+          "title": "Tema 1: Actuator y health checks personalizados",
           "state": "explained",
-          "score": 3,
+          "score": 9,
           "missing": [
-            "goal",
             "prerequisites",
-            "location",
-            "expected",
             "failure",
-            "diagnosis",
-            "practice",
             "project",
-            "proof",
-            "transition"
-          ]
-        },
-        {
-          "module": 7,
-          "title": "Tema 3: Liveness vs readiness",
-          "state": "explained",
-          "score": 3,
-          "missing": [
-            "goal",
-            "prerequisites",
-            "location",
-            "execution",
-            "failure",
-            "diagnosis",
-            "practice",
-            "project",
-            "proof",
-            "transition"
-          ]
-        },
-        {
-          "module": 9,
-          "title": "Tema 1: Mono y Flux",
-          "state": "explained",
-          "score": 3,
-          "missing": [
-            "goal",
-            "prerequisites",
-            "location",
-            "expected",
-            "failure",
-            "diagnosis",
-            "practice",
-            "project",
-            "proof",
-            "transition"
-          ]
-        },
-        {
-          "module": 9,
-          "title": "Tema 2: WebClient y composición no bloqueante",
-          "state": "explained",
-          "score": 3,
-          "missing": [
-            "goal",
-            "prerequisites",
-            "location",
-            "expected",
-            "failure",
-            "diagnosis",
-            "practice",
-            "project",
-            "proof",
-            "transition"
-          ]
-        },
-        {
-          "module": 9,
-          "title": "Tema 3: Cuándo WebFlux vale la complejidad, y R2DBC",
-          "state": "explained",
-          "score": 3,
-          "missing": [
-            "goal",
-            "prerequisites",
-            "location",
-            "expected",
-            "failure",
-            "diagnosis",
-            "practice",
-            "project",
-            "proof",
-            "transition"
-          ]
-        },
-        {
-          "module": 10,
-          "title": "Tema 2: Spring Cloud Gateway",
-          "state": "explained",
-          "score": 3,
-          "missing": [
-            "goal",
-            "prerequisites",
-            "location",
-            "execution",
-            "failure",
-            "diagnosis",
-            "practice",
-            "project",
-            "proof",
-            "transition"
-          ]
-        },
-        {
-          "module": 10,
-          "title": "Tema 3: Circuit breaker con Resilience4j",
-          "state": "explained",
-          "score": 3,
-          "missing": [
-            "goal",
-            "prerequisites",
-            "location",
-            "expected",
-            "failure",
-            "diagnosis",
-            "practice",
-            "project",
-            "proof",
-            "transition"
-          ]
-        },
-        {
-          "module": 13,
-          "title": "Tema 1: `@Transactional` funciona en una frontera, no como encantamiento",
-          "state": "explained",
-          "score": 3,
-          "missing": [
-            "goal",
-            "prerequisites",
-            "location",
-            "expected",
-            "failure",
-            "diagnosis",
-            "practice",
-            "project",
-            "proof",
             "transition"
           ]
         }
@@ -3369,103 +2893,28 @@
       "labs": 14,
       "verifiableLabs": 14,
       "states": {
-        "explained": 51
+        "explained": 49,
+        "practicable": 2
       },
       "criteria": {
-        "goal": 3,
+        "goal": 41,
         "prerequisites": 2,
         "terms": 51,
         "code": 51,
-        "location": 3,
-        "execution": 39,
-        "expected": 16,
+        "location": 27,
+        "execution": 45,
+        "expected": 43,
         "failure": 2,
-        "diagnosis": 2,
-        "practice": 25,
+        "diagnosis": 42,
+        "practice": 49,
         "project": 10,
-        "proof": 10,
+        "proof": 49,
         "transition": 0
       },
       "blockers": [
         {
-          "module": 7,
-          "title": "Tema 3: Combine vs async/await",
-          "state": "explained",
-          "score": 2,
-          "missing": [
-            "goal",
-            "prerequisites",
-            "location",
-            "execution",
-            "expected",
-            "failure",
-            "diagnosis",
-            "practice",
-            "project",
-            "proof",
-            "transition"
-          ]
-        },
-        {
-          "module": 8,
-          "title": "Tema 3: Cuándo MVVM no alcanza",
-          "state": "explained",
-          "score": 2,
-          "missing": [
-            "goal",
-            "prerequisites",
-            "location",
-            "execution",
-            "expected",
-            "failure",
-            "diagnosis",
-            "practice",
-            "project",
-            "proof",
-            "transition"
-          ]
-        },
-        {
-          "module": 11,
-          "title": "Tema 1: Certificados y provisioning profiles",
-          "state": "explained",
-          "score": 2,
-          "missing": [
-            "goal",
-            "prerequisites",
-            "location",
-            "execution",
-            "expected",
-            "failure",
-            "diagnosis",
-            "practice",
-            "project",
-            "proof",
-            "transition"
-          ]
-        },
-        {
-          "module": 11,
-          "title": "Tema 2: Archivar, subir y TestFlight",
-          "state": "explained",
-          "score": 2,
-          "missing": [
-            "goal",
-            "prerequisites",
-            "location",
-            "execution",
-            "expected",
-            "failure",
-            "diagnosis",
-            "practice",
-            "project",
-            "proof",
-            "transition"
-          ]
-        },
-        {
-          "module": 2,
-          "title": "Tema 2: @Observable",
+          "module": 13,
+          "title": "Tema 3: Offline-first es un protocolo, no una caché",
           "state": "explained",
           "score": 3,
           "missing": [
@@ -3482,20 +2931,145 @@
           ]
         },
         {
-          "module": 2,
-          "title": "Tema 3: @Environment y identidad vs valor",
+          "module": 13,
+          "title": "Tema 2: Proteger datos es controlar todas sus copias",
           "state": "explained",
-          "score": 3,
+          "score": 5,
+          "missing": [
+            "goal",
+            "prerequisites",
+            "location",
+            "failure",
+            "diagnosis",
+            "project",
+            "proof",
+            "transition"
+          ]
+        },
+        {
+          "module": 13,
+          "title": "Tema 4: Operar significa detectar, limitar y aprender del fallo",
+          "state": "explained",
+          "score": 5,
           "missing": [
             "goal",
             "prerequisites",
             "location",
             "expected",
             "failure",
-            "diagnosis",
             "practice",
             "project",
-            "proof",
+            "transition"
+          ]
+        },
+        {
+          "module": 14,
+          "title": "Tema 1: XCTest y pruebas asíncronas",
+          "state": "explained",
+          "score": 5,
+          "missing": [
+            "goal",
+            "prerequisites",
+            "location",
+            "execution",
+            "expected",
+            "failure",
+            "diagnosis",
+            "transition"
+          ]
+        },
+        {
+          "module": 14,
+          "title": "Tema 2: ViewInspector con criterio",
+          "state": "explained",
+          "score": 5,
+          "missing": [
+            "goal",
+            "prerequisites",
+            "location",
+            "execution",
+            "expected",
+            "failure",
+            "diagnosis",
+            "transition"
+          ]
+        },
+        {
+          "module": 14,
+          "title": "Tema 3: Combine avanzado",
+          "state": "explained",
+          "score": 5,
+          "missing": [
+            "goal",
+            "prerequisites",
+            "location",
+            "execution",
+            "expected",
+            "failure",
+            "diagnosis",
+            "transition"
+          ]
+        },
+        {
+          "module": 14,
+          "title": "Tema 4: Animaciones y matchedGeometryEffect",
+          "state": "explained",
+          "score": 5,
+          "missing": [
+            "goal",
+            "prerequisites",
+            "location",
+            "execution",
+            "expected",
+            "failure",
+            "diagnosis",
+            "transition"
+          ]
+        },
+        {
+          "module": 14,
+          "title": "Tema 5: UIViewRepresentable",
+          "state": "explained",
+          "score": 5,
+          "missing": [
+            "goal",
+            "prerequisites",
+            "location",
+            "execution",
+            "expected",
+            "failure",
+            "diagnosis",
+            "transition"
+          ]
+        },
+        {
+          "module": 14,
+          "title": "Tema 6: UIViewControllerRepresentable y Coordinator",
+          "state": "explained",
+          "score": 5,
+          "missing": [
+            "goal",
+            "prerequisites",
+            "location",
+            "execution",
+            "expected",
+            "failure",
+            "diagnosis",
+            "transition"
+          ]
+        },
+        {
+          "module": 13,
+          "title": "Tema 1: El sandbox reduce superficie, pero no valida intenciones",
+          "state": "explained",
+          "score": 6,
+          "missing": [
+            "goal",
+            "prerequisites",
+            "location",
+            "failure",
+            "diagnosis",
+            "project",
             "transition"
           ]
         },
@@ -3503,17 +3077,12 @@
           "module": 3,
           "title": "Tema 1: NavigationStack y NavigationPath",
           "state": "explained",
-          "score": 3,
+          "score": 8,
           "missing": [
-            "goal",
             "prerequisites",
             "location",
-            "expected",
             "failure",
-            "diagnosis",
-            "practice",
             "project",
-            "proof",
             "transition"
           ]
         },
@@ -3521,17 +3090,12 @@
           "module": 3,
           "title": "Tema 2: Sheets, full screen covers y TabView",
           "state": "explained",
-          "score": 3,
+          "score": 8,
           "missing": [
-            "goal",
             "prerequisites",
             "location",
-            "expected",
             "failure",
-            "diagnosis",
-            "practice",
             "project",
-            "proof",
             "transition"
           ]
         },
@@ -3539,35 +3103,12 @@
           "module": 3,
           "title": "Tema 3: Deep linking y controles de formulario",
           "state": "explained",
-          "score": 3,
+          "score": 8,
           "missing": [
-            "goal",
             "prerequisites",
             "location",
-            "expected",
             "failure",
-            "diagnosis",
-            "practice",
             "project",
-            "proof",
-            "transition"
-          ]
-        },
-        {
-          "module": 5,
-          "title": "Tema 3: Reintentos y cancelación",
-          "state": "explained",
-          "score": 3,
-          "missing": [
-            "goal",
-            "prerequisites",
-            "location",
-            "expected",
-            "failure",
-            "diagnosis",
-            "practice",
-            "project",
-            "proof",
             "transition"
           ]
         },
@@ -3575,17 +3116,12 @@
           "module": 6,
           "title": "Tema 1: @Model y ModelContainer",
           "state": "explained",
-          "score": 3,
+          "score": 8,
           "missing": [
-            "goal",
             "prerequisites",
             "location",
-            "expected",
             "failure",
-            "diagnosis",
-            "practice",
             "project",
-            "proof",
             "transition"
           ]
         },
@@ -3593,71 +3129,12 @@
           "module": 6,
           "title": "Tema 2: @Query y operaciones de escritura",
           "state": "explained",
-          "score": 3,
+          "score": 8,
           "missing": [
-            "goal",
             "prerequisites",
             "location",
-            "expected",
             "failure",
-            "diagnosis",
-            "practice",
             "project",
-            "proof",
-            "transition"
-          ]
-        },
-        {
-          "module": 7,
-          "title": "Tema 1: Publishers y Subscribers",
-          "state": "explained",
-          "score": 3,
-          "missing": [
-            "goal",
-            "prerequisites",
-            "location",
-            "expected",
-            "failure",
-            "diagnosis",
-            "practice",
-            "project",
-            "proof",
-            "transition"
-          ]
-        },
-        {
-          "module": 8,
-          "title": "Tema 2: Capas del proyecto e inyección por inicializador",
-          "state": "explained",
-          "score": 3,
-          "missing": [
-            "goal",
-            "prerequisites",
-            "location",
-            "expected",
-            "failure",
-            "diagnosis",
-            "practice",
-            "project",
-            "proof",
-            "transition"
-          ]
-        },
-        {
-          "module": 9,
-          "title": "Tema 2: Testing de código async",
-          "state": "explained",
-          "score": 3,
-          "missing": [
-            "goal",
-            "prerequisites",
-            "location",
-            "expected",
-            "failure",
-            "diagnosis",
-            "practice",
-            "project",
-            "proof",
             "transition"
           ]
         }
@@ -3682,59 +3159,21 @@
         "explained": 57
       },
       "criteria": {
-        "goal": 2,
+        "goal": 11,
         "prerequisites": 2,
         "terms": 57,
         "code": 57,
-        "location": 8,
-        "execution": 29,
-        "expected": 20,
+        "location": 17,
+        "execution": 31,
+        "expected": 28,
         "failure": 0,
-        "diagnosis": 5,
-        "practice": 19,
+        "diagnosis": 13,
+        "practice": 28,
         "project": 12,
-        "proof": 13,
+        "proof": 22,
         "transition": 1
       },
       "blockers": [
-        {
-          "module": 2,
-          "title": "Tema 1: MediaQuery vs LayoutBuilder",
-          "state": "explained",
-          "score": 2,
-          "missing": [
-            "goal",
-            "prerequisites",
-            "location",
-            "execution",
-            "expected",
-            "failure",
-            "diagnosis",
-            "practice",
-            "project",
-            "proof",
-            "transition"
-          ]
-        },
-        {
-          "module": 2,
-          "title": "Tema 3: Breakpoints propios y SafeArea",
-          "state": "explained",
-          "score": 2,
-          "missing": [
-            "goal",
-            "prerequisites",
-            "location",
-            "execution",
-            "expected",
-            "failure",
-            "diagnosis",
-            "practice",
-            "project",
-            "proof",
-            "transition"
-          ]
-        },
         {
           "module": 4,
           "title": "Tema 3: Bloc/Cubit y otras alternativas",
@@ -3831,96 +3270,6 @@
           ]
         },
         {
-          "module": 0,
-          "title": "Tema 2: Clases y mixins",
-          "state": "explained",
-          "score": 3,
-          "missing": [
-            "goal",
-            "prerequisites",
-            "location",
-            "expected",
-            "failure",
-            "diagnosis",
-            "practice",
-            "project",
-            "proof",
-            "transition"
-          ]
-        },
-        {
-          "module": 0,
-          "title": "Tema 3: Futures, async/await y colecciones funcionales",
-          "state": "explained",
-          "score": 3,
-          "missing": [
-            "goal",
-            "prerequisites",
-            "location",
-            "expected",
-            "failure",
-            "diagnosis",
-            "practice",
-            "project",
-            "proof",
-            "transition"
-          ]
-        },
-        {
-          "module": 1,
-          "title": "Tema 1: StatelessWidget vs StatefulWidget",
-          "state": "explained",
-          "score": 3,
-          "missing": [
-            "goal",
-            "prerequisites",
-            "location",
-            "expected",
-            "failure",
-            "diagnosis",
-            "practice",
-            "project",
-            "proof",
-            "transition"
-          ]
-        },
-        {
-          "module": 1,
-          "title": "Tema 2: Layout con Row, Column y Stack, y ciclo de vida",
-          "state": "explained",
-          "score": 3,
-          "missing": [
-            "goal",
-            "prerequisites",
-            "location",
-            "expected",
-            "failure",
-            "diagnosis",
-            "practice",
-            "project",
-            "proof",
-            "transition"
-          ]
-        },
-        {
-          "module": 1,
-          "title": "Tema 3: Keys",
-          "state": "explained",
-          "score": 3,
-          "missing": [
-            "goal",
-            "prerequisites",
-            "location",
-            "expected",
-            "failure",
-            "diagnosis",
-            "practice",
-            "project",
-            "proof",
-            "transition"
-          ]
-        },
-        {
           "module": 3,
           "title": "Tema 1: go_router: navegación como función de la URL",
           "state": "explained",
@@ -3966,6 +3315,132 @@
             "prerequisites",
             "location",
             "execution",
+            "failure",
+            "diagnosis",
+            "practice",
+            "project",
+            "proof",
+            "transition"
+          ]
+        },
+        {
+          "module": 4,
+          "title": "Tema 1: setState y sus límites",
+          "state": "explained",
+          "score": 3,
+          "missing": [
+            "goal",
+            "prerequisites",
+            "location",
+            "execution",
+            "expected",
+            "failure",
+            "diagnosis",
+            "project",
+            "proof",
+            "transition"
+          ]
+        },
+        {
+          "module": 5,
+          "title": "Tema 1: http vs dio",
+          "state": "explained",
+          "score": 3,
+          "missing": [
+            "goal",
+            "prerequisites",
+            "location",
+            "expected",
+            "failure",
+            "diagnosis",
+            "practice",
+            "project",
+            "proof",
+            "transition"
+          ]
+        },
+        {
+          "module": 6,
+          "title": "Tema 1: shared_preferences",
+          "state": "explained",
+          "score": 3,
+          "missing": [
+            "goal",
+            "prerequisites",
+            "location",
+            "execution",
+            "expected",
+            "failure",
+            "diagnosis",
+            "project",
+            "proof",
+            "transition"
+          ]
+        },
+        {
+          "module": 6,
+          "title": "Tema 3: Offline-first y Firebase",
+          "state": "explained",
+          "score": 3,
+          "missing": [
+            "goal",
+            "prerequisites",
+            "location",
+            "expected",
+            "failure",
+            "diagnosis",
+            "practice",
+            "project",
+            "proof",
+            "transition"
+          ]
+        },
+        {
+          "module": 9,
+          "title": "Tema 1: Unit tests y widget tests",
+          "state": "explained",
+          "score": 3,
+          "missing": [
+            "goal",
+            "prerequisites",
+            "location",
+            "execution",
+            "failure",
+            "diagnosis",
+            "practice",
+            "project",
+            "proof",
+            "transition"
+          ]
+        },
+        {
+          "module": 9,
+          "title": "Tema 2: Mocking con mocktail",
+          "state": "explained",
+          "score": 3,
+          "missing": [
+            "goal",
+            "prerequisites",
+            "location",
+            "execution",
+            "expected",
+            "failure",
+            "diagnosis",
+            "project",
+            "proof",
+            "transition"
+          ]
+        },
+        {
+          "module": 10,
+          "title": "Tema 2: Adaptación Material vs Cupertino",
+          "state": "explained",
+          "score": 3,
+          "missing": [
+            "goal",
+            "prerequisites",
+            "location",
+            "expected",
             "failure",
             "diagnosis",
             "practice",

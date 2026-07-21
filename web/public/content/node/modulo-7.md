@@ -5,6 +5,72 @@
 
 ### Tema 1: Vitest y Supertest — pruebas de integración HTTP reales
 
+#### Paso 1 · Objetivo y preparación
+
+Al finalizar podrás probar una ruta HTTP sin depender de un puerto real. **Prerrequisitos:** Node LTS, npm y HTTP básico; ejemplo independiente desde una carpeta vacía.
+
+#### Paso 2 · Contexto y caso real
+
+Una API de entregas debe comprobar estado, cuerpo y códigos antes de desplegar. Probar solo funciones internas no detecta errores de serialización o middleware.
+
+#### Paso 3 · Teoría y analogía aplicada
+
+Vitest ejecuta aserciones; Supertest habla con la aplicación en memoria. Es como probar una puerta con su cerradura real, pero sin abrir todo el edificio al público.
+
+#### Paso 4 · Demostración guiada desde cero
+
+```bash
+mkdir ejemplo-vitest-http
+cd ejemplo-vitest-http
+npm init -y
+npm install express
+npm install -D vitest supertest
+mkdir src test
+```
+
+Crea `src/app.js`:
+
+```js
+import express from "express";
+export const app = express();
+app.get("/health", (_req, res) => res.json({ status: "ok" }));
+```
+
+Crea `test/health.test.js`:
+
+```js
+import request from "supertest";
+import { describe, expect, it } from "vitest";
+import { app } from "../src/app.js";
+describe("GET /health", () => {
+  it("devuelve estado OK", async () => {
+    const response = await request(app).get("/health");
+    expect(response.status).toBe(200);
+    expect(response.body).toEqual({ status: "ok" });
+  });
+});
+```
+
+Añade `"test": "vitest run"` a `package.json` y ejecuta `npm test`. **Resultado esperado:** una prueba pasa sin abrir un puerto. **Fallo deliberado y diagnóstico:** cambia `status` a `ready`; Vitest muestra la diferencia exacta entre cuerpos.
+
+#### Paso 5 · Práctica guiada
+
+Añade una ruta inexistente y prueba `404`. **Pista:** una prueba debe describir el contrato observable, no detalles privados.
+
+#### Paso 6 · Práctica independiente
+
+Prueba un `POST` con body inválido y entrega salida verde y roja, explicando qué regresión detecta cada caso.
+
+#### Paso 7 · Cierre y conexión
+
+Ya probaste una API realista sin red externa. El siguiente tema aislará una base efímera en otra carpeta.
+
+**Errores comunes:** abrir puertos en cada prueba; compartir estado mutable; aserciones demasiado amplias; no esperar promesas; probar implementación en vez de contrato.
+
+**Fuentes oficiales:** [Vitest](https://vitest.dev/guide/), [Supertest](https://github.com/ladjs/supertest) y [Express testing](https://expressjs.com/en/starter/hello-world.html).
+
+**Evidencia de aprendizaje:** entrega la salida de `npm test` con casos 200 y 404.
+
 **Conceptos clave:** petición HTTP real sin puerto abierto, verificación de código de estado y body.
 
 Una prueba unitaria (estudiada en profundidad en el Módulo 9 del track de JavaScript) verifica una función aislada; una prueba de integración HTTP verifica el comportamiento real de un endpoint completo, incluyendo el routing, los middleware, y la lógica de negocio, todos operando juntos exactamente como lo harían en producción. Supertest permite realizar peticiones HTTP reales directamente contra la instancia de la aplicación Express (`request(app).get("/tareas")`) sin necesidad de que la aplicación esté escuchando activamente en un puerto de red real, interceptando la petición a nivel de la propia aplicación Node en memoria, lo que hace estas pruebas considerablemente más rápidas que levantar un servidor de red real y hacer peticiones HTTP genuinas contra él.
@@ -31,6 +97,64 @@ it("devuelve 200 y un array", async () => {
 ```
 
 ### Tema 2: Testcontainers — bases de datos de prueba reales y efímeras
+
+#### Paso 1 · Objetivo y preparación
+
+Al finalizar podrás levantar una base temporal para una prueba y eliminarla al terminar. **Prerrequisitos:** Node LTS y Docker Desktop; ejemplo independiente desde una carpeta vacía.
+
+#### Paso 2 · Contexto y caso real
+
+Una consulta puede funcionar con un mock y fallar con SQL real. Un contenedor efímero reproduce el motor sin compartir datos de desarrollo.
+
+#### Paso 3 · Teoría y analogía aplicada
+
+Testcontainers crea infraestructura aislada y con ciclo de vida controlado. Es un laboratorio desechable: cada ejecución comienza limpio y no contamina otra prueba.
+
+#### Paso 4 · Demostración guiada desde cero
+
+```bash
+mkdir ejemplo-testcontainers
+cd ejemplo-testcontainers
+npm init -y
+npm install -D vitest @testcontainers/postgresql
+mkdir test
+```
+
+Crea `test/postgres.test.js`:
+
+```js
+import { PostgreSqlContainer } from "@testcontainers/postgresql";
+import { afterAll, beforeAll, describe, expect, it } from "vitest";
+let container;
+beforeAll(async () => { container = await new PostgreSqlContainer("postgres:16-alpine").start(); });
+afterAll(async () => { await container.stop(); });
+describe("base efímera", () => {
+  it("expone un puerto y credenciales temporales", () => {
+    expect(container.getHost()).toBeTruthy();
+    expect(container.getPort()).toBeGreaterThan(0);
+  });
+});
+```
+
+Ejecuta `npx vitest run`. **Resultado esperado:** el contenedor inicia, la prueba pasa y se detiene. **Fallo deliberado y diagnóstico:** usa una imagen inexistente; el error indica que Docker no pudo obtener la imagen, no que la consulta fallara.
+
+#### Paso 5 · Práctica guiada
+
+Añade una tabla y una consulta con el cliente PostgreSQL. **Pista:** usa las credenciales que expone el contenedor, nunca una contraseña fija.
+
+#### Paso 6 · Práctica independiente
+
+Fuerza una violación de unicidad y entrega la aserción del error junto con evidencia de limpieza del contenedor.
+
+#### Paso 7 · Cierre y conexión
+
+Ya distingues infraestructura real de un mock. El siguiente tema enseñará a simular servicios externos sin perder el contrato.
+
+**Errores comunes:** dejar contenedores vivos; usar tags `latest`; depender del orden de pruebas; compartir volúmenes; ocultar credenciales en el repositorio.
+
+**Fuentes oficiales:** [Testcontainers Node](https://node.testcontainers.org/), [PostgreSQL image](https://hub.docker.com/_/postgres) y [Vitest setup](https://vitest.dev/api/).
+
+**Evidencia de aprendizaje:** entrega la salida de `npx vitest run`, el puerto temporal y la limpieza confirmada.
 
 **Conceptos clave:** contenedor efímero por corrida, aislamiento completo entre ejecuciones.
 
@@ -59,6 +183,68 @@ afterAll(() => contenedor.stop()); // destruido completamente al terminar
 
 ### Tema 3: Mocks de servicios externos y CI
 
+#### Paso 1 · Objetivo y preparación
+
+Al finalizar podrás simular una API externa de forma determinista y separar pruebas unitarias de integración. **Prerrequisitos:** Node LTS y promesas; ejemplo independiente desde una carpeta vacía.
+
+#### Paso 2 · Contexto y caso real
+
+Una API de mapas puede ser lenta, costosa o no estar disponible en CI. El código propio debe probarse sin llamar al proveedor real, pero conservando su contrato.
+
+#### Paso 3 · Teoría y analogía aplicada
+
+Un mock es un doble controlado, no una prueba de que el proveedor funciona. Es un simulador de vuelo: entrenas decisiones conocidas y reservas la prueba real para integración.
+
+#### Paso 4 · Demostración guiada desde cero
+
+```bash
+mkdir ejemplo-mocks-ci
+cd ejemplo-mocks-ci
+npm init -y
+npm install -D vitest
+mkdir src test
+```
+
+Crea `src/rutas.js` y `test/rutas.test.js`:
+
+```js
+export async function calcularRuta(cliente, origen, destino) {
+  const respuesta = await cliente.route(origen, destino);
+  if (!respuesta.ok) throw new Error("Proveedor de rutas no disponible");
+  return respuesta.distanceKm;
+}
+```
+
+```js
+import { expect, it, vi } from "vitest";
+import { calcularRuta } from "../src/rutas.js";
+it("usa el contrato del proveedor", async () => {
+  const cliente = { route: vi.fn().mockResolvedValue({ ok: true, distanceKm: 4.2 }) };
+  await expect(calcularRuta(cliente, "A", "B")).resolves.toBe(4.2);
+  expect(cliente.route).toHaveBeenCalledWith("A", "B");
+});
+```
+
+Añade `"test": "vitest run"` y ejecuta `npm test`. **Resultado esperado:** prueba verde sin red. **Fallo deliberado y diagnóstico:** devuelve `{ ok: false }`; la prueba debe mostrar el error de proveedor y no ocultarlo con un valor cero.
+
+#### Paso 5 · Práctica guiada
+
+Añade timeout simulado con `vi.fn().mockRejectedValue`. **Pista:** prueba la política de reintento separada del cliente.
+
+#### Paso 6 · Práctica independiente
+
+Escribe un workflow de CI que ejecute `npm ci` y `npm test`, y entrega qué secretos no son necesarios para esta suite.
+
+#### Paso 7 · Cierre y conexión
+
+Ya puedes aislar dependencias externas sin falsificar su contrato. El siguiente tema comparará estrategias de testing y debugging.
+
+**Errores comunes:** mockear la función propia; devolver datos imposibles; no verificar argumentos; llamar red real en unit tests; hacer CI dependiente de secretos.
+
+**Fuentes oficiales:** [Vitest mocks](https://vitest.dev/guide/mocking), [GitHub Actions Node](https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-nodejs) y [principio de contratos](https://martinfowler.com/articles/mocksArentStubs.html).
+
+**Evidencia de aprendizaje:** entrega la salida de la prueba de éxito, el fallo rechazado y el workflow ejecutable.
+
 **Conceptos clave:** aislar dependencias externas no controladas, pipeline de CI reproducible.
 
 Mockear servicios externos (un proveedor de envío de email, una pasarela de pago, una API de terceros) es necesario en pruebas automatizadas por razones tanto prácticas como de correctitud: depender de conectividad real a internet y de la disponibilidad de un servicio externo real haría las pruebas lentas, no deterministas (dependientes de la latencia y disponibilidad variable de ese servicio externo), y potencialmente costosas (si el servicio externo cobra por cada uso real, como enviar un email o procesar un pago real cada vez que se ejecuta la suite de pruebas). Mockear la llamada a ese servicio externo (con `vi.spyOn` o similar, estudiado en el Módulo 9 del track de JavaScript) aísla completamente las pruebas de esa dependencia externa no controlada, mientras sigue verificando que el código propio invoca correctamente esa dependencia con los parámetros esperados.
@@ -80,6 +266,60 @@ Combinar esta estrategia de testing con el pipeline CI/CD completo estudiado en 
 ```
 
 ### Tema 4: Alternativas de testing y debugging
+
+#### Paso 1 · Objetivo y preparación
+
+Al finalizar podrás elegir entre test unitario, integración, E2E y depuración interactiva. **Prerrequisitos:** Node LTS y una prueba Vitest; ejemplo independiente desde una carpeta vacía.
+
+#### Paso 2 · Contexto y caso real
+
+Un equipo necesita feedback rápido sin renunciar a una prueba que atraviese navegador y API. Cada nivel compra confianza a distinto costo.
+
+#### Paso 3 · Teoría y analogía aplicada
+
+La pirámide coloca muchas pruebas unitarias rápidas, menos integraciones y pocas E2E. El debugger permite observar estado; no reemplaza una aserción repetible. Es revisar una bicicleta con piezas separadas, luego ensamblada y finalmente en carretera.
+
+#### Paso 4 · Demostración guiada desde cero
+
+```bash
+mkdir ejemplo-debug-testing
+cd ejemplo-debug-testing
+npm init -y
+npm install -D vitest
+mkdir src test
+```
+
+Crea `src/sumar.js` y `test/sumar.test.js`:
+
+```js
+export function sumar(a, b) { return a + b; }
+```
+
+```js
+import { expect, it } from "vitest";
+import { sumar } from "../src/sumar.js";
+it("suma dos valores", () => { debugger; expect(sumar(2, 3)).toBe(5); });
+```
+
+Ejecuta `npx vitest run`; para inspeccionar el breakpoint usa `node --inspect-brk ./node_modules/vitest/vitest.mjs run`. **Resultado esperado:** prueba verde y, con inspector, ejecución pausada. **Fallo deliberado y diagnóstico:** espera `6`; Vitest muestra la diferencia y permite inspeccionar variables.
+
+#### Paso 5 · Práctica guiada
+
+Añade un caso límite con números negativos. **Pista:** el debugger explica el estado, pero la expectativa documenta el comportamiento.
+
+#### Paso 6 · Práctica independiente
+
+Clasifica tres casos de tu aplicación como unitarios, integración o E2E y justifica el costo y la confianza de cada uno.
+
+#### Paso 7 · Cierre y conexión
+
+Ya puedes elegir una estrategia proporcional y depurar sin reemplazar pruebas. El siguiente módulo tratará rendimiento desde una carpeta nueva.
+
+**Errores comunes:** usar solo E2E; dejar `debugger` en producción; hacer asserts frágiles; medir cobertura como calidad; depurar sin reproducir.
+
+**Fuentes oficiales:** [Node inspector](https://nodejs.org/en/learn/getting-started/debugging), [Vitest](https://vitest.dev/guide/) y [testing pyramid](https://martinfowler.com/articles/practical-test-pyramid.html).
+
+**Evidencia de aprendizaje:** entrega una prueba verde, una salida de fallo y la clasificación razonada de tres casos.
 
 **Conceptos clave:** panorama de frameworks de testing, `--inspect`, Chrome DevTools para Node.
 

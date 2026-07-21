@@ -5,6 +5,37 @@
 
 ### Tema 1: React Hook Form y el problema del re-render por tecla
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás construir un formulario React desde cero. Prerrequisitos: Node.js LTS, npm y editor. Verifica npm --version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real, una persona registra un paquete y necesita validación inmediata, accesibilidad y pasos que conserven datos.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+React Hook Form reduce renders usando referencias; zod valida datos con un esquema; eventos sintéticos normalizan interacción. La analogía es una ventanilla: recibe campos, valida el formulario completo y comunica errores en el mismo idioma.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-react-m3
+cd ejemplo-react-m3
+npm create vite@latest app -- --template react-ts
+cd app
+npm install react-hook-form zod @hookform/resolvers
+npm run dev
+```
+Crea src/components/DeliveryForm.tsx con campos controlados, zod y mensajes asociados a labels.
+
+#### Paso 5 · Práctica guiada
+Pista: envía deliberadamente un dato inválido para provocar un fallo deliberado de validación; observa el mensaje y corrígelo. Resultado esperado: no se envía hasta cumplir el esquema.
+
+#### Paso 6 · Práctica independiente
+Añade un segundo paso, persistencia temporal, estado pending y pruebas de teclado; mide renders antes/después.
+
+#### Paso 7 · Cierre y evidencia
+Guarda esquema, captura y medición; como siguiente paso estudia routing. Errores comunes: validar solo al final, mensajes sin aria-describedby, mezclar schema y UI y perder datos al cambiar paso. Fuentes oficiales: https://react-hook-form.com/get-started y https://zod.dev/.
+**¿Por qué es importante?** Porque los formularios son una frontera de datos y experiencia.
+**Evidencia de aprendizaje:** entrega formulario, fallo, corrección y prueba de accesibilidad.
 **Conceptos clave:** registro no controlado por debajo, rendimiento en formularios grandes.
 
 Manejar cada campo de un formulario con su propio `useState` individual (el enfoque controlado estudiado en el Módulo 1) funciona perfectamente bien para formularios pequeños, pero en formularios con muchos campos, cada tecla presionada en cualquier campo dispara un re-render de todo el componente formulario completo (dado que el estado vive en ese componente padre), un costo que se vuelve mensurable cuando el formulario tiene decenas de campos, cada uno re-renderizándose innecesariamente cada vez que cualquier otro campo cambia, no solo el que efectivamente recibió la tecla.
@@ -30,6 +61,37 @@ const { register, handleSubmit, formState: { errors } } = useForm();
 
 ### Tema 2: Validación con zod y formularios multi-paso
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás construir un formulario React desde cero. Prerrequisitos: Node.js LTS, npm y editor. Verifica npm --version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real, una persona registra un paquete y necesita validación inmediata, accesibilidad y pasos que conserven datos.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+React Hook Form reduce renders usando referencias; zod valida datos con un esquema; eventos sintéticos normalizan interacción. La analogía es una ventanilla: recibe campos, valida el formulario completo y comunica errores en el mismo idioma.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-react-m3
+cd ejemplo-react-m3
+npm create vite@latest app -- --template react-ts
+cd app
+npm install react-hook-form zod @hookform/resolvers
+npm run dev
+```
+Crea src/components/DeliveryForm.tsx con campos controlados, zod y mensajes asociados a labels.
+
+#### Paso 5 · Práctica guiada
+Pista: envía deliberadamente un dato inválido para provocar un fallo deliberado de validación; observa el mensaje y corrígelo. Resultado esperado: no se envía hasta cumplir el esquema.
+
+#### Paso 6 · Práctica independiente
+Añade un segundo paso, persistencia temporal, estado pending y pruebas de teclado; mide renders antes/después.
+
+#### Paso 7 · Cierre y evidencia
+Guarda esquema, captura y medición; como siguiente paso estudia routing. Errores comunes: validar solo al final, mensajes sin aria-describedby, mezclar schema y UI y perder datos al cambiar paso. Fuentes oficiales: https://react-hook-form.com/get-started y https://zod.dev/.
+**¿Por qué es importante?** Porque los formularios son una frontera de datos y experiencia.
+**Evidencia de aprendizaje:** entrega formulario, fallo, corrección y prueba de accesibilidad.
 **Conceptos clave:** schema declarativo, `zodResolver`, estado compartido entre pasos.
 
 Un schema de zod (`z.object({ email: z.string().email(), edad: z.number().min(18) })`) describe declarativamente qué forma y qué restricciones debe cumplir un objeto de datos válido, de forma similar en espíritu a los validadores declarativos de Reactive Forms estudiados en el Módulo 5 del track de Angular, pero expresado como un schema TypeScript-first reutilizable también para validar datos en otros contextos (por ejemplo, validar la misma forma de datos en el backend, Módulo 8 del track de Node.js, compartiendo literalmente el mismo schema entre cliente y servidor). Conectar ese schema a React Hook Form mediante `useForm({ resolver: zodResolver(schema) })` delega toda la lógica de validación a zod, poblando automáticamente `errors` con los mensajes correspondientes cuando el schema rechaza algún valor.
@@ -56,6 +118,37 @@ function siguientePaso(datosDelPaso) {
 
 ### Tema 3: Eventos sintéticos
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás construir un formulario React desde cero. Prerrequisitos: Node.js LTS, npm y editor. Verifica npm --version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real, una persona registra un paquete y necesita validación inmediata, accesibilidad y pasos que conserven datos.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+React Hook Form reduce renders usando referencias; zod valida datos con un esquema; eventos sintéticos normalizan interacción. La analogía es una ventanilla: recibe campos, valida el formulario completo y comunica errores en el mismo idioma.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-react-m3
+cd ejemplo-react-m3
+npm create vite@latest app -- --template react-ts
+cd app
+npm install react-hook-form zod @hookform/resolvers
+npm run dev
+```
+Crea src/components/DeliveryForm.tsx con campos controlados, zod y mensajes asociados a labels.
+
+#### Paso 5 · Práctica guiada
+Pista: envía deliberadamente un dato inválido para provocar un fallo deliberado de validación; observa el mensaje y corrígelo. Resultado esperado: no se envía hasta cumplir el esquema.
+
+#### Paso 6 · Práctica independiente
+Añade un segundo paso, persistencia temporal, estado pending y pruebas de teclado; mide renders antes/después.
+
+#### Paso 7 · Cierre y evidencia
+Guarda esquema, captura y medición; como siguiente paso estudia routing. Errores comunes: validar solo al final, mensajes sin aria-describedby, mezclar schema y UI y perder datos al cambiar paso. Fuentes oficiales: https://react-hook-form.com/get-started y https://zod.dev/.
+**¿Por qué es importante?** Porque los formularios son una frontera de datos y experiencia.
+**Evidencia de aprendizaje:** entrega formulario, fallo, corrección y prueba de accesibilidad.
 **Conceptos clave:** `SyntheticEvent`, API consistente entre navegadores, `preventDefault`.
 
 React envuelve los eventos nativos del DOM (que históricamente tenían implementaciones e interfaces ligeramente distintas entre distintos motores de navegador) en un objeto `SyntheticEvent` con una API consistente y unificada independientemente del navegador donde la aplicación se ejecute, siendo esta la razón por la que `e.preventDefault()` (para evitar el comportamiento por defecto del navegador, como recargar la página al enviar un formulario, Módulo 3 del track de JavaScript sobre el bucle de eventos y el DOM) y `e.target.value` (para leer el valor actual de un input) funcionan de forma idéntica en el código de React sin importar el motor de renderizado subyacente del navegador del usuario.

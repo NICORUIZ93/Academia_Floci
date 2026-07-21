@@ -5,6 +5,36 @@
 
 ### Tema 1: Bootstrap sin NgModules
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás organizar una aplicación Angular desde cero. Prerrequisitos: Node.js LTS, npm y Angular CLI. Verifica ng version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real, una app de entregas crece por funcionalidades; la estructura debe indicar dónde viven rutas, componentes, servicios y pruebas.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+Bootstrap standalone configura providers y componente raíz; organizar por feature mantiene cerca lo que cambia junto; migrar desde NgModules requiere entender dependencias, no copiar archivos. La analogía es una biblioteca: clasificar por tema facilita encontrar, prestar y retirar una pieza.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-angular-m8
+cd ejemplo-angular-m8
+npx -p @angular/cli ng new app --standalone --routing=true --style=css --skip-git
+cd app
+ng serve
+```
+Crea src/app/features/deliveries con componente, ruta, servicio y spec; importa solo lo necesario y muestra la navegación.
+
+#### Paso 5 · Práctica guiada
+Pista: elimina deliberadamente un provider para provocar un fallo deliberado de bootstrap; lee el mensaje y corrígelo. Resultado esperado: aplicación inicia y carga la feature.
+
+#### Paso 6 · Práctica independiente
+Extrae una feature antigua de un NgModule a standalone, añade barrel solo si mejora imports y documenta el antes/después.
+
+#### Paso 7 · Cierre y evidencia
+Guarda árbol, build, captura y migración; como siguiente paso estudia rendimiento. Errores comunes: carpetas por tipo globales, barrels circulares, providers duplicados y migrar sin pruebas. Fuentes oficiales: https://angular.dev/guide/standalone-components y https://angular.dev/reference/configs/application-structure.
+**¿Por qué es importante?** Porque una estructura explícita reduce el coste de aprender y mantener la aplicación.
+**Evidencia de aprendizaje:** entrega árbol de feature, ruta, prueba y diagnóstico.
 **Conceptos clave:** `bootstrapApplication`, ausencia de `AppModule`, `ApplicationConfig`.
 
 Antes de que existieran los standalone components (Módulo 0), toda aplicación Angular requería un `AppModule` raíz decorado con `@NgModule({ declarations: [...], imports: [...], bootstrap: [AppComponent] })`, que actuaba como el punto de entrada obligatorio de la aplicación, declarando explícitamente qué componentes pertenecían a ese módulo y qué otros módulos importaba. Con `bootstrapApplication(App, appConfig)` en `main.ts`, ese `AppModule` raíz desaparece por completo: el componente raíz se arranca directamente, y su configuración global (proveedores de routing, HTTP, animaciones, etc.) se declara en un objeto `ApplicationConfig` plano (típicamente en `app.config.ts`), sin ninguna clase de módulo de por medio.
@@ -32,6 +62,36 @@ export const appConfig: ApplicationConfig = {
 
 ### Tema 2: Organización por feature
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás organizar una aplicación Angular desde cero. Prerrequisitos: Node.js LTS, npm y Angular CLI. Verifica ng version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real, una app de entregas crece por funcionalidades; la estructura debe indicar dónde viven rutas, componentes, servicios y pruebas.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+Bootstrap standalone configura providers y componente raíz; organizar por feature mantiene cerca lo que cambia junto; migrar desde NgModules requiere entender dependencias, no copiar archivos. La analogía es una biblioteca: clasificar por tema facilita encontrar, prestar y retirar una pieza.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-angular-m8
+cd ejemplo-angular-m8
+npx -p @angular/cli ng new app --standalone --routing=true --style=css --skip-git
+cd app
+ng serve
+```
+Crea src/app/features/deliveries con componente, ruta, servicio y spec; importa solo lo necesario y muestra la navegación.
+
+#### Paso 5 · Práctica guiada
+Pista: elimina deliberadamente un provider para provocar un fallo deliberado de bootstrap; lee el mensaje y corrígelo. Resultado esperado: aplicación inicia y carga la feature.
+
+#### Paso 6 · Práctica independiente
+Extrae una feature antigua de un NgModule a standalone, añade barrel solo si mejora imports y documenta el antes/después.
+
+#### Paso 7 · Cierre y evidencia
+Guarda árbol, build, captura y migración; como siguiente paso estudia rendimiento. Errores comunes: carpetas por tipo globales, barrels circulares, providers duplicados y migrar sin pruebas. Fuentes oficiales: https://angular.dev/guide/standalone-components y https://angular.dev/reference/configs/application-structure.
+**¿Por qué es importante?** Porque una estructura explícita reduce el coste de aprender y mantener la aplicación.
+**Evidencia de aprendizaje:** entrega árbol de feature, ruta, prueba y diagnóstico.
 **Conceptos clave:** cohesión, agrupación por funcionalidad frente a agrupación por tipo.
 
 Un enfoque común pero problemático a gran escala organiza el código por tipo de archivo (`components/`, `services/`, `pipes/`, `guards/`), lo cual dispersa todo lo relacionado con una única funcionalidad concreta (por ejemplo, "tareas") a través de múltiples carpetas distantes entre sí, obligando a saltar entre `components/tarea-lista/`, `services/tareas.service.ts` y `guards/tarea.guard.ts` para entender o modificar completamente esa funcionalidad, incluso cuando esos archivos casi siempre cambian juntos.
@@ -57,6 +117,36 @@ src/app/
 
 ### Tema 3: Migración desde NgModules
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás organizar una aplicación Angular desde cero. Prerrequisitos: Node.js LTS, npm y Angular CLI. Verifica ng version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real, una app de entregas crece por funcionalidades; la estructura debe indicar dónde viven rutas, componentes, servicios y pruebas.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+Bootstrap standalone configura providers y componente raíz; organizar por feature mantiene cerca lo que cambia junto; migrar desde NgModules requiere entender dependencias, no copiar archivos. La analogía es una biblioteca: clasificar por tema facilita encontrar, prestar y retirar una pieza.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-angular-m8
+cd ejemplo-angular-m8
+npx -p @angular/cli ng new app --standalone --routing=true --style=css --skip-git
+cd app
+ng serve
+```
+Crea src/app/features/deliveries con componente, ruta, servicio y spec; importa solo lo necesario y muestra la navegación.
+
+#### Paso 5 · Práctica guiada
+Pista: elimina deliberadamente un provider para provocar un fallo deliberado de bootstrap; lee el mensaje y corrígelo. Resultado esperado: aplicación inicia y carga la feature.
+
+#### Paso 6 · Práctica independiente
+Extrae una feature antigua de un NgModule a standalone, añade barrel solo si mejora imports y documenta el antes/después.
+
+#### Paso 7 · Cierre y evidencia
+Guarda árbol, build, captura y migración; como siguiente paso estudia rendimiento. Errores comunes: carpetas por tipo globales, barrels circulares, providers duplicados y migrar sin pruebas. Fuentes oficiales: https://angular.dev/guide/standalone-components y https://angular.dev/reference/configs/application-structure.
+**¿Por qué es importante?** Porque una estructura explícita reduce el coste de aprender y mantener la aplicación.
+**Evidencia de aprendizaje:** entrega árbol de feature, ruta, prueba y diagnóstico.
 **Conceptos clave:** conversión gradual, `ng generate @angular/core:standalone`, compatibilidad durante la transición.
 
 Migrar un proyecto existente basado en NgModules hacia standalone components es un proceso incremental, no un "big bang" que deba completarse de una sola vez: el primer paso consiste en convertir cada componente declarado en un `NgModule` a `standalone: true`, moviendo sus dependencias desde el arreglo `imports` del módulo contenedor hacia el propio decorador `@Component` de cada componente individual, un cambio que puede hacerse componente por componente mientras el resto de la aplicación sigue usando NgModules normalmente (Angular soporta la coexistencia de componentes standalone y basados en módulos durante la transición).

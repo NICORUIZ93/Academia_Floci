@@ -5,6 +5,37 @@
 
 ### Tema 1: useEffect — dependencias y limpieza
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás manejar efectos React desde cero. Prerrequisitos: Node.js LTS, npm y editor. Verifica npm --version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real, una pantalla consulta entregas, escucha cambios y limpia recursos al desmontarse sin repetir solicitudes infinitas.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+useEffect sincroniza con sistemas externos y su cleanup libera recursos; useRef guarda un valor mutable sin render; useMemo y useCallback optimizan solo con evidencia; useReducer modela transiciones. La analogía es una suscripción: se abre, se usa y se cancela con el mismo identificador.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-react-m2
+cd ejemplo-react-m2
+npm create vite@latest app -- --template react-ts
+cd app
+npm install
+npm run dev
+```
+Crea src/components/DeliveryEffect.tsx con un effect que usa AbortController y cleanup; documenta dependencias y cleanup.
+
+#### Paso 5 · Práctica guiada
+Pista: elimina deliberadamente la limpieza para provocar un fallo deliberado de solicitudes o listeners duplicados; observa el diagnóstico y corrígelo. Resultado esperado: un recurso activo por componente.
+
+#### Paso 6 · Práctica independiente
+Añade useReducer para estados loading/success/error, memoización medida y una prueba que desmonte el componente.
+
+#### Paso 7 · Cierre y evidencia
+Guarda código, logs y medición; como siguiente paso estudia contexto. Errores comunes: effect para datos derivados, array de dependencias incompleto, memoizar todo y leer ref esperando render. Fuentes oficiales: https://react.dev/reference/react/useEffect y https://react.dev/learn/reusing-logic-with-custom-hooks.
+**¿Por qué es importante?** Porque los efectos son la frontera donde React toca red, DOM y recursos externos.
+**Evidencia de aprendizaje:** entrega effect, cleanup, fallo, reducer y medición.
 **Conceptos clave:** sincronización con sistemas externos, array de dependencias, función de limpieza.
 
 `useEffect` es el mecanismo de React para sincronizar un componente con un sistema externo al propio modelo de React: suscribirse a un evento del navegador (`window.addEventListener('resize', handler)`), establecer una conexión (un WebSocket, un temporizador), o cualquier operación que necesite ejecutarse como reacción a que el componente se montó o a que cierto valor cambió, en vez de como parte directa del cálculo de qué renderizar (que pertenece al cuerpo de la función componente en sí, no a un efecto).
@@ -29,6 +60,37 @@ useEffect(() => {
 
 ### Tema 2: useRef — valores mutables sin re-render
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás manejar efectos React desde cero. Prerrequisitos: Node.js LTS, npm y editor. Verifica npm --version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real, una pantalla consulta entregas, escucha cambios y limpia recursos al desmontarse sin repetir solicitudes infinitas.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+useEffect sincroniza con sistemas externos y su cleanup libera recursos; useRef guarda un valor mutable sin render; useMemo y useCallback optimizan solo con evidencia; useReducer modela transiciones. La analogía es una suscripción: se abre, se usa y se cancela con el mismo identificador.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-react-m2
+cd ejemplo-react-m2
+npm create vite@latest app -- --template react-ts
+cd app
+npm install
+npm run dev
+```
+Crea src/components/DeliveryEffect.tsx con un effect que usa AbortController y cleanup; documenta dependencias y cleanup.
+
+#### Paso 5 · Práctica guiada
+Pista: elimina deliberadamente la limpieza para provocar un fallo deliberado de solicitudes o listeners duplicados; observa el diagnóstico y corrígelo. Resultado esperado: un recurso activo por componente.
+
+#### Paso 6 · Práctica independiente
+Añade useReducer para estados loading/success/error, memoización medida y una prueba que desmonte el componente.
+
+#### Paso 7 · Cierre y evidencia
+Guarda código, logs y medición; como siguiente paso estudia contexto. Errores comunes: effect para datos derivados, array de dependencias incompleto, memoizar todo y leer ref esperando render. Fuentes oficiales: https://react.dev/reference/react/useEffect y https://react.dev/learn/reusing-logic-with-custom-hooks.
+**¿Por qué es importante?** Porque los efectos son la frontera donde React toca red, DOM y recursos externos.
+**Evidencia de aprendizaje:** entrega effect, cleanup, fallo, reducer y medición.
 **Conceptos clave:** persistencia entre renders sin disparar actualización, acceso a nodos del DOM.
 
 `useRef` crea un objeto mutable (`{ current: valorInicial }`) que persiste con la misma identidad a través de renders sucesivos del componente, con una diferencia crucial respecto a `useState`: modificar `.current` (`renderCount.current++`) no dispara un nuevo render del componente, a diferencia de llamar a un setter de `useState`, que sí lo hace siempre. Esto hace a `useRef` apropiado específicamente para valores que el componente necesita recordar entre renders pero que no deben influir en lo que se renderiza visualmente (un contador interno de cuántas veces se renderizó el componente con fines de depuración, el valor anterior de una prop para compararlo con el actual, o un identificador de un temporizador activo que debe poder cancelarse después).
@@ -48,6 +110,37 @@ renderCount.current++; // no causa re-render, a diferencia de useState
 
 ### Tema 3: useMemo y useCallback con criterio
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás manejar efectos React desde cero. Prerrequisitos: Node.js LTS, npm y editor. Verifica npm --version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real, una pantalla consulta entregas, escucha cambios y limpia recursos al desmontarse sin repetir solicitudes infinitas.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+useEffect sincroniza con sistemas externos y su cleanup libera recursos; useRef guarda un valor mutable sin render; useMemo y useCallback optimizan solo con evidencia; useReducer modela transiciones. La analogía es una suscripción: se abre, se usa y se cancela con el mismo identificador.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-react-m2
+cd ejemplo-react-m2
+npm create vite@latest app -- --template react-ts
+cd app
+npm install
+npm run dev
+```
+Crea src/components/DeliveryEffect.tsx con un effect que usa AbortController y cleanup; documenta dependencias y cleanup.
+
+#### Paso 5 · Práctica guiada
+Pista: elimina deliberadamente la limpieza para provocar un fallo deliberado de solicitudes o listeners duplicados; observa el diagnóstico y corrígelo. Resultado esperado: un recurso activo por componente.
+
+#### Paso 6 · Práctica independiente
+Añade useReducer para estados loading/success/error, memoización medida y una prueba que desmonte el componente.
+
+#### Paso 7 · Cierre y evidencia
+Guarda código, logs y medición; como siguiente paso estudia contexto. Errores comunes: effect para datos derivados, array de dependencias incompleto, memoizar todo y leer ref esperando render. Fuentes oficiales: https://react.dev/reference/react/useEffect y https://react.dev/learn/reusing-logic-with-custom-hooks.
+**¿Por qué es importante?** Porque los efectos son la frontera donde React toca red, DOM y recursos externos.
+**Evidencia de aprendizaje:** entrega effect, cleanup, fallo, reducer y medición.
 **Conceptos clave:** memoización de valores frente a memoización de funciones, costo real frente a beneficio real.
 
 `useMemo(() => calculoCostoso(datos), [datos])` memoiza el resultado (el valor) de un cálculo, recalculándolo únicamente cuando alguna de las dependencias listadas cambia, en vez de recalcularlo en cada render del componente sin importar si sus entradas relevantes efectivamente cambiaron; `useCallback(() => hacer(id), [id])` es conceptualmente equivalente pero memoiza específicamente una función (una referencia estable a esa función) en vez de un valor arbitrario, siendo `useCallback(fn, deps)` sintácticamente equivalente a `useMemo(() => fn, deps)`.
@@ -69,6 +162,37 @@ const manejarClick = useCallback(() => hacer(id), [id]);          // memoiza una
 
 ### Tema 4: Reglas de los hooks, useReducer y useImperativeHandle
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás manejar efectos React desde cero. Prerrequisitos: Node.js LTS, npm y editor. Verifica npm --version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real, una pantalla consulta entregas, escucha cambios y limpia recursos al desmontarse sin repetir solicitudes infinitas.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+useEffect sincroniza con sistemas externos y su cleanup libera recursos; useRef guarda un valor mutable sin render; useMemo y useCallback optimizan solo con evidencia; useReducer modela transiciones. La analogía es una suscripción: se abre, se usa y se cancela con el mismo identificador.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-react-m2
+cd ejemplo-react-m2
+npm create vite@latest app -- --template react-ts
+cd app
+npm install
+npm run dev
+```
+Crea src/components/DeliveryEffect.tsx con un effect que usa AbortController y cleanup; documenta dependencias y cleanup.
+
+#### Paso 5 · Práctica guiada
+Pista: elimina deliberadamente la limpieza para provocar un fallo deliberado de solicitudes o listeners duplicados; observa el diagnóstico y corrígelo. Resultado esperado: un recurso activo por componente.
+
+#### Paso 6 · Práctica independiente
+Añade useReducer para estados loading/success/error, memoización medida y una prueba que desmonte el componente.
+
+#### Paso 7 · Cierre y evidencia
+Guarda código, logs y medición; como siguiente paso estudia contexto. Errores comunes: effect para datos derivados, array de dependencias incompleto, memoizar todo y leer ref esperando render. Fuentes oficiales: https://react.dev/reference/react/useEffect y https://react.dev/learn/reusing-logic-with-custom-hooks.
+**¿Por qué es importante?** Porque los efectos son la frontera donde React toca red, DOM y recursos externos.
+**Evidencia de aprendizaje:** entrega effect, cleanup, fallo, reducer y medición.
 **Conceptos clave:** orden consistente de llamadas, reducers para estado complejo, exponer una API imperativa controlada.
 
 Las reglas de los hooks establecen que los hooks deben llamarse siempre en el mismo orden, en el nivel superior de la función componente, nunca dentro de un `if`, un bucle, o una función anidada condicional: React asocia internamente cada hook con su estado correspondiente basándose estrictamente en el orden en que fueron llamados durante el render (no en un nombre o identificador explícito), por lo que llamar un hook condicionalmente (a veces sí, a veces no, según una rama de código) rompería esa asociación posicional, causando que React confunda el estado de un hook con el de otro en renders sucesivos, un error que React detecta y reporta explícitamente en desarrollo cuando ocurre.

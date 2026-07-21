@@ -5,6 +5,36 @@
 
 ### Tema 1: StatelessWidget vs StatefulWidget
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás construir widgets Flutter desde cero. Prerrequisitos: Flutter SDK y emulador. Verifica flutter --version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real, una app de entregas necesita pantallas adaptables, estado local claro y listas que mantengan identidad al actualizarse.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+StatelessWidget describe una vista pura; StatefulWidget mantiene estado y lifecycle; Row, Column y Stack organizan espacio; Keys preservan identidad. La analogía es un escenario: algunas piezas son decorado, otras cambian de posición y necesitan etiqueta única.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-flutter-m1
+cd ejemplo-flutter-m1
+flutter create app
+cd app
+flutter run
+```
+Crea lib/delivery_card.dart con widget stateless y stateful, una lista y keys estables; úsalo en main.dart y observa el emulador.
+
+#### Paso 5 · Práctica guiada
+Pista: usa deliberadamente keys por índice para provocar un fallo deliberado de identidad al reordenar; observa el estado incorrecto y corrígelo. Resultado esperado: cada fila conserva su estado.
+
+#### Paso 6 · Práctica independiente
+Añade layout responsive, estado loading/error, animación simple y prueba de widget.
+
+#### Paso 7 · Cierre y evidencia
+Guarda captura, árbol y test; como siguiente paso estudia navegación. Errores comunes: Column sin límites, keys aleatorias, estado en widget equivocado y lifecycle sin dispose. Fuentes oficiales: https://docs.flutter.dev/ui/widgets y https://api.flutter.dev/flutter/widgets/Widget-class.html.
+**¿Por qué es importante?** Porque comprender composición y estado evita interfaces frágiles.
+**Evidencia de aprendizaje:** entrega widgets, keys, fallo, corrección y prueba.
 **Conceptos clave:** widget sin estado propio frente a widget con estado mutable y ciclo de vida.
 
 ```dart
@@ -49,6 +79,36 @@ class _ContadorState extends State<Contador> {
 
 ### Tema 2: Layout con Row, Column y Stack, y ciclo de vida
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás construir widgets Flutter desde cero. Prerrequisitos: Flutter SDK y emulador. Verifica flutter --version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real, una app de entregas necesita pantallas adaptables, estado local claro y listas que mantengan identidad al actualizarse.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+StatelessWidget describe una vista pura; StatefulWidget mantiene estado y lifecycle; Row, Column y Stack organizan espacio; Keys preservan identidad. La analogía es un escenario: algunas piezas son decorado, otras cambian de posición y necesitan etiqueta única.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-flutter-m1
+cd ejemplo-flutter-m1
+flutter create app
+cd app
+flutter run
+```
+Crea lib/delivery_card.dart con widget stateless y stateful, una lista y keys estables; úsalo en main.dart y observa el emulador.
+
+#### Paso 5 · Práctica guiada
+Pista: usa deliberadamente keys por índice para provocar un fallo deliberado de identidad al reordenar; observa el estado incorrecto y corrígelo. Resultado esperado: cada fila conserva su estado.
+
+#### Paso 6 · Práctica independiente
+Añade layout responsive, estado loading/error, animación simple y prueba de widget.
+
+#### Paso 7 · Cierre y evidencia
+Guarda captura, árbol y test; como siguiente paso estudia navegación. Errores comunes: Column sin límites, keys aleatorias, estado en widget equivocado y lifecycle sin dispose. Fuentes oficiales: https://docs.flutter.dev/ui/widgets y https://api.flutter.dev/flutter/widgets/Widget-class.html.
+**¿Por qué es importante?** Porque comprender composición y estado evita interfaces frágiles.
+**Evidencia de aprendizaje:** entrega widgets, keys, fallo, corrección y prueba.
 **Conceptos clave:** contenedores de layout combinables, hooks del ciclo de vida de un StatefulWidget.
 
 ```dart
@@ -77,6 +137,36 @@ Column(children: [
 
 ### Tema 3: Keys
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás construir widgets Flutter desde cero. Prerrequisitos: Flutter SDK y emulador. Verifica flutter --version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real, una app de entregas necesita pantallas adaptables, estado local claro y listas que mantengan identidad al actualizarse.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+StatelessWidget describe una vista pura; StatefulWidget mantiene estado y lifecycle; Row, Column y Stack organizan espacio; Keys preservan identidad. La analogía es un escenario: algunas piezas son decorado, otras cambian de posición y necesitan etiqueta única.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-flutter-m1
+cd ejemplo-flutter-m1
+flutter create app
+cd app
+flutter run
+```
+Crea lib/delivery_card.dart con widget stateless y stateful, una lista y keys estables; úsalo en main.dart y observa el emulador.
+
+#### Paso 5 · Práctica guiada
+Pista: usa deliberadamente keys por índice para provocar un fallo deliberado de identidad al reordenar; observa el estado incorrecto y corrígelo. Resultado esperado: cada fila conserva su estado.
+
+#### Paso 6 · Práctica independiente
+Añade layout responsive, estado loading/error, animación simple y prueba de widget.
+
+#### Paso 7 · Cierre y evidencia
+Guarda captura, árbol y test; como siguiente paso estudia navegación. Errores comunes: Column sin límites, keys aleatorias, estado en widget equivocado y lifecycle sin dispose. Fuentes oficiales: https://docs.flutter.dev/ui/widgets y https://api.flutter.dev/flutter/widgets/Widget-class.html.
+**¿Por qué es importante?** Porque comprender composición y estado evita interfaces frágiles.
+**Evidencia de aprendizaje:** entrega widgets, keys, fallo, corrección y prueba.
 **Conceptos clave:** identidad estable de un widget a través de reconstrucciones, especialmente al reordenar.
 
 ```dart

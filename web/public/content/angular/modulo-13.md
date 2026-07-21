@@ -5,6 +5,36 @@
 
 ### Tema 1: Estructura del proyecto integrador
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás ensamblar una app Angular completa desde cero. Prerrequisitos: Node.js LTS, npm y Angular CLI. Verifica ng version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real, una app de entregas necesita navegación, estado, formularios y backend sin que el estudiante adivine la ubicación de cada archivo.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+El proyecto integrador conecta componentes, rutas, store, validación y HTTP mediante contratos. La analogía es una central: cada área recibe una responsabilidad, un evento y una evidencia de salida.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-angular-m13
+cd ejemplo-angular-m13
+npx -p @angular/cli ng new app --standalone --routing=true --style=css --skip-git
+cd app
+ng serve
+```
+Crea src/app/features/deliveries con ruta, store, formulario y servicio; implementa primero el camino feliz y prueba en el navegador.
+
+#### Paso 5 · Práctica guiada
+Pista: rompe deliberadamente el contrato del formulario para provocar un fallo deliberado de validación o HTTP; lee el error, corrígelo y registra el resultado. Resultado esperado: flujo completo estable.
+
+#### Paso 6 · Práctica independiente
+Añade loading/empty/error, guard, test de componente, prueba HTTP y README con estructura, decisiones y comandos exactos.
+
+#### Paso 7 · Cierre y evidencia
+Guarda captura, árbol, tests y logs; como siguiente paso publica un build de producción. Errores comunes: lógica en plantilla, store sin límites, error invisible y carpetas ambiguas. Fuentes oficiales: https://angular.dev/overview y https://angular.dev/guide/http.
+**¿Por qué es importante?** Porque integrar capas demuestra que el estudiante puede construir y mantener una aplicación real.
+**Evidencia de aprendizaje:** entrega aplicación funcionando, pruebas, fallo diagnosticado y guía reproducible.
 **Conceptos clave:** organización por feature, separación entre `tareas/` y `auth/`.
 
 Siguiendo el principio de organización por feature estudiado en el Módulo 8, el proyecto integrador se estructura en dos features principales claramente separadas: `tareas/`, que agrupa todo lo relacionado con la gestión de tareas (`tarea-lista.ts` para listar, `tarea-detalle.ts` para ver/editar una tarea individual, `tareas.store.ts` como store centralizado de estado, y `tareas.routes.ts` con las rutas específicas de esta feature), y `auth/`, que agrupa todo lo relacionado con autenticación (`auth.guard.ts` como guard funcional de protección de rutas, `auth.interceptor.ts` como interceptor de autenticación HTTP, y `auth.service.ts` como servicio de estado de sesión).
@@ -36,6 +66,36 @@ src/app/
 
 ### Tema 2: Integrando routing, store y formularios
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás ensamblar una app Angular completa desde cero. Prerrequisitos: Node.js LTS, npm y Angular CLI. Verifica ng version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real, una app de entregas necesita navegación, estado, formularios y backend sin que el estudiante adivine la ubicación de cada archivo.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+El proyecto integrador conecta componentes, rutas, store, validación y HTTP mediante contratos. La analogía es una central: cada área recibe una responsabilidad, un evento y una evidencia de salida.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-angular-m13
+cd ejemplo-angular-m13
+npx -p @angular/cli ng new app --standalone --routing=true --style=css --skip-git
+cd app
+ng serve
+```
+Crea src/app/features/deliveries con ruta, store, formulario y servicio; implementa primero el camino feliz y prueba en el navegador.
+
+#### Paso 5 · Práctica guiada
+Pista: rompe deliberadamente el contrato del formulario para provocar un fallo deliberado de validación o HTTP; lee el error, corrígelo y registra el resultado. Resultado esperado: flujo completo estable.
+
+#### Paso 6 · Práctica independiente
+Añade loading/empty/error, guard, test de componente, prueba HTTP y README con estructura, decisiones y comandos exactos.
+
+#### Paso 7 · Cierre y evidencia
+Guarda captura, árbol, tests y logs; como siguiente paso publica un build de producción. Errores comunes: lógica en plantilla, store sin límites, error invisible y carpetas ambiguas. Fuentes oficiales: https://angular.dev/overview y https://angular.dev/guide/http.
+**¿Por qué es importante?** Porque integrar capas demuestra que el estudiante puede construir y mantener una aplicación real.
+**Evidencia de aprendizaje:** entrega aplicación funcionando, pruebas, fallo diagnosticado y guía reproducible.
 **Conceptos clave:** guard funcional, ruta perezosa, store con HttpClient, formulario reactivo.
 
 El routing del proyecto integrador combina un guard funcional (`CanActivateFn`, Módulo 4) que consulta `AuthService` para verificar si existe una sesión activa antes de permitir el acceso a las rutas de `tareas/`, junto con carga perezosa mediante `loadComponent` (Módulo 4) para que el código de la feature de tareas solo se descargue cuando el usuario efectivamente navega hacia ella, reduciendo el bundle inicial de la aplicación para usuarios que todavía no han iniciado sesión y por tanto no necesitan ese código todavía.
@@ -58,6 +118,36 @@ formulario reactivo → store.metodoPublico(...) → estado actualizado para amb
 
 ### Tema 3: TareasStore — combinando signals, computed y HttpClient
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás ensamblar una app Angular completa desde cero. Prerrequisitos: Node.js LTS, npm y Angular CLI. Verifica ng version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real, una app de entregas necesita navegación, estado, formularios y backend sin que el estudiante adivine la ubicación de cada archivo.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+El proyecto integrador conecta componentes, rutas, store, validación y HTTP mediante contratos. La analogía es una central: cada área recibe una responsabilidad, un evento y una evidencia de salida.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-angular-m13
+cd ejemplo-angular-m13
+npx -p @angular/cli ng new app --standalone --routing=true --style=css --skip-git
+cd app
+ng serve
+```
+Crea src/app/features/deliveries con ruta, store, formulario y servicio; implementa primero el camino feliz y prueba en el navegador.
+
+#### Paso 5 · Práctica guiada
+Pista: rompe deliberadamente el contrato del formulario para provocar un fallo deliberado de validación o HTTP; lee el error, corrígelo y registra el resultado. Resultado esperado: flujo completo estable.
+
+#### Paso 6 · Práctica independiente
+Añade loading/empty/error, guard, test de componente, prueba HTTP y README con estructura, decisiones y comandos exactos.
+
+#### Paso 7 · Cierre y evidencia
+Guarda captura, árbol, tests y logs; como siguiente paso publica un build de producción. Errores comunes: lógica en plantilla, store sin límites, error invisible y carpetas ambiguas. Fuentes oficiales: https://angular.dev/overview y https://angular.dev/guide/http.
+**¿Por qué es importante?** Porque integrar capas demuestra que el estudiante puede construir y mantener una aplicación real.
+**Evidencia de aprendizaje:** entrega aplicación funcionando, pruebas, fallo diagnosticado y guía reproducible.
 **Conceptos clave:** store inyectable que consume HttpClient, estado derivado con `computed`.
 
 `TareasStore`, registrado con `providedIn: 'root'` (Módulo 3), mantiene un signal privado `tareas` con el arreglo completo de tareas cargadas desde el backend, y expone `pendientes` como un `computed()` derivado que filtra automáticamente solo las tareas no completadas, recalculándose sin intervención manual cada vez que el signal `tareas` cambia (Módulo 2), de la misma forma que `total` se recalculaba automáticamente en `CarritoStore` (Módulo 9).

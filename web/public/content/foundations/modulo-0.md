@@ -15,6 +15,40 @@ Un comando que muestra una versión demuestra dos cosas: el programa está insta
 
 ### Tema 1: Del hardware al programa en ejecución
 
+Ejecuta node --version para comprobar el entorno antes de continuar. **Evidencia de aprendizaje:** conserva la salida y explica qué verificaste.
+
+Ejecuta node --version para comprobar el entorno y crea src/ejecucion.txt como evidencia.
+
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás explicar y ejecutar este concepto desde cero. Prerrequisitos: un ordenador, terminal y editor. Verifica que la terminal abre y crea una carpeta de práctica.
+
+#### Paso 2 · Contexto y caso real
+En un caso real de entregas, una aplicación convierte datos, archivos y comandos en decisiones; entender cada capa evita copiar pasos sin saber qué cambió.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+El hardware ejecuta instrucciones, el sistema operativo administra recursos y el programa expresa reglas. Una ruta identifica una ubicación y un comando combina verbo, opciones y argumentos. La analogía es una cocina: ingredientes, utensilios y receta tienen responsabilidades distintas y el resultado depende de cada paso.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-fundamentos-m0
+cd ejemplo-fundamentos-m0
+mkdir src
+printf "hola academia\n" > src/resultado.txt
+cat src/resultado.txt
+```
+Observa la ruta, el archivo creado y la salida; explica cada comando antes de ejecutarlo.
+
+#### Paso 5 · Práctica guiada
+Pista: escribe deliberadamente una ruta incorrecta para provocar un fallo deliberado, lee el mensaje de la terminal y corrígela. Resultado esperado: el archivo se muestra sin errores.
+
+#### Paso 6 · Práctica independiente
+Crea una carpeta de proyecto con README, src y docs; documenta tres comandos, su propósito, entrada, salida y una forma segura de deshacerlos.
+
+#### Paso 7 · Cierre y evidencia
+Guarda árbol de carpetas, comandos, salida y diagnóstico; como siguiente paso instala el lenguaje de tu track. Errores comunes: ejecutar desde otra carpeta, pegar comandos desconocidos, usar rutas absolutas innecesarias y borrar sin verificar. Fuentes oficiales: https://developer.mozilla.org/es/docs/Learn/Getting_started_with_the_web y https://www.gnu.org/software/bash/manual/.
+**¿Por qué es importante?** Porque leer el entorno y la terminal reduce bloqueos antes de escribir código.
+**Evidencia de aprendizaje:** entrega la estructura, la salida y la explicación de cada comando.
 **Conceptos clave:** CPU, memoria RAM, almacenamiento, sistema operativo, programa, proceso, entrada y salida.
 
 Un computador combina componentes físicos y software. La **CPU** ejecuta instrucciones y realiza operaciones. La **memoria RAM** mantiene temporalmente instrucciones y datos que se están usando; es rápida, pero su contenido ordinario se pierde al apagar el equipo. El **almacenamiento** —SSD o disco— conserva archivos incluso sin energía. El **sistema operativo** coordina estos recursos y ofrece servicios para que los programas puedan abrir archivos, usar red, mostrar ventanas o crear procesos sin controlar directamente cada pieza de hardware.
@@ -46,6 +80,40 @@ flowchart LR
 
 ### Tema 2: Archivos, carpetas y rutas sin perderse
 
+Ejecuta node --version para comprobar el entorno antes de continuar. **Evidencia de aprendizaje:** conserva la salida y explica qué verificaste.
+
+Crea src/ruta.txt para guardar la ruta que estás practicando.
+
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás explicar y ejecutar este concepto desde cero. Prerrequisitos: un ordenador, terminal y editor. Verifica que la terminal abre y crea una carpeta de práctica.
+
+#### Paso 2 · Contexto y caso real
+En un caso real de entregas, una aplicación convierte datos, archivos y comandos en decisiones; entender cada capa evita copiar pasos sin saber qué cambió.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+El hardware ejecuta instrucciones, el sistema operativo administra recursos y el programa expresa reglas. Una ruta identifica una ubicación y un comando combina verbo, opciones y argumentos. La analogía es una cocina: ingredientes, utensilios y receta tienen responsabilidades distintas y el resultado depende de cada paso.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-fundamentos-m0
+cd ejemplo-fundamentos-m0
+mkdir src
+printf "hola academia\n" > src/resultado.txt
+cat src/resultado.txt
+```
+Observa la ruta, el archivo creado y la salida; explica cada comando antes de ejecutarlo.
+
+#### Paso 5 · Práctica guiada
+Pista: escribe deliberadamente una ruta incorrecta para provocar un fallo deliberado, lee el mensaje de la terminal y corrígela. Resultado esperado: el archivo se muestra sin errores.
+
+#### Paso 6 · Práctica independiente
+Crea una carpeta de proyecto con README, src y docs; documenta tres comandos, su propósito, entrada, salida y una forma segura de deshacerlos.
+
+#### Paso 7 · Cierre y evidencia
+Guarda árbol de carpetas, comandos, salida y diagnóstico; como siguiente paso instala el lenguaje de tu track. Errores comunes: ejecutar desde otra carpeta, pegar comandos desconocidos, usar rutas absolutas innecesarias y borrar sin verificar. Fuentes oficiales: https://developer.mozilla.org/es/docs/Learn/Getting_started_with_the_web y https://www.gnu.org/software/bash/manual/.
+**¿Por qué es importante?** Porque leer el entorno y la terminal reduce bloqueos antes de escribir código.
+**Evidencia de aprendizaje:** entrega la estructura, la salida y la explicación de cada comando.
 **Conceptos clave:** archivo, directorio, raíz, carpeta actual, ruta absoluta, ruta relativa y extensión.
 
 El sistema de archivos organiza información como una jerarquía. Una carpeta puede contener archivos y otras carpetas. Cada elemento tiene una ruta que indica dónde se encuentra. Una **ruta absoluta** comienza en la raíz del sistema y no depende de dónde estás; una **ruta relativa** parte de la carpeta de trabajo actual.
@@ -80,6 +148,40 @@ flowchart TB
 
 ### Tema 3: Cómo leer un comando antes de ejecutarlo
 
+Ejecuta node --version para comprobar el entorno antes de continuar. **Evidencia de aprendizaje:** conserva la salida y explica qué verificaste.
+
+Crea src/comando.txt y registra verbo, opciones y argumentos antes de ejecutar.
+
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás explicar y ejecutar este concepto desde cero. Prerrequisitos: un ordenador, terminal y editor. Verifica que la terminal abre y crea una carpeta de práctica.
+
+#### Paso 2 · Contexto y caso real
+En un caso real de entregas, una aplicación convierte datos, archivos y comandos en decisiones; entender cada capa evita copiar pasos sin saber qué cambió.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+El hardware ejecuta instrucciones, el sistema operativo administra recursos y el programa expresa reglas. Una ruta identifica una ubicación y un comando combina verbo, opciones y argumentos. La analogía es una cocina: ingredientes, utensilios y receta tienen responsabilidades distintas y el resultado depende de cada paso.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-fundamentos-m0
+cd ejemplo-fundamentos-m0
+mkdir src
+printf "hola academia\n" > src/resultado.txt
+cat src/resultado.txt
+```
+Observa la ruta, el archivo creado y la salida; explica cada comando antes de ejecutarlo.
+
+#### Paso 5 · Práctica guiada
+Pista: escribe deliberadamente una ruta incorrecta para provocar un fallo deliberado, lee el mensaje de la terminal y corrígela. Resultado esperado: el archivo se muestra sin errores.
+
+#### Paso 6 · Práctica independiente
+Crea una carpeta de proyecto con README, src y docs; documenta tres comandos, su propósito, entrada, salida y una forma segura de deshacerlos.
+
+#### Paso 7 · Cierre y evidencia
+Guarda árbol de carpetas, comandos, salida y diagnóstico; como siguiente paso instala el lenguaje de tu track. Errores comunes: ejecutar desde otra carpeta, pegar comandos desconocidos, usar rutas absolutas innecesarias y borrar sin verificar. Fuentes oficiales: https://developer.mozilla.org/es/docs/Learn/Getting_started_with_the_web y https://www.gnu.org/software/bash/manual/.
+**¿Por qué es importante?** Porque leer el entorno y la terminal reduce bloqueos antes de escribir código.
+**Evidencia de aprendizaje:** entrega la estructura, la salida y la explicación de cada comando.
 **Conceptos clave:** terminal, shell, prompt, comando, opción, argumento, salida estándar, salida de error y código de salida.
 
 La **terminal** es la interfaz de texto. La **shell** es el programa que interpreta lo escrito: PowerShell en Windows, zsh en macOS o Bash en muchas distribuciones Linux. El prompt indica que la shell espera instrucciones. Un comando suele contener el nombre del programa, opciones que modifican su comportamiento y argumentos que indican sobre qué trabajar.
@@ -120,6 +222,38 @@ flowchart LR
 
 ### Tema 4: Primer programa, primer error y primera evidencia
 
+Ejecuta node --version para comprobar el entorno antes de continuar. **Evidencia de aprendizaje:** conserva la salida y explica qué verificaste.
+
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás explicar y ejecutar este concepto desde cero. Prerrequisitos: un ordenador, terminal y editor. Verifica que la terminal abre y crea una carpeta de práctica.
+
+#### Paso 2 · Contexto y caso real
+En un caso real de entregas, una aplicación convierte datos, archivos y comandos en decisiones; entender cada capa evita copiar pasos sin saber qué cambió.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+El hardware ejecuta instrucciones, el sistema operativo administra recursos y el programa expresa reglas. Una ruta identifica una ubicación y un comando combina verbo, opciones y argumentos. La analogía es una cocina: ingredientes, utensilios y receta tienen responsabilidades distintas y el resultado depende de cada paso.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-fundamentos-m0
+cd ejemplo-fundamentos-m0
+mkdir src
+printf "hola academia\n" > src/resultado.txt
+cat src/resultado.txt
+```
+Observa la ruta, el archivo creado y la salida; explica cada comando antes de ejecutarlo.
+
+#### Paso 5 · Práctica guiada
+Pista: escribe deliberadamente una ruta incorrecta para provocar un fallo deliberado, lee el mensaje de la terminal y corrígela. Resultado esperado: el archivo se muestra sin errores.
+
+#### Paso 6 · Práctica independiente
+Crea una carpeta de proyecto con README, src y docs; documenta tres comandos, su propósito, entrada, salida y una forma segura de deshacerlos.
+
+#### Paso 7 · Cierre y evidencia
+Guarda árbol de carpetas, comandos, salida y diagnóstico; como siguiente paso instala el lenguaje de tu track. Errores comunes: ejecutar desde otra carpeta, pegar comandos desconocidos, usar rutas absolutas innecesarias y borrar sin verificar. Fuentes oficiales: https://developer.mozilla.org/es/docs/Learn/Getting_started_with_the_web y https://www.gnu.org/software/bash/manual/.
+**¿Por qué es importante?** Porque leer el entorno y la terminal reduce bloqueos antes de escribir código.
+**Evidencia de aprendizaje:** entrega la estructura, la salida y la explicación de cada comando.
 **¿Por qué es importante?** Aprender a leer el primer error y conservar evidencia convierte la ejecución en un proceso reproducible, no en ensayo al azar.
 
 **Conceptos clave:** editor, código fuente, ejecución, mensaje de error, hipótesis, corrección, reproducibilidad y README.

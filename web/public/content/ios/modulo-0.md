@@ -23,6 +23,35 @@ Si Xcode indica que no encuentra un runtime, instálalo en Settings → Platform
 
 ### Tema 1: Optionals y unwrapping seguro
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás ejecutar este concepto Swift desde cero. Prerrequisitos: macOS, Xcode y Swift. Verifica swift --version y xcodebuild -version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real de entregas, ubicación, usuario y estado pueden faltar o cambiar; el código debe expresar ausencia sin crashes.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+Optional representa valor o ausencia; struct modela valor y class identidad compartida; protocolos expresan capacidades; enums modelan estados; closures y genéricos reutilizan comportamiento. La analogía es una etiqueta de paquete: puede faltar, tener identidad o cumplir una capacidad concreta, pero no se debe adivinar.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-ios-m0
+cd ejemplo-ios-m0
+swift package init --type executable
+swift run
+```
+Crea Sources/main.swift con un modelo Delivery, un enum de estado y una función que valide un Optional; explica compilación y salida.
+
+#### Paso 5 · Práctica guiada
+Pista: fuerza deliberadamente un unwrap de nil para provocar un fallo deliberado; lee el crash y corrígelo con guard let. Resultado esperado: mensaje controlado sin crash.
+
+#### Paso 6 · Práctica independiente
+Añade protocolo Trackable, colección de entregas, closure de filtrado y prueba con datos ausentes.
+
+#### Paso 7 · Cierre y evidencia
+Guarda árbol, comandos, salida y diagnóstico; como siguiente paso crea una app de UI. Errores comunes: force unwrap, class por defecto, enum sin estado imposible y closures que capturan fuerte. Fuentes oficiales: https://docs.swift.org/swift-book/documentation/the-swift-programming-language/ y https://developer.apple.com/documentation/swift.
+**¿Por qué es importante?** Porque el modelo de tipos de Swift previene errores frecuentes antes de llegar al usuario.
+**Evidencia de aprendizaje:** entrega código, fallo, corrección y salida de Swift Package.
 **Conceptos clave:** ausencia de valor modelada en el sistema de tipos, no como un valor especial oculto.
 
 ```swift
@@ -53,6 +82,35 @@ let saludo = nombre ?? "Invitado"
 
 ### Tema 2: struct vs class
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás ejecutar este concepto Swift desde cero. Prerrequisitos: macOS, Xcode y Swift. Verifica swift --version y xcodebuild -version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real de entregas, ubicación, usuario y estado pueden faltar o cambiar; el código debe expresar ausencia sin crashes.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+Optional representa valor o ausencia; struct modela valor y class identidad compartida; protocolos expresan capacidades; enums modelan estados; closures y genéricos reutilizan comportamiento. La analogía es una etiqueta de paquete: puede faltar, tener identidad o cumplir una capacidad concreta, pero no se debe adivinar.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-ios-m0
+cd ejemplo-ios-m0
+swift package init --type executable
+swift run
+```
+Crea Sources/main.swift con un modelo Delivery, un enum de estado y una función que valide un Optional; explica compilación y salida.
+
+#### Paso 5 · Práctica guiada
+Pista: fuerza deliberadamente un unwrap de nil para provocar un fallo deliberado; lee el crash y corrígelo con guard let. Resultado esperado: mensaje controlado sin crash.
+
+#### Paso 6 · Práctica independiente
+Añade protocolo Trackable, colección de entregas, closure de filtrado y prueba con datos ausentes.
+
+#### Paso 7 · Cierre y evidencia
+Guarda árbol, comandos, salida y diagnóstico; como siguiente paso crea una app de UI. Errores comunes: force unwrap, class por defecto, enum sin estado imposible y closures que capturan fuerte. Fuentes oficiales: https://docs.swift.org/swift-book/documentation/the-swift-programming-language/ y https://developer.apple.com/documentation/swift.
+**¿Por qué es importante?** Porque el modelo de tipos de Swift previene errores frecuentes antes de llegar al usuario.
+**Evidencia de aprendizaje:** entrega código, fallo, corrección y salida de Swift Package.
 **Conceptos clave:** copia independiente vs instancia compartida.
 
 ```swift
@@ -81,6 +139,35 @@ class Contador { var valor = 0 }            // reference type: instancia compart
 
 ### Tema 3: Protocolos y enums con valores asociados
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás ejecutar este concepto Swift desde cero. Prerrequisitos: macOS, Xcode y Swift. Verifica swift --version y xcodebuild -version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real de entregas, ubicación, usuario y estado pueden faltar o cambiar; el código debe expresar ausencia sin crashes.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+Optional representa valor o ausencia; struct modela valor y class identidad compartida; protocolos expresan capacidades; enums modelan estados; closures y genéricos reutilizan comportamiento. La analogía es una etiqueta de paquete: puede faltar, tener identidad o cumplir una capacidad concreta, pero no se debe adivinar.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-ios-m0
+cd ejemplo-ios-m0
+swift package init --type executable
+swift run
+```
+Crea Sources/main.swift con un modelo Delivery, un enum de estado y una función que valide un Optional; explica compilación y salida.
+
+#### Paso 5 · Práctica guiada
+Pista: fuerza deliberadamente un unwrap de nil para provocar un fallo deliberado; lee el crash y corrígelo con guard let. Resultado esperado: mensaje controlado sin crash.
+
+#### Paso 6 · Práctica independiente
+Añade protocolo Trackable, colección de entregas, closure de filtrado y prueba con datos ausentes.
+
+#### Paso 7 · Cierre y evidencia
+Guarda árbol, comandos, salida y diagnóstico; como siguiente paso crea una app de UI. Errores comunes: force unwrap, class por defecto, enum sin estado imposible y closures que capturan fuerte. Fuentes oficiales: https://docs.swift.org/swift-book/documentation/the-swift-programming-language/ y https://developer.apple.com/documentation/swift.
+**¿Por qué es importante?** Porque el modelo de tipos de Swift previene errores frecuentes antes de llegar al usuario.
+**Evidencia de aprendizaje:** entrega código, fallo, corrección y salida de Swift Package.
 **Conceptos clave:** contrato de comportamiento compartido entre tipos no relacionados; estado modelado como un conjunto cerrado de casos con datos propios.
 
 ```swift
@@ -125,6 +212,35 @@ enum Resultado {
 
 ### Tema 4: Closures, colecciones y genéricos con propósito
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás ejecutar este concepto Swift desde cero. Prerrequisitos: macOS, Xcode y Swift. Verifica swift --version y xcodebuild -version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real de entregas, ubicación, usuario y estado pueden faltar o cambiar; el código debe expresar ausencia sin crashes.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+Optional representa valor o ausencia; struct modela valor y class identidad compartida; protocolos expresan capacidades; enums modelan estados; closures y genéricos reutilizan comportamiento. La analogía es una etiqueta de paquete: puede faltar, tener identidad o cumplir una capacidad concreta, pero no se debe adivinar.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-ios-m0
+cd ejemplo-ios-m0
+swift package init --type executable
+swift run
+```
+Crea Sources/main.swift con un modelo Delivery, un enum de estado y una función que valide un Optional; explica compilación y salida.
+
+#### Paso 5 · Práctica guiada
+Pista: fuerza deliberadamente un unwrap de nil para provocar un fallo deliberado; lee el crash y corrígelo con guard let. Resultado esperado: mensaje controlado sin crash.
+
+#### Paso 6 · Práctica independiente
+Añade protocolo Trackable, colección de entregas, closure de filtrado y prueba con datos ausentes.
+
+#### Paso 7 · Cierre y evidencia
+Guarda árbol, comandos, salida y diagnóstico; como siguiente paso crea una app de UI. Errores comunes: force unwrap, class por defecto, enum sin estado imposible y closures que capturan fuerte. Fuentes oficiales: https://docs.swift.org/swift-book/documentation/the-swift-programming-language/ y https://developer.apple.com/documentation/swift.
+**¿Por qué es importante?** Porque el modelo de tipos de Swift previene errores frecuentes antes de llegar al usuario.
+**Evidencia de aprendizaje:** entrega código, fallo, corrección y salida de Swift Package.
 **Conceptos clave:** función como valor, closure de escape, lista de captura, `map`, `filter`, `compactMap`, `reduce`, parámetro genérico y cláusula `where`.
 
 Construiremos una preparación de ruta para RutaFlow. Una closure es una función que puede almacenarse, pasarse y ejecutarse después. SwiftUI, `URLSession`, Combine y UIKit dependen de ellas; por eso debes comprender parámetros, retorno, captura y duración antes de usar sintaxis abreviada como `$0` en todas partes.

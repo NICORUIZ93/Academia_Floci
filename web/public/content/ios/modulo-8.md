@@ -5,6 +5,35 @@
 
 ### Tema 1: De una vista "gorda" a MVVM
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás separar responsabilidades SwiftUI desde cero. Prerrequisitos: macOS, Xcode y Swift. Verifica swift --version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real, una app de entregas necesita presentar estado, coordinar red y probar reglas sin que una vista conozca todos los detalles.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+MVVM separa vista, estado y lógica de presentación; capas y protocolos permiten sustituir adaptadores; cuando el dominio crece, evalúa límites adicionales. La analogía es una central: mostrador, coordinador y proveedor tienen responsabilidades distintas.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-ios-m8
+cd ejemplo-ios-m8
+swift package init --type executable
+swift run
+```
+Crea Sources/main.swift con DeliveryViewModel, un DeliveryRepository protocol y un mock; conecta la vista SwiftUI mediante inicializador.
+
+#### Paso 5 · Práctica guiada
+Pista: inyecta deliberadamente un repositorio que lanza error para provocar un fallo deliberado de carga; diagnostica y muestra estado error. Resultado esperado: vista recuperable y testable.
+
+#### Paso 6 · Práctica independiente
+Añade caso de uso, dependencia real/fake, navegación y una prueba de ViewModel sin red.
+
+#### Paso 7 · Cierre y evidencia
+Guarda árbol, código, prueba y captura; como siguiente paso estudia modularización. Errores comunes: ViewModel gigante, singleton global, protocolo sin propósito y lógica en View. Fuentes oficiales: https://developer.apple.com/tutorials/swiftui y https://developer.apple.com/documentation/swift.
+**¿Por qué es importante?** Porque separar responsabilidades hace que el código sea comprensible y comprobable.
+**Evidencia de aprendizaje:** entrega capas, mock, fallo y prueba.
 **Conceptos clave:** la vista solo describe la UI, el ViewModel orquesta la lógica.
 
 ```swift
@@ -56,6 +85,35 @@ struct TareasView: View {
 
 ### Tema 2: Capas del proyecto e inyección por inicializador
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás separar responsabilidades SwiftUI desde cero. Prerrequisitos: macOS, Xcode y Swift. Verifica swift --version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real, una app de entregas necesita presentar estado, coordinar red y probar reglas sin que una vista conozca todos los detalles.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+MVVM separa vista, estado y lógica de presentación; capas y protocolos permiten sustituir adaptadores; cuando el dominio crece, evalúa límites adicionales. La analogía es una central: mostrador, coordinador y proveedor tienen responsabilidades distintas.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-ios-m8
+cd ejemplo-ios-m8
+swift package init --type executable
+swift run
+```
+Crea Sources/main.swift con DeliveryViewModel, un DeliveryRepository protocol y un mock; conecta la vista SwiftUI mediante inicializador.
+
+#### Paso 5 · Práctica guiada
+Pista: inyecta deliberadamente un repositorio que lanza error para provocar un fallo deliberado de carga; diagnostica y muestra estado error. Resultado esperado: vista recuperable y testable.
+
+#### Paso 6 · Práctica independiente
+Añade caso de uso, dependencia real/fake, navegación y una prueba de ViewModel sin red.
+
+#### Paso 7 · Cierre y evidencia
+Guarda árbol, código, prueba y captura; como siguiente paso estudia modularización. Errores comunes: ViewModel gigante, singleton global, protocolo sin propósito y lógica en View. Fuentes oficiales: https://developer.apple.com/tutorials/swiftui y https://developer.apple.com/documentation/swift.
+**¿Por qué es importante?** Porque separar responsabilidades hace que el código sea comprensible y comprobable.
+**Evidencia de aprendizaje:** entrega capas, mock, fallo y prueba.
 **Conceptos clave:** límites explícitos de responsabilidad, dependencias sustituibles en tests.
 
 ```
@@ -83,6 +141,35 @@ init(servicio: ServicioTareas = ServicioTareasReal()) { self.servicio = servicio
 
 ### Tema 3: Cuándo MVVM no alcanza
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás separar responsabilidades SwiftUI desde cero. Prerrequisitos: macOS, Xcode y Swift. Verifica swift --version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real, una app de entregas necesita presentar estado, coordinar red y probar reglas sin que una vista conozca todos los detalles.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+MVVM separa vista, estado y lógica de presentación; capas y protocolos permiten sustituir adaptadores; cuando el dominio crece, evalúa límites adicionales. La analogía es una central: mostrador, coordinador y proveedor tienen responsabilidades distintas.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-ios-m8
+cd ejemplo-ios-m8
+swift package init --type executable
+swift run
+```
+Crea Sources/main.swift con DeliveryViewModel, un DeliveryRepository protocol y un mock; conecta la vista SwiftUI mediante inicializador.
+
+#### Paso 5 · Práctica guiada
+Pista: inyecta deliberadamente un repositorio que lanza error para provocar un fallo deliberado de carga; diagnostica y muestra estado error. Resultado esperado: vista recuperable y testable.
+
+#### Paso 6 · Práctica independiente
+Añade caso de uso, dependencia real/fake, navegación y una prueba de ViewModel sin red.
+
+#### Paso 7 · Cierre y evidencia
+Guarda árbol, código, prueba y captura; como siguiente paso estudia modularización. Errores comunes: ViewModel gigante, singleton global, protocolo sin propósito y lógica en View. Fuentes oficiales: https://developer.apple.com/tutorials/swiftui y https://developer.apple.com/documentation/swift.
+**¿Por qué es importante?** Porque separar responsabilidades hace que el código sea comprensible y comprobable.
+**Evidencia de aprendizaje:** entrega capas, mock, fallo y prueba.
 **Conceptos clave:** MVVM simple funciona bien hasta cierta escala; escalas mayores requieren capas adicionales.
 
 Para apps muy grandes con flujos de navegación complejos y lógica de negocio sustancial compartida entre múltiples ViewModels, equipos suelen agregar una capa explícita de "casos de uso" (use cases) entre el ViewModel y los Servicios, cada caso de uso encapsulando una única operación de negocio bien definida (reutilizable entre distintos ViewModels que necesiten esa misma operación), en vez de duplicar esa lógica directamente dentro de cada ViewModel individual; alternativamente, algunos equipos adoptan TCA (The Composable Architecture), una arquitectura de terceros que estructura el estado y las acciones de la app de forma más explícita y testeable a gran escala, a costa de una curva de aprendizaje y un boilerplate inicial mayor que el MVVM simple estudiado en este módulo.

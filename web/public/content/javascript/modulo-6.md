@@ -5,6 +5,18 @@
 
 ### Tema 1: async/await sobre promesas
 
+#### Paso 1 · Objetivo y preparación
+
+Al finalizar podrás escribir flujos asíncronos legibles, distinguir dependencia de concurrencia y demostrar que `await` pausa una función, no el hilo.
+
+**Conocimiento previo:** promesas, event loop, combinadores y funciones.
+
+#### Paso 2 · Contexto y caso real
+
+**¿Por qué es importante?** RutaFlow consulta una entrega y después obtiene su ruta; esos pasos dependen entre sí. En cambio, dos guías independientes deben consultarse en paralelo para no sumar latencias.
+
+#### Paso 3 · Teoría con analogía
+
 **Conceptos clave:** azúcar sintáctica sobre Promesas, pausa no bloqueante, legibilidad secuencial.
 
 `async`/`await`, introducido en ES2017, no es un mecanismo de concurrencia distinto de las Promesas estudiadas en el Módulo 5: es sintaxis construida directamente encima de ellas, diseñada para que el código asíncrono se lea de forma secuencial y familiar, en vez de encadenar múltiples `.then()`. Declarar una función con la palabra clave `async` garantiza que esa función siempre devuelve una Promesa (incluso si internamente retorna un valor simple, JavaScript lo envuelve automáticamente en una Promesa resuelta), y habilita el uso de `await` dentro de su cuerpo.
@@ -21,16 +33,80 @@ Reescribir una cadena de `.then().then().catch()` como una función `async` con 
 
 **Diagrama:**
 
-```
-// Con .then():                        // Con async/await (equivalente):
-fetch(url)                              async function obtener() {
-  .then(r => r.json())                    const r = await fetch(url);
-  .then(datos => procesar(datos))          const datos = await r.json();
-  .catch(err => manejar(err));             return procesar(datos);
-                                         } // errores: envolver en try/catch
+```mermaid
+sequenceDiagram
+    participant UI as Interfaz RutaFlow
+    participant F as función async
+    participant API as API
+    UI->>F: consultarGuia()
+    F->>API: await fetch(...)
+    Note over F: se pausa solo esta función
+    API-->>F: respuesta
+    F-->>UI: Promise con la guía
 ```
 
+#### Paso 4 · Demostración guiada desde cero
+
+#### Construcción RutaFlow: primera consulta secuencial
+
+Desde una carpeta vacía crea `ejemplo-async-await`, ejecuta `npm init -y`, crea `src` y después `src/cliente.js`:
+
+```bash
+mkdir ejemplo-async-await
+cd ejemplo-async-await
+npm init -y
+mkdir src
+```
+
+```javascript
+const esperar = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
+async function consultarGuia(numero) {
+  await esperar(50); // se pausa esta función; el event loop sigue trabajando
+  return { numero, estado: 'EN_RUTA' };
+}
+
+console.log('antes');
+const pendiente = consultarGuia('RF-101');
+console.log('es promesa:', pendiente instanceof Promise);
+console.log(await pendiente);
+```
+
+```bash
+node src/cliente-rutaflow.js
+```
+
+**Resultado esperado:** `antes`, `es promesa: true` y la guía `RF-101` en ruta.
+
+**Fallo deliberado:** consulta dos guías independientes con dos `await` consecutivos y mide cerca de 100 ms. No es un error del lenguaje: serializaste trabajo que podía comenzar junto.
+
+#### Paso 5 · Práctica guiada
+
+Usa `Promise.all` para iniciar ambas consultas y mide cerca de 50 ms. **Pista:** crea las dos promesas antes de esperar sus resultados.
+
+#### Paso 6 · Práctica independiente
+
+Modela `consultarGuia → consultarRuta`, donde el segundo paso necesita el ID del primero. Combina esa secuencia con otra entrega independiente y dibuja dependencias y concurrencia.
+
+#### Paso 7 · Cierre y evidencia
+
+Ya usas `await` para dependencias y combinadores para concurrencia. El siguiente tema clasifica y propaga errores. **Evidencia:** demuestra el resultado, los dos tiempos y el flujo mixto. Fuente oficial: [MDN — async function](https://developer.mozilla.org/es/docs/Web/JavaScript/Reference/Statements/async_function).
+
+**Errores comunes:** creer que `async` devuelve un valor directo; esperar operaciones independientes una por una; usar `await` fuera de contexto compatible; confundir pausa con bloqueo.
+
 ### Tema 2: try/catch en flujos asíncronos
+
+#### Paso 1 · Objetivo y preparación
+
+Al finalizar podrás convertir fallos de red, HTTP y datos en errores diferenciados, limpiar siempre el estado visual y conservar la causa técnica.
+
+**Conocimiento previo:** `async`/`await`, `fetch`, excepciones y códigos HTTP.
+
+#### Paso 2 · Contexto y caso real
+
+**¿Por qué es importante?** Una entrega de RutaFlow puede fallar por conexión, por respuesta 404 o por JSON inválido. Mostrar “algo salió mal” para todos los casos impide actuar y diagnosticar.
+
+#### Paso 3 · Teoría con analogía
 
 **Conceptos clave:** captura de rechazos, manejo explícito de errores, propagación de excepciones asíncronas.
 
@@ -48,6 +124,17 @@ Combinar `try/catch` con un bloque `finally` es útil para ejecutar lógica de l
 
 **Código del ejemplo:**
 
+#### Paso 4 · Demostración guiada desde cero
+
+Desde una carpeta vacía crea `ejemplo-errores-async`:
+
+```bash
+mkdir ejemplo-errores-async
+cd ejemplo-errores-async
+npm init -y
+mkdir src
+```
+
 ```js
 async function obtenerUsuarios() {
   try {
@@ -63,7 +150,43 @@ async function obtenerUsuarios() {
 }
 ```
 
+Guarda una versión ejecutable en `academia-javascript/src/errores-asincronos.js`, define allí `url` y reemplaza la limpieza visual por `console.log('Carga finalizada')`.
+
+```bash
+node src/errores-asincronos.js
+```
+
+**Resultado esperado:** con una URL válida devuelve datos y siempre imprime `Carga finalizada`.
+
+**Fallo deliberado:** usa una ruta inexistente. `fetch` resuelve con una respuesta 404; solo `if (!r.ok) throw ...` la convierte en el error `HTTP 404` que captura el flujo.
+
+#### Paso 5 · Práctica guiada
+
+Crea `ErrorHttp` con propiedad `status`. **Pista:** conserva `cause` al envolver otro error y decide en una capa superior qué mensaje mostrar.
+
+#### Paso 6 · Práctica independiente
+
+Clasifica red, HTTP, JSON inválido y validación de dominio. Escribe un caso reproducible por categoría y demuestra que `finally` se ejecuta en todos sin devolver silenciosamente `[]` cuando eso oculte el fallo.
+
+#### Paso 7 · Cierre y evidencia
+
+Ya manejas errores donde existe contexto para decidir y propagas los demás con causa. El siguiente tema cancela solicitudes obsoletas. **Evidencia:** demuestra éxito, 404, datos inválidos y limpieza en todos los caminos. Fuente oficial: [MDN — try...catch](https://developer.mozilla.org/es/docs/Web/JavaScript/Reference/Statements/try...catch).
+
+**Errores comunes:** asumir que fetch rechaza 404; capturar y devolver vacío siempre; perder la causa original; omitir `finally` para indicadores de carga.
+
 ### Tema 3: fetch API y AbortController
+
+#### Paso 1 · Objetivo y preparación
+
+Al finalizar podrás cancelar una petición obsoleta, distinguir cancelación intencional de error y evitar que una respuesta antigua sobrescriba la más reciente.
+
+**Conocimiento previo:** `fetch`, promesas, `try/catch` y eventos de interfaz.
+
+#### Paso 2 · Contexto y caso real
+
+**¿Por qué es importante?** En el proyecto RutaFlow un operador puede buscar varias entregas rápidamente. Sin cancelación, una respuesta lenta de la primera búsqueda puede reemplazar el resultado correcto de la última.
+
+#### Paso 3 · Teoría con analogía
 
 **Conceptos clave:** `fetch`, `Response`, cancelación de peticiones en curso.
 
@@ -81,6 +204,17 @@ Combinar `AbortController` con `debounce` (visto en el Módulo 1) es un patrón 
 
 **Código del ejemplo:**
 
+#### Paso 4 · Demostración guiada desde cero
+
+Desde una carpeta vacía crea `ejemplo-fetch-abort`:
+
+```bash
+mkdir ejemplo-fetch-abort
+cd ejemplo-fetch-abort
+npm init -y
+mkdir src
+```
+
 ```js
 const controlador = new AbortController();
 fetch(url, { signal: controlador.signal })
@@ -91,7 +225,43 @@ fetch(url, { signal: controlador.signal })
 controlador.abort(); // cancela la petición anterior en curso
 ```
 
+Crea `academia-javascript/src/busqueda-cancelable.js` y usa una promesa controlada o servidor local lento para que la práctica sea determinista.
+
+```bash
+node src/busqueda-cancelable.js
+```
+
+**Resultado esperado:** al llamar `abort()` antes de completar aparece `petición cancelada`; no se muestra como fallo al usuario.
+
+**Fallo deliberado:** elimina la cancelación y dispara búsqueda lenta `RF-1`, seguida de búsqueda rápida `RF-10`. La respuesta antigua puede escribirse al final y dejar datos obsoletos.
+
+#### Paso 5 · Práctica guiada
+
+Conserva un controlador activo y cancélalo antes de cada nueva búsqueda. **Pista:** crea otro controlador después de abortar; una señal abortada no puede reutilizarse.
+
+#### Paso 6 · Práctica independiente
+
+Combina debounce, cancelación y un contador de solicitud. Prueba respuesta fuera de orden, cancelación intencional y fallo real; solo el último debe mostrar error.
+
+#### Paso 7 · Cierre y evidencia
+
+Ya evitas actualizaciones obsoletas y distingues cancelación de fallo. El siguiente tema limita tiempo y reintenta solo operaciones seguras. **Evidencia:** demuestra el resultado cancelado, la carrera sin protección y la búsqueda final correcta. Fuente oficial: [MDN — AbortController](https://developer.mozilla.org/es/docs/Web/API/AbortController).
+
+**Errores comunes:** reutilizar una señal abortada; mostrar cancelación como error; creer que ignorar una respuesta cancela la red; no limpiar listeners asociados.
+
 ### Tema 4: Reintentos y timeouts manuales
+
+#### Paso 1 · Objetivo y preparación
+
+Al finalizar podrás aplicar timeout por intento, backoff exponencial con jitter y una política limitada de reintentos para operaciones idempotentes.
+
+**Conocimiento previo:** `async`/`await`, `AbortController`, códigos HTTP y combinadores.
+
+#### Paso 2 · Contexto y caso real
+
+**¿Por qué es importante?** RutaFlow debe recuperarse de una caída breve sin duplicar una confirmación de entrega ni saturar un servicio degradado. No todos los errores ni comandos son reintentables.
+
+#### Paso 3 · Teoría con analogía
 
 **Conceptos clave:** backoff exponencial, reintentos limitados, timeout con `Promise.race`.
 
@@ -108,6 +278,17 @@ Estas dos técnicas —reintentos con backoff y timeout manual— son extremadam
 **¿Por qué es importante?** Reintentos con backoff y timeouts manuales son prácticas de robustez estándar en cualquier cliente de API de producción seria, protegiendo a la aplicación de fallos transitorios de red sin requerir intervención manual del usuario.
 
 **Código del ejemplo:**
+
+#### Paso 4 · Demostración guiada desde cero
+
+Desde una carpeta vacía crea `ejemplo-reintentos`:
+
+```bash
+mkdir ejemplo-reintentos
+cd ejemplo-reintentos
+npm init -y
+mkdir src
+```
 
 ```js
 async function fetchConReintentos(url, intentos = 3) {
@@ -127,7 +308,43 @@ function conTimeout(promesa, ms) {
 }
 ```
 
+Guarda el cliente en `academia-javascript/src/resiliencia.js`, instrumenta cada intento y ejecuta:
+
+```bash
+node src/resiliencia.js
+```
+
+**Resultado esperado:** como máximo tres intentos y un resultado o error final explícito.
+
+**Fallo deliberado:** configura timeout de `1` ms. La carrera rechaza, pero la operación perdedora continúa si no recibe una señal; combina timeout con `AbortController` para cancelar trabajo real.
+
+#### Paso 5 · Práctica guiada
+
+Implementa espera `base * 2 ** intento + jitter`. **Pista:** inyecta la función aleatoria y el reloj para probar demoras sin esperar realmente.
+
+#### Paso 6 · Práctica independiente
+
+Clasifica red, 408, 429, 400 y 500; respeta `Retry-After`, limita presupuesto total y exige idempotencia para comandos. Escribe pruebas deterministas de éxito al tercer intento y fallo permanente.
+
+#### Paso 7 · Cierre y evidencia
+
+Ya aplicas resiliencia sin convertir reintentos en duplicación o tormenta de tráfico. El siguiente tema crea secuencias perezosas con generadores. **Evidencia:** demuestra el resultado, timeout cancelado, backoff inyectado y matriz de errores reintentables. Fuente oficial: [MDN — AbortSignal.timeout](https://developer.mozilla.org/en-US/docs/Web/API/AbortSignal/timeout_static).
+
+**Errores comunes:** reintentar 400; omitir jitter; no cancelar el intento vencido; reintentar comandos no idempotentes; ignorar `Retry-After`.
+
 ### Tema 5: Generadores — function*, yield y yield*
+
+#### Paso 1 · Objetivo y preparación
+
+Al finalizar podrás construir una secuencia perezosa con `function*`, detenerla con `yield`, reanudarla con `.next()` y componerla con `yield*`. La aplicarás al proyecto RutaFlow para recorrer entregas por lotes sin crear todas las páginas en memoria.
+
+**Conocimiento previo:** funciones, arrays, ciclos `for`, objetos y el protocolo iterable presentado en el módulo de colecciones. Si todavía no distingues un iterable de un iterador, repasa que el iterable puede producir un iterador y que `.next()` devuelve `{ value, done }`.
+
+#### Paso 2 · Contexto y caso real
+
+El panel de operaciones puede recibir miles de entregas. Convertirlas todas en páginas antes de usar la primera aumenta memoria y demora la primera respuesta. En este incremento del proyecto RutaFlow construiremos un paginador perezoso: cada lote se calcula únicamente cuando el consumidor lo solicita.
+
+#### Paso 3 · Teoría, modelo mental y analogía
 
 **Conceptos clave:** funciones generadoras, pausar y reanudar ejecución, iteradores personalizados.
 
@@ -143,20 +360,81 @@ Aunque los generadores son una herramienta relativamente especializada en el uso
 
 **¿Por qué es importante?** Los generadores permiten expresar secuencias perezosas e infinitas de forma natural, y son la base conceptual de mecanismos avanzados de control de flujo asíncrono en bibliotecas especializadas del ecosistema JavaScript.
 
-**Código del ejemplo:**
+#### Paso 4 · Demostración guiada
 
-```js
-function* contarHasta(n) {
-  for (let i = 1; i <= n; i++) yield i;
-}
-const gen = contarHasta(3);
-gen.next(); // { value: 1, done: false }
-gen.next(); // { value: 2, done: false }
-gen.next(); // { value: 3, done: false }
-gen.next(); // { value: undefined, done: true }
+Desde una carpeta vacía crea `ejemplo-generadores`, ejecuta `npm init -y`, crea `src` y después `src/generadores.js`. El ejemplo valida primero el tamaño para que el ciclo siempre avance; después `yield` entrega una sola página y conserva internamente la posición `inicio` hasta la siguiente petición.
+
+```bash
+mkdir ejemplo-generadores
+cd ejemplo-generadores
+npm init -y
+mkdir src
 ```
 
+```js
+function* paginarEntregas(entregas, tamano) {
+  // La validación protege la condición de avance del ciclo.
+  if (!Number.isInteger(tamano) || tamano <= 0) {
+    throw new RangeError("tamano debe ser un entero mayor que cero");
+  }
+
+  for (let inicio = 0; inicio < entregas.length; inicio += tamano) {
+    // yield pausa aquí; la siguiente iteración continúa después de esta línea.
+    yield entregas.slice(inicio, inicio + tamano);
+  }
+}
+
+const entregas = [
+  { numero: "RF-101", prioridad: true },
+  { numero: "RF-102", prioridad: false },
+  { numero: "RF-103", prioridad: false },
+];
+
+const paginas = paginarEntregas(entregas, 2);
+console.log("Primera solicitud:", paginas.next());
+console.log("Segunda solicitud:", paginas.next());
+console.log("Fin:", paginas.next());
+```
+
+Desde `academia-javascript`, ejecuta:
+
+```bash
+node src/generadores.js
+```
+
+**Resultado esperado:** la primera llamada contiene `RF-101` y `RF-102` con `done: false`; la segunda contiene `RF-103`; la tercera devuelve `{ value: undefined, done: true }`. Observa que llamar a `paginarEntregas` no ejecuta el cuerpo: el trabajo comienza con `.next()`.
+
+**Fallo deliberado:** elimina temporalmente la validación y usa tamaño `0`. El incremento `inicio += tamano` nunca cambia `inicio`, por lo que el generador puede producir la misma página indefinidamente. Detén la ejecución, restaura el `RangeError` y confirma que el diagnóstico aparece antes de entrar al ciclo.
+
+#### Paso 5 · Práctica guiada
+
+Implementa `function* entregasOrdenadas(prioritarias, normales)` que delegue primero con `yield* prioritarias` y luego con `yield* normales`. **Pista:** `yield*` recibe cualquier iterable; no necesitas escribir dos ciclos ni copiar ambos arrays.
+
+#### Paso 6 · Práctica independiente
+
+Crea un generador infinito de números de guía `RF-000001`, `RF-000002`, etc., y una función que consuma solamente los primeros cinco. Explica por qué el programa no reserva memoria para una colección infinita y añade una prueba que verifique el quinto identificador.
+
+#### Paso 7 · Cierre y evidencia
+
+Ya puedes producir datos bajo demanda y reconocer cuándo un array completo es innecesario. El siguiente tema estudia cómo interceptar operaciones sobre objetos con Proxy y Reflect. **Evidencia:** entrega el archivo, demuestra la salida de las tres llamadas a `.next()`, el fallo controlado para tamaño cero y explica en qué línea se pausa y se reanuda el generador.
+
+**Errores comunes:** creer que invocar la función ejecuta su cuerpo; ignorar `done`; crear un ciclo infinito sin limitar el consumo; usar un generador esperando paralelismo o comportamiento asíncrono; olvidar validar que el estado avance.
+
+**Fuente oficial:** [MDN — Iterators and generators](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Iterators_and_generators) y [MDN — `yield*`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/yield*).
+
 ### Tema 6: Proxies y Reflect
+
+#### Paso 1 · Objetivo y preparación
+
+Al finalizar podrás interceptar lecturas y escrituras con `Proxy`, conservar la semántica del lenguaje mediante `Reflect` y decidir cuándo esta metaprogramación es adecuada. Protegerás el estado de una entrega de RutaFlow sin ocultar las reglas centrales del dominio.
+
+**Prerrequisitos:** objetos, propiedades, funciones, excepciones y modo estricto. Recuerda que una asignación puede tener reglas internas —propiedades no escribibles, accesores o herencia— que no conviene reimplementar manualmente.
+
+#### Paso 2 · Contexto y caso real
+
+RutaFlow recibe objetos desde formularios, almacenamiento local y APIs. En el borde de infraestructura queremos auditar cambios y rechazar estados desconocidos antes de que contaminen el proyecto. El Proxy funcionará como una frontera observable; las transiciones de negocio más complejas seguirán en métodos explícitos de la entrega.
+
+#### Paso 3 · Teoría, modelo mental y analogía
 
 **Conceptos clave:** intercepción de operaciones sobre objetos, traps (`get`/`set`/`has`), `Reflect`.
 
@@ -172,25 +450,74 @@ Aunque Proxy es una herramienta de uso relativamente avanzado y especializado (r
 
 **¿Por qué es importante?** Proxy y Reflect son la base de metaprogramación transparente en JavaScript, usada internamente por frameworks reactivos modernos para detectar cambios de estado automáticamente, un mecanismo que vale la pena entender conceptualmente aunque rara vez se implemente Proxies propios en código de aplicación típico.
 
-**Código del ejemplo:**
+#### Paso 4 · Demostración guiada
+
+Desde una carpeta vacía crea `ejemplo-proxy`, ejecuta `npm init -y`, crea `src` y después `src/proxy.js`. El trap `set` valida una regla pequeña de frontera, registra el cambio y delega la asignación real a `Reflect.set`; el trap `get` conserva la lectura estándar.
+
+```bash
+mkdir ejemplo-proxy
+cd ejemplo-proxy
+npm init -y
+mkdir src
+```
 
 ```js
-const configuracion = new Proxy({}, {
-  set(target, prop, valor) {
-    if (prop === "puerto" && typeof valor !== "number") {
-      throw new TypeError("puerto debe ser number");
+"use strict";
+
+const estadosPermitidos = new Set(["CREADA", "EN_RUTA", "ENTREGADA"]);
+const entrega = { numero: "RF-201", estado: "CREADA" };
+
+const entregaAuditada = new Proxy(entrega, {
+  set(target, propiedad, valor, receiver) {
+    // Esta validación protege datos que llegan desde el borde de la aplicación.
+    if (propiedad === "estado" && !estadosPermitidos.has(valor)) {
+      throw new TypeError(`Estado no permitido: ${valor}`);
     }
-    return Reflect.set(target, prop, valor); // delega la asignación real
+
+    console.log(`AUDITORÍA ${String(propiedad)}: ${target[propiedad]} -> ${valor}`);
+    // Reflect respeta accesores, herencia y el booleano real de la operación.
+    return Reflect.set(target, propiedad, valor, receiver);
+  },
+
+  get(target, propiedad, receiver) {
+    return Reflect.get(target, propiedad, receiver);
   },
 });
-configuracion.puerto = 8080;   // ok
-configuracion.puerto = "8080"; // TypeError, interceptado transparentemente
+
+entregaAuditada.estado = "EN_RUTA";
+console.log(`${entregaAuditada.numero}: ${entregaAuditada.estado}`);
 ```
+
+Desde `academia-javascript`, ejecuta:
+
+```bash
+node src/proxy.js
+```
+
+**Salida esperada:** primero aparece `AUDITORÍA estado: CREADA -> EN_RUTA` y después `RF-201: EN_RUTA`.
+
+**Fallo deliberado:** cambia el estado a `"PERDIDA"`. Debes obtener `TypeError: Estado no permitido: PERDIDA` y el objeto original debe conservar `EN_RUTA`. Después sustituye temporalmente `return Reflect.set(...)` por `return false`: en modo estricto la asignación lanza `TypeError`, demostrando que el booleano del trap forma parte del contrato.
+
+#### Paso 5 · Práctica guiada
+
+Añade una lista `camposPermitidos` y rechaza la escritura de una propiedad desconocida como `estatus`. **Pista:** valida con `Reflect.has(target, propiedad)` antes de delegar; permite únicamente las excepciones que hayas definido de manera explícita.
+
+#### Paso 6 · Práctica independiente
+
+Construye un Proxy que cuente lecturas de `estado`, escribe pruebas para lectura, escritura válida e inválida y compara esta solución con un método explícito `entrega.cambiarEstado()`. Documenta por qué elegirías el método para reglas del negocio y el Proxy para observabilidad o adaptación en una frontera.
+
+#### Paso 7 · Cierre y evidencia
+
+Ahora distingues una intercepción transversal de una regla de dominio y sabes delegar sin romper invariantes. El próximo módulo organiza estas capacidades en módulos, herramientas y una aplicación mantenible. **Evidencia:** entrega el archivo y demuestra la salida correcta, el fallo por estado inválido y explica el resultado de reemplazar `Reflect.set` por `false`.
+
+**Errores comunes:** esconder reglas esenciales dentro de traps difíciles de rastrear; olvidar devolver el booleano de `set`; violar invariantes de propiedades no configurables; provocar recursión leyendo el Proxy dentro de su propio trap; asumir que el Proxy y el objeto original tienen la misma identidad.
+
+**Fuentes oficiales:** [MDN — Proxy](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Proxy) y [MDN — Reflect](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Reflect).
 
 ---
 
 
-## Laboratorio práctico
+## Construcción guiada del capítulo
 
 **Objetivo del laboratorio:** construir un cliente de API robusto que consuma una API pública con manejo de errores, cancelación, reintentos y timeout, usando `async`/`await` de principio a fin.
 
@@ -206,6 +533,32 @@ configuracion.puerto = "8080"; // TypeError, interceptado transparentemente
 | 6 | Implementar timeout manual de 5 segundos | `conTimeout(fetch(url), 5000)` | Verifica que se rechaza si la petición excede el límite |
 
 **Verificación:** el laboratorio se considera exitoso si el cliente maneja correctamente los tres escenarios de fallo (red caída, HTTP de error, timeout excedido), mostrando en cada caso un mensaje claro y distinto al usuario, sin ningún error no manejado en la consola.
+
+### Comprueba lo construido
+
+#### Ejercicio verificable 1
+
+Ejecuta el ejemplo del Event Loop del módulo anterior y responde qué cola se vacía antes de tomar una macrotask.
+
+**Pista:** las continuaciones de `await` usan la misma prioridad que `.then()`.
+
+**Respuesta esperada:** microtasks|microtareas
+
+#### Ejercicio verificable 2
+
+Una API responde HTTP 404. Escribe la propiedad de `Response` que debes comprobar porque `fetch` no rechaza automáticamente.
+
+**Pista:** es un booleano.
+
+**Respuesta esperada:** ok|response.ok|respuesta.ok
+
+#### Ejercicio verificable 3
+
+Escribe el nombre exacto del error usado para reconocer una cancelación intencional de `fetch`.
+
+**Pista:** se consulta en `error.name`.
+
+**Respuesta esperada:** AbortError
 
 **Errores comunes y soluciones**
 

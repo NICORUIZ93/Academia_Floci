@@ -5,6 +5,37 @@
 
 ### Tema 1: createContext y useContext
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás compartir dependencias React desde cero. Prerrequisitos: Node.js LTS, npm y editor. Verifica npm --version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real, tema, usuario y configuración de entregas se consumen en varias pantallas; el contexto debe evitar prop drilling sin ocultar dependencias.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+createContext define un canal y useContext lo consume; el Provider establece valor y alcance. Context no es automáticamente un store para todo. Componentes compuestos y hooks personalizados reutilizan comportamiento con contratos claros. La analogía es una oficina: una recepción comparte credenciales de visita, pero no administra toda la contabilidad del edificio.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-react-m4
+cd ejemplo-react-m4
+npm create vite@latest app -- --template react-ts
+cd app
+npm install
+npm run dev
+```
+Crea src/context/DeliveryContext.tsx y un Provider; consume el contexto en una tarjeta y muestra valor por defecto y valor real.
+
+#### Paso 5 · Práctica guiada
+Pista: renderiza deliberadamente el consumidor sin Provider para provocar un fallo deliberado de configuración; diagnostica el valor undefined y corrígelo. Resultado esperado: componente con dependencia explícita.
+
+#### Paso 6 · Práctica independiente
+Crea un hook useDelivery, un componente compuesto con slots y una comparación documentada entre Context y store externo.
+
+#### Paso 7 · Cierre y evidencia
+Guarda árbol, código y captura; como siguiente paso estudia routing. Errores comunes: contexto mutable gigante, valores nuevos en cada render, hooks fuera de componentes y dependencias implícitas. Fuentes oficiales: https://react.dev/learn/passing-data-deeply-with-context y https://react.dev/learn/reusing-logic-with-custom-hooks.
+**¿Por qué es importante?** Porque compartir datos sin diseñar el alcance crea acoplamiento invisible.
+**Evidencia de aprendizaje:** entrega Provider, consumidor, fallo, hook y decisión.
 **Conceptos clave:** proveedor y consumidor, evitar prop drilling.
 
 `createContext('claro')` crea un objeto Context con un valor por defecto, que luego se provee a un subárbol completo de componentes mediante un componente `Provider` (`<ThemeContext.Provider value={{ tema, setTema }}>`) envolviendo esa parte de la aplicación; cualquier componente descendiente de ese Provider, sin importar cuántos niveles de anidamiento existan entre ambos, puede leer ese valor directamente con `useContext(ThemeContext)`, sin que ningún componente intermedio entre el Provider y el consumidor final necesite recibir, conocer, ni reenviar manualmente ese valor a través de sus propias props.
@@ -37,6 +68,37 @@ function BotonToggle() {
 
 ### Tema 2: Cuándo Context es suficiente y cuándo no
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás compartir dependencias React desde cero. Prerrequisitos: Node.js LTS, npm y editor. Verifica npm --version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real, tema, usuario y configuración de entregas se consumen en varias pantallas; el contexto debe evitar prop drilling sin ocultar dependencias.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+createContext define un canal y useContext lo consume; el Provider establece valor y alcance. Context no es automáticamente un store para todo. Componentes compuestos y hooks personalizados reutilizan comportamiento con contratos claros. La analogía es una oficina: una recepción comparte credenciales de visita, pero no administra toda la contabilidad del edificio.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-react-m4
+cd ejemplo-react-m4
+npm create vite@latest app -- --template react-ts
+cd app
+npm install
+npm run dev
+```
+Crea src/context/DeliveryContext.tsx y un Provider; consume el contexto en una tarjeta y muestra valor por defecto y valor real.
+
+#### Paso 5 · Práctica guiada
+Pista: renderiza deliberadamente el consumidor sin Provider para provocar un fallo deliberado de configuración; diagnostica el valor undefined y corrígelo. Resultado esperado: componente con dependencia explícita.
+
+#### Paso 6 · Práctica independiente
+Crea un hook useDelivery, un componente compuesto con slots y una comparación documentada entre Context y store externo.
+
+#### Paso 7 · Cierre y evidencia
+Guarda árbol, código y captura; como siguiente paso estudia routing. Errores comunes: contexto mutable gigante, valores nuevos en cada render, hooks fuera de componentes y dependencias implícitas. Fuentes oficiales: https://react.dev/learn/passing-data-deeply-with-context y https://react.dev/learn/reusing-logic-with-custom-hooks.
+**¿Por qué es importante?** Porque compartir datos sin diseñar el alcance crea acoplamiento invisible.
+**Evidencia de aprendizaje:** entrega Provider, consumidor, fallo, hook y decisión.
 **Conceptos clave:** frecuencia de cambio del valor, re-renders de todos los consumidores.
 
 Context resuelve bien el caso de valores que cambian con poca frecuencia relativa (el tema visual de la aplicación, el idioma seleccionado, la identidad del usuario autenticado) y que necesitan leerse desde muchos lugares distintos y potencialmente lejanos del árbol de componentes, dado que el costo de un re-render ocasional de todos los consumidores de ese Context (cada vez que el valor provisto cambia, absolutamente todos los componentes que consumen ese Context con `useContext` se re-renderizan, sin distinción de granularidad más fina) es perfectamente aceptable cuando esos cambios son infrecuentes.
@@ -56,6 +118,37 @@ Context problemático: valor de un input en cada tecla (cambia mucho, re-renderi
 
 ### Tema 3: Componentes compuestos, render props y hooks personalizados
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás compartir dependencias React desde cero. Prerrequisitos: Node.js LTS, npm y editor. Verifica npm --version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real, tema, usuario y configuración de entregas se consumen en varias pantallas; el contexto debe evitar prop drilling sin ocultar dependencias.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+createContext define un canal y useContext lo consume; el Provider establece valor y alcance. Context no es automáticamente un store para todo. Componentes compuestos y hooks personalizados reutilizan comportamiento con contratos claros. La analogía es una oficina: una recepción comparte credenciales de visita, pero no administra toda la contabilidad del edificio.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-react-m4
+cd ejemplo-react-m4
+npm create vite@latest app -- --template react-ts
+cd app
+npm install
+npm run dev
+```
+Crea src/context/DeliveryContext.tsx y un Provider; consume el contexto en una tarjeta y muestra valor por defecto y valor real.
+
+#### Paso 5 · Práctica guiada
+Pista: renderiza deliberadamente el consumidor sin Provider para provocar un fallo deliberado de configuración; diagnostica el valor undefined y corrígelo. Resultado esperado: componente con dependencia explícita.
+
+#### Paso 6 · Práctica independiente
+Crea un hook useDelivery, un componente compuesto con slots y una comparación documentada entre Context y store externo.
+
+#### Paso 7 · Cierre y evidencia
+Guarda árbol, código y captura; como siguiente paso estudia routing. Errores comunes: contexto mutable gigante, valores nuevos en cada render, hooks fuera de componentes y dependencias implícitas. Fuentes oficiales: https://react.dev/learn/passing-data-deeply-with-context y https://react.dev/learn/reusing-logic-with-custom-hooks.
+**¿Por qué es importante?** Porque compartir datos sin diseñar el alcance crea acoplamiento invisible.
+**Evidencia de aprendizaje:** entrega Provider, consumidor, fallo, hook y decisión.
 **Conceptos clave:** coordinación implícita vía Context interno, alternativas históricas de reutilización de lógica.
 
 El patrón de componentes compuestos usa un Context interno y privado (no expuesto directamente al usuario del componente) para coordinar el estado compartido entre un componente contenedor y sus componentes hijos relacionados, sin que el usuario final del componente necesite pasar props de coordinación manualmente: `<Tabs><Tabs.Tab label="Perfil">...</Tabs.Tab></Tabs>` funciona porque `Tabs` provee internamente un Context que sus propios componentes hijos `Tabs.Tab` consumen automáticamente, coordinando cuál pestaña está activa sin que el código que usa `Tabs` tenga que gestionar ese estado explícitamente por su cuenta.

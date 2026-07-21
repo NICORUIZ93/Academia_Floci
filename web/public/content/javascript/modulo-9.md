@@ -5,6 +5,18 @@
 
 ### Tema 1: Unit testing con Vitest
 
+#### Paso 1 · Objetivo y preparación
+
+Al finalizar podrás instalar Vitest, escribir pruebas con Arrange–Act–Assert, verificar resultados y errores y leer un fallo sin modificar primero la expectativa. Protegerás la creación de guías de RutaFlow mediante un contrato ejecutable.
+
+**Conocimiento previo:** funciones, módulos ESM, excepciones, npm y el proyecto Vite. Comprueba que `npm run build` funciona antes de añadir testing; una prueba no debe ocultar una configuración ya rota.
+
+#### Paso 2 · Contexto y caso real
+
+Toda entrega nueva debe empezar en `CREADA` y rechazar números vacíos. En este incremento del proyecto RutaFlow, una prueba documentará ambas reglas para detectar inmediatamente una regresión durante una refactorización.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+
 **Conceptos clave:** `describe`/`it`/`expect`, arrange-act-assert, aserciones.
 
 Una prueba unitaria verifica que una pieza aislada de código (típicamente una única función) se comporta como se espera ante entradas específicas, de forma automatizada y repetible, sin depender de verificación manual humana cada vez que el código cambia. Vitest, una herramienta de testing moderna diseñada para integrarse naturalmente con proyectos basados en Vite (Módulo 7), organiza las pruebas con `describe` (para agrupar pruebas relacionadas bajo un nombre descriptivo común) e `it` (o su alias `test`, para definir un caso de prueba individual con una descripción de qué comportamiento específico verifica), usando `expect(valorObtenido).toBe(valorEsperado)` (y muchas otras aserciones específicas según el tipo de comparación necesaria) para declarar la expectativa concreta que debe cumplirse.
@@ -19,20 +31,94 @@ Escribir la primera prueba de un proyecto —por trivial que sea, como verificar
 
 **¿Por qué es importante?** El testing automatizado convierte la verificación de correctitud de "revisar manualmente cada vez que algo cambia" en "ejecutar la suite en segundos y confiar en el resultado", habilitando refactorizaciones y cambios con mucha mayor confianza y velocidad.
 
-**Código del ejemplo:**
+#### Paso 4 · Demostración guiada desde cero
+
+Instala Vitest y registra el comando estable:
+
+```bash
+npm install --save-dev vitest
+npm pkg set scripts.test="vitest run"
+```
+
+Desde una carpeta vacía crea `ejemplo-vitest`, instala Vitest y crea `src` y `test`:
+
+```bash
+mkdir ejemplo-vitest
+cd ejemplo-vitest
+npm init -y
+npm install -D vitest
+mkdir src test
+```
+
+Crea `src/guia.js`:
+
+```js
+export function crearGuia(numero) {
+  // La unidad concentra una regla observable del dominio.
+  if (!numero?.trim()) throw new TypeError("numero es obligatorio");
+  return { numero, estado: "CREADA" };
+}
+```
+
+Crea `test/guia.test.js`:
 
 ```js
 import { describe, it, expect } from "vitest";
-import { sumar } from "./suma.js";
+import { crearGuia } from "./guia.js";
 
-describe("sumar", () => {
-  it("suma dos números positivos", () => {
-    expect(sumar(2, 3)).toBe(5); // arrange (implícito) → act → assert
+describe("crearGuia", () => {
+  it("crea una guía en estado inicial", () => {
+    const numero = "RF-101";                 // Arrange
+    const resultado = crearGuia(numero);      // Act
+    expect(resultado).toEqual({ numero, estado: "CREADA" }); // Assert
+  });
+
+  it("rechaza un número vacío", () => {
+    // La función se entrega a expect sin ejecutarla antes de la aserción.
+    expect(() => crearGuia(" ")).toThrow(TypeError);
   });
 });
 ```
 
+Ejecuta:
+
+```bash
+npm test
+```
+
+**Resultado esperado:** un archivo y dos pruebas aprobadas. La salida identifica suite, duración y cada caso; no se necesita abrir el navegador.
+
+**Fallo deliberado:** cambia en producción `CREADA` por `EN_RUTA` sin tocar la prueba. Vitest muestra diferencia entre esperado y recibido, archivo y línea. Lee ese contrato, restaura la regla correcta y confirma dos pruebas verdes.
+
+#### Paso 5 · Práctica guiada
+
+Exige el patrón `RF-` y añade casos válido e inválido. **Pista:** nombra las pruebas por comportamiento; evita una prueba genérica llamada “funciona”.
+
+#### Paso 6 · Práctica independiente
+
+Construye una tabla de casos con números vacíos, espacios, prefijo incorrecto y valor válido. Verifica el mensaje de error cuando sea parte útil del contrato y demuestra que cada prueba funciona aisladamente con un filtro de Vitest.
+
+#### Paso 7 · Cierre y evidencia
+
+Ya puedes convertir una regla de dominio en feedback rápido y determinista. El siguiente tema aislará colaboraciones y tiempo sin reemplazar la lógica que sí puede probarse directamente. **Evidencia:** entrega producción y prueba, demuestra salida verde y diff rojo, y explica las tres fases de la primera prueba.
+
+**Errores comunes:** ejecutar la función antes de `toThrow`; compartir estado mutable; probar detalles privados; corregir la expectativa sin investigar la regresión; escribir casos que dependen de orden o red.
+
+**Fuentes oficiales:** [Vitest — Getting Started](https://vitest.dev/guide/) y [Vitest — Expect](https://vitest.dev/api/expect.html).
+
 ### Tema 2: Mocks, spies y fakes
+
+#### Paso 1 · Objetivo y preparación
+
+Al finalizar podrás elegir entre spy, mock y fake, controlar temporizadores con Vitest y limpiar el entorno después de cada caso. Verificarás que el filtro de RutaFlow colapsa entradas rápidas sin esperar 300 ms reales.
+
+**Prerrequisitos:** callbacks, closures, `setTimeout`, pruebas Vitest y función `debounce`. Si no tienes `debounce`, créala como función de producción antes de probarla; no la declares dentro del test.
+
+#### Paso 2 · Contexto y caso real
+
+El operador escribe “EN_RUTA” letra por letra. Consultar la API por cada tecla desperdicia red; el filtro espera una pausa. En el proyecto RutaFlow controlaremos el reloj y observaremos la colaboración con búsqueda, manteniendo la prueba rápida y determinista.
+
+#### Paso 3 · Teoría, modelo mental y analogía
 
 **Conceptos clave:** aislar la unidad bajo prueba, `vi.fn()`, fake timers.
 
@@ -48,18 +134,85 @@ Usar mocks y spies con moderación es importante: sobre-mockear una prueba (reem
 
 **¿Por qué es importante?** Mocks, spies y fakes permiten aislar la unidad de código realmente bajo prueba de sus dependencias externas costosas o no deterministas, haciendo las pruebas rápidas, deterministas y enfocadas exclusivamente en verificar el comportamiento específico que interesa en cada caso.
 
-**Código del ejemplo:**
+#### Paso 4 · Demostración guiada desde cero
 
-```js
-vi.useFakeTimers();
-const spy = vi.fn();
-const conDebounce = debounce(spy, 300);
-conDebounce(); conDebounce(); conDebounce(); // 3 llamadas rápidas
-vi.advanceTimersByTime(300); // avanza el reloj simulado instantáneamente
-expect(spy).toHaveBeenCalledTimes(1); // debounce colapsó las 3 en 1 sola ejecución
+Desde una carpeta vacía crea `ejemplo-mocks`, ejecuta `npm init -y`, instala Vitest y crea `src` y `test`; después crea `test/filtro.test.js`:
+
+```bash
+mkdir ejemplo-mocks
+cd ejemplo-mocks
+npm init -y
+npm install -D vitest
+mkdir src test
 ```
 
+```js
+import { afterEach, describe, expect, it, vi } from "vitest";
+import { debounce } from "../util/debounce.js";
+
+afterEach(() => {
+  // Evita que reloj y funciones simuladas contaminen el siguiente caso.
+  vi.useRealTimers();
+  vi.restoreAllMocks();
+});
+
+describe("filtro de guías", () => {
+  it("busca una vez con el último texto", () => {
+    vi.useFakeTimers();
+    const buscar = vi.fn();
+    const buscarConPausa = debounce(buscar, 300);
+
+    buscarConPausa("E");
+    buscarConPausa("EN");
+    buscarConPausa("EN_RUTA");
+    expect(buscar).not.toHaveBeenCalled();
+
+    vi.advanceTimersByTime(300);
+    expect(buscar).toHaveBeenCalledTimes(1);
+    expect(buscar).toHaveBeenCalledWith("EN_RUTA");
+  });
+});
+```
+
+Ejecuta:
+
+```bash
+npm test -- src/ui/filtro-guias.test.js
+```
+
+**Resultado esperado:** una prueba aprobada inmediatamente; la función no se invoca antes de 300 ms simulados y recibe únicamente `EN_RUTA`.
+
+**Fallo deliberado:** comenta `vi.useRealTimers()` y añade otro caso que espere temporizadores reales. El estado global puede dejarlo colgado o hacerlo fallar. Restaura `afterEach`; la causa es contaminación del entorno, no el comportamiento del filtro.
+
+#### Paso 5 · Práctica guiada
+
+Inyecta un fake repositorio en memoria que filtre tres entregas y usa un spy únicamente para observar la consulta. **Pista:** el fake conserva comportamiento; `vi.fn()` sin implementación solo registra llamadas.
+
+#### Paso 6 · Práctica independiente
+
+Prueba cancelación de debounce y dos instancias independientes. Para cada sustitución, escribe por qué la dependencia real sería lenta, no determinista o difícil de provocar; elimina mocks que no aporten ese aislamiento.
+
+#### Paso 7 · Cierre y evidencia
+
+Ya puedes controlar colaboraciones y tiempo sin convertir el test en teatro de mocks. El siguiente tema aplicará el mismo límite a HTTP, simulando el contrato de `fetch`. **Evidencia:** demuestra la llamada única, el argumento final y el fallo por reloj contaminado, y clasifica `buscar`, el repositorio en memoria y un método real como mock, fake o spy.
+
+**Errores comunes:** olvidar restaurar timers; mockear la unidad bajo prueba; verificar llamadas internas sin valor de negocio; no avanzar el reloj; construir mocks que no respetan la interfaz real.
+
+**Fuentes oficiales:** [Vitest — Mocking Functions](https://vitest.dev/guide/mocking/functions) y [Vitest — Timers](https://vitest.dev/guide/mocking/timers).
+
 ### Tema 3: Mockear fetch
+
+#### Paso 1 · Objetivo y preparación
+
+Al finalizar podrás probar éxito, error HTTP y fallo de red sin tráfico real, crear una respuesta simulada compatible y restaurar `fetch` después de cada caso. Asegurarás el cliente de entregas de RutaFlow en milisegundos.
+
+**Conocimiento previo:** `fetch`, Promesas, `async`/`await`, excepciones, mocks y Vitest. Recuerda que HTTP 404 resuelve la Promesa: el cliente debe revisar `response.ok`.
+
+#### Paso 2 · Contexto y caso real
+
+La pantalla no puede depender de un servidor disponible para probar su manejo de errores. En el proyecto RutaFlow, el cliente traducirá respuestas HTTP a datos o errores explícitos, mientras la prueba controla únicamente la frontera `fetch`.
+
+#### Paso 3 · Teoría, modelo mental y analogía
 
 **Conceptos clave:** aislar código dependiente de red, `vi.spyOn` sobre `global.fetch`.
 
@@ -75,18 +228,96 @@ Es importante restaurar el comportamiento original de `fetch` después de cada p
 
 **¿Por qué es importante?** Mockear `fetch` es la técnica estándar para probar código dependiente de red de forma rápida, determinista y capaz de simular exactamente los escenarios de error que serían difíciles de provocar confiablemente contra servidores reales.
 
-**Código del ejemplo:**
+#### Paso 4 · Demostración guiada desde cero
 
-```js
-vi.spyOn(global, "fetch").mockResolvedValue({
-  ok: true,
-  json: async () => ([{ id: 1, nombre: "Ana" }]),
-});
-// el código bajo prueba que llama fetch() recibe esta respuesta simulada,
-// sin ninguna petición de red real ni latencia
+Desde una carpeta vacía crea `ejemplo-fetch-mock`, ejecuta `npm init -y`, instala Vitest y crea `src` y `test`; después crea `src/cliente.js`:
+
+```bash
+mkdir ejemplo-fetch-mock
+cd ejemplo-fetch-mock
+npm init -y
+npm install -D vitest
+mkdir src test
 ```
 
+Crea `src/cliente.js`:
+
+```js
+export async function obtenerGuia(numero, fetchImpl = fetch) {
+  const respuesta = await fetchImpl(`/api/guias/${encodeURIComponent(numero)}`);
+  if (!respuesta.ok) throw new Error(`HTTP ${respuesta.status}`);
+  return respuesta.json();
+}
+```
+
+Crea `test/cliente.test.js`:
+
+```js
+import { afterEach, describe, expect, it, vi } from "vitest";
+import { obtenerGuia } from "./cliente-guias.js";
+
+afterEach(() => vi.restoreAllMocks());
+
+describe("obtenerGuia", () => {
+  it("devuelve la guía solicitada", async () => {
+    const respuesta = { numero: "RF-101", estado: "CREADA" };
+    const fetchMock = vi.spyOn(globalThis, "fetch").mockResolvedValue({
+      ok: true,
+      status: 200,
+      // json también es asíncrono en un Response real.
+      json: async () => respuesta,
+    });
+
+    await expect(obtenerGuia("RF-101")).resolves.toEqual(respuesta);
+    expect(fetchMock).toHaveBeenCalledWith("/api/guias/RF-101");
+  });
+
+  it("convierte un 404 en error explícito", async () => {
+    vi.spyOn(globalThis, "fetch").mockResolvedValue({ ok: false, status: 404 });
+    await expect(obtenerGuia("RF-404")).rejects.toThrow("HTTP 404");
+  });
+});
+```
+
+Ejecuta:
+
+```bash
+npm test -- src/api/cliente-guias.test.js
+```
+
+**Resultado esperado:** dos pruebas aprobadas, una llamada con la URL codificada y cero solicitudes visibles en Network; el 404 se convierte en rechazo controlado.
+
+**Fallo deliberado:** cambia `json: async () => respuesta` por `json: respuesta`. El cliente intenta invocar un objeto como función y produce `TypeError`; restaura la forma real de `Response` en vez de adaptar producción a un mock incorrecto.
+
+#### Paso 5 · Práctica guiada
+
+Añade un caso `mockRejectedValue(new TypeError("Failed to fetch"))` y conserva una distinción entre red y HTTP. **Pista:** fallo de red rechaza `fetch`; error HTTP resuelve con `ok: false`.
+
+#### Paso 6 · Práctica independiente
+
+Prueba un cliente con dos fallos transitorios y éxito usando `mockRejectedValueOnce` y `mockResolvedValueOnce`. Verifica número de intentos y añade una prueba de integración separada contra un servidor controlado para no depender exclusivamente de la imitación.
+
+#### Paso 7 · Cierre y evidencia
+
+Ya puedes simular la frontera HTTP conservando su contrato esencial. El siguiente tema automatizará análisis, formato y cobertura sin confundir métricas con corrección. **Evidencia:** demuestra éxito, 404, fallo de red y mock mal formado; explica por qué restaurar `fetch` es obligatorio.
+
+**Errores comunes:** hacer red real en unit tests; omitir `ok`; simular `json` como dato; dejar mocks activos; probar solo éxito; crear una respuesta tan incompleta que ya no representa la API.
+
+**Fuentes oficiales:** [Vitest — Mocking Requests](https://vitest.dev/guide/mocking/requests) y [MDN — Response](https://developer.mozilla.org/en-US/docs/Web/API/Response).
+
 ### Tema 4: ESLint, Prettier y cobertura de código
+
+#### Paso 1 · Objetivo y preparación
+
+Al finalizar podrás distinguir análisis estático, formato y cobertura, configurar comandos reproducibles y usar un reporte para encontrar una rama sin prueba. Convertirás calidad de RutaFlow en un contrato ejecutable sin perseguir un porcentaje vacío.
+
+**Prerrequisitos:** npm, Vitest y una suite verde. Conserva `package-lock.json`; las mismas versiones deben ejecutarse localmente y en CI.
+
+#### Paso 2 · Contexto y caso real
+
+RutaFlow ya tiene pruebas, pero aún puede contener variables sin usar, formato inconsistente o ramas nunca ejercitadas. El proyecto integrará tres señales distintas y bloqueará errores, manteniendo las decisiones de cobertura enfocadas en el dominio crítico.
+
+#### Paso 3 · Teoría, modelo mental y analogía
 
 **Conceptos clave:** análisis estático de calidad frente a formato visual, cobertura de líneas/ramas, límites de la cobertura como métrica.
 
@@ -102,19 +333,84 @@ Sin embargo, un 100% de cobertura no garantiza en absoluto la ausencia de bugs: 
 
 **¿Por qué es importante?** ESLint y Prettier automatizan dos aspectos distintos y complementarios de calidad de código, eliminando tanto errores de lógica detectables como discusiones de estilo; la cobertura es una señal útil de código no probado, pero nunca una garantía de corrección real del comportamiento verificado.
 
-**Prueba en terminal:**
+#### Paso 4 · Demostración guiada desde cero
+
+Instala herramientas en `rutaflow-web`:
 
 ```bash
-npm init @eslint/config@latest    # configura reglas de calidad de lógica
-npx prettier --write .            # aplica formato visual consistente
-npx vitest --coverage             # reporta qué líneas/ramas se ejecutaron
-# 100% cobertura ≠ ausencia de bugs; solo significa "se ejecutó", no "se verificó bien"
+npm install --save-dev eslint @eslint/js prettier @vitest/coverage-v8
 ```
+
+Desde una carpeta vacía crea `ejemplo-calidad-js`, instala ESLint, Prettier y Vitest, y crea `src`:
+
+```bash
+mkdir ejemplo-calidad-js
+cd ejemplo-calidad-js
+npm init -y
+npm install -D eslint prettier vitest
+mkdir src
+```
+
+Crea `eslint.config.js`:
+
+```js
+import js from "@eslint/js";
+
+export default [
+  js.configs.recommended,
+  {
+    files: ["src/**/*.js"],
+    languageOptions: { globals: { document: "readonly", fetch: "readonly" } },
+    rules: { eqeqeq: "error", "no-unused-vars": "error" },
+  },
+];
+```
+
+Crea `.prettierrc.json` con `{ "printWidth": 100, "semi": true }` y agrega scripts:
+
+```json
+{
+  "scripts": {
+    "lint": "eslint .",
+    "format:check": "prettier --check .",
+    "test:coverage": "vitest run --coverage",
+    "verify": "npm run lint && npm run format:check && npm test"
+  }
+}
+```
+
+Ejecuta:
+
+```bash
+npm run lint
+npm run format:check
+npm run test:coverage
+```
+
+**Resultado esperado:** lint y formato terminan sin errores; cobertura genera tabla con líneas, funciones y ramas, además de `coverage/` para inspección detallada.
+
+**Fallo deliberado:** añade `const temporal = 1;` sin usar en `src/main.js`. ESLint muestra regla, archivo y línea. Elimina la variable o úsala con intención; no desactives la regla para ocultar deuda.
+
+#### Paso 5 · Práctica guiada
+
+Abre el reporte HTML, localiza una rama roja de `crearGuia` y escribe un caso significativo. **Pista:** primero describe el comportamiento ausente; el porcentaje debe subir como consecuencia, no como objetivo único.
+
+#### Paso 6 · Práctica independiente
+
+Define un umbral razonado para `src/dominio/**`, crea un archivo deliberadamente ejecutado sin aserciones y explica por qué su cobertura no prueba corrección. Documenta qué comandos ejecutará CI y cuánto tardan.
+
+#### Paso 7 · Cierre y evidencia
+
+Ya puedes interpretar tres controles complementarios y mantenerlos reproducibles. El próximo módulo medirá rendimiento con la misma disciplina: hipótesis, métrica y comparación. **Evidencia:** entrega configuraciones, salida de los tres comandos, diagnóstico `no-unused-vars` y una rama cubierta con una aserción significativa.
+
+**Errores comunes:** hacer competir ESLint y Prettier por formato; ejecutar herramientas globales con versiones distintas; perseguir 100% sin aserciones; ignorar ramas; corregir warnings desactivando reglas sin justificar.
+
+**Fuentes oficiales:** [ESLint — Configure](https://eslint.org/docs/latest/use/configure/), [Prettier — Install](https://prettier.io/docs/install) y [Vitest — Coverage](https://vitest.dev/guide/coverage).
 
 ---
 
 
-## Laboratorio práctico
+## Construcción guiada del capítulo
 
 **Objetivo del laboratorio:** construir una suite de pruebas con cobertura significativa sobre la biblioteca de funciones utilitarias del Módulo 1, integrando ESLint y Prettier al flujo de trabajo.
 
@@ -130,6 +426,26 @@ npx vitest --coverage             # reporta qué líneas/ramas se ejecutaron
 | 6 | Ejecutar el reporte de cobertura | `npx vitest --coverage` | Identifica qué rama de código no está cubierta |
 
 **Verificación:** el laboratorio se considera exitoso si la suite de pruebas alcanza más del 80% de cobertura sobre la biblioteca del Módulo 1, si ESLint no reporta ningún warning pendiente, y si la prueba de `fetchConReintentos` verifica correctamente el escenario de reintentos exitosos tras fallos simulados.
+
+### Comprueba lo construido
+
+#### Ejercicio verificable 1
+
+¿Qué fase de Arrange–Act–Assert compara el resultado con la expectativa?
+
+**Respuesta esperada:** assert
+
+#### Ejercicio verificable 2
+
+¿Qué función de Vitest crea una función simulada que registra sus llamadas?
+
+**Respuesta esperada:** vi.fn|vi.fn()
+
+#### Ejercicio verificable 3
+
+¿Qué herramienta corrige formato visual sin decidir la lógica del programa?
+
+**Respuesta esperada:** Prettier
 
 **Errores comunes y soluciones**
 

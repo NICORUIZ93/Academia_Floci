@@ -5,6 +5,35 @@
 
 ### Tema 1: @State y @Binding
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás modelar estado SwiftUI desde cero. Prerrequisitos: macOS, Xcode y Swift. Verifica swift --version y xcodebuild -version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real de entregas, una vista edita un pedido, otra observa el mismo estado y el cambio debe propagarse sin duplicar fuentes.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+State pertenece a la vista, Binding comparte una referencia de edición, Observable modela estado observable y Environment distribuye dependencias por jerarquía. Struct expresa valor y class identidad. La analogía es una pizarra compartida: cada pantalla debe saber quién es dueño y qué puede modificar.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-ios-m2
+cd ejemplo-ios-m2
+swift package init --type executable
+swift run
+```
+Crea Sources/main.swift con un modelo Delivery observable y una función que cambie estado; replica @State/@Binding en un proyecto SwiftUI de Xcode.
+
+#### Paso 5 · Práctica guiada
+Pista: crea deliberadamente dos fuentes independientes para provocar un fallo deliberado de estado divergente; observa la UI y corrígela con un único dueño. Resultado esperado: vistas sincronizadas.
+
+#### Paso 6 · Práctica independiente
+Añade Environment dependency, estado loading/error y una prueba que verifique actualización y cancelación.
+
+#### Paso 7 · Cierre y evidencia
+Guarda código, preview y salida; como siguiente paso estudia async/await. Errores comunes: estado duplicado, Environment oculto, observar valor equivocado y referencias fuertes innecesarias. Fuentes oficiales: https://developer.apple.com/documentation/swiftui/state-and-data-flow y https://developer.apple.com/documentation/observation.
+**¿Por qué es importante?** Porque el ownership explícito evita UI incoherente y ciclos de actualización.
+**Evidencia de aprendizaje:** entrega modelo, bindings, fallo y corrección.
 **Conceptos clave:** estado propio de una vista vs referencia mutable al estado de otra.
 
 #### Cómo leer `@State`, `@Binding` y el prefijo `$`
@@ -53,6 +82,35 @@ struct BotonContador: View {
 
 ### Tema 2: @Observable
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás modelar estado SwiftUI desde cero. Prerrequisitos: macOS, Xcode y Swift. Verifica swift --version y xcodebuild -version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real de entregas, una vista edita un pedido, otra observa el mismo estado y el cambio debe propagarse sin duplicar fuentes.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+State pertenece a la vista, Binding comparte una referencia de edición, Observable modela estado observable y Environment distribuye dependencias por jerarquía. Struct expresa valor y class identidad. La analogía es una pizarra compartida: cada pantalla debe saber quién es dueño y qué puede modificar.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-ios-m2
+cd ejemplo-ios-m2
+swift package init --type executable
+swift run
+```
+Crea Sources/main.swift con un modelo Delivery observable y una función que cambie estado; replica @State/@Binding en un proyecto SwiftUI de Xcode.
+
+#### Paso 5 · Práctica guiada
+Pista: crea deliberadamente dos fuentes independientes para provocar un fallo deliberado de estado divergente; observa la UI y corrígela con un único dueño. Resultado esperado: vistas sincronizadas.
+
+#### Paso 6 · Práctica independiente
+Añade Environment dependency, estado loading/error y una prueba que verifique actualización y cancelación.
+
+#### Paso 7 · Cierre y evidencia
+Guarda código, preview y salida; como siguiente paso estudia async/await. Errores comunes: estado duplicado, Environment oculto, observar valor equivocado y referencias fuertes innecesarias. Fuentes oficiales: https://developer.apple.com/documentation/swiftui/state-and-data-flow y https://developer.apple.com/documentation/observation.
+**¿Por qué es importante?** Porque el ownership explícito evita UI incoherente y ciclos de actualización.
+**Evidencia de aprendizaje:** entrega modelo, bindings, fallo y corrección.
 **Conceptos clave:** redibujado granular basado en la propiedad específica leída, no en el objeto completo.
 
 ```swift
@@ -86,6 +144,35 @@ class TareasViewModel {
 
 ### Tema 3: @Environment y identidad vs valor
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás modelar estado SwiftUI desde cero. Prerrequisitos: macOS, Xcode y Swift. Verifica swift --version y xcodebuild -version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real de entregas, una vista edita un pedido, otra observa el mismo estado y el cambio debe propagarse sin duplicar fuentes.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+State pertenece a la vista, Binding comparte una referencia de edición, Observable modela estado observable y Environment distribuye dependencias por jerarquía. Struct expresa valor y class identidad. La analogía es una pizarra compartida: cada pantalla debe saber quién es dueño y qué puede modificar.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-ios-m2
+cd ejemplo-ios-m2
+swift package init --type executable
+swift run
+```
+Crea Sources/main.swift con un modelo Delivery observable y una función que cambie estado; replica @State/@Binding en un proyecto SwiftUI de Xcode.
+
+#### Paso 5 · Práctica guiada
+Pista: crea deliberadamente dos fuentes independientes para provocar un fallo deliberado de estado divergente; observa la UI y corrígela con un único dueño. Resultado esperado: vistas sincronizadas.
+
+#### Paso 6 · Práctica independiente
+Añade Environment dependency, estado loading/error y una prueba que verifique actualización y cancelación.
+
+#### Paso 7 · Cierre y evidencia
+Guarda código, preview y salida; como siguiente paso estudia async/await. Errores comunes: estado duplicado, Environment oculto, observar valor equivocado y referencias fuertes innecesarias. Fuentes oficiales: https://developer.apple.com/documentation/swiftui/state-and-data-flow y https://developer.apple.com/documentation/observation.
+**¿Por qué es importante?** Porque el ownership explícito evita UI incoherente y ciclos de actualización.
+**Evidencia de aprendizaje:** entrega modelo, bindings, fallo y corrección.
 **Conceptos clave:** inyección de dependencias sin pasar manualmente por cada inicializador.
 
 ```swift

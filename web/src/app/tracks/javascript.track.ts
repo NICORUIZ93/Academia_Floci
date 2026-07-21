@@ -206,7 +206,7 @@ export const JAVASCRIPT_MODULES: CourseModule[] = [
     'SPA endurecida con threat model, CSP, render seguro, auditoría de dependencias, prueba de memoria, telemetría de errores, compatibilidad e internacionalización verificadas.'),
   m(14, 'JavaScript Master: TypeScript, WASM y cómputo emergente', 'JavaScript Master', 'Experto', '10 h', '#e9b400',
     'Amplía JavaScript con TypeScript avanzado, workers, bundlers, accesibilidad, WebAssembly, Web3 y ML responsable en navegador.',
-    ['TypeScript avanzado', 'Web Workers y Service Workers', 'Vite, Rollup, webpack y esbuild', 'ARIA y navegación por teclado', 'WebAssembly con Rust/C', 'Web3 y TensorFlow.js/ONNX/WebNN'],
+    ['TypeScript avanzado', 'Web Workers y Service Workers', 'Vite, Rollup, webpack y esbuild', 'ARIA y navegación por teclado', 'WebAssembly con Rust/C', 'Web3 y TensorFlow.js/ONNX/WebNN', 'Geolocalización y permisos', 'sessionStorage, cookies e IndexedDB', 'Expresiones regulares y Unicode', 'Patrones Factory, Strategy, Observer y Pub/Sub', 'Service Workers y PWA offline', 'WebSocket y tiempo real', 'Typed Arrays, ArrayBuffer y DataView', 'Temporal, iterator helpers y ECMAScript moderno'],
     ['Modela tipos condicionales', 'Mueve CPU a worker', 'Compara bundles', 'Audita teclado', 'Mide frontera WASM', 'Evalúa modelo local y amenaza Web3'],
     ['¿Cuándo WASM no mejora rendimiento?', '¿Qué riesgos introduce firmar una transacción desde la web?'], ['TypeScript','WebAssembly','Vite','ARIA','TensorFlow.js'], 'Aplicación web accesible con workers, bundle medido y laboratorios aislados WASM, Web3 y ML.'),
 ];

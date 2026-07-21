@@ -5,6 +5,37 @@
 
 ### Tema 1: Estructura del proyecto integrador
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás ensamblar una aplicación React completa desde cero. Prerrequisitos: Node.js LTS, npm y editor. Verifica npm --version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real, una app de entregas integra rutas, estado local, cache remoto, formularios y errores visibles sin mezclar responsabilidades.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+El proyecto integra componentes, router, query cache y store cliente con contratos. La analogía es una central logística: cada estación tiene entrada, proceso, salida, métrica y procedimiento de recuperación.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-react-m12
+cd ejemplo-react-m12
+npm create vite@latest app -- --template react-ts
+cd app
+npm install react-router-dom @tanstack/react-query zustand
+npm run dev
+```
+Crea src/features/deliveries con ruta, useTareas, store y formulario; implementa primero el camino feliz y prueba en el navegador.
+
+#### Paso 5 · Práctica guiada
+Pista: rompe deliberadamente la URL de consulta para provocar un fallo deliberado de red; diagnostica el estado error y corrígelo. Resultado esperado: flujo estable con loading/error/data.
+
+#### Paso 6 · Práctica independiente
+Añade optimistic update con rollback, ruta protegida, prueba MSW y README con carpetas, comandos y decisiones.
+
+#### Paso 7 · Cierre y evidencia
+Guarda capturas, tests, árbol y logs; como siguiente paso publica build. Errores comunes: duplicar cache y store, esconder errores, rutas sin fallback y componentes gigantes. Fuentes oficiales: https://react.dev/learn y https://tanstack.com/query/latest/docs/framework/react/overview.
+**¿Por qué es importante?** Porque integrar capas demuestra aprendizaje transferible y revela huecos.
+**Evidencia de aprendizaje:** entrega aplicación, pruebas, fallo diagnosticado y guía reproducible.
 **Conceptos clave:** organización por feature, separación entre `features/` y `store/`.
 
 Siguiendo el principio de organización por feature (el mismo criterio aplicado en el proyecto integrador de Angular, Módulo 13 del track de Angular), el proyecto se estructura en `features/tareas/` (con `ListaTareas.tsx` para la vista y `useTareas.ts` como hook dedicado que encapsula el acceso a datos con TanStack Query) y `features/auth/` (con `RutaProtegida.tsx` y `useAuth.ts`), manteniendo separadas las responsabilidades de dominio de gestión de tareas y de autenticación, comunicándose entre sí únicamente a través de puntos de integración explícitos, exactamente el mismo criterio de cohesión estudiado en profundidad en el Módulo 8 del track de Angular.
@@ -33,6 +64,37 @@ src/
 
 ### Tema 2: Integrando rutas, TanStack Query y Zustand
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás ensamblar una aplicación React completa desde cero. Prerrequisitos: Node.js LTS, npm y editor. Verifica npm --version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real, una app de entregas integra rutas, estado local, cache remoto, formularios y errores visibles sin mezclar responsabilidades.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+El proyecto integra componentes, router, query cache y store cliente con contratos. La analogía es una central logística: cada estación tiene entrada, proceso, salida, métrica y procedimiento de recuperación.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-react-m12
+cd ejemplo-react-m12
+npm create vite@latest app -- --template react-ts
+cd app
+npm install react-router-dom @tanstack/react-query zustand
+npm run dev
+```
+Crea src/features/deliveries con ruta, useTareas, store y formulario; implementa primero el camino feliz y prueba en el navegador.
+
+#### Paso 5 · Práctica guiada
+Pista: rompe deliberadamente la URL de consulta para provocar un fallo deliberado de red; diagnostica el estado error y corrígelo. Resultado esperado: flujo estable con loading/error/data.
+
+#### Paso 6 · Práctica independiente
+Añade optimistic update con rollback, ruta protegida, prueba MSW y README con carpetas, comandos y decisiones.
+
+#### Paso 7 · Cierre y evidencia
+Guarda capturas, tests, árbol y logs; como siguiente paso publica build. Errores comunes: duplicar cache y store, esconder errores, rutas sin fallback y componentes gigantes. Fuentes oficiales: https://react.dev/learn y https://tanstack.com/query/latest/docs/framework/react/overview.
+**¿Por qué es importante?** Porque integrar capas demuestra aprendizaje transferible y revela huecos.
+**Evidencia de aprendizaje:** entrega aplicación, pruebas, fallo diagnosticado y guía reproducible.
 **Conceptos clave:** rutas protegidas con layout, estado de servidor centralizado en un hook dedicado.
 
 `RutaProtegida` (Módulo 5) envuelve las rutas de la feature de tareas, verificando la sesión activa mediante `useAuth` antes de permitir el acceso, redirigiendo a `/login` en caso contrario; el layout compartido de esas rutas (con la navegación común) se define una única vez en la configuración de rutas anidadas, evitando duplicarlo en cada vista individual de la feature de tareas.
@@ -55,6 +117,37 @@ uiStore.ts (Zustand) → solo estado de UI pura, desacoplado de useTareas
 
 ### Tema 3: useTareas — hook dedicado con TanStack Query
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás ensamblar una aplicación React completa desde cero. Prerrequisitos: Node.js LTS, npm y editor. Verifica npm --version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real, una app de entregas integra rutas, estado local, cache remoto, formularios y errores visibles sin mezclar responsabilidades.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+El proyecto integra componentes, router, query cache y store cliente con contratos. La analogía es una central logística: cada estación tiene entrada, proceso, salida, métrica y procedimiento de recuperación.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-react-m12
+cd ejemplo-react-m12
+npm create vite@latest app -- --template react-ts
+cd app
+npm install react-router-dom @tanstack/react-query zustand
+npm run dev
+```
+Crea src/features/deliveries con ruta, useTareas, store y formulario; implementa primero el camino feliz y prueba en el navegador.
+
+#### Paso 5 · Práctica guiada
+Pista: rompe deliberadamente la URL de consulta para provocar un fallo deliberado de red; diagnostica el estado error y corrígelo. Resultado esperado: flujo estable con loading/error/data.
+
+#### Paso 6 · Práctica independiente
+Añade optimistic update con rollback, ruta protegida, prueba MSW y README con carpetas, comandos y decisiones.
+
+#### Paso 7 · Cierre y evidencia
+Guarda capturas, tests, árbol y logs; como siguiente paso publica build. Errores comunes: duplicar cache y store, esconder errores, rutas sin fallback y componentes gigantes. Fuentes oficiales: https://react.dev/learn y https://tanstack.com/query/latest/docs/framework/react/overview.
+**¿Por qué es importante?** Porque integrar capas demuestra aprendizaje transferible y revela huecos.
+**Evidencia de aprendizaje:** entrega aplicación, pruebas, fallo diagnosticado y guía reproducible.
 **Conceptos clave:** encapsular queryKey y queryFn detrás de un hook con nombre significativo.
 
 `useTareas()` envuelve `useQuery<Tarea[]>({ queryKey: ['tareas'], queryFn: () => fetch('/api/tareas').then(r => r.json()) })` dentro de un hook con nombre significativo específico del dominio, en vez de que cada componente que necesita la lista de tareas invoque `useQuery` directamente con su propia `queryKey` y `queryFn` repetidas en cada punto de uso: esta encapsulación centraliza en un único lugar cualquier cambio futuro relacionado con cómo se obtienen las tareas (el endpoint exacto, headers adicionales necesarios, transformación de la respuesta), sin tener que modificar cada componente individual que consume esos datos.

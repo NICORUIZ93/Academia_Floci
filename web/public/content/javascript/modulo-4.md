@@ -5,6 +5,18 @@
 
 ### Tema 1: map, filter, reduce, find, some/every
 
+#### Paso 1 · Objetivo y preparación
+
+Al finalizar podrás elegir el método de array según la intención y construir un pipeline que calcule la carga activa sin mutar entregas.
+
+**Conocimiento previo:** funciones flecha, arrays, objetos y valores booleanos.
+
+#### Paso 2 · Contexto y caso real
+
+**¿Por qué es importante?** El tablero de RutaFlow debe seleccionar guías activas, transformar sus datos y obtener totales. Usar un método con propósito claro permite leer la operación sin descifrar un bucle genérico.
+
+#### Paso 3 · Teoría con analogía
+
 **Conceptos clave:** transformación (map), selección (filter), acumulación (reduce), búsqueda y comprobación booleana.
 
 `map`, `filter` y `reduce` son los tres métodos funcionales fundamentales sobre arrays, y cada uno resuelve una intención distinta y bien delimitada. `map` transforma cada elemento de un array en otro valor, produciendo un array nuevo de la misma longitud; su uso correcto implica que la función pasada siempre devuelve un valor (si no se necesita un valor de retorno, probablemente no se necesita `map`, sino `forEach`). `filter` selecciona un subconjunto de elementos que cumplen una condición booleana, produciendo un array potencialmente más corto; `reduce` acumula todos los elementos de un array en un único valor final (que puede ser un número, un objeto, otro array, o cualquier estructura), siendo la herramienta más general y potente de las tres, capaz de expresar tanto `map` como `filter` si fuera necesario, aunque usar la herramienta más específica disponible produce código más legible.
@@ -21,14 +33,77 @@ Dominar cuándo usar cada uno de estos métodos frente a un bucle `for` tradicio
 
 **Diagrama:**
 
-```
-pedidos.filter(p => p.monto > 50)   // selecciona
-       .map(p => p.cliente)         // transforma
-// vs un único reduce que hace ambos pasos en una sola pasada:
-pedidos.reduce((acc, p) => p.monto > 50 ? [...acc, p.cliente] : acc, [])
+```mermaid
+flowchart LR
+    RAW["guías recibidas"] --> FILTER["filter: solo EN_RUTA"] --> MAP["map: extraer peso"] --> REDUCE["reduce: sumar carga"]
 ```
 
+#### Paso 4 · Demostración guiada desde cero
+
+#### Construcción RutaFlow: calcular la carga activa
+
+Desde una carpeta vacía crea `ejemplo-colecciones`, ejecuta `npm init -y`, crea `src` y después `src/colecciones.js`. Cada operación conserva una intención: `filter` selecciona, `map` transforma y `reduce` agrega.
+
+```bash
+mkdir ejemplo-colecciones
+cd ejemplo-colecciones
+npm init -y
+mkdir src
+```
+
+```js
+const guias = [
+  { numero: 'RF-101', estado: 'EN_RUTA', pesoKg: 4 },
+  { numero: 'RF-102', estado: 'ENTREGADA', pesoKg: 2 },
+  { numero: 'RF-103', estado: 'EN_RUTA', pesoKg: 7 },
+];
+
+const activas = guias.filter((guia) => guia.estado === 'EN_RUTA');
+const pesos = activas.map((guia) => guia.pesoKg);
+const cargaActiva = pesos.reduce((total, peso) => total + peso, 0);
+
+console.log({ numeros: activas.map(({ numero }) => numero), cargaActiva });
+console.log('¿Hay una guía pesada?', guias.some(({ pesoKg }) => pesoKg > 5));
+console.log('¿Todas tienen número?', guias.every(({ numero }) => numero.length > 0));
+```
+
+Desde `academia-javascript`, ejecuta:
+
+```bash
+node src/colecciones.js
+```
+
+**Resultado esperado:** contiene `numeros: ['RF-101', 'RF-103']`, `cargaActiva: 11` y dos valores `true`.
+
+**Fallo deliberado:** elimina el valor inicial `0` y prueba un array vacío. `reduce` lanza `TypeError`; restituir el acumulador inicial hace explícito el resultado del caso vacío.
+
+#### Paso 5 · Práctica guiada
+
+Usa `find` para localizar `RF-103`. **Pista:** prueba también `RF-999` y valida `undefined` antes de leer una propiedad.
+
+#### Paso 6 · Práctica independiente
+
+Calcula el peso promedio de guías activas en una sola pasada y en un pipeline legible. Compara resultados, caso vacío y trade-off de claridad frente a recorridos.
+
+#### Paso 7 · Cierre y evidencia
+
+Ya eliges transformación, selección, acumulación, búsqueda o comprobación según la pregunta. El siguiente tema elige estructuras por unicidad y tipo de clave. **Evidencia:** demuestra el resultado del tablero, el fallo de `reduce` y ambas versiones del promedio. Fuente oficial: [MDN — Array](https://developer.mozilla.org/es/docs/Web/JavaScript/Reference/Global_Objects/Array).
+
+**Errores comunes:** usar `map` sin retornar; omitir valor inicial en `reduce`; usar `filter` para buscar uno; encadenar pasadas costosas sin medir.
+
 ### Tema 2: Set y Map frente a Array y Object
+
+#### Paso 1 · Objetivo y preparación
+
+Al finalizar podrás escoger `Array`, `Object`, `Set` o `Map` según orden, duplicados, forma y claves dinámicas.
+
+**Conocimiento previo:** arrays, objetos, iterables y comparación por referencia.
+
+#### Paso 2 · Contexto y caso real
+
+**¿Por qué es importante?** RutaFlow recibe escaneos repetidos y busca guías por número. `Set` expresa unicidad local y `Map` evita recorrer toda la lista en cada consulta.
+
+#### Paso 3 · Teoría con analogía
 
 **Conceptos clave:** valores únicos (`Set`), claves de cualquier tipo (`Map`), orden de inserción garantizado.
 
@@ -46,13 +121,77 @@ La elección entre `Map` y un objeto plano para almacenar pares clave-valor depe
 
 **Diagrama:**
 
-```
-Set: [1,2,2,3,3,3] → new Set(...) → {1,2,3} (únicos, orden de inserción)
-Map: claves de CUALQUIER tipo, size directo, iterable con for...of
-     const m = new Map(); m.set(objetoComoClave, "valor");
+```mermaid
+flowchart TD
+    NEED{"¿Qué representa el dato?"}
+    NEED -->|"secuencia y duplicados"| ARRAY["Array"]
+    NEED -->|"registro de forma fija"| OBJECT["Object"]
+    NEED -->|"valores únicos"| SET["Set"]
+    NEED -->|"claves dinámicas"| MAP["Map"]
 ```
 
+#### Paso 4 · Demostración guiada desde cero
+
+Desde una carpeta vacía crea `ejemplo-set-map`:
+
+```bash
+mkdir ejemplo-set-map
+cd ejemplo-set-map
+npm init -y
+mkdir src
+```
+
+#### Construcción RutaFlow: evitar escaneos y duplicados
+
+Actualiza `academia-javascript/src/colecciones.js`:
+
+```js
+const codigosEscaneados = ['RF-101', 'RF-101', 'RF-103'];
+const codigosUnicos = new Set(codigosEscaneados);
+
+const guiasPorNumero = new Map(guias.map((guia) => [guia.numero, guia]));
+console.log([...codigosUnicos]);
+console.log(guiasPorNumero.get('RF-103'));
+console.log('Guías indexadas:', guiasPorNumero.size);
+```
+
+Ejecuta:
+
+```bash
+node src/colecciones.js
+```
+
+**Resultado esperado:** dos códigos únicos, la guía `RF-103` y tamaño `3`.
+
+**Fallo deliberado:** busca `RF-999` y lee inmediatamente `.estado`. `Map.get` devuelve `undefined` y aparece `TypeError`; usa `has` o una comprobación explícita antes de acceder.
+
+#### Paso 5 · Práctica guiada
+
+Cuenta escaneos por código con `Map`. **Pista:** usa `(conteos.get(codigo) ?? 0) + 1` y verifica que `RF-101` queda en dos.
+
+#### Paso 6 · Práctica independiente
+
+Implementa un índice por objeto conductor como clave de `Map` y demuestra que dos objetos con iguales propiedades son claves distintas. Decide si el dominio necesita identidad u otro ID estable.
+
+#### Paso 7 · Cierre y evidencia
+
+Ya eliges estructuras por semántica y no por costumbre. El siguiente tema actualiza estructuras anidadas sin destruir versiones anteriores. **Evidencia:** demuestra el resultado, la búsqueda ausente, el conteo y la diferencia de identidad. Fuente oficial: [MDN — keyed collections](https://developer.mozilla.org/es/docs/Web/JavaScript/Guide/Keyed_collections).
+
+**Errores comunes:** creer que `Set` deduplica objetos por contenido; usar objeto plano con claves arbitrarias; leer `Map` con corchetes; tratar unicidad en memoria como restricción persistente.
+
 ### Tema 3: Inmutabilidad y actualización de estructuras anidadas
+
+#### Paso 1 · Objetivo y preparación
+
+Al finalizar podrás actualizar estructuras anidadas sin modificar versiones anteriores y decidir cuándo normalizar el estado.
+
+**Conocimiento previo:** spread, referencias, `Map` y comparación de objetos.
+
+#### Paso 2 · Contexto y caso real
+
+**¿Por qué es importante?** RutaFlow necesita conservar estados anteriores para auditoría y para que la interfaz detecte cambios por referencia. Una copia superficial incompleta puede borrar país o mutar una dirección compartida.
+
+#### Paso 3 · Teoría con analogía
 
 **Conceptos clave:** inmutabilidad, spread anidado, normalización de datos.
 
@@ -70,15 +209,80 @@ La normalización de datos es una técnica relacionada: en vez de anidar profund
 
 **Diagrama:**
 
-```
-const usuario = { nombre: "Ana", direccion: { ciudad: "Lima", pais: "Perú" } };
-// INCORRECTO (pierde "pais"):
-{...usuario, direccion: { ciudad: "Bogotá" }}
-// CORRECTO (spread en cada nivel):
-{...usuario, direccion: {...usuario.direccion, ciudad: "Bogotá"}}
+```mermaid
+flowchart LR
+    OLD["estado anterior"] --> COPY["copia de cada nivel modificado"] --> NEW["estado nuevo"]
+    OLD -. "permanece intacto" .-> CHECK["comparación y auditoría"]
 ```
 
+#### Paso 4 · Demostración guiada desde cero
+
+#### Construcción RutaFlow: actualizar sin perder el historial
+
+Desde una carpeta vacía crea `ejemplo-inmutabilidad`, ejecuta `npm init -y`, crea `src` y después `src/estado-inmutable.js`:
+
+```bash
+mkdir ejemplo-inmutabilidad
+cd ejemplo-inmutabilidad
+npm init -y
+mkdir src
+```
+
+```js
+const entrega = Object.freeze({
+  numero: 'RF-101',
+  destino: Object.freeze({ ciudad: 'Lima', pais: 'Perú' }),
+  estado: 'CREADA',
+});
+
+const actualizada = {
+  ...entrega,
+  destino: { ...entrega.destino, ciudad: 'Bogotá' },
+  estado: 'EN_RUTA',
+};
+
+console.log('Anterior:', entrega);
+console.log('Nueva:', actualizada);
+console.log('Referencias distintas:', entrega !== actualizada);
+```
+
+Ejecuta:
+
+```bash
+node src/estado-inmutable.js
+```
+
+**Resultado esperado:** conserva `Perú`, mantiene el original en `CREADA` y muestra `true` al comparar referencias.
+
+**Fallo deliberado:** reemplaza `destino` solo por `{ ciudad: 'Bogotá' }`; desaparece `pais`. Compara ambas salidas y copia también las propiedades del nivel anidado.
+
+#### Paso 5 · Práctica guiada
+
+Actualiza `codigoPostal` sin cambiar ciudad ni país. **Pista:** necesitas spread en el objeto raíz y en `destino`; comprueba qué referencias deben cambiar.
+
+#### Paso 6 · Práctica independiente
+
+Normaliza tres entregas como `{ byId, allIds }`, actualiza una sola entidad y demuestra que las otras conservan su referencia. Explica cuándo la normalización compensa la complejidad.
+
+#### Paso 7 · Cierre y evidencia
+
+Ya conservas historia y copias únicamente niveles modificados. El siguiente tema asocia metadatos sin retener objetos. **Evidencia:** demuestra el resultado, la pérdida de país, su corrección y la actualización normalizada. Fuente oficial: [MDN — spread syntax](https://developer.mozilla.org/es/docs/Web/JavaScript/Reference/Operators/Spread_syntax).
+
+**Errores comunes:** creer que spread clona profundamente; reemplazar un objeto parcial perdiendo campos; usar `Object.freeze` esperando congelación profunda; normalizar sin necesidad.
+
 ### Tema 4: WeakMap y WeakSet
+
+#### Paso 1 · Objetivo y preparación
+
+Al finalizar podrás asociar metadatos débiles a objetos y explicar por qué no se pueden enumerar ni usar como almacenamiento de negocio.
+
+**Conocimiento previo:** `Map`, `Set`, referencias y noción básica de recolección de basura.
+
+#### Paso 2 · Contexto y caso real
+
+**¿Por qué es importante?** El proyecto RutaFlow puede asociar diagnósticos temporales a objetos de lectura. Un `Map` los mantendría vivos; `WeakMap` no impide su recolección cuando desaparecen las demás referencias.
+
+#### Paso 3 · Teoría con analogía
 
 **Conceptos clave:** referencias débiles, prevención de fugas de memoria, claves no enumerables.
 
@@ -96,16 +300,78 @@ En la práctica cotidiana, `WeakMap` y `WeakSet` son herramientas de uso relativ
 
 **Diagrama:**
 
-```
-Map normal: mantiene la clave viva indefinidamente (fuga de memoria potencial)
-WeakMap: si no hay otras referencias a la clave, se libera automáticamente
-  const cache = new WeakMap();
-  cache.set(elementoDOM, metadatos);
-  // si elementoDOM se elimina del DOM y no hay otra referencia,
-  // su entrada en cache desaparece automáticamente
+```mermaid
+flowchart LR
+    OBJECT["objeto de vida corta"] --> APP["referencia de la aplicación"]
+    OBJECT -. "clave débil" .-> WEAK["WeakMap: metadatos"]
+    APP -->|"se elimina"| GC["elegible para recolección"]
+    WEAK -. "no impide liberar" .-> GC
 ```
 
+#### Paso 4 · Demostración guiada desde cero
+
+#### Construcción RutaFlow: metadatos sin retener objetos
+
+Desde una carpeta vacía crea `ejemplo-weakmap`, ejecuta `npm init -y`, crea `src` y después `src/metadatos-debiles.js`:
+
+```bash
+mkdir ejemplo-weakmap
+cd ejemplo-weakmap
+npm init -y
+mkdir src
+```
+
+```js
+const diagnosticos = new WeakMap();
+
+function registrarLectura(guia, origen) {
+  diagnosticos.set(guia, { origen, registradaEn: new Date().toISOString() });
+}
+
+let guiaTemporal = { numero: 'RF-TEMP' };
+registrarLectura(guiaTemporal, 'lector-bodega');
+console.log(diagnosticos.get(guiaTemporal));
+console.log('¿Registrada?', diagnosticos.has(guiaTemporal));
+guiaTemporal = null; // ya no existe una referencia fuerte desde la aplicación
+```
+
+Ejecuta:
+
+```bash
+node src/metadatos-debiles.js
+```
+
+**Resultado esperado:** antes de retirar la referencia muestra metadatos y `true`. No intentes demostrar el momento de recolección: es no determinista.
+
+**Fallo deliberado:** intenta `for (const item of diagnosticos)`. Recibirás `TypeError: diagnosticos is not iterable`; la enumeración haría observable un proceso de recolección que no tiene tiempo garantizado.
+
+#### Paso 5 · Práctica guiada
+
+Usa `WeakSet` para marcar objetos ya validados. **Pista:** solo admite objetos; prueba primero una cadena y diagnostica el `TypeError`.
+
+#### Paso 6 · Práctica independiente
+
+Compara una asociación de diagnósticos con `Map` y `WeakMap`. Documenta cuál permite listar, cuál conoce tamaño y cuál conviene para auditoría persistente. No intentes forzar el recolector.
+
+#### Paso 7 · Cierre y evidencia
+
+Ya reservas colecciones débiles para metadatos no enumerables de objetos vivos. El siguiente tema usa operaciones inmutables modernas sobre arrays. **Evidencia:** demuestra el resultado, el fallo de iteración, la clave primitiva rechazada y la tabla comparativa. Fuente oficial: [MDN — WeakMap](https://developer.mozilla.org/es/docs/Web/JavaScript/Reference/Global_Objects/WeakMap).
+
+**Errores comunes:** esperar `size`; usar claves primitivas; guardar información que debe listarse; afirmar cuándo ocurrirá la recolección.
+
 ### Tema 5: Métodos inmutables modernos
+
+#### Paso 1 · Objetivo y preparación
+
+Al finalizar podrás ordenar, invertir, insertar y reemplazar elementos sin modificar el plan original, verificando compatibilidad del runtime.
+
+**Conocimiento previo:** inmutabilidad, métodos de array, funciones comparadoras y versiones de Node.js.
+
+#### Paso 2 · Contexto y caso real
+
+**¿Por qué es importante?** El proyecto RutaFlow compara distintas propuestas de ruta para una entrega. Si `sort()` altera el plan original, se pierde la referencia necesaria para auditar la decisión.
+
+#### Paso 3 · Teoría con analogía
 
 **Conceptos clave:** `toSorted`, `toReversed`, `toSpliced`, `with`, inmutabilidad nativa de array.
 
@@ -123,16 +389,70 @@ Adoptar estos métodos modernos en código nuevo, cuando el entorno de ejecució
 
 **Diagrama:**
 
+```mermaid
+flowchart LR
+    ORIGINAL["array original"] --> TOSORTED["toSorted"] --> SORTED["copia ordenada"]
+    ORIGINAL --> WITH["with"] --> REPLACED["copia con reemplazo"]
+    ORIGINAL -. "sin cambios" .-> VERIFY["verificación"]
 ```
-arr.sort()        → muta arr, devuelve la MISMA referencia ordenada
-arr.toSorted()    → NO muta arr, devuelve un array NUEVO ordenado
-arr.with(2, "x")  → NO muta arr, devuelve un array NUEVO con esa posición reemplazada
+
+#### Paso 4 · Demostración guiada desde cero
+
+#### Construcción RutaFlow: ordenar prioridades sin mutar
+
+Desde una carpeta vacía crea `ejemplo-arrays-modernos`, ejecuta `npm init -y`, crea `src` y después `src/arrays-modernos.js`:
+
+```bash
+mkdir ejemplo-arrays-modernos
+cd ejemplo-arrays-modernos
+npm init -y
+mkdir src
 ```
+
+```js
+const paradas = [
+  { guia: 'RF-101', prioridad: 2 },
+  { guia: 'RF-102', prioridad: 1 },
+  { guia: 'RF-103', prioridad: 3 },
+];
+
+const ordenadas = paradas.toSorted((a, b) => a.prioridad - b.prioridad);
+const corregidas = ordenadas.with(0, { ...ordenadas[0], prioridad: 0 });
+
+console.log('Original:', paradas.map(({ guia }) => guia));
+console.log('Ordenadas:', ordenadas.map(({ guia }) => guia));
+console.log('Corregidas:', corregidas);
+```
+
+Ejecuta con Node.js 20 o superior:
+
+```bash
+node --version
+node src/arrays-modernos.js
+```
+
+**Resultado esperado:** el original sigue `RF-101, RF-102, RF-103`; la copia ordenada comienza por `RF-102`.
+
+**Fallo deliberado:** sustituye `toSorted` por `sort`; la salida del original cambia porque ambos nombres apuntan al mismo array mutado. Si `toSorted` no existe, valida la versión y usa `[...paradas].sort(...)` conscientemente.
+
+#### Paso 5 · Práctica guiada
+
+Elimina la segunda parada con `toSpliced`. **Pista:** compara longitud, contenido y referencia del original antes y después.
+
+#### Paso 6 · Práctica independiente
+
+Construye cuatro versiones usando `toSorted`, `toReversed`, `toSpliced` y `with`. Añade una alternativa compatible para cada operación y prueba que ninguna muta `paradas`.
+
+#### Paso 7 · Cierre y evidencia
+
+Completaste colecciones funcionales conservando versiones auditables. El siguiente módulo explica cuándo se ejecutan tareas y microtareas. **Evidencia:** demuestra el resultado, la mutación con `sort`, las cuatro copias y la compatibilidad. Fuente oficial: [MDN — copying array methods](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/toSorted).
+
+**Errores comunes:** usar comparador booleano; asumir soporte sin revisar versión; creer que el array nuevo clona objetos internos; confundir `splice` con `toSpliced`.
 
 ---
 
 
-## Laboratorio práctico
+## Construcción guiada del capítulo
 
 **Objetivo del laboratorio:** construir un pipeline de transformación de datos completo (CSV en string → JSON agregado) usando exclusivamente métodos funcionales inmutables.
 

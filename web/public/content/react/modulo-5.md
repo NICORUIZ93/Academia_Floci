@@ -5,6 +5,37 @@
 
 ### Tema 1: Rutas anidadas y layouts compartidos
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás crear navegación React desde cero. Prerrequisitos: Node.js LTS, npm y editor. Verifica npm --version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real, el seguimiento tiene lista, detalle y administración; cada ruta debe cargar sus datos, proteger permisos y permitir volver atrás.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+Un router relaciona URL con árbol de componentes; layouts comparten estructura; loaders preparan datos y code-splitting reduce carga inicial. Una ruta protegida mejora UX, pero la autorización real vive en servidor. La analogía es un edificio con pasillos, recepción y puertas, pero cada puerta también se verifica internamente.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-react-m5
+cd ejemplo-react-m5
+npm create vite@latest app -- --template react-ts
+cd app
+npm install react-router-dom
+npm run dev
+```
+Crea src/routes.tsx con layout, ruta /deliveries/:id y loader; muestra loading, error y datos.
+
+#### Paso 5 · Práctica guiada
+Pista: apunta deliberadamente el loader a una URL inexistente para provocar un fallo deliberado; observa la pantalla de error y corrígela. Resultado esperado: navegación con estado explícito.
+
+#### Paso 6 · Práctica independiente
+Añade ruta protegida, lazy import, 404, query params y prueba de recarga directa en servidor estático.
+
+#### Paso 7 · Cierre y evidencia
+Guarda mapa de rutas, capturas, log y bundle; como siguiente paso estudia datos remotos. Errores comunes: auth solo en cliente, loaders sin cancelación, rutas ambiguas y servidor sin fallback. Fuentes oficiales: https://reactrouter.com/home y https://react.dev/learn.
+**¿Por qué es importante?** Porque la navegación es un contrato de producto y rendimiento.
+**Evidencia de aprendizaje:** entrega rutas, loader, error, lazy chunk y protección.
 **Conceptos clave:** `children`, layout compartido, composición de rutas.
 
 React Router permite definir rutas anidadas mediante la propiedad `children` de una configuración de ruta: una ruta padre (`/tareas`) puede definir un `element` que actúa como layout compartido (por ejemplo, una barra de navegación común a todas las sub-rutas), dentro del cual se renderizan sus rutas hijas (`{ index: true, element: <ListaTareas /> }` para la ruta exacta `/tareas`, y `{ path: ':id', element: <DetalleTarea /> }` para `/tareas/:id`), evitando la necesidad de repetir manualmente ese layout compartido (la navbar, por ejemplo) en cada componente de vista individual.
@@ -32,6 +63,37 @@ const router = createBrowserRouter([
 
 ### Tema 2: Loaders — datos antes de renderizar
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás crear navegación React desde cero. Prerrequisitos: Node.js LTS, npm y editor. Verifica npm --version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real, el seguimiento tiene lista, detalle y administración; cada ruta debe cargar sus datos, proteger permisos y permitir volver atrás.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+Un router relaciona URL con árbol de componentes; layouts comparten estructura; loaders preparan datos y code-splitting reduce carga inicial. Una ruta protegida mejora UX, pero la autorización real vive en servidor. La analogía es un edificio con pasillos, recepción y puertas, pero cada puerta también se verifica internamente.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-react-m5
+cd ejemplo-react-m5
+npm create vite@latest app -- --template react-ts
+cd app
+npm install react-router-dom
+npm run dev
+```
+Crea src/routes.tsx con layout, ruta /deliveries/:id y loader; muestra loading, error y datos.
+
+#### Paso 5 · Práctica guiada
+Pista: apunta deliberadamente el loader a una URL inexistente para provocar un fallo deliberado; observa la pantalla de error y corrígela. Resultado esperado: navegación con estado explícito.
+
+#### Paso 6 · Práctica independiente
+Añade ruta protegida, lazy import, 404, query params y prueba de recarga directa en servidor estático.
+
+#### Paso 7 · Cierre y evidencia
+Guarda mapa de rutas, capturas, log y bundle; como siguiente paso estudia datos remotos. Errores comunes: auth solo en cliente, loaders sin cancelación, rutas ambiguas y servidor sin fallback. Fuentes oficiales: https://reactrouter.com/home y https://react.dev/learn.
+**¿Por qué es importante?** Porque la navegación es un contrato de producto y rendimiento.
+**Evidencia de aprendizaje:** entrega rutas, loader, error, lazy chunk y protección.
 **Conceptos clave:** carga de datos previa a la vista, `useLoaderData`, evitar el parpadeo de carga.
 
 Un loader es una función asociada a una ruta específica que React Router ejecuta y espera a que complete antes de renderizar el componente de esa ruta: `loader: ({ params }) => fetch(`/api/tareas/${params.id}`)`, con el componente accediendo al resultado de esa carga mediante `useLoaderData()`, en vez de disparar la carga de datos dentro de un `useEffect` una vez que el componente ya se montó (el patrón tradicional de fetching dentro del propio componente).
@@ -56,6 +118,37 @@ const tarea = useLoaderData();
 
 ### Tema 3: Rutas protegidas y code-splitting por ruta
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás crear navegación React desde cero. Prerrequisitos: Node.js LTS, npm y editor. Verifica npm --version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real, el seguimiento tiene lista, detalle y administración; cada ruta debe cargar sus datos, proteger permisos y permitir volver atrás.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+Un router relaciona URL con árbol de componentes; layouts comparten estructura; loaders preparan datos y code-splitting reduce carga inicial. Una ruta protegida mejora UX, pero la autorización real vive en servidor. La analogía es un edificio con pasillos, recepción y puertas, pero cada puerta también se verifica internamente.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-react-m5
+cd ejemplo-react-m5
+npm create vite@latest app -- --template react-ts
+cd app
+npm install react-router-dom
+npm run dev
+```
+Crea src/routes.tsx con layout, ruta /deliveries/:id y loader; muestra loading, error y datos.
+
+#### Paso 5 · Práctica guiada
+Pista: apunta deliberadamente el loader a una URL inexistente para provocar un fallo deliberado; observa la pantalla de error y corrígela. Resultado esperado: navegación con estado explícito.
+
+#### Paso 6 · Práctica independiente
+Añade ruta protegida, lazy import, 404, query params y prueba de recarga directa en servidor estático.
+
+#### Paso 7 · Cierre y evidencia
+Guarda mapa de rutas, capturas, log y bundle; como siguiente paso estudia datos remotos. Errores comunes: auth solo en cliente, loaders sin cancelación, rutas ambiguas y servidor sin fallback. Fuentes oficiales: https://reactrouter.com/home y https://react.dev/learn.
+**¿Por qué es importante?** Porque la navegación es un contrato de producto y rendimiento.
+**Evidencia de aprendizaje:** entrega rutas, loader, error, lazy chunk y protección.
 **Conceptos clave:** redirección condicional según autenticación, `React.lazy` + `Suspense`, chunks separados.
 
 Una ruta protegida verifica, antes de mostrar su contenido real, si el usuario cumple una condición de acceso (típicamente estar autenticado): `function RutaProtegida({ children }) { const { autenticado } = useAuth(); return autenticado ? children : <Navigate to="/login" />; }`, un componente envolvente que renderiza condicionalmente su contenido protegido o redirige a la ruta de login, conceptualmente equivalente a un guard funcional de Angular (`CanActivateFn`, Módulo 4 del track de Angular), aunque expresado aquí como un componente de React en vez de una función dedicada del sistema de routing.

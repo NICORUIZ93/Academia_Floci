@@ -117,6 +117,7 @@ python3 scripts/validate_code_quality.py
 python3 scripts/validate_rutaflow.py
 python3 scripts/validate_requested_master_topics.py
 python3 scripts/audit_topic_learning_quality.py --check
+python3 scripts/audit_seven_step_methodology.py --check
 python3 scripts/audit_code_visual_quality.py --check
 python3 scripts/build_editorial_backlog.py --check
 python3 scripts/validate_learning_priorities.py

@@ -27,6 +27,43 @@ Ejecuta `javac Hola.java` y luego `java Hola`. El primer comando produce `Hola.c
 
 ### Tema 1: Del código fuente a la JVM
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás ejecutar este concepto desde cero. Prerrequisitos: JDK 21, Maven y un editor. Verifica java --version y mvn --version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real de una plataforma de entregas, el programa debe transformar entradas, aplicar reglas y producir resultados repetibles en distintos equipos.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+Java compila a bytecode y la JVM lo ejecuta con seguridad y portabilidad. La sintaxis, tipos y flujo forman un contrato que el compilador ayuda a comprobar. La analogía es una receta traducida a instrucciones que varias cocinas pueden ejecutar con el mismo resultado.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-java-m0
+cd ejemplo-java-m0
+mkdir -p src/main/java/com/example
+```
+Crea src/main/java/com/example/Main.java con una clase Main y un método main que imprima un resultado del tema:
+```java
+package com.example;
+public class Main {
+  public static void main(String[] args) {
+    System.out.println("resultado reproducible");
+  }
+}
+```
+Compila con javac y ejecuta con java; explica paquete, clase, método y salida.
+
+#### Paso 5 · Práctica guiada
+Pista: ejecuta javac -d out src/main/java/com/example/Main.java y java -cp out com.example.Main; cambia un tipo para provocar un fallo deliberado, lee el diagnóstico y corrígelo. Resultado esperado: salida reproducible.
+
+#### Paso 6 · Práctica independiente
+Crea otra clase que procese un dato de entrega, añade una entrada válida y otra inválida, y explica la decisión de tipos o flujo.
+
+#### Paso 7 · Cierre y evidencia
+Guarda estructura, comandos, salida y log; como siguiente paso añade una prueba automatizada con Maven. Errores comunes: confundir JDK con JVM, ejecutar desde la carpeta incorrecta, ignorar paquetes y mezclar tipos sin conversión explícita. Fuentes oficiales: https://dev.java/learn/ y https://docs.oracle.com/en/java/javase/21/.
+**¿Por qué es importante?** Porque comprender la ejecución evita copiar comandos sin saber qué componente actúa.
+**Evidencia de aprendizaje:** entrega código, bytecode compilado, comandos, salida y diagnóstico del fallo.
 **Conceptos clave:** bytecode, portabilidad, `javac`/`java`.
 
 Java no compila directamente a código máquina nativo específico de un procesador (como sí lo hacen C o C++), sino a bytecode: una representación intermedia (`Hola.class`) que no depende de ningún procesador específico, sino de una máquina virtual, la JVM (Java Virtual Machine), que interpreta o compila ese bytecode a código máquina real en el momento de la ejecución, específicamente para el procesador y sistema operativo donde esa JVM concreta se ejecuta. `javac Hola.java` realiza la compilación de código fuente a bytecode, generando el archivo `.class`; `java Hola` invoca la JVM, que carga ese archivo `.class` y lo ejecuta.
@@ -64,7 +101,54 @@ javap -classpath out -c com.rutaflow.app.Inicio
 
 **Resultado esperado:** la consola muestra `RutaFlow iniciado`; `javap` presenta instrucciones como `getstatic`, `ldc` e `invokevirtual`. Borra temporalmente `static` de `main`: el código compila, pero la JVM informa que no encuentra un método principal válido. Restáuralo y cambia el programa para que reciba el nombre de una sede mediante `args[0]`, mostrando un mensaje seguro cuando no haya argumentos. Este archivo será el punto de arranque del proyecto integrador de entregas. El bytecode aporta portabilidad, pero no garantiza que una aplicación use correctamente rutas, codificaciones o bibliotecas nativas; esas dependencias también deben probarse en la plataforma objetivo.
 
+**Práctica guiada:** predice qué archivos existirán antes y después de `javac`; usa `find out -type f` para comprobarlo. **Pista:** `-d out` conserva la estructura del paquete.
+
+**Práctica independiente:** crea `Estado.java` en el mismo paquete, compílalo junto con `Inicio.java` y explica por qué ejecutar una fuente directamente no demuestra el mismo flujo.
+
+**Errores comunes:** ejecutar desde una carpeta incorrecta, incluir `.class` en el nombre pasado a `java` o no hacer coincidir paquete y directorio.
+
+**Cierre:** ahora distingues fuente, bytecode y proceso JVM. El siguiente tema desmonta palabra por palabra el punto de entrada. Recurso oficial: [herramientas del JDK](https://docs.oracle.com/en/java/javase/21/docs/specs/man/).
+
 ### Tema 2: public static void main — qué significa cada palabra
+
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás ejecutar este concepto desde cero. Prerrequisitos: JDK 21, Maven y un editor. Verifica java --version y mvn --version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real de una plataforma de entregas, el programa debe transformar entradas, aplicar reglas y producir resultados repetibles en distintos equipos.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+Java compila a bytecode y la JVM lo ejecuta con seguridad y portabilidad. La sintaxis, tipos y flujo forman un contrato que el compilador ayuda a comprobar. La analogía es una receta traducida a instrucciones que varias cocinas pueden ejecutar con el mismo resultado.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-java-m0
+cd ejemplo-java-m0
+mkdir -p src/main/java/com/example
+```
+Crea src/main/java/com/example/Main.java con una clase Main y un método main que imprima un resultado del tema:
+```java
+package com.example;
+public class Main {
+  public static void main(String[] args) {
+    System.out.println("resultado reproducible");
+  }
+}
+```
+Compila con javac y ejecuta con java; explica paquete, clase, método y salida.
+
+#### Paso 5 · Práctica guiada
+Pista: ejecuta javac -d out src/main/java/com/example/Main.java y java -cp out com.example.Main; cambia un tipo para provocar un fallo deliberado, lee el diagnóstico y corrígelo. Resultado esperado: salida reproducible.
+
+#### Paso 6 · Práctica independiente
+Crea otra clase que procese un dato de entrega, añade una entrada válida y otra inválida, y explica la decisión de tipos o flujo.
+
+#### Paso 7 · Cierre y evidencia
+Guarda estructura, comandos, salida y log; como siguiente paso añade una prueba automatizada con Maven. Errores comunes: confundir JDK con JVM, ejecutar desde la carpeta incorrecta, ignorar paquetes y mezclar tipos sin conversión explícita. Fuentes oficiales: https://dev.java/learn/ y https://docs.oracle.com/en/java/javase/21/.
+**¿Por qué es importante?** Porque comprender la ejecución evita copiar comandos sin saber qué componente actúa.
+**Evidencia de aprendizaje:** entrega código, bytecode compilado, comandos, salida y diagnóstico del fallo.
+**Objetivo:** construir y diagnosticar el punto de entrada de RutaFlow entendiendo cada modificador, los argumentos y una firma inválida.
 
 **Conceptos clave:** punto de entrada, pertenencia a la clase frente a instancia.
 
@@ -93,8 +177,64 @@ Edita `src/main/java/com/rutaflow/app/Inicio.java` para aceptar `java -cp out co
 
 Provoca `ArrayIndexOutOfBoundsException` quitando la comprobación y ejecutando sin argumentos; identifica en el *stack trace* el archivo y la línea. Luego restaura la protección y modifica el programa para normalizar el centro con `toUpperCase()`. La evidencia es capturar ambas salidas en el README del proyecto; así demuestras que entiendes la firma y no solo que la memorizaste.
 
+**Demostración guiada:** guarda este punto de entrada en `src/main/java/com/rutaflow/app/Inicio.java`:
+
+```java
+package com.rutaflow.app;
+public final class Inicio {
+    public static void main(String[] args) {
+        System.out.println(args.length == 0 ? "Uso: Inicio <CENTRO>" : "Centro operativo: " + args[0]);
+    }
+}
+```
+
+**Resultado esperado:** sin argumentos aparece el uso; con `BOGOTA`, aparece `Centro operativo: BOGOTA`.
+
+**Práctica independiente:** acepta además `--debug` sin asumir su posición y devuelve un mensaje claro ante argumentos desconocidos.
+
+**Errores comunes:** retirar `static`, cambiar el nombre `main` o ejecutar otra clase. Lee el mensaje de la JVM antes de modificar código al azar.
+
+**Cierre:** ya sabes cómo entra información externa al proceso. A continuación ubicarás `main` dentro de JDK, runtime y JVM. Recurso oficial: [Java launcher](https://docs.oracle.com/en/java/javase/21/docs/specs/man/java.html).
+
 ### Tema 3: JDK, JRE y JVM
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás ejecutar este concepto desde cero. Prerrequisitos: JDK 21, Maven y un editor. Verifica java --version y mvn --version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real de una plataforma de entregas, el programa debe transformar entradas, aplicar reglas y producir resultados repetibles en distintos equipos.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+Java compila a bytecode y la JVM lo ejecuta con seguridad y portabilidad. La sintaxis, tipos y flujo forman un contrato que el compilador ayuda a comprobar. La analogía es una receta traducida a instrucciones que varias cocinas pueden ejecutar con el mismo resultado.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-java-m0
+cd ejemplo-java-m0
+mkdir -p src/main/java/com/example
+```
+Crea src/main/java/com/example/Main.java con una clase Main y un método main que imprima un resultado del tema:
+```java
+package com.example;
+public class Main {
+  public static void main(String[] args) {
+    System.out.println("resultado reproducible");
+  }
+}
+```
+Compila con javac y ejecuta con java; explica paquete, clase, método y salida.
+
+#### Paso 5 · Práctica guiada
+Pista: ejecuta javac -d out src/main/java/com/example/Main.java y java -cp out com.example.Main; cambia un tipo para provocar un fallo deliberado, lee el diagnóstico y corrígelo. Resultado esperado: salida reproducible.
+
+#### Paso 6 · Práctica independiente
+Crea otra clase que procese un dato de entrega, añade una entrada válida y otra inválida, y explica la decisión de tipos o flujo.
+
+#### Paso 7 · Cierre y evidencia
+Guarda estructura, comandos, salida y log; como siguiente paso añade una prueba automatizada con Maven. Errores comunes: confundir JDK con JVM, ejecutar desde la carpeta incorrecta, ignorar paquetes y mezclar tipos sin conversión explícita. Fuentes oficiales: https://dev.java/learn/ y https://docs.oracle.com/en/java/javase/21/.
+**¿Por qué es importante?** Porque comprender la ejecución evita copiar comandos sin saber qué componente actúa.
+**Evidencia de aprendizaje:** entrega código, bytecode compilado, comandos, salida y diagnóstico del fallo.
 **Conceptos clave:** desarrollo frente a ejecución, herramientas incluidas en cada nivel.
 
 La JVM es específicamente la máquina virtual que ejecuta bytecode, el componente mínimo necesario para correr cualquier programa Java ya compilado; el JRE (Java Runtime Environment) incluye la JVM más las librerías estándar necesarias para que los programas Java se ejecuten correctamente (las clases básicas como `String`, `ArrayList`, etc., que un programa típico necesita en tiempo de ejecución, no solo el motor de ejecución del bytecode en sí); el JDK (Java Development Kit) incluye el JRE completo más las herramientas necesarias específicamente para desarrollar programas Java, no solo ejecutarlos (`javac` el compilador, un debugger, `javap` para inspeccionar bytecode, y otras herramientas de desarrollo).
@@ -120,7 +260,64 @@ En la raíz `academia-java/` crea `docs/entorno.md` y registra el sistema operat
 
 El fallo que debes provocar es abrir otra terminal con un `PATH` que no contenga el JDK y observar `javac: command not found` o “no se reconoce como un comando”. La corrección no consiste en reinstalar a ciegas: localiza el JDK y configura `JAVA_HOME` y `PATH`. Añade al documento una tabla “síntoma → causa → comprobación → solución”; será el manual de incorporación para cualquier desarrollador que clone RutaFlow.
 
+**Demostración guiada:** crea `scripts/verificar-java.sh`, ejecútalo y guarda su salida en `docs/entorno.md`:
+
+```bash
+#!/usr/bin/env bash
+set -euo pipefail
+java --version
+javac --version
+java -XshowSettings:properties -version 2>&1 | grep -E 'java.home|os.arch'
+```
+
+Comprueba que `java --version` y `javac --version` pertenecen a la misma versión principal.
+
+**Práctica independiente:** instala dos JDK, cambia deliberadamente `JAVA_HOME` y documenta cómo seleccionar Java 21 sin borrar la otra instalación.
+
+**Resultado esperado:** otra persona puede seguir `docs/entorno.md`, compilar `Inicio.java` y obtener la misma versión sin adivinar rutas.
+
+**Cierre:** el entorno deja de ser una caja negra y pasa a ser evidencia reproducible. El siguiente tema explica qué almacena una variable. Recurso oficial: [instalación del JDK 21](https://docs.oracle.com/en/java/javase/21/install/).
+
 ### Tema 4: Tipos primitivos vs referencias
+
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás ejecutar este concepto desde cero. Prerrequisitos: JDK 21, Maven y un editor. Verifica java --version y mvn --version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real de una plataforma de entregas, el programa debe transformar entradas, aplicar reglas y producir resultados repetibles en distintos equipos.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+Java compila a bytecode y la JVM lo ejecuta con seguridad y portabilidad. La sintaxis, tipos y flujo forman un contrato que el compilador ayuda a comprobar. La analogía es una receta traducida a instrucciones que varias cocinas pueden ejecutar con el mismo resultado.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-java-m0
+cd ejemplo-java-m0
+mkdir -p src/main/java/com/example
+```
+Crea src/main/java/com/example/Main.java con una clase Main y un método main que imprima un resultado del tema:
+```java
+package com.example;
+public class Main {
+  public static void main(String[] args) {
+    System.out.println("resultado reproducible");
+  }
+}
+```
+Compila con javac y ejecuta con java; explica paquete, clase, método y salida.
+
+#### Paso 5 · Práctica guiada
+Pista: ejecuta javac -d out src/main/java/com/example/Main.java y java -cp out com.example.Main; cambia un tipo para provocar un fallo deliberado, lee el diagnóstico y corrígelo. Resultado esperado: salida reproducible.
+
+#### Paso 6 · Práctica independiente
+Crea otra clase que procese un dato de entrega, añade una entrada válida y otra inválida, y explica la decisión de tipos o flujo.
+
+#### Paso 7 · Cierre y evidencia
+Guarda estructura, comandos, salida y log; como siguiente paso añade una prueba automatizada con Maven. Errores comunes: confundir JDK con JVM, ejecutar desde la carpeta incorrecta, ignorar paquetes y mezclar tipos sin conversión explícita. Fuentes oficiales: https://dev.java/learn/ y https://docs.oracle.com/en/java/javase/21/.
+**¿Por qué es importante?** Porque comprender la ejecución evita copiar comandos sin saber qué componente actúa.
+**Evidencia de aprendizaje:** entrega código, bytecode compilado, comandos, salida y diagnóstico del fallo.
+**Objetivo:** predecir cuándo Java copia un valor y cuándo una variable contiene una referencia, evitando `null` y unboxing accidental.
 
 **Conceptos clave:** valor directo frente a apuntador a un objeto, wrappers.
 
@@ -146,7 +343,52 @@ Guarda este incremento en `src/main/java/com/rutaflow/domain/PaqueteDemo.java`. 
 
 Después declara `Integer intentos = null` y provoca el fallo al evaluar `int siguiente = intentos + 1`; el `NullPointerException` ocurre durante el *unboxing*. Corrige validando la ausencia antes de calcular. Como modificación, reemplaza variables aisladas por un `record Paquete(String destinatario, double pesoKg, boolean fragil)` y verifica que la salida conserve los datos. Este será el primer objeto del dominio de RutaFlow; todavía no uses base de datos ni framework.
 
+**Resultado esperado:** el programa imprime los datos; el fallo deliberado señala el unboxing y desaparece al modelar la ausencia explícitamente.
+
+**Errores comunes:** comparar objetos con `==`, asumir que una referencia es el objeto o usar wrappers sin necesitar ausencia.
+
+**Cierre:** ya puedes modelar datos simples sin confundir valor, identidad y ausencia. Sigue con conversiones y cadenas. Recurso oficial: [tipos en Java](https://docs.oracle.com/javase/specs/jls/se21/html/jls-4.html).
+
 ### Tema 5: Variables, conversiones y `String`
+
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás ejecutar este concepto desde cero. Prerrequisitos: JDK 21, Maven y un editor. Verifica java --version y mvn --version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real de una plataforma de entregas, el programa debe transformar entradas, aplicar reglas y producir resultados repetibles en distintos equipos.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+Java compila a bytecode y la JVM lo ejecuta con seguridad y portabilidad. La sintaxis, tipos y flujo forman un contrato que el compilador ayuda a comprobar. La analogía es una receta traducida a instrucciones que varias cocinas pueden ejecutar con el mismo resultado.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-java-m0
+cd ejemplo-java-m0
+mkdir -p src/main/java/com/example
+```
+Crea src/main/java/com/example/Main.java con una clase Main y un método main que imprima un resultado del tema:
+```java
+package com.example;
+public class Main {
+  public static void main(String[] args) {
+    System.out.println("resultado reproducible");
+  }
+}
+```
+Compila con javac y ejecuta con java; explica paquete, clase, método y salida.
+
+#### Paso 5 · Práctica guiada
+Pista: ejecuta javac -d out src/main/java/com/example/Main.java y java -cp out com.example.Main; cambia un tipo para provocar un fallo deliberado, lee el diagnóstico y corrígelo. Resultado esperado: salida reproducible.
+
+#### Paso 6 · Práctica independiente
+Crea otra clase que procese un dato de entrega, añade una entrada válida y otra inválida, y explica la decisión de tipos o flujo.
+
+#### Paso 7 · Cierre y evidencia
+Guarda estructura, comandos, salida y log; como siguiente paso añade una prueba automatizada con Maven. Errores comunes: confundir JDK con JVM, ejecutar desde la carpeta incorrecta, ignorar paquetes y mezclar tipos sin conversión explícita. Fuentes oficiales: https://dev.java/learn/ y https://docs.oracle.com/en/java/javase/21/.
+**¿Por qué es importante?** Porque comprender la ejecución evita copiar comandos sin saber qué componente actúa.
+**Evidencia de aprendizaje:** entrega código, bytecode compilado, comandos, salida y diagnóstico del fallo.
+**Objetivo:** convertir entradas externas sin perder precisión ni confundir identidad con contenido.
 
 **Conceptos clave:** inferencia local, conversión segura, precisión e inmutabilidad.
 
@@ -188,7 +430,52 @@ Conserva `Conversiones.java` en la ruta indicada y ejecútalo con los comandos a
 
 Integra el aprendizaje en `src/main/java/com/rutaflow/domain/CalculadoraTarifa.java`: crea `BigDecimal calcular(BigDecimal tarifaUnidad, int unidades)` y rechaza unidades menores que uno con `IllegalArgumentException`. Ejecuta un `main` pequeño desde esa misma clase. Modifica la tarifa y predice el total antes de correrlo; luego documenta por qué `new BigDecimal(0.1)` no es equivalente a `new BigDecimal("0.1")`. RutaFlow reutilizará este cálculo cuando se incorpore persistencia.
 
+**Práctica independiente:** acepta tarifa y unidades desde `args`, devuelve mensajes distintos para formato inválido y valor fuera de rango, y prueba `0.10 × 3` con `BigDecimal`.
+
+**Errores comunes:** usar `==` para `String`, construir `BigDecimal` desde `double` o silenciar `NumberFormatException` con cero.
+
+**Cierre:** los datos ya entran de manera segura al dominio. Continúa con decisiones y ciclos que los transforman. Recurso oficial: [`String`](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html).
+
 ### Tema 6: Operadores, precedencia y control de flujo
+
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás ejecutar este concepto desde cero. Prerrequisitos: JDK 21, Maven y un editor. Verifica java --version y mvn --version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real de una plataforma de entregas, el programa debe transformar entradas, aplicar reglas y producir resultados repetibles en distintos equipos.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+Java compila a bytecode y la JVM lo ejecuta con seguridad y portabilidad. La sintaxis, tipos y flujo forman un contrato que el compilador ayuda a comprobar. La analogía es una receta traducida a instrucciones que varias cocinas pueden ejecutar con el mismo resultado.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-java-m0
+cd ejemplo-java-m0
+mkdir -p src/main/java/com/example
+```
+Crea src/main/java/com/example/Main.java con una clase Main y un método main que imprima un resultado del tema:
+```java
+package com.example;
+public class Main {
+  public static void main(String[] args) {
+    System.out.println("resultado reproducible");
+  }
+}
+```
+Compila con javac y ejecuta con java; explica paquete, clase, método y salida.
+
+#### Paso 5 · Práctica guiada
+Pista: ejecuta javac -d out src/main/java/com/example/Main.java y java -cp out com.example.Main; cambia un tipo para provocar un fallo deliberado, lee el diagnóstico y corrígelo. Resultado esperado: salida reproducible.
+
+#### Paso 6 · Práctica independiente
+Crea otra clase que procese un dato de entrega, añade una entrada válida y otra inválida, y explica la decisión de tipos o flujo.
+
+#### Paso 7 · Cierre y evidencia
+Guarda estructura, comandos, salida y log; como siguiente paso añade una prueba automatizada con Maven. Errores comunes: confundir JDK con JVM, ejecutar desde la carpeta incorrecta, ignorar paquetes y mezclar tipos sin conversión explícita. Fuentes oficiales: https://dev.java/learn/ y https://docs.oracle.com/en/java/javase/21/.
+**¿Por qué es importante?** Porque comprender la ejecución evita copiar comandos sin saber qué componente actúa.
+**Evidencia de aprendizaje:** entrega código, bytecode compilado, comandos, salida y diagnóstico del fallo.
+**Objetivo:** escribir decisiones exhaustivas y ciclos con límites demostrables para las transiciones de una entrega.
 
 **Conceptos clave:** agrupación explícita, cortocircuito, ramas exhaustivas y ciclos terminables.
 
@@ -225,7 +512,52 @@ Crea `src/main/java/com/rutaflow/domain/EstadoEnvio.java` para el `enum` y `src/
 
 Agrega `EN_BODEGA` al `enum` sin modificar el `switch`: el error de compilación esperado indica que la expresión no cubre todos los valores. No lo ocultes con `default`; añade una regla explícita. Como modificación, implementa `puedeEntregarse(EstadoEnvio estado, boolean tieneFirma)` y predice cuatro combinaciones antes de ejecutarlas. Esta política será usada más adelante por la API, por lo que permanece en dominio y no en el controlador.
 
+**Resultado esperado:** se imprime una línea por estado; añadir `EN_BODEGA` rompe la compilación hasta definir su regla.
+
+**Errores comunes:** ocultar casos con `default`, usar `<= length` o reemplazar `&&` por `&`.
+
+**Cierre:** el compilador ya protege reglas del dominio. El siguiente tema aplica esos controles a secuencias. Recurso oficial: [sentencias Java](https://docs.oracle.com/javase/specs/jls/se21/html/jls-14.html).
+
 ### Tema 7: Arreglos, wrappers y paso de argumentos
+
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás ejecutar este concepto desde cero. Prerrequisitos: JDK 21, Maven y un editor. Verifica java --version y mvn --version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real de una plataforma de entregas, el programa debe transformar entradas, aplicar reglas y producir resultados repetibles en distintos equipos.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+Java compila a bytecode y la JVM lo ejecuta con seguridad y portabilidad. La sintaxis, tipos y flujo forman un contrato que el compilador ayuda a comprobar. La analogía es una receta traducida a instrucciones que varias cocinas pueden ejecutar con el mismo resultado.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-java-m0
+cd ejemplo-java-m0
+mkdir -p src/main/java/com/example
+```
+Crea src/main/java/com/example/Main.java con una clase Main y un método main que imprima un resultado del tema:
+```java
+package com.example;
+public class Main {
+  public static void main(String[] args) {
+    System.out.println("resultado reproducible");
+  }
+}
+```
+Compila con javac y ejecuta con java; explica paquete, clase, método y salida.
+
+#### Paso 5 · Práctica guiada
+Pista: ejecuta javac -d out src/main/java/com/example/Main.java y java -cp out com.example.Main; cambia un tipo para provocar un fallo deliberado, lee el diagnóstico y corrígelo. Resultado esperado: salida reproducible.
+
+#### Paso 6 · Práctica independiente
+Crea otra clase que procese un dato de entrega, añade una entrada válida y otra inválida, y explica la decisión de tipos o flujo.
+
+#### Paso 7 · Cierre y evidencia
+Guarda estructura, comandos, salida y log; como siguiente paso añade una prueba automatizada con Maven. Errores comunes: confundir JDK con JVM, ejecutar desde la carpeta incorrecta, ignorar paquetes y mezclar tipos sin conversión explícita. Fuentes oficiales: https://dev.java/learn/ y https://docs.oracle.com/en/java/javase/21/.
+**¿Por qué es importante?** Porque comprender la ejecución evita copiar comandos sin saber qué componente actúa.
+**Evidencia de aprendizaje:** entrega código, bytecode compilado, comandos, salida y diagnóstico del fallo.
+**Objetivo:** recorrer secuencias con límites seguros y predecir exactamente qué puede modificar un método.
 
 **Conceptos clave:** tamaño fijo, autoboxing, aliasing y Java siempre pasa por valor.
 
@@ -258,7 +590,52 @@ Guarda el ejemplo en `src/main/java/com/rutaflow/domain/RutaDemo.java`, dentro d
 
 Provoca `ArrayIndexOutOfBoundsException` recorriendo hasta `i <= paradas.length`; usa el mensaje para localizar el índice inválido. Corrige el límite y modifica el ejemplo para calcular la suma de identificadores sin alterar el arreglo. En RutaFlow esta secuencia representa paradas ordenadas; cuando necesite crecer, el siguiente módulo la migrará a una colección, evitando adelantar una solución que aún no se ha explicado.
 
+**Práctica independiente:** reemplaza el arreglo por una copia defensiva y demuestra con una salida esperada que el método ya no modifica el original.
+
+**Resultado esperado:** la primera ejecución imprime `[99, 2, 3]`; el ciclo incorrecto informa un índice fuera del rango válido.
+
+**Cierre:** ya predices aliasing y límites. El siguiente tema lleva esa disciplina a entrada, fechas y configuración. Recurso oficial: [arrays en Java](https://docs.oracle.com/javase/specs/jls/se21/html/jls-10.html).
+
 ### Tema 8: Entrada y APIs estándar sin aprender APIs obsoletas como modelo principal
+
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás ejecutar este concepto desde cero. Prerrequisitos: JDK 21, Maven y un editor. Verifica java --version y mvn --version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real de una plataforma de entregas, el programa debe transformar entradas, aplicar reglas y producir resultados repetibles en distintos equipos.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+Java compila a bytecode y la JVM lo ejecuta con seguridad y portabilidad. La sintaxis, tipos y flujo forman un contrato que el compilador ayuda a comprobar. La analogía es una receta traducida a instrucciones que varias cocinas pueden ejecutar con el mismo resultado.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-java-m0
+cd ejemplo-java-m0
+mkdir -p src/main/java/com/example
+```
+Crea src/main/java/com/example/Main.java con una clase Main y un método main que imprima un resultado del tema:
+```java
+package com.example;
+public class Main {
+  public static void main(String[] args) {
+    System.out.println("resultado reproducible");
+  }
+}
+```
+Compila con javac y ejecuta con java; explica paquete, clase, método y salida.
+
+#### Paso 5 · Práctica guiada
+Pista: ejecuta javac -d out src/main/java/com/example/Main.java y java -cp out com.example.Main; cambia un tipo para provocar un fallo deliberado, lee el diagnóstico y corrígelo. Resultado esperado: salida reproducible.
+
+#### Paso 6 · Práctica independiente
+Crea otra clase que procese un dato de entrega, añade una entrada válida y otra inválida, y explica la decisión de tipos o flujo.
+
+#### Paso 7 · Cierre y evidencia
+Guarda estructura, comandos, salida y log; como siguiente paso añade una prueba automatizada con Maven. Errores comunes: confundir JDK con JVM, ejecutar desde la carpeta incorrecta, ignorar paquetes y mezclar tipos sin conversión explícita. Fuentes oficiales: https://dev.java/learn/ y https://docs.oracle.com/en/java/javase/21/.
+**¿Por qué es importante?** Porque comprender la ejecución evita copiar comandos sin saber qué componente actúa.
+**Evidencia de aprendizaje:** entrega código, bytecode compilado, comandos, salida y diagnóstico del fallo.
+**Objetivo:** validar entrada externa y elegir APIs de fecha, configuración y aleatoriedad según su semántica.
 
 **Conceptos clave:** validación en la frontera, `java.time`, configuración y aleatoriedad apropiada.
 
@@ -291,6 +668,12 @@ System.out.printf("edad=%d, demora=%d min%n", edad, demoraMinutos);
 Crea `src/main/java/com/rutaflow/domain/PromesaEntrega.java`. Recibe por argumento una fecha ISO como `2026-07-20`, conviértela con `LocalDate.parse` y suma dos días hábiles con un ciclo que ignore sábado y domingo. Compila con `javac -d out src/main/java/com/rutaflow/domain/PromesaEntrega.java` y ejecuta `java -cp out com.rutaflow.domain.PromesaEntrega 2026-07-20`; la salida debe incluir la fecha de entrada y la promesa calculada.
 
 Ejecuta después con `20/07/2026` para observar `DateTimeParseException`. Captura esa excepción en la frontera, muestra `Formato requerido: AAAA-MM-DD` y conserva el método de dominio trabajando con `LocalDate`. Como modificación, inyecta la fecha base en vez de consultar `now()` dentro del cálculo y prueba un viernes. Este diseño permitirá que RutaFlow reproduzca reglas temporales sin depender del reloj real.
+
+**Resultado esperado:** `2026-07-20` produce una promesa dos días hábiles después; `20/07/2026` muestra el formato requerido sin un cierre abrupto.
+
+**Errores comunes:** usar `LocalDate` para instantes globales, consultar `now()` dentro de lógica comprobable, registrar secretos o usar `Random` para tokens.
+
+**Cierre:** completaste los fundamentos con entrada reproducible y tipos apropiados. El módulo siguiente transforma estos datos en objetos con responsabilidades claras. Recursos oficiales: [`java.time`](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/time/package-summary.html) y [`SecureRandom`](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/security/SecureRandom.html).
 
 ---
 

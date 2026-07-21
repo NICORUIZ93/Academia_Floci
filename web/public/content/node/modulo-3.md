@@ -33,6 +33,86 @@ const servidor = createServer((req, res) => {
 servidor.listen(3000);
 ```
 
+#### Paso 1 · Objetivo y preparación
+
+Al finalizar podrás crear, arrancar y detener un servidor HTTP que responda JSON. **Prerrequisitos:** Node LTS y una terminal; no necesitas Express ni archivos de otro tema. Este ejemplo independiente comienza en una carpeta vacía.
+
+#### Paso 2 · Contexto y caso real
+
+Una aplicación web necesita que un cliente solicite información y reciba una respuesta con formato y estado explícitos. Antes de usar un framework, construirás el intercambio HTTP básico para ver qué abstraen sus rutas y sus helpers de respuesta.
+
+#### Paso 3 · Teoría y analogía aplicada
+
+La petición es el sobre que llega: método, URL, cabeceras y cuerpo. La respuesta es el sobre que tú construyes: primero estado y cabeceras, después contenido, finalmente cierre. El `req` es además un stream, aunque esta primera ruta GET no tenga cuerpo que leer.
+
+#### Paso 4 · Demostración guiada desde cero
+
+Desde una carpeta vacía crea el proyecto nuevo:
+
+```bash
+mkdir ejemplo-http-basico
+cd ejemplo-http-basico
+npm init -y
+mkdir src
+```
+
+Añade `"type": "module"` a `package.json` y crea `src/server.js`:
+
+```js
+import { createServer } from "node:http";
+
+const servidor = createServer((req, res) => {
+  // Esta ruta solo responde a GET /. Las demás reciben 404.
+  if (req.method === "GET" && req.url === "/") {
+    const respuesta = JSON.stringify({ mensaje: "Servidor Node activo" });
+
+    // writeHead define el estado y cómo debe interpretar el cliente el cuerpo.
+    res.writeHead(200, { "Content-Type": "application/json; charset=utf-8" });
+    res.end(respuesta); // end finaliza esta respuesta y libera la conexión.
+    return;
+  }
+
+  res.writeHead(404, { "Content-Type": "application/json; charset=utf-8" });
+  res.end(JSON.stringify({ error: "Ruta no encontrada" }));
+});
+
+servidor.listen(3000, "127.0.0.1", () => {
+  console.log("Servidor listo en http://127.0.0.1:3000");
+});
+```
+
+`createServer` registra la función que se ejecuta por cada petición; `return` evita que el código siga intentando responder dos veces; `listen` mantiene el proceso abierto. Ejecuta:
+
+```bash
+node src/server.js
+```
+
+En otra terminal prueba la ruta:
+
+```bash
+curl -i http://127.0.0.1:3000/
+```
+
+**Resultado esperado:** la segunda terminal muestra `HTTP/1.1 200 OK`, `content-type: application/json` y `{"mensaje":"Servidor Node activo"}`. Detén el servidor con `Ctrl+C` cuando termines.
+
+**Fallo deliberado y diagnóstico:** con el servidor activo solicita `http://127.0.0.1:3000/inexistente`. Obtendrás `404` y `{"error":"Ruta no encontrada"}`. No es un fallo del servidor: es la respuesta correcta a una ruta que no fue definida. Si aparece `EADDRINUSE`, el puerto 3000 ya está ocupado; detén el proceso anterior o cambia el puerto en `listen` y en `curl`.
+
+#### Paso 5 · Práctica guiada
+
+Cambia el mensaje e incluye `method: req.method` en la respuesta. **Pista:** conserva `JSON.stringify`; enviar un objeto directamente a `res.end` produce un error de tipo.
+
+#### Paso 6 · Práctica independiente
+
+Añade `GET /salud` que responda `{ "status": "ok" }` y prueba ambas rutas con `curl -i`. Entrega las dos salidas y explica por qué una ruta desconocida no debe responder `200`.
+
+#### Paso 7 · Cierre y conexión
+
+Ya puedes observar el ciclo request/response sin abstracciones. El siguiente tema implementará el enrutamiento manual completo en otro proyecto nuevo, con rutas y estado en memoria.
+
+**Errores comunes:** olvidar `res.end`; responder dos veces; enviar JSON sin `Content-Type`; dejar el servidor corriendo y confundir `EADDRINUSE` con un error de código; usar `localhost` cuando una política local requiere `127.0.0.1`.
+
+**Fuentes oficiales:** [`node:http`](https://nodejs.org/api/http.html), [`http.createServer`](https://nodejs.org/api/http.html#httpcreateserveroptions-requestlistener) y [códigos de estado HTTP de MDN](https://developer.mozilla.org/es/docs/Web/HTTP/Status).
+
 ### Tema 2: Routing manual
 
 **Conceptos clave:** verificación de método y URL, estado en memoria.
@@ -57,6 +137,109 @@ else if (req.method === "POST" && req.url === "/tareas") { /* ... */ }
 else { res.writeHead(404); res.end("No encontrado"); }
 // Express equivalente: app.get("/tareas", ...); app.post("/tareas", ...);
 ```
+
+#### Paso 1 · Objetivo y preparación
+
+Al finalizar podrás implementar rutas `GET` y `POST` sin framework y devolver un `404` consistente. **Prerrequisitos:** Node LTS, JSON básico y una terminal con `curl`. Este ejemplo independiente comienza desde una carpeta vacía.
+
+#### Paso 2 · Contexto y caso real
+
+Una API pequeña puede necesitar exponer una lista y aceptar nuevas tareas. Antes de delegar esa responsabilidad a Express, construirás el enrutamiento explícito para identificar qué deben decidir método, ruta, cuerpo y código de estado.
+
+#### Paso 3 · Teoría y analogía aplicada
+
+Una ruta no se identifica solo por su URL: `GET /tareas` consulta y `POST /tareas` crea, aunque compartan la misma dirección. El array en memoria es una libreta temporal: sirve para aprender el contrato HTTP, pero se borra al reiniciar y no debe usarse como persistencia real.
+
+#### Paso 4 · Demostración guiada desde cero
+
+Desde una carpeta vacía crea el proyecto nuevo:
+
+```bash
+mkdir ejemplo-routing-manual
+cd ejemplo-routing-manual
+npm init -y
+mkdir src
+```
+
+Añade `"type": "module"` a `package.json` y crea `src/server.js`:
+
+```js
+import { createServer } from "node:http";
+
+const tareas = [];
+
+function responderJson(res, status, cuerpo) {
+  res.writeHead(status, { "Content-Type": "application/json; charset=utf-8" });
+  res.end(JSON.stringify(cuerpo));
+}
+
+async function leerJson(req) {
+  const chunks = [];
+  for await (const chunk of req) chunks.push(chunk);
+  return JSON.parse(Buffer.concat(chunks).toString("utf8"));
+}
+
+const servidor = createServer(async (req, res) => {
+  if (req.method === "GET" && req.url === "/tareas") {
+    return responderJson(res, 200, { tareas });
+  }
+
+  if (req.method === "POST" && req.url === "/tareas") {
+    try {
+      const body = await leerJson(req);
+      const titulo = body.titulo?.trim();
+
+      if (!titulo) return responderJson(res, 400, { error: "titulo es obligatorio" });
+
+      const tarea = { id: tareas.length + 1, titulo };
+      tareas.push(tarea);
+      return responderJson(res, 201, { tarea });
+    } catch {
+      return responderJson(res, 400, { error: "El body debe ser JSON válido" });
+    }
+  }
+
+  return responderJson(res, 404, { error: "Ruta no encontrada" });
+});
+
+servidor.listen(3001, "127.0.0.1", () => {
+  console.log("API en http://127.0.0.1:3001");
+});
+```
+
+`responderJson` evita repetir cabeceras y serialización; `leerJson` transforma el stream en objeto solo para esta ruta; los `return` aseguran una sola respuesta por petición. Arranca el servidor:
+
+```bash
+node src/server.js
+```
+
+En otra terminal consulta, crea y vuelve a consultar:
+
+```bash
+curl -i http://127.0.0.1:3001/tareas
+curl -i -X POST http://127.0.0.1:3001/tareas -H "Content-Type: application/json" -d '{"titulo":"Leer HTTP"}'
+curl -i http://127.0.0.1:3001/tareas
+```
+
+**Resultado esperado:** la primera consulta devuelve `200` y lista vacía; el POST devuelve `201` con `id: 1`; la última consulta devuelve la tarea creada. Al reiniciar, la lista vuelve a estar vacía porque vive solo en memoria.
+
+**Fallo deliberado y diagnóstico:** ejecuta `curl -i -X POST http://127.0.0.1:3001/tareas -d '{titulo:sin-comillas}'`. Obtendrás `400` con `El body debe ser JSON válido`. El servidor sigue disponible porque el error de cliente se captura dentro de la ruta. Prueba también `GET /tarea` para observar un `404`.
+
+#### Paso 5 · Práctica guiada
+
+Añade `GET /tareas/1` usando una comparación exacta de ruta. **Pista:** busca por `id`; si no existe, responde `404`, no una lista vacía ni `200`.
+
+#### Paso 6 · Práctica independiente
+
+Implementa `DELETE /tareas/1`, prueba borrar una tarea existente y otra inexistente, y entrega las salidas HTTP. Explica por qué el estado se pierde al reiniciar y qué responsabilidad tendría una base de datos.
+
+#### Paso 7 · Cierre y conexión
+
+Ya puedes relacionar método, URL, body y respuesta. El siguiente tema se concentrará en límites de body y cabeceras dentro de un ejemplo nuevo, sin reutilizar este servidor.
+
+**Errores comunes:** comprobar solo la URL; no devolver después de responder; usar estado en memoria como datos reales; responder `200` al crear; dejar errores de JSON sin capturar.
+
+**Fuentes oficiales:** [métodos HTTP en MDN](https://developer.mozilla.org/es/docs/Web/HTTP/Reference/Methods), [estado `201`](https://developer.mozilla.org/es/docs/Web/HTTP/Status/201), [estado `404`](https://developer.mozilla.org/es/docs/Web/HTTP/Status/404) y [`IncomingMessage`](https://nodejs.org/api/http.html#class-httpincomingmessage).
 
 ### Tema 3: Parsing de body y headers
 
@@ -87,6 +270,110 @@ try {
 }
 ```
 
+#### Paso 1 · Objetivo y preparación
+
+Al finalizar podrás leer un body JSON, validar `Content-Type` y rechazar un tamaño excesivo sin derribar el proceso. **Prerrequisitos:** Node LTS y JSON básico. Este ejemplo independiente empieza desde una carpeta vacía.
+
+#### Paso 2 · Contexto y caso real
+
+Una API que recibe registros debe aceptar JSON bien formado, pero no puede permitir que un cliente envíe datos ilimitados y consuma toda la memoria. El caso real combina formato, tamaño y manejo de errores como un contrato de entrada.
+
+#### Paso 3 · Teoría y analogía aplicada
+
+El body llega en paquetes, no como objeto listo. Antes de abrir una caja, una recepción revisa la etiqueta (`Content-Type`) y limita su peso; del mismo modo el servidor verifica formato y acumula bytes con un máximo antes de usar `JSON.parse`.
+
+#### Paso 4 · Demostración guiada desde cero
+
+Desde una carpeta vacía crea el proyecto nuevo:
+
+```bash
+mkdir ejemplo-body-headers
+cd ejemplo-body-headers
+npm init -y
+mkdir src
+```
+
+Añade `"type": "module"` a `package.json` y crea `src/server.js`:
+
+```js
+import { createServer } from "node:http";
+
+const LIMITE_BYTES = 1_024;
+
+async function leerJson(req) {
+  if (!req.headers["content-type"]?.includes("application/json")) {
+    throw Object.assign(new Error("Content-Type debe incluir application/json"), { status: 415 });
+  }
+
+  const chunks = [];
+  let total = 0;
+
+  for await (const chunk of req) {
+    total += chunk.length;
+    if (total > LIMITE_BYTES) {
+      throw Object.assign(new Error(`Body supera ${LIMITE_BYTES} bytes`), { status: 413 });
+    }
+    chunks.push(chunk);
+  }
+
+  try {
+    return JSON.parse(Buffer.concat(chunks).toString("utf8"));
+  } catch {
+    throw Object.assign(new Error("JSON inválido"), { status: 400 });
+  }
+}
+
+function responder(res, status, body) {
+  res.writeHead(status, { "Content-Type": "application/json; charset=utf-8" });
+  res.end(JSON.stringify(body));
+}
+
+createServer(async (req, res) => {
+  if (req.method !== "POST" || req.url !== "/eco") {
+    return responder(res, 404, { error: "Ruta no encontrada" });
+  }
+
+  try {
+    const datos = await leerJson(req);
+    return responder(res, 200, { recibido: datos });
+  } catch (error) {
+    return responder(res, error.status ?? 500, { error: error.message });
+  }
+}).listen(3002, "127.0.0.1", () => console.log("API en http://127.0.0.1:3002"));
+```
+
+`chunk.length` mide bytes, no caracteres; el límite se evalúa mientras llega el stream; `415` comunica formato no admitido y `413` body demasiado grande. Arranca el servidor:
+
+```bash
+node src/server.js
+```
+
+En otra terminal envía JSON válido:
+
+```bash
+curl -i -X POST http://127.0.0.1:3002/eco -H "Content-Type: application/json" -d '{"nombre":"Ana"}'
+```
+
+**Resultado esperado:** responde `200` y devuelve `{"recibido":{"nombre":"Ana"}}`.
+
+**Fallo deliberado y diagnóstico:** repite el comando sin `-H "Content-Type: application/json"`. Recibirás `415` con el mensaje de formato. Después envía `-d '{nombre:Ana}'` con la cabecera correcta: recibirás `400 JSON inválido`. Ambos son errores de cliente, por lo que el proceso continúa atendiendo solicitudes.
+
+#### Paso 5 · Práctica guiada
+
+Reduce `LIMITE_BYTES` a `20` y envía un JSON que lo supere. **Pista:** comprueba `413`; no cambies el límite solamente para que la prueba “pase”.
+
+#### Paso 6 · Práctica independiente
+
+Añade un header obligatorio `x-request-id` con longitud de 8 a 40 caracteres. Entrega un caso válido y otro con `400`, y explica por qué un header se valida antes de procesar la lógica de negocio.
+
+#### Paso 7 · Cierre y conexión
+
+Ya puedes recibir datos de red con límites y diagnósticos claros. El siguiente tema elegirá códigos de estado y representación de salida en un proyecto HTTP nuevo.
+
+**Errores comunes:** asumir `req.body`; omitir límite de bytes; validar `Content-Type` después de consumir el body; responder `500` a JSON inválido; usar longitud de string en lugar de bytes.
+
+**Fuentes oficiales:** [`IncomingMessage.headers`](https://nodejs.org/api/http.html#messageheaders), [estado `400`](https://developer.mozilla.org/es/docs/Web/HTTP/Status/400), [estado `413`](https://developer.mozilla.org/es/docs/Web/HTTP/Status/413) y [estado `415`](https://developer.mozilla.org/es/docs/Web/HTTP/Status/415).
+
 ### Tema 4: Códigos de estado y content negotiation
 
 **Conceptos clave:** códigos de estado HTTP apropiados, negociación de contenido según `Accept`.
@@ -114,6 +401,94 @@ res.end(aceptaJson ? JSON.stringify(dato) : String(dato));
 // 200 consulta OK · 201 recurso creado · 400 petición inválida
 // 404 ruta inexistente · 500 fallo inesperado del servidor
 ```
+
+#### Paso 1 · Objetivo y preparación
+
+Al finalizar podrás devolver estados HTTP coherentes y elegir JSON o texto según `Accept`. **Prerrequisitos:** Node LTS y saber que una cabecera contiene metadatos de la petición. El ejemplo es independiente y comienza en una carpeta vacía.
+
+#### Paso 2 · Contexto y caso real
+
+Un mismo endpoint puede atender una herramienta de terminal que prefiere texto y una aplicación que necesita JSON. El servidor debe comunicar tanto el resultado como su representación, sin obligar al cliente a adivinar el formato.
+
+#### Paso 3 · Teoría y analogía aplicada
+
+El código de estado es una señal de tráfico: `200` indica consulta correcta, `201` creación, `400` petición inválida y `404` recurso inexistente. `Accept` es el idioma que el cliente prefiere; `Content-Type` confirma el idioma que el servidor eligió. Preferir JSON solo porque es habitual no equivale a negociar una representación.
+
+#### Paso 4 · Demostración guiada desde cero
+
+Desde una carpeta vacía crea el proyecto nuevo:
+
+```bash
+mkdir ejemplo-content-negotiation
+cd ejemplo-content-negotiation
+npm init -y
+mkdir src
+```
+
+Añade `"type": "module"` a `package.json` y crea `src/server.js`:
+
+```js
+import { createServer } from "node:http";
+
+const producto = Object.freeze({ id: 7, nombre: "Cuaderno", precio: 12_000 });
+
+function responderProducto(req, res) {
+  const acepta = req.headers.accept ?? "*/*";
+
+  if (acepta.includes("application/json") || acepta.includes("*/*")) {
+    res.writeHead(200, { "Content-Type": "application/json; charset=utf-8", Vary: "Accept" });
+    return res.end(JSON.stringify(producto));
+  }
+
+  if (acepta.includes("text/plain")) {
+    res.writeHead(200, { "Content-Type": "text/plain; charset=utf-8", Vary: "Accept" });
+    return res.end(`${producto.nombre}: $${producto.precio}`);
+  }
+
+  res.writeHead(406, { "Content-Type": "application/json; charset=utf-8", Vary: "Accept" });
+  return res.end(JSON.stringify({ error: "Formato no disponible" }));
+}
+
+createServer((req, res) => {
+  if (req.method === "GET" && req.url === "/producto") return responderProducto(req, res);
+
+  res.writeHead(404, { "Content-Type": "application/json; charset=utf-8" });
+  res.end(JSON.stringify({ error: "Ruta no encontrada" }));
+}).listen(3003, "127.0.0.1", () => console.log("API en http://127.0.0.1:3003"));
+```
+
+`Vary: Accept` indica a las cachés que la respuesta depende de esa cabecera. El orden de las condiciones documenta que JSON es el valor predeterminado cuando el cliente acepta cualquier formato. Arranca:
+
+```bash
+node src/server.js
+```
+
+En otra terminal prueba ambas representaciones:
+
+```bash
+curl -i -H "Accept: application/json" http://127.0.0.1:3003/producto
+curl -i -H "Accept: text/plain" http://127.0.0.1:3003/producto
+```
+
+**Resultado esperado:** ambas respuestas usan `200`, pero una tiene `Content-Type: application/json` y la otra `text/plain`. La cabecera `Vary: Accept` aparece en las dos.
+
+**Fallo deliberado y diagnóstico:** solicita `curl -i -H "Accept: application/xml" http://127.0.0.1:3003/producto`. Recibirás `406 Not Acceptable`: el recurso existe, pero el servidor no puede representarlo en XML. Solicita `/productos` para comparar un `404`, donde la ruta no existe.
+
+#### Paso 5 · Práctica guiada
+
+Añade el formato `text/csv` con una cabecera y una fila. **Pista:** devuelve `Content-Type: text/csv; charset=utf-8`, conserva `Vary: Accept` y prueba con `curl -i`.
+
+#### Paso 6 · Práctica independiente
+
+Crea `POST /producto` que valide nombre y precio, responda `201` al crear y `400` cuando falte un campo. Entrega tres pruebas: JSON creado, body inválido y formato no aceptado; explica cada código de estado.
+
+#### Paso 7 · Cierre y conexión
+
+Ya puedes comunicar resultado y formato con precisión. El próximo módulo aplicará estos contratos a Express, en nuevos ejemplos creados desde cero.
+
+**Errores comunes:** usar `200` para todo; ignorar `Accept`; enviar JSON con `text/plain`; olvidar `Vary`; confundir `406` con `404`; inventar un formato que el servidor no soporta.
+
+**Fuentes oficiales:** [negociación de contenido en MDN](https://developer.mozilla.org/es/docs/Web/HTTP/Content_negotiation), [cabecera `Accept`](https://developer.mozilla.org/es/docs/Web/HTTP/Reference/Headers/Accept), [cabecera `Vary`](https://developer.mozilla.org/es/docs/Web/HTTP/Reference/Headers/Vary) y [estado `406`](https://developer.mozilla.org/es/docs/Web/HTTP/Status/406).
 
 ---
 

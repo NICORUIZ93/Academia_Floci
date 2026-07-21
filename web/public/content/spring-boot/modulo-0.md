@@ -25,6 +25,45 @@ Visita `http://localhost:8080`. Un 404 significa que el servidor sí arrancó pe
 
 ### Tema 1: Inversión de control y el contenedor de Spring
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás construir este concepto desde cero. Prerrequisitos: JDK 21, Maven y un editor. Verifica `java --version` y `mvn --version`.
+
+#### Paso 2 · Contexto y caso real
+En un caso real de una API de entregas, los servicios cambian de implementación entre pruebas y producción. El contenedor administra dependencias sin que el controlador conozca su creación.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+Spring aplica inversión de control: el framework crea y conecta objetos según configuración y anotaciones. La inyección por constructor hace obligatorias las dependencias y facilita pruebas. Los estereotipos expresan intención; scopes controlan ciclo de vida. La analogía es una central que asigna vehículos: cada pieza recibe su recurso sin construirlo a escondidas.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-spring-m0
+cd ejemplo-spring-m0
+curl -fsSL https://start.spring.io/starter.zip -d dependencies=web -d javaVersion=21 -o app.zip
+unzip app.zip
+mvn spring-boot:run
+```
+Crea `src/main/java/com/example/demo/DeliveryService.java`:
+```java
+@Service
+public class DeliveryService {
+  public String status() { return "ready"; }
+}
+```
+Crea un controlador que reciba `DeliveryService` por constructor y exponga `GET /status`. El contenedor crea el servicio y entrega la misma dependencia al controlador.
+
+#### Paso 5 · Práctica guiada
+Pista: ejecuta `mvn spring-boot:run` y consulta `curl http://localhost:8080/status`; provoca un fallo deliberado quitando `@Service`, observa el diagnóstico de bean ausente y restáuralo. Resultado esperado: `ready`.
+
+#### Paso 6 · Práctica independiente
+Crea una interfaz `RouteProvider`, dos implementaciones y un perfil de pruebas. Comprueba por qué el constructor hace explícita la dependencia y escribe una prueba con un stub.
+
+#### Paso 7 · Cierre y evidencia
+Guarda estructura, comandos, respuesta HTTP y log del fallo; como siguiente paso estudia configuración externa. Errores comunes: inyección por campo, componentes fuera del paquete raíz, scopes globales sin razón y ocultar dependencias. Fuentes oficiales: https://docs.spring.io/spring-framework/reference/core/beans.html y https://spring.io/guides/gs/spring-boot/.
+**¿Por qué es importante?** Porque entender el contenedor evita magia accidental y permite diseñar servicios comprobables.
+**Evidencia de aprendizaje:** entrega el proyecto ejecutable, la respuesta de `/status`, la prueba del fallo y una explicación de la dependencia inyectada.
+**Evidencia de aprendizaje:** entrega el proyecto ejecutable, la respuesta de `/status`, la prueba del fallo y una explicación de la dependencia inyectada.
+**Evidencia de aprendizaje:** entrega el proyecto ejecutable, la respuesta de `/status`, la prueba del fallo y una explicación de la dependencia inyectada.
 **Conceptos clave:** el framework crea y conecta objetos, no el propio código de la aplicación.
 
 En código sin un contenedor de inversión de control, una clase que necesita colaboradores típicamente los crea ella misma directamente (`new RepositorioTareas()`), acoplándose fuertemente a una implementación concreta específica y haciendo que cambiar esa implementación, o sustituirla por una versión de prueba durante los tests, requiera modificar el código interno de la propia clase que la crea. La inversión de control invierte esa responsabilidad: en vez de que cada clase cree sus propias dependencias, un contenedor externo (el contenedor de Spring) las crea centralizadamente y las "inyecta" en cada clase que las declara como necesarias, de modo que la clase consumidora solo declara qué necesita (a través de su constructor, típicamente), sin saber ni importarle cómo esa dependencia concreta se construye ni de dónde proviene.
@@ -49,6 +88,44 @@ public class ServicioTareas {
 
 ### Tema 2: Inyección por constructor vs por campo
 
+**Evidencia de aprendizaje:** entrega el proyecto ejecutable, la respuesta de `/status`, la prueba del fallo y una explicación de la dependencia inyectada.
+
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás construir este concepto desde cero. Prerrequisitos: JDK 21, Maven y un editor. Verifica `java --version` y `mvn --version`.
+
+#### Paso 2 · Contexto y caso real
+En un caso real de una API de entregas, los servicios cambian de implementación entre pruebas y producción. El contenedor administra dependencias sin que el controlador conozca su creación.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+Spring aplica inversión de control: el framework crea y conecta objetos según configuración y anotaciones. La inyección por constructor hace obligatorias las dependencias y facilita pruebas. Los estereotipos expresan intención; scopes controlan ciclo de vida. La analogía es una central que asigna vehículos: cada pieza recibe su recurso sin construirlo a escondidas.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-spring-m0
+cd ejemplo-spring-m0
+curl -fsSL https://start.spring.io/starter.zip -d dependencies=web -d javaVersion=21 -o app.zip
+unzip app.zip
+mvn spring-boot:run
+```
+Crea `src/main/java/com/example/demo/DeliveryService.java`:
+```java
+@Service
+public class DeliveryService {
+  public String status() { return "ready"; }
+}
+```
+Crea un controlador que reciba `DeliveryService` por constructor y exponga `GET /status`. El contenedor crea el servicio y entrega la misma dependencia al controlador.
+
+#### Paso 5 · Práctica guiada
+Pista: ejecuta `mvn spring-boot:run` y consulta `curl http://localhost:8080/status`; provoca un fallo deliberado quitando `@Service`, observa el diagnóstico de bean ausente y restáuralo. Resultado esperado: `ready`.
+
+#### Paso 6 · Práctica independiente
+Crea una interfaz `RouteProvider`, dos implementaciones y un perfil de pruebas. Comprueba por qué el constructor hace explícita la dependencia y escribe una prueba con un stub.
+
+#### Paso 7 · Cierre y evidencia
+Guarda estructura, comandos, respuesta HTTP y log del fallo; como siguiente paso estudia configuración externa. Errores comunes: inyección por campo, componentes fuera del paquete raíz, scopes globales sin razón y ocultar dependencias. Fuentes oficiales: https://docs.spring.io/spring-framework/reference/core/beans.html y https://spring.io/guides/gs/spring-boot/.
+**¿Por qué es importante?** Porque entender el contenedor evita magia accidental y permite diseñar servicios comprobables.
 **Conceptos clave:** inmutabilidad, testabilidad sin el contenedor.
 
 `@Autowired private RepositorioTareas repositorio;` (inyección por campo) es sintácticamente más corta, pero tiene desventajas concretas frente a la inyección por constructor: el campo no puede declararse `final`, permitiendo en teoría que se reasigne después de la construcción inicial (aunque en la práctica Spring solo lo asigna una vez, el propio lenguaje no impone esa garantía de inmutabilidad); y, más importante en la práctica diaria, escribir un test unitario de esa clase sin levantar el contenedor completo de Spring se vuelve más difícil, dado que no existe una forma directa de "pasarle" el mock al campo privado sin usar reflexión o alguna utilidad especial de testing.
@@ -69,6 +146,44 @@ private RepositorioTareas repositorio;
 
 ### Tema 3: Estereotipos, autoconfiguración y scopes
 
+**Evidencia de aprendizaje:** entrega el proyecto ejecutable, la respuesta de `/status`, la prueba del fallo y una explicación de la dependencia inyectada.
+
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás construir este concepto desde cero. Prerrequisitos: JDK 21, Maven y un editor. Verifica `java --version` y `mvn --version`.
+
+#### Paso 2 · Contexto y caso real
+En un caso real de una API de entregas, los servicios cambian de implementación entre pruebas y producción. El contenedor administra dependencias sin que el controlador conozca su creación.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+Spring aplica inversión de control: el framework crea y conecta objetos según configuración y anotaciones. La inyección por constructor hace obligatorias las dependencias y facilita pruebas. Los estereotipos expresan intención; scopes controlan ciclo de vida. La analogía es una central que asigna vehículos: cada pieza recibe su recurso sin construirlo a escondidas.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-spring-m0
+cd ejemplo-spring-m0
+curl -fsSL https://start.spring.io/starter.zip -d dependencies=web -d javaVersion=21 -o app.zip
+unzip app.zip
+mvn spring-boot:run
+```
+Crea `src/main/java/com/example/demo/DeliveryService.java`:
+```java
+@Service
+public class DeliveryService {
+  public String status() { return "ready"; }
+}
+```
+Crea un controlador que reciba `DeliveryService` por constructor y exponga `GET /status`. El contenedor crea el servicio y entrega la misma dependencia al controlador.
+
+#### Paso 5 · Práctica guiada
+Pista: ejecuta `mvn spring-boot:run` y consulta `curl http://localhost:8080/status`; provoca un fallo deliberado quitando `@Service`, observa el diagnóstico de bean ausente y restáuralo. Resultado esperado: `ready`.
+
+#### Paso 6 · Práctica independiente
+Crea una interfaz `RouteProvider`, dos implementaciones y un perfil de pruebas. Comprueba por qué el constructor hace explícita la dependencia y escribe una prueba con un stub.
+
+#### Paso 7 · Cierre y evidencia
+Guarda estructura, comandos, respuesta HTTP y log del fallo; como siguiente paso estudia configuración externa. Errores comunes: inyección por campo, componentes fuera del paquete raíz, scopes globales sin razón y ocultar dependencias. Fuentes oficiales: https://docs.spring.io/spring-framework/reference/core/beans.html y https://spring.io/guides/gs/spring-boot/.
+**¿Por qué es importante?** Porque entender el contenedor evita magia accidental y permite diseñar servicios comprobables.
 **Conceptos clave:** `@Component`/`@Service`/`@Repository`, autoconfiguración de starters, ciclo de vida de un bean.
 
 `@Component`, `@Service` y `@Repository` son todas variantes especializadas de la misma anotación base `@Component`, que le indica a Spring "gestiona esta clase como un bean dentro del contenedor"; la diferencia entre ellas es principalmente semántica y documental, con una excepción funcional concreta: `@Repository` traduce automáticamente excepciones específicas de la tecnología de persistencia subyacente (por ejemplo, excepciones específicas de JDBC) a una jerarquía de excepciones propia y consistente de Spring, independiente de la tecnología concreta usada por debajo; `@Service` no agrega ningún comportamiento funcional adicional respecto a `@Component`, pero documenta claramente la intención de que esa clase pertenece a la capa de lógica de negocio.

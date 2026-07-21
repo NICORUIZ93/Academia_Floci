@@ -5,6 +5,36 @@
 
 ### Tema 1: Actuator y health checks personalizados
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás observar este servicio desde cero. Prerrequisitos: JDK 21, Maven y un editor. Verifica java --version y mvn --version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real, una plataforma de entregas debe distinguir una aplicación viva de una instancia lista para recibir tráfico, y medir pedidos sin exponer datos personales.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+Actuator expone señales operativas; health resume dependencias; Micrometer registra métricas con etiquetas. Liveness responde si el proceso puede continuar y readiness si puede recibir trabajo. La analogía es un aeropuerto: una pista abierta no significa que el avión tenga combustible ni permiso de despegue.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-spring-m7
+cd ejemplo-spring-m7
+curl -fsSL https://start.spring.io/starter.zip -d dependencies=web,actuator -d javaVersion=21 -o app.zip
+unzip app.zip
+mvn spring-boot:run
+```
+Configura management endpoints y crea un health indicator para una dependencia simulada en `src/main/java/com/example/demo/DeliveryHealth.java`.
+
+#### Paso 5 · Práctica guiada
+Pista: consulta `curl http://localhost:8080/actuator/health`, desconecta la dependencia para provocar un fallo deliberado y corrígela. Resultado esperado: health informa UP cuando la dependencia está disponible.
+
+#### Paso 6 · Práctica independiente
+Añade un contador de entregas, etiquetas de región sin PII y endpoints separados de liveness/readiness; documenta qué alerta produciría cada señal.
+
+#### Paso 7 · Cierre y evidencia
+Guarda respuestas JSON, métricas y logs; como siguiente paso crea un dashboard. Errores comunes: exponer endpoints sin auth, etiquetas de alta cardinalidad, health que depende de todo y registrar PII. Fuentes oficiales: https://docs.spring.io/spring-boot/reference/actuator/index.html y https://micrometer.io/docs.
+**¿Por qué es importante?** Porque sin señales operativas un fallo se descubre por quejas y no por evidencia.
+**Evidencia de aprendizaje:** entrega health UP/DOWN, métricas y una tabla de alertas.
 **Conceptos clave:** endpoints estándar de observabilidad, `HealthIndicator` propio.
 
 `spring-boot-starter-actuator`, agregado como dependencia, expone automáticamente endpoints de observabilidad estándar como `/actuator/health` (estado general de la aplicación, `{"status": "UP"}` o `"DOWN"`) y `/actuator/metrics` (lista de métricas disponibles para inspección), configurables explícitamente en cuanto a qué endpoints específicos exponer (`management.endpoints.web.exposure.include: health, metrics, info`), dado que no todos los endpoints de Actuator deberían estar públicamente expuestos por defecto (algunos revelan información sensible sobre la configuración interna de la aplicación).
@@ -35,6 +65,36 @@ public class ServicioExternoHealthIndicator implements HealthIndicator {
 
 ### Tema 2: Métricas de negocio con Micrometer
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás observar este servicio desde cero. Prerrequisitos: JDK 21, Maven y un editor. Verifica java --version y mvn --version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real, una plataforma de entregas debe distinguir una aplicación viva de una instancia lista para recibir tráfico, y medir pedidos sin exponer datos personales.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+Actuator expone señales operativas; health resume dependencias; Micrometer registra métricas con etiquetas. Liveness responde si el proceso puede continuar y readiness si puede recibir trabajo. La analogía es un aeropuerto: una pista abierta no significa que el avión tenga combustible ni permiso de despegue.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-spring-m7
+cd ejemplo-spring-m7
+curl -fsSL https://start.spring.io/starter.zip -d dependencies=web,actuator -d javaVersion=21 -o app.zip
+unzip app.zip
+mvn spring-boot:run
+```
+Configura management endpoints y crea un health indicator para una dependencia simulada en `src/main/java/com/example/demo/DeliveryHealth.java`.
+
+#### Paso 5 · Práctica guiada
+Pista: consulta `curl http://localhost:8080/actuator/health`, desconecta la dependencia para provocar un fallo deliberado y corrígela. Resultado esperado: health informa UP cuando la dependencia está disponible.
+
+#### Paso 6 · Práctica independiente
+Añade un contador de entregas, etiquetas de región sin PII y endpoints separados de liveness/readiness; documenta qué alerta produciría cada señal.
+
+#### Paso 7 · Cierre y evidencia
+Guarda respuestas JSON, métricas y logs; como siguiente paso crea un dashboard. Errores comunes: exponer endpoints sin auth, etiquetas de alta cardinalidad, health que depende de todo y registrar PII. Fuentes oficiales: https://docs.spring.io/spring-boot/reference/actuator/index.html y https://micrometer.io/docs.
+**¿Por qué es importante?** Porque sin señales operativas un fallo se descubre por quejas y no por evidencia.
+**Evidencia de aprendizaje:** entrega health UP/DOWN, métricas y una tabla de alertas.
 **Conceptos clave:** métricas custom, valor para el equipo de producto, no solo infraestructura.
 
 Micrometer, la fachada de métricas integrada en Spring Boot Actuator, permite definir métricas custom específicas del dominio de negocio, no solo las métricas técnicas genéricas que Actuator expone automáticamente por defecto (uso de CPU, memoria, latencia de peticiones HTTP): `PedidoService(MeterRegistry registry) { this.pedidosCreados = registry.counter("pedidos.creados"); } void crear(Pedido p) { pedidosCreados.increment(); }` registra un contador que se incrementa cada vez que se crea un pedido, exponiendo esa métrica de negocio a través de `/actuator/metrics`, consumible directamente por sistemas de visualización como Prometheus/Grafana (Módulo 8 del track de DevOps).
@@ -60,6 +120,36 @@ public class PedidoService {
 
 ### Tema 3: Liveness vs readiness
 
+#### Paso 1 · Objetivo y preparación
+Al finalizar podrás observar este servicio desde cero. Prerrequisitos: JDK 21, Maven y un editor. Verifica java --version y mvn --version.
+
+#### Paso 2 · Contexto y caso real
+En un caso real, una plataforma de entregas debe distinguir una aplicación viva de una instancia lista para recibir tráfico, y medir pedidos sin exponer datos personales.
+
+#### Paso 3 · Teoría, modelo mental y analogía
+Actuator expone señales operativas; health resume dependencias; Micrometer registra métricas con etiquetas. Liveness responde si el proceso puede continuar y readiness si puede recibir trabajo. La analogía es un aeropuerto: una pista abierta no significa que el avión tenga combustible ni permiso de despegue.
+
+#### Paso 4 · Demostración guiada desde cero
+Parte de una carpeta vacía:
+```bash
+mkdir ejemplo-spring-m7
+cd ejemplo-spring-m7
+curl -fsSL https://start.spring.io/starter.zip -d dependencies=web,actuator -d javaVersion=21 -o app.zip
+unzip app.zip
+mvn spring-boot:run
+```
+Configura management endpoints y crea un health indicator para una dependencia simulada en `src/main/java/com/example/demo/DeliveryHealth.java`.
+
+#### Paso 5 · Práctica guiada
+Pista: consulta `curl http://localhost:8080/actuator/health`, desconecta la dependencia para provocar un fallo deliberado y corrígela. Resultado esperado: health informa UP cuando la dependencia está disponible.
+
+#### Paso 6 · Práctica independiente
+Añade un contador de entregas, etiquetas de región sin PII y endpoints separados de liveness/readiness; documenta qué alerta produciría cada señal.
+
+#### Paso 7 · Cierre y evidencia
+Guarda respuestas JSON, métricas y logs; como siguiente paso crea un dashboard. Errores comunes: exponer endpoints sin auth, etiquetas de alta cardinalidad, health que depende de todo y registrar PII. Fuentes oficiales: https://docs.spring.io/spring-boot/reference/actuator/index.html y https://micrometer.io/docs.
+**¿Por qué es importante?** Porque sin señales operativas un fallo se descubre por quejas y no por evidencia.
+**Evidencia de aprendizaje:** entrega health UP/DOWN, métricas y una tabla de alertas.
 **Conceptos clave:** ¿debe reiniciarse el pod? vs ¿debe recibir tráfico ahora?
 
 `management.endpoint.health.probes.enabled: true` habilita que Actuator genere dos endpoints de salud separados y con un propósito distinto cada uno: `/actuator/health/liveness` responde a la pregunta "¿está la aplicación en un estado tan roto que Kubernetes debería reiniciar completamente este pod?" (un fallo de liveness dispara un reinicio del contenedor), mientras `/actuator/health/readiness` responde a una pregunta distinta: "¿está la aplicación actualmente en condiciones de recibir tráfico?" (un fallo de readiness simplemente saca temporalmente al pod de la rotación de balanceo de carga, sin reiniciarlo, esperando a que vuelva a estar listo por sí solo).
