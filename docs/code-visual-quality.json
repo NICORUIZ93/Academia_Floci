@@ -115,11 +115,11 @@
       "code": 43,
       "commentedCode": 6,
       "mermaid": 6,
-      "asciiVisual": 22,
+      "asciiVisual": 24,
       "misleadingDiagramLabel": 0,
-      "filePath": 5,
-      "runCommand": 5,
-      "officialSource": 0
+      "filePath": 6,
+      "runCommand": 6,
+      "officialSource": 3
     },
     "ios": {
       "topics": 51,
@@ -3701,7 +3701,7 @@
     {
       "track": "android",
       "module": 0,
-      "topic": "Tema 1: Estructura de un proyecto Android Studio",
+      "topic": "Tema 3: AndroidManifest.xml y módulos Gradle",
       "missingCode": false,
       "missingComments": true
     },

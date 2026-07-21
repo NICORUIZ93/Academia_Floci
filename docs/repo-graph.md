@@ -1,6 +1,6 @@
 # Academia Floci Repo Graph
 
-Generated: 2026-07-21 09:19 UTC
+Generated: 2026-07-21 09:23 UTC
 Root: `Academia_Floci`
 Indexed files: 781
 Import edges: 33
@@ -181,7 +181,7 @@ For automated lookups, use `docs/repo-graph.json`.
 
 - `web/public/content/ATRIBUCION.md` (20 lines) - headings: # Atribucion y licencia
 - `web/public/content/LICENSE-FLOCI.txt` (21 lines)
-- `web/public/content/android/modulo-0.md` (169 lines) - headings: # Módulo 0: Kotlin aplicado a Android, ## Antes de comenzar: instala Android Studio y un dispositivo de prueba, ## Aprende construyendo, ### Tema 1: Estructura de un proyecto Android Studio
+- `web/public/content/android/modulo-0.md` (333 lines) - headings: # Módulo 0: Kotlin aplicado a Android, ## Antes de comenzar: instala Android Studio y un dispositivo de prueba, ## Aprende construyendo, ### Tema 1: Estructura de un proyecto Android Studio
 - `web/public/content/android/modulo-1.md` (126 lines) - headings: # Módulo 1: Ciclo de vida: Activities y ViewModel, ## Aprende construyendo, ### Tema 1: Ciclo de vida de una Activity, ### Tema 2: ViewModel sobrevive a la rotación
 - `web/public/content/android/modulo-10.md` (116 lines) - headings: # Módulo 10: Performance, Material 3 y accesibilidad, ## Aprende construyendo, ### Tema 1: Detectar y corregir recomposición innecesaria, ### Tema 2: Baseline Profiles y ciclo de efectos
 - `web/public/content/android/modulo-11.md` (141 lines) - headings: # Módulo 11: Publicación en Google Play, ## Aprende construyendo, ### Tema 1: Firma de la app, ### Tema 2: App Bundle vs APK

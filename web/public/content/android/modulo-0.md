@@ -9,12 +9,12 @@ No necesitas un teléfono Android. Android Studio incluye el SDK, Gradle y un em
 - **macOS:** elige la descarga para Apple Silicon o Intel según tu Mac. En Apple Silicon usa imágenes de emulador ARM64.
 - **Linux:** instala los paquetes de virtualización/KVM de tu distribución, agrega tu usuario al grupo `kvm` y reinicia sesión.
 
-En **SDK Manager** instala Android SDK Platform, Build-Tools y Platform-Tools. En **Device Manager** crea un dispositivo Pixel con una imagen estable. Crea un proyecto **Empty Activity**, Kotlin y Jetpack Compose; espera a que termine “Gradle Sync” y pulsa Run.
+En **SDK Manager** instala Android SDK Platform, Build-Tools y Platform-Tools. En **Device Manager** crea un dispositivo Pixel con una imagen estable. Crea un proyecto **Empty Activity**, Kotlin y Jetpack Compose; espera a que termine "Gradle Sync" y pulsa Run.
 
 Comprueba también la terminal integrada:
 
 ```bash
-./gradlew tasks          # macOS/Linux
+./gradlew tasks          # macOS/Linux (invoca Gradle vía el wrapper)
 .\gradlew.bat tasks      # Windows
 adb devices
 ```
@@ -25,107 +25,271 @@ El emulador debe aparecer como `device`. Si figura `unauthorized`, acepta el di�
 
 ### Tema 1: Estructura de un proyecto Android Studio
 
-**Conceptos clave:** separación entre código, recursos y configuración de build.
+#### Paso 1 · Objetivo y preparación
 
-Un proyecto Android Studio organiza el código Kotlin bajo `app/src/main/java/com/miapp/`, los recursos (textos, imágenes, dimensiones, colores) bajo `app/src/main/res/`, y la configuración de build bajo archivos `build.gradle.kts` en cada nivel (proyecto raíz y cada módulo). Esta separación no es arbitraria: el sistema de recursos de Android (`res/`) permite que el mismo código fuente seleccione automáticamente el recurso correcto según el idioma del dispositivo, el tamaño de pantalla, o el modo claro/oscuro, sin que el código Kotlin necesite ninguna lógica condicional explícita para eso, algo que sería mucho más difícil de mantener si los textos e imágenes estuvieran hardcodeados directamente dentro del código.
+Al finalizar podrás ubicar dónde vive el código, los recursos y la configuración de build de cualquier proyecto Android, y explicar por qué esa separación existe.
 
-El archivo `build.gradle.kts` de cada módulo declara sus dependencias (librerías externas, otros módulos del mismo proyecto) y su configuración de compilación (versión mínima de Android soportada, versión de Kotlin, plugins aplicados). Gradle lee estos archivos y construye un grafo de dependencias completo antes de compilar, determinando en qué orden deben compilarse los módulos y qué código está disponible para cada uno, de forma conceptualmente similar a cómo Maven o Gradle organizan un proyecto Java multi-módulo (estudiado en profundidad en el Módulo 9 del track de Java).
+**Conocimiento previo:** Kotlin básico (funciones, clases); ninguna experiencia previa en Android requerida.
 
-**Analogía:** la estructura de un proyecto Android es como los planos de un edificio: una carpeta para la estructura (código), otra para el mobiliario y la decoración (recursos), y un documento de especificaciones (Gradle) que define qué materiales usar y de dónde vienen, todo separado para que un electricista no tenga que revisar los planos de plomería para hacer su trabajo.
+#### Paso 2 · Contexto y caso real
 
 **¿Por qué es importante?** Entender esta estructura desde el primer módulo evita la confusión común de "dónde va cada cosa" que ralentiza a cualquier desarrollador nuevo en Android, y prepara el terreno para conceptos posteriores (recursos localizados, módulos Gradle separados por feature) que dependen directamente de esta organización.
 
-**Casos de uso reales:**
-- Ubicar rápidamente dónde vive un string, un color o un composable al incorporarte a un proyecto Android existente.
-- Añadir una nueva dependencia (Retrofit, Room, Módulos 5-6) sabiendo exactamente en qué `build.gradle.kts` declararla.
-- Separar `app/` de `core/` desde el día uno para que el proyecto escale sin reorganizaciones dolorosas después.
+#### Paso 3 · Teoría con analogía
+
+**Conceptos clave:** separación entre código, recursos y configuración de build.
+
+Un proyecto Android Studio organiza el código Kotlin bajo `app/src/main/java/com/miapp/`, los recursos (textos, imágenes, dimensiones, colores) bajo `app/src/main/res/`, y la configuración de build bajo archivos `build.gradle.kts`. Esta separación permite que el sistema de recursos (`res/`) seleccione automáticamente el recurso correcto según idioma, tamaño de pantalla o modo claro/oscuro, sin lógica condicional explícita en Kotlin. El archivo `build.gradle.kts` de cada módulo declara sus dependencias y configuración de compilación; Gradle lee estos archivos y construye un grafo de dependencias completo antes de compilar, de forma conceptualmente similar a un proyecto Java multi-módulo (track Java, Módulo 9).
+
+**Analogía:** la estructura de un proyecto Android es como los planos de un edificio: una carpeta para la estructura (código), otra para el mobiliario (recursos), y un documento de especificaciones (Gradle) que define qué materiales usar, todo separado para que un electricista no revise los planos de plomería.
 
 **Diagrama:**
 
 ```
-app/
-  src/main/
-    java/com/miapp/      ← código Kotlin
-    res/
-      values/strings.xml  ← textos externalizados
-      drawable/             ← imágenes/iconos
-    AndroidManifest.xml    ← declara componentes, permisos, ícono
-  build.gradle.kts          ← dependencias y configuración del módulo
+┌── app/ ─────────────────────────────────┐
+│  src/main/                                 │
+│    java/com/miapp/    ← código Kotlin        │
+│    res/                                       │
+│      values/strings.xml  ← textos externalizados │
+│      drawable/             ← imágenes/iconos       │
+│    AndroidManifest.xml    ← componentes, permisos    │
+│  build.gradle.kts          ← dependencias del módulo   │
+└─────────────────────────────────────┘
 ```
+
+#### Paso 4 · Demostración guiada desde cero
+
+Desde una carpeta vacía, crea un proyecto nuevo con la plantilla **Empty Activity** (Kotlin + Compose) desde Android Studio, llamado `academia-android`, e inspecciona su estructura real (`app/src/main/`) desde la terminal integrada:
+
+```bash
+mkdir -p academia-android
+cd academia-android
+# (genera el proyecto "Empty Activity" con Android Studio dentro de esta carpeta)
+find app/src/main -maxdepth 3 -type d
+cat app/build.gradle.kts | grep -A3 "^android {"
+```
+
+**Explicación línea por línea:** `find app/src/main -maxdepth 3 -type d` lista los directorios reales generados por la plantilla (`java/`, `res/values`, `res/drawable`), confirmando visualmente la separación código/recursos que describe el Paso 3; el `grep` sobre `build.gradle.kts` muestra el bloque `android { ... }` que declara la configuración de compilación del módulo `:app`.
+
+Confirma que el string de bienvenida y el nombre de la app viven en `res/`, no hardcodeados en el código Kotlin:
+
+```bash
+grep -rn "app_name" app/src/main/res/values/strings.xml
+grep -n "app_name\|ic_launcher" app/src/main/AndroidManifest.xml
+```
+
+**Resultado esperado:** `strings.xml` contiene la entrada `app_name` con el nombre de la app como texto; `AndroidManifest.xml` referencia ese mismo string vía `@string/app_name` y el ícono vía `@mipmap/ic_launcher`, nunca como literales hardcodeados dentro del manifiesto.
+
+**Fallo deliberado:** busca el texto literal del nombre de la app directamente dentro de cualquier archivo `.kt` del proyecto (`grep -rn "MiAplicacion" app/src/main/java/`, sustituyendo por el nombre real que le diste al proyecto). No debería encontrarse ninguna coincidencia — diagnostica confirmando que Android Studio, al generar el proyecto, ya externaliza el nombre a `res/values/strings.xml` y lo referencia por recurso (`@string/app_name`), nunca como literal directo en el código Kotlin.
+
+#### Construcción RutaFlow: estructura del proyecto integrador
+
+Crea el archivo `academia-android/README.md` documentando que este mismo repositorio evoluciona durante todo el track (siguiendo la ruta de proyecto progresivo de la sección siguiente), y que su estructura de `app/`, `res/` y `build.gradle.kts` es la base sobre la que se construirán los módulos `:core` y `:feature-*` de los próximos temas.
+
+#### Paso 5 · Práctica guiada
+
+Ejecuta `find app/src/main/res -type d` y para cada carpeta que veas (`values/`, `drawable/`, `mipmap-*/`, `layout/` si existe), escribe en una línea qué tipo de recurso contiene. **Pista:** el nombre de la carpeta (`drawable`, `values`, `mipmap`) generalmente describe directamente el tipo de recurso que contiene.
+
+#### Paso 6 · Práctica independiente
+
+Agrega un nuevo recurso de color en `app/src/main/res/values/colors.xml` (créalo si no existe) y úsalo desde el `MainActivity.kt` generado por la plantilla, confirmando con `grep` que el color se referencia por nombre de recurso (`R.color.tu_color`), no como un valor hexadecimal hardcodeado en Kotlin.
+
+#### Paso 7 · Cierre y evidencia
+
+Ya ubicas con confianza dónde vive el código, los recursos y la configuración de build de cualquier proyecto Android. El siguiente tema profundiza específicamente en cómo y por qué externalizar recursos de texto. **Evidencia:** entrega el resultado del `grep` confirmando que `app_name` vive en `strings.xml` y no como literal en ningún archivo `.kt`, y explica por qué esa ausencia es la señal de una externalización correcta. Fuente oficial: [Android Developers — App resources overview](https://developer.android.com/guide/topics/resources/providing-resources).
+
+**Errores comunes:** escribir código Kotlin directamente dentro de `res/` por error de ubicación; modificar `AndroidManifest.xml` sin sincronizar Gradle después, dejando cambios sin aplicar realmente al build.
+
+**Cuándo no usarlo:** para un prototipo desechable de un único archivo sin intención de mantenerlo ni traducirlo, seguir esta estructura completa con múltiples módulos Gradle es una sobre-ingeniería; la plantilla mínima de un solo módulo `:app` es suficiente en ese caso.
 
 ### Tema 2: Recursos externalizados
 
-**Conceptos clave:** una fuente de verdad por texto/valor, selección automática según configuración del dispositivo.
+#### Paso 1 · Objetivo y preparación
 
-```xml
-<!-- res/values/strings.xml -->
-<string name="titulo_bienvenida">Bienvenido</string>
-```
+Al finalizar podrás externalizar un texto a `strings.xml` y explicar cómo Android resuelve automáticamente variantes por idioma, tema y densidad de pantalla.
 
-```kotlin
-Text(text = stringResource(R.string.titulo_bienvenida))
-```
+**Conocimiento previo:** Tema 1 de este módulo.
 
-Externalizar un string a `res/values/strings.xml` en vez de escribirlo directamente como literal dentro del composable Kotlin (`Text("Bienvenido")`) tiene dos beneficios concretos que se vuelven cada vez más valiosos a medida que la app crece: primero, permite traducir la app completa a otro idioma agregando un archivo `res/values-es/strings.xml` o `res/values-fr/strings.xml` sin tocar absolutamente ninguna línea del código Kotlin existente, dado que Android selecciona automáticamente el archivo de recursos correcto según el idioma configurado en el dispositivo del usuario; segundo, centraliza cada texto en una única fuente de verdad, de modo que corregir un error tipográfico o cambiar el copy de un texto que aparece en múltiples pantallas requiere modificar una sola línea en vez de buscar y reemplazar ese texto duplicado en cada composable donde aparece.
-
-Este mismo mecanismo de "resolución automática según configuración" se extiende más allá de idiomas: `res/values-night/` provee valores específicos para modo oscuro, y calificadores de densidad de pantalla (`drawable-hdpi/`, `drawable-xhdpi/`) permiten proveer versiones de una misma imagen optimizadas para distintas resoluciones de pantalla, todo resuelto automáticamente por el sistema en tiempo de ejecución sin lógica condicional explícita en el código de la app.
-
-**Analogía:** externalizar strings es como tener un único directorio telefónico central en vez de que cada empleado memorice individualmente los números que necesita: actualizar un número (corregir un texto) se hace en un solo lugar, y cualquiera que consulte el directorio (cualquier pantalla que use ese string) obtiene automáticamente el valor correcto y actualizado.
+#### Paso 2 · Contexto y caso real
 
 **¿Por qué es importante?** Externalizar recursos evita duplicación de texto, habilita traducción sin tocar código Kotlin, y permite que Android resuelva automáticamente variantes (idioma, modo oscuro, densidad de pantalla) según la configuración del dispositivo del usuario.
 
-**Casos de uso reales:**
-- Lanzar la misma app en varios países agregando `values-es/`, `values-pt/` sin recompilar la lógica.
-- Soportar modo oscuro real (no solo colores invertidos) con `values-night/` para textos e imágenes que también cambian.
-- Corregir un error tipográfico reportado por QA editando una sola línea en `strings.xml` en vez de buscarlo en 20 composables.
+#### Paso 3 · Teoría con analogía
 
-**Configuración del ejemplo:**
+**Conceptos clave:** una fuente de verdad por texto/valor, selección automática según configuración del dispositivo.
 
-```xml
-<!-- res/values/strings.xml -->
-<string name="titulo_bienvenida">Bienvenido</string>
+Externalizar un string a `res/values/strings.xml` en vez de escribirlo como literal (`Text("Bienvenido")`) permite traducir la app agregando `res/values-es/strings.xml` sin tocar el código Kotlin, y centraliza cada texto en una única fuente de verdad. Este mismo mecanismo se extiende a `res/values-night/` (modo oscuro) y calificadores de densidad (`drawable-hdpi/`, `drawable-xhdpi/`), todo resuelto automáticamente en tiempo de ejecución.
+
+**Analogía:** externalizar strings es como tener un único directorio telefónico central en vez de que cada empleado memorice individualmente los números: actualizar un número se hace en un solo lugar, y cualquiera que lo consulte obtiene el valor correcto.
+
+**Diagrama:**
+
+```
+┌── res/values/strings.xml (por defecto) ──┐
+│ <string name="titulo">Bienvenido</string>    │
+└──────────┬───────────────────────┘
+           │  Android elige según configuración del dispositivo
+   ┌───────┼────────────┬──────────────┐
+   ▼                     ▼                ▼
+values-es/          values-night/    drawable-xhdpi/
+(idioma español)     (modo oscuro)    (pantalla alta densidad)
 ```
 
-```kotlin
-Text(text = stringResource(R.string.titulo_bienvenida))
+#### Paso 4 · Demostración guiada desde cero
+
+Reutiliza `academia-android` (Tema 1; si partes de una carpeta vacía nueva, créala primero con `mkdir -p academia-android`) y crea, dentro de `app/src/main/res/`, un string nuevo y su traducción al inglés:
+
+```bash
+cd academia-android
+mkdir -p app/src/main/res/values-en
+cat >> app/src/main/res/values/strings.xml <<'EOF'
+<!-- agregado manualmente para este ejercicio, dentro del bloque <resources> existente -->
+EOF
+cat > app/src/main/res/values-en/strings.xml <<'EOF'
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="titulo_bienvenida">Welcome</string>
+</resources>
+EOF
+# python valida que el XML generado es válido antes de continuar
+python3 -c "
+import xml.etree.ElementTree as ET
+ET.parse('app/src/main/res/values-en/strings.xml')
+print('values-en/strings.xml es XML bien formado')
+"
 ```
+
+**Explicación línea por línea:** `values-en/strings.xml` provee la traducción al inglés bajo el mismo nombre de recurso (`titulo_bienvenida`); Android selecciona automáticamente este archivo en vez de `values/strings.xml` (español, por defecto) cuando el idioma del dispositivo está configurado en inglés, sin ningún cambio de código Kotlin.
+
+Confirma que ambos archivos definen la misma clave de recurso, condición necesaria para que la resolución automática funcione:
+
+```bash
+python3 -c "
+import xml.etree.ElementTree as ET
+es = {s.get('name') for s in ET.parse('app/src/main/res/values/strings.xml').getroot()}
+en = {s.get('name') for s in ET.parse('app/src/main/res/values-en/strings.xml').getroot()}
+print('claves solo en español:', es - en)
+print('claves solo en inglés:', en - es)
+print('claves compartidas:', es & en)
+"
+```
+
+**Resultado esperado:** `titulo_bienvenida` aparece en la intersección de claves compartidas entre ambos archivos; ninguna clave debería existir solo en un idioma sin su contraparte, porque eso dejaría un texto sin traducir cuando el dispositivo cambie de idioma.
+
+**Fallo deliberado:** agrega una clave nueva (`<string name="solo_en_espanol">Texto</string>`) únicamente en `values/strings.xml`, sin agregarla también en `values-en/strings.xml`, y repite la comparación de claves. Aparece en "claves solo en español" — diagnostica confirmando que un dispositivo configurado en inglés mostraría, para esa clave específica, el string por defecto (español) como respaldo, no un error, pero rompiendo la consistencia de traducción esperada por el usuario.
+
+#### Construcción RutaFlow: internacionalización del proyecto
+
+Documenta en `academia-android/README.md` que todo string visible al usuario en RutaFlow se declara primero en `values/strings.xml` (español, idioma por defecto del proyecto) y se traduce a `values-en/` antes de considerarse listo para una release pública.
+
+#### Paso 5 · Práctica guiada
+
+Agrega `res/values-night/colors.xml` con un color de fondo oscuro para la misma clave (`color_fondo`) que ya exista en `values/colors.xml`, y confirma con el mismo script de comparación de claves que ambos archivos comparten la clave. **Pista:** el sufijo `-night` sigue exactamente la misma convención de calificador que `-es`/`-en` para idioma.
+
+#### Paso 6 · Práctica independiente
+
+Agrega un tercer idioma (`values-pt/strings.xml`, portugués) con la traducción de `titulo_bienvenida`, y confirma con el script de comparación que las tres versiones (español, inglés, portugués) comparten exactamente la misma clave.
+
+#### Paso 7 · Cierre y evidencia
+
+Ya externalizas textos y confirmas programáticamente que las traducciones mantienen las mismas claves de recurso. El siguiente tema cubre el manifiesto que declara los componentes de la app ante el sistema operativo. **Evidencia:** entrega el resultado de la comparación de claves mostrando `titulo_bienvenida` compartida entre español e inglés, y explica qué pasaría si una clave faltara en un idioma. Fuente oficial: [Android Developers — Localization](https://developer.android.com/guide/topics/resources/localization).
+
+**Errores comunes:** agregar una traducción nueva sin mantener la misma clave exacta que la versión por defecto, rompiendo la resolución automática; hardcodear un string directamente en un composable "solo por ahora" y olvidar externalizarlo después.
+
+**Cuándo no usarlo:** para una app interna de un solo idioma sin ninguna intención de traducirse ni de soportar modo oscuro distinto, externalizar cada valor a calificadores múltiples aporta menos valor inmediato, aunque sigue siendo buena práctica para el string en sí.
 
 ### Tema 3: AndroidManifest.xml y módulos Gradle
 
-**Conceptos clave:** contrato entre la app y el sistema operativo, declarado antes de instalar.
+#### Paso 1 · Objetivo y preparación
 
-```xml
-<application android:icon="@mipmap/ic_launcher" android:label="@string/app_name">
-    <activity android:name=".MainActivity" android:exported="true">
-        <intent-filter>
-            <action android:name="android.intent.action.MAIN" />
-            <category android:name="android.intent.category.LAUNCHER" />
-        </intent-filter>
-    </activity>
-</application>
-```
+Al finalizar podrás declarar un componente y un permiso en el manifiesto, y dividir un proyecto en módulos Gradle con una dependencia explícita entre ellos.
 
-El `AndroidManifest.xml` es leído por el sistema operativo antes de instalar la app, y declara todo lo que Android necesita saber de antemano: qué componentes existen (Activities, Services, BroadcastReceivers), cuál es el punto de entrada de la app (el `intent-filter` con `MAIN`/`LAUNCHER` que aparece en el launcher del dispositivo), qué permisos requiere la app (acceso a cámara, ubicación, internet), y metadatos como el ícono y el nombre visible. Esta declaración anticipada permite que el sistema operativo tome decisiones de seguridad y de recursos (por ejemplo, pedir permiso explícito al usuario) sin necesidad de ejecutar código de la app primero.
+**Conocimiento previo:** Temas 1 y 2 de este módulo.
 
-Un proyecto Gradle multi-módulo divide la aplicación en unidades de compilación independientes (`:app`, `:core`, `:feature-tareas`), cada una con su propio `build.gradle.kts` declarando sus propias dependencias. Un módulo `:app/build.gradle.kts` que declare `implementation(project(":core"))` establece que el módulo `:app` depende del módulo `:core`, permitiendo que Gradle compile `:core` primero y lo ponga a disposición de `:app`; esta separación en módulos, aunque opcional en un proyecto pequeño, se vuelve valiosa en proyectos grandes al forzar límites explícitos entre partes de la app y permitir compilaciones incrementales más rápidas (solo recompilar el módulo que cambió, no el proyecto entero).
-
-**Analogía:** el AndroidManifest.xml es como el formulario de aduana que se completa antes de que un envío cruce la frontera: declara de antemano qué contiene el paquete (componentes), qué permisos especiales necesita (permisos sensibles), y cómo identificarlo (ícono, nombre), permitiendo que la aduana (el sistema operativo) tome decisiones antes de que el contenido real llegue a su destino.
+#### Paso 2 · Contexto y caso real
 
 **¿Por qué es importante?** El manifiesto es el contrato que el sistema operativo lee antes de instalar o ejecutar la app; los módulos Gradle establecen límites explícitos de compilación que se vuelven cada vez más valiosos a medida que el proyecto crece.
 
-**Casos de uso reales:**
-- Declarar el permiso `CAMERA` en el manifiesto antes de poder pedirlo en tiempo de ejecución al usuario.
-- Dividir una app grande en `:feature-login`, `:feature-tareas` para que un cambio en uno no recompile todo el proyecto.
-- Revisar el manifiesto al hacer code review de seguridad para verificar qué componentes están `exported="true"` innecesariamente.
+#### Paso 3 · Teoría con analogía
 
-**Código del ejemplo:**
+**Conceptos clave:** contrato entre la app y el sistema operativo, declarado antes de instalar.
 
-```kotlin
-// app/build.gradle.kts
-dependencies {
-    implementation(project(":core"))
-}
+El `AndroidManifest.xml` declara qué componentes existen (Activities, Services), el punto de entrada (`intent-filter` con `MAIN`/`LAUNCHER`), y qué permisos requiere la app, permitiendo que el sistema operativo tome decisiones de seguridad sin ejecutar código de la app primero. Un proyecto Gradle multi-módulo divide la app en unidades de compilación independientes (`:app`, `:core`); `implementation(project(":core"))` en `:app/build.gradle.kts` establece esa dependencia, forzando límites explícitos y permitiendo compilaciones incrementales más rápidas.
+
+**Analogía:** el AndroidManifest.xml es como el formulario de aduana que se completa antes de que un envío cruce la frontera: declara de antemano qué contiene el paquete y qué permisos especiales necesita, permitiendo que la aduana tome decisiones antes de que el contenido llegue a destino.
+
+**Diagrama:**
+
 ```
+┌── AndroidManifest.xml ────────────────────┐
+│ <application>                                 │
+│   <activity android:name=".MainActivity">       │
+│     <intent-filter>                                │
+│       <action android:name="...MAIN" />               │
+│       <category android:name="...LAUNCHER" />           │
+│     </intent-filter>                                       │
+│   </activity>                                                 │
+│ </application>                                                   │
+└──────────┬────────────────────────────────┘
+           │ leído por el SO antes de instalar
+     Sistema operativo decide permisos y punto de entrada
+```
+
+#### Paso 4 · Demostración guiada desde cero
+
+Reutiliza `academia-android` (o créalo desde una carpeta vacía con `mkdir -p academia-android` si es tu primera vez en este módulo) y crea un módulo Gradle nuevo `:core` con una dependencia explícita desde `:app`:
+
+```bash
+cd academia-android
+mkdir -p core/src/main/kotlin/com/academia/core
+cat > core/build.gradle.kts <<'EOF'
+plugins { id("org.jetbrains.kotlin.jvm") }
+EOF
+cat > core/src/main/kotlin/com/academia/core/Formateador.kt <<'EOF'
+package com.academia.core
+fun formatearBienvenida(nombre: String): String = "Bienvenido, $nombre"
+EOF
+cat > settings.gradle.kts.fragmento <<'EOF'
+include(":app", ":core")
+EOF
+grep -q 'implementation(project(":core"))' app/build.gradle.kts || \
+  echo 'implementation(project(":core"))' >> app/build.gradle.kts
+grep -n "project(\":core\")" app/build.gradle.kts
+```
+
+**Explicación línea por línea:** `core/build.gradle.kts` declara el módulo `:core` como un módulo Kotlin puro (sin dependencias de Android), conteniendo lógica reutilizable (`formatearBienvenida`); agregar `implementation(project(":core"))` en `app/build.gradle.kts` establece que `:app` depende de `:core`, permitiendo que Gradle compile `:core` primero y lo ponga a disposición de `:app`.
+
+Confirma que el grafo de dependencias declarado coincide con la estructura de carpetas real creada:
+
+```bash
+find core/src -name "*.kt"
+grep -c "project(\":core\")" app/build.gradle.kts
+echo "gradle compilaría :core antes que :app por esta dependencia declarada"
+```
+
+**Resultado esperado:** `core/src/main/kotlin/com/academia/core/Formateador.kt` existe con la función `formatearBienvenida`; `app/build.gradle.kts` contiene exactamente una línea con `project(":core")`, confirmando la dependencia declarada que Gradle usará para determinar el orden de compilación.
+
+**Fallo deliberado:** intenta usar `formatearBienvenida` desde un archivo dentro de `core/` importando algo del propio módulo `:app` (una dependencia inversa, de `:core` hacia `:app`). Esto crearía una dependencia circular — diagnostica revisando que `core/build.gradle.kts` nunca declara `implementation(project(":app"))`: un módulo de bajo nivel como `:core` no debe depender de un módulo de más alto nivel como `:app`, exactamente la misma regla de dependencias en una sola dirección que evita ciclos de compilación imposibles de resolver.
+
+#### Construcción RutaFlow: modularización del proyecto
+
+Documenta en `academia-android/README.md` que RutaFlow modulariza su lógica compartida (formateo, validaciones) en `:core`, y que cada nueva feature futura (`:feature-tareas`, `:feature-perfil`) dependerá de `:core` pero nunca al revés, manteniendo el mismo sentido único de dependencia de este Tema.
+
+#### Paso 5 · Práctica guiada
+
+Agrega el permiso `INTERNET` al `AndroidManifest.xml` (`<uses-permission android:name="android.permission.INTERNET" />`) y confirma con `grep` que aparece declarado antes del bloque `<application>`. **Pista:** los permisos se declaran como elementos hermanos de `<application>`, no anidados dentro de ella.
+
+#### Paso 6 · Práctica independiente
+
+Agrega una segunda función a `core/src/main/kotlin/com/academia/core/Formateador.kt` y úsala desde `MainActivity.kt` en `:app`, confirmando visualmente que el import (`import com.academia.core.NombreDeLaFuncion`) referencia correctamente el paquete del módulo `:core`.
+
+#### Paso 7 · Cierre y evidencia
+
+Ya declaras componentes y permisos en el manifiesto, y divides un proyecto en módulos Gradle con dependencias explícitas y unidireccionales. El siguiente módulo del track construye sobre esta base con Jetpack Compose y estado. **Evidencia:** entrega el resultado confirmando la línea `project(":core")` en `app/build.gradle.kts`, y explica por qué `:core` nunca debe depender de `:app` en sentido inverso. Fuente oficial: [Android Developers — App manifest overview](https://developer.android.com/guide/topics/manifest/manifest-intro).
+
+**Errores comunes:** declarar un componente `exported="true"` sin necesidad real, exponiendo innecesariamente esa Activity a otras apps; crear una dependencia circular entre módulos de distinto nivel de abstracción.
+
+**Cuándo no usarlo:** para un proyecto de un solo módulo pequeño sin ninguna intención de escalar en equipo o funcionalidades, dividir en `:app`/`:core` desde el día uno puede ser una sobre-ingeniería prematura; la modularización aporta valor claramente a partir de cierto tamaño y número de personas trabajando en paralelo.
 
 ---
 

@@ -2844,7 +2844,7 @@
     },
     {
       "path": "web/public/content/android/modulo-0.md",
-      "lines": 169,
+      "lines": 333,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -2853,10 +2853,14 @@
         "## Antes de comenzar: instala Android Studio y un dispositivo de prueba",
         "## Aprende construyendo",
         "### Tema 1: Estructura de un proyecto Android Studio",
-        "### Tema 2: Recursos externalizados",
-        "### Tema 3: AndroidManifest.xml y m\u00f3dulos Gradle",
-        "## Ruta de proyecto progresivo desde carpeta vac\u00eda",
-        "## Laboratorio pr\u00e1ctico"
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
+        "#### Paso 2 \u00b7 Contexto y caso real",
+        "#### Paso 3 \u00b7 Teor\u00eda con analog\u00eda",
+        "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
+        "# (genera el proyecto \"Empty Activity\" con Android Studio dentro de esta carpeta)",
+        "#### Construcci\u00f3n RutaFlow: estructura del proyecto integrador",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
+        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente"
       ]
     },
     {
