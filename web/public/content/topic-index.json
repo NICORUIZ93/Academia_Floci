@@ -3120,6 +3120,10 @@
       {
         "title": "Interceptores y autenticación",
         "fragment": "tema-3-interceptores-y-autenticacion"
+      },
+      {
+        "title": "Reintentos con backoff exponencial",
+        "fragment": "tema-4-reintentos-con-backoff-exponencial"
       }
     ],
     "6": [

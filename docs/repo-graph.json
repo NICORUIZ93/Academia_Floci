@@ -137,7 +137,7 @@
     },
     {
       "path": "docs/code-visual-quality.json",
-      "lines": 4410,
+      "lines": 4389,
       "kind": "project-file",
       "symbols": [],
       "imports": [],
@@ -224,7 +224,7 @@
     },
     {
       "path": "docs/prerequisite-graph.json",
-      "lines": 10018,
+      "lines": 10029,
       "kind": "project-file",
       "symbols": [],
       "imports": [],
@@ -252,7 +252,7 @@
     },
     {
       "path": "docs/seven-step-methodology.json",
-      "lines": 23975,
+      "lines": 24001,
       "kind": "project-file",
       "symbols": [],
       "imports": [],
@@ -308,7 +308,7 @@
     },
     {
       "path": "docs/topic-learning-quality.json",
-      "lines": 19367,
+      "lines": 19388,
       "kind": "project-file",
       "symbols": [],
       "imports": [],
@@ -6283,7 +6283,7 @@
     },
     {
       "path": "web/public/content/kotlin-multiplatform/modulo-5.md",
-      "lines": 116,
+      "lines": 615,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -6291,9 +6291,15 @@
         "# M\u00f3dulo 5: Networking compartido con Ktor Client",
         "## Aprende construyendo",
         "### Tema 1: Ktor Client multiplataforma",
-        "### Tema 2: Manejo de errores de red con un tipo expl\u00edcito",
-        "### Tema 3: Interceptores y autenticaci\u00f3n",
-        "## Laboratorio pr\u00e1ctico"
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
+        "#### Paso 2 \u00b7 Contexto y caso real",
+        "#### Paso 3 \u00b7 Teor\u00eda con analog\u00eda",
+        "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
+        "# python levanta despu\u00e9s un servidor real y consume el endpoint con deserializaci\u00f3n",
+        "#### Construcci\u00f3n RutaFlow: cliente compartido para el cat\u00e1logo de paradas",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada \u2014 repetici\u00f3n progresiva",
+        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
+        "#### Paso 7 \u00b7 Cierre y evidencia"
       ]
     },
     {
@@ -9530,7 +9536,7 @@
     },
     {
       "path": "web/public/content/topic-index.json",
-      "lines": 4119,
+      "lines": 4123,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -11890,7 +11896,7 @@
     },
     {
       "path": "web/src/app/tracks/kotlin-multiplatform.track.ts",
-      "lines": 187,
+      "lines": 188,
       "kind": "angular-app",
       "symbols": [],
       "imports": [

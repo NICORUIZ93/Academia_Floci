@@ -100,15 +100,15 @@
       "officialSource": 58
     },
     "kotlin-multiplatform": {
-      "topics": 51,
-      "code": 45,
-      "commentedCode": 25,
-      "mermaid": 18,
-      "asciiVisual": 16,
+      "topics": 52,
+      "code": 46,
+      "commentedCode": 29,
+      "mermaid": 20,
+      "asciiVisual": 18,
       "misleadingDiagramLabel": 0,
-      "filePath": 23,
-      "runCommand": 30,
-      "officialSource": 19
+      "filePath": 27,
+      "runCommand": 34,
+      "officialSource": 20
     },
     "android": {
       "topics": 49,
@@ -3536,27 +3536,6 @@
       "topic": "Tema 6: Compatibilidad binaria y CI multi-target",
       "missingCode": true,
       "missingComments": false
-    },
-    {
-      "track": "kotlin-multiplatform",
-      "module": 5,
-      "topic": "Tema 1: Ktor Client multiplataforma",
-      "missingCode": false,
-      "missingComments": true
-    },
-    {
-      "track": "kotlin-multiplatform",
-      "module": 5,
-      "topic": "Tema 2: Manejo de errores de red con un tipo explícito",
-      "missingCode": false,
-      "missingComments": true
-    },
-    {
-      "track": "kotlin-multiplatform",
-      "module": 5,
-      "topic": "Tema 3: Interceptores y autenticación",
-      "missingCode": false,
-      "missingComments": true
     },
     {
       "track": "kotlin-multiplatform",

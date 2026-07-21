@@ -5035,6 +5035,17 @@
       ]
     },
     {
+      "id": "kotlin-multiplatform:5:4",
+      "track": "kotlin-multiplatform",
+      "module": 5,
+      "position": 4,
+      "title": "Reintentos con backoff exponencial",
+      "file": "web/public/content/kotlin-multiplatform/modulo-5.md",
+      "requires": [
+        "kotlin-multiplatform:5:3"
+      ]
+    },
+    {
       "id": "kotlin-multiplatform:6:1",
       "track": "kotlin-multiplatform",
       "module": 6,
@@ -5042,7 +5053,7 @@
       "title": "Esquemas SQLDelight y queries tipadas",
       "file": "web/public/content/kotlin-multiplatform/modulo-6.md",
       "requires": [
-        "kotlin-multiplatform:5:3"
+        "kotlin-multiplatform:5:4"
       ]
     },
     {
