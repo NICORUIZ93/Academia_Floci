@@ -70,11 +70,7 @@ fun describirApodo(apodo: String?): String {
     return if (apodo != null) "El apodo '$apodo' tiene $largo caracteres" else "Sin apodo (largo: $largo)"
 }
 EOF
-python3 -c "
-codigo = open('shared/src/commonMain/kotlin/com/academia/kmp/NullSafety.kt').read()
-assert 'apodo?.length ?: 0' in codigo, 'falta combinar safe call con operador Elvis'
-print('NullSafety.kt: usa safe call + Elvis, sin ningún !! injustificado')
-"
+./gradlew :shared:compileKotlinMetadata
 ```
 
 **Explicación línea por línea:** `apodo: String?` declara el parámetro explícitamente nullable; `apodo?.length` evalúa a `null` si `apodo` es `null`, sin lanzar excepción; `?: 0` sustituye ese `null` por el valor por defecto `0` en la misma expresión, sin un `if` separado.
@@ -189,12 +185,7 @@ data class Persona(val nombre: String, val edad: Int)
 
 fun String.esEmailValido(): Boolean = this.contains("@") && this.contains(".")
 EOF
-python3 -c "
-codigo = open('shared/src/commonMain/kotlin/com/academia/kmp/Persona.kt').read()
-assert 'data class Persona' in codigo, 'falta declarar la data class'
-assert 'fun String.esEmailValido' in codigo, 'falta la función de extensión sobre String'
-print('Persona.kt: data class genera igualdad estructural; esEmailValido extiende String sin heredar')
-"
+./gradlew :shared:compileKotlinMetadata
 ```
 
 **Explicación línea por línea:** `data class Persona(val nombre: String, val edad: Int)` genera automáticamente los cuatro métodos a partir de los parámetros del constructor; `fun String.esEmailValido()` declara `String` como receptor, permitiendo llamarla como `"texto".esEmailValido()` aunque `String` sea una clase de la librería estándar que no modificaste.
@@ -321,12 +312,7 @@ fun describir(estado: EstadoUI): String = when (estado) {
     // sin else: el compilador exige cubrir los tres casos de la sealed class
 }
 EOF
-python3 -c "
-codigo = open('shared/src/commonMain/kotlin/com/academia/kmp/EstadoUI.kt').read()
-assert 'sealed class EstadoUI' in codigo, 'falta modelar el conjunto cerrado de estados'
-assert 'when (estado) {' in codigo and 'else' not in codigo.split('when (estado) {')[1].split('}')[0], 'el when debe ser exhaustivo sin else'
-print('EstadoUI.kt: when exhaustivo sobre sealed class, sin rama else de respaldo')
-"
+./gradlew :shared:compileKotlinMetadata
 ```
 
 **Explicación línea por línea:** `sealed class EstadoUI` cierra el conjunto de subtipos posibles a los declarados en el mismo archivo; `when (estado) { is EstadoUI.Cargando -> ...; ... }` devuelve directamente el `String` de cada rama como resultado de la función `describir`, sin una variable intermedia; la ausencia de `else` es intencional — el compilador exige que las tres ramas cubran todos los casos.
@@ -459,12 +445,7 @@ fun pasosImpares(hasta: Int): List<Int> {
     return (1..hasta step 2).toList()
 }
 EOF
-python3 -c "
-codigo = open('shared/src/commonMain/kotlin/com/academia/kmp/Destructuring.kt').read()
-assert 'val (x, y) = punto' in codigo, 'falta la declaración de destructuring'
-assert '1..hasta step 2' in codigo, 'falta el rango con step explícito'
-print('Destructuring.kt: desestructura Punto y genera un rango con step 2')
-"
+./gradlew :shared:compileKotlinMetadata
 ```
 
 **Explicación línea por línea:** `val (x, y) = punto` invoca implícitamente `punto.component1()` y `punto.component2()` (generados automáticamente por `data class Punto`), asignando cada resultado a `x` e `y` respectivamente; `1..hasta step 2` construye un rango desde `1` hasta `hasta` (inclusive), avanzando de dos en dos.
