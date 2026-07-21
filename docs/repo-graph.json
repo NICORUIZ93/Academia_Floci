@@ -137,7 +137,7 @@
     },
     {
       "path": "docs/code-visual-quality.json",
-      "lines": 4606,
+      "lines": 4592,
       "kind": "project-file",
       "symbols": [],
       "imports": [],
@@ -2886,7 +2886,7 @@
     },
     {
       "path": "web/public/content/android/modulo-10.md",
-      "lines": 116,
+      "lines": 383,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -2894,9 +2894,15 @@
         "# M\u00f3dulo 10: Performance, Material 3 y accesibilidad",
         "## Aprende construyendo",
         "### Tema 1: Detectar y corregir recomposici\u00f3n innecesaria",
-        "### Tema 2: Baseline Profiles y ciclo de efectos",
-        "### Tema 3: Accesibilidad e interop con Views",
-        "## Laboratorio pr\u00e1ctico"
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
+        "#### Paso 2 \u00b7 Contexto y caso real",
+        "#### Paso 3 \u00b7 Teor\u00eda con analog\u00eda",
+        "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
+        "# python confirma en ejecuci\u00f3n real la diferencia de identidad entre lambdas",
+        "#### Construcci\u00f3n RutaFlow: skippability de los composables del proyecto",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
+        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
+        "#### Paso 7 \u00b7 Cierre y evidencia"
       ]
     },
     {

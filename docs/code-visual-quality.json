@@ -113,13 +113,13 @@
     "android": {
       "topics": 49,
       "code": 43,
-      "commentedCode": 30,
+      "commentedCode": 32,
       "mermaid": 6,
-      "asciiVisual": 40,
+      "asciiVisual": 41,
       "misleadingDiagramLabel": 0,
-      "filePath": 33,
-      "runCommand": 32,
-      "officialSource": 27
+      "filePath": 36,
+      "runCommand": 35,
+      "officialSource": 30
     },
     "ios": {
       "topics": 51,
@@ -3702,20 +3702,6 @@
       "track": "android",
       "module": 0,
       "topic": "Tema 3: AndroidManifest.xml y módulos Gradle",
-      "missingCode": false,
-      "missingComments": true
-    },
-    {
-      "track": "android",
-      "module": 10,
-      "topic": "Tema 2: Baseline Profiles y ciclo de efectos",
-      "missingCode": false,
-      "missingComments": true
-    },
-    {
-      "track": "android",
-      "module": 10,
-      "topic": "Tema 3: Accesibilidad e interop con Views",
       "missingCode": false,
       "missingComments": true
     },
