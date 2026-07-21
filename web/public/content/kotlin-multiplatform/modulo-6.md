@@ -55,12 +55,7 @@ SELECT * FROM Tarea;
 insertar:
 INSERT INTO Tarea(id, titulo, completada) VALUES (?, ?, ?);
 EOF
-python3 -c "
-esquema = open('shared/src/commonMain/sqldelight/com/academia/kmp/Tarea.sq').read()
-assert 'CREATE TABLE Tarea' in esquema, 'falta declarar el esquema de la tabla'
-assert 'selectTodas:' in esquema and 'insertar:' in esquema, 'faltan las queries nombradas que SQLDelight tipará'
-print('Tarea.sq: esquema y queries nombradas listas para generar código Kotlin tipado')
-"
+./gradlew :shared:compileKotlinMetadata
 ```
 
 **Explicación línea por línea:** `CREATE TABLE Tarea (...)` declara el esquema real de SQL; `selectTodas:` y `insertar:` son nombres de query que SQLDelight usa para generar funciones Kotlin correspondientes (`tareaQueries.selectTodas()`, `tareaQueries.insertar(...)`), cada una tipada según las columnas reales de la tabla.
@@ -176,13 +171,7 @@ import com.squareup.sqldelight.db.SqlDriver
 
 actual fun crearDriver(): SqlDriver = AndroidSqliteDriver(Database.Schema, context, "app.db")
 EOF
-python3 -c "
-comun = open('shared/src/commonMain/kotlin/com/academia/kmp/Driver.kt').read()
-android = open('shared/src/androidMain/kotlin/com/academia/kmp/Driver.android.kt').read()
-assert 'expect fun crearDriver()' in comun, 'falta el contrato expect en commonMain'
-assert 'actual fun crearDriver()' in android and 'AndroidSqliteDriver' in android, 'falta la implementación actual específica de Android'
-print('Driver.kt: contrato expect en commonMain, actual con AndroidSqliteDriver en androidMain')
-"
+./gradlew :shared:compileKotlinMetadata :shared:compileDebugKotlinAndroid
 ```
 
 **Explicación línea por línea:** `expect fun crearDriver(): SqlDriver` declara el contrato en `commonMain`, sin especificar cómo se construye el driver; `actual fun crearDriver(): SqlDriver = AndroidSqliteDriver(...)` en `androidMain` proporciona la implementación real específica de Android, mientras `iosMain` tendría su propia `actual` con `NativeSqliteDriver`.
@@ -294,11 +283,7 @@ cd academia-kmp
 cat > shared/src/commonMain/sqldelight/com/academia/kmp/migrations/2.sqm <<'EOF'
 ALTER TABLE Tarea ADD COLUMN prioridad INTEGER NOT NULL DEFAULT 0;
 EOF
-python3 -c "
-migracion = open('shared/src/commonMain/sqldelight/com/academia/kmp/migrations/2.sqm').read()
-assert 'ALTER TABLE Tarea ADD COLUMN prioridad' in migracion, 'falta la migración que agrega la columna prioridad'
-print('2.sqm: migración versionada que agrega una columna sin recrear la tabla')
-"
+./gradlew :shared:compileKotlinMetadata
 ```
 
 **Explicación línea por línea:** `2.sqm` (nombrado según el número de versión de esquema al que corresponde) contiene `ALTER TABLE Tarea ADD COLUMN prioridad INTEGER NOT NULL DEFAULT 0`, que agrega una columna nueva con un valor por defecto para las filas ya existentes, en vez de recrear la tabla completa (lo cual perdería los datos).
@@ -401,11 +386,7 @@ fun insertarTareaConContador(database: Any, id: String, titulo: String) {
     // contadorQueries.incrementar()
 }
 EOF
-python3 -c "
-codigo = open('shared/src/commonMain/kotlin/com/academia/kmp/Transacciones.kt').read()
-assert 'transaction' in codigo.lower() or 'insertarTareaConContador' in codigo, 'falta documentar el uso de transacción'
-print('Transacciones.kt: documenta insertar tarea + incrementar contador como una unidad atómica')
-"
+./gradlew :shared:compileKotlinMetadata
 ```
 
 **Explicación línea por línea:** `insertarTareaConContador` documenta el patrón: en SQLDelight real, `database.transaction { ... }` envolvería ambas escrituras (`tareaQueries.insertar(...)`, `contadorQueries.incrementar()`) como una sola unidad atómica, revertida completamente si cualquiera de las dos falla.
