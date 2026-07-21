@@ -55,11 +55,7 @@ import android.os.Build
 
 actual fun nombrePlataforma(): String = "Android ${Build.VERSION.SDK_INT}"
 EOF
-python3 -c "
-comun = open('shared/src/commonMain/kotlin/com/academia/kmp/Tarea.kt').read()
-assert 'import android' not in comun and 'import platform' not in comun, 'commonMain no debe importar APIs específicas de plataforma'
-print('Tarea.kt en commonMain: sin imports de plataforma, compila para TODOS los targets')
-"
+./gradlew :shared:compileKotlinMetadata
 ```
 
 **Explicación línea por línea:** `Tarea.kt` en `commonMain` solo usa tipos del lenguaje base de Kotlin (`String`, `Boolean`), sin ningún import de `android.*` o de Foundation/UIKit, por lo que puede compilarse igual para Android, iOS o cualquier otro target configurado; `Plataforma.android.kt` en `androidMain` sí importa `android.os.Build` libremente, porque este archivo solo se compila cuando el target es Android.
@@ -171,16 +167,7 @@ package com.academia.kmp
 actual fun nombrePlataforma(): String = "Android"
 actual fun idUnicoDispositivo(): String = "android-id-simulado"
 EOF
-python3 -c "
-comun = open('shared/src/commonMain/kotlin/com/academia/kmp/Plataforma.kt').read()
-android = open('shared/src/androidMain/kotlin/com/academia/kmp/Plataforma.android.kt').read()
-import re
-expects = set(re.findall(r'expect fun (\w+)', comun))
-actuals = set(re.findall(r'actual fun (\w+)', android))
-faltantes = expects - actuals
-assert not faltantes, f'androidMain no implementa: {faltantes}'
-print('androidMain implementa TODAS las funciones expect declaradas en commonMain')
-"
+./gradlew :shared:compileKotlinMetadata :shared:compileDebugKotlinAndroid
 ```
 
 **Explicación línea por línea:** `expect fun nombrePlataforma(): String` y `expect fun idUnicoDispositivo(): String` declaran dos contratos en `commonMain`; `actual fun nombrePlataforma()` y `actual fun idUnicoDispositivo()` en `androidMain` implementan AMBOS contratos — si faltara implementar uno de los dos, la compilación para Android fallaría.
