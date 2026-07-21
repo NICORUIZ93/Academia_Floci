@@ -1,14 +1,6 @@
 {
   "files": [
     {
-      "path": ".claude/settings.local.json",
-      "lines": 14,
-      "kind": "project-file",
-      "symbols": [],
-      "imports": [],
-      "headings": []
-    },
-    {
       "path": ".env.example",
       "lines": 8,
       "kind": "project-file",
@@ -26,7 +18,7 @@
     },
     {
       "path": ".gitignore",
-      "lines": 25,
+      "lines": 26,
       "kind": "project-file",
       "symbols": [],
       "imports": [],
@@ -4102,7 +4094,7 @@
     },
     {
       "path": "web/public/content/devops/modulo-1.md",
-      "lines": 235,
+      "lines": 584,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -4110,13 +4102,15 @@
         "# M\u00f3dulo 1: Git avanzado y estrategias de branching",
         "## Aprende construyendo",
         "### Tema 1: Trunk-based development vs GitFlow",
-        "### Tema 2: Rebase interactivo vs merge",
-        "### Tema 3: Bisect para encontrar regresiones",
-        "### Tema 4: Hooks de Git y commits firmados",
-        "### Tema 5: Monorepos vs polyrepos",
-        "### Tema 6: git cherry-pick, git stash, git reset vs git revert",
-        "### Tema 7: git reflog, git worktree y git submodule",
-        "## Laboratorio pr\u00e1ctico"
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
+        "#### Paso 2 \u00b7 Contexto y caso real",
+        "#### Paso 3 \u00b7 Teor\u00eda con analog\u00eda",
+        "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
+        "#### Construcci\u00f3n RutaFlow: estrategia de branching del proyecto",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
+        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
+        "#### Paso 7 \u00b7 Cierre y evidencia",
+        "### Tema 2: Rebase interactivo vs merge"
       ]
     },
     {

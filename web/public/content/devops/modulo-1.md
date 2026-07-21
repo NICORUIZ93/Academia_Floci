@@ -5,19 +5,27 @@
 
 ### Tema 1: Trunk-based development vs GitFlow
 
+#### Paso 1 · Objetivo y preparación
+
+Al finalizar podrás elegir entre trunk-based development y GitFlow según el tamaño y madurez operativa de un equipo, explicando qué rol cumplen los feature flags en cada modelo.
+
+**Conocimiento previo:** uso básico de Git (`commit`, `branch`, `merge`) y Docker (Módulo 0 de este track).
+
+#### Paso 2 · Contexto y caso real
+
+**¿Por qué es importante?** Este es un caso real: la estrategia de branching de un equipo determina directamente qué tan rápido puede integrarse y validarse un cambio, qué tan fácil es depurar una regresión, y qué tan arriesgado es cada despliegue. Elegir mal esta estrategia genera fricción constante que el equipo siente todos los días.
+
+#### Paso 3 · Teoría con analogía
+
 **Conceptos clave:** rama principal (`main`/`trunk`), integración continua, feature flag, rama de larga duración, ceremonia de release.
 
-Trunk-based development es una estrategia donde todo el equipo integra sus cambios a la rama principal (`main` o `trunk`) con mucha frecuencia, normalmente varias veces al día, manteniendo esa rama siempre en un estado desplegable. El trabajo incompleto o experimental que no debe ser visible todavía para los usuarios se oculta con feature flags (interruptores en configuración que activan o desactivan una funcionalidad) en vez de aislarlo en una rama separada de larga duración. Esta estrategia exige, casi como condición previa, un pipeline de CI/CD maduro (el que vas a construir en los Módulos 4 y 5 de este mismo track): sin pruebas automatizadas confiables y un pipeline rápido, integrar constantemente a `main` sería arriesgado.
+Trunk-based development es una estrategia donde todo el equipo integra sus cambios a la rama principal (`main` o `trunk`) con mucha frecuencia, manteniendo esa rama siempre en un estado desplegable. El trabajo incompleto se oculta con feature flags en vez de aislarlo en una rama de larga duración. Esta estrategia exige, casi como condición previa, un pipeline de CI/CD maduro (el que construirás en los Módulos 4 y 5 de este track).
 
-GitFlow, en cambio, es un modelo más estructurado con varias ramas de larga duración con propósitos específicos: `develop` como rama de integración continua de funcionalidades, `release/*` para preparar una versión específica antes de publicarla, `hotfix/*` para corregir errores urgentes directamente sobre producción, y `main` reservada exclusivamente para el código que efectivamente está en producción. Este modelo añade más ceremonia (más tipos de rama, más pasos formales de fusión) pero da más control explícito sobre qué contiene exactamente cada versión publicada, algo valioso en contextos con ciclos de release programados y menos automatización de por medio.
+GitFlow, en cambio, es un modelo más estructurado con varias ramas de larga duración con propósitos específicos: `develop` como integración continua de funcionalidades, `release/*` para preparar una versión, `hotfix/*` para corregir errores urgentes sobre producción, y `main` reservada al código en producción. Añade más ceremonia pero da más control explícito sobre qué contiene exactamente cada versión publicada.
 
-La elección entre ambos no es una cuestión de cuál es "mejor" en abstracto, sino de qué encaja con la madurez operativa y el tamaño del equipo. Equipos pequeños con buena cobertura de pruebas y despliegues frecuentes tienden a beneficiarse de trunk-based development, porque su mayor simplicidad y velocidad de integración superan la necesidad de la estructura adicional de GitFlow. Equipos grandes, con múltiples versiones soportadas simultáneamente en producción, o con procesos de aprobación de release más formales (por ejemplo, en software regulado), suelen encontrar en GitFlow una estructura que refleja mejor esa realidad organizativa.
+La elección no es de cuál es "mejor" en abstracto, sino de qué encaja con la madurez operativa y el tamaño del equipo. Un error común es adoptar GitFlow por costumbre sin evaluar si la ceremonia adicional aporta valor; del mismo modo, forzar trunk-based sin disciplina de pruebas automatizadas degrada rápidamente la estabilidad de `main`.
 
-Un error común es adoptar GitFlow por costumbre o porque "así se hace en la industria", sin evaluar si la ceremonia adicional realmente aporta valor al contexto específico del equipo; del mismo modo, forzar trunk-based development en un equipo sin disciplina de pruebas automatizadas suele degradar rápidamente la estabilidad de `main`, precisamente la propiedad que esta estrategia depende de mantener.
-
-**Analogía:** trunk-based development es como un grupo de cocineros que van añadiendo ingredientes a la misma olla común constantemente, confiando en que cada uno prueba su ingrediente antes de añadirlo (las pruebas automatizadas) para no arruinar el plato compartido. GitFlow es como preparar cada plato en una estación separada (una rama de funcionalidad), y solo llevarlo a la olla común (`main`) en una ceremonia formal de "montaje del plato final" (el proceso de release), con más pasos de control antes de servir.
-
-**¿Por qué es importante?** La estrategia de branching de un equipo no es un detalle superficial: determina directamente qué tan rápido puede integrarse y validarse un cambio, qué tan fácil es depurar una regresión, y qué tan arriesgado es cada despliegue. Elegir mal esta estrategia genera fricción constante que el equipo siente todos los días, aunque rara vez se identifique de inmediato como la causa raíz.
+**Analogía:** trunk-based development es como un grupo de cocineros que añaden ingredientes a la misma olla común constantemente, confiando en que cada uno prueba su ingrediente antes de añadirlo (las pruebas automatizadas). GitFlow es como preparar cada plato en una estación separada (rama de funcionalidad), y solo llevarlo a la olla común en una ceremonia formal de montaje (el proceso de release).
 
 **Diagrama:**
 
@@ -27,51 +35,150 @@ main ●─●─●─●─●─●─●─●                main ───
      (integración constante,         develop ●─●───●─●─●──●───
       feature flags ocultan               \        /  \        /
       trabajo incompleto)          feature/x ●─●─●     release/1.2 ●─●
-                                                              \
-                                                          hotfix/urgente ●
 ```
+
+#### Paso 4 · Demostración guiada desde cero
+
+Desde una carpeta vacía crea `academia-devops/src/modulo1/branching` y simula un flujo trunk-based dentro de un contenedor Git aislado:
+
+```bash
+mkdir -p academia-devops/src/modulo1/branching/trunk-demo
+cd academia-devops/src/modulo1/branching/trunk-demo
+docker run --rm -v "$(pwd)":/repo -w /repo alpine/git sh -c \
+  "git init -q && git config user.email demo@academia.dev && git config user.name demo && \
+   echo v1 > app.txt && git add . && git commit -qm inicio && \
+   git checkout -qb feature/x && echo 'v2 tras flag' >> app.txt && git commit -qam 'feature x' && \
+   git checkout -q main && git merge --no-ff -q feature/x -m 'integra feature x' && \
+   git log --oneline --graph --all"
+```
+
+**Explicación línea por línea:** `--no-ff` fuerza un commit de merge explícito aunque el merge pudiera resolverse en avance rápido, dejando visible en el historial cuándo se integró cada feature — el patrón típico de trunk-based con integración frecuente.
+
+**Resultado esperado:** `git log --oneline --graph --all` muestra dos commits en `main` con un merge explícito de `feature/x`, simulando una integración frecuente y de corta duración.
+
+**Fallo deliberado:** repite el flujo pero mantén `feature/x` sin fusionar (agrega 5 commits más solo ahí, sin tocar `main`, antes de fusionar). El merge tiene más probabilidad de conflicto — diagnostica que cuanto más tiempo vive una rama sin integrarse, mayor el riesgo, exactamente el problema que trunk-based evita.
+
+#### Construcción RutaFlow: estrategia de branching del proyecto
+
+Documenta en `academia-devops/README.md` qué estrategia usará RutaFlow (trunk-based, dado el pipeline de CI/CD que construirás en los Módulos 4 y 5) y por qué.
+
+#### Paso 5 · Práctica guiada
+
+Repite el demo simulando GitFlow: crea `develop` y `release/1.0`, y confirma con `git log --graph --all` que la estructura de ramas es más profunda que en trunk-based. **Pista:** cada rama de GitFlow tiene un propósito específico; nómbrala según ese propósito, no genéricamente.
+
+#### Paso 6 · Práctica independiente
+
+Para un equipo hipotético de 3 personas con despliegues diarios y buena cobertura de pruebas, decide qué estrategia recomendarías y justifica en 3-4 líneas basándote en los criterios del Paso 3.
+
+#### Paso 7 · Cierre y evidencia
+
+Ya distingues cuándo la integración frecuente supera a la estructura de GitFlow. El siguiente tema limpia el historial de una rama antes de integrarla. **Evidencia:** entrega el `git log --graph --all` de ambos escenarios y tu justificación escrita explicando la elección. Fuente oficial: [trunkbaseddevelopment.com](https://trunkbaseddevelopment.com/).
+
+**Errores comunes:** adoptar GitFlow por costumbre sin evaluar si la ceremonia aporta valor real; forzar trunk-based sin disciplina de pruebas automatizadas.
+
+**Cuándo no usarlo:** GitFlow frente a trunk-based no conviene invertirlo en un equipo de una sola persona sin necesidad de releases versionadas paralelas; el límite de GitFlow es la ceremonia que añade sin beneficio si nadie más la necesita.
 
 ### Tema 2: Rebase interactivo vs merge
 
+#### Paso 1 · Objetivo y preparación
+
+Al finalizar podrás limpiar un historial de commits con `git rebase -i` y explicar por qué nunca debe reescribirse el historial de una rama ya compartida.
+
+**Conocimiento previo:** Tema 1 de este módulo.
+
+#### Paso 2 · Contexto y caso real
+
+**¿Por qué es importante?** Este es un caso real: confundir `reset`/`rebase` con operaciones seguras sobre una rama compartida es uno de los errores más comunes y disruptivos que un desarrollador nuevo con Git puede cometer.
+
+#### Paso 3 · Teoría con analogía
+
 **Conceptos clave:** `git rebase -i`, `pick`/`squash`/`reword`/`drop`, historial lineal, riesgo de reescribir historial compartido.
 
-`git merge` combina dos ramas creando un nuevo commit de fusión que tiene dos padres, preservando exactamente el historial tal como ocurrió, incluyendo todos los commits intermedios de ambas ramas. `git rebase` reescribe el historial: toma los commits de tu rama y los "reaplica" uno por uno sobre la punta actual de otra rama, como si los hubieras escrito directamente ahí desde el principio, produciendo un historial final lineal, sin commits de fusión.
+`git merge` combina dos ramas creando un commit de fusión con dos padres, preservando el historial tal como ocurrió. `git rebase` reescribe el historial: reaplica los commits de tu rama uno por uno sobre la punta actual de otra rama, produciendo un historial lineal sin commits de fusión.
 
-`git rebase -i HEAD~3` abre un editor con los últimos tres commits, permitiendo reordenarlos y aplicarles una acción a cada uno: `pick` los mantiene tal cual, `squash` los combina con el commit anterior en uno solo, `reword` permite cambiar el mensaje de un commit sin tocar su contenido, y `drop` lo elimina por completo del historial. Esto es extremadamente útil para limpiar una secuencia de commits de trabajo en progreso ("WIP", "fix typo", "otro intento") en un único commit coherente y bien descrito antes de abrir un pull request, dejando un historial legible para quien lo revise después.
+`git rebase -i HEAD~3` abre un editor con los últimos tres commits: `pick` los mantiene, `squash` los combina con el anterior, `reword` cambia el mensaje sin tocar el contenido, y `drop` lo elimina. Útil para limpiar commits de trabajo en progreso ("WIP", "fix") en uno solo antes de abrir un pull request.
 
-La regla de seguridad más importante sobre el rebase, sin excepciones razonables, es: nunca reescribas el historial de una rama que otras personas ya tienen clonada o que ya fue fusionada a una rama compartida. Como el rebase cambia los hashes de commit (cada commit reaplicado es técnicamente un commit nuevo, aunque su contenido sea idéntico), cualquier persona que ya tenga la versión antigua de esos commits en su copia local terminará con un historial divergente e inconsistente respecto al tuyo, generando conflictos confusos y difíciles de resolver para todo el equipo.
+La regla de seguridad más importante: nunca reescribas el historial de una rama que otras personas ya tienen clonada. Como el rebase cambia los hashes de commit, cualquiera con la versión antigua terminará con un historial divergente e inconsistente.
 
-La práctica segura y ampliamente adoptada es: usa rebase libremente sobre tus propias ramas de funcionalidad que nadie más ha clonado todavía, para limpiar tu historial antes de compartirlo; usa merge (o rebase solo con extremo cuidado y coordinación explícita del equipo) sobre ramas que ya son compartidas o públicas, donde reescribir el historial afectaría a otras personas.
-
-**Analogía:** el merge es como pegar dos capítulos de un libro tal como fueron escritos, con una nota explícita de "aquí se unieron ambas historias". El rebase es como reescribir uno de los capítulos como si siempre hubiera continuado directamente donde terminó el otro, sin esa nota de unión, produciendo una narrativa más lineal y limpia de leer. Rebasar una rama que otros ya leyeron es como reescribir un capítulo que un grupo de lectores ya está discutiendo activamente: de repente, todos están hablando de versiones distintas del mismo capítulo.
-
-**¿Por qué es importante?** Saber cuándo usar rebase y cuándo usar merge —y sobre todo, respetar la regla de no reescribir historial compartido— evita uno de los problemas más frustrantes y evitables en el trabajo colaborativo con Git: un historial confuso, con commits duplicados o conflictos aparentemente inexplicables, causados por reescribir algo que otra persona ya había construido sobre la versión anterior.
+**Analogía:** el merge es como pegar dos capítulos de un libro tal como fueron escritos, con una nota de "aquí se unieron ambas historias". El rebase es como reescribir un capítulo como si siempre hubiera continuado directamente donde terminó el otro, sin esa nota. Rebasar una rama que otros ya leyeron es como reescribir un capítulo que un grupo de lectores ya está discutiendo activamente.
 
 **Diagrama:**
 
 ```
-Antes del rebase interactivo:          Después de "squash" los tres en uno:
-main ─●
-       \                                main ─●
-   feature ●─●─●  ("WIP", "fix", "fix2")            \
-                                              feature ●  ("Añade validación de formulario")
+Antes:  main ─●            Después de squash:  main ─●
+              \                                       \
+        feature ●─●─●                          feature ●  ("Añade validación")
+        ("WIP","fix","fix2")
 ```
+
+#### Paso 4 · Demostración guiada desde cero
+
+Desde una carpeta vacía crea `academia-devops/src/modulo1/rebase` y genera tres commits desprolijos dentro de un contenedor Git aislado:
+
+```bash
+mkdir -p academia-devops/src/modulo1/rebase
+cd academia-devops/src/modulo1/rebase
+docker run --rm -v "$(pwd)":/repo -w /repo alpine/git sh -c \
+  "git init -q && git config user.email demo@academia.dev && git config user.name demo && \
+   echo v1 > archivo.txt && git add . && git commit -qm WIP && \
+   echo v2 >> archivo.txt && git commit -qam fix && \
+   echo v3 >> archivo.txt && git commit -qam 'fix de verdad' && git log --oneline"
+```
+
+**Explicación línea por línea:** se crean tres commits deliberadamente desprolijos para practicar limpiarlos con rebase interactivo.
+
+Combina los tres en uno usando `GIT_SEQUENCE_EDITOR` para automatizar el editor interactivo:
+
+```bash
+docker run --rm -v "$(pwd)":/repo -w /repo alpine/git sh -c \
+  "GIT_SEQUENCE_EDITOR='sed -i 2,3s/^pick/squash/' git rebase -i HEAD~3 && git log --oneline"
+```
+
+**Resultado esperado:** un único commit en el historial en vez de tres, con un mensaje que combina los tres originales.
+
+**Fallo deliberado:** antes del rebase, clona el repositorio a otra carpeta (`git clone academia-devops/src/modulo1/rebase clon-companero`), simulando a un compañero. Haz el rebase solo en el original, luego intenta `git -C clon-companero pull`. Verás un rechazo o historiales divergentes — diagnostica que el rebase cambió los hashes y por eso el clon con el historial antiguo ya no coincide.
+
+#### Construcción RutaFlow: historial limpio antes de cada pull request
+
+Antes de abrir cualquier pull request contra el repositorio de RutaFlow, limpia tu rama de funcionalidad con `rebase -i` (nunca sobre `main` ya fusionada), dejando un historial legible para quien lo revise.
+
+#### Paso 5 · Práctica guiada
+
+Repite el rebase pero usa `reword` en vez de `squash` en el commit final para mejorar solo su mensaje, sin combinar commits. **Pista:** `GIT_SEQUENCE_EDITOR` también puede cambiar `pick` por `reword` en una línea específica con `sed`.
+
+#### Paso 6 · Práctica independiente
+
+Provoca intencionalmente un conflicto durante un rebase (modifica la misma línea en dos commits distintos) y resuélvelo con `git rebase --continue` tras editar el archivo en conflicto.
+
+#### Paso 7 · Cierre y evidencia
+
+Ya limpias tu propio historial local sin arriesgar el de otros. El siguiente tema usa búsqueda binaria para encontrar regresiones en cualquier historial, limpio o no. **Evidencia:** entrega el `git log --oneline` antes y después del squash, y la explicación del historial divergente del compañero simulado. Fuente oficial: [Git — git-rebase](https://git-scm.com/docs/git-rebase).
+
+**Errores comunes:** rebasar una rama que ya fue fusionada o compartida; olvidar `git rebase --continue` después de resolver un conflicto durante el rebase.
+
+**Cuándo no usarlo:** frente a una rama pública con varios colaboradores activos, rebase no conviene; usa merge o coordina explícitamente con el equipo antes de reescribir cualquier historial ya compartido.
 
 ### Tema 3: Bisect para encontrar regresiones
 
+#### Paso 1 · Objetivo y preparación
+
+Al finalizar podrás usar `git bisect` para encontrar por búsqueda binaria el commit exacto que introdujo una regresión, incluyendo su automatización con `bisect run`.
+
+**Conocimiento previo:** Temas 1 y 2 de este módulo.
+
+#### Paso 2 · Contexto y caso real
+
+**¿Por qué es importante?** Este es un caso real de cualquier proyecto con suficiente historial: encontrar manualmente el commit que introdujo un bug sutil puede consumir horas; `git bisect` reduce esa búsqueda a minutos.
+
+#### Paso 3 · Teoría con analogía
+
 **Conceptos clave:** `git bisect`, búsqueda binaria, commit `good`/`bad`, regresión.
 
-`git bisect` automatiza la búsqueda del commit exacto que introdujo un bug, usando búsqueda binaria sobre el historial de commits en vez de revisarlos uno por uno secuencialmente. El proceso empieza con `git bisect start`, seguido de marcar un commit donde sabes que el bug ya está presente (`git bisect bad`, normalmente el commit actual) y otro donde sabes con certeza que el bug todavía no existía (`git bisect good <commit-o-tag>`, por ejemplo una versión anterior conocida como estable).
+`git bisect` automatiza la búsqueda del commit exacto que introdujo un bug usando búsqueda binaria. Empieza con `git bisect start`, marca un commit `bad` (donde el bug está presente) y otro `good` (donde no existía). Git hace checkout al punto medio, lo pruebas y lo marcas; con cada marca el rango sospechoso se reduce a la mitad hasta converger en un único commit. Para mil commits, esto reduce la búsqueda a unas diez iteraciones (log₂ de mil).
 
-A partir de ahí, Git hace checkout automáticamente al commit que está exactamente a mitad de camino entre ambos puntos marcados, y te pide que pruebes si el bug está presente en ese punto medio, marcándolo como `good` o `bad` según el resultado. Con cada marca, Git reduce a la mitad el rango de commits sospechosos, y repite el proceso hasta converger en un único commit: exactamente el que introdujo la regresión. Para un historial de mil commits, esto reduce la búsqueda a aproximadamente diez iteraciones (log₂ de mil), en vez de las potencialmente mil revisiones secuenciales que tomaría revisarlos uno por uno.
+El proceso puede automatizarse por completo con `git bisect run <script>`, que ejecuta un script en cada punto medio y marca `good`/`bad` según su código de salida, sin intervención manual.
 
-Este proceso puede automatizarse por completo si tienes un script o un test que determine automáticamente si el bug está presente (por ejemplo, un test unitario específico que falla exactamente cuando el bug existe): `git bisect run <script>` ejecuta ese script en cada punto medio y marca automáticamente `good`/`bad` según su código de salida, sin necesitar intervención manual en cada paso, encontrando la regresión de forma completamente automática.
-
-`git bisect` es una de esas herramientas que la mayoría de los desarrolladores conocen de nombre pero pocos usan habitualmente, a pesar de ser dramáticamente más eficiente que la alternativa manual de revisar commits uno por uno o intentar adivinar cuál pudo haber introducido el problema. Es especialmente valiosa en repositorios con historiales largos donde el bug se introdujo hace tiempo y nadie recuerda exactamente en qué cambio.
-
-**Analogía:** `git bisect` es como buscar una palabra específica en un diccionario físico: en vez de leer página por página desde el principio, abres el diccionario por la mitad, ves si la palabra que buscas viene antes o después alfabéticamente, y repites ese proceso de dividir a la mitad hasta encontrarla en unos pocos pasos, en vez de cientos.
-
-**¿Por qué es importante?** En cualquier proyecto con suficiente historial, encontrar manualmente el commit exacto que introdujo un bug sutil (uno que no fue detectado inmediatamente al introducirse) puede consumir horas de revisión manual. `git bisect`, especialmente combinado con un test automatizado y `bisect run`, reduce esa búsqueda a minutos, siendo una de las herramientas de diagnóstico de mayor retorno de tiempo invertido en el ecosistema de Git.
+**Analogía:** `git bisect` es como buscar una palabra en un diccionario físico: en vez de leer página por página, abres el diccionario por la mitad, ves si la palabra viene antes o después, y repites hasta encontrarla en unos pocos pasos.
 
 **Diagrama:**
 
@@ -79,128 +186,370 @@ Este proceso puede automatizarse por completo si tienes un script o un test que 
 good ●───────────────●───────────────● bad
      v1.0          (punto medio)   HEAD (bug presente)
                         │
-              ¿el bug está aquí? marca good o bad
-                        │
         el rango sospechoso se reduce a la mitad
         y el proceso se repite hasta converger
-        en el commit exacto que introdujo el bug
 ```
+
+#### Paso 4 · Demostración guiada desde cero
+
+Desde una carpeta vacía crea `academia-devops/src/modulo1/bisect` con seis commits, uno de ellos con un bug intencional:
+
+```bash
+mkdir -p academia-devops/src/modulo1/bisect
+cd academia-devops/src/modulo1/bisect
+docker run --rm -v "$(pwd)":/repo -w /repo alpine/git sh -c '
+  git init -q && git config user.email demo@academia.dev && git config user.name demo
+  echo "def suma(a,b): return a+b" > operacion.py && git add . && git commit -qm v1
+  echo "def resta(a,b): return a-b" >> operacion.py && git commit -qam v2
+  echo "def bug(a,b): return a-b  # BUG: debería sumar" >> operacion.py && git commit -qam v3-bug
+  echo "def multiplica(a,b): return a*b" >> operacion.py && git commit -qam v4
+  echo "def divide(a,b): return a/b" >> operacion.py && git commit -qam v5
+  git log --oneline'
+```
+
+**Explicación línea por línea:** el commit `v3-bug` introduce deliberadamente una función mal implementada, tres commits antes de `HEAD`, simulando una regresión que nadie notó de inmediato.
+
+Automatiza la búsqueda con un script que detecta el bug (`grep` sobre el comentario `BUG`) y `bisect run`:
+
+```bash
+docker run --rm -v "$(pwd)":/repo -w /repo alpine/git sh -c '
+  echo "#!/bin/sh
+  grep -q BUG operacion.py && exit 1 || exit 0" > /repo/test-bug.sh && chmod +x /repo/test-bug.sh
+  git bisect start HEAD HEAD~4
+  git bisect run ./test-bug.sh'
+```
+
+**Resultado esperado:** `git bisect run` reporta `v3-bug` (o su hash) como el primer commit "malo", exactamente donde se introdujo el comentario `BUG`.
+
+**Fallo deliberado:** cambia el script de detección para que use `grep -q BUGG` (con un error tipográfico) y repite `bisect run`. El resultado converge en un commit incorrecto o falla por completo — diagnostica que la calidad de `bisect` depende enteramente de que el criterio `good`/`bad` sea correcto.
+
+#### Construcción RutaFlow: script de detección reutilizable
+
+Guarda `test-bug.sh` (generalizado a ejecutar la suite de pruebas real del proyecto) como `academia-devops/src/modulo1/bisect/verificar.sh`; RutaFlow lo reutilizará como criterio automático de `bisect run` cuando aparezca una regresión real.
+
+#### Paso 5 · Práctica guiada
+
+Repite `git bisect start HEAD HEAD~4` pero esta vez marca manualmente cada punto medio con `git bisect good`/`git bisect bad` en vez de `bisect run`. **Pista:** en cada paso, revisa `cat operacion.py` para decidir si el bug está presente.
+
+#### Paso 6 · Práctica independiente
+
+Introduce una segunda regresión en un commit distinto del mismo historial y ejecuta `bisect run` de nuevo; confirma que encuentra la primera regresión introducida cronológicamente, no la segunda.
+
+#### Paso 7 · Cierre y evidencia
+
+Ya conviertes una búsqueda manual de horas en un proceso de minutos con búsqueda binaria. El siguiente tema automatiza validaciones locales antes de cada commit con hooks. **Evidencia:** entrega el hash exacto reportado por `bisect run` como resultado y explica por qué corresponde exactamente al commit `v3-bug`. Fuente oficial: [Git — git-bisect](https://git-scm.com/docs/git-bisect).
+
+**Errores comunes:** marcar `good`/`bad` incorrectamente en algún punto intermedio, lo que hace converger la búsqueda en un commit equivocado; olvidar `git bisect reset` al terminar, dejando el repositorio en estado "detached HEAD".
+
+**Cuándo no usarlo:** frente a un bug que no es reproducible de forma determinista (depende de condiciones de carrera o datos externos variables), `bisect` no converge de forma confiable; necesitas primero un criterio `good`/`bad` reproducible.
 
 ### Tema 4: Hooks de Git y commits firmados
 
+#### Paso 1 · Objetivo y preparación
+
+Al finalizar podrás configurar un hook `pre-commit` que bloquea commits inválidos localmente, y explicar por qué los commits firmados dan una garantía de autoría más fuerte que el `user.name` configurado.
+
+**Conocimiento previo:** Temas 1 a 3 de este módulo.
+
+#### Paso 2 · Contexto y caso real
+
+**¿Por qué es importante?** Este es un caso real de cualquier equipo: los hooks aceleran el ciclo de retroalimentación deteniendo un commit con un problema antes incluso de subirlo, ahorrando el ciclo de subir y esperar a que CI lo rechace.
+
+#### Paso 3 · Teoría con analogía
+
 **Conceptos clave:** hook (`pre-commit`, `pre-push`), automatización local, commit firmado (GPG/SSH), verificación de autoría.
 
-Un hook de Git es un script que se ejecuta automáticamente en un punto específico del flujo de trabajo de Git, viviendo en el directorio `.git/hooks/` de un repositorio (o gestionado de forma compartida con herramientas como Husky en proyectos Node.js, que sincronizan hooks entre todos los miembros del equipo). Un hook `pre-commit`, por ejemplo, se ejecuta justo antes de que un commit se complete, y si el script termina con un código de salida distinto de cero, Git cancela el commit por completo: es el mecanismo perfecto para bloquear localmente un commit que no pasa el linter o que introduce un archivo con un patrón prohibido (como una clave de API hardcodeada).
+Un hook de Git es un script que se ejecuta automáticamente en un punto específico del flujo de trabajo, viviendo en `.git/hooks/`. Un hook `pre-commit` se ejecuta justo antes de completar un commit; si termina con código de salida distinto de cero, Git cancela el commit.
 
-Un commit firmado añade una firma criptográfica (usando GPG o, más recientemente, también claves SSH) que verifica que ese commit específico fue efectivamente creado por quien dice haberlo creado, y que su contenido no fue alterado después de firmarse. Esto es distinto y más fuerte que simplemente confiar en el nombre y correo configurados localmente con `git config user.name`/`user.email`, que cualquiera puede escribir libremente sin ninguna verificación real de identidad. Plataformas como GitHub muestran una insignia visual de "Verified" junto a los commits firmados correctamente, dando una señal de confianza adicional sobre la autoría real de ese cambio.
+Un commit firmado añade una firma criptográfica (GPG o claves SSH) que verifica que ese commit fue efectivamente creado por quien dice haberlo creado. Esto es más fuerte que confiar en `git config user.name`, que cualquiera puede escribir libremente.
 
-Los hooks son, por naturaleza, locales a cada copia del repositorio: no se distribuyen automáticamente solo por hacer `git clone`, lo que significa que un hook `pre-commit` configurado en tu máquina no protege automáticamente a un compañero de equipo que no lo tiene configurado en la suya, a menos que el equipo use explícitamente una herramienta que sincronice hooks (como Husky) como parte del proceso de instalación del proyecto. Esta es una diferencia importante frente a validaciones de CI, que sí se aplican de forma centralizada e inevitable para todo el equipo sin depender de la configuración local de cada persona.
+Los hooks son locales a cada copia del repositorio: no se distribuyen automáticamente con `git clone`, a menos que el equipo use una herramienta como Husky para sincronizarlos. Por eso los hooks son una primera línea de defensa rápida, pero la validación obligatoria para todo el equipo debe vivir en CI (Módulo 4 de este track), que no puede omitirse localmente.
 
-Precisamente por esa naturaleza local y opcional, los hooks se consideran una primera línea de defensa rápida y conveniente (detectar un problema antes incluso de hacer commit, ahorrando el ciclo de subir el cambio y esperar a que CI lo rechace), pero nunca deben ser la única línea de defensa: la validación real y obligatoria para todo el equipo debe vivir en el pipeline de CI, que vas a construir en el Módulo 4 de este track, precisamente porque CI no puede ser omitido ni desactivado localmente por accidente u omisión.
-
-**Analogía:** un hook de Git es como una alarma de humo instalada en tu propia cocina: te avisa rápidamente si algo empieza a arder mientras cocinas, pero solo protege tu cocina específica, no la de tus vecinos, a menos que cada uno instale la suya. Un commit firmado es como notariar un documento: cualquiera puede firmar con su nombre a mano, pero una firma notariada (o su equivalente criptográfico) da una garantía mucho más fuerte de que esa persona específica, y nadie más, produjo ese documento exacto.
-
-**¿Por qué es importante?** Los hooks aceleran el ciclo de retroalimentación al detectar problemas antes de subir un cambio, y los commits firmados añaden una capa real de verificación de identidad, especialmente valiosa en proyectos de código abierto o con requisitos de cumplimiento donde la autoría verificable de cada cambio importa. Ninguno de los dos reemplaza a CI como la validación obligatoria final, pero ambos mejoran significativamente el flujo de trabajo diario de un equipo.
+**Analogía:** un hook de Git es como una alarma de humo en tu propia cocina: te avisa rápido, pero solo protege tu cocina, no la de tus vecinos, a menos que cada uno instale la suya. Un commit firmado es como notariar un documento: cualquiera firma con su nombre a mano, pero una firma notariada da una garantía mucho más fuerte de autoría.
 
 **Diagrama:**
 
 ```
 .git/hooks/pre-commit (local, opcional, rápido)
-   │
-   ▼
 git commit ──▶ ejecuta el hook ──▶ ¿pasa? ──▶ Sí: commit se crea
                                         └──▶ No: commit se cancela
-
 CI en el pipeline (centralizado, obligatorio, para TODO el equipo)
-   │
-   ▼
 git push ──▶ dispara CI ──▶ ¿pasa? ──▶ Sí: PR puede fusionarse
-                                  └──▶ No: PR bloqueado
 ```
+
+#### Paso 4 · Demostración guiada desde cero
+
+Desde una carpeta vacía crea `academia-devops/src/modulo1/hooks` con un hook `pre-commit` que bloquea archivos con la palabra `SECRETO`:
+
+```bash
+mkdir -p academia-devops/src/modulo1/hooks
+cd academia-devops/src/modulo1/hooks
+docker run --rm -v "$(pwd)":/repo -w /repo alpine/git sh -c '
+  git init -q && git config user.email demo@academia.dev && git config user.name demo
+  mkdir -p .git/hooks
+  printf "#!/bin/sh\nif git diff --cached | grep -q SECRETO; then echo \"bloqueado: SECRETO detectado\"; exit 1; fi\n" > .git/hooks/pre-commit
+  chmod +x .git/hooks/pre-commit
+  echo "config normal" > config.txt && git add . && git commit -qm ok && git log --oneline'
+```
+
+**Explicación línea por línea:** el hook revisa el contenido en staging (`git diff --cached`) buscando la palabra `SECRETO`; si la encuentra, imprime un mensaje y sale con código 1, cancelando el commit.
+
+Ejecuta la prueba que debe fallar:
+
+```bash
+docker run --rm -v "$(pwd)":/repo -w /repo alpine/git sh -c '
+  echo "DB_PASSWORD=SECRETO123" >> config.txt
+  git add . && git commit -qm "intento con secreto"; echo "codigo de salida: $?"'
+```
+
+**Resultado esperado:** el commit anterior (`ok`) se crea sin problema; el segundo intento imprime `bloqueado: SECRETO detectado` y `codigo de salida: 1`, sin crear el commit.
+
+**Fallo deliberado:** repite el segundo commit pero con `git commit --no-verify`. El commit se crea a pesar del hook — diagnostica que `--no-verify` omite explícitamente los hooks locales, confirmando por qué nunca deben ser la única línea de defensa frente a datos sensibles.
+
+#### Construcción RutaFlow: bloqueo local de credenciales
+
+Instala este mismo hook `pre-commit` en el repositorio real de RutaFlow, y documenta en el README que su ausencia de sincronización automática exige complementarlo con un chequeo equivalente en CI (Módulo 4).
+
+#### Paso 5 · Práctica guiada
+
+Extiende el hook para que también bloquee la palabra `API_KEY`. **Pista:** usa `grep -qE "SECRETO|API_KEY"` para verificar ambos patrones en una sola condición.
+
+#### Paso 6 · Práctica independiente
+
+Investiga y anota los comandos para generar una clave GPG o SSH de firma y configurar `git config commit.gpgsign true`, sin necesariamente ejecutarlos si no tienes GPG disponible; explica qué cambiaría en `git log --show-signature` una vez configurado.
+
+#### Paso 7 · Cierre y evidencia
+
+Ya bloqueas localmente commits con contenido prohibido y entiendes que los hooks no sustituyen a CI. El siguiente tema decide si tu proyecto vive en un monorepo o un polyrepo. **Evidencia:** entrega el código de salida `1` del commit bloqueado y la confirmación de que `--no-verify` lo omite. Fuente oficial: [Git — githooks](https://git-scm.com/docs/githooks).
+
+**Errores comunes:** confiar solo en el hook local sin un chequeo equivalente en CI; olvidar dar permisos de ejecución (`chmod +x`) al archivo del hook.
+
+**Cuándo no usarlo:** frente a una regla que el equipo completo debe cumplir sin excepción, un hook local no basta (cualquiera puede omitirlo con `--no-verify` o simplemente no tenerlo instalado); esa regla debe vivir en CI.
 
 ### Tema 5: Monorepos vs polyrepos
 
+#### Paso 1 · Objetivo y preparación
+
+Al finalizar podrás argumentar cuándo un monorepo facilita cambios atómicos entre paquetes relacionados y cuándo un polyrepo da límites de ownership más claros.
+
+**Conocimiento previo:** Tema 1 de este módulo (branching).
+
+#### Paso 2 · Contexto y caso real
+
+**¿Por qué es importante?** Este es un caso real de arquitectura organizacional: la decisión entre monorepo y polyrepo afecta cómo se coordinan cambios entre equipos, qué tan rápido es el pipeline de CI, y qué tan claros son los límites de responsabilidad, y rara vez se revierte fácilmente una vez que un proyecto crece.
+
+#### Paso 3 · Teoría con analogía
+
 **Conceptos clave:** monorepo, polyrepo, cambios atómicos, ownership, tooling compartido.
 
-Un monorepo aloja múltiples proyectos o paquetes relacionados dentro de un único repositorio Git, mientras que un polyrepo distribuye cada proyecto en su propio repositorio independiente. La ventaja principal de un monorepo es la posibilidad de hacer cambios atómicos que abarcan múltiples paquetes relacionados en un único commit y un único pull request: si una función compartida cambia su firma, puedes actualizar esa función y todos sus consumidores internos en el mismo cambio, revisado y fusionado como una sola unidad coherente, en vez de coordinar múltiples pull requests separados en repositorios distintos que deben fusionarse en un orden específico.
+Un monorepo aloja múltiples proyectos relacionados en un único repositorio; un polyrepo distribuye cada proyecto en su propio repositorio. La ventaja del monorepo es hacer cambios atómicos que abarcan múltiples paquetes en un único commit y pull request. También facilita compartir tooling (linters, CI) de forma centralizada. La desventaja es que operaciones como clonar o correr CI sobre "todo" pueden volverse lentas sin herramientas específicas de monorepo.
 
-Un monorepo también facilita compartir configuración de tooling (linters, formateo, configuración de CI) de forma centralizada, evitando que cada proyecto mantenga su propia copia potencialmente desincronizada de esa configuración. La desventaja es que, a medida que el monorepo crece, operaciones como clonar el repositorio completo, o ejecutar el pipeline de CI sobre "todo" en vez de solo lo que cambió, pueden volverse lentas si no se invierte en herramientas específicas de monorepo (como sistemas de build que solo reconstruyen y prueban lo que realmente cambió, en vez de todo el repositorio en cada commit).
+Un polyrepo da límites de ownership más claros: cada equipo controla su propio repositorio y ciclo de despliegue independiente. La desventaja es la fricción de coordinar cambios que sí necesitan tocar múltiples repositorios a la vez.
 
-Un polyrepo da límites de ownership mucho más claros: cada equipo controla completamente su propio repositorio, con su propio ciclo de despliegue independiente, sin riesgo de que un cambio en un proyecto no relacionado afecte accidentalmente al pipeline de CI de otro. La desventaja es la fricción de coordinar cambios que sí necesitan tocar múltiples repositorios a la vez (por ejemplo, un cambio de contrato de API que afecta tanto al backend como a un cliente), que requiere múltiples pull requests coordinados manualmente, con el riesgo de que queden temporalmente desincronizados entre sí.
-
-No existe una respuesta universalmente correcta entre ambos enfoques: empresas de gran escala como Google operan con un monorepo gigantesco y herramientas de build altamente especializadas para sostenerlo; muchas otras organizaciones, especialmente con equipos más pequeños y proyectos con ciclos de vida y ownership claramente independientes, encuentran en el polyrepo un modelo más simple de operar sin esa inversión adicional en tooling especializado.
-
-**Analogía:** un monorepo es como un edificio de oficinas compartido donde varios departamentos relacionados trabajan bajo el mismo techo, pueden coordinar cambios de infraestructura común fácilmente (el mismo sistema eléctrico, la misma recepción), pero cualquier obra grande en el edificio (una reconstrucción del pipeline de CI) afecta potencialmente a todos los inquilinos a la vez. Un polyrepo es como cada departamento en su propio edificio independiente: control total sobre su espacio, pero coordinar una reunión conjunta entre varios departamentos requiere organizar el transporte entre edificios distintos cada vez.
-
-**¿Por qué es importante?** La decisión entre monorepo y polyrepo afecta directamente cómo se coordinan los cambios entre equipos, qué tan rápido es el pipeline de CI, y qué tan claros son los límites de responsabilidad entre proyectos. Es una decisión de arquitectura organizacional, no solo técnica, que rara vez se revierte fácilmente una vez que un proyecto crece, por lo que vale la pena razonarla con cuidado desde el principio de un proyecto nuevo.
+**Analogía:** un monorepo es como un edificio de oficinas compartido donde varios departamentos coordinan infraestructura común fácilmente, pero cualquier obra grande afecta a todos los inquilinos. Un polyrepo es como cada departamento en su propio edificio: control total, pero coordinar una reunión conjunta requiere transporte entre edificios.
 
 **Diagrama:**
 
 ```
 Monorepo                              Polyrepo
 ┌─────────────────────────┐        ┌───────────┐  ┌───────────┐
-│  /paquete-a                │        │ repo-a       │  │ repo-b       │
-│  /paquete-b                │        │ (propio CI,   │  │ (propio CI,   │
-│  /tooling-compartido        │        │  propio ciclo │  │  propio ciclo │
-│  (un solo commit puede       │        │  de release)  │  │  de release)  │
-│   tocar a y b a la vez)      │        └───────────┘  └───────────┘
-└─────────────────────────┘           (coordinar cambios entre ambos
-                                        requiere PRs separados)
+│  /paquete-a /paquete-b      │        │ repo-a       │  │ repo-b       │
+│  (un commit toca ambos)      │        │ (propio CI)   │  │ (propio CI)   │
+└─────────────────────────┘        └───────────┘  └───────────┘
 ```
+
+#### Paso 4 · Demostración guiada desde cero
+
+Desde una carpeta vacía, simula un monorepo mínimo con dos paquetes que comparten una función:
+
+```bash
+mkdir -p academia-devops/src/modulo1/monorepo-demo
+cd academia-devops/src/modulo1/monorepo-demo
+docker run --rm -v "$(pwd)":/repo -w /repo alpine/git sh -c '
+  git init -q && git config user.email demo@academia.dev && git config user.name demo
+  mkdir -p paquete-a paquete-b tooling-compartido
+  echo "function formatear(x) { return x.toFixed(2); }" > tooling-compartido/formato.js
+  echo "const { formatear } = require(\"../tooling-compartido/formato\"); console.log(formatear(3));" > paquete-a/index.js
+  echo "const { formatear } = require(\"../tooling-compartido/formato\"); console.log(formatear(7));" > paquete-b/index.js
+  git add . && git commit -qm "monorepo inicial con tooling compartido" && git log --oneline --stat'
+```
+
+**Explicación línea por línea:** ambos paquetes importan la misma función de `tooling-compartido/`; un solo commit registra los tres archivos relacionados, la ventaja atómica descrita en la teoría.
+
+**Resultado esperado:** `git log --oneline --stat` muestra un único commit tocando los tres archivos (`paquete-a/index.js`, `paquete-b/index.js`, `tooling-compartido/formato.js`) a la vez.
+
+**Fallo deliberado:** modifica la firma de `formatear` en `tooling-compartido/formato.js` (agrega un parámetro obligatorio) sin actualizar `paquete-a` ni `paquete-b`, y ejecuta ambos con `node paquete-a/index.js`. Fallan por argumento faltante — diagnostica que el monorepo permitió el cambio atómico, pero no te exime de actualizar todos los consumidores en el mismo commit.
+
+#### Construcción RutaFlow: decisión de estructura de repositorio
+
+Documenta en `academia-devops/README.md` si RutaFlow vivirá como monorepo (con sus distintos servicios) o como polyrepo, justificando la decisión con el tamaño real del equipo del curso.
+
+#### Paso 5 · Práctica guiada
+
+Corrige `paquete-a` y `paquete-b` para que pasen el nuevo parámetro obligatorio, en el mismo commit que el cambio de `formatear`. **Pista:** revisa `git status` antes de confirmar para asegurarte de que los tres archivos quedan en el mismo commit.
+
+#### Paso 6 · Práctica independiente
+
+Simula ahora el equivalente en polyrepo: crea dos carpetas Git independientes (`repo-a`, `repo-b`) y explica en un README qué pasos manuales necesitarías para propagar el mismo cambio de `formatear` entre ambos repositorios separados.
+
+#### Paso 7 · Cierre y evidencia
+
+Ya distingues cuándo el cambio atómico de un monorepo compensa la ceremonia de coordinar múltiples repositorios. El siguiente tema cubre comandos puntuales para deshacer cambios sin perder historial. **Evidencia:** entrega el commit atómico con los tres archivos y la explicación de los pasos manuales equivalentes en polyrepo. Fuente oficial: [Google — Why Google Stores Billions of Lines in a Single Repository](https://cacm.acm.org/research/why-google-stores-billions-of-lines-of-code-in-a-single-repository/).
+
+**Errores comunes:** tratar un monorepo como una excusa para no versionar cuidadosamente cada paquete por separado; subestimar la fricción real de coordinar cambios cruzados en polyrepo.
+
+**Cuándo no usarlo:** un monorepo sin herramientas de build incremental (que solo reconstruyan lo que cambió) no conviene a partir de cierto tamaño; ese es el límite frente a invertir en tooling especializado o simplemente usar polyrepo.
 
 ### Tema 6: git cherry-pick, git stash, git reset vs git revert
 
+#### Paso 1 · Objetivo y preparación
+
+Al finalizar podrás elegir entre `cherry-pick`, `stash`, `reset` y `revert` según si necesitas un cambio puntual, trabajo temporal, reescribir tu propio historial o deshacer algo de forma segura en una rama compartida.
+
+**Conocimiento previo:** Temas 1 y 2 de este módulo.
+
+#### Paso 2 · Contexto y caso real
+
+**¿Por qué es importante?** Este es un caso real: confundir `reset --hard` con `revert` sobre una rama compartida es uno de los errores más comunes y potencialmente disruptivos que un desarrollador nuevo con Git puede cometer.
+
+#### Paso 3 · Teoría con analogía
+
 **Conceptos clave:** `cherry-pick`, `stash`, `reset` (soft/mixed/hard), `revert`, historial destructivo vs no destructivo.
 
-`git cherry-pick <commit>` aplica un commit específico de otra rama sobre tu rama actual, sin traer el resto del historial de esa rama, útil cuando necesitas un cambio puntual (por ejemplo, una corrección urgente) sin fusionar toda una rama de funcionalidad todavía en desarrollo. `git stash` guarda temporalmente los cambios no confirmados de tu directorio de trabajo, dejándolo limpio (como si acabaras de hacer checkout de un commit), para poder cambiar de rama rápidamente o probar algo distinto, y recuperar esos cambios después con `git stash pop` cuando quieras continuar donde los dejaste.
+`git cherry-pick <commit>` aplica un commit específico de otra rama sobre la actual, sin traer el resto de esa rama. `git stash` guarda temporalmente cambios no confirmados, dejando el directorio limpio, recuperables después con `git stash pop`.
 
-`git reset` mueve la punta de una rama a un commit distinto, con tres modos según cuánto afecta al directorio de trabajo y al área de staging: `--soft` mueve solo la referencia de la rama, dejando los cambios de esos commits "deshechos" en el área de staging, listos para volver a confirmarse de otra forma; `--mixed` (el valor por defecto) además saca esos cambios del área de staging, dejándolos como cambios no confirmados en tu directorio de trabajo; `--hard` descarta completamente esos cambios, sin dejar ningún rastro en el directorio de trabajo, siendo el modo más destructivo de los tres.
+`git reset` mueve la punta de una rama a un commit distinto: `--soft` deja los cambios en staging; `--mixed` (por defecto) los deja como cambios no confirmados; `--hard` los descarta por completo, el modo más destructivo. `git revert <commit>` no reescribe el historial: crea un commit nuevo que deshace exactamente los cambios de uno anterior, preservando ambos commits visibles — la diferencia crucial frente a `reset`, que sí es seguro usar sobre ramas ya compartidas.
 
-`git revert <commit>`, en cambio, no reescribe el historial: crea un commit nuevo que deshace exactamente los cambios de un commit anterior, preservando ambos commits (el original y el que lo revierte) visibles en el historial. Esta es la diferencia crucial frente a `reset`: `revert` es seguro de usar sobre ramas ya compartidas (porque no reescribe nada, solo añade un commit nuevo que deshace el efecto), mientras que `reset` reescribe la posición de la rama y puede causar los mismos problemas de historial divergente que viste con rebase en el Tema 2 si se usa sobre una rama que otros ya tienen.
-
-La regla práctica que resume estos cuatro comandos: `cherry-pick` para traer un cambio puntual de otra rama; `stash` para guardar trabajo temporal sin comprometerlo todavía; `reset` para reescribir tu propio historial local no compartido; `revert` para deshacer un cambio de forma segura en una rama que ya es compartida o pública, sin alterar el historial existente.
-
-**Analogía:** `cherry-pick` es como fotocopiar una sola página de un libro ajeno y pegarla en el tuyo, sin llevarte el libro completo. `stash` es como guardar temporalmente en un cajón un trabajo a medio terminar sobre tu escritorio, para poder despejarlo y atender algo urgente, sacándolo de nuevo del cajón cuando quieras continuar. `reset --hard` es como arrancar páginas completas de tu propio cuaderno personal. `revert` es como escribir una nueva entrada en un diario compartido que dice explícitamente "corrijo lo que escribí el martes", sin arrancar la página del martes, dejando ambas entradas visibles para quien lea el diario completo.
-
-**¿Por qué es importante?** Confundir `reset --hard` con `revert` sobre una rama compartida es uno de los errores más comunes y potencially más disruptivos que un desarrollador nuevo con Git puede cometer: reescribir el historial de una rama que el resto del equipo ya tiene clonada genera exactamente el mismo problema de divergencia que viste con rebase compartido, mientras que `revert` logra el mismo objetivo (deshacer un cambio) de forma completamente segura para cualquier rama, compartida o no.
+**Analogía:** `cherry-pick` es fotocopiar una página de un libro ajeno sin llevarte el libro completo. `stash` es guardar en un cajón un trabajo a medio terminar. `reset --hard` es arrancar páginas de tu propio cuaderno. `revert` es escribir una nueva entrada de diario que dice "corrijo lo del martes", sin arrancar esa página.
 
 **Diagrama:**
 
 ```
-git reset --hard <commit-anterior>    git revert <commit-a-deshacer>
-main ──●──●──●                        main ──●──●──●──●(revierte al anterior)
-        (la rama "retrocede",                 (nuevo commit que deshace el efecto,
-         el historial posterior                el commit original SIGUE visible
-         desaparece de la rama)                 en el historial)
+git reset --hard <anterior>          git revert <a-deshacer>
+main ──●──●──●                       main ──●──●──●──●(revierte)
+   (la rama retrocede,                    (commit original SIGUE
+    el historial desaparece)               visible en el historial)
 ```
+
+#### Paso 4 · Demostración guiada desde cero
+
+Desde una carpeta vacía crea `academia-devops/src/modulo1/reset-revert` con un historial de prueba:
+
+```bash
+mkdir -p academia-devops/src/modulo1/reset-revert
+cd academia-devops/src/modulo1/reset-revert
+docker run --rm -v "$(pwd)":/repo -w /repo alpine/git sh -c '
+  git init -q && git config user.email demo@academia.dev && git config user.name demo
+  echo v1 > dato.txt && git add . && git commit -qm v1
+  echo v2 >> dato.txt && git commit -qam v2
+  echo v3-error >> dato.txt && git commit -qam "v3 con error"
+  git revert --no-edit HEAD && cat dato.txt && git log --oneline'
+```
+
+**Explicación línea por línea:** `git revert --no-edit HEAD` deshace el último commit creando uno nuevo, sin pedir confirmación interactiva del mensaje; `cat dato.txt` confirma que el contenido volvió al estado de `v2`.
+
+**Resultado esperado:** `dato.txt` contiene `v1` y `v2` (sin `v3-error`), y `git log --oneline` muestra **cuatro** commits: los tres originales más el commit de revert, con el commit erróneo todavía visible en el historial.
+
+**Fallo deliberado:** en vez de `revert`, ejecuta `git reset --hard HEAD~1` sobre el mismo estado (antes del revert). El historial retrocede a solo tres commits y el commit `v3 con error` desaparece del historial visible — diagnostica que, si alguien más ya había clonado ese commit, esta operación causaría exactamente la divergencia peligrosa descrita en la teoría.
+
+#### Construcción RutaFlow: deshacer cambios en producción de forma segura
+
+Documenta en `academia-devops/README.md` que cualquier corrección sobre una rama ya fusionada de RutaFlow debe usar `revert`, nunca `reset --hard`, precisamente porque esas ramas ya son compartidas.
+
+#### Paso 5 · Práctica guiada
+
+Practica `git stash`: modifica `dato.txt` sin confirmar, guarda con `git stash`, confirma que `git status` está limpio, y recupera el cambio con `git stash pop`. **Pista:** `git stash list` muestra todos los stashes guardados si necesitas recuperar uno específico.
+
+#### Paso 6 · Práctica independiente
+
+Crea una segunda rama con un commit útil, y usa `git cherry-pick <hash>` para traer solo ese commit a `main` sin fusionar el resto de la rama.
+
+#### Paso 7 · Cierre y evidencia
+
+Ya eliges la herramienta correcta según si el historial es local o ya compartido. El siguiente tema cubre `reflog`, `worktree` y `submodule` para casos menos frecuentes pero igualmente importantes. **Evidencia:** entrega el `git log --oneline` mostrando el commit de revert (cuatro commits) frente al resultado de `reset --hard` (tres commits), explicando la diferencia. Fuente oficial: [Git — git-revert](https://git-scm.com/docs/git-revert).
+
+**Errores comunes:** usar `reset --hard` sobre una rama que otros ya clonaron; olvidar que `stash pop` puede generar conflictos si el árbol de trabajo cambió mientras tanto.
+
+**Cuándo no usarlo:** `revert` no conviene si de verdad quieres eliminar un commit sensible (una credencial expuesta) del historial por completo; ahí revert no basta porque el commit original sigue visible, y se necesita reescribir historial con herramientas como `git filter-repo`.
 
 ### Tema 7: git reflog, git worktree y git submodule
 
+#### Paso 1 · Objetivo y preparación
+
+Al finalizar podrás recuperar commits "perdidos" con `git reflog`, trabajar en paralelo sobre varias ramas con `git worktree`, e incluir un repositorio externo versionado con `git submodule`.
+
+**Conocimiento previo:** Temas 1 a 6 de este módulo.
+
+#### Paso 2 · Contexto y caso real
+
+**¿Por qué es importante?** Este es un caso real de cualquier error aparentemente irreversible: `git reflog` en particular vale la pena conocerlo antes de necesitarlo en pánico, porque el momento en que más se necesita es exactamente el peor momento para aprender que existe por primera vez.
+
+#### Paso 3 · Teoría con analogía
+
 **Conceptos clave:** `reflog`, red de seguridad de Git, `worktree` (múltiples directorios de trabajo), `submodule` (repositorio anidado).
 
-`git reflog` es, posiblemente, la red de seguridad más subestimada de Git: registra un historial local de a dónde ha apuntado `HEAD` (la posición actual del repositorio) a lo largo del tiempo, incluyendo operaciones que reescriben el historial como rebases o resets. Si alguna vez ejecutas un `reset --hard` por error, o un rebase sale mal y "pierdes" commits que parecían haber desaparecido, `git reflog` casi siempre te permite encontrar la referencia exacta a ese estado anterior y recuperarlo con un simple `git reset --hard <hash-del-reflog>`, incluso cuando esos commits ya no son alcanzables desde ninguna rama visible.
+`git reflog` registra un historial local de a dónde ha apuntado `HEAD` a lo largo del tiempo, incluyendo rebases o resets. Si ejecutas un `reset --hard` por error, `reflog` casi siempre permite encontrar la referencia exacta y recuperarla.
 
-`git worktree` permite tener múltiples directorios de trabajo asociados al mismo repositorio, cada uno con una rama distinta activa simultáneamente, sin necesidad de clonar el repositorio varias veces ni de hacer stash/checkout constante para alternar entre ramas. Esto es útil, por ejemplo, cuando necesitas revisar un pull request en una rama distinta mientras mantienes tu propio trabajo en curso intacto en otro directorio, sin interrumpir ninguno de los dos.
+`git worktree` permite tener múltiples directorios de trabajo asociados al mismo repositorio, cada uno con una rama distinta activa simultáneamente, sin clonar varias veces. `git submodule` permite incluir un repositorio Git completo dentro de otro, como referencia a un commit específico; tienen fama merecida de ser incómodos de operar (es fácil olvidar actualizar la referencia), por lo que muchos equipos prefieren, cuando es posible, un monorepo (Tema 5).
 
-`git submodule` permite incluir un repositorio Git completo dentro de otro, como una referencia a un commit específico de ese repositorio externo, útil cuando un proyecto depende de otro repositorio de código que se versiona de forma independiente (por ejemplo, una librería compartida entre varios proyectos que vive en su propio repositorio). Los submódulos tienen fama merecida de ser algo incómodos de operar correctamente (es fácil olvidar actualizar la referencia del submódulo, o clonar un repositorio sin inicializar sus submódulos por accidente), por lo que muchos equipos prefieren, cuando es posible, alternativas como gestores de paquetes propios o, si el caso de uso encaja, directamente un monorepo (Tema 5) para evitar esa complejidad operativa.
-
-Estos tres comandos —`reflog`, `worktree` y `submodule`— no se usan con la misma frecuencia diaria que `commit`, `push` o `merge`, pero cada uno resuelve un problema específico que, cuando aparece, no tiene una alternativa igualmente directa: `reflog` para recuperarte de un error de historial, `worktree` para trabajar en paralelo sobre múltiples ramas sin fricciones, y `submodule` para incluir dependencias de código externas versionadas de forma independiente.
-
-**Analogía:** `git reflog` es como la papelera de reciclaje del sistema operativo, pero para el historial de tu repositorio: incluso si "borraste" algo con una operación destructiva, normalmente sigue recuperable durante un tiempo antes de que Git lo limpie definitivamente. `git worktree` es como tener varios escritorios físicos distintos, cada uno con un proyecto diferente abierto, en vez de tener que guardar y sacar papeles de un cajón cada vez que cambias de tarea. `git submodule` es como incluir literalmente un capítulo de otro libro, con una referencia exacta a qué edición de ese libro externo estás incluyendo.
-
-**¿Por qué es importante?** `git reflog` en particular es una herramienta que vale la pena conocer antes de necesitarla en pánico: el momento en que más se necesita (después de un error aparentemente irreversible) es exactamente el peor momento para estar aprendiendo que existe por primera vez.
+**Analogía:** `git reflog` es como la papelera de reciclaje del sistema operativo, pero para el historial del repositorio. `git worktree` es como tener varios escritorios físicos, cada uno con un proyecto distinto abierto. `git submodule` es como incluir literalmente un capítulo de otro libro, con una referencia exacta a qué edición estás incluyendo.
 
 **Diagrama:**
 
 ```
 git reflog
-┌───────────────────────────────────────────────┐
-│ a1b2c3d HEAD@{0}: reset: moving to HEAD~3          │
-│ e4f5g6h HEAD@{1}: commit: Añade validación          │  ← este commit "desapareció"
-│ i7j8k9l HEAD@{2}: checkout: moving from main         │     de la rama tras el reset,
-└───────────────────────────────────────────────┘     pero sigue recuperable:
-                                                          git reset --hard e4f5g6h
+┌────────────────────────────────────────────────────┐
+│ a1b2c3d HEAD@{0}: reset: moving to HEAD~3               │
+│ e4f5g6h HEAD@{1}: commit: Añade validación               │  ← "desapareció"
+│ i7j8k9l HEAD@{2}: checkout: moving from main               │     de la rama,
+└────────────────────────────────────────────────────┘     pero recuperable:
+                                                               git reset --hard e4f5g6h
 ```
+
+#### Paso 4 · Demostración guiada desde cero
+
+Desde una carpeta vacía crea `academia-devops/src/modulo1/reflog` y provoca una "pérdida" recuperable:
+
+```bash
+mkdir -p academia-devops/src/modulo1/reflog
+cd academia-devops/src/modulo1/reflog
+docker run --rm -v "$(pwd)":/repo -w /repo alpine/git sh -c '
+  git init -q && git config user.email demo@academia.dev && git config user.name demo
+  echo v1 > dato.txt && git add . && git commit -qm v1
+  echo v2 > dato.txt && git commit -qam "commit importante"
+  git reset --hard HEAD~1
+  echo "--- tras el reset, dato.txt: ---" && cat dato.txt
+  echo "--- reflog: ---" && git reflog
+  HASH=$(git reflog | grep "commit importante" | head -1 | cut -d" " -f1)
+  git reset --hard "$HASH"
+  echo "--- recuperado: ---" && cat dato.txt'
+```
+
+**Explicación línea por línea:** tras el `reset --hard` el commit "importante" ya no es alcanzable desde ninguna rama, pero `git reflog` conserva su hash; `git reset --hard "$HASH"` lo recupera exactamente.
+
+**Resultado esperado:** tras el primer reset, `dato.txt` muestra `v1`; después de recuperar con el hash del reflog, vuelve a mostrar `v2`, confirmando que el commit "perdido" nunca se eliminó realmente.
+
+**Fallo deliberado:** ejecuta `git gc --prune=now --aggressive` inmediatamente después del `reset --hard` y antes de recuperar. En un repositorio real (fuera de esta demo corta), esto puede eliminar definitivamente commits no alcanzables — diagnostica que `reflog` es una red de seguridad temporal, no permanente, y que operaciones de garbage collection agresivas reducen la ventana de recuperación.
+
+#### Construcción RutaFlow: runbook de recuperación de historial
+
+Documenta en `academia-devops/README.md` los pasos de este demo como el runbook oficial de RutaFlow para recuperar un commit perdido por un `reset --hard` accidental, antes de que ocurra en la práctica.
+
+#### Paso 5 · Práctica guiada
+
+Crea un `git worktree` adicional apuntando a una rama distinta del mismo repositorio (`git worktree add ../reflog-otra-rama nombre-rama`) y confirma que ambos directorios coexisten con contenido distinto. **Pista:** `git worktree list` muestra todos los directorios de trabajo activos.
+
+#### Paso 6 · Práctica independiente
+
+Agrega un submódulo de prueba (`git submodule add <url> libs/externa`) a un repositorio de práctica y explica, en un comentario en el README, qué comando adicional necesita ejecutar alguien que clona el repositorio por primera vez para que el submódulo no quede vacío.
+
+#### Paso 7 · Cierre y evidencia
+
+Ya conoces la red de seguridad de `reflog` antes de necesitarla en un incidente real, y cuándo usar `worktree` o `submodule`. Esto cierra el módulo de Git avanzado; el siguiente módulo empaqueta aplicaciones en contenedores Docker reproducibles. **Evidencia:** entrega la salida completa mostrando "commit importante" perdido y recuperado vía `reflog`, y explica el resultado con los hashes involucrados. Fuente oficial: [Git — git-reflog](https://git-scm.com/docs/git-reflog).
+
+**Errores comunes:** confiar en `reflog` como recuperación permanente sin entender que expira; olvidar `git submodule update --init --recursive` al clonar un repositorio con submódulos, dejándolos vacíos.
+
+**Cuándo no usarlo:** `submodule` no conviene si el repositorio externo cambia con la misma frecuencia que el principal; ahí un monorepo (Tema 5) o un gestor de paquetes propio evita la fricción operativa de mantener sincronizada la referencia.
 
 ---
 
@@ -209,26 +558,26 @@ git reflog
 
 **Objetivo del laboratorio:** limpiar un historial de commits con rebase interactivo, provocar y resolver un conflicto de fusión manualmente, y usar `git bisect` para encontrar el commit exacto que introdujo un bug.
 
-**Requisitos previos:** Git instalado y configurado (`git config user.name`/`user.email`), un repositorio local de prueba con al menos algunos commits.
+**Requisitos previos:** Git y Docker instalados (Módulo 0 de este track).
 
 | Paso | Acción | Comando | Explicación | Salida esperada |
 |---|---|---|---|---|
-| 1 | Crear tres commits desordenados | Haz tres cambios pequeños y confírmalos por separado con mensajes como "WIP", "fix", "fix de verdad" | Simula el historial típico de trabajo en progreso antes de limpiar | Tres commits nuevos en el historial |
-| 2 | Limpiar el historial con rebase interactivo | `git rebase -i HEAD~3`, y en el editor cambia los dos últimos de `pick` a `squash`, ajustando el mensaje final | Combina los tres commits en uno solo, con un mensaje descriptivo único | El historial ahora muestra un único commit coherente en vez de tres |
-| 3 | Crear dos ramas que modifiquen la misma línea de un archivo | Crea `rama-a` y `rama-b` desde el mismo punto, y en cada una modifica la misma línea de un archivo de forma distinta | Prepara un conflicto de fusión intencional | Ambas ramas tienen commits que modifican la misma línea |
-| 4 | Fusionar y provocar el conflicto | Desde `main`, ejecuta `git merge rama-a` (sin conflicto), y luego `git merge rama-b` | El segundo merge debería fallar por conflicto en la línea modificada por ambas ramas | Git reporta `CONFLICT (content)` y marca el archivo como sin fusionar |
-| 5 | Resolver el conflicto manualmente | Edita el archivo para elegir (o combinar) el contenido correcto entre las marcas `<<<<<<<`/`=======`/`>>>>>>>`, luego `git add <archivo>` y `git commit` | Completa la fusión con la resolución elegida | El commit de merge se crea exitosamente, sin marcas de conflicto restantes en el archivo |
-| 6 | Introducir un bug intencional en un commit intermedio | Sobre una rama de prueba con al menos 5-6 commits, introduce un bug obvio (por ejemplo, invertir una condición) en uno de los commits intermedios, y sigue añadiendo commits normales después | Prepara el escenario para practicar `bisect` | El bug está presente desde ese commit en adelante, sin que sea obvio en cuál exactamente |
-| 7 | Usar bisect para encontrar el commit exacto | `git bisect start`, `git bisect bad` (en el commit actual), `git bisect good <commit-inicial-sin-el-bug>`, y en cada punto medio verifica manualmente si el bug está presente, marcando `git bisect good` o `git bisect bad` | Converge mediante búsqueda binaria en el commit exacto que introdujo el bug | Git reporta el hash exacto del commit responsable |
-| 8 | Terminar la sesión de bisect | `git bisect reset` | Vuelve tu repositorio al estado (rama y commit) en que estaba antes de iniciar `bisect` | El repositorio vuelve a la rama original |
+| 1 | Crear tres commits desordenados | Haz tres cambios pequeños y confírmalos con mensajes como "WIP", "fix", "fix de verdad" | Simula el historial típico de trabajo en progreso | Tres commits nuevos en el historial |
+| 2 | Limpiar el historial con rebase interactivo | `git rebase -i HEAD~3`, cambia los dos últimos de `pick` a `squash` | Combina los tres commits en uno con mensaje único | Un único commit coherente en vez de tres |
+| 3 | Crear dos ramas que modifiquen la misma línea | Crea `rama-a` y `rama-b` desde el mismo punto, modifica la misma línea distinto en cada una | Prepara un conflicto de fusión intencional | Ambas ramas modifican la misma línea |
+| 4 | Fusionar y provocar el conflicto | `git merge rama-a` (sin conflicto), luego `git merge rama-b` | El segundo merge falla por conflicto | Git reporta `CONFLICT (content)` |
+| 5 | Resolver el conflicto manualmente | Edita entre `<<<<<<<`/`=======`/`>>>>>>>`, luego `git add` y `git commit` | Completa la fusión con la resolución elegida | El commit de merge se crea sin marcas restantes |
+| 6 | Introducir un bug intencional | Sobre 5-6 commits, invierte una condición en uno intermedio | Prepara el escenario para `bisect` | El bug está presente desde ese commit en adelante |
+| 7 | Usar bisect para encontrar el commit | `git bisect start`, `git bisect bad`, `git bisect good <inicial>`, marca cada punto medio | Converge por búsqueda binaria en el commit exacto | Git reporta el hash responsable |
+| 8 | Terminar la sesión de bisect | `git bisect reset` | Vuelve al estado anterior a iniciar bisect | El repositorio vuelve a la rama original |
 
-**Verificación:** el laboratorio se considera exitoso si el paso 2 deja un único commit limpio en vez de tres, si el conflicto del paso 4 se resuelve correctamente sin dejar marcas de conflicto en el archivo final, y si `git bisect` en el paso 7 identifica exactamente el commit donde introdujiste el bug intencional, no uno anterior ni posterior.
+**Verificación:** el laboratorio se considera exitoso si el paso 2 deja un único commit limpio, si el conflicto del paso 4 se resuelve sin marcas restantes, y si `git bisect` identifica exactamente el commit del bug intencional.
 
 **Errores comunes y soluciones**
 
-- **El editor de `rebase -i` no se abre, o se cierra sin aplicar cambios.** Verifica tu editor configurado con `git config --get core.editor`; si usas un editor de terminal como Vim por primera vez, recuerda que debes guardar y salir explícitamente (`:wq` en Vim) para que el rebase continúe.
-- **Aparecen marcas `<<<<<<<`/`=======`/`>>>>>>>` en el archivo tras resolver un conflicto y olvidas eliminarlas antes de confirmar.** Revisa cuidadosamente el archivo completo antes de `git add`; dejar estas marcas produce un archivo con sintaxis rota, no un error de Git en sí mismo (Git no puede detectar automáticamente si "olvidaste" limpiar las marcas).
-- **`git bisect` converge en un commit que no tiene sentido como causa del bug.** Verifica que estás probando correctamente el bug en cada punto medio antes de marcarlo `good`/`bad`; un error de marcado en cualquier paso intermedio hace que la búsqueda binaria converja en un commit incorrecto.
-- **Reescribiste con rebase una rama que un compañero ya había clonado, y ahora aparecen conflictos extraños al sincronizar.** Esto es exactamente el riesgo descrito en el Tema 2; la solución más simple es coordinar con el equipo, y que quien clonó la versión antigua vuelva a clonar la rama reescrita desde cero, en vez de intentar reconciliar manualmente ambos historiales divergentes.
+- **El editor de `rebase -i` no se abre o se cierra sin aplicar cambios.** Verifica `git config --get core.editor`; en Vim recuerda `:wq` para guardar y salir.
+- **Quedan marcas `<<<<<<<`/`=======`/`>>>>>>>` tras resolver un conflicto.** Revisa el archivo completo antes de `git add`.
+- **`git bisect` converge en un commit que no tiene sentido.** Verifica que el criterio `good`/`bad` en cada paso fue correcto.
+- **Reescribiste con rebase una rama que un compañero ya había clonado.** Coordina con el equipo para que vuelva a clonar la rama reescrita desde cero.
 
 ---

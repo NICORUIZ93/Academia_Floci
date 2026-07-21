@@ -1,8 +1,8 @@
 # Academia Floci Repo Graph
 
-Generated: 2026-07-21 08:34 UTC
+Generated: 2026-07-21 08:38 UTC
 Root: `Academia_Floci`
-Indexed files: 782
+Indexed files: 781
 Import edges: 33
 
 Use this file as the first, compact context for AI assistants. Refresh it with:
@@ -21,7 +21,7 @@ For automated lookups, use `docs/repo-graph.json`.
 - `documentation`: 104 files
 - `example`: 216 files
 - `local-infra`: 1 files
-- `project-file`: 33 files
+- `project-file`: 32 files
 
 ## File Types
 
@@ -30,7 +30,7 @@ For automated lookups, use `docs/repo-graph.json`.
 - `.ts`: 48
 - `.js`: 42
 - `.java`: 40
-- `.json`: 28
+- `.json`: 27
 - `.go`: 24
 - `.rs`: 24
 - `.kt`: 11
@@ -249,10 +249,9 @@ For automated lookups, use `docs/repo-graph.json`.
 
 ### project-file
 
-- `.claude/settings.local.json` (14 lines)
 - `.env.example` (8 lines)
 - `.github/workflows/ci.yml` (55 lines)
-- `.gitignore` (25 lines)
+- `.gitignore` (26 lines)
 - `docs/code-visual-quality.json` (4809 lines)
 - `docs/curriculum-matrix.json` (155 lines)
 - `docs/floci-official-curriculum.json` (14 lines)
@@ -267,4 +266,5 @@ For automated lookups, use `docs/repo-graph.json`.
 - `docs/topic-learning-quality.json` (19262 lines)
 - `install.sh` (99 lines)
 - `web/.gitignore` (48 lines)
-- ... 15 more files
+- `web/.vscode/extensions.json` (5 lines)
+- ... 14 more files
