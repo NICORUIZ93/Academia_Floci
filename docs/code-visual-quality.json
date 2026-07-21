@@ -9,17 +9,17 @@
       "misleadingDiagramLabel": 0,
       "filePath": 50,
       "runCommand": 50,
-      "officialSource": 0
+      "officialSource": 12
     },
     "cloud": {
       "topics": 153,
-      "code": 94,
-      "commentedCode": 5,
+      "code": 99,
+      "commentedCode": 9,
       "mermaid": 14,
       "asciiVisual": 78,
       "misleadingDiagramLabel": 0,
-      "filePath": 24,
-      "runCommand": 103,
+      "filePath": 28,
+      "runCommand": 104,
       "officialSource": 1
     },
     "devops": {
@@ -34,26 +34,26 @@
       "officialSource": 0
     },
     "javascript": {
-      "topics": 75,
-      "code": 75,
-      "commentedCode": 19,
-      "mermaid": 6,
-      "asciiVisual": 43,
+      "topics": 83,
+      "code": 83,
+      "commentedCode": 70,
+      "mermaid": 54,
+      "asciiVisual": 0,
       "misleadingDiagramLabel": 0,
-      "filePath": 28,
-      "runCommand": 22,
-      "officialSource": 0
+      "filePath": 83,
+      "runCommand": 83,
+      "officialSource": 65
     },
     "node": {
-      "topics": 64,
-      "code": 58,
-      "commentedCode": 25,
+      "topics": 68,
+      "code": 68,
+      "commentedCode": 31,
       "mermaid": 7,
-      "asciiVisual": 16,
+      "asciiVisual": 13,
       "misleadingDiagramLabel": 0,
-      "filePath": 21,
-      "runCommand": 41,
-      "officialSource": 0
+      "filePath": 68,
+      "runCommand": 68,
+      "officialSource": 45
     },
     "angular": {
       "topics": 61,
@@ -62,9 +62,9 @@
       "mermaid": 7,
       "asciiVisual": 19,
       "misleadingDiagramLabel": 0,
-      "filePath": 14,
-      "runCommand": 4,
-      "officialSource": 0
+      "filePath": 55,
+      "runCommand": 55,
+      "officialSource": 55
     },
     "react": {
       "topics": 55,
@@ -73,31 +73,31 @@
       "mermaid": 6,
       "asciiVisual": 13,
       "misleadingDiagramLabel": 0,
-      "filePath": 11,
-      "runCommand": 1,
-      "officialSource": 0
+      "filePath": 50,
+      "runCommand": 49,
+      "officialSource": 39
     },
     "java": {
       "topics": 59,
-      "code": 51,
-      "commentedCode": 10,
+      "code": 58,
+      "commentedCode": 12,
       "mermaid": 13,
       "asciiVisual": 0,
       "misleadingDiagramLabel": 0,
       "filePath": 59,
       "runCommand": 59,
-      "officialSource": 0
+      "officialSource": 40
     },
     "spring-boot": {
       "topics": 58,
-      "code": 46,
+      "code": 58,
       "commentedCode": 5,
       "mermaid": 14,
       "asciiVisual": 11,
       "misleadingDiagramLabel": 0,
-      "filePath": 7,
-      "runCommand": 35,
-      "officialSource": 0
+      "filePath": 58,
+      "runCommand": 58,
+      "officialSource": 58
     },
     "kotlin-multiplatform": {
       "topics": 46,
@@ -128,9 +128,9 @@
       "mermaid": 8,
       "asciiVisual": 17,
       "misleadingDiagramLabel": 0,
-      "filePath": 2,
-      "runCommand": 39,
-      "officialSource": 0
+      "filePath": 26,
+      "runCommand": 45,
+      "officialSource": 41
     },
     "flutter": {
       "topics": 57,
@@ -139,9 +139,9 @@
       "mermaid": 14,
       "asciiVisual": 15,
       "misleadingDiagramLabel": 0,
-      "filePath": 8,
-      "runCommand": 29,
-      "officialSource": 0
+      "filePath": 17,
+      "runCommand": 31,
+      "officialSource": 9
     },
     "rutaflow": {
       "topics": 24,
@@ -769,36 +769,8 @@
       "track": "cloud",
       "module": 21,
       "topic": "Tema 1: El modelo de ejecución de EC2 — instancias que son contenedores Docker reales",
-      "missingCode": true,
-      "missingComments": false
-    },
-    {
-      "track": "cloud",
-      "module": 21,
-      "topic": "Tema 2: AMIs, grupos de seguridad y claves SSH",
-      "missingCode": true,
-      "missingComments": false
-    },
-    {
-      "track": "cloud",
-      "module": 21,
-      "topic": "Tema 3: UserData e IMDS — arranque automatizado y credenciales por instancia",
-      "missingCode": true,
-      "missingComments": false
-    },
-    {
-      "track": "cloud",
-      "module": 21,
-      "topic": "Tema 4: Auto Scaling — configuraciones de lanzamiento y grupos",
-      "missingCode": true,
-      "missingComments": false
-    },
-    {
-      "track": "cloud",
-      "module": 21,
-      "topic": "Tema 5: El reconciliador de capacidad y las políticas de escalado",
-      "missingCode": true,
-      "missingComments": false
+      "missingCode": false,
+      "missingComments": true
     },
     {
       "track": "cloud",
@@ -2119,84 +2091,21 @@
     {
       "track": "javascript",
       "module": 0,
-      "topic": "Tema 1: Variables — let, const y var",
+      "topic": "Tema 2: Tipos primitivos y `typeof`",
       "missingCode": false,
       "missingComments": true
     },
     {
       "track": "javascript",
       "module": 0,
-      "topic": "Tema 2: Tipos primitivos y typeof",
+      "topic": "Tema 3: Conversión, coerción e igualdad",
       "missingCode": false,
       "missingComments": true
     },
     {
       "track": "javascript",
       "module": 0,
-      "topic": "Tema 3: Coerción implícita — == frente a ===",
-      "missingCode": false,
-      "missingComments": true
-    },
-    {
-      "track": "javascript",
-      "module": 0,
-      "topic": "Tema 4: Template literals",
-      "missingCode": false,
-      "missingComments": true
-    },
-    {
-      "track": "javascript",
-      "module": 0,
-      "topic": "Tema 5: Entorno — navegador frente a Node.js",
-      "missingCode": false,
-      "missingComments": true
-    },
-    {
-      "track": "javascript",
-      "module": 1,
-      "topic": "Tema 1: Tres formas de escribir una función",
-      "missingCode": false,
-      "missingComments": true
-    },
-    {
-      "track": "javascript",
-      "module": 1,
-      "topic": "Tema 2: Parámetros por defecto y rest/spread",
-      "missingCode": false,
-      "missingComments": true
-    },
-    {
-      "track": "javascript",
-      "module": 1,
-      "topic": "Tema 3: Funciones de orden superior",
-      "missingCode": false,
-      "missingComments": true
-    },
-    {
-      "track": "javascript",
-      "module": 1,
-      "topic": "Tema 4: Control de flujo — if, switch y loops",
-      "missingCode": false,
-      "missingComments": true
-    },
-    {
-      "track": "javascript",
-      "module": 10,
-      "topic": "Tema 1: Debounce y throttle",
-      "missingCode": false,
-      "missingComments": true
-    },
-    {
-      "track": "javascript",
-      "module": 10,
-      "topic": "Tema 4: Profiling con DevTools",
-      "missingCode": false,
-      "missingComments": true
-    },
-    {
-      "track": "javascript",
-      "module": 10,
-      "topic": "Tema 5: Core Web Vitals",
+      "topic": "Tema 4: Template literals y mensajes seguros",
       "missingCode": false,
       "missingComments": true
     },
@@ -2204,20 +2113,6 @@
       "track": "javascript",
       "module": 11,
       "topic": "Tema 1: Tipos básicos, interfaces y type aliases",
-      "missingCode": false,
-      "missingComments": true
-    },
-    {
-      "track": "javascript",
-      "module": 11,
-      "topic": "Tema 2: Generics",
-      "missingCode": false,
-      "missingComments": true
-    },
-    {
-      "track": "javascript",
-      "module": 11,
-      "topic": "Tema 3: Narrowing y union types",
       "missingCode": false,
       "missingComments": true
     },
@@ -2232,34 +2127,6 @@
       "track": "javascript",
       "module": 12,
       "topic": "Tema 1: Routing manual con History API",
-      "missingCode": false,
-      "missingComments": true
-    },
-    {
-      "track": "javascript",
-      "module": 12,
-      "topic": "Tema 2: Estado de aplicación con un store propio",
-      "missingCode": false,
-      "missingComments": true
-    },
-    {
-      "track": "javascript",
-      "module": 12,
-      "topic": "Tema 4: Conectando todo — el patrón completo de una SPA",
-      "missingCode": false,
-      "missingComments": true
-    },
-    {
-      "track": "javascript",
-      "module": 13,
-      "topic": "Tema 1: Datos no confiables y seguridad en el navegador",
-      "missingCode": false,
-      "missingComments": true
-    },
-    {
-      "track": "javascript",
-      "module": 13,
-      "topic": "Tema 2: Memoria administrada no significa memoria infinita",
       "missingCode": false,
       "missingComments": true
     },
@@ -2280,119 +2147,7 @@
     {
       "track": "javascript",
       "module": 14,
-      "topic": "Tema 1: TypeScript avanzado",
-      "missingCode": false,
-      "missingComments": true
-    },
-    {
-      "track": "javascript",
-      "module": 14,
-      "topic": "Tema 2: Workers y ejecución fuera del hilo principal",
-      "missingCode": false,
-      "missingComments": true
-    },
-    {
-      "track": "javascript",
-      "module": 14,
-      "topic": "Tema 3: Bundlers y optimización",
-      "missingCode": false,
-      "missingComments": true
-    },
-    {
-      "track": "javascript",
-      "module": 14,
-      "topic": "Tema 4: Accesibilidad web",
-      "missingCode": false,
-      "missingComments": true
-    },
-    {
-      "track": "javascript",
-      "module": 14,
-      "topic": "Tema 5: WebAssembly con Rust o C",
-      "missingCode": false,
-      "missingComments": true
-    },
-    {
-      "track": "javascript",
-      "module": 14,
-      "topic": "Tema 6: Web3 y machine learning en navegador",
-      "missingCode": false,
-      "missingComments": true
-    },
-    {
-      "track": "javascript",
-      "module": 2,
-      "topic": "Tema 1: Scope léxico y closures",
-      "missingCode": false,
-      "missingComments": true
-    },
-    {
-      "track": "javascript",
-      "module": 2,
-      "topic": "Tema 3: Call stack y contexto de ejecución",
-      "missingCode": false,
-      "missingComments": true
-    },
-    {
-      "track": "javascript",
-      "module": 2,
-      "topic": "Tema 4: this según el modo de invocación",
-      "missingCode": false,
-      "missingComments": true
-    },
-    {
-      "track": "javascript",
-      "module": 2,
-      "topic": "Tema 5: Module pattern y factory functions",
-      "missingCode": false,
-      "missingComments": true
-    },
-    {
-      "track": "javascript",
-      "module": 2,
-      "topic": "Tema 6: Execution Context, Scope Chain y Lexical Environment",
-      "missingCode": false,
-      "missingComments": true
-    },
-    {
-      "track": "javascript",
-      "module": 3,
-      "topic": "Tema 1: Prototype chain y Object.create",
-      "missingCode": false,
-      "missingComments": true
-    },
-    {
-      "track": "javascript",
-      "module": 4,
-      "topic": "Tema 2: Set y Map frente a Array y Object",
-      "missingCode": false,
-      "missingComments": true
-    },
-    {
-      "track": "javascript",
-      "module": 4,
-      "topic": "Tema 5: Métodos inmutables modernos",
-      "missingCode": false,
-      "missingComments": true
-    },
-    {
-      "track": "javascript",
-      "module": 5,
-      "topic": "Tema 3: Promise.all, allSettled, race y any",
-      "missingCode": false,
-      "missingComments": true
-    },
-    {
-      "track": "javascript",
-      "module": 5,
-      "topic": "Tema 4: El motor V8 — JIT y AST",
-      "missingCode": false,
-      "missingComments": true
-    },
-    {
-      "track": "javascript",
-      "module": 5,
-      "topic": "Tema 5: Stack, Heap y Garbage Collection",
+      "topic": "Tema 12: WebSocket y comunicación en tiempo real",
       "missingCode": false,
       "missingComments": true
     },
@@ -2412,27 +2167,6 @@
     },
     {
       "track": "javascript",
-      "module": 6,
-      "topic": "Tema 5: Generadores — function*, yield y yield*",
-      "missingCode": false,
-      "missingComments": true
-    },
-    {
-      "track": "javascript",
-      "module": 6,
-      "topic": "Tema 6: Proxies y Reflect",
-      "missingCode": false,
-      "missingComments": true
-    },
-    {
-      "track": "javascript",
-      "module": 7,
-      "topic": "Tema 3: Vite y esbuild",
-      "missingCode": false,
-      "missingComments": true
-    },
-    {
-      "track": "javascript",
       "module": 7,
       "topic": "Tema 4: package.json — exports, type y scripts",
       "missingCode": false,
@@ -2440,92 +2174,8 @@
     },
     {
       "track": "javascript",
-      "module": 7,
-      "topic": "Tema 5: import() dinámico e import.meta",
-      "missingCode": false,
-      "missingComments": true
-    },
-    {
-      "track": "javascript",
-      "module": 7,
-      "topic": "Tema 6: Webpack, Rollup y Babel/SWC",
-      "missingCode": false,
-      "missingComments": true
-    },
-    {
-      "track": "javascript",
-      "module": 8,
-      "topic": "Tema 1: Selección y manipulación del DOM",
-      "missingCode": false,
-      "missingComments": true
-    },
-    {
-      "track": "javascript",
-      "module": 8,
-      "topic": "Tema 2: Delegación de eventos",
-      "missingCode": false,
-      "missingComments": true
-    },
-    {
-      "track": "javascript",
-      "module": 8,
-      "topic": "Tema 3: Formularios y validación nativa",
-      "missingCode": false,
-      "missingComments": true
-    },
-    {
-      "track": "javascript",
-      "module": 8,
-      "topic": "Tema 4: Web APIs — localStorage e IntersectionObserver",
-      "missingCode": false,
-      "missingComments": true
-    },
-    {
-      "track": "javascript",
-      "module": 8,
-      "topic": "Tema 5: ResizeObserver y MutationObserver",
-      "missingCode": false,
-      "missingComments": true
-    },
-    {
-      "track": "javascript",
-      "module": 8,
-      "topic": "Tema 6: requestAnimationFrame y requestIdleCallback",
-      "missingCode": false,
-      "missingComments": true
-    },
-    {
-      "track": "javascript",
       "module": 9,
-      "topic": "Tema 1: Unit testing con Vitest",
-      "missingCode": false,
-      "missingComments": true
-    },
-    {
-      "track": "javascript",
-      "module": 9,
-      "topic": "Tema 2: Mocks, spies y fakes",
-      "missingCode": false,
-      "missingComments": true
-    },
-    {
-      "track": "node",
-      "module": 0,
-      "topic": "Tema 1: Node no es \"JavaScript en el servidor\" sin más",
-      "missingCode": false,
-      "missingComments": true
-    },
-    {
-      "track": "node",
-      "module": 0,
-      "topic": "Tema 2: Fases del Event Loop de Node",
-      "missingCode": false,
-      "missingComments": true
-    },
-    {
-      "track": "node",
-      "module": 0,
-      "topic": "Tema 3: process, global y módulos core",
+      "topic": "Tema 4: ESLint, Prettier y cobertura de código",
       "missingCode": false,
       "missingComments": true
     },
@@ -2636,50 +2286,50 @@
     },
     {
       "track": "node",
+      "module": 13,
+      "topic": "Tema 5: OpenAPI como contrato ejecutable",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "node",
       "module": 14,
       "topic": "Tema 1: TypeScript en Node.js",
-      "missingCode": true,
-      "missingComments": false
+      "missingCode": false,
+      "missingComments": true
     },
     {
       "track": "node",
       "module": 14,
       "topic": "Tema 2: GraphQL avanzado y Federation",
-      "missingCode": true,
-      "missingComments": false
+      "missingCode": false,
+      "missingComments": true
     },
     {
       "track": "node",
       "module": 14,
       "topic": "Tema 3: Microservicios, Kafka, RabbitMQ y sagas",
-      "missingCode": true,
-      "missingComments": false
+      "missingCode": false,
+      "missingComments": true
     },
     {
       "track": "node",
       "module": 14,
       "topic": "Tema 4: Serverless multi-cloud",
-      "missingCode": true,
-      "missingComments": false
+      "missingCode": false,
+      "missingComments": true
     },
     {
       "track": "node",
       "module": 14,
       "topic": "Tema 5: Docker productivo con Node",
-      "missingCode": true,
-      "missingComments": false
+      "missingCode": false,
+      "missingComments": true
     },
     {
       "track": "node",
       "module": 14,
       "topic": "Tema 6: CI/CD y promoción de artefactos",
-      "missingCode": true,
-      "missingComments": false
-    },
-    {
-      "track": "node",
-      "module": 2,
-      "topic": "Tema 3: Backpressure",
       "missingCode": false,
       "missingComments": true
     },
@@ -2687,20 +2337,6 @@
       "track": "node",
       "module": 4,
       "topic": "Tema 1: Middleware — orden de ejecución y next()",
-      "missingCode": false,
-      "missingComments": true
-    },
-    {
-      "track": "node",
-      "module": 4,
-      "topic": "Tema 3: Validación de entrada con Zod y manejo centralizado de errores",
-      "missingCode": false,
-      "missingComments": true
-    },
-    {
-      "track": "node",
-      "module": 4,
-      "topic": "Tema 4: Express frente a Fastify",
       "missingCode": false,
       "missingComments": true
     },
@@ -2748,6 +2384,13 @@
     },
     {
       "track": "node",
+      "module": 6,
+      "topic": "Tema 5: Sesiones, cookies seguras y protección CSRF",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "node",
       "module": 7,
       "topic": "Tema 1: Vitest y Supertest — pruebas de integración HTTP reales",
       "missingCode": false,
@@ -2769,6 +2412,13 @@
     },
     {
       "track": "node",
+      "module": 8,
+      "topic": "Tema 5: Redis para caché, idempotencia y Pub/Sub",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "node",
       "module": 9,
       "topic": "Tema 3: Excepciones no capturadas y graceful shutdown",
       "missingCode": false,
@@ -2778,6 +2428,13 @@
       "track": "node",
       "module": 9,
       "topic": "Tema 4: REST, GraphQL y gRPC",
+      "missingCode": false,
+      "missingComments": true
+    },
+    {
+      "track": "node",
+      "module": 9,
+      "topic": "Tema 5: Métricas Prometheus y trazas distribuidas con OpenTelemetry",
       "missingCode": false,
       "missingComments": true
     },
@@ -3470,20 +3127,6 @@
     {
       "track": "java",
       "module": 0,
-      "topic": "Tema 2: public static void main — qué significa cada palabra",
-      "missingCode": true,
-      "missingComments": false
-    },
-    {
-      "track": "java",
-      "module": 0,
-      "topic": "Tema 3: JDK, JRE y JVM",
-      "missingCode": true,
-      "missingComments": false
-    },
-    {
-      "track": "java",
-      "module": 0,
       "topic": "Tema 4: Tipos primitivos vs referencias",
       "missingCode": false,
       "missingComments": true
@@ -3534,8 +3177,8 @@
       "track": "java",
       "module": 10,
       "topic": "Tema 2: Migración incremental y cuándo JPMS aporta valor",
-      "missingCode": true,
-      "missingComments": false
+      "missingCode": false,
+      "missingComments": true
     },
     {
       "track": "java",
@@ -3562,8 +3205,8 @@
       "track": "java",
       "module": 11,
       "topic": "Tema 3: Referencias especiales y heap dumps",
-      "missingCode": true,
-      "missingComments": false
+      "missingCode": false,
+      "missingComments": true
     },
     {
       "track": "java",
@@ -3583,15 +3226,15 @@
       "track": "java",
       "module": 12,
       "topic": "Tema 3: SOLID y cuándo NO aplicar un patrón",
-      "missingCode": true,
-      "missingComments": false
+      "missingCode": false,
+      "missingComments": true
     },
     {
       "track": "java",
       "module": 13,
       "topic": "Tema 1: Arquitectura por capas del proyecto integrador",
-      "missingCode": true,
-      "missingComments": false
+      "missingCode": false,
+      "missingComments": true
     },
     {
       "track": "java",
@@ -3779,8 +3422,8 @@
       "track": "java",
       "module": 8,
       "topic": "Tema 3: Proyectos multi-módulo",
-      "missingCode": true,
-      "missingComments": false
+      "missingCode": false,
+      "missingComments": true
     },
     {
       "track": "java",
@@ -3947,85 +3590,85 @@
       "track": "spring-boot",
       "module": 14,
       "topic": "Tema 1: CRUD API y contratos",
-      "missingCode": true,
-      "missingComments": false
+      "missingCode": false,
+      "missingComments": true
     },
     {
       "track": "spring-boot",
       "module": 14,
       "topic": "Tema 2: MySQL y datos espaciales",
-      "missingCode": true,
-      "missingComments": false
+      "missingCode": false,
+      "missingComments": true
     },
     {
       "track": "spring-boot",
       "module": 14,
       "topic": "Tema 3: JPA e Hibernate Spatial",
-      "missingCode": true,
-      "missingComments": false
+      "missingCode": false,
+      "missingComments": true
     },
     {
       "track": "spring-boot",
       "module": 14,
       "topic": "Tema 4: JWT Bearer y autorización por roles",
-      "missingCode": true,
-      "missingComments": false
+      "missingCode": false,
+      "missingComments": true
     },
     {
       "track": "spring-boot",
       "module": 14,
       "topic": "Tema 5: Socket.IO y tiempo real",
-      "missingCode": true,
-      "missingComments": false
+      "missingCode": false,
+      "missingComments": true
     },
     {
       "track": "spring-boot",
       "module": 14,
       "topic": "Tema 6: Archivos y notificaciones push",
-      "missingCode": true,
-      "missingComments": false
+      "missingCode": false,
+      "missingComments": true
     },
     {
       "track": "spring-boot",
       "module": 15,
       "topic": "Tema 1: WebFlux, Mono, Flux y Netty",
-      "missingCode": true,
-      "missingComments": false
+      "missingCode": false,
+      "missingComments": true
     },
     {
       "track": "spring-boot",
       "module": 15,
       "topic": "Tema 2: Testing avanzado con slices y Testcontainers",
-      "missingCode": true,
-      "missingComments": false
+      "missingCode": false,
+      "missingComments": true
     },
     {
       "track": "spring-boot",
       "module": 15,
       "topic": "Tema 3: Arquitectura hexagonal",
-      "missingCode": true,
-      "missingComments": false
+      "missingCode": false,
+      "missingComments": true
     },
     {
       "track": "spring-boot",
       "module": 15,
       "topic": "Tema 4: Spring Cloud y Resilience4j",
-      "missingCode": true,
-      "missingComments": false
+      "missingCode": false,
+      "missingComments": true
     },
     {
       "track": "spring-boot",
       "module": 15,
       "topic": "Tema 5: Sagas y CQRS",
-      "missingCode": true,
-      "missingComments": false
+      "missingCode": false,
+      "missingComments": true
     },
     {
       "track": "spring-boot",
       "module": 15,
       "topic": "Tema 6: Event Sourcing y Outbox",
-      "missingCode": true,
-      "missingComments": false
+      "missingCode": false,
+      "missingComments": true
     },
     {
       "track": "spring-boot",

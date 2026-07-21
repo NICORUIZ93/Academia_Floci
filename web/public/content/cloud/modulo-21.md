@@ -29,9 +29,48 @@ stateDiagram-v2
  terminated --> [*]: consultable 1h, luego se elimina
 ```
 
+**Practícalo tú:**
+
+```bash
+# archivo: src/labs/modulo-21/tema-1-ciclo-de-vida.sh — ejecutar con: bash tema-1-ciclo-de-vida.sh
+ID=$(aws ec2 run-instances --image-id ami-amazonlinux2023 --instance-type t2.micro \
+  --query 'Instances[0].InstanceId' --output text)
+docker ps | grep "$ID"          # contenedor real, estado "Up"
+aws ec2 stop-instances --instance-ids "$ID"
+sleep 3
+docker ps -a | grep "$ID"       # mismo contenedor, ahora "Exited"
+```
+
+**Resultado esperado:** el primer `docker ps` muestra el contenedor en estado `Up`; después de `stop-instances`, `docker ps -a` lo muestra `Exited` — la prueba de que `pending/running/stopped` de EC2 son estados reales de Docker, no un campo simulado en una base de datos.
+
+**Modifica esto:** repite el experimento pero termina la instancia con `aws ec2 terminate-instances` en vez de detenerla, y confirma con `docker ps -a` que el contenedor desaparece por completo (`docker rm -f`) en vez de quedar `Exited`.
+
+**Cuándo no usarlo:** no asumas que el contenedor aísla red, CPU o memoria como lo haría una instancia EC2 real; comparte el kernel y la red de tu máquina, así que no sirve para pruebas de aislamiento o de rendimiento comparables a producción.
+
+**Cómo crece RutaFlow:** esta instancia es el primer nodo de cómputo que usará RutaFlow para correr el agente de seguimiento del proyecto integrador — arráncala y detenla aquí antes de conectarla a nada más.
+
 ### Tema 2: AMIs, grupos de seguridad y claves SSH
 
 **Conceptos clave:** mapeo de AMI a imagen Docker, `CreateSecurityGroup`, `ImportKeyPair`, inyección de clave pública.
+
+**Practícalo tú:**
+
+```bash
+# archivo: src/labs/modulo-21/tema-2-security-group-y-clave.sh — ejecutar con: bash tema-2-security-group-y-clave.sh
+GROUP_ID=$(aws ec2 create-security-group \
+  --group-name rutaflow-nodo --description "SG del primer nodo RutaFlow" \
+  --query 'GroupId' --output text)
+aws ec2 authorize-security-group-ingress --group-id "$GROUP_ID" --protocol tcp --port 22 --cidr 0.0.0.0/0
+aws ec2 import-key-pair --key-name rutaflow-key --public-key-material fileb://~/.ssh/id_rsa.pub
+```
+
+**Resultado esperado:** `create-security-group` devuelve un `GroupId`; `import-key-pair` devuelve un `KeyFingerprint`. Ambos quedan guardados y consultables — pero, como leíste arriba, el `GroupId` no bloquea ni permite tráfico real: la regla vive en el registro de Floci, no en la red puente de Docker.
+
+**Modifica esto:** ejecuta `aws ec2 describe-security-groups --group-ids $GROUP_ID` y confirma que la regla de entrada al puerto 22 aparece en la respuesta aunque, como acabas de leer, no se aplique de verdad.
+
+**Cuándo no usarlo:** no valides reglas de firewall de producción contra este grupo de seguridad; esa prueba solo es válida contra AWS real.
+
+**Cómo crece RutaFlow:** `rutaflow-nodo` y `rutaflow-key` son el grupo y la clave que usarás para lanzar y conectarte por SSH al primer nodo de cómputo de reparto del proyecto integrador.
 
 Floci resuelve identificadores de AMI en imágenes Docker reales mediante una tabla de mapeo incorporada: `ami-amazonlinux2023` apunta a `public.ecr.aws/amazonlinux/amazonlinux:2023`, `ami-ubuntu2204` a `public.ecr.aws/docker/library/ubuntu:22.04`, y así con Debian y Alpine. Cualquier ID de AMI que no reconozca —incluyendo IDs reales de AWS como `ami-0abc12345678`— cae por defecto en Amazon Linux 2023, así que scripts existentes que referencian AMIs reales siguen funcionando sin modificación.
 
@@ -53,6 +92,28 @@ El servicio de metadatos de instancia (IMDS) es un servidor HTTP que Floci expon
 
 **¿Por qué es importante?** El patrón "instancia con rol IAM que obtiene credenciales vía IMDS" es la forma correcta y recomendada de dar permisos a una instancia EC2 real, en vez de hardcodear credenciales de larga duración dentro de la instancia — un error de seguridad común que quieres evitar desde el principio.
 
+**Practícalo tú:**
+
+```bash
+# archivo: src/labs/modulo-21/tema-3-userdata-imds.sh — ejecutar con: bash tema-3-userdata-imds.sh
+aws ec2 run-instances --image-id ami-amazonlinux2023 --instance-type t2.micro \
+  --user-data '#!/bin/bash
+echo "listo" > /tmp/listo.txt'
+# copia el InstanceId de la respuesta y busca el container-id con: docker ps
+docker logs <container-id> | grep listo
+
+TOKEN=$(curl -s -X PUT http://localhost:9169/latest/api/token -H "x-aws-ec2-metadata-token-ttl-seconds: 21600")
+curl -s -H "x-aws-ec2-metadata-token: $TOKEN" http://localhost:9169/latest/meta-data/instance-id
+```
+
+**Resultado esperado:** `docker logs` muestra la ejecución del script de `UserData` (no hace falta conectarte por SSH para confirmarlo); la petición IMDSv2 devuelve el mismo `InstanceId` que reportó `run-instances`.
+
+**Modifica esto:** cambia el `UserData` para que también escriba la fecha (`date >> /tmp/listo.txt`) y confirma en los logs que ambas líneas aparecen en orden.
+
+**Cuándo no usarlo:** no confíes en IMDSv1 (sin token) para nada que dependas en producción real; AWS lo desalienta activamente por motivos de seguridad (SSRF) y Floci lo soporta solo por compatibilidad con scripts antiguos.
+
+**Cómo crece RutaFlow:** el patrón `UserData` + credenciales por `IMDS` es el que usará el nodo de reparto de RutaFlow para autoconfigurarse al arrancar, sin que nadie tenga que conectarse manualmente a instalarlo.
+
 ### Tema 4: Auto Scaling — configuraciones de lanzamiento y grupos
 
 **Conceptos clave:** launch configuration, Auto Scaling Group, capacidad mínima/máxima/deseada, adjunto a grupos objetivo ELB.
@@ -65,6 +126,28 @@ Los grupos de Auto Scaling se pueden adjuntar a grupos objetivo de un Applicatio
 
 **¿Por qué es importante?** Separar la plantilla (qué lanzar) de la política de capacidad (cuántas y cuándo) es el mismo patrón declarativo que verás una y otra vez en infraestructura moderna — Kubernetes Deployments, ECS Services — y entenderlo aquí te da una base sólida para reconocerlo en cualquier plataforma.
 
+**Practícalo tú:**
+
+```bash
+# archivo: src/labs/modulo-21/tema-4-launch-config.sh — ejecutar con: bash tema-4-launch-config.sh
+aws autoscaling create-launch-configuration \
+  --launch-configuration-name rutaflow-lc \
+  --image-id ami-amazonlinux2023 --instance-type t2.micro
+aws autoscaling create-auto-scaling-group \
+  --auto-scaling-group-name rutaflow-asg \
+  --launch-configuration-name rutaflow-lc \
+  --min-size 1 --max-size 3 --desired-capacity 1 \
+  --availability-zones us-east-1a
+```
+
+**Resultado esperado:** ambos comandos terminan sin salida (éxito silencioso, igual que en AWS real); `aws autoscaling describe-auto-scaling-groups --auto-scaling-group-names rutaflow-asg` muestra el grupo con una instancia en `LifecycleState: InService` a los pocos segundos.
+
+**Modifica esto:** guarda la definición de la configuración de lanzamiento en `launch-config.json` y vuelve a crearla pasando `--cli-input-json file://launch-config.json` en vez de flags sueltos — así es como versionarías esta plantilla en un repositorio real.
+
+**Cuándo no usarlo:** las configuraciones de lanzamiento (launch configurations) están en modo de solo-mantenimiento en AWS real desde 2023; en un proyecto nuevo fuera de este curso usarías Launch Templates, no este recurso.
+
+**Cómo crece RutaFlow:** `rutaflow-asg` es el grupo que mantiene siempre disponible al menos un nodo de reparto activo para el proyecto integrador, incluso si uno falla.
+
 ### Tema 5: El reconciliador de capacidad y las políticas de escalado
 
 **Conceptos clave:** reconciliador de capacidad, ciclo de 10 segundos, scale-out, scale-in, lifecycle hooks, políticas de escalado.
@@ -76,6 +159,23 @@ Los lifecycle hooks (`PutLifecycleHook`) te permiten insertar una pausa controla
 **Analogía:** el reconciliador de capacidad es como un encargado de turno que cada 10 segundos cuenta cuántos meseros hay trabajando, y si faltan llama a alguien de la lista de guardia; si sobran, envía a alguien a casa — sin que el gerente tenga que estar pendiente minuto a minuto.
 
 **¿Por qué es importante?** Este patrón de "reconciliación continua hacia un estado deseado" es el mismo principio detrás de Kubernetes, Terraform y casi toda la infraestructura declarativa moderna: aprenderlo aquí, con un ciclo de 10 segundos que puedes observar en vivo, es mucho más intuitivo que leerlo solo en teoría.
+
+**Practícalo tú:**
+
+```bash
+# archivo: src/labs/modulo-21/tema-5-reconciliador.sh — ejecutar con: bash tema-5-reconciliador.sh
+aws autoscaling set-desired-capacity --auto-scaling-group-name rutaflow-asg --desired-capacity 3
+sleep 12
+aws autoscaling describe-scaling-activities --auto-scaling-group-name rutaflow-asg
+```
+
+**Resultado esperado:** en los ~12 segundos de espera (más de un ciclo de reconciliación de 10 s), el reconciliador lanza 2 instancias adicionales; `describe-scaling-activities` muestra las actividades de lanzamiento hasta llegar a 3 instancias `InService`, sin que tú hayas llamado a `run-instances` manualmente.
+
+**Modifica esto:** vuelve a bajar `--desired-capacity` a 1 y observa en `describe-scaling-activities` cómo el reconciliador ahora termina instancias (scale-in) en vez de lanzarlas, hasta volver a 1 `InService`.
+
+**Cuándo no usarlo:** no uses `set-desired-capacity` manual como sustituto de una política de escalado real en producción; ahí querrías políticas dirigidas por métricas (`PutScalingPolicy`) que reaccionen solas a CPU o latencia, no un valor fijo que cambias a mano.
+
+**Cómo crece RutaFlow:** este es el mismo mecanismo que mantiene la flota de nodos de reparto de RutaFlow al tamaño correcto durante picos de pedidos, sin intervención manual.
 
 ---
 

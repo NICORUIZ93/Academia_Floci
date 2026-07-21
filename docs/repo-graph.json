@@ -145,7 +145,7 @@
     },
     {
       "path": "docs/code-visual-quality.json",
-      "lines": 5187,
+      "lines": 5159,
       "kind": "project-file",
       "symbols": [],
       "imports": [],
@@ -172,7 +172,7 @@
     },
     {
       "path": "docs/editorial-backlog.md",
-      "lines": 58,
+      "lines": 57,
       "kind": "documentation",
       "symbols": [],
       "imports": [],
@@ -3662,7 +3662,7 @@
     },
     {
       "path": "web/public/content/cloud/modulo-21.md",
-      "lines": 121,
+      "lines": 221,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -3670,13 +3670,15 @@
         "# M\u00f3dulo 21: C\u00f3mputo el\u00e1stico con EC2 y Auto Scaling",
         "## Aprende construyendo",
         "### Tema 1: El modelo de ejecuci\u00f3n de EC2 \u2014 instancias que son contenedores Docker reales",
+        "# archivo: src/labs/modulo-21/tema-1-ciclo-de-vida.sh \u2014 ejecutar con: bash tema-1-ciclo-de-vida.sh",
         "### Tema 2: AMIs, grupos de seguridad y claves SSH",
+        "# archivo: src/labs/modulo-21/tema-2-security-group-y-clave.sh \u2014 ejecutar con: bash tema-2-security-group-y-clave.sh",
         "### Tema 3: UserData e IMDS \u2014 arranque automatizado y credenciales por instancia",
+        "# archivo: src/labs/modulo-21/tema-3-userdata-imds.sh \u2014 ejecutar con: bash tema-3-userdata-imds.sh",
+        "# copia el InstanceId de la respuesta y busca el container-id con: docker ps",
         "### Tema 4: Auto Scaling \u2014 configuraciones de lanzamiento y grupos",
-        "### Tema 5: El reconciliador de capacidad y las pol\u00edticas de escalado",
-        "## Laboratorio pr\u00e1ctico",
-        "### Laboratorio 21.1 \u2014 Lanzar una instancia EC2 con acceso SSH e IMDS",
-        "### Laboratorio 21.2 \u2014 Auto Scaling Group con reconciliador en vivo"
+        "# archivo: src/labs/modulo-21/tema-4-launch-config.sh \u2014 ejecutar con: bash tema-4-launch-config.sh",
+        "### Tema 5: El reconciliador de capacidad y las pol\u00edticas de escalado"
       ]
     },
     {
@@ -9380,7 +9382,7 @@
     },
     {
       "path": "web/public/floci-landing.html",
-      "lines": 734,
+      "lines": 735,
       "kind": "project-file",
       "symbols": [
         "menuToggle",

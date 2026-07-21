@@ -566,7 +566,7 @@
       "track": "javascript",
       "module": 0,
       "position": 1,
-      "title": "Variables — let, const y var",
+      "title": "Variables — `const`, `let` y `var`",
       "file": "web/public/content/javascript/modulo-0.md",
       "requires": []
     },
@@ -575,7 +575,7 @@
       "track": "javascript",
       "module": 0,
       "position": 2,
-      "title": "Tipos primitivos y typeof",
+      "title": "Tipos primitivos y `typeof`",
       "file": "web/public/content/javascript/modulo-0.md",
       "requires": [
         "javascript:0:1"
@@ -586,7 +586,7 @@
       "track": "javascript",
       "module": 0,
       "position": 3,
-      "title": "Coerción implícita — == frente a ===",
+      "title": "Conversión, coerción e igualdad",
       "file": "web/public/content/javascript/modulo-0.md",
       "requires": [
         "javascript:0:2"
@@ -597,7 +597,7 @@
       "track": "javascript",
       "module": 0,
       "position": 4,
-      "title": "Template literals",
+      "title": "Template literals y mensajes seguros",
       "file": "web/public/content/javascript/modulo-0.md",
       "requires": [
         "javascript:0:3"
@@ -608,7 +608,7 @@
       "track": "javascript",
       "module": 0,
       "position": 5,
-      "title": "Entorno — navegador frente a Node.js",
+      "title": "JavaScript en navegador y Node.js",
       "file": "web/public/content/javascript/modulo-0.md",
       "requires": [
         "javascript:0:4"
@@ -1385,6 +1385,94 @@
       ]
     },
     {
+      "id": "javascript:14:7",
+      "track": "javascript",
+      "module": 14,
+      "position": 7,
+      "title": "Geolocalización, permisos y precisión GPS",
+      "file": "web/public/content/javascript/modulo-14.md",
+      "requires": [
+        "javascript:14:6"
+      ]
+    },
+    {
+      "id": "javascript:14:8",
+      "track": "javascript",
+      "module": 14,
+      "position": 8,
+      "title": "sessionStorage, cookies e IndexedDB",
+      "file": "web/public/content/javascript/modulo-14.md",
+      "requires": [
+        "javascript:14:7"
+      ]
+    },
+    {
+      "id": "javascript:14:9",
+      "track": "javascript",
+      "module": 14,
+      "position": 9,
+      "title": "Expresiones regulares avanzadas y Unicode",
+      "file": "web/public/content/javascript/modulo-14.md",
+      "requires": [
+        "javascript:14:8"
+      ]
+    },
+    {
+      "id": "javascript:14:10",
+      "track": "javascript",
+      "module": 14,
+      "position": 10,
+      "title": "Patrones Factory, Strategy, Observer y Pub/Sub",
+      "file": "web/public/content/javascript/modulo-14.md",
+      "requires": [
+        "javascript:14:9"
+      ]
+    },
+    {
+      "id": "javascript:14:11",
+      "track": "javascript",
+      "module": 14,
+      "position": 11,
+      "title": "Service Workers, PWA y estrategias de caché",
+      "file": "web/public/content/javascript/modulo-14.md",
+      "requires": [
+        "javascript:14:10"
+      ]
+    },
+    {
+      "id": "javascript:14:12",
+      "track": "javascript",
+      "module": 14,
+      "position": 12,
+      "title": "WebSocket y comunicación en tiempo real",
+      "file": "web/public/content/javascript/modulo-14.md",
+      "requires": [
+        "javascript:14:11"
+      ]
+    },
+    {
+      "id": "javascript:14:13",
+      "track": "javascript",
+      "module": 14,
+      "position": 13,
+      "title": "Typed Arrays, ArrayBuffer y DataView",
+      "file": "web/public/content/javascript/modulo-14.md",
+      "requires": [
+        "javascript:14:12"
+      ]
+    },
+    {
+      "id": "javascript:14:14",
+      "track": "javascript",
+      "module": 14,
+      "position": 14,
+      "title": "ECMAScript moderno, Temporal e iterator helpers",
+      "file": "web/public/content/javascript/modulo-14.md",
+      "requires": [
+        "javascript:14:13"
+      ]
+    },
+    {
       "id": "java:0:1",
       "track": "java",
       "module": 0,
@@ -2039,7 +2127,7 @@
       "title": "Node no es \"JavaScript en el servidor\" sin más",
       "file": "web/public/content/node/modulo-0.md",
       "requires": [
-        "javascript:14:6"
+        "javascript:14:14"
       ]
     },
     {
@@ -2340,6 +2428,17 @@
       ]
     },
     {
+      "id": "node:6:5",
+      "track": "node",
+      "module": 6,
+      "position": 5,
+      "title": "Sesiones, cookies seguras y protección CSRF",
+      "file": "web/public/content/node/modulo-6.md",
+      "requires": [
+        "node:6:4"
+      ]
+    },
+    {
       "id": "node:7:1",
       "track": "node",
       "module": 7,
@@ -2347,7 +2446,7 @@
       "title": "Vitest y Supertest — pruebas de integración HTTP reales",
       "file": "web/public/content/node/modulo-7.md",
       "requires": [
-        "node:6:4"
+        "node:6:5"
       ]
     },
     {
@@ -2428,6 +2527,17 @@
       ]
     },
     {
+      "id": "node:8:5",
+      "track": "node",
+      "module": 8,
+      "position": 5,
+      "title": "Redis para caché, idempotencia y Pub/Sub",
+      "file": "web/public/content/node/modulo-8.md",
+      "requires": [
+        "node:8:4"
+      ]
+    },
+    {
       "id": "node:9:1",
       "track": "node",
       "module": 9,
@@ -2435,7 +2545,7 @@
       "title": "Logging estructurado",
       "file": "web/public/content/node/modulo-9.md",
       "requires": [
-        "node:8:4"
+        "node:8:5"
       ]
     },
     {
@@ -2472,6 +2582,17 @@
       ]
     },
     {
+      "id": "node:9:5",
+      "track": "node",
+      "module": 9,
+      "position": 5,
+      "title": "Métricas Prometheus y trazas distribuidas con OpenTelemetry",
+      "file": "web/public/content/node/modulo-9.md",
+      "requires": [
+        "node:9:4"
+      ]
+    },
+    {
       "id": "node:10:1",
       "track": "node",
       "module": 10,
@@ -2479,7 +2600,7 @@
       "title": "Cabeceras seguras con helmet",
       "file": "web/public/content/node/modulo-10.md",
       "requires": [
-        "node:9:4"
+        "node:9:5"
       ]
     },
     {
@@ -2670,6 +2791,17 @@
       ]
     },
     {
+      "id": "node:13:5",
+      "track": "node",
+      "module": 13,
+      "position": 5,
+      "title": "OpenAPI como contrato ejecutable",
+      "file": "web/public/content/node/modulo-13.md",
+      "requires": [
+        "node:13:4"
+      ]
+    },
+    {
       "id": "node:14:1",
       "track": "node",
       "module": 14,
@@ -2677,7 +2809,7 @@
       "title": "TypeScript en Node.js",
       "file": "web/public/content/node/modulo-14.md",
       "requires": [
-        "node:13:4"
+        "node:13:5"
       ]
     },
     {
@@ -3381,7 +3513,7 @@
       "title": "El CLI ya no genera NgModules",
       "file": "web/public/content/angular/modulo-0.md",
       "requires": [
-        "javascript:14:6"
+        "javascript:14:14"
       ]
     },
     {
@@ -4052,7 +4184,7 @@
       "title": "JSX es azúcar sintáctica sobre createElement",
       "file": "web/public/content/react/modulo-0.md",
       "requires": [
-        "javascript:14:6"
+        "javascript:14:14"
       ]
     },
     {

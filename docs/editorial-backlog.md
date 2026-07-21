@@ -6,41 +6,40 @@ Este inventario se genera desde el Markdown real. Las ayudas visuales, el glosar
 
 | Criterio | Cubierto | Pendiente |
 |---|---:|---:|
-| Explicación | 892 | 1 |
-| Código | 843 | 50 |
-| Ruta | 249 | 644 |
-| Ejecución | 449 | 444 |
-| Resultado | 308 | 585 |
-| Modificación | 479 | 414 |
-| Rutaflow | 222 | 671 |
-| Modelo mental | 893 | 0 |
-| Límites | 439 | 454 |
-| **Tema practicable completo** | **143** | **750** |
+| Explicación | 904 | 1 |
+| Código | 859 | 46 |
+| Ruta | 521 | 384 |
+| Ejecución | 670 | 235 |
+| Resultado | 569 | 336 |
+| Modificación | 690 | 215 |
+| Rutaflow | 295 | 610 |
+| Modelo mental | 905 | 0 |
+| Límites | 512 | 393 |
+| **Tema practicable completo** | **378** | **527** |
 
 ## Prioridad por track
 
 | Track | Temas | Sin código | Sin ruta | Sin ejecución | Sin resultado | Sin modificación | Sin límites |
 |---|---:|---:|---:|---:|---:|---:|---:|
 | android | 49 | 0 | 45 | 44 | 38 | 25 | 29 |
-| angular | 61 | 0 | 47 | 57 | 44 | 29 | 31 |
-| cloud | 153 | 50 | 130 | 51 | 122 | 82 | 76 |
+| angular | 61 | 0 | 6 | 6 | 6 | 0 | 21 |
+| cloud | 153 | 46 | 125 | 50 | 117 | 78 | 74 |
 | devops | 91 | 0 | 73 | 47 | 69 | 28 | 41 |
-| flutter | 57 | 0 | 49 | 28 | 37 | 36 | 38 |
-| foundations | 50 | 0 | 0 | 0 | 10 | 0 | 26 |
-| ios | 51 | 0 | 49 | 12 | 35 | 30 | 27 |
-| java | 59 | 0 | 0 | 0 | 9 | 0 | 21 |
-| javascript | 75 | 0 | 47 | 53 | 46 | 27 | 25 |
+| flutter | 57 | 0 | 40 | 26 | 29 | 29 | 34 |
+| foundations | 50 | 0 | 0 | 0 | 5 | 0 | 22 |
+| ios | 51 | 0 | 25 | 6 | 8 | 4 | 26 |
+| java | 59 | 0 | 0 | 0 | 2 | 0 | 15 |
+| javascript | 83 | 0 | 0 | 0 | 0 | 0 | 19 |
 | kotlin-multiplatform | 46 | 0 | 41 | 29 | 35 | 30 | 23 |
-| node | 64 | 0 | 43 | 25 | 39 | 29 | 29 |
-| react | 55 | 0 | 44 | 54 | 47 | 37 | 33 |
+| node | 68 | 0 | 0 | 0 | 0 | 0 | 14 |
+| react | 55 | 0 | 5 | 6 | 6 | 0 | 30 |
 | rutaflow | 24 | 0 | 24 | 21 | 21 | 21 | 19 |
-| spring-boot | 58 | 0 | 52 | 23 | 33 | 40 | 36 |
+| spring-boot | 58 | 0 | 0 | 0 | 0 | 0 | 26 |
 
 ## Temas sin código editorial
 
 ### cloud
 
-- Módulo 21: AMIs, grupos de seguridad y claves SSH; UserData e IMDS — arranque automatizado y credenciales por instancia; Auto Scaling — configuraciones de lanzamiento y grupos; El reconciliador de capacidad y las políticas de escalado
 - Módulo 22: ELB v2 — balanceadores, grupos objetivo y reglas; ACM — certificados TLS con criptografía real; CloudFront — distribución de contenido y control de acceso al origen; Route53 — zonas alojadas y registros de recursos; Cómo se integran los cuatro servicios en una arquitectura de borde real
 - Módulo 23: Qué resuelve un caché en memoria — y cuándo no ayuda; Arquitectura de ElastiCache en Floci — contenedores reales, no simulación; Creación de clústeres y conexión con clientes estándar; Autenticación IAM para el plano de datos de ElastiCache
 - Módulo 24: CodeBuild — compilaciones reales dentro de contenedores Docker; buildspec.yml — fases y artefactos; CodeDeploy — aplicaciones, grupos y configuraciones predefinidas; Despliegue Blue/Green de Lambda — cambio de tráfico por alias; Despliegue Blue/Green de ECS — cambio de tráfico por listener ELB

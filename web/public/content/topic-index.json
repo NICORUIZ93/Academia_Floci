@@ -2584,24 +2584,24 @@
   "javascript": {
     "0": [
       {
-        "title": "Variables — let, const y var",
-        "fragment": "tema-1-variables-let-const-y-var"
+        "title": "Variables — `const`, `let` y `var`",
+        "fragment": "tema-1-variables-const-let-y-var"
       },
       {
-        "title": "Tipos primitivos y typeof",
+        "title": "Tipos primitivos y `typeof`",
         "fragment": "tema-2-tipos-primitivos-y-typeof"
       },
       {
-        "title": "Coerción implícita — == frente a ===",
-        "fragment": "tema-3-coercion-implicita-frente-a"
+        "title": "Conversión, coerción e igualdad",
+        "fragment": "tema-3-conversion-coercion-e-igualdad"
       },
       {
-        "title": "Template literals",
-        "fragment": "tema-4-template-literals"
+        "title": "Template literals y mensajes seguros",
+        "fragment": "tema-4-template-literals-y-mensajes-seguros"
       },
       {
-        "title": "Entorno — navegador frente a Node.js",
-        "fragment": "tema-5-entorno-navegador-frente-a-node-js"
+        "title": "JavaScript en navegador y Node.js",
+        "fragment": "tema-5-javascript-en-navegador-y-node-js"
       }
     ],
     "1": [
@@ -2726,6 +2726,38 @@
       {
         "title": "Web3 y machine learning en navegador",
         "fragment": "tema-6-web3-y-machine-learning-en-navegador"
+      },
+      {
+        "title": "Geolocalización, permisos y precisión GPS",
+        "fragment": "tema-7-geolocalizacion-permisos-y-precision-gps"
+      },
+      {
+        "title": "sessionStorage, cookies e IndexedDB",
+        "fragment": "tema-8-sessionstorage-cookies-e-indexeddb"
+      },
+      {
+        "title": "Expresiones regulares avanzadas y Unicode",
+        "fragment": "tema-9-expresiones-regulares-avanzadas-y-unicode"
+      },
+      {
+        "title": "Patrones Factory, Strategy, Observer y Pub/Sub",
+        "fragment": "tema-10-patrones-factory-strategy-observer-y-pub-sub"
+      },
+      {
+        "title": "Service Workers, PWA y estrategias de caché",
+        "fragment": "tema-11-service-workers-pwa-y-estrategias-de-cache"
+      },
+      {
+        "title": "WebSocket y comunicación en tiempo real",
+        "fragment": "tema-12-websocket-y-comunicacion-en-tiempo-real"
+      },
+      {
+        "title": "Typed Arrays, ArrayBuffer y DataView",
+        "fragment": "tema-13-typed-arrays-arraybuffer-y-dataview"
+      },
+      {
+        "title": "ECMAScript moderno, Temporal e iterator helpers",
+        "fragment": "tema-14-ecmascript-moderno-temporal-e-iterator-helpers"
       }
     ],
     "2": [
@@ -3242,6 +3274,10 @@
       {
         "title": "Webhooks verificables y recuperación por reconciliación",
         "fragment": "tema-4-webhooks-verificables-y-recuperacion-por-reconciliacion"
+      },
+      {
+        "title": "OpenAPI como contrato ejecutable",
+        "fragment": "tema-5-openapi-como-contrato-ejecutable"
       }
     ],
     "14": [
@@ -3358,6 +3394,10 @@
       {
         "title": "OAuth 2.0 y Passport.js",
         "fragment": "tema-4-oauth-2-0-y-passport-js"
+      },
+      {
+        "title": "Sesiones, cookies seguras y protección CSRF",
+        "fragment": "tema-5-sesiones-cookies-seguras-y-proteccion-csrf"
       }
     ],
     "7": [
@@ -3394,6 +3434,10 @@
       {
         "title": "PM2, memory leaks y heap snapshots",
         "fragment": "tema-4-pm2-memory-leaks-y-heap-snapshots"
+      },
+      {
+        "title": "Redis para caché, idempotencia y Pub/Sub",
+        "fragment": "tema-5-redis-para-cache-idempotencia-y-pub-sub"
       }
     ],
     "9": [
@@ -3412,6 +3456,10 @@
       {
         "title": "REST, GraphQL y gRPC",
         "fragment": "tema-4-rest-graphql-y-grpc"
+      },
+      {
+        "title": "Métricas Prometheus y trazas distribuidas con OpenTelemetry",
+        "fragment": "tema-5-metricas-prometheus-y-trazas-distribuidas-con-opentelemetry"
       }
     ]
   },
