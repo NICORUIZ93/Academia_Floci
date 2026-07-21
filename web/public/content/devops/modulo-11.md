@@ -5,186 +5,572 @@
 
 ### Tema 1: Escaneo de imágenes y dependencias (Trivy, Snyk)
 
+#### Paso 1 · Objetivo y preparación
+
+Al finalizar podrás escanear una imagen Docker propia con Trivy, leer su reporte de CVEs por severidad, y decidir con criterio cuáles atender primero.
+
+**Conocimiento previo:** Docker e imágenes base (Módulo 2 de este track).
+
+#### Paso 2 · Contexto y caso real
+
+**¿Por qué es importante?** El software moderno depende de una cadena enorme de dependencias de terceros, cada una potencialmente introduciendo vulnerabilidades que el equipo nunca escribió directamente; ignorar esta superficie de riesgo es una de las causas más comunes de brechas de seguridad reales, muchas de las cuales explotan vulnerabilidades ya conocidas y con corrección disponible, simplemente no aplicada a tiempo.
+
+#### Paso 3 · Teoría con analogía
+
 **Conceptos clave:** CVE (vulnerabilidad conocida), escaneo de sistema operativo base, escaneo de dependencias de aplicación, severidad (crítica, alta, media, baja).
 
-Una CVE (Common Vulnerabilities and Exposures) es una vulnerabilidad de seguridad conocida y catalogada públicamente, identificada por un código único, que afecta a una versión específica de un paquete de software. Herramientas como Trivy o Snyk escanean tanto el sistema operativo base de una imagen Docker (las librerías del sistema instaladas, heredadas de la imagen base que estudiaste en el Módulo 2 de este track) como las dependencias de aplicación empaquetadas dentro de ella (las librerías de tu gestor de paquetes específico: npm, pip, Maven), comparando cada versión instalada contra bases de datos actualizadas de vulnerabilidades conocidas, y reportando cualquier coincidencia encontrada junto con su nivel de severidad.
+Una CVE (Common Vulnerabilities and Exposures) es una vulnerabilidad de seguridad conocida y catalogada públicamente, identificada por un código único. Trivy escanea tanto el sistema operativo base de una imagen (heredado de la imagen base del Módulo 2) como las dependencias de aplicación empaquetadas (npm, pip, Maven), comparando cada versión instalada contra bases de datos de vulnerabilidades conocidas.
 
-`trivy image mi-api:1.0` es el comando básico que escanea una imagen ya construida, produciendo un reporte que lista cada vulnerabilidad encontrada, el paquete específico afectado, la versión instalada frente a la versión donde se corrigió (si existe una corrección disponible), y su severidad clasificada (crítica, alta, media, baja), permitiendo priorizar qué vulnerabilidades atender primero según su impacto potencial real.
+Este escaneo conecta directamente con la elección de imagen base: una imagen completa presenta una superficie mucho mayor de posibles vulnerabilidades detectables que una imagen Alpine o distroless minimalista, que al contener menos software instalado reduce proporcionalmente cuántas vulnerabilidades potenciales existen.
 
-Este escaneo conecta directamente con la elección de imagen base que estudiaste en el Módulo 2: una imagen base completa, con muchas más librerías y utilidades instaladas de las estrictamente necesarias, presenta naturalmente una superficie mucho mayor de posibles vulnerabilidades detectables, mientras que una imagen Alpine o distroless minimalista, al contener drásticamente menos software instalado, reduce proporcionalmente cuántas vulnerabilidades potenciales existen para reportar en primer lugar; el escaneo de vulnerabilidades y la elección de imagen base minimalista son, en la práctica, dos estrategias de seguridad complementarias que se refuerzan mutuamente, no alternativas independientes entre sí.
+Una CVE reportada no significa automáticamente que tu aplicación esté explotable a través de ella: una CVE en una librería que tu código nunca invoca de la forma vulnerable puede representar un riesgo real menor que su severidad catalogada sugeriría de forma aislada, lo que requiere criterio humano al priorizar la respuesta.
 
-Es importante entender que la existencia de una vulnerabilidad reportada no significa automáticamente que tu aplicación específica esté explotable a través de ella: una CVE en una librería que tu código nunca invoca de la forma vulnerable, o en un componente que no está expuesto a entrada de usuario no confiable, puede representar un riesgo real mucho menor que su severidad catalogada sugeriría de forma aislada. Esto no justifica ignorar sistemáticamente las alertas, pero sí requiere criterio humano al priorizar la respuesta, en vez de tratar cada CVE reportada como igualmente urgente sin ningún contexto adicional sobre cómo se usa realmente ese componente específico en tu aplicación.
-
-**Analogía:** escanear una imagen con Trivy es como hacer una inspección de seguridad exhaustiva de un edificio antes de habitarlo, revisando cada componente instalado (cerraduras, cableado eléctrico, materiales de construcción) contra una base de datos actualizada de defectos de fabricación conocidos reportados públicamente por sus fabricantes, y recibiendo un informe priorizado de qué defectos son más urgentes de corregir antes de mudarse, en vez de descubrirlos accidentalmente después de ocupar el edificio.
-
-**¿Por qué es importante?** El software moderno depende de una cadena enorme de dependencias de terceros, cada una potencialmente introduciendo vulnerabilidades que el equipo de desarrollo nunca escribió directamente ni tiene forma de conocer sin una herramienta de escaneo dedicada; ignorar esta superficie de riesgo es una de las causas más comunes de brechas de seguridad reales en la industria, muchas de las cuales explotan vulnerabilidades ya conocidas y con corrección disponible, simplemente no aplicada a tiempo.
+**Analogía:** escanear una imagen con Trivy es como hacer una inspección de seguridad exhaustiva de un edificio antes de habitarlo, comparando cada componente instalado contra una base de datos de defectos de fabricación conocidos, y recibiendo un informe priorizado de qué corregir antes de mudarse.
 
 **Diagrama:**
 
 ```
-docker build ──▶ Imagen mi-api:1.0
-                        │
-                   trivy image mi-api:1.0
-                        │
-             compara cada paquete instalado
-             contra base de datos de CVEs conocidas
-                        │
-             ┌──────────┼──────────┐
-             ▼                     ▼
-       Sin vulnerabilidades    Vulnerabilidades encontradas
-       críticas reportadas      (priorizadas por severidad)
+┌──────────────────────────┐
+│ docker build → mi-api:1.0   │
+└──────────┬───────────────┘
+           │
+┌──────────▼───────────────┐
+│ trivy image mi-api:1.0        │
+│ compara paquetes vs CVEs      │
+└──────────┬───────────────┘
+           │
+   ┌───────┴────────┐
+   ▼                 ▼
+┌─────────┐    ┌──────────────────┐
+│ Sin críticas │    │ Vulnerabilidades  │
+└─────────┘    │ (por severidad)      │
+                 └──────────────────┘
 ```
+
+#### Paso 4 · Demostración guiada desde cero
+
+Desde una carpeta vacía crea `academia-devops/src/modulo11/escaneo-imagen` con una imagen mínima para escanear:
+
+```bash
+mkdir -p academia-devops/src/modulo11/escaneo-imagen
+cd academia-devops/src/modulo11/escaneo-imagen
+cat > Dockerfile <<'EOF'
+FROM node:18.19.0-alpine3.18
+WORKDIR /app
+COPY package.json .
+CMD ["node", "-e", "console.log('mi-api activa')"]
+EOF
+cat > package.json <<'EOF'
+{ "name": "mi-api", "version": "1.0.0", "dependencies": { "lodash": "4.17.15" } }
+EOF
+docker build -t mi-api:1.0 .
+docker run --rm aquasec/trivy:0.55.0 --version
+```
+
+**Explicación línea por línea:** se fija deliberadamente una versión antigua de `node:18-alpine` y de `lodash` (4.17.15, con CVEs conocidas y corregidas en versiones posteriores) para que el escaneo tenga contenido real que reportar, en vez de una imagen ya limpia sin ningún hallazgo.
+
+Escanea la imagen construida y filtra por severidad:
+
+```bash
+docker run --rm -v /var/run/docker.sock:/var/run/docker.sock \
+  aquasec/trivy:0.55.0 image --severity CRITICAL,HIGH --format table mi-api:1.0
+```
+
+**Resultado esperado:** un reporte tabular que lista cada CVE encontrada en `lodash@4.17.15` o en las librerías del sistema de la imagen base, con la versión instalada, la versión donde se corrigió (si existe), y su severidad clasificada, permitiendo priorizar cuáles atender primero.
+
+**Fallo deliberado:** ejecuta el mismo escaneo contra una etiqueta de imagen que no existe localmente ni en ningún registry (`mi-api:9.9-inexistente`). Trivy falla reportando que no puede resolver ni encontrar esa imagen — diagnostica confirmando que Trivy necesita una imagen ya construida (local o remota) para escanear; no puede inventar un reporte sobre una imagen que no existe en ningún lado.
+
+#### Construcción RutaFlow: política de severidad del proyecto
+
+Documenta en `academia-devops/README.md` que toda imagen de RutaFlow debe escanearse con `--severity CRITICAL,HIGH` antes de considerarse candidata a despliegue, dejando las de severidad media/baja como backlog de seguimiento, no como bloqueo inmediato.
+
+#### Paso 5 · Práctica guiada
+
+Actualiza `package.json` para fijar `lodash` a una versión reciente sin CVEs conocidas críticas, reconstruye la imagen, y confirma con un nuevo escaneo que el hallazgo específico de esa dependencia desaparece del reporte. **Pista:** compara el reporte "antes" y "después" línea por línea para confirmar exactamente qué cambió.
+
+#### Paso 6 · Práctica independiente
+
+Repite el escaneo comparando la imagen `node:18-alpine` (Módulo 2, imagen minimalista) contra `node:18` (imagen completa, sin `-alpine`) usando la misma aplicación, y documenta cuántas vulnerabilidades adicionales reporta la imagen completa solo por el software adicional instalado en su sistema base.
+
+#### Paso 7 · Cierre y evidencia
+
+Ya escaneas imágenes propias y priorizas hallazgos por severidad con criterio, en vez de tratar cada CVE como igualmente urgente. El siguiente tema integra este escaneo como un paso automático del pipeline. **Evidencia:** entrega el reporte de Trivy mostrando la CVE de `lodash@4.17.15`, y el resultado del fallo al escanear una imagen inexistente. Fuente oficial: [Trivy — Vulnerability Scanning](https://trivy.dev/latest/docs/scanner/vulnerability/).
+
+**Errores comunes:** tratar cada CVE reportada como igualmente urgente sin revisar si el componente afectado realmente se usa de forma vulnerable en la aplicación; escanear solo una vez de forma manual y nunca repetir el escaneo cuando se publican nuevas CVEs para las mismas dependencias ya instaladas.
+
+**Cuándo no usarlo:** para una imagen que nunca se despliega ni se expone a ningún tráfico real (por ejemplo, una herramienta interna de un solo uso ejecutada localmente y descartada), el coste de mantener un proceso de escaneo formal puede no justificarse; el valor aparece cuando la imagen se despliega y se mantiene en el tiempo.
 
 ### Tema 2: Integración en el pipeline
 
-**Conceptos clave:** escaneo como gate obligatorio, `--exit-code`, bloqueo de merge por vulnerabilidad crítica.
+#### Paso 1 · Objetivo y preparación
 
-Ejecutar un escaneo de vulnerabilidades manualmente y de forma esporádica tiene un valor limitado comparado con integrarlo como un paso automático y obligatorio dentro del pipeline de CI que ya construiste en el Módulo 4 de este track: `trivy image --exit-code 1 --severity CRITICAL mi-api:${{ github.sha }}` configura Trivy para que termine con un código de salida distinto de cero (fallando explícitamente el job de CI) si encuentra al menos una vulnerabilidad de severidad crítica, aplicando exactamente el mismo mecanismo de "un comando que falla detiene el pipeline" que ya usaste para tests y linting en el Módulo 4.
+Al finalizar podrás integrar Trivy como un gate obligatorio del pipeline de CI que bloquea el pipeline ante vulnerabilidades críticas.
 
-Esta integración convierte la seguridad en un gate obligatorio del proceso de entrega, no en una revisión opcional que alguien podría (u olvidaría) ejecutar manualmente de vez en cuando: siguiendo exactamente el mismo razonamiento que ya viste sobre por qué CI obligatorio a nivel técnico es más robusto que depender de la disciplina individual de cada persona (Módulo 4, Tema 4), hacer el escaneo de seguridad un paso técnicamente bloqueante del pipeline elimina la dependencia de que alguien recuerde ejecutarlo manualmente antes de cada despliegue.
+**Conocimiento previo:** Tema 1 de este módulo; pipelines de CI (Módulo 4 de este track).
 
-La etiqueta de imagen usada en el ejemplo (`${{ github.sha }}`, el hash del commit específico que disparó el pipeline) es también una práctica deliberada: escanear y etiquetar la imagen exacta que corresponde a ese commit específico, en vez de reescanear repetidamente una etiqueta genérica como `latest` que podría representar contenido distinto en momentos distintos, asegura una trazabilidad exacta entre qué código específico generó qué imagen específica y qué resultado de escaneo corresponde exactamente a esa combinación.
+#### Paso 2 · Contexto y caso real
 
-Es importante calibrar el umbral de severidad que bloquea el pipeline (`--severity CRITICAL` en el ejemplo) con criterio: bloquear ante cualquier vulnerabilidad de cualquier severidad, incluyendo las de severidad baja o media que pueden ser extremadamente numerosas y de bajo riesgo real, puede generar la misma fatiga y fricción que ya estudiaste con alertas mal calibradas en el módulo de observabilidad de este mismo track, llevando a los equipos a buscar formas de saltarse o ignorar la validación en vez de tratarla como una señal confiable y accionable.
+**¿Por qué es importante?** Igual que con CI obligatorio en general, convertir el escaneo de seguridad en una regla técnica del pipeline —no una práctica opcional dependiente de memoria individual— es lo que garantiza que ninguna imagen con vulnerabilidades críticas conocidas llegue a producción sin que alguien haya tenido la oportunidad explícita de revisarla.
 
-**Analogía:** ejecutar un escaneo de seguridad manualmente de vez en cuando es como hacer una revisión de seguridad de un edificio solo cuando alguien se acuerda de programarla, dejando ventanas de tiempo sin ninguna verificación reciente. Integrarlo como gate obligatorio del pipeline es como instalar un sistema de inspección automática que revisa cada nueva construcción antes de que se permita ocuparla, sin excepciones ni dependencia de que un inspector humano lo recuerde cada vez.
+#### Paso 3 · Teoría con analogía
 
-**¿Por qué es importante?** Igual que con CI obligatorio en general, convertir el escaneo de seguridad en una regla técnica del pipeline —no una práctica opcional dependiente de memoria individual— es lo que garantiza consistentemente que ninguna imagen con vulnerabilidades críticas conocidas llegue a producción sin que al menos alguien haya tenido la oportunidad explícita de revisarla y decidir conscientemente.
+**Conceptos clave:** escaneo como gate obligatorio, código de salida distinto de cero, bloqueo de merge por vulnerabilidad crítica.
+
+`trivy image --exit-code 1 --severity CRITICAL` configura Trivy para terminar con código de salida distinto de cero si encuentra al menos una vulnerabilidad crítica, aplicando el mismo mecanismo de "un comando que falla detiene el pipeline" que ya usaste para tests y linting en el Módulo 4. Calibrar el umbral de severidad (`CRITICAL` en vez de incluir también `MEDIUM`/`LOW`) evita la misma fatiga de alertas mal calibradas que ya estudiaste en observabilidad (Módulo 9).
+
+**Analogía:** ejecutar un escaneo manualmente de vez en cuando es como una revisión de seguridad de un edificio solo cuando alguien se acuerda de programarla. Integrarlo como gate obligatorio es instalar un sistema de inspección automática que revisa cada nueva construcción antes de ocuparla, sin depender de que un inspector humano lo recuerde.
 
 **Diagrama:**
 
 ```
-Pipeline de CI
-├── Job "test" (lint, tests)
-├── Job "build" (construye la imagen mi-api:sha123)
-└── Job "escaneo-seguridad"
-     └── trivy image --exit-code 1 --severity CRITICAL mi-api:sha123
-          │
-     ¿vulnerabilidad crítica encontrada?
-          │
-         Sí ──▶ el job falla ──▶ el PR queda bloqueado (CI obligatorio)
-         No ──▶ el pipeline continúa hacia el despliegue
+┌──────────────────────────────────┐
+│ Pipeline CI                          │
+│  ├── job "test" (lint, tests)          │
+│  ├── job "build" (construye imagen)     │
+│  └── job "escaneo-seguridad"              │
+│        trivy --exit-code 1 --severity CRITICAL │
+└──────────┬───────────────────────┘
+           │ ¿crítica encontrada?
+      ┌────┴────┐
+      ▼           ▼
+    Sí          No
+ job falla    continúa hacia despliegue
+ PR bloqueado
 ```
+
+#### Paso 4 · Demostración guiada desde cero
+
+Desde una carpeta vacía crea `academia-devops/src/modulo11/gate-pipeline` reutilizando la imagen vulnerable del Tema 1 dentro de un workflow real:
+
+```bash
+mkdir -p academia-devops/src/modulo11/gate-pipeline/.github/workflows
+cd academia-devops/src/modulo11/gate-pipeline
+cat > .github/workflows/seguridad.yml <<'EOF'
+name: Seguridad
+on: [pull_request]
+jobs:
+  escaneo-seguridad:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Construir imagen
+        run: docker build -t mi-api:${{ github.sha }} .
+      - name: Escanear con Trivy (gate obligatorio)
+        run: |
+          docker run --rm -v /var/run/docker.sock:/var/run/docker.sock \
+            aquasec/trivy:0.55.0 image --exit-code 1 --severity CRITICAL mi-api:${{ github.sha }}
+EOF
+python3 -c "import yaml; d = yaml.safe_load(open('.github/workflows/seguridad.yml')); print('jobs:', list(d['jobs'].keys()))"
+```
+
+**Explicación línea por línea:** la etiqueta `mi-api:${{ github.sha }}` (el hash del commit exacto) asegura trazabilidad exacta entre qué código generó qué imagen y qué resultado de escaneo corresponde a esa combinación específica, en vez de reescanear repetidamente una etiqueta genérica como `latest`.
+
+Simula localmente el mismo gate contra la imagen vulnerable del Tema 1:
+
+```bash
+cd ../escaneo-imagen
+docker run --rm -v /var/run/docker.sock:/var/run/docker.sock \
+  aquasec/trivy:0.55.0 image --exit-code 1 --severity CRITICAL mi-api:1.0
+echo "código de salida: $?"
+```
+
+**Resultado esperado:** si la imagen tiene al menos una CVE crítica, el comando termina con código de salida `1` (visible en `echo $?`), exactamente el mismo mecanismo que haría fallar el job de CI y bloquear el merge del pull request.
+
+**Fallo deliberado:** cambia `--severity CRITICAL` por `--severity LOW` en el mismo comando contra la misma imagen. El comando probablemente también falla, pero ahora por hallazgos de severidad baja que no ameritan bloquear un despliegue — diagnostica revisando el reporte: bloquear por severidad baja generaría fricción constante sin beneficio proporcional, confirmando por qué calibrar el umbral correctamente es una decisión deliberada, no un valor arbitrario.
+
+#### Construcción RutaFlow: workflow de seguridad del proyecto
+
+Documenta en `academia-devops/README.md` que el pipeline de CI de RutaFlow (Módulo 4) incorpora el job `escaneo-seguridad` como requisito obligatorio de rama protegida, exactamente igual que los jobs de test y build.
+
+#### Paso 5 · Práctica guiada
+
+Agrega al mismo workflow un segundo step que solo se ejecute si el escaneo fue exitoso (usando `if: success()`), simulando un step de "publicar imagen" posterior al gate de seguridad. **Pista:** GitHub Actions ejecuta los steps de un job en orden secuencial, deteniéndose en el primero que falla salvo que se indique lo contrario explícitamente.
+
+#### Paso 6 · Práctica independiente
+
+Agrega un segundo umbral de severidad (`HIGH`) que solo genere una advertencia sin bloquear el pipeline (usando `continue-on-error: true` en ese step específico), documentando la diferencia entre un hallazgo que bloquea y uno que solo notifica.
+
+#### Paso 7 · Cierre y evidencia
+
+Ya conviertes el escaneo de seguridad en un gate automático y obligatorio del pipeline, eliminando la dependencia de que alguien lo ejecute manualmente. El siguiente tema aborda cómo gestionar secretos de forma segura dentro de ese mismo pipeline. **Evidencia:** entrega el código de salida distinto de cero del escaneo contra la imagen vulnerable, y explica por qué ese mismo mecanismo bloquearía el pull request en un pipeline real. Fuente oficial: [Trivy — GitHub Actions integration](https://trivy.dev/latest/docs/ecosystem/ci/).
+
+**Errores comunes:** bloquear el pipeline ante cualquier severidad (incluyendo baja/media) generando fricción y fatiga de alertas; escanear una etiqueta genérica como `latest` en vez de la imagen exacta del commit, perdiendo trazabilidad precisa.
+
+**Cuándo no usarlo:** en un pipeline de un proyecto experimental sin intención de desplegarse nunca a un entorno real, el coste de mantener este gate puede no justificarse; se vuelve indispensable en cuanto existe un despliegue real hacia cualquier entorno accesible.
 
 ### Tema 3: Gestión de secretos (Vault, SOPS)
 
+#### Paso 1 · Objetivo y preparación
+
+Al finalizar podrás explicar por qué hardcodear un secreto es un antipatrón y cómo Vault y SOPS resuelven la inyección segura de secretos en runtime.
+
+**Conocimiento previo:** `.env` y variables de entorno (Módulo 3 de este track).
+
+#### Paso 2 · Contexto y caso real
+
+**¿Por qué es importante?** Los secretos hardcodeados o mal gestionados son, de forma consistente, una de las causas más citadas de incidentes de seguridad reales; adoptar desde el inicio la disciplina de nunca hardcodear secretos es una práctica de bajo coste de adopción temprana y de alto coste de corrección tardía.
+
+#### Paso 3 · Teoría con analogía
+
 **Conceptos clave:** secreto hardcodeado (antipatrón), inyección en runtime, cifrado en reposo, auditoría de acceso.
 
-Hardcodear un secreto directamente en el código fuente (`const apiKey = "sk-abc123";`) es uno de los antipatrones de seguridad más comunes y más fácilmente evitables: ese valor queda expuesto en el historial de control de versiones para siempre (recuperable incluso después de eliminarlo en un commit posterior, exactamente el mismo problema que estudiaste con `.env` filtrado en el Módulo 3 de este track), visible para cualquiera con acceso de lectura al repositorio, y sin ningún registro de auditoría de quién lo consultó o cuándo.
+Hardcodear un secreto directamente en el código (`const apiKey = "sk-abc123";`) queda expuesto en el historial de Git para siempre, recuperable incluso después de eliminarlo en un commit posterior, exactamente el mismo problema que estudiaste con `.env` filtrado en el Módulo 3. La alternativa correcta es inyectarlo en runtime desde una fuente externa (`process.env.API_KEY`, poblada por el sistema de despliegue). Vault cifra los secretos en reposo, controla el acceso mediante políticas (el mismo principio de mínimo privilegio de IAM/RBAC) y mantiene auditoría de quién accedió a qué secreto y cuándo. SOPS cifra archivos completos de configuración para versionarlos de forma segura directamente en Git, descifrándose solo en el momento y lugar correctos.
 
-La alternativa correcta es inyectar secretos en tiempo de ejecución desde una fuente externa gestionada específicamente para ese propósito (`const apiKey = process.env.API_KEY;`, leyendo de una variable de entorno poblada externamente por el sistema de despliegue, no hardcodeada en el código), combinado con una herramienta dedicada de gestión de secretos que provee ese valor de forma segura al proceso en el momento exacto en que lo necesita. Vault (HashiCorp) es una de las herramientas de gestión de secretos más adoptadas: cifra los secretos en reposo, controla el acceso mediante políticas específicas (aplicando el mismo principio de mínimo privilegio que ya conoces de IAM en el track Cloud y de RBAC en Kubernetes), y mantiene un registro de auditoría detallado de exactamente quién o qué proceso accedió a cada secreto y cuándo.
-
-SOPS (Secrets OPerationS) resuelve un problema relacionado pero distinto: permite cifrar archivos completos de configuración (que pueden contener una mezcla de valores sensibles y no sensibles) de forma que puedan versionarse de forma segura directamente en un repositorio Git —a diferencia de la práctica de excluir completamente `.env` del control de versiones que viste en el Módulo 3—, descifrándose automáticamente solo en el momento y lugar correctos (por ejemplo, durante el despliegue, usando una clave de descifrado gestionada de forma separada y más restringida). Esto habilita un flujo de "todo como código, incluso la configuración cifrada", manteniendo trazabilidad completa de cambios de configuración en el historial de Git sin exponer los valores reales en texto plano.
-
-La elección entre depender exclusivamente de los secretos nativos de la plataforma (como los Secrets de Kubernetes, cuya limitación real de seguridad ya estudiaste en el módulo de Kubernetes de este track) y una herramienta dedicada como Vault o SOPS depende de cuán crítica sea la protección de esos secretos específicos: para la mayoría de los proyectos con requisitos de seguridad serios, complementar los mecanismos nativos de la plataforma con una herramienta dedicada de gestión de secretos, en vez de depender únicamente de la codificación base64 no cifrada de un Secret nativo de Kubernetes, es la práctica recomendada.
-
-**Analogía:** hardcodear un secreto en el código es como escribir la combinación de tu caja fuerte directamente en un cartel pegado en la puerta de tu casa, visible para cualquiera que pase por ahí y quede registrado permanentemente en cualquier fotografía que alguien tome de esa puerta. Vault es como una caja fuerte profesional gestionada por una empresa de seguridad especializada, que registra exactamente quién solicitó acceso a qué contenido y cuándo, entregando la combinación solo a quienes están autorizados y solo en el momento exacto en que la necesitan.
-
-**¿Por qué es importante?** Los secretos hardcodeados o mal gestionados son, de forma consistente, una de las causas más citadas de incidentes de seguridad reales en la industria del software; adoptar desde el principio de un proyecto la disciplina de nunca hardcodear secretos y de usar mecanismos de gestión adecuados es una de las prácticas de seguridad de menor coste de adopción temprana y de mayor coste de corrección tardía, después de que un secreto ya se haya filtrado.
+**Analogía:** hardcodear un secreto es como escribir la combinación de tu caja fuerte en un cartel pegado en tu puerta. Vault es una caja fuerte profesional que registra exactamente quién solicitó acceso y cuándo, entregando la combinación solo a quienes están autorizados.
 
 **Diagrama:**
 
 ```
-NUNCA:                                    SIEMPRE:
-const apiKey = "sk-abc123";               const apiKey = process.env.API_KEY;
-(hardcodeado, expuesto en el                     │
- historial de Git para siempre)            (inyectado en runtime desde
-                                             Vault/SOPS/gestor de secretos,
-                                             con cifrado y auditoría de acceso)
+┌── NUNCA ──────────────────────┐   ┌── SIEMPRE ──────────────────────┐
+│ const apiKey = "sk-abc123";        │   │ const apiKey = process.env.API_KEY; │
+│ hardcodeado, expuesto en Git para siempre │   │ inyectado en runtime desde Vault/SOPS,  │
+│                                              │   │ con cifrado y auditoría de acceso        │
+└─────────────────────────┘   └─────────────────────────┘
 ```
+
+#### Paso 4 · Demostración guiada desde cero
+
+Desde una carpeta vacía crea `academia-devops/src/modulo11/gestion-secretos` y levanta Vault en modo desarrollo:
+
+```bash
+mkdir -p academia-devops/src/modulo11/gestion-secretos
+cd academia-devops/src/modulo11/gestion-secretos
+docker run -d --name vault-dev --cap-add=IPC_LOCK \
+  -e 'VAULT_DEV_ROOT_TOKEN_ID=token-academia' -p 8200:8200 hashicorp/vault:1.17
+sleep 5
+export VAULT_ADDR='http://127.0.0.1:8200'
+export VAULT_TOKEN='token-academia'
+docker exec -e VAULT_ADDR -e VAULT_TOKEN vault-dev \
+  vault kv put secret/mi-api api_key="sk-real-gestionado-por-vault"
+```
+
+**Explicación línea por línea:** `VAULT_DEV_ROOT_TOKEN_ID` fija un token conocido solo para este laboratorio (Vault en producción nunca usaría un token fijo así); `vault kv put` almacena el secreto cifrado en reposo dentro de Vault, en vez de escribirlo en ningún archivo de código versionado.
+
+Lee el secreto de vuelta simulando cómo la aplicación lo obtendría en runtime, y confirma que no existe en ningún archivo del proyecto:
+
+```bash
+docker exec -e VAULT_ADDR -e VAULT_TOKEN vault-dev vault kv get -field=api_key secret/mi-api
+grep -r "sk-real-gestionado-por-vault" . 2>/dev/null || echo "no encontrado en ningún archivo versionado"
+```
+
+**Resultado esperado:** el comando `vault kv get` recupera exitosamente el valor del secreto en runtime; el `grep` sobre los archivos del proyecto no encuentra ninguna coincidencia, confirmando que el secreto nunca existió como texto plano en ningún archivo versionable.
+
+**Fallo deliberado:** intenta leer el mismo secreto sin exportar `VAULT_TOKEN` (`docker exec vault-dev vault kv get -field=api_key secret/mi-api`, sin las variables `-e`). El comando falla con un error de permiso/autenticación — diagnostica confirmando que Vault exige un token válido para cada acceso, quedando ese intento (exitoso o fallido) registrado en su auditoría, exactamente el control de acceso que un secreto hardcodeado en texto plano nunca tendría.
+
+#### Construcción RutaFlow: convención de secretos del proyecto
+
+Documenta en `academia-devops/README.md` que ningún servicio de RutaFlow debe contener un secreto hardcodeado; todos se inyectan vía `process.env` poblado externamente por Vault (entornos con requisitos de auditoría) o por los Secrets nativos de la plataforma de CI (casos más simples).
+
+#### Paso 5 · Práctica guiada
+
+Almacena un segundo secreto distinto (por ejemplo, una contraseña de base de datos simulada) bajo una ruta distinta (`secret/mi-api-db`) y confirma que puedes leer ambos secretos de forma independiente. **Pista:** Vault organiza los secretos en rutas jerárquicas, similar a un sistema de archivos.
+
+#### Paso 6 · Práctica independiente
+
+Detén el contenedor `vault-dev` (`docker stop vault-dev`) e intenta leer el secreto nuevamente; documenta qué comportamiento esperarías de una aplicación real si Vault estuviera temporalmente inaccesible durante su arranque, y por qué eso es preferible a que la aplicación tuviera el secreto hardcodeado como alternativa de respaldo.
+
+#### Paso 7 · Cierre y evidencia
+
+Ya distingues por qué un secreto hardcodeado es un antipatrón grave y cómo Vault provee inyección segura con auditoría. El siguiente tema aplica el mismo principio de mínimo privilegio a las credenciales del propio pipeline de CI/CD. **Evidencia:** entrega el resultado exitoso de `vault kv get`, el `grep` vacío confirmando ausencia del secreto en archivos versionados, y el fallo de autenticación al omitir el token. Fuente oficial: [HashiCorp Vault — Secrets Engines](https://developer.hashicorp.com/vault/docs/secrets).
+
+**Errores comunes:** hardcodear un secreto "temporalmente" durante desarrollo y olvidar removerlo antes de hacer commit; almacenar el token raíz de Vault (u otro secreto maestro) con el mismo nivel de protección que un secreto de aplicación individual.
+
+**Cuándo no usarlo:** para un proyecto personal sin ningún dato ni credencial real sensible, levantar Vault completo puede ser una sobre-ingeniería; los Secrets nativos de la plataforma de CI/CD suelen ser suficientes en ese contexto.
 
 ### Tema 4: Menor privilegio en CI/CD
 
-**Conceptos clave:** token de pipeline, permisos acotados por tarea, radio de exposición ante filtración.
+#### Paso 1 · Objetivo y preparación
 
-El token o las credenciales que un pipeline de CI/CD usa para realizar sus tareas —desplegar a un entorno, publicar una imagen a un registry, aplicar cambios de infraestructura con Terraform— son, en la práctica, uno de los activos más sensibles de todo el sistema de entrega de software, precisamente porque un pipeline automatizado se ejecuta con mucha frecuencia y, si sus credenciales se filtran (por un error de configuración, una dependencia comprometida, o una vulnerabilidad en la propia plataforma de CI), el daño potencial depende directamente de cuán amplios sean los permisos que ese token específico tiene concedidos.
+Al finalizar podrás acotar los permisos de un token de pipeline al mínimo necesario para su tarea específica, y explicar por qué esto limita el daño ante una filtración.
 
-Aplicar mínimo privilegio a estas credenciales de pipeline sigue exactamente el mismo principio que ya estudiaste en profundidad con IAM en el track Cloud y con RBAC en el módulo de Kubernetes de este track: un token usado específicamente para desplegar una aplicación no debería tener permisos de administrador sobre toda la infraestructura de la organización, sino únicamente los permisos exactos y mínimos necesarios para esa tarea específica y acotada (por ejemplo, permiso para actualizar el Deployment de una aplicación específica en un namespace específico, no permiso irrestricto sobre el clúster completo).
+**Conocimiento previo:** IAM (track Cloud) y RBAC de Kubernetes (Módulo 6 de este track).
 
-Un patrón cada vez más adoptado para reducir aún más este riesgo es evitar por completo credenciales de larga duración almacenadas como secretos del pipeline, en favor de identidades federadas de corta duración: la plataforma de CI se autentica ante el proveedor de nube usando un mecanismo de confianza federada (por ejemplo, OpenID Connect), obteniendo credenciales temporales válidas solo durante la ejecución específica de ese pipeline, sin necesidad de almacenar ninguna credencial de larga duración como secreto en la configuración de CI en absoluto; este enfoque elimina directamente el riesgo de que un secreto de larga duración almacenado en la plataforma de CI se filtre, porque simplemente no existe ninguna credencial permanente que filtrar.
+#### Paso 2 · Contexto y caso real
 
-Revisar periódicamente qué permisos tienen realmente concedidos los tokens y credenciales usados por cada pipeline, y retirar cualquier permiso concedido "por si acaso" que no se use realmente en la práctica, es la misma disciplina de auditoría periódica que ya estudiaste como buena práctica de IAM en el track Cloud, aplicada ahora específicamente al contexto de credenciales de automatización de CI/CD.
+**¿Por qué es importante?** Los pipelines de CI/CD son cada vez más un objetivo atractivo de ataques dirigidos precisamente porque suelen tener acceso amplio y automatizado a infraestructura crítica; aplicar mínimo privilegio a sus credenciales es una de las defensas más directas contra que un pipeline comprometido se convierta en la puerta de entrada a un compromiso mucho más amplio.
 
-**Analogía:** el token de un pipeline de CI/CD es como la llave maestra que le das a un servicio de limpieza que entra a tu oficina todas las noches: si le das una llave que abre absolutamente todas las puertas del edificio completo, incluyendo la caja fuerte y los archivos confidenciales de otros departamentos, y esa llave se pierde o se copia sin autorización, el daño potencial es enorme. Si en cambio le das una llave que solo abre las puertas específicas que necesita limpiar, el riesgo de una llave perdida queda acotado exactamente a esas áreas específicas.
+#### Paso 3 · Teoría con analogía
 
-**¿Por qué es importante?** Los pipelines de CI/CD son, cada vez más, un objetivo atractivo de ataques dirigidos precisamente porque suelen tener acceso amplio y automatizado a infraestructura crítica; aplicar mínimo privilegio consistentemente a sus credenciales es una de las defensas más directas y efectivas contra el escenario en que un pipeline comprometido se convierte en la puerta de entrada a un compromiso mucho más amplio de toda la infraestructura de una organización.
+**Conceptos clave:** token de pipeline, permisos acotados por tarea, radio de exposición ante filtración, identidad federada de corta duración.
+
+El token que un pipeline usa para desplegar, publicar imágenes o aplicar Terraform es uno de los activos más sensibles del sistema de entrega: si se filtra, el daño potencial depende directamente de cuán amplios sean sus permisos concedidos. Aplicar mínimo privilegio sigue el mismo principio que IAM y RBAC: un token de despliegue no debería tener permisos de administrador sobre toda la infraestructura, solo los permisos exactos para su tarea acotada. Un patrón más avanzado usa identidades federadas de corta duración (OIDC) en vez de credenciales de larga duración almacenadas como secretos.
+
+**Analogía:** el token de un pipeline es como la llave maestra de un servicio de limpieza: una llave que abre todo el edificio, si se pierde o se copia, expone todo; una llave acotada solo a las puertas necesarias limita el riesgo a esas áreas específicas.
 
 **Diagrama:**
 
 ```
-Token del pipeline CON permisos amplios     Token del pipeline CON mínimo privilegio
-┌─────────────────────────┐              ┌─────────────────────────┐
-│ Permisos de administrador     │              │ Solo: actualizar el          │
-│ sobre TODA la infraestructura   │              │ Deployment "mi-api" en el     │
-└─────────────────────────┘              │ namespace "produccion"          │
-   Si se filtra: daño MÁXIMO                └─────────────────────────┘
-                                              Si se filtra: daño ACOTADO
+┌── Token con permisos amplios ────┐   ┌── Token con mínimo privilegio ──────┐
+│ Administrador de TODA la infra      │   │ Solo: actualizar Deployment "mi-api" │
+│ Si se filtra: daño MÁXIMO             │   │ en namespace "produccion"                │
+└─────────────────────────┘   │ Si se filtra: daño ACOTADO                  │
+                                        └─────────────────────────────┘
 ```
+
+#### Paso 4 · Demostración guiada desde cero
+
+Desde una carpeta vacía crea `academia-devops/src/modulo11/minimo-privilegio` y compara dos RoleBinding de Kubernetes (retomando el RBAC del Módulo 7) representando un token amplio frente a uno acotado:
+
+```bash
+mkdir -p academia-devops/src/modulo11/minimo-privilegio
+cd academia-devops/src/modulo11/minimo-privilegio
+cat > pipeline-amplio.yaml <<'EOF'
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: pipeline-cluster-admin
+subjects:
+  - kind: ServiceAccount
+    name: pipeline-ci
+    namespace: default
+roleRef:
+  kind: ClusterRole
+  name: cluster-admin
+  apiGroup: rbac.authorization.k8s.io
+EOF
+cat > pipeline-acotado.yaml <<'EOF'
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: pipeline-desplegar-mi-api
+  namespace: produccion
+rules:
+  - apiGroups: ["apps"]
+    resources: ["deployments"]
+    resourceNames: ["mi-api"]
+    verbs: ["get", "update", "patch"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: pipeline-desplegar-mi-api-binding
+  namespace: produccion
+subjects:
+  - kind: ServiceAccount
+    name: pipeline-ci
+    namespace: default
+roleRef:
+  kind: Role
+  name: pipeline-desplegar-mi-api
+  apiGroup: rbac.authorization.k8s.io
+EOF
+python3 -c "
+import yaml
+docs_amplio = list(yaml.safe_load_all(open('pipeline-amplio.yaml')))
+docs_acotado = list(yaml.safe_load_all(open('pipeline-acotado.yaml')))
+print('amplio:', docs_amplio[0]['roleRef']['name'])
+print('acotado, verbos:', docs_acotado[0]['rules'][0]['verbs'], 'recurso:', docs_acotado[0]['rules'][0]['resourceNames'])
+"
+```
+
+**Explicación línea por línea:** `pipeline-amplio.yaml` vincula el ServiceAccount `pipeline-ci` al `ClusterRole` predefinido `cluster-admin` (control total del clúster); `pipeline-acotado.yaml` define un `Role` que solo permite `get/update/patch` sobre el `Deployment` específico llamado `mi-api`, dentro del namespace `produccion` únicamente.
+
+Simula la verificación de permisos que un clúster real haría con `kubectl auth can-i` (documentando el resultado esperado ya que no hay clúster real disponible en este entorno):
+
+```bash
+echo "kubectl auth can-i delete namespaces --as=system:serviceaccount:default:pipeline-ci"
+echo "-> con pipeline-amplio.yaml: yes (cluster-admin permite todo)"
+echo "-> con pipeline-acotado.yaml: no (el Role solo permite deployments específicos)"
+```
+
+**Resultado esperado:** con el binding acotado, el token del pipeline solo puede actualizar el Deployment `mi-api` en `produccion`; cualquier otra acción (borrar namespaces, leer Secrets de otros servicios, modificar otros Deployments) queda explícitamente denegada por RBAC.
+
+**Fallo deliberado:** intenta usar el token acotado (`pipeline-acotado.yaml`) para una tarea fuera de su alcance, como actualizar un Deployment llamado `otro-servicio` en vez de `mi-api` (cambia mentalmente `resourceNames` para verificarlo). La API de Kubernetes denegaría la petición con un error de permisos — diagnostica confirmando que el `resourceNames` acota el Role a un recurso específico por nombre, no a todo el tipo de recurso.
+
+#### Construcción RutaFlow: permisos del pipeline del proyecto
+
+Documenta en `academia-devops/README.md` que el ServiceAccount `pipeline-ci` de RutaFlow tiene permisos exclusivamente sobre los Deployments de RutaFlow en el namespace correspondiente a cada entorno, nunca `cluster-admin`, siguiendo exactamente el patrón de `pipeline-acotado.yaml`.
+
+#### Paso 5 · Práctica guiada
+
+Agrega un segundo recurso permitido al `Role` acotado (por ejemplo, permiso de lectura sobre `pods` para poder verificar el estado del despliegue tras aplicarlo) y confirma que sigues sin otorgar ningún permiso de escritura sobre recursos no relacionados. **Pista:** agrega permisos incrementalmente, solo cuando confirmes que un step específico del pipeline realmente los necesita.
+
+#### Paso 6 · Práctica independiente
+
+Investiga y documenta en una frase cómo OIDC permite a un pipeline de GitHub Actions obtener credenciales temporales de un proveedor de nube sin almacenar ningún secreto de larga duración en la configuración de CI, comparando ese enfoque con almacenar una clave de acceso permanente como secreto.
+
+#### Paso 7 · Cierre y evidencia
+
+Ya acotas los permisos de un token de pipeline al mínimo necesario, limitando el radio de daño ante una filtración. El siguiente tema cubre el inventario de dependencias (SBOM) que complementa este conjunto de defensas de la cadena de suministro. **Evidencia:** entrega la comparación entre el `ClusterRoleBinding` amplio y el `Role`/`RoleBinding` acotado, explicando qué acción específica permite uno y deniega el otro. Fuente oficial: [Kubernetes — Using RBAC Authorization](https://kubernetes.io/docs/reference/access-authn-authz/rbac/).
+
+**Errores comunes:** conceder `cluster-admin` "temporalmente para probar" y olvidar revertirlo; no revisar periódicamente si los permisos concedidos siguen siendo realmente necesarios a medida que el pipeline evoluciona.
+
+**Cuándo no usarlo:** en un clúster de laboratorio personal de un solo usuario sin ningún dato sensible, acotar permisos con este nivel de detalle aporta poco valor práctico inmediato; se vuelve indispensable en cualquier entorno compartido o de producción real.
 
 ### Tema 5: SBOM y supply chain security
 
+#### Paso 1 · Objetivo y preparación
+
+Al finalizar podrás generar un SBOM de una imagen propia y explicar cómo acelera la respuesta ante una vulnerabilidad reportada en el ecosistema.
+
+**Conocimiento previo:** Tema 1 de este módulo (Trivy).
+
+#### Paso 2 · Contexto y caso real
+
+**¿Por qué es importante?** A medida que la cadena de suministro de software se vuelve un vector de ataque cada vez más relevante, mantener un inventario preciso mediante SBOMs generados automáticamente permite responder con velocidad ante vulnerabilidades reportadas en el ecosistema más amplio, en vez de depender de auditorías manuales lentas exactamente cuando la velocidad de respuesta más importa.
+
+#### Paso 3 · Teoría con analogía
+
 **Conceptos clave:** SBOM (Software Bill of Materials), cadena de suministro de software, respuesta rápida ante vulnerabilidades de terceros.
 
-Un SBOM (Software Bill of Materials) es un inventario completo y estructurado de exactamente qué componentes de software —incluyendo cada dependencia directa e indirecta, con su versión exacta— forma parte de una aplicación específica en un momento dado. Generar un SBOM se ha convertido en una práctica cada vez más estándar (e incluso, en ciertos contextos regulados o gubernamentales, obligatoria contractualmente) precisamente porque el software moderno rara vez se construye desde cero: depende de una cadena extensa de librerías de terceros, cada una con sus propias dependencias adicionales, formando lo que se conoce como la cadena de suministro de software (software supply chain) de una aplicación.
+Un SBOM es un inventario completo y estructurado de exactamente qué componentes —incluyendo dependencias directas e indirectas, con versión exacta— forman parte de una aplicación en un momento dado. Sin un SBOM ya generado, responder "¿usamos esa librería vulnerable, y en qué versión?" puede requerir una auditoría manual de días; con un SBOM generado automáticamente en cada build, esa pregunta se responde en minutos.
 
-El valor práctico de un SBOM se hace evidente cuando se reporta públicamente una vulnerabilidad crítica en una librería específica ampliamente usada en el ecosistema (un evento que ocurre con relativa frecuencia en la industria): sin un SBOM ya generado y actualizado, responder a la pregunta "¿usamos esa librería vulnerable en alguno de nuestros sistemas, y en qué versión específica?" puede requerir una auditoría manual que tome días, revisando manualmente las dependencias de cada proyecto de la organización. Con un SBOM generado automáticamente como parte del pipeline de CI/CD para cada build, esa misma pregunta se responde en minutos con una simple consulta sobre los SBOMs ya generados y almacenados, identificando exactamente qué sistemas están afectados y con qué urgencia deben actualizarse.
-
-La seguridad de la cadena de suministro de software va más allá de solo mantener un inventario: incluye verificar la integridad y procedencia de cada componente que se incorpora a una aplicación (confirmando que una dependencia descargada no fue alterada maliciosamente en tránsito o en el propio repositorio de paquetes de origen), y ha ganado atención creciente en la industria tras varios incidentes de alto perfil donde atacantes comprometieron dependencias populares ampliamente utilizadas, afectando indirectamente a un número enorme de aplicaciones que las consumían sin saberlo, precisamente el tipo de riesgo que un inventario preciso (SBOM) y una verificación de integridad ayudan a mitigar y a responder rápidamente cuando ocurre.
-
-Generar un SBOM automáticamente como parte del pipeline (muchas herramientas de escaneo, incluyendo Trivy y Snyk mencionadas en el Tema 1, pueden generar un SBOM como parte del mismo proceso de escaneo) y almacenarlo junto con cada versión desplegada de la aplicación es una práctica de bajo coste adicional (aprovechando herramientas que probablemente ya estás usando para el escaneo de vulnerabilidades) que proporciona un beneficio significativo de capacidad de respuesta rápida ante futuras vulnerabilidades reportadas en el ecosistema.
-
-**Analogía:** un SBOM es como la lista completa y precisa de ingredientes de un producto alimenticio empaquetado, incluyendo no solo los ingredientes principales sino también los aditivos y componentes de los propios ingredientes compuestos. Si una autoridad sanitaria anuncia que un aditivo específico de un proveedor concreto está contaminado, un fabricante con listas de ingredientes precisas y actualizadas de todos sus productos puede responder en minutos exactamente qué productos suyos contienen ese aditivo específico, mientras que un fabricante sin ese registro preciso tendría que revisar manualmente las fórmulas de cada producto individual, un proceso mucho más lento.
-
-**¿Por qué es importante?** A medida que la cadena de suministro de software se vuelve un vector de ataque cada vez más relevante en la industria, mantener un inventario preciso y actualizado de dependencias mediante SBOMs generados automáticamente es lo que permite a una organización responder con velocidad y precisión ante vulnerabilidades reportadas en el ecosistema más amplio, en vez de depender de auditorías manuales lentas exactamente en el momento en que la velocidad de respuesta más importa.
+**Analogía:** un SBOM es la lista completa de ingredientes de un producto empaquetado, incluyendo aditivos de sus propios componentes. Si una autoridad anuncia que un aditivo específico está contaminado, un fabricante con listas precisas responde en minutos qué productos lo contienen.
 
 **Diagrama:**
 
 ```
-Pipeline genera SBOM en cada build
-┌─────────────────────────────────┐
-│ mi-api v1.2.3                       │
-│  ├── express@4.18.2                  │
-│  ├── lodash@4.17.21                    │
-│  └── (todas las dependencias, directas │
-│       e indirectas, con versión exacta) │
-└─────────────────────────────────┘
-        │
-   Se reporta una CVE crítica en lodash@4.17.21
-        │
-   Consulta rápida a los SBOMs almacenados
-        │
-   ──▶ "Sí, mi-api v1.2.3 usa esa versión exacta" (minutos, no días)
+┌── SBOM generado en cada build ─────────┐
+│ mi-api v1.2.3                              │
+│  ├── express@4.18.2                          │
+│  └── lodash@4.17.15 (versión con CVE)          │
+└──────────┬──────────────────────────┘
+           │ se reporta CVE crítica en lodash@4.17.15
+           ▼
+   Consulta rápida a SBOMs almacenados
+           │
+   ──▶ "mi-api v1.2.3 usa esa versión exacta" (minutos)
 ```
+
+#### Paso 4 · Demostración guiada desde cero
+
+Desde una carpeta vacía crea un proyecto nuevo `academia-devops/src/modulo11/sbom-demo` reutilizando la imagen ya construida `mi-api:1.0` (Tema 1) como base para generar su inventario:
+
+```bash
+mkdir -p academia-devops/src/modulo11/sbom-demo
+cd academia-devops/src/modulo11/sbom-demo
+docker run --rm -v /var/run/docker.sock:/var/run/docker.sock -v "$(pwd)":/salida \
+  aquasec/trivy:0.55.0 image --format cyclonedx --output /salida/sbom.json mi-api:1.0
+python3 -c "
+import json
+sbom = json.load(open('sbom.json'))
+componentes = [c['name'] + '@' + c.get('version','?') for c in sbom.get('components', [])]
+print('total componentes:', len(componentes))
+print('lodash presente:', any('lodash' in c for c in componentes))
+"
+```
+
+**Explicación línea por línea:** `--format cyclonedx` genera el SBOM en el formato estándar CycloneDX, `--output /salida/sbom.json` lo escribe como archivo estructurado versionable, y el script Python lo parsea confirmando cuántos componentes fueron inventariados y si `lodash` aparece listado con su versión exacta.
+
+Simula la respuesta rápida ante una nueva CVE reportada, consultando el SBOM ya generado en vez de re-escanear todo:
+
+```bash
+python3 -c "
+import json
+sbom = json.load(open('sbom.json'))
+cve_reportada_en = 'lodash'
+afectados = [c['name'] + '@' + c.get('version','?') for c in sbom.get('components', []) if cve_reportada_en in c['name']]
+print('Componentes afectados por una CVE en', cve_reportada_en, ':', afectados)
+"
+```
+
+**Resultado esperado:** la consulta sobre el SBOM ya generado identifica en segundos que `mi-api` usa `lodash@4.17.15`, sin necesidad de re-escanear la imagen completa ni auditar manualmente el `package.json`.
+
+**Fallo deliberado:** elimina el archivo `sbom.json` y ejecuta la misma consulta de "componentes afectados". El script falla con un error de archivo no encontrado — diagnostica confirmando que la velocidad de respuesta depende enteramente de tener el SBOM ya generado y almacenado de antemano; generarlo reactivamente después de que ya se reportó la vulnerabilidad pierde la ventaja de velocidad que es el propósito central de esta práctica.
+
+#### Construcción RutaFlow: inventario de dependencias del proyecto
+
+Documenta en `academia-devops/README.md` que el pipeline de CI de RutaFlow genera un `sbom.json` por cada imagen construida y lo almacena junto con esa versión desplegada, habilitando consultas rápidas ante futuras vulnerabilidades reportadas.
+
+#### Paso 5 · Práctica guiada
+
+Genera un segundo SBOM después de actualizar `lodash` a una versión reciente (Tema 1, Paso 5) y compara ambos archivos `sbom.json` para confirmar que la versión del componente cambió. **Pista:** usa el mismo script Python de conteo de componentes sobre ambos archivos y compara sus versiones.
+
+#### Paso 6 · Práctica independiente
+
+Investiga qué formato de SBOM (CycloneDX o SPDX) usa o prefiere alguna herramienta que ya conozcas, y documenta en una frase la diferencia práctica principal entre ambos formatos estándar.
+
+#### Paso 7 · Cierre y evidencia
+
+Ya generas un inventario preciso de dependencias que acelera drásticamente la respuesta ante vulnerabilidades reportadas en el ecosistema. El siguiente tema distingue tres categorías de análisis de seguridad que se complementan con todo lo visto hasta ahora. **Evidencia:** entrega el resultado de la consulta rápida identificando `lodash@4.17.15` en el SBOM, y el fallo al consultar un SBOM que no fue generado de antemano. Fuente oficial: [CycloneDX — Software Bill of Materials Standard](https://cyclonedx.org/).
+
+**Errores comunes:** generar el SBOM solo una vez de forma manual en vez de automatizarlo en cada build; almacenar el SBOM en un lugar no vinculado a la versión específica de la imagen que describe, perdiendo trazabilidad.
+
+**Cuándo no usarlo:** para un script personal de un solo uso sin dependencias externas relevantes, generar un SBOM formal aporta poco valor; su beneficio aparece con aplicaciones desplegadas y mantenidas en el tiempo con dependencias reales.
 
 ### Tema 6: SAST, DAST y SCA — diferencias y herramientas
 
-**Conceptos clave:** SAST (análisis estático), DAST (análisis dinámico), SCA (análisis de composición de software), OWASP ZAP, Burp Suite.
+#### Paso 1 · Objetivo y preparación
 
-SAST (Static Application Security Testing) analiza el código fuente de una aplicación sin ejecutarlo, buscando patrones de código potencialmente vulnerables (por ejemplo, construcción insegura de consultas SQL susceptibles a inyección, uso de funciones criptográficas débiles, o manejo inseguro de entrada de usuario) directamente a partir del texto del código, típicamente integrado como un paso más del pipeline de CI, de forma similar a como integraste el linting en el Módulo 4 de este track. Su ventaja principal es detectar problemas potenciales muy temprano en el ciclo de desarrollo, incluso antes de que el código se ejecute en ningún entorno; su limitación es que puede generar falsos positivos (patrones que parecen sospechosos pero no son realmente explotables en el contexto específico de esa aplicación) y no puede detectar vulnerabilidades que solo se manifiestan en el comportamiento real en tiempo de ejecución.
+Al finalizar podrás distinguir qué detecta cada una de SAST, DAST y SCA, y en qué punto del ciclo de desarrollo integrar cada una.
 
-DAST (Dynamic Application Security Testing) analiza una aplicación ya en ejecución, típicamente enviándole peticiones automatizadas diseñadas específicamente para detectar comportamientos vulnerables observables desde fuera (intentos de inyección, manejo incorrecto de autenticación, exposición de información sensible en respuestas), de forma análoga a cómo un atacante real interactuaría con la aplicación. Herramientas como OWASP ZAP (de código abierto y gratuita) o Burp Suite (con una edición gratuita limitada y una versión profesional de pago mucho más completa) son las más adoptadas para este tipo de análisis. La ventaja de DAST es que detecta problemas reales observables en el comportamiento efectivo de la aplicación en ejecución, incluyendo interacciones complejas entre componentes que SAST, al analizar solo código estático aislado, no puede anticipar; su limitación es que solo puede probar lo que efectivamente se ejecuta y es alcanzable durante esa sesión de pruebas específica, y típicamente se ejecuta más tarde en el ciclo de desarrollo (contra un entorno de pruebas ya desplegado), no directamente sobre el código fuente antes de ejecutarlo.
+**Conocimiento previo:** Temas 1 y 5 de este módulo (SCA vía Trivy, SBOM); linting en CI (Módulo 4).
 
-SCA (Software Composition Analysis) es, en esencia, el mismo tipo de análisis que ya estudiaste con Trivy y Snyk en el Tema 1: analiza las dependencias de terceros de una aplicación (no el código propio escrito por el equipo) buscando vulnerabilidades conocidas en esas dependencias específicas y sus versiones exactas, siendo la categoría de análisis que directamente habilita también la generación de un SBOM (Tema 5), dado que ambos requieren el mismo inventario preciso de dependencias como base de su funcionamiento.
+#### Paso 2 · Contexto y caso real
 
-Estas tres categorías —SAST sobre código propio estático, DAST sobre comportamiento en ejecución, SCA sobre dependencias de terceros— son complementarias, no sustitutas entre sí: un programa de seguridad de aplicaciones maduro típicamente integra las tres en distintos puntos del ciclo de desarrollo (SAST y SCA tempranamente en CI, sobre cada pull request; DAST más tarde, contra un entorno de pruebas ya desplegado), reconociendo que cada una detecta un tipo de problema que las otras dos, por su propio diseño y alcance, no pueden detectar.
+**¿Por qué es importante?** Ninguna de las tres categorías por sí sola cubre todo el espectro de riesgos de seguridad de una aplicación moderna; entender qué detecta cada una permite diseñar un programa de seguridad completo que combine las tres en los puntos correctos del ciclo de desarrollo.
 
-**Analogía:** SAST es como revisar los planos arquitectónicos de un edificio antes de construirlo, buscando errores de diseño estructural evidentes en el papel. DAST es como poner a prueba el edificio ya construido con inspectores que intentan activamente forzar puertas, probar la resistencia de ventanas, y buscar puntos débiles reales en la estructura terminada, algo que no se puede evaluar completamente solo mirando los planos. SCA es como verificar la procedencia y calidad certificada de cada material de construcción específico (ladrillos, cableado) comprado a proveedores externos, en vez de evaluar el diseño propio del edificio en sí.
+#### Paso 3 · Teoría con analogía
 
-**¿Por qué es importante?** Ninguna de las tres categorías por sí sola cubre todo el espectro de riesgos de seguridad de una aplicación moderna; entender qué detecta específicamente cada una permite diseñar un programa de seguridad de aplicaciones completo que combine las tres en los puntos correctos del ciclo de desarrollo, en vez de depender de una sola categoría de análisis y asumir erróneamente que eso cubre todos los riesgos relevantes.
+**Conceptos clave:** SAST (análisis estático), DAST (análisis dinámico), SCA (análisis de composición de software), OWASP ZAP.
+
+SAST analiza el código fuente sin ejecutarlo, buscando patrones potencialmente vulnerables (inyección SQL, criptografía débil), típicamente integrado en CI como el linting del Módulo 4; puede generar falsos positivos y no detecta problemas que solo se manifiestan en ejecución real. DAST analiza una aplicación ya en ejecución enviándole peticiones automatizadas diseñadas para detectar comportamientos vulnerables (OWASP ZAP es la herramienta abierta más adoptada); detecta problemas reales de comportamiento pero solo prueba lo alcanzable durante esa sesión. SCA es el mismo análisis que Trivy/Snyk del Tema 1, sobre dependencias de terceros, la misma base que habilita el SBOM del Tema 5.
+
+**Analogía:** SAST es revisar los planos arquitectónicos antes de construir. DAST es poner a prueba el edificio ya construido con inspectores forzando puertas y ventanas. SCA es verificar la procedencia certificada de cada material comprado a proveedores externos.
 
 **Diagrama:**
 
 ```
-SAST                          DAST                         SCA
-(código propio,                (aplicación en ejecución,     (dependencias de
- sin ejecutar,                  probada activamente            terceros, versiones
- temprano en CI)                 como un atacante real)          exactas conocidas)
-     │                                │                              │
-     ▼                                ▼                              ▼
-Errores de código             Vulnerabilidades de           Vulnerabilidades
-potencialmente inseguro         comportamiento real              conocidas en
-                                                                   librerías externas
+┌── SAST ──────────┐  ┌── DAST ──────────────┐  ┌── SCA ────────────┐
+│ código propio,       │  │ aplicación en ejecución, │  │ dependencias de      │
+│ sin ejecutar, en CI     │  │ probada como atacante real │  │ terceros, versiones   │
+└────────┬─────────┘  └────────┬─────────────┘  └────────┬──────────┘
+         ▼                        ▼                          ▼
+  código inseguro       comportamiento vulnerable      CVEs conocidas
 ```
+
+#### Paso 4 · Demostración guiada desde cero
+
+Desde una carpeta vacía crea `academia-devops/src/modulo11/sast-dast-sca` con una app deliberadamente vulnerable a inyección, y aplica las tres categorías sobre ella:
+
+```bash
+mkdir -p academia-devops/src/modulo11/sast-dast-sca
+cd academia-devops/src/modulo11/sast-dast-sca
+cat > app.js <<'EOF'
+const http = require('node:http');
+http.createServer((req, res) => {
+  const url = new URL(req.url, 'http://localhost');
+  const nombre = url.searchParams.get('nombre') ?? 'invitado';
+  res.end(`<h1>Hola, ${nombre}</h1>`); // vulnerable a XSS: sin escapar la entrada
+}).listen(3000);
+EOF
+grep -n 'res.end(\`.*\${' app.js
+```
+
+**Explicación línea por línea:** el `grep` simula un análisis SAST muy simplificado: detecta el patrón de código sospechoso (interpolación directa de entrada de usuario `nombre` dentro de HTML sin escapar), exactamente el tipo de hallazgo que una herramienta SAST real reportaría analizando solo el texto del código, sin ejecutarlo.
+
+Levanta la app y aplica un análisis DAST real con OWASP ZAP contra ella en ejecución:
+
+```bash
+docker run -d --name app-vulnerable -p 3040:3000 -v "$(pwd)":/app -w /app node:22-alpine node app.js
+sleep 1
+curl -s "http://localhost:3040/?nombre=<script>alert(1)</script>" | grep -o '<script>alert(1)</script>'
+docker run --rm --network host zaproxy/zap-stable zap-baseline.py -t http://localhost:3040/ 2>&1 | tail -5
+```
+
+**Resultado esperado:** el `curl` confirma que la entrada `<script>alert(1)</script>` se refleja sin escapar en la respuesta HTML (el mismo hallazgo que SAST anticipó estáticamente, ahora confirmado dinámicamente); ZAP, al probar la aplicación en ejecución real, reporta una alerta de XSS reflejado sobre el parámetro `nombre`.
+
+**Fallo deliberado:** ejecuta el mismo `grep` de SAST sobre un archivo `app-segura.js` que sí escapa correctamente la entrada (usando una función de escape HTML antes de interpolar). El `grep` no encuentra ninguna coincidencia sospechosa — diagnostica confirmando que SAST detecta patrones de código, no el comportamiento real; para confirmar con certeza que la app corregida efectivamente ya no es explotable, es DAST (probándola en ejecución) el que da la confirmación definitiva del comportamiento real observable.
+
+#### Construcción RutaFlow: programa de seguridad del proyecto
+
+Documenta en `academia-devops/README.md` que RutaFlow integra SAST y SCA tempranamente en cada pull request (Módulo 4), y DAST más tarde contra el entorno de pruebas ya desplegado, reconociendo que cada categoría detecta un tipo de problema que las otras dos no pueden.
+
+#### Paso 5 · Práctica guiada
+
+Corrige `app.js` escapando la entrada `nombre` antes de interpolarla en el HTML (por ejemplo, reemplazando `<`, `>` y `&` por sus entidades HTML), reconstruye, y repite la petición del `curl` con el mismo payload para confirmar que ya no se refleja sin escapar. **Pista:** una función simple de reemplazo de caracteres especiales es suficiente para esta demostración didáctica.
+
+#### Paso 6 · Práctica independiente
+
+Detén el contenedor `app-vulnerable` y documenta, para tu propio proyecto o ejercicio, un ejemplo concreto de qué esperarías que SAST detectara que DAST no podría (y viceversa), basándote en la diferencia de alcance entre analizar código estático y probar comportamiento en ejecución.
+
+#### Paso 7 · Cierre y evidencia
+
+Ya distingues qué detecta específicamente cada una de SAST, DAST y SCA, y por qué un programa de seguridad maduro las integra en distintos puntos del ciclo de desarrollo. Esto cierra el módulo de seguridad DevSecOps; el siguiente módulo del track continúa con la práctica avanzada de la disciplina. **Evidencia:** entrega el resultado del `curl` mostrando el XSS reflejado sin escapar antes de la corrección, y explica por qué ese mismo resultado desaparece después de escapar la entrada. Fuente oficial: [OWASP — Vulnerability Scanning Tools](https://owasp.org/www-community/Vulnerability_Scanning_Tools).
+
+**Errores comunes:** depender de una sola categoría de análisis (típicamente solo SCA) asumiendo erróneamente que eso cubre todos los riesgos relevantes; ejecutar DAST solo una vez antes de un lanzamiento importante en vez de integrarlo regularmente contra cada versión desplegada al entorno de pruebas.
+
+**Cuándo no usarlo:** DAST contra una aplicación que aún no expone ningún endpoint real accesible no aporta valor todavía; en esa etapa temprana, SAST y SCA sobre el código y dependencias ya existentes son las categorías aplicables primero.
 
 ---
 
@@ -209,9 +595,9 @@ potencialmente inseguro         comportamiento real              conocidas en
 
 **Errores comunes y soluciones**
 
-- **Trivy reporta un volumen abrumador de vulnerabilidades de severidad baja/media, dificultando identificar qué es realmente urgente.** Filtra el reporte inicial por severidad (`--severity CRITICAL,HIGH`) para enfocar la atención en lo más urgente primero, sin ignorar completamente el resto, pero sin dejar que el volumen total abrume la priorización inicial.
-- **El pipeline falla en el step de escaneo pero el mensaje de error no indica claramente qué vulnerabilidad específica lo causó.** Revisa la salida completa del step de Trivy en los logs del pipeline (no solo el código de salida), que normalmente incluye el detalle completo de cada vulnerabilidad encontrada, incluyendo cuál específicamente cruzó el umbral de severidad configurado.
-- **El secreto configurado en GitHub Actions no parece estar disponible dentro del workflow.** Verifica que estás referenciándolo correctamente con la sintaxis `${{ secrets.NOMBRE_DEL_SECRETO }}`, y que el nombre coincide exactamente (sensible a mayúsculas y minúsculas) con el configurado en la sección de Secrets del repositorio.
-- **Reducir los permisos del `GITHUB_TOKEN` rompe un step que sí necesitaba un permiso específico.** Revisa cuidadosamente qué permisos usa realmente cada step de tu workflow (por ejemplo, si algún step necesita escribir comentarios en el PR, necesita permiso de escritura sobre pull requests específicamente) antes de reducir permisos de forma demasiado agresiva sin verificar el impacto real.
+- **Trivy reporta un volumen abrumador de vulnerabilidades de severidad baja/media, dificultando identificar qué es realmente urgente.** Filtra el reporte inicial por severidad (`--severity CRITICAL,HIGH`) para enfocar la atención en lo más urgente primero.
+- **El pipeline falla en el step de escaneo pero el mensaje de error no indica claramente qué vulnerabilidad específica lo causó.** Revisa la salida completa del step de Trivy en los logs del pipeline, que normalmente incluye el detalle completo de cada vulnerabilidad encontrada.
+- **El secreto configurado en GitHub Actions no parece estar disponible dentro del workflow.** Verifica que estás referenciándolo con la sintaxis `${{ secrets.NOMBRE_DEL_SECRETO }}`, y que el nombre coincide exactamente con el configurado en Secrets.
+- **Reducir los permisos del `GITHUB_TOKEN` rompe un step que sí necesitaba un permiso específico.** Revisa cuidadosamente qué permisos usa realmente cada step antes de reducir permisos de forma demasiado agresiva.
 
 ---

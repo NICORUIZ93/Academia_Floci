@@ -4136,7 +4136,7 @@
     },
     {
       "path": "web/public/content/devops/modulo-11.md",
-      "lines": 218,
+      "lines": 604,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -4144,12 +4144,15 @@
         "# M\u00f3dulo 11: Seguridad DevSecOps",
         "## Aprende construyendo",
         "### Tema 1: Escaneo de im\u00e1genes y dependencias (Trivy, Snyk)",
-        "### Tema 2: Integraci\u00f3n en el pipeline",
-        "### Tema 3: Gesti\u00f3n de secretos (Vault, SOPS)",
-        "### Tema 4: Menor privilegio en CI/CD",
-        "### Tema 5: SBOM y supply chain security",
-        "### Tema 6: SAST, DAST y SCA \u2014 diferencias y herramientas",
-        "## Laboratorio pr\u00e1ctico"
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
+        "#### Paso 2 \u00b7 Contexto y caso real",
+        "#### Paso 3 \u00b7 Teor\u00eda con analog\u00eda",
+        "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
+        "#### Construcci\u00f3n RutaFlow: pol\u00edtica de severidad del proyecto",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
+        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
+        "#### Paso 7 \u00b7 Cierre y evidencia",
+        "### Tema 2: Integraci\u00f3n en el pipeline"
       ]
     },
     {
