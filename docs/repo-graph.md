@@ -1,6 +1,6 @@
 # Academia Floci Repo Graph
 
-Generated: 2026-07-21 09:28 UTC
+Generated: 2026-07-21 09:31 UTC
 Root: `Academia_Floci`
 Indexed files: 781
 Import edges: 33
@@ -189,7 +189,7 @@ For automated lookups, use `docs/repo-graph.json`.
 - `web/public/content/android/modulo-13.md` (247 lines) - headings: # Módulo 13: Android en producción — seguridad, sincronización y calidad, ## Aprende construyendo, ### Tema 1: El sistema operativo conecta tu app con entradas externas, ### Tema 2: Proteger datos exige conocer copias y ciclo de vida
 - `web/public/content/android/modulo-14.md` (157 lines) - headings: # Módulo 14: Compose Master: pruebas, accesibilidad y animación, ## Aprende construyendo, ### Tema 1: ComposeTestRule, ### Tema 2: Finders, assertions y actions
 - `web/public/content/android/modulo-2.md` (389 lines) - headings: # Módulo 2: Jetpack Compose: UI declarativa, ## Aprende construyendo, ### Tema 1: Composables y recomposición, #### Paso 1 · Objetivo y preparación
-- `web/public/content/android/modulo-3.md` (146 lines) - headings: # Módulo 3: Navegación con Navigation Compose, ## Aprende construyendo, ### Tema 1: NavHost y NavController, ### Tema 2: Argumentos tipados y deep links
+- `web/public/content/android/modulo-3.md` (398 lines) - headings: # Módulo 3: Navegación con Navigation Compose, ## Aprende construyendo, ### Tema 1: NavHost y NavController, #### Paso 1 · Objetivo y preparación
 - `web/public/content/android/modulo-4.md` (144 lines) - headings: # Módulo 4: Estado con StateFlow y Compose, ## Aprende construyendo, ### Tema 1: StateFlow en el ViewModel, ### Tema 2: collectAsStateWithLifecycle y UDF
 - `web/public/content/android/modulo-5.md` (144 lines) - headings: # Módulo 5: Networking con Retrofit/Ktor, ## Aprende construyendo, ### Tema 1: Retrofit con coroutines, ### Tema 2: Manejo de errores HTTP
 - `web/public/content/android/modulo-6.md` (149 lines) - headings: # Módulo 6: Persistencia local con Room, ## Aprende construyendo, ### Tema 1: Entities, DAOs y Database, ### Tema 2: Room + Flow reactivo, y migraciones
@@ -252,7 +252,7 @@ For automated lookups, use `docs/repo-graph.json`.
 - `.env.example` (8 lines)
 - `.github/workflows/ci.yml` (55 lines)
 - `.gitignore` (26 lines)
-- `docs/code-visual-quality.json` (4739 lines)
+- `docs/code-visual-quality.json` (4718 lines)
 - `docs/curriculum-matrix.json` (155 lines)
 - `docs/floci-official-curriculum.json` (14 lines)
 - `docs/official-learning-guides.json` (22 lines)

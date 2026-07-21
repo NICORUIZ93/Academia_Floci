@@ -137,7 +137,7 @@
     },
     {
       "path": "docs/code-visual-quality.json",
-      "lines": 4739,
+      "lines": 4718,
       "kind": "project-file",
       "symbols": [],
       "imports": [],
@@ -2995,7 +2995,7 @@
     },
     {
       "path": "web/public/content/android/modulo-3.md",
-      "lines": 146,
+      "lines": 398,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -3003,9 +3003,15 @@
         "# M\u00f3dulo 3: Navegaci\u00f3n con Navigation Compose",
         "## Aprende construyendo",
         "### Tema 1: NavHost y NavController",
-        "### Tema 2: Argumentos tipados y deep links",
-        "### Tema 3: Navegaci\u00f3n anidada con stacks independientes",
-        "## Laboratorio pr\u00e1ctico"
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
+        "#### Paso 2 \u00b7 Contexto y caso real",
+        "#### Paso 3 \u00b7 Teor\u00eda con analog\u00eda",
+        "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
+        "# python valida despu\u00e9s la sintaxis; primero se genera el archivo Kotlin",
+        "#### Construcci\u00f3n RutaFlow: grafo de navegaci\u00f3n del proyecto",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
+        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
+        "#### Paso 7 \u00b7 Cierre y evidencia"
       ]
     },
     {
