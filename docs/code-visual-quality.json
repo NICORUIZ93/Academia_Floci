@@ -113,13 +113,13 @@
     "android": {
       "topics": 49,
       "code": 43,
-      "commentedCode": 36,
+      "commentedCode": 40,
       "mermaid": 6,
       "asciiVisual": 43,
       "misleadingDiagramLabel": 0,
-      "filePath": 41,
-      "runCommand": 39,
-      "officialSource": 36
+      "filePath": 43,
+      "runCommand": 43,
+      "officialSource": 40
     },
     "ios": {
       "topics": 51,
@@ -3716,34 +3716,6 @@
       "track": "android",
       "module": 11,
       "topic": "Tema 3: Versionado, tracks y políticas",
-      "missingCode": false,
-      "missingComments": true
-    },
-    {
-      "track": "android",
-      "module": 13,
-      "topic": "Tema 1: El sistema operativo conecta tu app con entradas externas",
-      "missingCode": false,
-      "missingComments": true
-    },
-    {
-      "track": "android",
-      "module": 13,
-      "topic": "Tema 2: Proteger datos exige conocer copias y ciclo de vida",
-      "missingCode": false,
-      "missingComments": true
-    },
-    {
-      "track": "android",
-      "module": 13,
-      "topic": "Tema 3: Offline-first necesita un protocolo de cambios",
-      "missingCode": false,
-      "missingComments": true
-    },
-    {
-      "track": "android",
-      "module": 13,
-      "topic": "Tema 4: La calidad se opera por dispositivo y versión",
       "missingCode": false,
       "missingComments": true
     },

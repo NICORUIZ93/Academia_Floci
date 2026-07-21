@@ -137,7 +137,7 @@
     },
     {
       "path": "docs/code-visual-quality.json",
-      "lines": 4564,
+      "lines": 4536,
       "kind": "project-file",
       "symbols": [],
       "imports": [],
@@ -2949,7 +2949,7 @@
     },
     {
       "path": "web/public/content/android/modulo-13.md",
-      "lines": 247,
+      "lines": 597,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -2957,15 +2957,15 @@
         "# M\u00f3dulo 13: Android en producci\u00f3n \u2014 seguridad, sincronizaci\u00f3n y calidad",
         "## Aprende construyendo",
         "### Tema 1: El sistema operativo conecta tu app con entradas externas",
-        "### Tema 2: Proteger datos exige conocer copias y ciclo de vida",
-        "### Tema 3: Offline-first necesita un protocolo de cambios",
-        "### Tema 4: La calidad se opera por dispositivo y versi\u00f3n",
-        "## Revisi\u00f3n oficial de plataforma \u2014 julio de 2026",
-        "### Android 17: privacidad, compatibilidad y dispositivos grandes",
-        "## Laboratorio pr\u00e1ctico",
-        "### Proyecto: app resistente a dispositivo, red y release",
-        "## Atlas completo de temas oficiales",
-        "### M\u00e9todo de estudio y proyecto de ampliaci\u00f3n"
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
+        "#### Paso 2 \u00b7 Contexto y caso real",
+        "#### Paso 3 \u00b7 Teor\u00eda con analog\u00eda",
+        "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
+        "# python valida despu\u00e9s la estructura de este archivo Kotlin",
+        "#### Construcci\u00f3n RutaFlow: deep links del proyecto",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
+        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente",
+        "#### Paso 7 \u00b7 Cierre y evidencia"
       ]
     },
     {
