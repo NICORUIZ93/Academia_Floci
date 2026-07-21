@@ -15,6 +15,23 @@ Esto es exactamente el tipo de servicio "puente entre lo legado y lo moderno" qu
 
 **¿Por qué es importante?** Reconocer cuándo un problema es "necesito modernizar internamente sin romper compatibilidad externa" —el caso de uso central de Transfer Family— es una habilidad de diseño valiosa en cualquier empresa con sistemas heredados, que son la mayoría de las empresas grandes reales.
 
+**Practícalo tú:**
+
+```bash
+# archivo: src/labs/modulo-30/tema-1-por-que-transfer-family.sh — ejecutar con: bash tema-1-por-que-transfer-family.sh
+aws s3 mb s3://rutaflow-intercambio-socios
+aws transfer create-server --protocols SFTP --endpoint-type PUBLIC \
+  --query 'ServerId' --output text
+```
+
+**Resultado esperado:** el bucket se crea normalmente; el servidor Transfer Family devuelve un `ServerId` con formato `s-...` — la pieza que, en AWS real, conectaría SFTP tradicional con ese mismo bucket sin que el socio externo sepa que el backend es S3.
+
+**Modifica esto:** describe el servidor con `describe-server` y localiza el campo que indica el tipo de endpoint (`PUBLIC`); investiga en la documentación de AWS qué otra opción existe (`VPC`) y para qué caso de uso.
+
+**Cuándo no usarlo:** no adoptes Transfer Family si puedes migrar a tus socios externos a una API moderna (S3 con presigned URLs, por ejemplo); resérvalo específicamente para cuando el otro lado exige SFTP por restricciones que no controlas.
+
+**Cómo crece RutaFlow:** este servidor es el puente que usaría un socio logístico externo de RutaFlow para subir manifiestos de carga por SFTP tradicional, aterrizando directo en S3.
+
 ### Tema 2: Ciclo de vida del servidor y modelo de usuarios
 
 **Conceptos clave:** `CreateServer`, estado `ONLINE`/`OFFLINE`, `CreateUser`, directorio de inicio.
@@ -26,6 +43,25 @@ Un usuario (`CreateUser`) se asocia siempre a un servidor específico, con un ro
 **Analogía:** el ciclo de vida `ONLINE`/`OFFLINE` de un servidor Transfer Family es como el horario de atención de una oficina de correos: puedes cerrarla temporalmente para mantenimiento sin desmantelar el edificio completo, y solo la desmantelas (`DeleteServer`) cuando ya está cerrada y vacía.
 
 **¿Por qué es importante?** Practicar la gestión del ciclo de vida completo —crear, detener, reiniciar, eliminar en el orden correcto— es exactamente el tipo de operación que necesitarás automatizar con infraestructura como código en un despliegue real.
+
+**Practícalo tú:**
+
+```bash
+# archivo: src/labs/modulo-30/tema-2-ciclo-de-vida.sh — ejecutar con: bash tema-2-ciclo-de-vida.sh
+SERVER_ID=$(aws transfer create-server --protocols SFTP --endpoint-type PUBLIC --query 'ServerId' --output text)
+aws transfer create-user --server-id "$SERVER_ID" --user-name socio-logistico \
+  --role arn:aws:iam::000000000000:role/transfer-role --home-directory /uploads
+aws transfer stop-server --server-id "$SERVER_ID"
+aws transfer describe-server --server-id "$SERVER_ID" --query 'Server.State'
+```
+
+**Resultado esperado:** el usuario `socio-logistico` queda creado con su directorio de inicio; tras `stop-server`, `describe-server` reporta el estado `OFFLINE`.
+
+**Modifica esto:** intenta eliminar el servidor mientras sigue `ONLINE` (antes de detenerlo) y confirma que `delete-server` lo rechaza — el mismo patrón de protección que ya viste con bóvedas de Backup y grupos objetivo de ELB.
+
+**Cuándo no usarlo:** no reutilices el mismo usuario para socios externos distintos; cada socio debe tener su propio usuario con su propio directorio de inicio aislado.
+
+**Cómo crece RutaFlow:** `socio-logistico` es el usuario que representaría a un proveedor externo con acceso limitado únicamente a la carpeta de manifiestos de RutaFlow.
 
 ### Tema 3: Claves públicas SSH y autenticación de usuarios
 
@@ -39,6 +75,24 @@ Este modelo de autenticación por clave —sin contraseñas que gestionar, rotar
 
 **¿Por qué es importante?** Que Floci no valide criptográficamente las claves te permite enfocar tu práctica en la lógica de gestión de usuarios y permisos —lo que realmente vas a automatizar con IaC— sin la fricción de generar pares de claves reales solo para probar tu script de aprovisionamiento.
 
+**Practícalo tú:**
+
+```bash
+# archivo: src/labs/modulo-30/tema-3-clave-ssh.sh — ejecutar con: bash tema-3-clave-ssh.sh
+ssh-keygen -t rsa -f /tmp/clave-socio -N "" -q
+aws transfer import-ssh-public-key --server-id "$SERVER_ID" --user-name socio-logistico \
+  --ssh-public-key-body "$(cat /tmp/clave-socio.pub)"
+aws transfer describe-user --server-id "$SERVER_ID" --user-name socio-logistico --query 'User.SshPublicKeys'
+```
+
+**Resultado esperado:** `describe-user` muestra la clave pública recién importada asociada a `socio-logistico`, lista para que —en AWS real— cualquiera con la clave privada correspondiente pueda autenticarse.
+
+**Modifica esto:** importa una segunda "clave" con contenido inventado (texto arbitrario, no una clave SSH real) y confirma que Floci la acepta igual — recuerda que no valida criptográficamente el contenido.
+
+**Cuándo no usarlo:** no asumas, por lo anterior, que un texto arbitrario funcionaría como clave contra un Transfer Family real; ahí sí se valida criptográficamente, y esto es exclusivamente una facilidad de práctica en Floci.
+
+**Cómo crece RutaFlow:** esta clave es la que el socio logístico usaría para autenticarse sin contraseña al subir manifiestos al servidor de RutaFlow.
+
 ### Tema 4: Los límites de la Fase 1 — plano de gestión completo, plano de datos pendiente
 
 **Conceptos clave:** Fase 1, plano de gestión vs plano de datos, transferencia real no emulada.
@@ -50,6 +104,22 @@ Reconocer explícitamente esta frontera —qué es plano de gestión emulado vs 
 **Analogía:** practicar con Transfer Family en su estado actual es como ensayar la coreografía completa de una obra de teatro sin la escenografía final instalada todavía: los movimientos, las entradas y salidas, el guion — todo eso lo puedes ensayar perfectamente; falta el telón de fondo físico para la función completa.
 
 **¿Por qué es importante?** Saber distinguir qué partes de un servicio emulado son completamente confiables para practicar y cuáles requieren validación adicional contra el servicio real antes de producción es, en sí mismo, una competencia profesional importante — la misma que aplicas al leer la documentación de cualquier herramienta nueva que adoptas en un equipo real.
+
+**Practícalo tú:**
+
+```bash
+# archivo: src/labs/modulo-30/tema-4-limites-fase-1.sh — ejecutar con: bash tema-4-limites-fase-1.sh
+aws transfer describe-server --server-id "$SERVER_ID" --query 'Server.{Estado:State,Protocolos:Protocols}'
+sftp -i /tmp/clave-socio socio-logistico@localhost 2>&1 | head -3 || true
+```
+
+**Resultado esperado:** `describe-server` confirma el plano de gestión completo (estado, protocolos); el intento real de `sftp` falla o no responde — confirmando en vivo que el plano de datos de Fase 1 todavía no está implementado, exactamente como dice la explicación de arriba.
+
+**Modifica esto:** escribe en un README de tu proyecto qué validarías contra AWS real antes de confiar en este flujo para producción (la conectividad SFTP efectiva), separado de lo que ya validaste aquí (la gestión completa de servidores y usuarios).
+
+**Cuándo no usarlo:** no reportes este módulo como "probado end-to-end" en una demo; sé explícito con tu equipo sobre qué parte es plano de gestión verificado y qué parte sigue pendiente de Fase 2.
+
+**Cómo crece RutaFlow:** documentar esta frontera es lo que le permite al equipo de RutaFlow decidir con criterio cuándo necesita probar contra AWS real antes de prometer esta integración a un socio externo.
 
 ---
 

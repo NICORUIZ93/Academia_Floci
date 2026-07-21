@@ -32,6 +32,23 @@ Usa el mismo instalador oficial con `curl -fsSL https://floci.io/install.sh | sh
 
 En PowerShell puedes ejecutar `iwr https://floci.io/install.ps1 | iex`. La alternativa administrada es Scoop: `scoop bucket add floci https://github.com/floci-io/scoop-floci` y luego `scoop install floci`. Comprueba con `floci doctor`; si Docker Desktop usa WSL 2, verifica que la integración esté activa para tu distribución.
 
+**Practícalo tú:**
+
+```bash
+# archivo: src/labs/modulo-34/tema-1-diagnostico.sh — ejecutar con: bash tema-1-diagnostico.sh
+docker version --format '{{.Server.Version}}'
+floci --version
+floci doctor
+```
+
+**Resultado esperado:** los tres comandos responden sin error, en cualquier sistema operativo: Docker reporta una versión de servidor, `floci --version` confirma la instalación, y `floci doctor` reporta que Docker, la CLI y la conectividad local funcionan juntos — el mismo diagnóstico sin importar si instalaste con Homebrew, el script curl o Scoop.
+
+**Modifica esto:** detén Docker Desktop deliberadamente y vuelve a correr `floci doctor`; confirma que el diagnóstico señala explícitamente el problema (Docker no disponible) en vez de fallar con un error genérico.
+
+**Cuándo no usarlo:** no saltes `floci doctor` asumiendo que "instalar" es sinónimo de "funciona"; diferencias sutiles de PATH o de integración WSL2 solo las detecta el diagnóstico, no la instalación en sí.
+
+**Cómo crece RutaFlow:** este diagnóstico es el primer paso reproducible que cualquier persona nueva en el equipo de RutaFlow ejecuta antes de tocar código.
+
 ### Tema 2: Modelo mental de la plataforma
 
 **¿Por qué es importante?** Distinguir cliente, CLI, emulador y motor real permite saber qué componente observar cuando una operación falla.
@@ -92,6 +109,26 @@ AWS usa `AWS_ENDPOINT_URL=http://localhost:4566` y credenciales desechables. Azu
 
 Una variable mal aplicada suele producir dos errores opuestos: conexión rechazada si apunta al puerto equivocado, o una petición accidental a la nube real si el override no existe. Antes de ejecutar una operación destructiva, imprime el endpoint y confirma que contiene `localhost`.
 
+**Practícalo tú:**
+
+```bash
+# archivo: src/labs/modulo-34/tema-3-tres-clis.sh — ejecutar con: bash tema-3-tres-clis.sh
+eval "$(floci env)"
+echo "AWS -> $AWS_ENDPOINT_URL"
+eval "$(floci az env)"
+echo "Azure -> $AZURE_STORAGE_CONNECTION_STRING" | grep -o 'BlobEndpoint=[^;]*'
+eval "$(floci gcp env)"
+echo "GCP storage -> $STORAGE_EMULATOR_HOST"
+```
+
+**Resultado esperado:** los tres `echo` muestran endpoints que contienen `localhost` con los puertos 4566, 4577 y 4588 respectivamente — la confirmación de que las tres CLIs oficiales (AWS, Azure, GCP) apuntan a Floci y no a la nube real.
+
+**Modifica esto:** comenta la línea `eval "$(floci env)"` y repite el primer `echo`; confirma que `AWS_ENDPOINT_URL` queda vacío o apunta a un endpoint real — así reconoces el síntoma exacto de un override no aplicado.
+
+**Cuándo no usarlo:** no ejecutes un comando destructivo (`delete-bucket`, `rm`) sin haber impreso y confirmado el endpoint primero; es el hábito de seguridad más simple de este módulo.
+
+**Cómo crece RutaFlow:** este patrón de "imprime el endpoint antes de destruir nada" es el que protege los tres entornos cloud de RutaFlow (AWS, Azure, GCP) de una operación accidental contra una cuenta real.
+
 ### Tema 4: Configuración avanzada y ciclo de vida
 
 **¿Por qué es importante?** Persistencia, aislamiento y hooks determinan si un laboratorio es reproducible o depende de estado manual oculto.
@@ -111,6 +148,25 @@ AWS separa almacenamiento por identificador de cuenta; GCP hace lo propio por pr
 #### TLS y HTTPS, Initialization hooks
 
 TLS local permite recorrer código sensible al esquema HTTPS mediante un certificado autofirmado. El cliente debe confiar deliberadamente en ese certificado solo en desarrollo. Los Initialization hooks crean recursos al arrancar y convierten el entorno en reproducible; deben ser idempotentes para que un segundo inicio no falle ni duplique datos.
+
+**Practícalo tú:**
+
+```bash
+# archivo: src/labs/modulo-34/tema-4-persistencia.sh — ejecutar con: bash tema-4-persistencia.sh
+floci start --persist ./data
+aws s3 mb s3://rutaflow-persistente
+floci snapshot save antes-de-reiniciar
+floci stop && floci start --persist ./data
+aws s3 ls | grep rutaflow-persistente
+```
+
+**Resultado esperado:** tras detener y reiniciar Floci con el mismo directorio `--persist`, `aws s3 ls` sigue mostrando `rutaflow-persistente` — el bucket sobrevivió al reinicio porque el estado quedó en disco, no solo en memoria.
+
+**Modifica esto:** restaura el snapshot con `floci snapshot restore antes-de-reiniciar` después de crear un segundo bucket, y confirma que ese segundo bucket desaparece — el snapshot vuelve exactamente al punto guardado.
+
+**Cuándo no usarlo:** no uses `--persist` para tu suite de pruebas automatizadas; ahí una instancia limpia por corrida es mejor, porque evita que un recurso de una corrida anterior produzca un falso positivo.
+
+**Cómo crece RutaFlow:** la persistencia es la que usarías en tu entorno de desarrollo diario de RutaFlow; los snapshots te devuelven a un punto conocido antes de probar una migración riesgosa.
 
 ### Tema 5: Automatización, UI y agentes
 
@@ -188,6 +244,24 @@ Los módulos anteriores explican los servicios principales. Esta tabla completa 
 | Cloud Control API | Gestionar recursos mediante una interfaz común y estudiar consistencia del modelo CRUD. |
 
 El inventario completo también incluye S3, AWS Backup, Transfer Family, DynamoDB y Streams, ElastiCache, RDS, Neptune, DocumentDB, Lambda, EC2, Auto Scaling, ECS, ECR, EKS, ELB v2, Route 53, CloudFront, AppSync, SQS, SNS, Kinesis, EventBridge, Scheduler, Pipes, MSK, SES, IAM, STS, Cognito, KMS, Secrets Manager, ACM, CloudWatch Logs, AWS Config, CloudTrail, OpenSearch, Athena, Glue, Data Firehose, Bedrock Runtime, Textract, Transcribe, SSM Parameter Store, CloudFormation, Step Functions, AppConfig, CodeBuild, CodeDeploy, Resource Groups Tagging API, Cost Explorer, Pricing, CUR y BCM Data Exports.
+
+**Practícalo tú:**
+
+```bash
+# archivo: src/labs/modulo-34/tema-6-servicio-nuevo.sh — ejecutar con: bash tema-6-servicio-nuevo.sh
+aws batch create-compute-environment --compute-environment-name rutaflow-batch \
+  --type MANAGED --state ENABLED
+aws batch describe-compute-environments --compute-environments rutaflow-batch \
+  --query 'computeEnvironments[0].state'
+```
+
+**Resultado esperado:** el entorno de cómputo de AWS Batch queda creado y `describe-compute-environments` confirma `ENABLED` — la misma disciplina de "crear y luego confirmar con describe" que ya aplicaste en Lambda, RDS y una docena de servicios más en este track.
+
+**Modifica esto:** elige otro servicio de la tabla que no hayas probado (por ejemplo Cloud Map o CloudWatch Metrics) y repite el mismo patrón crear → describir con su comando equivalente.
+
+**Cuándo no usarlo:** no asumas que todos los servicios de esta tabla tienen el mismo nivel de fidelidad que EC2 o RDS; revisa la documentación de cada uno para saber si es plano de control únicamente o motor real.
+
+**Cómo crece RutaFlow:** este patrón exploratorio —crear, describir, entender qué se emula— es el mismo que usarías para evaluar si un servicio nuevo de esta tabla resuelve una necesidad futura de RutaFlow.
 
 ### Tema 7: Servicios Azure que completan el recorrido
 
@@ -290,12 +364,55 @@ Crea un contenedor, carga y descarga un blob y genera un SAS con permisos y venc
 
 Inicia una instancia local, abre y cierra puertos mientras corre y observa los sidecars `socat` que aparecen y desaparecen. Evidencia: `docker ps`, petición exitosa con el puerto abierto, fallo esperado al cerrarlo y explicación de la diferencia frente a publicar puertos solo al crear un contenedor.
 
+**Practícalo tú:**
+
+```bash
+# archivo: src/labs/modulo-34/tema-9-s3-101.sh — ejecutar con: bash tema-9-s3-101.sh
+aws s3 mb s3://rutaflow-101
+echo "manifiesto de prueba" > manifiesto.txt
+aws s3 cp manifiesto.txt s3://rutaflow-101/
+URL=$(aws s3 presign s3://rutaflow-101/manifiesto.txt --expires-in 30)
+curl -s -o /dev/null -w "%{http_code}\n" "$URL"
+sleep 31
+curl -s -o /dev/null -w "%{http_code}\n" "$URL"
+```
+
+**Resultado esperado:** la primera petición con la URL prefirmada devuelve `200`; tras esperar más de los 30 segundos de vigencia, la segunda devuelve un código de error (`403`) — la evidencia verificable de por qué una URL expirada deja de funcionar, tal como pide este laboratorio oficial.
+
+**Modifica esto:** repite el ejercicio con `--expires-in 300` y confirma que la segunda petición, hecha antes de los 5 minutos, sigue devolviendo `200`.
+
+**Cuándo no usarlo:** no reutilices una URL prefirmada de corta duración para un flujo que tarda más que su vigencia; genera una nueva o usa una vigencia acorde al caso de uso real.
+
+**Cómo crece RutaFlow:** este es exactamente el mecanismo que RutaFlow usa para compartir temporalmente un comprobante de entrega con un cliente sin exponer el bucket completo.
+
 ### Tema 10: Límites y transferencia a producción
 
 **¿Por qué es importante?** Reconocer qué no reproduce el entorno local evita trasladar conclusiones falsas sobre seguridad, escala, coste o disponibilidad.
 
 Compatibilidad de API significa que clientes y formatos se comportan como espera el SDK; no significa que latencia regional, cuotas, IAM organizacional, facturación, hardware administrado, disponibilidad multi-zona y fallos del proveedor estén reproducidos completamente. Antes de producción ejecuta un conjunto pequeño de pruebas contractuales en la nube real, revisa seguridad y costes, y documenta cualquier diferencia.
 
+**Practícalo tú:**
+
+```bash
+# archivo: src/labs/modulo-34/tema-10-matriz-de-limites.sh — ejecutar con: bash tema-10-matriz-de-limites.sh
+cat <<'EOF' > matriz-limites.md
+| Capacidad | Validado localmente | Requiere nube real | Riesgo si se omite |
+|---|---|---|---|
+| Contrato SDK/CLI de S3 | Sí | No | Bajo |
+| Latencia multi-región | No | Sí | Medio |
+| IAM organizacional y SCPs | No | Sí | Alto |
+| Facturación real | No | Sí | Alto |
+EOF
+cat matriz-limites.md
+```
+
+**Resultado esperado:** el archivo `matriz-limites.md` queda escrito y muestra la tabla — el mismo tipo de matriz "validado localmente / requiere nube real / riesgo si se omite" que pide la Construcción final de este módulo.
+
+**Modifica esto:** añade una fila por cada servicio que hayas usado en los módulos 21-30 de este track, clasificando honestamente qué validaste en Floci y qué te falta confirmar contra AWS, Azure o GCP real.
+
+**Cuándo no usarlo:** no publiques esta matriz una sola vez y la abandones; actualízala cada vez que agregues un servicio nuevo al proyecto, o dejará de reflejar el riesgo real.
+
+**Cómo crece RutaFlow:** esta matriz es exactamente el documento que el equipo de RutaFlow revisaría antes de decidir qué probar contra una cuenta real antes de un primer despliegue a producción.
 
 ## Construcción final multi-nube
 

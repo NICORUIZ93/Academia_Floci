@@ -13,13 +13,13 @@
     },
     "cloud": {
       "topics": 153,
-      "code": 135,
-      "commentedCode": 45,
+      "code": 145,
+      "commentedCode": 55,
       "mermaid": 14,
       "asciiVisual": 78,
       "misleadingDiagramLabel": 0,
-      "filePath": 62,
-      "runCommand": 115,
+      "filePath": 71,
+      "runCommand": 117,
       "officialSource": 1
     },
     "devops": {
@@ -802,34 +802,6 @@
     },
     {
       "track": "cloud",
-      "module": 30,
-      "topic": "Tema 1: Qué resuelve Transfer Family",
-      "missingCode": true,
-      "missingComments": false
-    },
-    {
-      "track": "cloud",
-      "module": 30,
-      "topic": "Tema 2: Ciclo de vida del servidor y modelo de usuarios",
-      "missingCode": true,
-      "missingComments": false
-    },
-    {
-      "track": "cloud",
-      "module": 30,
-      "topic": "Tema 3: Claves públicas SSH y autenticación de usuarios",
-      "missingCode": true,
-      "missingComments": false
-    },
-    {
-      "track": "cloud",
-      "module": 30,
-      "topic": "Tema 4: Los límites de la Fase 1 — plano de gestión completo, plano de datos pendiente",
-      "missingCode": true,
-      "missingComments": false
-    },
-    {
-      "track": "cloud",
       "module": 31,
       "topic": "Tema 1: Arquitectura multi-nube y portabilidad de conocimiento",
       "missingCode": false,
@@ -929,13 +901,6 @@
     {
       "track": "cloud",
       "module": 34,
-      "topic": "Tema 1: Instalación en macOS, Linux y Windows",
-      "missingCode": true,
-      "missingComments": false
-    },
-    {
-      "track": "cloud",
-      "module": 34,
       "topic": "Tema 2: Modelo mental de la plataforma",
       "missingCode": false,
       "missingComments": true
@@ -943,30 +908,9 @@
     {
       "track": "cloud",
       "module": 34,
-      "topic": "Tema 3: AWS CLI y SDK, Azure CLI y SDK, GCP CLI y SDK",
-      "missingCode": true,
-      "missingComments": false
-    },
-    {
-      "track": "cloud",
-      "module": 34,
-      "topic": "Tema 4: Configuración avanzada y ciclo de vida",
-      "missingCode": true,
-      "missingComments": false
-    },
-    {
-      "track": "cloud",
-      "module": 34,
       "topic": "Tema 5: Automatización, UI y agentes",
       "missingCode": false,
       "missingComments": true
-    },
-    {
-      "track": "cloud",
-      "module": 34,
-      "topic": "Tema 6: Servicios AWS incorporados en la documentación actual",
-      "missingCode": true,
-      "missingComments": false
     },
     {
       "track": "cloud",
@@ -981,20 +925,6 @@
       "topic": "Tema 8: Servicios GCP que completan el recorrido",
       "missingCode": false,
       "missingComments": true
-    },
-    {
-      "track": "cloud",
-      "module": 34,
-      "topic": "Tema 9: Laboratorios oficiales reconstruidos en español",
-      "missingCode": true,
-      "missingComments": false
-    },
-    {
-      "track": "cloud",
-      "module": 34,
-      "topic": "Tema 10: Límites y transferencia a producción",
-      "missingCode": true,
-      "missingComments": false
     },
     {
       "track": "cloud",

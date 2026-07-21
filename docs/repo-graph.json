@@ -145,7 +145,7 @@
     },
     {
       "path": "docs/code-visual-quality.json",
-      "lines": 4907,
+      "lines": 4837,
       "kind": "project-file",
       "symbols": [],
       "imports": [],
@@ -172,7 +172,7 @@
     },
     {
       "path": "docs/editorial-backlog.md",
-      "lines": 49,
+      "lines": 45,
       "kind": "documentation",
       "symbols": [],
       "imports": [],
@@ -181,7 +181,6 @@
         "## Estado global",
         "## Prioridad por track",
         "## Temas sin c\u00f3digo editorial",
-        "### cloud",
         "## Regla de cierre"
       ]
     },
@@ -3869,7 +3868,7 @@
     },
     {
       "path": "web/public/content/cloud/modulo-30.md",
-      "lines": 84,
+      "lines": 154,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -3877,9 +3876,13 @@
         "# M\u00f3dulo 30: Transferencia de archivos gestionada con Transfer Family",
         "## Aprende construyendo",
         "### Tema 1: Qu\u00e9 resuelve Transfer Family",
+        "# archivo: src/labs/modulo-30/tema-1-por-que-transfer-family.sh \u2014 ejecutar con: bash tema-1-por-que-transfer-family.sh",
         "### Tema 2: Ciclo de vida del servidor y modelo de usuarios",
+        "# archivo: src/labs/modulo-30/tema-2-ciclo-de-vida.sh \u2014 ejecutar con: bash tema-2-ciclo-de-vida.sh",
         "### Tema 3: Claves p\u00fablicas SSH y autenticaci\u00f3n de usuarios",
+        "# archivo: src/labs/modulo-30/tema-3-clave-ssh.sh \u2014 ejecutar con: bash tema-3-clave-ssh.sh",
         "### Tema 4: Los l\u00edmites de la Fase 1 \u2014 plano de gesti\u00f3n completo, plano de datos pendiente",
+        "# archivo: src/labs/modulo-30/tema-4-limites-fase-1.sh \u2014 ejecutar con: bash tema-4-limites-fase-1.sh",
         "## Laboratorio pr\u00e1ctico",
         "### Laboratorio 30.1 \u2014 Servidor, usuario y clave SSH"
       ]
@@ -3944,7 +3947,7 @@
     },
     {
       "path": "web/public/content/cloud/modulo-34.md",
-      "lines": 317,
+      "lines": 434,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -3957,10 +3960,10 @@
         "#### macOS",
         "#### Instalaci\u00f3n en Linux",
         "#### Instalaci\u00f3n en Windows",
+        "# archivo: src/labs/modulo-34/tema-1-diagnostico.sh \u2014 ejecutar con: bash tema-1-diagnostico.sh",
         "### Tema 2: Modelo mental de la plataforma",
         "#### Simulaci\u00f3n de API frente a motor real",
-        "### Tema 3: AWS CLI y SDK, Azure CLI y SDK, GCP CLI y SDK",
-        "### Tema 4: Configuraci\u00f3n avanzada y ciclo de vida"
+        "### Tema 3: AWS CLI y SDK, Azure CLI y SDK, GCP CLI y SDK"
       ]
     },
     {

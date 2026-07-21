@@ -44,17 +44,17 @@
     },
     "cloud": {
       "topics": 153,
-      "explanation": 152,
-      "code": 143,
+      "explanation": 153,
+      "code": 153,
       "visual": 59,
-      "filePath": 62,
-      "runCommand": 114,
-      "expectedResult": 65,
-      "practice": 104,
-      "project": 49,
+      "filePath": 71,
+      "runCommand": 116,
+      "expectedResult": 71,
+      "practice": 111,
+      "project": 59,
       "modelMental": 153,
-      "limitsDecision": 105,
-      "practicable": 49,
+      "limitsDecision": 109,
+      "practicable": 59,
       "genericScaffold": 0
     },
     "devops": {
@@ -4539,19 +4539,19 @@
         "topic": "Tema 1: Qué resuelve Transfer Family",
         "criteria": {
           "explanation": true,
-          "code": false,
+          "code": true,
           "visual": false,
-          "filePath": false,
+          "filePath": true,
           "runCommand": true,
-          "expectedResult": false,
-          "practice": false,
-          "project": false,
+          "expectedResult": true,
+          "practice": true,
+          "project": true,
           "modelMental": true,
           "limitsDecision": true
         },
         "classification": {
-          "rubricScore": 4,
-          "practicable": false,
+          "rubricScore": 14,
+          "practicable": true,
           "genericScaffold": false
         }
       },
@@ -4560,19 +4560,19 @@
         "topic": "Tema 2: Ciclo de vida del servidor y modelo de usuarios",
         "criteria": {
           "explanation": true,
-          "code": false,
+          "code": true,
           "visual": false,
-          "filePath": false,
-          "runCommand": false,
-          "expectedResult": false,
-          "practice": false,
-          "project": false,
+          "filePath": true,
+          "runCommand": true,
+          "expectedResult": true,
+          "practice": true,
+          "project": true,
           "modelMental": true,
-          "limitsDecision": false
+          "limitsDecision": true
         },
         "classification": {
-          "rubricScore": 1,
-          "practicable": false,
+          "rubricScore": 14,
+          "practicable": true,
           "genericScaffold": false
         }
       },
@@ -4581,19 +4581,19 @@
         "topic": "Tema 3: Claves públicas SSH y autenticación de usuarios",
         "criteria": {
           "explanation": true,
-          "code": false,
+          "code": true,
           "visual": false,
-          "filePath": false,
+          "filePath": true,
           "runCommand": true,
           "expectedResult": true,
           "practice": true,
-          "project": false,
+          "project": true,
           "modelMental": true,
-          "limitsDecision": false
+          "limitsDecision": true
         },
         "classification": {
-          "rubricScore": 7,
-          "practicable": false,
+          "rubricScore": 14,
+          "practicable": true,
           "genericScaffold": false
         }
       },
@@ -4602,19 +4602,19 @@
         "topic": "Tema 4: Los límites de la Fase 1 — plano de gestión completo, plano de datos pendiente",
         "criteria": {
           "explanation": true,
-          "code": false,
+          "code": true,
           "visual": false,
-          "filePath": false,
+          "filePath": true,
           "runCommand": true,
-          "expectedResult": false,
-          "practice": false,
-          "project": false,
+          "expectedResult": true,
+          "practice": true,
+          "project": true,
           "modelMental": true,
           "limitsDecision": true
         },
         "classification": {
-          "rubricScore": 4,
-          "practicable": false,
+          "rubricScore": 14,
+          "practicable": true,
           "genericScaffold": false
         }
       },
@@ -4917,19 +4917,19 @@
         "topic": "Tema 1: Instalación en macOS, Linux y Windows",
         "criteria": {
           "explanation": true,
-          "code": false,
+          "code": true,
           "visual": false,
-          "filePath": false,
+          "filePath": true,
           "runCommand": true,
           "expectedResult": true,
-          "practice": false,
-          "project": false,
+          "practice": true,
+          "project": true,
           "modelMental": true,
           "limitsDecision": true
         },
         "classification": {
-          "rubricScore": 6,
-          "practicable": false,
+          "rubricScore": 14,
+          "practicable": true,
           "genericScaffold": false
         }
       },
@@ -4959,19 +4959,19 @@
         "topic": "Tema 3: AWS CLI y SDK, Azure CLI y SDK, GCP CLI y SDK",
         "criteria": {
           "explanation": true,
-          "code": false,
+          "code": true,
           "visual": false,
-          "filePath": false,
+          "filePath": true,
           "runCommand": true,
-          "expectedResult": false,
-          "practice": false,
-          "project": false,
+          "expectedResult": true,
+          "practice": true,
+          "project": true,
           "modelMental": true,
-          "limitsDecision": false
+          "limitsDecision": true
         },
         "classification": {
-          "rubricScore": 3,
-          "practicable": false,
+          "rubricScore": 14,
+          "practicable": true,
           "genericScaffold": false
         }
       },
@@ -4980,19 +4980,19 @@
         "topic": "Tema 4: Configuración avanzada y ciclo de vida",
         "criteria": {
           "explanation": true,
-          "code": false,
+          "code": true,
           "visual": false,
           "filePath": true,
           "runCommand": true,
-          "expectedResult": false,
+          "expectedResult": true,
           "practice": true,
-          "project": false,
+          "project": true,
           "modelMental": true,
-          "limitsDecision": false
+          "limitsDecision": true
         },
         "classification": {
-          "rubricScore": 7,
-          "practicable": false,
+          "rubricScore": 14,
+          "practicable": true,
           "genericScaffold": false
         }
       },
@@ -5022,19 +5022,19 @@
         "topic": "Tema 6: Servicios AWS incorporados en la documentación actual",
         "criteria": {
           "explanation": true,
-          "code": false,
+          "code": true,
           "visual": false,
-          "filePath": false,
+          "filePath": true,
           "runCommand": true,
           "expectedResult": true,
-          "practice": false,
-          "project": false,
+          "practice": true,
+          "project": true,
           "modelMental": true,
           "limitsDecision": true
         },
         "classification": {
-          "rubricScore": 6,
-          "practicable": false,
+          "rubricScore": 14,
+          "practicable": true,
           "genericScaffold": false
         }
       },
@@ -5085,19 +5085,19 @@
         "topic": "Tema 9: Laboratorios oficiales reconstruidos en español",
         "criteria": {
           "explanation": true,
-          "code": false,
+          "code": true,
           "visual": false,
-          "filePath": false,
+          "filePath": true,
           "runCommand": true,
           "expectedResult": true,
           "practice": true,
-          "project": false,
+          "project": true,
           "modelMental": true,
           "limitsDecision": true
         },
         "classification": {
-          "rubricScore": 8,
-          "practicable": false,
+          "rubricScore": 14,
+          "practicable": true,
           "genericScaffold": false
         }
       },
@@ -5105,20 +5105,20 @@
         "module": 34,
         "topic": "Tema 10: Límites y transferencia a producción",
         "criteria": {
-          "explanation": false,
-          "code": false,
+          "explanation": true,
+          "code": true,
           "visual": false,
-          "filePath": false,
-          "runCommand": false,
-          "expectedResult": false,
-          "practice": false,
-          "project": false,
+          "filePath": true,
+          "runCommand": true,
+          "expectedResult": true,
+          "practice": true,
+          "project": true,
           "modelMental": true,
           "limitsDecision": true
         },
         "classification": {
-          "rubricScore": 2,
-          "practicable": false,
+          "rubricScore": 14,
+          "practicable": true,
           "genericScaffold": false
         }
       },

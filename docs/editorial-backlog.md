@@ -6,16 +6,16 @@ Este inventario se genera desde el Markdown real. Las ayudas visuales, el glosar
 
 | Criterio | Cubierto | Pendiente |
 |---|---:|---:|
-| Explicación | 904 | 1 |
-| Código | 895 | 10 |
-| Ruta | 555 | 350 |
-| Ejecución | 681 | 224 |
-| Resultado | 598 | 307 |
-| Modificación | 719 | 186 |
-| Rutaflow | 331 | 574 |
+| Explicación | 905 | 0 |
+| Código | 905 | 0 |
+| Ruta | 564 | 341 |
+| Ejecución | 683 | 222 |
+| Resultado | 604 | 301 |
+| Modificación | 726 | 179 |
+| Rutaflow | 341 | 564 |
 | Modelo mental | 905 | 0 |
-| Límites | 538 | 367 |
-| **Tema practicable completo** | **414** | **491** |
+| Límites | 542 | 363 |
+| **Tema practicable completo** | **424** | **481** |
 
 ## Prioridad por track
 
@@ -23,7 +23,7 @@ Este inventario se genera desde el Markdown real. Las ayudas visuales, el glosar
 |---|---:|---:|---:|---:|---:|---:|---:|
 | android | 49 | 0 | 45 | 44 | 38 | 25 | 29 |
 | angular | 61 | 0 | 6 | 6 | 6 | 0 | 21 |
-| cloud | 153 | 10 | 91 | 39 | 88 | 49 | 48 |
+| cloud | 153 | 0 | 82 | 37 | 82 | 42 | 44 |
 | devops | 91 | 0 | 73 | 47 | 69 | 28 | 41 |
 | flutter | 57 | 0 | 40 | 26 | 29 | 29 | 34 |
 | foundations | 50 | 0 | 0 | 0 | 5 | 0 | 22 |
@@ -38,11 +38,7 @@ Este inventario se genera desde el Markdown real. Las ayudas visuales, el glosar
 
 ## Temas sin código editorial
 
-### cloud
-
-- Módulo 30: Qué resuelve Transfer Family; Ciclo de vida del servidor y modelo de usuarios; Claves públicas SSH y autenticación de usuarios; Los límites de la Fase 1 — plano de gestión completo, plano de datos pendiente
-- Módulo 34: Instalación en macOS, Linux y Windows; AWS CLI y SDK, Azure CLI y SDK, GCP CLI y SDK; Configuración avanzada y ciclo de vida; Servicios AWS incorporados en la documentación actual; Laboratorios oficiales reconstruidos en español; Límites y transferencia a producción
-
+No hay temas pendientes de código.
 ## Regla de cierre
 
 Un pendiente solo se cierra cuando el tema específico incluye archivo, código explicado, comando, salida, fallo diagnosticable, modificación y conexión con RutaFlow. No se acepta texto generado o el mismo ejemplo repetido entre temas.
