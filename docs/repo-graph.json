@@ -137,7 +137,7 @@
     },
     {
       "path": "docs/code-visual-quality.json",
-      "lines": 4683,
+      "lines": 4662,
       "kind": "project-file",
       "symbols": [],
       "imports": [],
@@ -3058,7 +3058,7 @@
     },
     {
       "path": "web/public/content/android/modulo-6.md",
-      "lines": 149,
+      "lines": 384,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -3066,9 +3066,15 @@
         "# M\u00f3dulo 6: Persistencia local con Room",
         "## Aprende construyendo",
         "### Tema 1: Entities, DAOs y Database",
-        "### Tema 2: Room + Flow reactivo, y migraciones",
-        "### Tema 3: Estrategia offline-first",
-        "## Laboratorio pr\u00e1ctico"
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
+        "#### Paso 2 \u00b7 Contexto y caso real",
+        "#### Paso 3 \u00b7 Teor\u00eda con analog\u00eda",
+        "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
+        "# python (v\u00eda sqlite3) valida el esquema SQL real que Room generar\u00eda",
+        "# el esquema equivalente que Room generar\u00eda a partir de la @Entity Tarea",
+        "#### Construcci\u00f3n RutaFlow: esquema de base de datos del proyecto",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada",
+        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente"
       ]
     },
     {
