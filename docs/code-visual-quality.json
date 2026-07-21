@@ -25,13 +25,13 @@
     "devops": {
       "topics": 91,
       "code": 85,
-      "commentedCode": 6,
+      "commentedCode": 7,
       "mermaid": 7,
       "asciiVisual": 84,
       "misleadingDiagramLabel": 0,
-      "filePath": 53,
+      "filePath": 57,
       "runCommand": 68,
-      "officialSource": 21
+      "officialSource": 26
     },
     "javascript": {
       "topics": 83,
@@ -1672,13 +1672,6 @@
       "track": "devops",
       "module": 8,
       "topic": "Tema 6: Ansible — playbooks, roles, inventory y módulos",
-      "missingCode": false,
-      "missingComments": true
-    },
-    {
-      "track": "devops",
-      "module": 8,
-      "topic": "Tema 7: Pulumi como alternativa a HCL",
       "missingCode": false,
       "missingComments": true
     },
