@@ -148,18 +148,18 @@
       "genericScaffold": 0
     },
     "kotlin-multiplatform": {
-      "topics": 52,
-      "explanation": 52,
-      "code": 52,
-      "visual": 30,
-      "filePath": 27,
-      "runCommand": 34,
-      "expectedResult": 29,
-      "practice": 33,
-      "project": 30,
-      "modelMental": 52,
-      "limitsDecision": 39,
-      "practicable": 24,
+      "topics": 53,
+      "explanation": 53,
+      "code": 53,
+      "visual": 34,
+      "filePath": 31,
+      "runCommand": 38,
+      "expectedResult": 32,
+      "practice": 37,
+      "project": 34,
+      "modelMental": 53,
+      "limitsDecision": 42,
+      "practicable": 28,
       "genericScaffold": 0
     },
     "node": {
@@ -14823,18 +14823,18 @@
         "criteria": {
           "explanation": true,
           "code": true,
-          "visual": false,
-          "filePath": false,
-          "runCommand": false,
+          "visual": true,
+          "filePath": true,
+          "runCommand": true,
           "expectedResult": true,
-          "practice": false,
-          "project": false,
+          "practice": true,
+          "project": true,
           "modelMental": true,
           "limitsDecision": true
         },
         "classification": {
-          "rubricScore": 6,
-          "practicable": false,
+          "rubricScore": 16,
+          "practicable": true,
           "genericScaffold": false
         }
       },
@@ -14844,18 +14844,18 @@
         "criteria": {
           "explanation": true,
           "code": true,
-          "visual": false,
-          "filePath": false,
-          "runCommand": false,
-          "expectedResult": false,
-          "practice": false,
-          "project": false,
+          "visual": true,
+          "filePath": true,
+          "runCommand": true,
+          "expectedResult": true,
+          "practice": true,
+          "project": true,
           "modelMental": true,
-          "limitsDecision": false
+          "limitsDecision": true
         },
         "classification": {
-          "rubricScore": 3,
-          "practicable": false,
+          "rubricScore": 16,
+          "practicable": true,
           "genericScaffold": false
         }
       },
@@ -14865,18 +14865,39 @@
         "criteria": {
           "explanation": true,
           "code": true,
-          "visual": false,
-          "filePath": false,
-          "runCommand": false,
-          "expectedResult": false,
-          "practice": false,
-          "project": false,
+          "visual": true,
+          "filePath": true,
+          "runCommand": true,
+          "expectedResult": true,
+          "practice": true,
+          "project": true,
           "modelMental": true,
-          "limitsDecision": false
+          "limitsDecision": true
         },
         "classification": {
-          "rubricScore": 3,
-          "practicable": false,
+          "rubricScore": 16,
+          "practicable": true,
+          "genericScaffold": false
+        }
+      },
+      {
+        "module": 6,
+        "topic": "Tema 4: Transacciones: atomicidad en operaciones multi-tabla",
+        "criteria": {
+          "explanation": true,
+          "code": true,
+          "visual": true,
+          "filePath": true,
+          "runCommand": true,
+          "expectedResult": true,
+          "practice": true,
+          "project": true,
+          "modelMental": true,
+          "limitsDecision": true
+        },
+        "classification": {
+          "rubricScore": 16,
+          "practicable": true,
           "genericScaffold": false
         }
       },

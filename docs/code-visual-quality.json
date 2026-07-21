@@ -100,14 +100,14 @@
       "officialSource": 58
     },
     "kotlin-multiplatform": {
-      "topics": 52,
-      "code": 46,
-      "commentedCode": 29,
-      "mermaid": 20,
-      "asciiVisual": 18,
+      "topics": 53,
+      "code": 47,
+      "commentedCode": 30,
+      "mermaid": 22,
+      "asciiVisual": 20,
       "misleadingDiagramLabel": 0,
-      "filePath": 27,
-      "runCommand": 34,
+      "filePath": 31,
+      "runCommand": 38,
       "officialSource": 20
     },
     "android": {

@@ -5079,6 +5079,17 @@
       ]
     },
     {
+      "id": "kotlin-multiplatform:6:4",
+      "track": "kotlin-multiplatform",
+      "module": 6,
+      "position": 4,
+      "title": "Transacciones: atomicidad en operaciones multi-tabla",
+      "file": "web/public/content/kotlin-multiplatform/modulo-6.md",
+      "requires": [
+        "kotlin-multiplatform:6:3"
+      ]
+    },
+    {
       "id": "kotlin-multiplatform:7:1",
       "track": "kotlin-multiplatform",
       "module": 7,
@@ -5086,7 +5097,7 @@
       "title": "Compose Multiplatform vs Jetpack Compose",
       "file": "web/public/content/kotlin-multiplatform/modulo-7.md",
       "requires": [
-        "kotlin-multiplatform:6:3"
+        "kotlin-multiplatform:6:4"
       ]
     },
     {

@@ -3138,6 +3138,10 @@
       {
         "title": "Migraciones de esquema",
         "fragment": "tema-3-migraciones-de-esquema"
+      },
+      {
+        "title": "Transacciones: atomicidad en operaciones multi-tabla",
+        "fragment": "tema-4-transacciones-atomicidad-en-operaciones-multi-tabla"
       }
     ],
     "7": [
