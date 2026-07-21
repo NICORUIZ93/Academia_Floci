@@ -145,7 +145,7 @@
     },
     {
       "path": "docs/code-visual-quality.json",
-      "lines": 5026,
+      "lines": 4907,
       "kind": "project-file",
       "symbols": [],
       "imports": [],
@@ -172,7 +172,7 @@
     },
     {
       "path": "docs/editorial-backlog.md",
-      "lines": 53,
+      "lines": 49,
       "kind": "documentation",
       "symbols": [],
       "imports": [],
@@ -3767,7 +3767,7 @@
     },
     {
       "path": "web/public/content/cloud/modulo-26.md",
-      "lines": 92,
+      "lines": 166,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -3775,17 +3775,20 @@
         "# M\u00f3dulo 26: Streaming e integraci\u00f3n avanzada \u2014 Firehose y EventBridge Pipes",
         "## Aprende construyendo",
         "### Tema 1: Amazon Data Firehose \u2014 entrega gestionada sin consumidores propios",
+        "# archivo: src/labs/modulo-26/tema-1-firehose.sh \u2014 ejecutar con: bash tema-1-firehose.sh",
         "### Tema 2: Firehose vs Kinesis Data Streams \u2014 qui\u00e9n consume los datos",
+        "# archivo: src/labs/modulo-26/tema-2-comparar-firehose-kinesis.sh \u2014 ejecutar con: bash tema-2-comparar-firehose-kinesis.sh",
         "### Tema 3: EventBridge Pipes \u2014 conectar origen y destino sin c\u00f3digo de pegamento",
+        "# archivo: src/labs/modulo-26/tema-3-pipe.sh \u2014 ejecutar con: bash tema-3-pipe.sh",
         "### Tema 4: Cu\u00e1ndo usar Pipes frente a reglas EventBridge o Step Functions",
+        "# archivo: src/labs/modulo-26/tema-4-cuando-cada-uno.sh \u2014 ejecutar con: bash tema-4-cuando-cada-uno.sh",
         "## Laboratorio pr\u00e1ctico",
-        "### Laboratorio 26.1 \u2014 Entrega autom\u00e1tica con Firehose",
-        "### Laboratorio 26.2 \u2014 Pipe de SQS a Lambda sin c\u00f3digo intermedio"
+        "### Laboratorio 26.1 \u2014 Entrega autom\u00e1tica con Firehose"
       ]
     },
     {
       "path": "web/public/content/cloud/modulo-27.md",
-      "lines": 95,
+      "lines": 167,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -3793,17 +3796,20 @@
         "# M\u00f3dulo 27: APIs GraphQL con AppSync y correo transaccional con SES",
         "## Aprende construyendo",
         "### Tema 1: AppSync \u2014 APIs GraphQL gestionadas",
+        "# archivo: src/labs/modulo-27/tema-1-appsync-api.sh \u2014 ejecutar con: bash tema-1-appsync-api.sh",
         "### Tema 2: Fuentes de datos y resolvers",
+        "# archivo: src/labs/modulo-27/tema-2-resolver-local.sh \u2014 ejecutar con: bash tema-2-resolver-local.sh",
         "### Tema 3: SES \u2014 identidades, env\u00edo y plantillas",
+        "# archivo: src/labs/modulo-27/tema-3-ses-plantilla.sh \u2014 ejecutar con: bash tema-3-ses-plantilla.sh",
         "### Tema 4: El simulador de buzones y el punto de inspecci\u00f3n local",
+        "# archivo: src/labs/modulo-27/tema-4-simulador.sh \u2014 ejecutar con: bash tema-4-simulador.sh",
         "## Laboratorio pr\u00e1ctico",
-        "### Laboratorio 27.1 \u2014 API GraphQL con resolver local",
-        "### Laboratorio 27.2 \u2014 Simulador de entrega, rebote y queja con SES"
+        "### Laboratorio 27.1 \u2014 API GraphQL con resolver local"
       ]
     },
     {
       "path": "web/public/content/cloud/modulo-28.md",
-      "lines": 93,
+      "lines": 173,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -3811,17 +3817,20 @@
         "# M\u00f3dulo 28: Bases de datos de grafos y b\u00fasqueda \u2014 Neptune y OpenSearch",
         "## Aprende construyendo",
         "### Tema 1: Bases de datos de grafos \u2014 cuando las relaciones son el dato",
+        "# archivo: src/labs/modulo-28/tema-1-por-que-un-grafo.py \u2014 ejecutar con: python tema-1-por-que-un-grafo.py",
+        "# Compara mentalmente: recuperar \"qui\u00e9n entreg\u00f3 el pedido RF-001\" es una",
+        "# consulta por clave (DynamoDB). Recuperar \"todos los repartidores que",
+        "# alguna vez cubrieron la misma zona que Ana\" es un recorrido multi-salto:",
+        "# exactamente el tipo de pregunta que justifica una base de grafos.",
         "### Tema 2: Neptune en Floci \u2014 un servidor Gremlin real, no una simulaci\u00f3n",
+        "# archivo: src/labs/modulo-28/tema-2-neptune-real.sh \u2014 ejecutar con: bash tema-2-neptune-real.sh",
         "### Tema 3: OpenSearch \u2014 modo simulado y modo real",
-        "### Tema 4: Eligiendo entre Neptune, OpenSearch y DynamoDB",
-        "## Laboratorio pr\u00e1ctico",
-        "### Laboratorio 28.1 \u2014 Grafo de relaciones con Neptune",
-        "### Laboratorio 28.2 \u2014 B\u00fasqueda de texto completo con OpenSearch"
+        "# archivo: src/labs/modulo-28/tema-3-opensearch.sh \u2014 ejecutar con: bash tema-3-opensearch.sh"
       ]
     },
     {
       "path": "web/public/content/cloud/modulo-29.md",
-      "lines": 106,
+      "lines": 195,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -3829,13 +3838,15 @@
         "# M\u00f3dulo 29: FinOps y gobierno de cuenta \u2014 Cost Explorer, Pricing, BCM Data Exports, Resource Groups Tagging y STS",
         "## Aprende construyendo",
         "### Tema 1: Cost Explorer \u2014 costos sintetizados a partir de tu estado real",
+        "# archivo: src/labs/modulo-29/tema-1-cost-explorer.sh \u2014 ejecutar con: bash tema-1-cost-explorer.sh",
         "### Tema 2: Pricing \u2014 cat\u00e1logo de tarifas de referencia",
+        "# archivo: src/labs/modulo-29/tema-2-pricing.sh \u2014 ejecutar con: bash tema-2-pricing.sh",
         "### Tema 3: BCM Data Exports \u2014 reportes de costo en formato est\u00e1ndar",
+        "# archivo: src/labs/modulo-29/tema-3-bcm-export.sh \u2014 ejecutar con: bash tema-3-bcm-export.sh",
         "### Tema 4: Resource Groups Tagging API \u2014 descubrimiento centralizado por etiqueta",
+        "# archivo: src/labs/modulo-29/tema-4-tagging.sh \u2014 ejecutar con: bash tema-4-tagging.sh",
         "### Tema 5: STS en profundidad \u2014 identidad temporal y aislamiento multi-cuenta",
-        "## Laboratorio pr\u00e1ctico",
-        "### Laboratorio 29.1 \u2014 Costo sintetizado y exportaci\u00f3n FOCUS",
-        "### Laboratorio 29.2 \u2014 Descubrimiento centralizado por etiqueta"
+        "# archivo: src/labs/modulo-29/tema-5-sts.sh \u2014 ejecutar con: bash tema-5-sts.sh"
       ]
     },
     {

@@ -15,6 +15,23 @@ Una vez definido el esquema, cada campo de tipo `Query`, `Mutation` o `Subscript
 
 **¿Por qué es importante?** Elegir GraphQL sobre REST no es gratis —añade la complejidad de definir un esquema y resolvers—, así que reconocer cuándo el problema real es "mis clientes necesitan formas de datos muy variables" (donde GraphQL brilla) frente a "necesito operaciones CRUD simples y predecibles" (donde REST suele ser más simple) es la decisión de diseño central de este tema.
 
+**Practícalo tú:**
+
+```bash
+# archivo: src/labs/modulo-27/tema-1-appsync-api.sh — ejecutar con: bash tema-1-appsync-api.sh
+API_ID=$(aws appsync create-graphql-api --name rutaflow-api --authentication-type API_KEY --query 'graphqlApi.apiId' --output text)
+aws appsync start-schema-creation --api-id "$API_ID" \
+  --definition 'type Query { estadoEntrega(guia: String!): String }'
+```
+
+**Resultado esperado:** `create-graphql-api` devuelve un `apiId`; `start-schema-creation` confirma de inmediato (es síncrono en Floci, sin estado `PROCESSING` que sondear).
+
+**Modifica esto:** añade un segundo campo al esquema (`totalEntregas: Int`) recreando el esquema con `start-schema-creation`, y confirma con `get-introspection-schema` que ambos campos existen.
+
+**Cuándo no usarlo:** no migres una API REST simple y estable a GraphQL solo por moda; si tus clientes siempre piden la misma forma de datos, el costo de mantener esquema y resolvers no se paga solo.
+
+**Cómo crece RutaFlow:** `estadoEntrega` es el campo GraphQL que el panel de seguimiento de RutaFlow consulta para pedir exactamente los datos de una guía, sin sobre-pedir el resto de la entrega.
+
 ### Tema 2: Fuentes de datos y resolvers
 
 **Conceptos clave:** fuente de datos tipo `NONE`, resolvers locales, función.
@@ -26,6 +43,24 @@ Un detalle de comportamiento importante para gestionar el ciclo de vida de tu AP
 **Analogía:** una fuente de datos tipo `NONE` es como un mesero que puede confirmar tu pedido y darte una respuesta inmediata sin tener que ir a la cocina — útil cuando la "cocina" (backend real) todavía no existe pero necesitas probar el flujo completo de todos modos.
 
 **¿Por qué es importante?** Empezar con resolvers `NONE` te permite validar el diseño de tu esquema GraphQL con clientes reales antes de invertir tiempo conectando fuentes de datos definitivas — un patrón de "maqueta funcional primero" útil en cualquier desarrollo de API.
+
+**Practícalo tú:**
+
+```bash
+# archivo: src/labs/modulo-27/tema-2-resolver-local.sh — ejecutar con: bash tema-2-resolver-local.sh
+aws appsync create-data-source --api-id "$API_ID" --name origen-local --type NONE
+aws appsync create-resolver --api-id "$API_ID" --type-name Query --field-name estadoEntrega \
+  --data-source-name origen-local
+aws appsync create-api-key --api-id "$API_ID" --description "clave de prueba"
+```
+
+**Resultado esperado:** la fuente `origen-local` y el resolver quedan creados sin backend externo; la clave API devuelta es la que usarías desde un cliente GraphQL real para consultar `estadoEntrega`.
+
+**Modifica esto:** elimina la API completa con `delete-graphql-api --api-id $API_ID` y confirma con `get-data-source` que la fuente también desapareció — la eliminación en cascada no deja huérfanos.
+
+**Cuándo no usarlo:** no dejes un resolver `NONE` en producción esperando datos reales; es exclusivamente una herramienta de prototipado antes de conectar DynamoDB o Lambda como fuente definitiva.
+
+**Cómo crece RutaFlow:** este resolver local es el borrador rápido antes de conectar `estadoEntrega` a la tabla DynamoDB real de entregas de RutaFlow.
 
 ### Tema 3: SES — identidades, envío y plantillas
 
@@ -39,6 +74,25 @@ SES existe en dos versiones de API en Floci: la consulta clásica v1 (la que usa
 
 **¿Por qué es importante?** Practicar plantillas y envío estructurado desde el principio —en vez de concatenar strings de HTML manualmente en cada llamada— es el hábito que evita correos inconsistentes o rotos cuando tu aplicación crece y empieza a enviar decenas de tipos distintos de notificación.
 
+**Practícalo tú:**
+
+```bash
+# archivo: src/labs/modulo-27/tema-3-ses-plantilla.sh — ejecutar con: bash tema-3-ses-plantilla.sh
+aws ses verify-email-identity --email-address notificaciones@rutaflow.example.com
+aws ses create-template --template '{"TemplateName":"entrega-confirmada","SubjectPart":"Tu pedido {{guia}} fue entregado","TextPart":"Hola {{nombre}}, tu paquete {{guia}} llegó."}'
+aws ses send-templated-email --source notificaciones@rutaflow.example.com \
+  --destination ToAddresses=success@simulator.amazonses.com \
+  --template entrega-confirmada --template-data '{"guia":"RF-001","nombre":"Ana"}'
+```
+
+**Resultado esperado:** la identidad queda verificada de inmediato; la plantilla se crea; `send-templated-email` devuelve un `MessageId` y el correo resuelto con los datos de Ana llega al buzón de inspección local.
+
+**Modifica esto:** reenvía el mismo correo pero con `template-data` distinto (`{"guia":"RF-002","nombre":"Luis"}`) y confirma en el buzón de inspección que cada mensaje muestra su propio contenido resuelto, sin mezclarse.
+
+**Cuándo no usarlo:** no uses `SendEmail` con strings concatenados a mano para el mismo tipo de correo que envías cientos de veces; ahí es exactamente donde una plantilla evita inconsistencias.
+
+**Cómo crece RutaFlow:** esta plantilla es la que RutaFlow usa para notificar automáticamente a cada cliente cuando su paquete se marca como entregado.
+
 ### Tema 4: El simulador de buzones y el punto de inspección local
 
 **Conceptos clave:** direcciones del simulador (`success@`, `bounce@`, `complaint@`), punto de inspección `/_aws/ses`, eventos deterministas.
@@ -50,6 +104,24 @@ Además, cada correo enviado —simulador o no— queda almacenado en un buzón 
 **Analogía:** las direcciones del simulador son como un maniquí de entrenamiento de primeros auxilios que reacciona de forma predecible a cada procedimiento que practiques, en vez de tener que esperar una emergencia real para poder entrenar la respuesta correcta.
 
 **¿Por qué es importante?** Un sistema de notificaciones por correo que nunca fue probado contra un rebote o una queja real fallará silenciosamente en producción la primera vez que ocurra uno; el simulador te permite escribir esa prueba desde el primer día, sin excusas.
+
+**Practícalo tú:**
+
+```bash
+# archivo: src/labs/modulo-27/tema-4-simulador.sh — ejecutar con: bash tema-4-simulador.sh
+aws ses send-email --from notificaciones@rutaflow.example.com \
+  --destination ToAddresses=bounce@simulator.amazonses.com \
+  --message "Subject={Data=Prueba rebote},Body={Text={Data=Hola}}"
+curl -s http://localhost:4566/_aws/ses | grep -o '"bounce@simulator.amazonses.com"'
+```
+
+**Resultado esperado:** el envío genera un evento `Bounce` determinista (no un error); el buzón de inspección `GET /_aws/ses` confirma que el mensaje quedó registrado con esa dirección de destino.
+
+**Modifica esto:** escribe un pequeño manejador (puede ser un script que consulte `/_aws/ses`) que distinga un correo enviado a `bounce@` de uno enviado a `success@`, simulando cómo tu aplicación reaccionaría distinto ante cada evento.
+
+**Cuándo no usarlo:** no uses estas direcciones de simulador para probar contenido real de correo (diseño, renderizado HTML); solo generan eventos deterministas, no validan cómo se ve el correo en un cliente real.
+
+**Cómo crece RutaFlow:** esta prueba determinista es la que RutaFlow usa en su suite automatizada para verificar que el manejador de rebotes desactiva correctamente las notificaciones a una dirección inválida.
 
 ---
 

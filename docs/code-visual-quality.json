@@ -13,13 +13,13 @@
     },
     "cloud": {
       "topics": 153,
-      "code": 118,
-      "commentedCode": 28,
+      "code": 135,
+      "commentedCode": 45,
       "mermaid": 14,
       "asciiVisual": 78,
       "misleadingDiagramLabel": 0,
-      "filePath": 45,
-      "runCommand": 109,
+      "filePath": 62,
+      "runCommand": 115,
       "officialSource": 1
     },
     "devops": {
@@ -771,125 +771,6 @@
       "topic": "Tema 1: El modelo de ejecución de EC2 — instancias que son contenedores Docker reales",
       "missingCode": false,
       "missingComments": true
-    },
-    {
-      "track": "cloud",
-      "module": 26,
-      "topic": "Tema 1: Amazon Data Firehose — entrega gestionada sin consumidores propios",
-      "missingCode": true,
-      "missingComments": false
-    },
-    {
-      "track": "cloud",
-      "module": 26,
-      "topic": "Tema 2: Firehose vs Kinesis Data Streams — quién consume los datos",
-      "missingCode": true,
-      "missingComments": false
-    },
-    {
-      "track": "cloud",
-      "module": 26,
-      "topic": "Tema 3: EventBridge Pipes — conectar origen y destino sin código de pegamento",
-      "missingCode": true,
-      "missingComments": false
-    },
-    {
-      "track": "cloud",
-      "module": 26,
-      "topic": "Tema 4: Cuándo usar Pipes frente a reglas EventBridge o Step Functions",
-      "missingCode": true,
-      "missingComments": false
-    },
-    {
-      "track": "cloud",
-      "module": 27,
-      "topic": "Tema 1: AppSync — APIs GraphQL gestionadas",
-      "missingCode": true,
-      "missingComments": false
-    },
-    {
-      "track": "cloud",
-      "module": 27,
-      "topic": "Tema 2: Fuentes de datos y resolvers",
-      "missingCode": true,
-      "missingComments": false
-    },
-    {
-      "track": "cloud",
-      "module": 27,
-      "topic": "Tema 3: SES — identidades, envío y plantillas",
-      "missingCode": true,
-      "missingComments": false
-    },
-    {
-      "track": "cloud",
-      "module": 27,
-      "topic": "Tema 4: El simulador de buzones y el punto de inspección local",
-      "missingCode": true,
-      "missingComments": false
-    },
-    {
-      "track": "cloud",
-      "module": 28,
-      "topic": "Tema 1: Bases de datos de grafos — cuando las relaciones son el dato",
-      "missingCode": true,
-      "missingComments": false
-    },
-    {
-      "track": "cloud",
-      "module": 28,
-      "topic": "Tema 2: Neptune en Floci — un servidor Gremlin real, no una simulación",
-      "missingCode": true,
-      "missingComments": false
-    },
-    {
-      "track": "cloud",
-      "module": 28,
-      "topic": "Tema 3: OpenSearch — modo simulado y modo real",
-      "missingCode": true,
-      "missingComments": false
-    },
-    {
-      "track": "cloud",
-      "module": 28,
-      "topic": "Tema 4: Eligiendo entre Neptune, OpenSearch y DynamoDB",
-      "missingCode": true,
-      "missingComments": false
-    },
-    {
-      "track": "cloud",
-      "module": 29,
-      "topic": "Tema 1: Cost Explorer — costos sintetizados a partir de tu estado real",
-      "missingCode": true,
-      "missingComments": false
-    },
-    {
-      "track": "cloud",
-      "module": 29,
-      "topic": "Tema 2: Pricing — catálogo de tarifas de referencia",
-      "missingCode": true,
-      "missingComments": false
-    },
-    {
-      "track": "cloud",
-      "module": 29,
-      "topic": "Tema 3: BCM Data Exports — reportes de costo en formato estándar",
-      "missingCode": true,
-      "missingComments": false
-    },
-    {
-      "track": "cloud",
-      "module": 29,
-      "topic": "Tema 4: Resource Groups Tagging API — descubrimiento centralizado por etiqueta",
-      "missingCode": true,
-      "missingComments": false
-    },
-    {
-      "track": "cloud",
-      "module": 29,
-      "topic": "Tema 5: STS en profundidad — identidad temporal y aislamiento multi-cuenta",
-      "missingCode": true,
-      "missingComments": false
     },
     {
       "track": "cloud",

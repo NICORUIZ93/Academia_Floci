@@ -45,16 +45,16 @@
     "cloud": {
       "topics": 153,
       "explanation": 152,
-      "code": 126,
+      "code": 143,
       "visual": 59,
-      "filePath": 45,
-      "runCommand": 108,
-      "expectedResult": 50,
-      "practice": 90,
-      "project": 32,
+      "filePath": 62,
+      "runCommand": 114,
+      "expectedResult": 65,
+      "practice": 104,
+      "project": 49,
       "modelMental": 153,
-      "limitsDecision": 91,
-      "practicable": 32,
+      "limitsDecision": 105,
+      "practicable": 49,
       "genericScaffold": 0
     },
     "devops": {
@@ -4098,19 +4098,19 @@
         "topic": "Tema 1: Amazon Data Firehose — entrega gestionada sin consumidores propios",
         "criteria": {
           "explanation": true,
-          "code": false,
+          "code": true,
           "visual": false,
-          "filePath": false,
-          "runCommand": false,
-          "expectedResult": false,
-          "practice": false,
-          "project": false,
+          "filePath": true,
+          "runCommand": true,
+          "expectedResult": true,
+          "practice": true,
+          "project": true,
           "modelMental": true,
           "limitsDecision": true
         },
         "classification": {
-          "rubricScore": 2,
-          "practicable": false,
+          "rubricScore": 14,
+          "practicable": true,
           "genericScaffold": false
         }
       },
@@ -4119,19 +4119,19 @@
         "topic": "Tema 2: Firehose vs Kinesis Data Streams — quién consume los datos",
         "criteria": {
           "explanation": true,
-          "code": false,
+          "code": true,
           "visual": false,
-          "filePath": false,
-          "runCommand": false,
-          "expectedResult": false,
-          "practice": false,
-          "project": false,
+          "filePath": true,
+          "runCommand": true,
+          "expectedResult": true,
+          "practice": true,
+          "project": true,
           "modelMental": true,
-          "limitsDecision": false
+          "limitsDecision": true
         },
         "classification": {
-          "rubricScore": 1,
-          "practicable": false,
+          "rubricScore": 14,
+          "practicable": true,
           "genericScaffold": false
         }
       },
@@ -4140,19 +4140,19 @@
         "topic": "Tema 3: EventBridge Pipes — conectar origen y destino sin código de pegamento",
         "criteria": {
           "explanation": true,
-          "code": false,
+          "code": true,
           "visual": false,
-          "filePath": false,
+          "filePath": true,
           "runCommand": true,
-          "expectedResult": false,
-          "practice": false,
-          "project": false,
+          "expectedResult": true,
+          "practice": true,
+          "project": true,
           "modelMental": true,
-          "limitsDecision": false
+          "limitsDecision": true
         },
         "classification": {
-          "rubricScore": 3,
-          "practicable": false,
+          "rubricScore": 14,
+          "practicable": true,
           "genericScaffold": false
         }
       },
@@ -4161,19 +4161,19 @@
         "topic": "Tema 4: Cuándo usar Pipes frente a reglas EventBridge o Step Functions",
         "criteria": {
           "explanation": true,
-          "code": false,
+          "code": true,
           "visual": false,
-          "filePath": false,
+          "filePath": true,
           "runCommand": true,
-          "expectedResult": false,
+          "expectedResult": true,
           "practice": true,
-          "project": false,
+          "project": true,
           "modelMental": true,
           "limitsDecision": true
         },
         "classification": {
-          "rubricScore": 6,
-          "practicable": false,
+          "rubricScore": 14,
+          "practicable": true,
           "genericScaffold": false
         }
       },
@@ -4182,19 +4182,19 @@
         "topic": "Tema 1: AppSync — APIs GraphQL gestionadas",
         "criteria": {
           "explanation": true,
-          "code": false,
+          "code": true,
           "visual": false,
-          "filePath": false,
-          "runCommand": false,
-          "expectedResult": false,
-          "practice": false,
-          "project": false,
+          "filePath": true,
+          "runCommand": true,
+          "expectedResult": true,
+          "practice": true,
+          "project": true,
           "modelMental": true,
           "limitsDecision": true
         },
         "classification": {
-          "rubricScore": 2,
-          "practicable": false,
+          "rubricScore": 14,
+          "practicable": true,
           "genericScaffold": false
         }
       },
@@ -4203,19 +4203,19 @@
         "topic": "Tema 2: Fuentes de datos y resolvers",
         "criteria": {
           "explanation": true,
-          "code": false,
+          "code": true,
           "visual": false,
-          "filePath": false,
+          "filePath": true,
           "runCommand": true,
-          "expectedResult": false,
+          "expectedResult": true,
           "practice": true,
-          "project": false,
+          "project": true,
           "modelMental": true,
-          "limitsDecision": false
+          "limitsDecision": true
         },
         "classification": {
-          "rubricScore": 5,
-          "practicable": false,
+          "rubricScore": 14,
+          "practicable": true,
           "genericScaffold": false
         }
       },
@@ -4224,19 +4224,19 @@
         "topic": "Tema 3: SES — identidades, envío y plantillas",
         "criteria": {
           "explanation": true,
-          "code": false,
+          "code": true,
           "visual": false,
-          "filePath": false,
+          "filePath": true,
           "runCommand": true,
           "expectedResult": true,
-          "practice": false,
-          "project": false,
+          "practice": true,
+          "project": true,
           "modelMental": true,
-          "limitsDecision": false
+          "limitsDecision": true
         },
         "classification": {
-          "rubricScore": 5,
-          "practicable": false,
+          "rubricScore": 14,
+          "practicable": true,
           "genericScaffold": false
         }
       },
@@ -4245,19 +4245,19 @@
         "topic": "Tema 4: El simulador de buzones y el punto de inspección local",
         "criteria": {
           "explanation": true,
-          "code": false,
+          "code": true,
           "visual": false,
-          "filePath": false,
+          "filePath": true,
           "runCommand": true,
-          "expectedResult": false,
-          "practice": false,
-          "project": false,
+          "expectedResult": true,
+          "practice": true,
+          "project": true,
           "modelMental": true,
-          "limitsDecision": false
+          "limitsDecision": true
         },
         "classification": {
-          "rubricScore": 3,
-          "practicable": false,
+          "rubricScore": 14,
+          "practicable": true,
           "genericScaffold": false
         }
       },
@@ -4266,19 +4266,19 @@
         "topic": "Tema 1: Bases de datos de grafos — cuando las relaciones son el dato",
         "criteria": {
           "explanation": true,
-          "code": false,
+          "code": true,
           "visual": false,
-          "filePath": false,
-          "runCommand": false,
-          "expectedResult": false,
-          "practice": false,
-          "project": false,
+          "filePath": true,
+          "runCommand": true,
+          "expectedResult": true,
+          "practice": true,
+          "project": true,
           "modelMental": true,
-          "limitsDecision": false
+          "limitsDecision": true
         },
         "classification": {
-          "rubricScore": 1,
-          "practicable": false,
+          "rubricScore": 14,
+          "practicable": true,
           "genericScaffold": false
         }
       },
@@ -4287,19 +4287,19 @@
         "topic": "Tema 2: Neptune en Floci — un servidor Gremlin real, no una simulación",
         "criteria": {
           "explanation": true,
-          "code": false,
+          "code": true,
           "visual": false,
-          "filePath": false,
+          "filePath": true,
           "runCommand": true,
-          "expectedResult": false,
-          "practice": false,
-          "project": false,
+          "expectedResult": true,
+          "practice": true,
+          "project": true,
           "modelMental": true,
-          "limitsDecision": false
+          "limitsDecision": true
         },
         "classification": {
-          "rubricScore": 3,
-          "practicable": false,
+          "rubricScore": 14,
+          "practicable": true,
           "genericScaffold": false
         }
       },
@@ -4308,19 +4308,19 @@
         "topic": "Tema 3: OpenSearch — modo simulado y modo real",
         "criteria": {
           "explanation": true,
-          "code": false,
+          "code": true,
           "visual": false,
-          "filePath": false,
+          "filePath": true,
           "runCommand": true,
-          "expectedResult": false,
-          "practice": false,
-          "project": false,
+          "expectedResult": true,
+          "practice": true,
+          "project": true,
           "modelMental": true,
-          "limitsDecision": false
+          "limitsDecision": true
         },
         "classification": {
-          "rubricScore": 3,
-          "practicable": false,
+          "rubricScore": 14,
+          "practicable": true,
           "genericScaffold": false
         }
       },
@@ -4329,19 +4329,19 @@
         "topic": "Tema 4: Eligiendo entre Neptune, OpenSearch y DynamoDB",
         "criteria": {
           "explanation": true,
-          "code": false,
+          "code": true,
           "visual": false,
-          "filePath": false,
-          "runCommand": false,
-          "expectedResult": false,
-          "practice": false,
-          "project": false,
+          "filePath": true,
+          "runCommand": true,
+          "expectedResult": true,
+          "practice": true,
+          "project": true,
           "modelMental": true,
-          "limitsDecision": false
+          "limitsDecision": true
         },
         "classification": {
-          "rubricScore": 1,
-          "practicable": false,
+          "rubricScore": 14,
+          "practicable": true,
           "genericScaffold": false
         }
       },
@@ -4350,19 +4350,19 @@
         "topic": "Tema 1: Cost Explorer — costos sintetizados a partir de tu estado real",
         "criteria": {
           "explanation": true,
-          "code": false,
+          "code": true,
           "visual": false,
-          "filePath": false,
+          "filePath": true,
           "runCommand": true,
-          "expectedResult": false,
+          "expectedResult": true,
           "practice": true,
-          "project": false,
+          "project": true,
           "modelMental": true,
-          "limitsDecision": false
+          "limitsDecision": true
         },
         "classification": {
-          "rubricScore": 5,
-          "practicable": false,
+          "rubricScore": 14,
+          "practicable": true,
           "genericScaffold": false
         }
       },
@@ -4371,19 +4371,19 @@
         "topic": "Tema 2: Pricing — catálogo de tarifas de referencia",
         "criteria": {
           "explanation": true,
-          "code": false,
+          "code": true,
           "visual": false,
-          "filePath": false,
+          "filePath": true,
           "runCommand": true,
-          "expectedResult": false,
-          "practice": false,
-          "project": false,
+          "expectedResult": true,
+          "practice": true,
+          "project": true,
           "modelMental": true,
-          "limitsDecision": false
+          "limitsDecision": true
         },
         "classification": {
-          "rubricScore": 3,
-          "practicable": false,
+          "rubricScore": 14,
+          "practicable": true,
           "genericScaffold": false
         }
       },
@@ -4392,19 +4392,19 @@
         "topic": "Tema 3: BCM Data Exports — reportes de costo en formato estándar",
         "criteria": {
           "explanation": true,
-          "code": false,
+          "code": true,
           "visual": false,
-          "filePath": false,
+          "filePath": true,
           "runCommand": true,
-          "expectedResult": false,
-          "practice": false,
-          "project": false,
+          "expectedResult": true,
+          "practice": true,
+          "project": true,
           "modelMental": true,
-          "limitsDecision": false
+          "limitsDecision": true
         },
         "classification": {
-          "rubricScore": 3,
-          "practicable": false,
+          "rubricScore": 14,
+          "practicable": true,
           "genericScaffold": false
         }
       },
@@ -4413,19 +4413,19 @@
         "topic": "Tema 4: Resource Groups Tagging API — descubrimiento centralizado por etiqueta",
         "criteria": {
           "explanation": true,
-          "code": false,
+          "code": true,
           "visual": false,
-          "filePath": false,
-          "runCommand": false,
-          "expectedResult": false,
-          "practice": false,
-          "project": false,
+          "filePath": true,
+          "runCommand": true,
+          "expectedResult": true,
+          "practice": true,
+          "project": true,
           "modelMental": true,
-          "limitsDecision": false
+          "limitsDecision": true
         },
         "classification": {
-          "rubricScore": 1,
-          "practicable": false,
+          "rubricScore": 14,
+          "practicable": true,
           "genericScaffold": false
         }
       },
@@ -4434,19 +4434,19 @@
         "topic": "Tema 5: STS en profundidad — identidad temporal y aislamiento multi-cuenta",
         "criteria": {
           "explanation": true,
-          "code": false,
+          "code": true,
           "visual": false,
-          "filePath": false,
+          "filePath": true,
           "runCommand": true,
           "expectedResult": true,
-          "practice": false,
-          "project": false,
+          "practice": true,
+          "project": true,
           "modelMental": true,
-          "limitsDecision": false
+          "limitsDecision": true
         },
         "classification": {
-          "rubricScore": 5,
-          "practicable": false,
+          "rubricScore": 14,
+          "practicable": true,
           "genericScaffold": false
         }
       },

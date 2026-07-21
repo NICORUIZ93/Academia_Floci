@@ -15,6 +15,28 @@ El caso de uso clásico que justifica esta elección son los grafos sociales (qu
 
 **¿Por qué es importante?** Elegir la estructura de datos correcta para el patrón de consulta dominante de tu aplicación es una de las decisiones arquitectónicas con mayor impacto en rendimiento a largo plazo; forzar consultas de grafo complejas dentro de una base relacional es una fuente común de deuda técnica que se vuelve dolorosa exactamente cuando el sistema crece.
 
+**Practícalo tú:**
+
+```python
+# archivo: src/labs/modulo-28/tema-1-por-que-un-grafo.py — ejecutar con: python tema-1-por-que-un-grafo.py
+# Compara mentalmente: recuperar "quién entregó el pedido RF-001" es una
+# consulta por clave (DynamoDB). Recuperar "todos los repartidores que
+# alguna vez cubrieron la misma zona que Ana" es un recorrido multi-salto:
+# exactamente el tipo de pregunta que justifica una base de grafos.
+pregunta_por_clave = "SELECT * FROM entregas WHERE guia = 'RF-001'"
+pregunta_multi_salto = "g.V().has('nombre','Ana').out('cubrio_zona').in('cubrio_zona').dedup()"
+print("clave:", pregunta_por_clave)
+print("grafo:", pregunta_multi_salto)
+```
+
+**Resultado esperado:** el script solo imprime ambas consultas lado a lado — el ejercicio es reconocer visualmente que la segunda no tiene una forma natural y eficiente de expresarse como JOIN repetido en SQL o como escaneo en DynamoDB.
+
+**Modifica esto:** escribe una tercera pregunta que sí sea puramente de clave (por ejemplo, "el nombre del repartidor con id X") y clasifícala junto a las otras dos.
+
+**Cuándo no usarlo:** no adoptes una base de grafos si tu aplicación nunca hace preguntas de "cadena de relaciones"; añadir Neptune sin ese patrón de acceso es complejidad sin beneficio.
+
+**Cómo crece RutaFlow:** esta pregunta multi-salto es exactamente la que RutaFlow necesita para sugerir repartidores de respaldo según zonas compartidas históricamente.
+
 ### Tema 2: Neptune en Floci — un servidor Gremlin real, no una simulación
 
 **Conceptos clave:** Apache TinkerPop Gremlin Server, `CreateDBCluster`, proxy WebSocket.
@@ -26,6 +48,24 @@ Esto significa que las consultas Gremlin que aprendas y practiques aquí —`g.a
 **Analogía:** conectarte a Neptune en Floci es como practicar ajedrez contra un motor de ajedrez real instalado en tu computadora, en vez de contra un tablero de juguete que solo simula las reglas aproximadamente: las jugadas (consultas) que aprendes a hacer aquí funcionan exactamente igual en el motor real de producción.
 
 **¿Por qué es importante?** Que el motor Gremlin sea real —no una reinterpretación aproximada— es lo que te permite aprender el lenguaje de consulta de grafos genuinamente, sin el riesgo de aprender comportamientos que luego no se replican contra un Neptune real en AWS.
+
+**Practícalo tú:**
+
+```bash
+# archivo: src/labs/modulo-28/tema-2-neptune-real.sh — ejecutar con: bash tema-2-neptune-real.sh
+aws neptune create-db-cluster --db-cluster-identifier rutaflow-grafo --engine neptune
+PUERTO=$(aws neptune describe-db-clusters --db-cluster-identifier rutaflow-grafo \
+  --query 'DBClusters[0].Port' --output text)
+docker ps | grep gremlin
+```
+
+**Resultado esperado:** `docker ps` muestra un contenedor real de Apache TinkerPop Gremlin Server corriendo — la misma prueba de "motor real, no simulación" que ya viste con EC2 y ElastiCache.
+
+**Modifica esto:** conéctate con `gremlin-python` al puerto devuelto y ejecuta `g.V().count()` contra un clúster recién creado; confirma que devuelve `0` (grafo vacío, listo para poblar).
+
+**Cuándo no usarlo:** no midas aquí rendimiento de un clúster Neptune distribuido con réplicas; este es un único contenedor Gremlin, útil para aprender el lenguaje de consulta, no para pruebas de carga.
+
+**Cómo crece RutaFlow:** este clúster es donde RutaFlow modela qué repartidores han cubierto qué zonas, la base del Tema 1.
 
 ### Tema 3: OpenSearch — modo simulado y modo real
 
@@ -39,6 +79,27 @@ Un detalle útil: en modo real, todas las peticiones al plano de datos (`/_searc
 
 **¿Por qué es importante?** Elegir el modo correcto según el contexto —simulado para CI rápida donde solo validas configuración, real para desarrollo local donde necesitas probar búsquedas de verdad— es la misma disciplina de "usa la herramienta con el costo justo para la pregunta que estás respondiendo" que ya aplicaste en otros módulos.
 
+**Practícalo tú:**
+
+```bash
+# archivo: src/labs/modulo-28/tema-3-opensearch.sh — ejecutar con: bash tema-3-opensearch.sh
+aws opensearch create-domain --domain-name rutaflow-busqueda --engine-version "OpenSearch_2.11" \
+  --cluster-config InstanceType=m5.large.search,InstanceCount=1 \
+  --ebs-options EBSEnabled=true,VolumeType=gp2,VolumeSize=10
+ENDPOINT=$(aws opensearch describe-domain --domain-name rutaflow-busqueda --query 'DomainStatus.Endpoint' --output text)
+curl -X POST "http://$ENDPOINT/paquetes/_doc/1" -H "Content-Type: application/json" \
+  -d '{"guia": "RF-001", "descripcion": "caja fragil electronica"}'
+curl "http://$ENDPOINT/paquetes/_search?q=fragil"
+```
+
+**Resultado esperado:** el dominio pasa de `Processing: true` a `Created: true` con un `Endpoint` real; la búsqueda por `fragil` devuelve el documento indexado — el plano de datos completo respondiendo, no solo metadatos.
+
+**Modifica esto:** repite el mismo flujo pero exportando `FLOCI_SERVICES_OPENSEARCH_MOCK=true` antes de crear el dominio, y confirma que `_search` esta vez no responde — solo el plano de gestión está disponible en modo simulado.
+
+**Cuándo no usarlo:** no uses modo real en un pipeline de CI que solo necesita validar que tu Terraform crea el dominio correctamente; el arranque del contenedor completo es innecesariamente lento para esa pregunta.
+
+**Cómo crece RutaFlow:** este dominio indexa la descripción de cada paquete para que el panel de soporte de RutaFlow pueda buscarlos por texto libre.
+
 ### Tema 4: Eligiendo entre Neptune, OpenSearch y DynamoDB
 
 **Conceptos clave:** patrón de acceso dominante, búsqueda por clave vs relación vs texto completo.
@@ -50,6 +111,25 @@ En sistemas reales, es común usar los tres simultáneamente para distintas part
 **Analogía:** elegir entre estas bases de datos es como elegir la herramienta correcta en un taller: un martillo (DynamoDB) para clavos, una sierra (OpenSearch) para cortes precisos, y una llave inglesa (Neptune) para tuercas — ninguna reemplaza completamente a las otras, y un proyecto complejo suele necesitar las tres.
 
 **¿Por qué es importante?** Esta capacidad de "múltiples vistas especializadas sobre la misma fuente de verdad" es un patrón arquitectónico maduro (a veces llamado CQRS a nivel de almacenamiento) que separa correctamente la responsabilidad de "dónde vive la verdad" de "cómo se consulta eficientemente para cada caso de uso".
+
+**Practícalo tú:**
+
+```bash
+# archivo: src/labs/modulo-28/tema-4-tres-vistas.sh — ejecutar con: bash tema-4-tres-vistas.sh
+aws dynamodb get-item --table-name rutaflow-entregas --key '{"guia":{"S":"RF-001"}}'
+curl -s "http://$ENDPOINT/paquetes/_search?q=fragil" | head -c 200
+echo
+# equivalente conceptual en Gremlin: recorrer relaciones del mismo pedido
+echo "g.V().has('guia','RF-001').out('procesado_por').values('nombre')"
+```
+
+**Resultado esperado:** los tres comandos muestran la misma entidad lógica (el pedido RF-001) consultada desde sus tres ángulos: por clave exacta (DynamoDB), por texto libre (OpenSearch) y por relación (Neptune) — la evidencia de que "múltiples vistas especializadas" no es solo teoría.
+
+**Modifica esto:** dibuja el flujo de DynamoDB Streams (Módulo 4) que replicaría cada cambio en `rutaflow-entregas` hacia OpenSearch y Neptune automáticamente, sin que tu aplicación escriba tres veces.
+
+**Cuándo no usarlo:** no repliques a las tres bases si tu aplicación solo necesita una; cada vista adicional es infraestructura y sincronización que hay que operar y puede desincronizarse.
+
+**Cómo crece RutaFlow:** este es el patrón completo que RutaFlow usa: DynamoDB como fuente de verdad, OpenSearch para soporte y búsqueda, Neptune para análisis de cobertura de zonas.
 
 ---
 

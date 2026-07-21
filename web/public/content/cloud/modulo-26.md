@@ -15,6 +15,26 @@ Esta simplicidad tiene un costo: a diferencia de Kinesis Data Streams, donde tú
 
 **¿Por qué es importante?** Elegir Firehose en vez de construir un consumidor Kinesis propio para el caso simple de "solo quiero que estos datos terminen en S3 para analizarlos después con Athena" ahorra código, operación y superficie de error — reservas la complejidad de un consumidor propio para cuando realmente necesitas lógica de procesamiento en el camino.
 
+**Practícalo tú:**
+
+```bash
+# archivo: src/labs/modulo-26/tema-1-firehose.sh — ejecutar con: bash tema-1-firehose.sh
+aws firehose create-delivery-stream --delivery-stream-name rutaflow-eventos
+for i in 1 2 3 4 5; do
+  aws firehose put-record --delivery-stream-name rutaflow-eventos \
+    --record "{\"Data\": \"{\\\"guia\\\": \\\"RF-00$i\\\", \\\"evento\\\": \\\"entregado\\\"}\"}"
+done
+aws s3 ls s3://floci-firehose-results/ --recursive
+```
+
+**Resultado esperado:** tras el quinto `put-record`, Floci vacía el búfer automáticamente; `s3 ls` muestra un archivo NDJSON nuevo en `floci-firehose-results` con los 5 eventos, uno por línea, sin que hayas escrito ningún consumidor.
+
+**Modifica esto:** envía solo 3 registros y confirma que el archivo todavía no aparece en S3 — el vaciado en Floci ocurre cada 5 registros, no en cada `put-record` individual.
+
+**Cuándo no usarlo:** no uses Firehose si necesitas reaccionar a cada registro individualmente en tiempo real (por ejemplo, alertar apenas llega un evento crítico); para eso necesitas un consumidor propio sobre Kinesis Data Streams, como viste en el Módulo 17.
+
+**Cómo crece RutaFlow:** este stream acumula cada evento de "entregado" de RutaFlow y los deja en S3 listos para análisis histórico con Athena.
+
 ### Tema 2: Firehose vs Kinesis Data Streams — quién consume los datos
 
 **Conceptos clave:** consumidor propio vs entrega gestionada, latencia de entrega, transformación en tránsito.
@@ -26,6 +46,23 @@ En arquitecturas reales, ambos conviven con frecuencia: un productor escribe a u
 **Analogía:** Kinesis Data Streams es una cinta transportadora donde varios trabajadores (consumidores) pueden inspeccionar cada paquete mientras pasa; Firehose es una cinta transportadora que termina automáticamente en un almacén (S3), sin trabajadores intermedios que decidan nada sobre cada paquete individual.
 
 **¿Por qué es importante?** Esta distinción —¿necesito lógica de procesamiento en tránsito o solo entrega confiable?— es la misma pregunta de diseño que ya aplicaste al elegir entre SQS y SNS, o entre EventBridge y Step Functions: reconocer el patrón general de "¿cuánto control necesito realmente?" te ahorra sobre-ingeniería.
+
+**Practícalo tú:**
+
+```bash
+# archivo: src/labs/modulo-26/tema-2-comparar-firehose-kinesis.sh — ejecutar con: bash tema-2-comparar-firehose-kinesis.sh
+aws firehose describe-delivery-stream --delivery-stream-name rutaflow-eventos \
+  --query 'DeliveryStreamDescription.DeliveryStreamStatus'
+aws kinesis describe-stream --stream-name rutaflow-stream --query 'StreamDescription.Shards' 2>&1 | head -5
+```
+
+**Resultado esperado:** Firehose responde con un estado simple (`ACTIVE`) y ningún concepto de shard; Kinesis Data Streams responde con una lista de shards que tú tendrías que iterar manualmente para leer registros — la diferencia estructural entre "entrega gestionada" y "stream que tú consumes".
+
+**Modifica esto:** crea un stream Kinesis (`aws kinesis create-stream --stream-name rutaflow-stream --shard-count 1`) y repite la comparación para verla con datos reales en vez de un stream inexistente.
+
+**Cuándo no usarlo:** no migres un consumidor Kinesis existente a Firehose solo por simplicidad si ese consumidor depende de leer registros en tiempo real con múltiples lectores independientes (fan-out); perderías esa capacidad.
+
+**Cómo crece RutaFlow:** RutaFlow usa Kinesis Data Streams para el tracking GPS en tiempo real (Módulo 17) y Firehose en paralelo para el histórico de entregas — la misma combinación que describe este tema.
 
 ### Tema 3: EventBridge Pipes — conectar origen y destino sin código de pegamento
 
@@ -39,6 +76,26 @@ Un pipe tiene un ciclo de vida propio: se crea en estado `STARTING`, pasa a `RUN
 
 **¿Por qué es importante?** Cada línea de código de pegamento que no tienes que escribir es una línea que no puede tener bugs, no necesita pruebas, y no necesita mantenimiento; Pipes es el ejemplo más directo en este curso de cómo AWS moderno favorece la configuración declarativa sobre código intermedio cuando el caso de uso es simple.
 
+**Practícalo tú:**
+
+```bash
+# archivo: src/labs/modulo-26/tema-3-pipe.sh — ejecutar con: bash tema-3-pipe.sh
+aws pipes create-pipe --name rutaflow-pipe \
+  --source arn:aws:sqs:us-east-1:000000000000:rutaflow-cola \
+  --target arn:aws:lambda:us-east-1:000000000000:function:rutaflow-notificar \
+  --role-arn arn:aws:iam::000000000000:role/pipe-role
+aws sqs send-message --queue-url "$COLA_URL" --message-body '{"tarea":"notificar-entrega"}'
+aws logs tail /aws/lambda/rutaflow-notificar --since 1m
+```
+
+**Resultado esperado:** el pipe queda `RUNNING`; segundos después de enviar el mensaje a la cola, los logs de la Lambda muestran que recibió el evento — sin que hayas escrito ningún código de polling entre la cola y la función.
+
+**Modifica esto:** detén el pipe con `stop-pipe`, envía otro mensaje a la cola, y confirma que la Lambda esta vez NO se invoca — el mensaje queda esperando en la cola hasta que reanudes el pipe con `start-pipe`.
+
+**Cuándo no usarlo:** no uses un pipe si necesitas transformar significativamente el payload antes de que llegue al destino más allá de un filtro simple; para lógica de transformación compleja, una Lambda intermedia explícita sigue siendo más clara y testeable.
+
+**Cómo crece RutaFlow:** este pipe dispara la notificación al cliente en cuanto se encola un evento de entrega, sin una Lambda adicional dedicada solo a hacer polling de la cola.
+
 ### Tema 4: Cuándo usar Pipes frente a reglas EventBridge o Step Functions
 
 **Conceptos clave:** integración punto a punto vs enrutamiento por patrones vs orquestación con estado.
@@ -50,6 +107,23 @@ La pregunta práctica para elegir es: si tienes UN origen conocido que necesita 
 **Analogía:** un Pipe es un pasillo directo entre dos oficinas específicas; una regla EventBridge es una recepcionista que redirige cada visita según de qué se trate; una Step Function es el proceso completo de trámites con varios departamentos, formularios y aprobaciones que una visita compleja podría necesitar recorrer.
 
 **¿Por qué es importante?** Elegir la herramienta con la complejidad justa para el problema —ni más simple de lo que necesitas ni más compleja de lo necesario— es una habilidad de diseño que se vuelve más valiosa cuanto más crece tu catálogo de servicios AWS disponibles.
+
+**Practícalo tú:**
+
+```bash
+# archivo: src/labs/modulo-26/tema-4-cuando-cada-uno.sh — ejecutar con: bash tema-4-cuando-cada-uno.sh
+aws pipes describe-pipe --name rutaflow-pipe --query 'Source'
+aws events list-rules --event-bus-name rutaflow-bus --query 'Rules[].Name' 2>&1 | head -5
+aws stepfunctions list-state-machines --query 'stateMachines[].name' 2>&1 | head -5
+```
+
+**Resultado esperado:** los tres comandos muestran, lado a lado, las tres piezas: un origen fijo para el pipe punto a punto, reglas de EventBridge que enrutan por patrón desde un bus compartido, y máquinas de estado que orquestan pasos múltiples — la misma jerarquía de complejidad que acabas de leer, visible en la API real.
+
+**Modifica esto:** dibuja (en papel o en un README) qué pieza usarías para "cuando llega un pedido nuevo, verificar inventario, cobrar, y si algo falla reintentar 3 veces" — y justifica por qué no es un simple pipe.
+
+**Cuándo no usarlo:** no fuerces todo a pasar por Step Functions "por si acaso necesitas lógica compleja después"; empezar con un pipe simple y migrar a Step Functions cuando la complejidad real aparezca es más barato que sobre-diseñar desde el principio.
+
+**Cómo crece RutaFlow:** RutaFlow combina las tres piezas: pipes para integraciones directas, reglas EventBridge para reaccionar a eventos de negocio, y Step Functions para el flujo completo de una entrega con reintentos.
 
 ---
 

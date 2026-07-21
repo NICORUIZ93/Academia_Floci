@@ -15,6 +15,23 @@ Puedes agrupar y filtrar exactamente como en AWS real: por servicio, por tipo de
 
 **¿Por qué es importante?** Practicar la lectura de reportes de costo agrupados por servicio y dimensión —la habilidad central de FinOps— sin el riesgo de generar una factura real mientras aprendes es exactamente el tipo de práctica segura que un emulador local debe ofrecer.
 
+**Practícalo tú:**
+
+```bash
+# archivo: src/labs/modulo-29/tema-1-cost-explorer.sh — ejecutar con: bash tema-1-cost-explorer.sh
+aws s3 mb s3://rutaflow-costo-antes 2>/dev/null
+aws ce get-cost-and-usage --time-period Start=2026-01-01,End=2026-02-01 \
+  --granularity MONTHLY --metrics UnblendedCost --group-by Type=DIMENSION,Key=SERVICE
+```
+
+**Resultado esperado:** el desglose incluye `S3` con un costo distinto de cero, reflejando el bucket que acabas de crear — la prueba de que Cost Explorer sintetiza sobre tu estado real, no sobre datos inventados.
+
+**Modifica esto:** elimina el bucket con `aws s3 rb s3://rutaflow-costo-antes` y vuelve a consultar `get-cost-and-usage`: confirma que el costo de S3 cambia en la siguiente consulta.
+
+**Cuándo no usarlo:** no uses estos números para decisiones de presupuesto reales; son sintéticos a partir de una instantánea de precios mínima, no una factura real de AWS.
+
+**Cómo crece RutaFlow:** este reporte te permite estimar, mientras desarrollas, cuánto costaría en AWS real la infraestructura que RutaFlow va acumulando módulo a módulo.
+
 ### Tema 2: Pricing — catálogo de tarifas de referencia
 
 **Conceptos clave:** `GetProducts`, `DescribeServices`, instantánea de precios.
@@ -26,6 +43,24 @@ Un detalle de formato importante: AWS devuelve `GetProducts` como un arreglo de 
 **Analogía:** la instantánea de precios incluida es como una lista de precios de referencia de los productos más comunes de una tienda, útil para hacer cálculos aproximados rápidos, sin pretender ser el catálogo completo de cada variante y promoción disponible.
 
 **¿Por qué es importante?** Entender que Pricing es deliberadamente una instantánea mínima —no un espejo completo y actualizado de las tarifas reales de AWS— evita que confíes en sus números para decisiones de presupuesto reales: para eso, siempre consulta la API de Pricing contra AWS real o la consola de precios oficial.
+
+**Practícalo tú:**
+
+```bash
+# archivo: src/labs/modulo-29/tema-2-pricing.sh — ejecutar con: bash tema-2-pricing.sh
+aws pricing describe-services --service-code AmazonEC2
+aws pricing get-products --service-code AmazonEC2 \
+  --filters 'Type=TERM_MATCH,Field=instanceType,Value=t3.micro' 'Type=TERM_MATCH,Field=regionCode,Value=us-east-1' \
+  --query 'PriceList[0]' --output text
+```
+
+**Resultado esperado:** `describe-services` confirma qué atributos son filtrables para EC2; `get-products` devuelve un string que es en realidad JSON serializado — cópialo y pásalo por `python -m json.tool` para confirmarlo.
+
+**Modifica esto:** repite la consulta cambiando `instanceType` a un valor que no existe en la instantánea (por ejemplo `x9.enorme`) y confirma que `PriceList` vuelve vacío en vez de fallar con error.
+
+**Cuándo no usarlo:** no confíes en este catálogo para cotizar un presupuesto real; solo cubre EC2, S3 y Lambda en `us-east-1` con tipos representativos, no el catálogo completo de AWS.
+
+**Cómo crece RutaFlow:** este catálogo es la fuente que consulta el Tema 1 para sintetizar el costo estimado de la infraestructura de RutaFlow.
 
 ### Tema 3: BCM Data Exports — reportes de costo en formato estándar
 
@@ -39,6 +74,24 @@ Un detalle importante: aunque le pasas una consulta SQL en `DataQuery.QueryState
 
 **¿Por qué es importante?** El esquema FOCUS es un estándar cada vez más adoptado en la industria de FinOps precisamente porque permite comparar costos entre proveedores de nube distintos con el mismo formato — practicar su generación aquí te familiariza con un formato que vas a encontrar en herramientas de análisis de costo reales.
 
+**Practícalo tú:**
+
+```bash
+# archivo: src/labs/modulo-29/tema-3-bcm-export.sh — ejecutar con: bash tema-3-bcm-export.sh
+aws s3 mb s3://rutaflow-facturacion
+aws bcm-data-exports create-export --export \
+  '{"Name":"rutaflow-reporte","DataQuery":{"QueryStatement":"SELECT * FROM COST_AND_USAGE_REPORT"},"DestinationConfigurations":{"S3Destination":{"S3Bucket":"rutaflow-facturacion","S3Prefix":"focus","S3Region":"us-east-1","S3OutputConfigurations":{"Format":"PARQUET","Compression":"PARQUET","OutputType":"CUSTOM","Overwrite":"OVERWRITE_REPORT"}}},"RefreshCadence":{"Frequency":"SYNCHRONOUS"}}'
+aws s3 ls s3://rutaflow-facturacion/focus/ --recursive
+```
+
+**Resultado esperado:** `create-export` devuelve un `ExportArn`; `s3 ls` muestra un archivo `.parquet` real generado por el motor DuckDB sidecar, siguiendo el esquema FOCUS 1.2.
+
+**Modifica esto:** cambia `"Format"` a `"CSV"` y confirma que `create-export` falla con `ValidationException` — solo Parquet está implementado en Floci hoy.
+
+**Cuándo no usarlo:** no esperes que el `QueryStatement` que pasaste filtre el contenido del reporte; Floci lo almacena pero no lo evalúa, la salida siempre sigue el esquema FOCUS completo.
+
+**Cómo crece RutaFlow:** este export es el que RutaFlow enviaría a una herramienta externa de FinOps para comparar su costo en AWS, Azure y GCP con el mismo formato estándar.
+
 ### Tema 4: Resource Groups Tagging API — descubrimiento centralizado por etiqueta
 
 **Conceptos clave:** `TagResources`, `GetResources`, filtro de tipo de recurso, ARN arbitrario.
@@ -51,6 +104,25 @@ El servicio acepta ARNs de recursos completamente arbitrarios —no valida que e
 
 **¿Por qué es importante?** A medida que una cuenta crece a decenas o cientos de recursos repartidos entre múltiples servicios, tener una forma centralizada de descubrimiento por etiqueta —en vez de recordar consultar cada servicio individualmente— es lo que hace posible auditorías de costo, seguridad o cumplimiento a escala.
 
+**Practícalo tú:**
+
+```bash
+# archivo: src/labs/modulo-29/tema-4-tagging.sh — ejecutar con: bash tema-4-tagging.sh
+aws resourcegroupstaggingapi tag-resources \
+  --resource-arn-list arn:aws:s3:::rutaflow-facturacion --tags Proyecto=rutaflow
+aws resourcegroupstaggingapi tag-resources \
+  --resource-arn-list arn:aws:dynamodb:us-east-1:000000000000:table/rutaflow-entregas --tags Proyecto=rutaflow
+aws resourcegroupstaggingapi get-resources --tag-filters Key=Proyecto,Values=rutaflow
+```
+
+**Resultado esperado:** `get-resources` devuelve ambos ARNs —el del bucket S3 y el de la tabla DynamoDB— en una sola respuesta, aunque pertenecen a servicios completamente distintos.
+
+**Modifica esto:** usa `get-tag-keys` y `get-tag-values` para auditar qué claves y valores de etiqueta existen en tu cuenta, y confirma que `Proyecto`/`rutaflow` aparece en ambos listados.
+
+**Cuándo no usarlo:** no confíes en `tag-resources` para validar que el recurso existe realmente; acepta ARNs arbitrarios sin verificar el servicio referenciado.
+
+**Cómo crece RutaFlow:** esta etiqueta común permite auditar de un vistazo todos los recursos que pertenecen al proyecto integrador, sin importar el servicio.
+
 ### Tema 5: STS en profundidad — identidad temporal y aislamiento multi-cuenta
 
 **Conceptos clave:** `GetCallerIdentity`, `AssumeRole`, resolución de cuenta por AKID de 12 dígitos.
@@ -62,6 +134,23 @@ Recordarás del Módulo 0 que Floci resuelve el ID de cuenta a partir del `AWS_A
 **Analogía:** `AssumeRole` es como un guardia de seguridad que te entrega una credencial temporal con un nivel de acceso distinto al tuyo habitual —válida solo por un tiempo limitado— después de verificar que tienes permiso para solicitarla, en vez de darte una llave maestra permanente que tendrías que recordar devolver.
 
 **¿Por qué es importante?** El patrón de credenciales temporales con alcance limitado en vez de credenciales permanentes de amplio alcance es el principio de seguridad más importante de todo este curso, y STS es el servicio que lo hace posible en cada rincón de AWS: desde instancias EC2 hasta pipelines de CI/CD multi-cuenta.
+
+**Practícalo tú:**
+
+```bash
+# archivo: src/labs/modulo-29/tema-5-sts.sh — ejecutar con: bash tema-5-sts.sh
+aws sts get-caller-identity
+AWS_ACCESS_KEY_ID=222222222222 AWS_SECRET_ACCESS_KEY=test \
+  aws sts get-caller-identity --query 'Account' --output text
+```
+
+**Resultado esperado:** la primera llamada confirma tu cuenta actual (por defecto `000000000000`); la segunda, con un `AWS_ACCESS_KEY_ID` de 12 dígitos distinto, devuelve `222222222222` — la prueba de que Floci resuelve la cuenta directamente desde ese identificador.
+
+**Modifica esto:** crea un bucket S3 con las credenciales de la cuenta `222222222222` y confirma que no aparece al listar buckets con las credenciales de la cuenta por defecto — el aislamiento multi-cuenta es real, no cosmético.
+
+**Cuándo no usarlo:** no uses `GetCallerIdentity` como sustituto de una prueba de permisos real; confirma que las credenciales son válidas, no que tienen permiso para la acción específica que vas a ejecutar después.
+
+**Cómo crece RutaFlow:** este patrón de aislamiento por cuenta es el que RutaFlow usaría para separar completamente el entorno de staging del de producción dentro del mismo Floci.
 
 ---
 
