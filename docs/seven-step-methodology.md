@@ -4,7 +4,7 @@ Un tema completo hace visibles los siete pasos solicitados y sus apoyos profesio
 
 | Track | Temas | objective | prerequisites | context | theoryAnalogy | guidedDemo | codeExplanation | execution | expectedResult | deliberateFailure | guidedPractice | independentPractice | closure | commonErrors | resources | standaloneExample | learningEvidence | Completos |
 |---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
-| android | 49 | 12 | 12 | 12 | 12 | 12 | 26 | 12 | 12 | 12 | 12 | 12 | 12 | 12 | 12 | 12 | 13 | 12 |
+| android | 49 | 15 | 15 | 15 | 15 | 15 | 27 | 15 | 15 | 15 | 15 | 15 | 15 | 15 | 15 | 15 | 16 | 15 |
 | angular | 61 | 55 | 55 | 55 | 55 | 52 | 55 | 55 | 55 | 55 | 55 | 55 | 55 | 55 | 55 | 55 | 33 | 33 |
 | cloud | 153 | 0 | 0 | 0 | 0 | 0 | 27 | 9 | 52 | 2 | 0 | 0 | 0 | 3 | 0 | 0 | 3 | 0 |
 | devops | 91 | 78 | 78 | 78 | 78 | 78 | 80 | 78 | 78 | 78 | 78 | 78 | 78 | 78 | 78 | 78 | 78 | 78 |
@@ -18,7 +18,7 @@ Un tema completo hace visibles los siete pasos solicitados y sus apoyos profesio
 | react | 55 | 49 | 49 | 49 | 49 | 49 | 49 | 49 | 49 | 49 | 49 | 49 | 49 | 49 | 49 | 49 | 39 | 39 |
 | rutaflow | 24 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 1 | 0 |
 | spring-boot | 58 | 58 | 58 | 58 | 58 | 58 | 58 | 58 | 58 | 55 | 58 | 58 | 58 | 58 | 58 | 58 | 49 | 46 |
-| **Total** | **905** | **526** | **528** | **526** | **526** | **503** | **599** | **521** | **602** | **527** | **526** | **526** | **526** | **529** | **526** | **526** | **479** | **440** |
+| **Total** | **905** | **529** | **531** | **529** | **529** | **506** | **600** | **524** | **605** | **530** | **529** | **529** | **529** | **532** | **529** | **529** | **482** | **443** |
 
 ## Interpretación
 

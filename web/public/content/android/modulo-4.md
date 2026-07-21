@@ -5,48 +5,174 @@
 
 ### Tema 1: StateFlow en el ViewModel
 
+#### Paso 1 · Objetivo y preparación
+
+Al finalizar podrás exponer un estado de pantalla desde un `ViewModel` con `StateFlow`, garantizando que siempre haya un valor actual disponible.
+
+**Conocimiento previo:** `ViewModel` (Módulo 1 de este track).
+
+#### Paso 2 · Contexto y caso real
+
+**¿Por qué es importante?** `StateFlow` garantiza un valor actual siempre disponible, apropiado para representar el estado de una pantalla completa; la convención de exponerlo como mutable privado y de solo lectura público refuerza la dirección única del flujo de datos (UDF, Tema 2).
+
+#### Paso 3 · Teoría con analogía
+
 **Conceptos clave:** estado observable, siempre con un valor actual disponible.
 
-```kotlin
-class TareasViewModel(private val repo: TareaRepository) : ViewModel() {
+`StateFlow` es un tipo especial de `Flow` (Kotlin Multiplatform, Módulo 2) que garantiza tener siempre un valor actual disponible de inmediato para cualquier nuevo observador, a diferencia de un `Flow` genérico. Esta garantía lo hace apto para representar "el estado actual de la pantalla" (`Cargando`, `Exito`, `Error`), un valor que siempre debe existir. El patrón `_estado` privado mutable expuesto como `estado` de solo lectura es una convención de encapsulación: el `ViewModel` controla exclusivamente cuándo cambia el estado; la UI solo puede leerlo.
+
+**Analogía:** `StateFlow` es como un tablero de anuncios público que siempre muestra algún mensaje actual visible para cualquiera que lo mire (nunca está vacío), en contraste con un sistema de mensajería que solo entrega mensajes nuevos a partir del momento en que alguien se suscribe.
+
+**Diagrama:**
+
+```
+┌── ViewModel ──────────────────────────────┐
+│ private val _estado = MutableStateFlow(Cargando)  │
+│ val estado: StateFlow<EstadoUI> = _estado.asStateFlow() │
+└──────────┬─────────────────────────────┘
+           │ solo lectura hacia afuera
+           ▼
+┌── Cualquier observador nuevo ──────────────┐
+│ recibe INMEDIATAMENTE el valor actual         │
+│ (nunca espera a un evento futuro)                │
+└───────────────────────────────────────┘
+```
+
+#### Paso 4 · Demostración guiada desde cero
+
+Desde una carpeta vacía (o continuando en `academia-android` de módulos anteriores), crea `app/src/main/kotlin/com/academia/android/TareasViewModelConEstado.kt`:
+
+```bash
+# python valida después la sintaxis; primero se genera el archivo Kotlin
+mkdir -p academia-android/app/src/main/kotlin/com/academia/android
+cd academia-android
+cat > app/src/main/kotlin/com/academia/android/TareasViewModelConEstado.kt <<'EOF'
+package com.academia.android
+
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
+
+sealed class EstadoUI {
+    object Cargando : EstadoUI()
+    data class Exito(val datos: List<String>) : EstadoUI()
+    data class Error(val mensaje: String?) : EstadoUI()
+}
+
+class TareasViewModelConEstado(private val repo: TareaRepository) : ViewModel() {
     private val _estado = MutableStateFlow<EstadoUI>(EstadoUI.Cargando)
     val estado: StateFlow<EstadoUI> = _estado.asStateFlow()
 
     fun cargar() = viewModelScope.launch {
-        _estado.value = try { EstadoUI.Exito(repo.obtenerTareas()) } catch (e: Exception) { EstadoUI.Error(e.message) }
+        _estado.value = try {
+            EstadoUI.Exito(repo.obtenerTareas())
+        } catch (e: Exception) {
+            EstadoUI.Error(e.message)
+        }
     }
 }
+EOF
+python3 -c "
+codigo = open('app/src/main/kotlin/com/academia/android/TareasViewModelConEstado.kt').read()
+assert codigo.count('{') == codigo.count('}'), 'llaves desbalanceadas'
+assert 'MutableStateFlow' in codigo and ': StateFlow<EstadoUI> = _estado.asStateFlow()' in codigo, 'falta el patrón privado mutable / público solo lectura'
+print('TareasViewModelConEstado.kt: patrón de encapsulación StateFlow correcto y llaves balanceadas')
+"
 ```
 
-`StateFlow` es un tipo especial de `Flow` (el tipo de flujo reactivo estudiado en profundidad en el Módulo 2 del track de Kotlin Multiplatform) que garantiza tener siempre un valor actual disponible de inmediato para cualquier nuevo observador, a diferencia de un `Flow` genérico que podría no emitir nada hasta que ocurra algún evento futuro; esta garantía lo hace especialmente apto para representar "el estado actual de la pantalla" (`EstadoUI.Cargando`, `EstadoUI.Exito`, `EstadoUI.Error`), un valor que siempre debe existir y estar disponible para renderizar la UI en cualquier momento, no solo en respuesta a un evento puntual.
+**Explicación línea por línea:** `_estado` es `MutableStateFlow`, mutable solo dentro de la clase; `estado` se expone como `StateFlow` (interfaz de solo lectura) vía `asStateFlow()`; `cargar()` actualiza `_estado.value` dentro de `viewModelScope.launch`, garantizando que siempre exista un valor (`Cargando` inicialmente, luego `Exito` o `Error`) disponible para cualquier observador, en cualquier momento.
 
-El patrón `_estado` privado mutable (`MutableStateFlow`) expuesto públicamente como `estado` de solo lectura (`StateFlow`) es una convención deliberada de encapsulación: el `ViewModel` controla exclusivamente cuándo y cómo cambia el estado internamente, mientras que cualquier consumidor externo (la UI de Compose) solo puede leerlo, nunca mutarlo directamente, reforzando desde el tipo mismo la dirección única del flujo de datos que se completa en el Tema 3.
+Simula, en Python, que un nuevo observador que se suscribe tarde igual recibe el valor actual de inmediato, a diferencia de un evento que ya pasó:
 
-**Analogía:** `StateFlow` es como un tablero de anuncios público que siempre muestra algún mensaje actual visible para cualquiera que lo mire por primera vez (nunca está vacío), en contraste con un sistema de mensajería que solo entrega mensajes nuevos a partir del momento en que alguien se suscribe, sin garantizar ningún mensaje inicial disponible de inmediato.
+```bash
+python3 -c "
+class StateFlowSimulado:
+    def __init__(self, valor_inicial):
+        self.valor_actual = valor_inicial  # SIEMPRE hay un valor
 
-**¿Por qué es importante?** `StateFlow` garantiza un valor actual siempre disponible, apropiado para representar el estado de una pantalla completa; la convención de exponerlo como mutable privado y de solo lectura público refuerza la dirección única del flujo de datos (UDF).
+    def actualizar(self, nuevo_valor):
+        self.valor_actual = nuevo_valor
 
-**Casos de uso reales:**
-- Estado de carga/éxito/error de una lista de tareas que la UI observa y renderiza sin lógica adicional.
-- Estado del carrito de compras en una app de e-commerce, consultable en cualquier momento desde cualquier pantalla.
-- Contador de elementos no leídos que cualquier pantalla puede observar con el valor correcto desde el primer instante.
+    def nuevo_observador_recibe(self):
+        return self.valor_actual  # inmediato, sin importar cuándo se suscribe
 
-**Código del ejemplo:**
-
-```kotlin
-class TareasViewModel(private val repo: TareaRepository) : ViewModel() {
-    private val _estado = MutableStateFlow<EstadoUI>(EstadoUI.Cargando)
-    val estado: StateFlow<EstadoUI> = _estado.asStateFlow()  // solo lectura hacia afuera
-}
+estado = StateFlowSimulado('Cargando')
+estado.actualizar('Exito: [tarea1, tarea2]')
+print('observador que llega tarde recibe de inmediato:', estado.nuevo_observador_recibe())
+"
 ```
+
+**Resultado esperado:** aunque el "observador" se suscribe después de que el estado ya cambió de `Cargando` a `Exito`, recibe inmediatamente el valor actual (`Exito: [tarea1, tarea2]`), confirmando la garantía central de `StateFlow`: nunca hay ausencia de valor para un nuevo observador.
+
+**Fallo deliberado:** intenta mutar `estado` (la propiedad pública de solo lectura) directamente desde fuera de la clase, como haría un composable si `TareasViewModelConEstado` expusiera `_estado` en vez de `estado` (`viewModel._estado.value = EstadoUI.Cargando`, simulando el error). En Kotlin real esto ni siquiera compila, porque `_estado` es `private` — diagnostica confirmando que la visibilidad `private` en el tipo mutable es lo que impide, a nivel de compilador, que cualquier consumidor externo rompa la dirección única del flujo de datos (UDF, Tema 2), no una simple convención de nombres sin efecto real.
+
+#### Construcción RutaFlow: estado de pantalla del proyecto
+
+Documenta en `academia-android/README.md` que toda pantalla de RutaFlow con estado de carga/éxito/error (lista de tareas, detalle) expone su estado con el mismo patrón `_estado`/`estado` de `TareasViewModelConEstado`, nunca exponiendo el `MutableStateFlow` directamente.
+
+#### Paso 5 · Práctica guiada
+
+Agrega un cuarto caso a `EstadoUI` (`object Vacio`, para cuando `repo.obtenerTareas()` devuelve una lista vacía) y actualiza `cargar()` para emitirlo cuando corresponda. **Pista:** revisa el tamaño de la lista dentro del bloque `try` antes de decidir entre `Exito` y `Vacio`.
+
+#### Paso 6 · Práctica independiente
+
+Documenta en una frase por qué `EstadoUI` se modela como `sealed class` en vez de, por ejemplo, tres variables booleanas independientes (`cargando`, `error`, `exito`), y qué estados inválidos (por ejemplo, `cargando = true` y `exito = true` simultáneamente) esa segunda alternativa permitiría por error que `sealed class` evita estructuralmente.
+
+#### Paso 7 · Cierre y evidencia
+
+Ya expones un estado de pantalla con `StateFlow`, garantizando un valor actual siempre disponible y protegido de mutación externa. El siguiente tema cubre cómo observar ese `StateFlow` desde Compose de forma consciente del ciclo de vida. **Evidencia:** entrega el resultado de la simulación mostrando que un observador tardío recibe el valor actual de inmediato, y explica por qué `_estado` debe ser `private` para proteger la dirección única del flujo de datos. Fuente oficial: [Android Developers — StateFlow and SharedFlow](https://developer.android.com/kotlin/flow/stateflow-and-sharedflow).
+
+**Errores comunes:** exponer `MutableStateFlow` directamente en vez de su versión de solo lectura, permitiendo que la UI mute el estado sin pasar por el `ViewModel`; olvidar el valor inicial de `MutableStateFlow`, lo cual ni siquiera compila porque `StateFlow` exige un valor desde su creación.
+
+**Cuándo no usarlo:** para un evento efímero de un solo uso (mostrar un mensaje puntual), `StateFlow` no es el tipo correcto porque retendría ese "último valor" indefinidamente; ese caso corresponde a `SharedFlow` (Tema 3).
 
 ### Tema 2: collectAsStateWithLifecycle y UDF
 
+#### Paso 1 · Objetivo y preparación
+
+Al finalizar podrás observar un `StateFlow` desde Compose de forma consciente del ciclo de vida, y explicar el principio UDF que rige la dirección del flujo de datos.
+
+**Conocimiento previo:** Tema 1 de este módulo; ciclo de vida (Módulo 1); state hoisting (Módulo 2).
+
+#### Paso 2 · Contexto y caso real
+
+**¿Por qué es importante?** `collectAsStateWithLifecycle` evita desperdiciar recursos recolectando actualizaciones mientras la UI no es visible; UDF hace que el flujo de datos de toda la pantalla sea predecible, con una única fuente de verdad (el `ViewModel`) controlando todos los cambios de estado.
+
+#### Paso 3 · Teoría con analogía
+
 **Conceptos clave:** recolección consciente del ciclo de vida, flujo de datos en una única dirección.
 
-```kotlin
+`collectAsStateWithLifecycle` pausa automáticamente la recolección cuando la Activity va a background (tras `onStop`, Módulo 1) y la reanuda al volver a foreground, ahorrando recursos que `collectAsState` (la versión simple, sin esa consciencia) desperdiciaría. UDF generaliza el state hoisting del Módulo 2 hacia la relación completa `ViewModel`↔UI: el estado fluye desde el `ViewModel` hacia la UI, y las intenciones del usuario fluyen en la dirección contraria, nunca al revés.
+
+**Analogía:** `collectAsStateWithLifecycle` es como un asistente que deja de tomar notas cuando la sala de reuniones está vacía y retoma al volver alguien; UDF es como una cadena de mando donde las órdenes fluyen de arriba hacia abajo y los reportes de abajo hacia arriba, sin que un subordinado emita órdenes directamente a sus pares.
+
+**Diagrama:**
+
+```
+┌── Usuario hace click ──▶ ViewModel.accion() ──▶ actualiza StateFlow ──▶ Compose recompone ─┐
+│                                                                                                │
+└──────────────── la UI NUNCA modifica el estado directamente ─────────────────────┘
+```
+
+#### Paso 4 · Demostración guiada desde cero
+
+Reutiliza `academia-android` (o créalo desde una carpeta vacía con `mkdir -p academia-android` si es tu primera vez) y crea `app/src/main/kotlin/com/academia/android/PantallaTareasUDF.kt`:
+
+```bash
+# python valida después la sintaxis; primero se genera el archivo Kotlin
+mkdir -p academia-android/app/src/main/kotlin/com/academia/android
+cd academia-android
+cat > app/src/main/kotlin/com/academia/android/PantallaTareasUDF.kt <<'EOF'
+package com.academia.android
+
+import androidx.compose.runtime.Composable
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+
 @Composable
-fun PantallaTareas(viewModel: TareasViewModel) {
+fun PantallaTareasUDF(viewModel: TareasViewModelConEstado) {
     val estado by viewModel.estado.collectAsStateWithLifecycle()
     when (estado) {
         is EstadoUI.Cargando -> Spinner()
@@ -54,66 +180,188 @@ fun PantallaTareas(viewModel: TareasViewModel) {
         is EstadoUI.Error -> MensajeError()
     }
 }
+EOF
+python3 -c "
+codigo = open('app/src/main/kotlin/com/academia/android/PantallaTareasUDF.kt').read()
+assert codigo.count('{') == codigo.count('}'), 'llaves desbalanceadas'
+assert 'collectAsStateWithLifecycle' in codigo, 'debe usar la versión consciente del ciclo de vida'
+assert '.value =' not in codigo, 'la UI no debe mutar el estado directamente'
+print('PantallaTareasUDF.kt: usa collectAsStateWithLifecycle y no muta el estado directamente')
+"
 ```
 
-`collectAsStateWithLifecycle` observa un `StateFlow` de forma "consciente del ciclo de vida" (lifecycle-aware): pausa automáticamente la recolección cuando la Activity va a background (por ejemplo, tras `onStop`) y la reanuda al volver a foreground, ahorrando recursos de CPU y memoria que se desperdiciarían recolectando actualizaciones de un `Flow` mientras la UI ni siquiera es visible para el usuario; esto contrasta con `collectAsState` (la versión más simple y anterior), que sigue recolectando de forma continua sin ninguna consideración del ciclo de vida, un comportamiento menos eficiente que Google ha desaconsejado en apps de producción desde la introducción de la versión consciente del ciclo de vida.
+**Explicación línea por línea:** `viewModel.estado.collectAsStateWithLifecycle()` observa el `StateFlow` pausando la recolección cuando la Activity no está en foreground; el `when (estado)` renderiza un composable distinto según el caso de `EstadoUI`, sin que ningún branch modifique `estado` directamente — la UI solo lee, nunca escribe.
 
+Simula la diferencia de consumo de recursos entre `collectAsState` (siempre activo) y `collectAsStateWithLifecycle` (pausado en background) a lo largo de una sesión de uso típica:
+
+```bash
+python3 -c "
+eventos = ['foreground', 'foreground', 'background', 'background', 'background', 'foreground']
+
+recolecciones_simple = sum(1 for e in eventos)  # collectAsState: recolecta siempre, sin importar el estado
+recolecciones_consciente = sum(1 for e in eventos if e == 'foreground')  # pausa en background
+
+print('eventos totales:', len(eventos))
+print('recolecciones con collectAsState (simple):', recolecciones_simple)
+print('recolecciones con collectAsStateWithLifecycle:', recolecciones_consciente)
+print('ahorro:', recolecciones_simple - recolecciones_consciente, 'recolecciones evitadas en background')
+"
 ```
-Usuario hace click → ViewModel.accion() → actualiza StateFlow → Compose recompone con el nuevo estado
-```
 
-UDF (Unidirectional Data Flow) es el principio arquitectónico que generaliza el state hoisting del Módulo 2 hacia la relación completa entre `ViewModel` y UI: el estado fluye en una única dirección, desde el `ViewModel` hacia la UI (vía `StateFlow`), y las intenciones del usuario fluyen en la dirección contraria, desde la UI hacia el `ViewModel` (vía llamadas a funciones), nunca al revés — la UI nunca modifica el `StateFlow` directamente, solo notifica una intención (`viewModel.accion()`) y espera a que el `ViewModel` decida cómo y si actualizar el estado en respuesta.
+**Resultado esperado:** de 6 eventos totales, solo 3 ocurren en `foreground`; `collectAsState` simple recolectaría en los 6, mientras que `collectAsStateWithLifecycle` solo recolecta en los 3 de `foreground`, ahorrando exactamente las 3 recolecciones que ocurrirían inútilmente mientras la UI no es visible.
 
-**Analogía:** `collectAsStateWithLifecycle` es como un asistente que deja de tomar notas activamente cuando la sala de reuniones está vacía (app en background) y retoma automáticamente al volver alguien a la sala, en vez de seguir tomando notas de una sala vacía sin ningún propósito; UDF es como una cadena de mando militar donde las órdenes fluyen estrictamente de arriba hacia abajo y los reportes de estado fluyen estrictamente de abajo hacia arriba, sin que un subordinado emita órdenes directamente a sus pares sin pasar por la cadena.
+**Fallo deliberado:** modifica `PantallaTareasUDF.kt` para que, dentro del `when`, alguna rama asigne directamente `viewModel.estado.value = EstadoUI.Cargando` (rompiendo UDF deliberadamente). En Kotlin real esto no compila, porque `estado` es `StateFlow` (interfaz de solo lectura, sin propiedad `value` mutable) — diagnostica confirmando que UDF no es solo una convención de diseño sino que, gracias al patrón del Tema 1, el propio sistema de tipos de Kotlin impide que la UI mute el estado directamente.
 
-**¿Por qué es importante?** `collectAsStateWithLifecycle` evita desperdiciar recursos recolectando actualizaciones mientras la UI no es visible; UDF hace que el flujo de datos de toda la pantalla sea predecible y fácil de razonar, con una única fuente de verdad (el `ViewModel`) controlando todos los cambios de estado.
+#### Construcción RutaFlow: observación de estado del proyecto
 
-**Casos de uso reales:**
-- Ahorrar batería pausando la recolección de un `StateFlow` de ubicación en tiempo real cuando la app pasa a background.
-- Depurar un bug de "estado inconsistente" verificando que ningún composable mute el `StateFlow` directamente, violando UDF.
-- Onboarding de un desarrollador nuevo al equipo explicando el flujo con una sola regla: clicks bajan, estado sube.
+Documenta en `academia-android/README.md` que toda pantalla de RutaFlow observa su `ViewModel` exclusivamente con `collectAsStateWithLifecycle`, nunca con `collectAsState` simple, como estándar de eficiencia de recursos del proyecto.
+
+#### Paso 5 · Práctica guiada
+
+Agrega una función `onReintentar: () -> Unit` como parámetro de `PantallaTareasUDF`, invocada desde `MensajeError()`, que llame a `viewModel.cargar()` (Tema 1) — confirma que esta es la única forma correcta de que la UI "reaccione" ante un error: notificando una intención, no mutando el estado. **Pista:** sigue exactamente el mismo patrón de callback de state hoisting del Módulo 2, Tema 2.
+
+#### Paso 6 · Práctica independiente
+
+Documenta en una frase qué diferencia de comportamiento observarías en los logs si cambiaras `collectAsStateWithLifecycle` por `collectAsState` simple en una pantalla real, dejando la app en background varios minutos y luego revisando cuántas veces se recolectó el `StateFlow` durante ese período.
+
+#### Paso 7 · Cierre y evidencia
+
+Ya observas un `StateFlow` de forma consciente del ciclo de vida, y explicas por qué UDF hace que el flujo de datos sea predecible y protegido por el propio sistema de tipos. El siguiente tema cubre el caso de eventos de un solo uso, donde `StateFlow` no es la herramienta correcta. **Evidencia:** entrega el resultado de la simulación de ahorro de recolecciones en background, y explica por qué la UI no puede compilar código que mute `estado` directamente. Fuente oficial: [Android Developers — collectAsStateWithLifecycle](https://developer.android.com/topic/libraries/architecture/lifecycle#lifecycle-aware-flow-collection).
+
+**Errores comunes:** usar `collectAsState` simple en pantallas de producción, desperdiciando recursos en background; que la UI intente modificar el estado directamente en vez de notificar una intención al `ViewModel`.
+
+**Cuándo no usarlo:** para un `Flow` de una fuente que no representa "estado de pantalla" sino un flujo de datos puramente transitorio sin necesidad de valor actual, `StateFlow` y `collectAsStateWithLifecycle` no son la herramienta adecuada; considera un `SharedFlow` (Tema 3) para esos casos.
+
+### Tema 3: SharedFlow para eventos de un solo uso
+
+#### Paso 1 · Objetivo y preparación
+
+Al finalizar podrás modelar un evento de un solo uso (como mostrar un Snackbar) con `SharedFlow`, evitando que se repita incorrectamente tras una recomposición.
+
+**Conocimiento previo:** Temas 1 y 2 de este módulo.
+
+#### Paso 2 · Contexto y caso real
+
+**¿Por qué es importante?** Modelar un evento de "mostrar Snackbar" con `SharedFlow` en vez de `StateFlow` evita que ese evento se repita incorrectamente en una recomposición posterior, dado que `SharedFlow` no retiene un "último valor" que un nuevo observador recibiría automáticamente.
+
+#### Paso 3 · Teoría con analogía
+
+**Conceptos clave:** eventos que no deben repetirse en una recomposición, a diferencia del estado persistente.
+
+Un evento como "mostrar un Snackbar" tiene una naturaleza distinta al estado de `StateFlow`: un `StateFlow` siempre tiene un valor actual que cualquier nuevo observador recibe de inmediato (Tema 1), lo cual sería incorrecto para un evento de un solo uso, ya que una recomposición posterior (tras rotar) volvería a entregar ese mismo "valor actual" a un nuevo observador, mostrando el Snackbar repetidamente sin que ocurriera ningún evento nuevo. `SharedFlow` modela correctamente esta semántica: cada emisión se entrega una única vez a los observadores activos en ese momento, sin quedar retenida.
+
+**Analogía:** `StateFlow` es como un letrero permanente que muestra el estado actual de un semáforo; `SharedFlow` para eventos es como el sonido de una campana que suena una única vez — quien no estaba escuchando en ese instante simplemente no la escucha, y no hay forma de recuperar ese sonido pasado.
 
 **Diagrama:**
 
 ```
-Usuario hace click → ViewModel.accion() → actualiza StateFlow → Compose recompone con el nuevo estado
-        ↑______________________________________________________________|
-                    (la UI nunca modifica el estado directamente)
+┌── StateFlow (estado persistente) ─────────────┐
+│ nuevo observador SIEMPRE recibe el valor actual     │
+│ (correcto para "lista de tareas actual")               │
+└─────────────────────────────────────────┘
+┌── SharedFlow (evento de un solo uso) ─────────┐
+│ cada emisión se entrega UNA vez a quien esté escuchando │
+│ (correcto para "mostrar Snackbar de éxito")               │
+└─────────────────────────────────────────┘
 ```
 
-### Tema 3: SharedFlow para eventos de un solo uso
+#### Paso 4 · Demostración guiada desde cero
 
-**Conceptos clave:** eventos que no deben repetirse en una recomposición, a diferencia del estado persistente.
+Reutiliza `academia-android` (o créalo desde una carpeta vacía con `mkdir -p academia-android` si es tu primera vez) y crea `app/src/main/kotlin/com/academia/android/EventosTareasViewModel.kt`:
 
-```kotlin
-private val _eventos = MutableSharedFlow<Evento>()
-val eventos = _eventos.asSharedFlow()
+```bash
+# python valida después la sintaxis; primero se genera el archivo Kotlin
+mkdir -p academia-android/app/src/main/kotlin/com/academia/android
+cd academia-android
+cat > app/src/main/kotlin/com/academia/android/EventosTareasViewModel.kt <<'EOF'
+package com.academia.android
 
-// en la UI, dentro de un LaunchedEffect:
-LaunchedEffect(Unit) { viewModel.eventos.collect { evento -> mostrarSnackbar(evento) } }
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.launch
+
+sealed class EventoTarea {
+    object TareaGuardada : EventoTarea()
+}
+
+class EventosTareasViewModel : ViewModel() {
+    private val _eventos = MutableSharedFlow<EventoTarea>()
+    val eventos = _eventos.asSharedFlow()
+
+    fun guardarTarea() = viewModelScope.launch {
+        // ... lógica de guardado real ...
+        _eventos.emit(EventoTarea.TareaGuardada)
+    }
+}
+EOF
+python3 -c "
+codigo = open('app/src/main/kotlin/com/academia/android/EventosTareasViewModel.kt').read()
+assert codigo.count('{') == codigo.count('}'), 'llaves desbalanceadas'
+assert 'MutableSharedFlow' in codigo and 'asSharedFlow()' in codigo, 'falta el patrón de SharedFlow'
+print('EventosTareasViewModel.kt: patrón SharedFlow correcto y llaves balanceadas')
+"
 ```
 
-Un evento como "mostrar un Snackbar" tiene una naturaleza fundamentalmente distinta al estado representado por `StateFlow`: un `StateFlow` siempre tiene un valor actual que cualquier nuevo observador recibe de inmediato (Tema 1), lo cual es exactamente el comportamiento correcto para "el estado actual de la lista de tareas", pero sería incorrecto para un evento de un solo uso como "mostrar un mensaje de éxito", dado que una recomposición posterior (por ejemplo, tras rotar la pantalla) volvería a entregar ese mismo valor "actual" a un nuevo observador, mostrando el Snackbar repetidamente sin que haya ocurrido ningún evento nuevo real.
+**Explicación línea por línea:** `_eventos` es `MutableSharedFlow`, sin ningún valor inicial retenido (a diferencia de `MutableStateFlow` del Tema 1, que exige uno); `guardarTarea()` emite `EventoTarea.TareaGuardada` una única vez mediante `_eventos.emit(...)`, y esa emisión solo llega a quien esté observando `eventos` en ese instante exacto.
 
-`SharedFlow` (sin la garantía de "valor actual siempre disponible" que tiene `StateFlow`) modela correctamente esta semántica de "evento efímero, no estado persistente": cada emisión se entrega una única vez a los observadores activos en ese momento, sin quedar retenida como un valor "actual" que un observador nuevo recibiría automáticamente al suscribirse más tarde, evitando exactamente el problema de repetición descrito.
+Simula la diferencia de comportamiento entre `StateFlow` y `SharedFlow` cuando un observador se suscribe DESPUÉS de que ocurrió el evento:
 
-**Analogía:** `StateFlow` es como un letrero permanente que muestra el estado actual de un semáforo (cualquiera que lo mire en cualquier momento ve el color vigente); `SharedFlow` para eventos es como el sonido de una campana que suena una única vez en el momento exacto del evento — quien no estaba escuchando en ese instante simplemente no la escucha, y no hay forma de "recuperar" ese sonido pasado consultando en un momento posterior.
+```bash
+python3 -c "
+class StateFlowSimulado:
+    def __init__(self, valor_inicial):
+        self.valor_actual = valor_inicial
+    def actualizar(self, valor):
+        self.valor_actual = valor
+    def nuevo_observador_recibe(self):
+        return self.valor_actual  # SIEMPRE recibe el último valor
 
-**¿Por qué es importante?** Modelar un evento de "mostrar Snackbar" con `SharedFlow` en vez de `StateFlow` evita que ese evento se repita incorrectamente en una recomposición posterior, dado que `SharedFlow` no retiene un "último valor" que un nuevo observador recibiría automáticamente.
+class SharedFlowSimulado:
+    def __init__(self):
+        self.observadores_activos_en_el_momento_de_emitir = []
+    def emitir(self, evento):
+        for callback in self.observadores_activos_en_el_momento_de_emitir:
+            callback(evento)
+        # el evento NO queda retenido para nadie que se suscriba después
 
-**Casos de uso reales:**
-- Mostrar un Snackbar de "Tarea guardada" exactamente una vez, sin que reaparezca al rotar la pantalla.
-- Disparar una navegación de un solo uso ("ir a la pantalla de éxito") tras completar un pago.
-- Emitir un evento de error puntual de red que se muestra una vez, sin quedar "pegado" como estado persistente.
+estado = StateFlowSimulado('lista_vacia')
+estado.actualizar('lista_cargada')
+# un observador que llega DESPUÉS de la actualización de StateFlow:
+print('StateFlow -> observador tardío recibe:', estado.nuevo_observador_recibe())
 
-**Código del ejemplo:**
-
-```kotlin
-private val _eventos = MutableSharedFlow<Evento>()
-val eventos = _eventos.asSharedFlow()
-
-LaunchedEffect(Unit) { viewModel.eventos.collect { evento -> mostrarSnackbar(evento) } }
+eventos = SharedFlowSimulado()
+eventos.emitir('TareaGuardada')  # nadie estaba escuchando todavía
+# un observador que llega DESPUÉS de la emisión de SharedFlow:
+observador_tardio_vio_algo = len(eventos.observadores_activos_en_el_momento_de_emitir) > 0
+print('SharedFlow -> observador tardío vio el evento:', observador_tardio_vio_algo)
+"
 ```
+
+**Resultado esperado:** el observador tardío de `StateFlow` recibe `lista_cargada` (el valor actual, siempre disponible); el observador tardío de `SharedFlow` NO ve ningún evento (`False`), porque `SharedFlow` no retiene la emisión pasada para nadie que se suscriba después, confirmando exactamente la distinción del diagrama del Paso 3.
+
+**Fallo deliberado:** modela incorrectamente el evento "mostrar Snackbar" con un `StateFlowSimulado` en vez de `SharedFlowSimulado` (`estado_snackbar = StateFlowSimulado('ninguno'); estado_snackbar.actualizar('TareaGuardada')`), y simula una rotación (un nuevo observador que se suscribe después, como ocurriría tras recrear la Activity). El nuevo observador recibe `'TareaGuardada'` de nuevo — diagnostica confirmando el bug real que este Tema previene: modelar un evento efímero con `StateFlow` haría que el Snackbar reaparezca en cada recomposición posterior a la rotación, aunque no haya ocurrido ningún guardado nuevo.
+
+#### Construcción RutaFlow: eventos de un solo uso del proyecto
+
+Documenta en `academia-android/README.md` que RutaFlow usa `SharedFlow` específicamente para eventos efímeros (Snackbar de "tarea guardada", navegación de un solo uso tras completar una acción), reservando `StateFlow` (Tema 1) exclusivamente para estado persistente de pantalla.
+
+#### Paso 5 · Práctica guiada
+
+Agrega un segundo evento a `EventoTarea` (`data class TareaEliminada(val id: String)`) y una función `eliminarTarea(id: String)` que lo emita, confirmando con el script de simulación que este evento también desaparece para cualquier observador tardío. **Pista:** sigue exactamente el mismo patrón de `emit()` ya usado para `TareaGuardada`.
+
+#### Paso 6 · Práctica independiente
+
+Documenta en una tabla de dos columnas, para tres señales reales de tu propio proyecto (por ejemplo: lista de resultados, mensaje de error puntual, navegación tras pago exitoso), si cada una debería modelarse con `StateFlow` o `SharedFlow`, justificando la decisión según si un observador tardío debería o no recibir ese valor/evento.
+
+#### Paso 7 · Cierre y evidencia
+
+Ya modelas eventos de un solo uso con `SharedFlow`, evitando que se repitan incorrectamente tras una recomposición, y distingues claramente cuándo usar `StateFlow` frente a `SharedFlow`. Esto cierra el módulo de estado con StateFlow y Compose; el siguiente módulo del track aborda networking con Retrofit para conectar este estado con datos reales de red. **Evidencia:** entrega el resultado de la simulación mostrando que el observador tardío de `SharedFlow` no recibe el evento pasado, y el resultado del fallo al modelar incorrectamente ese mismo evento con `StateFlow`. Fuente oficial: [Android Developers — SharedFlow](https://developer.android.com/kotlin/flow/stateflow-and-sharedflow#sharedflow).
+
+**Errores comunes:** modelar un evento de un solo uso con `StateFlow`, causando que se repita en recomposiciones posteriores; olvidar recolectar `eventos` dentro de un `LaunchedEffect` en la UI, perdiendo emisiones si el composable aún no está observando.
+
+**Cuándo no usarlo:** para el estado persistente de una pantalla completa (una lista, un formulario en progreso), `SharedFlow` no es la herramienta correcta porque no garantiza un valor actual disponible para un observador nuevo; ese caso corresponde a `StateFlow` (Tema 1).
 
 ---
 

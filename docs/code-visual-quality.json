@@ -113,13 +113,13 @@
     "android": {
       "topics": 49,
       "code": 43,
-      "commentedCode": 14,
+      "commentedCode": 16,
       "mermaid": 6,
-      "asciiVisual": 29,
+      "asciiVisual": 31,
       "misleadingDiagramLabel": 0,
-      "filePath": 15,
-      "runCommand": 15,
-      "officialSource": 12
+      "filePath": 18,
+      "runCommand": 18,
+      "officialSource": 15
     },
     "ios": {
       "topics": 51,
@@ -3830,20 +3830,6 @@
       "topic": "Tema 6: AnimatedContent y AnimationSpec",
       "missingCode": true,
       "missingComments": false
-    },
-    {
-      "track": "android",
-      "module": 4,
-      "topic": "Tema 1: StateFlow en el ViewModel",
-      "missingCode": false,
-      "missingComments": true
-    },
-    {
-      "track": "android",
-      "module": 4,
-      "topic": "Tema 2: collectAsStateWithLifecycle y UDF",
-      "missingCode": false,
-      "missingComments": true
     },
     {
       "track": "android",
