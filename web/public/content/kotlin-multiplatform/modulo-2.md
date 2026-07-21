@@ -58,12 +58,7 @@ suspend fun cargarPantalla() = coroutineScope {
     Pair(usuario.await(), pedidos.await()) // ambas corren en PARALELO, no secuencial
 }
 EOF
-python3 -c "
-codigo = open('shared/src/commonMain/kotlin/com/academia/kmp/ConcurrenciaEstructurada.kt').read()
-assert 'coroutineScope {' in codigo, 'falta el scope estructurado que agrupa las coroutines hijas'
-assert 'async { obtenerUsuario() }' in codigo and 'async { obtenerPedidos() }' in codigo, 'faltan ambas llamadas lanzadas en paralelo con async'
-print('ConcurrenciaEstructurada.kt: ambas llamadas se lanzan con async ANTES de esperar await()')
-"
+./gradlew :shared:compileKotlinMetadata
 ```
 
 **Explicación línea por línea:** `coroutineScope { ... }` crea un scope que agrupa las coroutines lanzadas dentro; `async { obtenerUsuario() }` y `async { obtenerPedidos() }` se lanzan AMBAS antes de llamar a `.await()` en cualquiera, por lo que corren en paralelo desde el inicio; `usuario.await()` y `pedidos.await()` esperan cada resultado sin bloquear el hilo mientras tanto.
@@ -183,12 +178,7 @@ sealed class EstadoUI { object Cargando : EstadoUI(); object Exito : EstadoUI() 
 val estado = MutableStateFlow<EstadoUI>(EstadoUI.Cargando)   // siempre tiene valor actual
 val eventos = MutableSharedFlow<String>()                     // sin valor inicial, un solo uso
 EOF
-python3 -c "
-codigo = open('shared/src/commonMain/kotlin/com/academia/kmp/FlowTipos.kt').read()
-assert 'MutableStateFlow<EstadoUI>(EstadoUI.Cargando)' in codigo, 'falta StateFlow con valor inicial obligatorio'
-assert 'MutableSharedFlow<String>()' in codigo, 'falta SharedFlow sin valor inicial'
-print('FlowTipos.kt: StateFlow con valor inicial obligatorio; SharedFlow sin valor inicial')
-"
+./gradlew :shared:compileKotlinMetadata
 ```
 
 **Explicación línea por línea:** `flow { for (i in 1..n) { delay(10); emit(i) } }` define un flujo perezoso que emite valores solo cuando algo lo recolecta; `MutableStateFlow<EstadoUI>(EstadoUI.Cargando)` EXIGE un valor inicial en el constructor porque siempre debe haber un "valor actual"; `MutableSharedFlow<String>()` no recibe (ni acepta) un valor inicial, porque conceptualmente representa eventos, no un estado persistente.
@@ -335,12 +325,7 @@ class CacheProtegida {
     }
 }
 EOF
-python3 -c "
-codigo = open('shared/src/commonMain/kotlin/com/academia/kmp/ErroresYMutex.kt').read()
-assert 'catch (e: Exception)' in codigo, 'falta capturar la excepción de la llamada suspend'
-assert 'mutex.withLock' in codigo, 'falta proteger el contador compartido con Mutex'
-print('ErroresYMutex.kt: try/catch transforma errores; Mutex protege estado compartido')
-"
+./gradlew :shared:compileKotlinMetadata
 ```
 
 **Explicación línea por línea:** `try { ... } catch (e: Exception) { EstadoUI.Error(...) }` convierte cualquier excepción en un estado explícito manejable por la UI; `mutex.withLock { contador += 1 }` garantiza que solo UNA coroutine a la vez ejecuta `contador += 1`, evitando que dos coroutines concurrentes lean el mismo valor antes de que cualquiera escriba su incremento.
@@ -479,11 +464,7 @@ suspend fun leerArchivoSeguro(): String = withContext(Dispatchers.IO) {
     leerArchivoGrandeBloqueante() // movido explícitamente fuera del hilo principal
 }
 EOF
-python3 -c "
-codigo = open('shared/src/commonMain/kotlin/com/academia/kmp/Dispatchers.kt').read()
-assert 'withContext(Dispatchers.IO)' in codigo, 'falta mover el trabajo bloqueante con withContext explícito'
-print('Dispatchers.kt: el I/O bloqueante se ejecuta dentro de withContext(Dispatchers.IO)')
-"
+./gradlew :shared:compileKotlinMetadata
 ```
 
 **Explicación línea por línea:** `leerArchivoGrandeBloqueante()` simula una operación de I/O bloqueante real (`Thread.sleep`, análogo a leer un archivo grande de forma síncrona); `withContext(Dispatchers.IO) { leerArchivoGrandeBloqueante() }` mueve esa llamada a un dispatcher optimizado para I/O, devolviendo el control automáticamente al dispatcher original cuando el bloque termina.
