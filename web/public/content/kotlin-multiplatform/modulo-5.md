@@ -63,12 +63,7 @@ data class TareaDTO(val id: String, val titulo: String)
 suspend fun obtenerTareas(): List<TareaDTO> =
     client.get("https://api.miapp.com/tareas").body()
 EOF
-python3 -c "
-codigo = open('shared/src/commonMain/kotlin/com/academia/kmp/Networking.kt').read()
-assert 'install(ContentNegotiation)' in codigo, 'falta instalar deserialización JSON automática'
-assert '@Serializable' in codigo and 'data class TareaDTO' in codigo, 'falta el modelo serializable'
-print('Networking.kt: HttpClient con ContentNegotiation, TareaDTO serializable')
-"
+./gradlew :shared:compileKotlinMetadata
 ```
 
 **Explicación línea por línea:** `install(ContentNegotiation) { json() }` habilita la deserialización automática de JSON hacia cualquier tipo `@Serializable`; `@Serializable data class TareaDTO(...)` marca el modelo como deserializable; `client.get(url).body()` ejecuta la petición y deserializa la respuesta directamente al tipo `List<TareaDTO>` especificado, sin parseo manual.
@@ -195,12 +190,7 @@ suspend fun obtenerTareasSeguro(): Resultado<List<TareaDTO>> = try {
     Resultado.Error(e.message ?: "Error de red")
 }
 EOF
-python3 -c "
-codigo = open('shared/src/commonMain/kotlin/com/academia/kmp/NetworkingSeguro.kt').read()
-assert 'sealed class Resultado<out T>' in codigo, 'falta modelar el resultado como tipo explícito'
-assert 'catch (e: Exception)' in codigo, 'falta capturar la excepción de red en el punto de origen'
-print('NetworkingSeguro.kt: obtenerTareasSeguro captura errores de red y los transforma en Resultado')
-"
+./gradlew :shared:compileKotlinMetadata
 ```
 
 **Explicación línea por línea:** `sealed class Resultado<out T>` con `Exito`/`Error` modela exhaustivamente ambos desenlaces; `try { Resultado.Exito(obtenerTareas()) } catch (e: Exception) { Resultado.Error(...) }` envuelve la llamada real, garantizando que cualquier excepción de red se transforme en `Resultado.Error` antes de llegar al código que consume el resultado.
@@ -341,11 +331,7 @@ val clienteAutenticado = HttpClient {
     }
 }
 EOF
-python3 -c "
-codigo = open('shared/src/commonMain/kotlin/com/academia/kmp/ClienteAutenticado.kt').read()
-assert 'install(Auth)' in codigo and 'bearer {' in codigo, 'falta instalar el interceptor de autenticación bearer'
-print('ClienteAutenticado.kt: el interceptor agrega Authorization automáticamente en cada request')
-"
+./gradlew :shared:compileKotlinMetadata
 ```
 
 **Explicación línea por línea:** `install(Auth) { bearer { loadTokens { ... } } }` configura el interceptor una única vez; a partir de ahí, CUALQUIER petición realizada con `clienteAutenticado` incluye automáticamente el header `Authorization`, sin que el código de cada llamada individual lo agregue.
@@ -481,12 +467,7 @@ suspend fun <T> conReintentos(maxIntentos: Int = 5, bloque: suspend () -> T): T 
     return bloque() // último intento, sin capturar (propaga si falla)
 }
 EOF
-python3 -c "
-codigo = open('shared/src/commonMain/kotlin/com/academia/kmp/Reintentos.kt').read()
-assert 'esperaMs *= 2' in codigo, 'falta el incremento exponencial del tiempo de espera'
-assert 'maxIntentos' in codigo, 'falta un límite de intentos para no reintentar indefinidamente'
-print('Reintentos.kt: backoff exponencial con límite de intentos')
-"
+./gradlew :shared:compileKotlinMetadata
 ```
 
 **Explicación línea por línea:** `conReintentos` intenta ejecutar `bloque()` hasta `maxIntentos` veces; cada fallo espera `esperaMs` (inicialmente 50ms) antes de reintentar, y luego DUPLICA esa espera (`esperaMs *= 2`) para el siguiente intento — el patrón de backoff exponencial.
