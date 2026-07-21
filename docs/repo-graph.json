@@ -137,7 +137,7 @@
     },
     {
       "path": "docs/code-visual-quality.json",
-      "lines": 4494,
+      "lines": 4473,
       "kind": "project-file",
       "symbols": [],
       "imports": [],
@@ -224,7 +224,7 @@
     },
     {
       "path": "docs/prerequisite-graph.json",
-      "lines": 9963,
+      "lines": 9974,
       "kind": "project-file",
       "symbols": [],
       "imports": [],
@@ -252,7 +252,7 @@
     },
     {
       "path": "docs/seven-step-methodology.json",
-      "lines": 23845,
+      "lines": 23871,
       "kind": "project-file",
       "symbols": [],
       "imports": [],
@@ -308,7 +308,7 @@
     },
     {
       "path": "docs/topic-learning-quality.json",
-      "lines": 19262,
+      "lines": 19283,
       "kind": "project-file",
       "symbols": [],
       "imports": [],
@@ -6104,7 +6104,7 @@
     },
     {
       "path": "web/public/content/kotlin-multiplatform/modulo-0.md",
-      "lines": 148,
+      "lines": 590,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -6113,10 +6113,14 @@
         "## Antes de comenzar: entorno Kotlin Multiplatform",
         "## Aprende construyendo",
         "### Tema 1: Null safety real",
-        "### Tema 2: data class y funciones de extensi\u00f3n",
-        "### Tema 3: when como expresi\u00f3n",
-        "## Ruta de proyecto progresivo desde carpeta vac\u00eda",
-        "## Laboratorio pr\u00e1ctico"
+        "#### Paso 1 \u00b7 Objetivo y preparaci\u00f3n",
+        "#### Paso 2 \u00b7 Contexto y caso real",
+        "#### Paso 3 \u00b7 Teor\u00eda con analog\u00eda",
+        "#### Paso 4 \u00b7 Demostraci\u00f3n guiada desde cero",
+        "# python verifica despu\u00e9s el comportamiento equivalente de cada operador",
+        "#### Construcci\u00f3n RutaFlow: tel\u00e9fono opcional del contacto de entrega",
+        "#### Paso 5 \u00b7 Pr\u00e1ctica guiada \u2014 repetici\u00f3n progresiva",
+        "#### Paso 6 \u00b7 Pr\u00e1ctica independiente"
       ]
     },
     {
@@ -9502,7 +9506,7 @@
     },
     {
       "path": "web/public/content/topic-index.json",
-      "lines": 4099,
+      "lines": 4103,
       "kind": "course-content",
       "symbols": [],
       "imports": [],
@@ -11862,7 +11866,7 @@
     },
     {
       "path": "web/src/app/tracks/kotlin-multiplatform.track.ts",
-      "lines": 181,
+      "lines": 182,
       "kind": "angular-app",
       "symbols": [],
       "imports": [

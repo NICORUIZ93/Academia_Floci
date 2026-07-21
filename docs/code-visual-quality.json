@@ -100,15 +100,15 @@
       "officialSource": 58
     },
     "kotlin-multiplatform": {
-      "topics": 46,
-      "code": 40,
-      "commentedCode": 8,
-      "mermaid": 6,
-      "asciiVisual": 9,
+      "topics": 47,
+      "code": 41,
+      "commentedCode": 12,
+      "mermaid": 9,
+      "asciiVisual": 10,
       "misleadingDiagramLabel": 0,
-      "filePath": 5,
-      "runCommand": 17,
-      "officialSource": 0
+      "filePath": 9,
+      "runCommand": 18,
+      "officialSource": 4
     },
     "android": {
       "topics": 49,
@@ -3429,27 +3429,6 @@
       "track": "spring-boot",
       "module": 9,
       "topic": "Tema 3: Cuándo WebFlux vale la complejidad, y R2DBC",
-      "missingCode": false,
-      "missingComments": true
-    },
-    {
-      "track": "kotlin-multiplatform",
-      "module": 0,
-      "topic": "Tema 1: Null safety real",
-      "missingCode": false,
-      "missingComments": true
-    },
-    {
-      "track": "kotlin-multiplatform",
-      "module": 0,
-      "topic": "Tema 2: data class y funciones de extensión",
-      "missingCode": false,
-      "missingComments": true
-    },
-    {
-      "track": "kotlin-multiplatform",
-      "module": 0,
-      "topic": "Tema 3: when como expresión",
       "missingCode": false,
       "missingComments": true
     },

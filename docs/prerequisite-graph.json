@@ -4815,6 +4815,17 @@
       ]
     },
     {
+      "id": "kotlin-multiplatform:0:4",
+      "track": "kotlin-multiplatform",
+      "module": 0,
+      "position": 4,
+      "title": "Destructuring declarations y rangos",
+      "file": "web/public/content/kotlin-multiplatform/modulo-0.md",
+      "requires": [
+        "kotlin-multiplatform:0:3"
+      ]
+    },
+    {
       "id": "kotlin-multiplatform:1:1",
       "track": "kotlin-multiplatform",
       "module": 1,
@@ -4822,7 +4833,7 @@
       "title": "Funciones de orden superior",
       "file": "web/public/content/kotlin-multiplatform/modulo-1.md",
       "requires": [
-        "kotlin-multiplatform:0:3"
+        "kotlin-multiplatform:0:4"
       ]
     },
     {

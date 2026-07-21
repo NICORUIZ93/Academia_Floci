@@ -2958,6 +2958,10 @@
       {
         "title": "when como expresión",
         "fragment": "tema-3-when-como-expresion"
+      },
+      {
+        "title": "Destructuring declarations y rangos",
+        "fragment": "tema-4-destructuring-declarations-y-rangos"
       }
     ],
     "1": [

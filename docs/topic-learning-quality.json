@@ -148,18 +148,18 @@
       "genericScaffold": 0
     },
     "kotlin-multiplatform": {
-      "topics": 46,
-      "explanation": 46,
-      "code": 46,
-      "visual": 6,
-      "filePath": 5,
-      "runCommand": 17,
-      "expectedResult": 11,
-      "practice": 16,
-      "project": 6,
-      "modelMental": 46,
-      "limitsDecision": 23,
-      "practicable": 0,
+      "topics": 47,
+      "explanation": 47,
+      "code": 47,
+      "visual": 10,
+      "filePath": 9,
+      "runCommand": 18,
+      "expectedResult": 13,
+      "practice": 19,
+      "project": 10,
+      "modelMental": 47,
+      "limitsDecision": 27,
+      "practicable": 4,
       "genericScaffold": 0
     },
     "node": {
@@ -13983,18 +13983,18 @@
         "criteria": {
           "explanation": true,
           "code": true,
-          "visual": false,
-          "filePath": false,
+          "visual": true,
+          "filePath": true,
           "runCommand": true,
           "expectedResult": true,
-          "practice": false,
-          "project": false,
+          "practice": true,
+          "project": true,
           "modelMental": true,
-          "limitsDecision": false
+          "limitsDecision": true
         },
         "classification": {
-          "rubricScore": 7,
-          "practicable": false,
+          "rubricScore": 16,
+          "practicable": true,
           "genericScaffold": false
         }
       },
@@ -14004,18 +14004,18 @@
         "criteria": {
           "explanation": true,
           "code": true,
-          "visual": false,
-          "filePath": false,
+          "visual": true,
+          "filePath": true,
           "runCommand": true,
-          "expectedResult": false,
+          "expectedResult": true,
           "practice": true,
-          "project": false,
+          "project": true,
           "modelMental": true,
-          "limitsDecision": false
+          "limitsDecision": true
         },
         "classification": {
-          "rubricScore": 7,
-          "practicable": false,
+          "rubricScore": 16,
+          "practicable": true,
           "genericScaffold": false
         }
       },
@@ -14025,18 +14025,39 @@
         "criteria": {
           "explanation": true,
           "code": true,
-          "visual": false,
-          "filePath": false,
+          "visual": true,
+          "filePath": true,
           "runCommand": true,
           "expectedResult": true,
-          "practice": false,
-          "project": false,
+          "practice": true,
+          "project": true,
           "modelMental": true,
-          "limitsDecision": false
+          "limitsDecision": true
         },
         "classification": {
-          "rubricScore": 7,
-          "practicable": false,
+          "rubricScore": 16,
+          "practicable": true,
+          "genericScaffold": false
+        }
+      },
+      {
+        "module": 0,
+        "topic": "Tema 4: Destructuring declarations y rangos",
+        "criteria": {
+          "explanation": true,
+          "code": true,
+          "visual": true,
+          "filePath": true,
+          "runCommand": true,
+          "expectedResult": true,
+          "practice": true,
+          "project": true,
+          "modelMental": true,
+          "limitsDecision": true
+        },
+        "classification": {
+          "rubricScore": 16,
+          "practicable": true,
           "genericScaffold": false
         }
       },

@@ -3,7 +3,7 @@ import { CourseModule, createModule as m } from '../course-module.model';
 export const KOTLIN_MULTIPLATFORM_MODULES: CourseModule[] = [
   m(0, 'Fundamentos de Kotlin', 'Fundamentos', 'Fundamentos', '2 h 30 min', '#7f52ff',
     'Kotlin es conciso y null-safe por diseño. Aprende la sintaxis que vas a reutilizar en Android, backend y multiplataforma.',
-    ['val/var, null safety (?, !!, ?:)', 'data class y sintaxis concisa', 'Funciones de extensión', 'when como expresión'],
+    ['val/var, null safety (?, !!, ?:)', 'data class y sintaxis concisa', 'Funciones de extensión', 'when como expresión', 'Destructuring declarations y rangos'],
     [
       'Declara variables con val y var y explica cuándo el compilador te obliga a usar cada una',
       'Declara una variable nullable (String?) e intenta usarla sin verificar null — observa el error de compilación',
@@ -11,6 +11,7 @@ export const KOTLIN_MULTIPLATFORM_MODULES: CourseModule[] = [
       'Crea una data class Persona y verifica que genera automáticamente equals, hashCode, toString y copy()',
       'Escribe una función de extensión String.esEmailValido() que agregue comportamiento a la clase String sin heredar de ella',
       'Reemplaza una cadena de if/else if por un when usado como expresión que devuelve un valor',
+      'Desestructura una data class en variables individuales e itera un rango con step y downTo',
     ],
     ['¿Por qué Kotlin distingue entre String y String? en el sistema de tipos?', '¿Qué evita en la práctica el null safety de Kotlin que Java no evita por defecto?'],
     ['Kotlin'],
