@@ -66,12 +66,7 @@ class ContadorTest {
     }
 }
 EOF
-python3 -c "
-codigo = open('app/src/androidTest/kotlin/com/academia/android/ContadorTest.kt').read()
-assert 'createComposeRule()' in codigo, 'falta el host de prueba ComposeTestRule'
-assert 'performClick()' in codigo and 'assertExists()' in codigo, 'falta acción y aserción sobre el árbol semántico'
-print('ContadorTest.kt: monta un composable real y verifica estado antes/después de una acción')
-"
+./gradlew :app:connectedDebugAndroidTest
 ```
 
 **Explicación línea por línea:** `createComposeRule()` crea el host de prueba sin necesidad de una Activity completa; `compose.setContent { PantallaContador() }` monta el composable real, igual que ocurriría en producción; `onNodeWithText(...)` busca en el árbol semántico ya estabilizado (la regla espera automáticamente la recomposición); `performClick()` dispara el evento real y `assertTextEquals`/`assertExists` verifican el nuevo estado tras la recomposición resultante.
@@ -172,7 +167,7 @@ flowchart LR
 Desde una carpeta vacía (o continuando en `academia-android`, o créala desde una carpeta vacía con `mkdir -p academia-android` si es tu primera vez), crea `app/src/androidTest/kotlin/com/academia/android/FormularioDobleTest.kt` mostrando el finder correcto ante ambigüedad:
 
 ```bash
-# python valida después que el finder usa testTag y no texto ambiguo
+# ejecuta con Gradle el test instrumentado de Compose que usa testTag
 mkdir -p academia-android/app/src/androidTest/kotlin/com/academia/android
 cd academia-android
 cat > app/src/androidTest/kotlin/com/academia/android/FormularioDobleTest.kt <<'EOF'
@@ -198,12 +193,7 @@ class FormularioDobleTest {
     }
 }
 EOF
-python3 -c "
-codigo = open('app/src/androidTest/kotlin/com/academia/android/FormularioDobleTest.kt').read()
-assert 'onNodeWithTag(\"campo_titulo_tarea\")' in codigo, 'debe usar testTag único, no texto ambiguo'
-assert 'performTextInput' in codigo, 'falta la acción real de entrada de texto'
-print('FormularioDobleTest.kt: usa testTag único para evitar ambigüedad entre nodos similares')
-"
+./gradlew :app:connectedDebugAndroidTest
 ```
 
 **Explicación línea por línea:** `onNodeWithTag(\"campo_titulo_tarea\")` localiza exactamente un nodo por su identificador estable, sin depender del texto visible que dos campos similares podrían compartir; `performTextInput(...)` simula la escritura real del usuario, y `assertTextEquals(...)` confirma que ese nodo específico —no otro parecido— refleja el nuevo valor.
@@ -326,12 +316,7 @@ fun TarjetaTareaAccesible(titulo: String, fecha: String) {
     }
 }
 EOF
-python3 -c "
-codigo = open('app/src/main/kotlin/com/academia/android/TarjetaTareaAccesible.kt').read()
-assert 'clearAndSetSemantics' in codigo, 'falta reemplazar la fusión automática con una descripción manual'
-assert 'contentDescription = null' in codigo, 'el ícono decorativo dentro del grupo ya cubierto debe silenciarse'
-print('TarjetaTareaAccesible.kt: reemplaza 3 anuncios sueltos por 1 enunciado coherente')
-"
+./gradlew :app:compileDebugKotlin
 ```
 
 **Explicación línea por línea:** `Modifier.clearAndSetSemantics { contentDescription = ... }` en el `Row` descarta cualquier fusión automática de sus hijos y establece un único enunciado completo para todo el grupo; el `Icon` interno recibe `contentDescription = null` porque su información ya está incluida en el enunciado del padre — anunciarlo de nuevo sería redundante.
@@ -530,12 +515,7 @@ fun opacidadTareaCompletada(completada: Boolean): Float {
     return opacidad
 }
 EOF
-python3 -c "
-codigo = open('app/src/main/kotlin/com/academia/android/AnimacionTareaCompletada.kt').read()
-assert 'animateFloatAsState' in codigo, 'falta la animación de valor float basada en estado'
-assert 'tween(durationMillis' in codigo, 'falta una especificación explícita de duración y easing'
-print('AnimacionTareaCompletada.kt: especifica duración y easing en vez de una animación implícita')
-"
+./gradlew :app:compileDebugKotlin
 ```
 
 **Explicación línea por línea:** `animateFloatAsState` observa el cambio de `completada` y anima automáticamente `opacidad` desde su valor actual hacia `targetValue`; `tween(durationMillis = 300, easing = LinearOutSlowInEasing)` especifica exactamente cuánto dura la transición y qué curva de velocidad sigue, information suficiente para calcular el valor esperado en cualquier instante intermedio.
@@ -649,12 +629,7 @@ fun TransicionContadorTareas(cantidad: Int) {
     }
 }
 EOF
-python3 -c "
-codigo = open('app/src/main/kotlin/com/academia/android/TransicionListaTareas.kt').read()
-assert 'AnimatedContent' in codigo, 'falta gestionar la transicion completa de contenido'
-assert 'spring(dampingRatio' in codigo, 'falta especificar el comportamiento fisico del spring'
-print('TransicionListaTareas.kt: usa AnimatedContent con un spring de amortiguacion explicita')
-"
+./gradlew :app:compileDebugKotlin
 ```
 
 **Explicación línea por línea:** `AnimatedContent(targetState = cantidad, ...)` reconstruye su contenido cada vez que `cantidad` cambia, animando la salida del valor anterior y la entrada del nuevo según `transitionSpec`; `spring(dampingRatio = Spring.DampingRatioMediumBouncy)` especifica que la animación de tamaño del texto se comporte como un resorte con rebote moderado, en vez de una duración fija.

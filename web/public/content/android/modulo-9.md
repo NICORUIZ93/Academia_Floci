@@ -65,12 +65,7 @@ class TareasViewModelTest {
     }
 }
 EOF
-python3 -c "
-codigo = open('app/src/main/kotlin/com/academia/android/TareasViewModelTest.kt').read()
-assert 'TareaRepositoryFake' in codigo and 'implements' not in codigo, 'debe usar un fake, no un mock generado'
-assert 'runTest' in codigo, 'falta runTest para tiempo virtual'
-print('TareasViewModelTest.kt: usa TareaRepositoryFake (código Kotlin ordinario) con runTest')
-"
+./gradlew :app:compileDebugKotlin
 ```
 
 **Explicación línea por línea:** `TareaRepositoryFake` es una clase Kotlin ordinaria que implementa `TareaRepository` devolviendo `datos` predefinidos, sin ninguna librería de mocking; `runTest` ejecuta el cuerpo del test en un dispatcher de tiempo virtual, permitiendo que cualquier `delay()` interno (por ejemplo, dentro de un backoff de reintento) transcurra instantáneamente.
@@ -200,12 +195,7 @@ class TarjetaTareaUiTest {
     }
 }
 EOF
-python3 -c "
-codigo = open('app/src/main/kotlin/com/academia/android/TarjetaTareaUiTest.kt').read()
-assert 'createComposeRule' in codigo, 'falta ComposeTestRule'
-assert 'onNodeWithText(\"Comprar leche\").assertIsDisplayed()' in codigo, 'falta la aserción sobre lo renderizado'
-print('TarjetaTareaUiTest.kt: verifica el nodo renderizado, no solo el estado')
-"
+./gradlew :app:compileDebugKotlin
 ```
 
 **Explicación línea por línea:** `composeTestRule.setContent { ... }` renderiza `TarjetaTarea` (Módulo 2) en un entorno de test aislado; `onNodeWithText("Comprar leche")` busca un nodo en el árbol de UI resultante con ese texto exacto, y `assertIsDisplayed()` confirma que efectivamente es visible, verificando el resultado visual real, no solo un valor de estado interno.
@@ -323,13 +313,7 @@ class FlujoCrearTareaTest {
     }
 }
 EOF
-python3 -c "
-codigo = open('app/src/main/kotlin/com/academia/android/FlujoCrearTareaTest.kt').read()
-pasos = ['botonAgregar', 'campoTitulo', 'botonGuardar', 'withText(\"Nueva tarea\")']
-for paso in pasos:
-    assert paso in codigo, f'falta el paso: {paso}'
-print('FlujoCrearTareaTest.kt: flujo completo de 4 pasos end-to-end presente')
-"
+./gradlew :app:compileDebugKotlin
 ```
 
 **Explicación línea por línea:** cada línea `onView(...).perform(...)` simula una interacción real de usuario en secuencia (tocar "agregar", escribir el título, tocar "guardar"); la aserción final (`onView(withText("Nueva tarea")).check(matches(isDisplayed()))`) verifica que, tras todo ese flujo a través de múltiples pantallas y componentes, la tarea nueva efectivamente aparece visible en la lista — algo que ni un test de ViewModel aislado ni uno de Compose UI de un único composable podrían verificar por sí solos.

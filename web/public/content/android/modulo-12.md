@@ -71,13 +71,7 @@ class TareasViewModelIntegrado @Inject constructor(
     fun sincronizar() = viewModelScope.launch { repo.sincronizar() }
 }
 EOF
-python3 -c "
-codigo = open('app/src/main/kotlin/com/academia/android/TareasViewModelIntegrado.kt').read()
-assert codigo.count('{') == codigo.count('}'), 'llaves desbalanceadas'
-assert '@HiltViewModel' in codigo and '@Inject constructor' in codigo, 'falta la integración con Hilt (Módulo 7)'
-assert 'repo.tareas' in codigo and 'stateIn' in codigo, 'falta la integración con Room/Flow (Módulo 6) hacia StateFlow (Módulo 4)'
-print('TareasViewModelIntegrado.kt: integra Hilt + Repositorio offline-first + StateFlow correctamente')
-"
+./gradlew :app:compileDebugKotlin
 ```
 
 **Explicación línea por línea:** `@Inject constructor(private val repo: TareaRepository)` es la integración de Hilt (Módulo 7); `repo.tareas` expone el `Flow` reactivo de Room (Módulo 6); `.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())` convierte ese `Flow` en un `StateFlow` (Módulo 4) con valor inicial garantizado, deteniendo la recolección 5 segundos después de que el último observador se desuscriba, evitando reiniciarla innecesariamente ante un hueco breve como una rotación de pantalla (Módulo 1).

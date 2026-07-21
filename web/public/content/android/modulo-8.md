@@ -66,13 +66,7 @@ class SincronizarWorker(
     }
 }
 EOF
-python3 -c "
-codigo = open('app/src/main/kotlin/com/academia/android/SincronizarWorker.kt').read()
-assert codigo.count('{') == codigo.count('}'), 'llaves desbalanceadas'
-assert 'suspend fun doWork(): Result' in codigo, 'falta doWork suspend'
-assert 'Result.retry()' in codigo, 'falta el manejo de reintento'
-print('SincronizarWorker.kt: doWork suspend con manejo de retry presente')
-"
+./gradlew :app:compileDebugKotlin
 ```
 
 **Explicación línea por línea:** `SincronizarWorker` extiende `CoroutineWorker`, recibiendo `context` y `params` que WorkManager provee automáticamente al ejecutar el trabajo; `doWork()` es `suspend`, permitiendo llamar directamente a la sincronización del repositorio (Módulo 6), devolviendo `Result.retry()` ante cualquier excepción para que WorkManager reintente automáticamente.
@@ -190,13 +184,7 @@ fun crearSolicitudPeriodica(): androidx.work.PeriodicWorkRequest {
         .build()
 }
 EOF
-python3 -c "
-codigo = open('app/src/main/kotlin/com/academia/android/ConstraintsSincronizacion.kt').read()
-assert codigo.count('(') == codigo.count(')'), 'paréntesis desbalanceados'
-assert 'setRequiredNetworkType(NetworkType.CONNECTED)' in codigo, 'falta constraint de red'
-assert 'PeriodicWorkRequestBuilder<SincronizarWorker>(15, TimeUnit.MINUTES)' in codigo, 'intervalo debe ser 15 minutos (mínimo permitido)'
-print('ConstraintsSincronizacion.kt: constraints e intervalo mínimo correctos')
-"
+./gradlew :app:compileDebugKotlin
 ```
 
 **Explicación línea por línea:** `Constraints.Builder()` acumula condiciones (red conectada, batería no baja) que deben cumplirse simultáneamente; `PeriodicWorkRequestBuilder<SincronizarWorker>(15, TimeUnit.MINUTES)` encola `SincronizarWorker` (Tema 1) para ejecutarse periódicamente, con 15 minutos como el intervalo mínimo que Android permite configurar.
@@ -315,13 +303,7 @@ class SincronizarWorkerConNotificacion(
     }
 }
 EOF
-python3 -c "
-codigo = open('app/src/main/kotlin/com/academia/android/SincronizarWorkerConNotificacion.kt').read()
-assert codigo.count('{') == codigo.count('}'), 'llaves desbalanceadas'
-assert 'NotificationManagerCompat.from(contexto).notify' in codigo, 'falta disparar la notificación'
-assert codigo.index('notify') < codigo.index('Result.success()'), 'la notificación debe dispararse ANTES de retornar éxito'
-print('SincronizarWorkerConNotificacion.kt: notifica antes de retornar Result.success()')
-"
+./gradlew :app:compileDebugKotlin
 ```
 
 **Explicación línea por línea:** el `Worker` construye una notificación (`NotificationCompat.Builder`) y la dispara con `NotificationManagerCompat.from(contexto).notify(...)` dentro del mismo bloque `try` que la sincronización, antes de retornar `Result.success()`, garantizando que la notificación solo se muestre si la sincronización efectivamente tuvo éxito.

@@ -43,7 +43,7 @@ Al finalizar podrás exponer un estado de pantalla desde un `ViewModel` con `Sta
 Desde una carpeta vacía (o continuando en `academia-android` de módulos anteriores), crea `app/src/main/kotlin/com/academia/android/TareasViewModelConEstado.kt`:
 
 ```bash
-# python valida después la sintaxis; primero se genera el archivo Kotlin
+# compila con Gradle el archivo Kotlin generado a continuación
 mkdir -p academia-android/app/src/main/kotlin/com/academia/android
 cd academia-android
 cat > app/src/main/kotlin/com/academia/android/TareasViewModelConEstado.kt <<'EOF'
@@ -75,12 +75,7 @@ class TareasViewModelConEstado(private val repo: TareaRepository) : ViewModel() 
     }
 }
 EOF
-python3 -c "
-codigo = open('app/src/main/kotlin/com/academia/android/TareasViewModelConEstado.kt').read()
-assert codigo.count('{') == codigo.count('}'), 'llaves desbalanceadas'
-assert 'MutableStateFlow' in codigo and ': StateFlow<EstadoUI> = _estado.asStateFlow()' in codigo, 'falta el patrón privado mutable / público solo lectura'
-print('TareasViewModelConEstado.kt: patrón de encapsulación StateFlow correcto y llaves balanceadas')
-"
+./gradlew :app:compileDebugKotlin
 ```
 
 **Explicación línea por línea:** `_estado` es `MutableStateFlow`, mutable solo dentro de la clase; `estado` se expone como `StateFlow` (interfaz de solo lectura) vía `asStateFlow()`; `cargar()` actualiza `_estado.value` dentro de `viewModelScope.launch`, garantizando que siempre exista un valor (`Cargando` inicialmente, luego `Exito` o `Error`) disponible para cualquier observador, en cualquier momento.
@@ -162,7 +157,7 @@ Al finalizar podrás observar un `StateFlow` desde Compose de forma consciente d
 Reutiliza `academia-android` (o créalo desde una carpeta vacía con `mkdir -p academia-android` si es tu primera vez) y crea `app/src/main/kotlin/com/academia/android/PantallaTareasUDF.kt`:
 
 ```bash
-# python valida después la sintaxis; primero se genera el archivo Kotlin
+# compila con Gradle el archivo Kotlin generado a continuación
 mkdir -p academia-android/app/src/main/kotlin/com/academia/android
 cd academia-android
 cat > app/src/main/kotlin/com/academia/android/PantallaTareasUDF.kt <<'EOF'
@@ -181,13 +176,7 @@ fun PantallaTareasUDF(viewModel: TareasViewModelConEstado) {
     }
 }
 EOF
-python3 -c "
-codigo = open('app/src/main/kotlin/com/academia/android/PantallaTareasUDF.kt').read()
-assert codigo.count('{') == codigo.count('}'), 'llaves desbalanceadas'
-assert 'collectAsStateWithLifecycle' in codigo, 'debe usar la versión consciente del ciclo de vida'
-assert '.value =' not in codigo, 'la UI no debe mutar el estado directamente'
-print('PantallaTareasUDF.kt: usa collectAsStateWithLifecycle y no muta el estado directamente')
-"
+./gradlew :app:compileDebugKotlin
 ```
 
 **Explicación línea por línea:** `viewModel.estado.collectAsStateWithLifecycle()` observa el `StateFlow` pausando la recolección cuando la Activity no está en foreground; el `when (estado)` renderiza un composable distinto según el caso de `EstadoUI`, sin que ningún branch modifique `estado` directamente — la UI solo lee, nunca escribe.
@@ -270,7 +259,7 @@ Un evento como "mostrar un Snackbar" tiene una naturaleza distinta al estado de 
 Reutiliza `academia-android` (o créalo desde una carpeta vacía con `mkdir -p academia-android` si es tu primera vez) y crea `app/src/main/kotlin/com/academia/android/EventosTareasViewModel.kt`:
 
 ```bash
-# python valida después la sintaxis; primero se genera el archivo Kotlin
+# compila con Gradle el archivo Kotlin generado a continuación
 mkdir -p academia-android/app/src/main/kotlin/com/academia/android
 cd academia-android
 cat > app/src/main/kotlin/com/academia/android/EventosTareasViewModel.kt <<'EOF'
@@ -296,12 +285,7 @@ class EventosTareasViewModel : ViewModel() {
     }
 }
 EOF
-python3 -c "
-codigo = open('app/src/main/kotlin/com/academia/android/EventosTareasViewModel.kt').read()
-assert codigo.count('{') == codigo.count('}'), 'llaves desbalanceadas'
-assert 'MutableSharedFlow' in codigo and 'asSharedFlow()' in codigo, 'falta el patrón de SharedFlow'
-print('EventosTareasViewModel.kt: patrón SharedFlow correcto y llaves balanceadas')
-"
+./gradlew :app:compileDebugKotlin
 ```
 
 **Explicación línea por línea:** `_eventos` es `MutableSharedFlow`, sin ningún valor inicial retenido (a diferencia de `MutableStateFlow` del Tema 1, que exige uno); `guardarTarea()` emite `EventoTarea.TareaGuardada` una única vez mediante `_eventos.emit(...)`, y esa emisión solo llega a quien esté observando `eventos` en ese instante exacto.

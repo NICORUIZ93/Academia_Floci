@@ -42,7 +42,7 @@ Al finalizar podrás declarar un grafo de navegación con `NavHost` y explicar c
 Desde una carpeta vacía (o continuando en `academia-android` de módulos anteriores), crea `app/src/main/kotlin/com/academia/android/GrafoNavegacion.kt`:
 
 ```bash
-# python valida después la sintaxis; primero se genera el archivo Kotlin
+# compila con Gradle el archivo Kotlin generado a continuación
 mkdir -p academia-android/app/src/main/kotlin/com/academia/android
 cd academia-android
 cat > app/src/main/kotlin/com/academia/android/GrafoNavegacion.kt <<'EOF'
@@ -67,12 +67,7 @@ fun GrafoNavegacion(navController: NavHostController = rememberNavController()) 
     }
 }
 EOF
-python3 -c "
-codigo = open('app/src/main/kotlin/com/academia/android/GrafoNavegacion.kt').read()
-assert codigo.count('{') == codigo.count('}'), 'llaves desbalanceadas'
-assert '\"lista\"' in codigo and '\"detalle/{id}\"' in codigo, 'faltan rutas declaradas'
-print('GrafoNavegacion.kt: ambas rutas declaradas y llaves balanceadas')
-"
+./gradlew :app:compileDebugKotlin
 ```
 
 **Explicación línea por línea:** `NavHost` recibe `startDestination = "lista"`, la primera ruta mostrada; cada bloque `composable("ruta") { ... }` asocia una ruta con el composable que la renderiza; `navController.navigate("detalle/$id")` dentro del callback `onTareaClick` empuja una nueva entrada al back stack, y `backStackEntry.arguments?.getString("id")` extrae el argumento de esa ruta específica.
@@ -164,7 +159,7 @@ Declarar explícitamente el tipo de un argumento con `navArgument(...) { type = 
 Reutiliza `academia-android` (o créalo desde una carpeta vacía con `mkdir -p academia-android` si es tu primera vez) y actualiza `GrafoNavegacion.kt` con un argumento tipado y un deep link:
 
 ```bash
-# python valida después la sintaxis; primero se genera el archivo Kotlin
+# compila con Gradle el archivo Kotlin generado a continuación
 mkdir -p academia-android/app/src/main/kotlin/com/academia/android
 cd academia-android
 cat > app/src/main/kotlin/com/academia/android/RutaDetalleTarea.kt <<'EOF'
@@ -181,12 +176,7 @@ fun rutaDetalleConArgumentoYDeepLink() = composable(
     deepLinks = listOf(navDeepLink { uriPattern = "miapp://tarea/{id}" })
 ) { /* renderiza DetalleTareaScreen con el id ya resuelto */ }
 EOF
-python3 -c "
-codigo = open('app/src/main/kotlin/com/academia/android/RutaDetalleTarea.kt').read()
-assert codigo.count('(') == codigo.count(')'), 'paréntesis desbalanceados'
-assert 'navArgument' in codigo and 'navDeepLink' in codigo, 'faltan argumento tipado o deep link'
-print('RutaDetalleTarea.kt: argumento tipado y deep link presentes, sintaxis balanceada')
-"
+./gradlew :app:compileDebugKotlin
 ```
 
 **Explicación línea por línea:** `navArgument("id") { type = NavType.StringType }` declara que el argumento `id` debe ser un `String`, permitiendo validación automática; `navDeepLink { uriPattern = "miapp://tarea/{id}" }` registra que cualquier URI que coincida con ese patrón (por ejemplo, `miapp://tarea/42`) navega directamente a esta ruta, extrayendo `42` como el argumento `id` automáticamente.
@@ -336,12 +326,7 @@ fun AppConNavegacionInferior(secciones: List<SeccionPrincipal>) {
     }
 }
 EOF
-python3 -c "
-codigo = open('app/src/main/kotlin/com/academia/android/NavegacionInferior.kt').read()
-assert codigo.count('{') == codigo.count('}'), 'llaves desbalanceadas'
-assert 'NavigationBar' in codigo and 'NavHost' in codigo, 'faltan NavigationBar o NavHost'
-print('NavegacionInferior.kt: estructura de bottom navigation con NavHost presente')
-"
+./gradlew :app:compileDebugKotlin
 ```
 
 **Explicación línea por línea:** el modelo Python (`NavegacionMultiSeccion`) confirma la lógica antes de escribir Compose: cada sección tiene su propio `stacks[seccion]`, y `cambiar_seccion` solo cambia cuál está activa sin tocar ningún stack; el `NavegacionInferior.kt` real usa `Scaffold` con `bottomBar` y un `NavigationBar` con un ítem por sección, cada uno navegando a la ruta raíz de su propia sección.

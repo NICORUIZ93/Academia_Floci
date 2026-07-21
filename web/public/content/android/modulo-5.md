@@ -82,12 +82,7 @@ interface ApiService {
     suspend fun obtenerTareas(): List<TareaDTO>
 }
 EOF
-python3 -c "
-codigo = open('app/src/main/kotlin/com/academia/android/ApiService.kt').read()
-assert 'suspend fun obtenerTareas' in codigo, 'falta la función suspend'
-assert '@GET(\"tareas\")' in codigo, 'falta la anotación @GET'
-print('ApiService.kt: interfaz declarativa con función suspend correcta')
-"
+./gradlew :app:compileDebugKotlin
 ```
 
 **Explicación línea por línea:** el servidor Python (`servidor_prueba.py`) simula el backend real que `ApiService.obtenerTareas()` consumiría en producción; `@GET("tareas")` declara la ruta relativa a la `baseUrl` configurada en el `Retrofit.Builder`, y `suspend fun obtenerTareas(): List<TareaDTO>` es la función que Retrofit implementaría automáticamente para hacer esa petición HTTP de forma asíncrona.
@@ -189,12 +184,7 @@ class TareasViewModelConErrores(private val api: ApiService) : ViewModel() {
     }
 }
 EOF
-python3 -c "
-codigo = open('app/src/main/kotlin/com/academia/android/TareasViewModelConErrores.kt').read()
-assert codigo.count('{') == codigo.count('}'), 'llaves desbalanceadas'
-assert 'catch (e: HttpException)' in codigo and 'catch (e: IOException)' in codigo, 'faltan ambos catch tipados'
-print('TareasViewModelConErrores.kt: distingue HttpException de IOException correctamente')
-"
+./gradlew :app:compileDebugKotlin
 ```
 
 **Explicación línea por línea:** el `try` intenta obtener y mapear las tareas del `ApiService` del Tema 1; el primer `catch (e: HttpException)` captura específicamente errores donde el servidor respondió con un código de error, extrayendo `e.code()`; el segundo `catch (e: IOException)` captura específicamente fallos de conectividad, donde nunca hubo respuesta del servidor.
@@ -310,13 +300,7 @@ fun crearClienteHttp(token: String): OkHttpClient {
 }
 EOF
 kill %1 2>/dev/null || true
-python3 -c "
-codigo = open('app/src/main/kotlin/com/academia/android/ClienteHttpConInterceptores.kt').read()
-assert codigo.count('{') == codigo.count('}'), 'llaves desbalanceadas'
-orden = codigo.split('addInterceptor(authInterceptor)')[1].split('addInterceptor(loggingInterceptor)')[0]
-assert orden.strip() != '', 'authInterceptor debe registrarse antes que loggingInterceptor'
-print('ClienteHttpConInterceptores.kt: authInterceptor registrado antes que loggingInterceptor')
-"
+./gradlew :app:compileDebugKotlin
 ```
 
 **Explicación línea por línea:** el servidor de prueba (`servidor_prueba_headers.py`) responde exactamente qué valor de `Authorization` recibió, permitiendo verificar objetivamente si un header llegó o no; en el cliente real, `addInterceptor(authInterceptor)` se registra antes que `addInterceptor(loggingInterceptor)`, de modo que cuando el logging se ejecuta, el header de autenticación ya fue agregado a la petición.

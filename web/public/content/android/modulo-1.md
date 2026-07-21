@@ -36,7 +36,7 @@ Cada Activity atraviesa una secuencia predecible de callbacks: `onCreate` se eje
 Desde una carpeta vacía (o continuando en `academia-android` del Módulo 0), crea `app/src/main/kotlin/com/academia/android/PantallaCicloDeVida.kt` registrando cada callback en el log para observar el orden real:
 
 ```bash
-# python valida después la sintaxis; primero se genera el archivo Kotlin
+# compila con Gradle el archivo Kotlin generado a continuación
 mkdir -p academia-android/app/src/main/kotlin/com/academia/android
 cd academia-android
 cat > app/src/main/kotlin/com/academia/android/MainActivity.kt <<'EOF'
@@ -61,13 +61,7 @@ class MainActivity : ComponentActivity() {
 }
 EOF
 grep -c "override fun on" app/src/main/kotlin/com/academia/android/MainActivity.kt
-python3 -c "
-codigo = open('app/src/main/kotlin/com/academia/android/MainActivity.kt').read()
-assert codigo.count('{') == codigo.count('}'), 'llaves desbalanceadas'
-for callback in ['onCreate', 'onStart', 'onResume', 'onPause', 'onStop', 'onDestroy']:
-    assert f'override fun {callback}' in codigo, f'falta {callback}'
-print('MainActivity.kt: los 6 callbacks del ciclo de vida están presentes y las llaves balanceadas')
-"
+./gradlew :app:compileDebugKotlin
 ```
 
 **Explicación línea por línea:** cada método sobrescrito (`onCreate`, `onStart`, `onResume`, `onPause`, `onStop`, `onDestroy`) llama primero a `super.on...()` (obligatorio, o el sistema lanza una excepción) y luego registra su propio nombre en el log, permitiendo observar el orden exacto en que Android los invoca al ejecutar la app y al rotar la pantalla.
@@ -139,7 +133,7 @@ Un `ViewModel` está vinculado al `ViewModelStore` de la Activity, una estructur
 Reutiliza `academia-android` (o créalo desde una carpeta vacía con `mkdir -p academia-android` si es tu primera vez) y crea `app/src/main/kotlin/com/academia/android/TareasViewModel.kt` moviendo el contador del Tema 1 a un `ViewModel`:
 
 ```bash
-# python valida después la sintaxis; primero se genera el archivo Kotlin
+# compila con Gradle el archivo Kotlin generado a continuación
 mkdir -p academia-android/app/src/main/kotlin/com/academia/android
 cd academia-android
 cat > app/src/main/kotlin/com/academia/android/TareasViewModel.kt <<'EOF'
@@ -158,12 +152,7 @@ class TareasViewModel : ViewModel() {
     }
 }
 EOF
-python3 -c "
-codigo = open('app/src/main/kotlin/com/academia/android/TareasViewModel.kt').read()
-assert codigo.count('{') == codigo.count('}'), 'llaves desbalanceadas'
-assert ': ViewModel()' in codigo, 'la clase debe extender ViewModel'
-print('TareasViewModel.kt: llaves balanceadas y extiende ViewModel correctamente')
-"
+./gradlew :app:compileDebugKotlin
 ```
 
 **Explicación línea por línea:** `TareasViewModel` extiende `ViewModel()`, vinculándola al `ViewModelStore` de la Activity que la solicite; `_contador` es un `MutableStateFlow` privado (mutable solo dentro de la clase) expuesto como `contador` de solo lectura (`asStateFlow()`), el mismo patrón de encapsulación de estado que ya viste con propiedades privadas en Kotlin/Java.
@@ -256,7 +245,7 @@ Al finalizar podrás usar `SavedStateHandle` para persistir un valor que sobrevi
 Reutiliza `academia-android` (o créalo desde una carpeta vacía con `mkdir -p academia-android` si es tu primera vez en este módulo) y crea `app/src/main/kotlin/com/academia/android/TareasConFiltroViewModel.kt`, extendiendo el patrón del Tema 2 con `SavedStateHandle` para un valor de filtro:
 
 ```bash
-# python valida después la sintaxis; primero se genera el archivo Kotlin
+# compila con Gradle el archivo Kotlin generado a continuación
 mkdir -p academia-android/app/src/main/kotlin/com/academia/android
 cd academia-android
 cat > app/src/main/kotlin/com/academia/android/TareasConFiltroViewModel.kt <<'EOF'
@@ -275,12 +264,7 @@ class TareasConFiltroViewModel(
         }
 }
 EOF
-python3 -c "
-codigo = open('app/src/main/kotlin/com/academia/android/TareasConFiltroViewModel.kt').read()
-assert codigo.count('{') == codigo.count('}'), 'llaves desbalanceadas'
-assert 'SavedStateHandle' in codigo, 'debe recibir SavedStateHandle en el constructor'
-print('TareasConFiltroViewModel.kt: llaves balanceadas y usa SavedStateHandle')
-"
+./gradlew :app:compileDebugKotlin
 ```
 
 **Explicación línea por línea:** `savedStateHandle["filtro"]` lee y escribe el valor a través del propio `SavedStateHandle` inyectado en el constructor, en vez de una variable normal de la clase; este mecanismo persiste el valor en un `Bundle` gestionado por el sistema que sobrevive incluso a la muerte del proceso, a diferencia de `_contador` del Tema 2.

@@ -46,7 +46,7 @@ Android asigna UID y sandbox por app, pero componentes declarados (`android:expo
 Desde una carpeta vacía (o continuando en `academia-android` de módulos anteriores), crea `app/src/main/kotlin/com/academia/android/ValidacionDeepLink.kt` con la validación real de un deep link:
 
 ```bash
-# python valida después la estructura de este archivo Kotlin
+# compila con Gradle el archivo Kotlin generado a continuación
 mkdir -p academia-android/app/src/main/kotlin/com/academia/android
 cd academia-android
 cat > app/src/main/kotlin/com/academia/android/ValidacionDeepLink.kt <<'EOF'
@@ -65,12 +65,7 @@ fun parseTaskLink(uri: Uri, sesionPuedeLeer: (String) -> Boolean): String {
     return id
 }
 EOF
-python3 -c "
-codigo = open('app/src/main/kotlin/com/academia/android/ValidacionDeepLink.kt').read()
-assert 'require(uri.scheme ==' in codigo and 'require(uri.host ==' in codigo, 'falta validar scheme/host'
-assert 'sesionPuedeLeer' in codigo, 'falta la autorización posterior a la validación de forma'
-print('ValidacionDeepLink.kt: valida forma (scheme/host/path) Y autorización, en ese orden')
-"
+./gradlew :app:compileDebugKotlin
 ```
 
 **Explicación línea por línea:** `parseTaskLink` valida primero la FORMA del URI (`scheme`, `host`, número y contenido de `pathSegments`) usando `require`, que lanza una excepción inmediatamente ante cualquier discrepancia; solo después de superar esa validación estructural consulta `sesionPuedeLeer(id)`, la autorización real — un deep link con forma perfecta pero apuntando a un recurso ajeno sigue siendo rechazado.
@@ -197,12 +192,7 @@ fun generarClaveEnKeystore() {
     generador.generateKey() // material de clave NO exportable, vive dentro del Keystore
 }
 EOF
-python3 -c "
-codigo = open('app/src/main/kotlin/com/academia/android/CifradoSensible.kt').read()
-assert 'AndroidKeyStore' in codigo, 'debe usar el proveedor AndroidKeyStore, no una clave en memoria exportable'
-assert 'BLOCK_MODE_GCM' in codigo, 'debe usar GCM (cifrado autenticado), no un modo sin autenticación'
-print('CifradoSensible.kt: usa AndroidKeyStore con GCM (cifrado autenticado) correctamente')
-"
+./gradlew :app:compileDebugKotlin
 ```
 
 **Explicación línea por línea:** `KeyGenerator.getInstance(..., \"AndroidKeyStore\")` genera la clave DENTRO del Keystore del sistema, sin que el material de clave salga nunca en texto plano hacia el proceso de la app; `BLOCK_MODE_GCM` es un modo de cifrado autenticado (AEAD), que detecta manipulación del ciphertext, a diferencia de un modo sin autenticación.
@@ -328,12 +318,7 @@ class OutboxRepository {
     }
 }
 EOF
-python3 -c "
-codigo = open('app/src/main/kotlin/com/academia/android/OutboxOffline.kt').read()
-assert 'operationId = UUID.randomUUID().toString()' in codigo, 'falta operation ID único por mutación'
-assert 'baseVersion' in codigo, 'falta la versión base para detectar conflictos'
-print('OutboxOffline.kt: cada mutación tiene operation ID único y versión base')
-"
+./gradlew :app:compileDebugKotlin
 ```
 
 **Explicación línea por línea:** cada `PendingMutation` recibe un `operationId` único (`UUID.randomUUID()`), permitiendo al servidor deduplicar reintentos del mismo cambio; `baseVersion` registra sobre qué versión de la entidad se basó la edición, la información que el servidor necesita para detectar si otro cambio ya avanzó esa versión mientras el dispositivo estaba offline.
@@ -460,12 +445,7 @@ class FileRepository(
     }
 }
 EOF
-python3 -c "
-codigo = open('app/src/main/kotlin/com/academia/android/RepositorioMainSafe.kt').read()
-assert 'withContext(io)' in codigo, 'el I/O debe envolverse explícitamente con withContext(io)'
-assert 'Dispatchers.IO' in codigo, 'debe usar Dispatchers.IO, no el dispatcher por defecto del main thread'
-print('RepositorioMainSafe.kt: I/O explícitamente movido fuera del hilo principal')
-"
+./gradlew :app:compileDebugKotlin
 ```
 
 **Explicación línea por línea:** `suspend fun load(...)` por sí solo NO garantiza que el trabajo ocurra fuera del hilo principal; `withContext(io)` con `io = Dispatchers.IO` es lo que efectivamente mueve la ejecución de `archivo.readText()` (una operación de I/O síncrona) a un hilo apropiado, evitando bloquear el hilo principal mientras se lee el archivo.

@@ -42,7 +42,7 @@ Al finalizar podrás explicar qué activa `@Composable` en el compilador, y pred
 Desde una carpeta vacía (o continuando en `academia-android` de módulos anteriores), crea `app/src/main/kotlin/com/academia/android/TarjetaTarea.kt`:
 
 ```bash
-# python valida después la sintaxis; primero se genera el archivo Kotlin
+# compila con Gradle el archivo Kotlin generado a continuación
 mkdir -p academia-android/app/src/main/kotlin/com/academia/android
 cd academia-android
 cat > app/src/main/kotlin/com/academia/android/TarjetaTarea.kt <<'EOF'
@@ -60,13 +60,7 @@ fun TarjetaTarea(titulo: String, completada: Boolean) {
     )
 }
 EOF
-python3 -c "
-codigo = open('app/src/main/kotlin/com/academia/android/TarjetaTarea.kt').read()
-assert codigo.count('(') == codigo.count(')'), 'paréntesis desbalanceados'
-assert '@Composable' in codigo, 'falta la anotación @Composable'
-assert 'fun TarjetaTarea(titulo: String, completada: Boolean)' in codigo, 'firma incorrecta'
-print('TarjetaTarea.kt: sintaxis balanceada y firma correcta')
-"
+./gradlew :app:compileDebugKotlin
 ```
 
 **Explicación línea por línea:** `@Composable` marca la función para el plugin de compilación de Compose; `titulo` y `completada` son los parámetros de entrada que determinan la salida — cualquier cambio en ellos dispara una recomposición que vuelve a evaluar la expresión `if (completada) TextDecoration.LineThrough else null`, produciendo tachado o no según el nuevo valor.
@@ -153,7 +147,7 @@ State hoisting es el patrón de elevar el estado desde un composable hijo hacia 
 Reutiliza `academia-android` (o créalo desde una carpeta vacía con `mkdir -p academia-android` si es tu primera vez) y crea `app/src/main/kotlin/com/academia/android/CampoTitulo.kt`:
 
 ```bash
-# python valida después la sintaxis; primero se genera el archivo Kotlin
+# compila con Gradle el archivo Kotlin generado a continuación
 mkdir -p academia-android/app/src/main/kotlin/com/academia/android
 cd academia-android
 cat > app/src/main/kotlin/com/academia/android/CampoTitulo.kt <<'EOF'
@@ -177,12 +171,7 @@ fun PantallaCrearTarea() {
     CampoTitulo(valor = titulo, onValorCambia = { titulo = it })
 }
 EOF
-python3 -c "
-codigo = open('app/src/main/kotlin/com/academia/android/CampoTitulo.kt').read()
-assert codigo.count('{') == codigo.count('}'), 'llaves desbalanceadas'
-assert 'remember' not in codigo.split('fun CampoTitulo')[1].split('fun PantallaCrearTarea')[0], 'CampoTitulo no debe usar remember internamente'
-print('CampoTitulo.kt: sin estado propio dentro de CampoTitulo, tal como exige state hoisting')
-"
+./gradlew :app:compileDebugKotlin
 ```
 
 **Explicación línea por línea:** `CampoTitulo` recibe `valor` y `onValorCambia` como parámetros, sin ningún `remember` interno; `PantallaCrearTarea` es quien posee el estado real (`titulo`) y se lo pasa hacia abajo, recibiendo notificaciones de cambio hacia arriba mediante el callback — el script Python confirma programáticamente que el cuerpo de `CampoTitulo` no contiene ningún `remember`, la condición central de state hoisting correctamente aplicado.
@@ -266,7 +255,7 @@ Al finalizar podrás elegir entre `remember` y `rememberSaveable` según si un v
 Reutiliza `academia-android` (o créalo desde una carpeta vacía con `mkdir -p academia-android` si es tu primera vez) y crea `app/src/main/kotlin/com/academia/android/PantallaContador.kt` comparando ambos mecanismos y combinando `Column`/`Row`:
 
 ```bash
-# python valida después la sintaxis; primero se genera el archivo Kotlin
+# compila con Gradle el archivo Kotlin generado a continuación
 mkdir -p academia-android/app/src/main/kotlin/com/academia/android
 cd academia-android
 cat > app/src/main/kotlin/com/academia/android/PantallaContador.kt <<'EOF'
@@ -302,12 +291,7 @@ fun PantallaContador() {
     }
 }
 EOF
-python3 -c "
-codigo = open('app/src/main/kotlin/com/academia/android/PantallaContador.kt').read()
-assert codigo.count('{') == codigo.count('}'), 'llaves desbalanceadas'
-assert 'rememberSaveable' in codigo and 'remember {' in codigo, 'deben coexistir ambos mecanismos'
-print('PantallaContador.kt: ambos mecanismos (remember y rememberSaveable) presentes, sintaxis balanceada')
-"
+./gradlew :app:compileDebugKotlin
 ```
 
 **Explicación línea por línea:** `contadorVolatil` usa `remember` simple; `contadorPersistente` usa `rememberSaveable`, agregando serialización a un `Bundle`; `Column`/`Row`/`Modifier.weight(1f)` construyen el layout, con `weight(1f)` haciendo que el `Spacer` ocupe todo el espacio disponible entre ambos textos, empujándolos a los extremos.

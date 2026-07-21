@@ -61,12 +61,7 @@ fun BotonEstable(viewModel: TareasViewModelConEstado) {
     Button(onClick = viewModel::cargar) { Text("Cargar") } // referencia estable
 }
 EOF
-python3 -c "
-codigo = open('app/src/main/kotlin/com/academia/android/BotonesComparados.kt').read()
-assert 'onClick = { viewModel.cargar() }' in codigo, 'falta el ejemplo inestable'
-assert 'onClick = viewModel::cargar' in codigo, 'falta el ejemplo estable con referencia de método'
-print('BotonesComparados.kt: ambas variantes (inestable y estable) presentes para comparar')
-"
+./gradlew :app:compileDebugKotlin
 ```
 
 **Explicación línea por línea:** `BotonInestable` crea una nueva expresión lambda (`{ viewModel.cargar() }`) cada vez que se recompone el padre; `BotonEstable` usa `viewModel::cargar`, una referencia de método que Kotlin resuelve a la misma identidad mientras `viewModel` no cambie, permitiendo que Compose confirme la igualdad y salte la recomposición si nada más cambió.
@@ -174,12 +169,7 @@ fun PantallaConSensor(alRecibirLectura: (Float) -> Unit) {
     }
 }
 EOF
-python3 -c "
-codigo = open('app/src/main/kotlin/com/academia/android/EfectosDeCiclo.kt').read()
-assert codigo.count('{') == codigo.count('}'), 'llaves desbalanceadas'
-assert 'SideEffect' in codigo and 'DisposableEffect' in codigo and 'onDispose' in codigo, 'faltan los tres efectos'
-print('EfectosDeCiclo.kt: SideEffect y DisposableEffect con onDispose presentes')
-"
+./gradlew :app:compileDebugKotlin
 ```
 
 **Explicación línea por línea:** `SideEffect { }` ejecuta su bloque en cada recomposición exitosa, apropiado para sincronizar un valor de Compose hacia un sistema externo; `DisposableEffect(Unit) { onDispose { ... } }` registra un recurso al entrar en composición y garantiza su limpieza (`onDispose`) cuando el composable sale de composición, evitando fugas de recursos como un listener de sensor nunca liberado.
@@ -296,12 +286,7 @@ fun IconoEliminarTarea() {
     Icon(Icons.Default.Delete, contentDescription = "Eliminar tarea") // sin esto, TalkBack no puede describir el ícono
 }
 EOF
-python3 -c "
-codigo = open('app/src/main/kotlin/com/academia/android/IconoAccesible.kt').read()
-assert 'contentDescription = \"Eliminar tarea\"' in codigo, 'falta contentDescription descriptivo'
-assert 'contentDescription = null' not in codigo, 'contentDescription no debe ser null para un ícono interactivo'
-print('IconoAccesible.kt: contentDescription presente y descriptivo')
-"
+./gradlew :app:compileDebugKotlin
 ```
 
 **Explicación línea por línea:** `Icon(Icons.Default.Delete, contentDescription = "Eliminar tarea")` provee el texto que TalkBack anuncia al usuario al enfocar ese ícono; sin `contentDescription` (o con `contentDescription = null`, apropiado solo para íconos puramente decorativos sin ninguna función interactiva), TalkBack no tiene ninguna forma de comunicar qué hace ese elemento.

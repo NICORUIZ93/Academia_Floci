@@ -63,12 +63,7 @@ class TareasViewModelInyectado @Inject constructor(
     private val repo: TareaRepository
 ) : ViewModel()
 EOF
-python3 -c "
-codigo = open('app/src/main/kotlin/com/academia/android/MiApp.kt').read()
-assert '@HiltAndroidApp' in codigo, 'falta @HiltAndroidApp en Application'
-assert '@HiltViewModel' in codigo and '@Inject constructor' in codigo, 'falta @HiltViewModel/@Inject'
-print('MiApp.kt: anotaciones de Hilt presentes en Application y ViewModel')
-"
+./gradlew :app:compileDebugKotlin
 ```
 
 **Explicación línea por línea:** `@HiltAndroidApp` en `MiApp` inicializa el contenedor de dependencias raíz de toda la aplicación; `@HiltViewModel` junto con `@Inject constructor(private val repo: TareaRepository)` le dice a Hilt que construya automáticamente `TareasViewModelInyectado`, resolviendo `TareaRepository` desde el grafo de dependencias sin que el desarrollador escriba ese código de construcción manualmente.
@@ -190,12 +185,7 @@ abstract class RepositoryModule {
     abstract fun bindTareaRepository(impl: TareaRepositoryImpl): TareaRepository
 }
 EOF
-python3 -c "
-codigo = open('app/src/main/kotlin/com/academia/android/NetworkModule.kt').read()
-assert '@Provides' in codigo and 'fun provideRetrofit(): Retrofit' in codigo, 'falta @Provides para Retrofit'
-assert '@Binds' in codigo and 'bindTareaRepository(impl: TareaRepositoryImpl): TareaRepository' in codigo, 'falta @Binds'
-print('NetworkModule.kt: @Provides para clase externa y @Binds para interfaz propia, ambos presentes')
-"
+./gradlew :app:compileDebugKotlin
 ```
 
 **Explicación línea por línea:** `provideRetrofit()` construye explícitamente la instancia de `Retrofit` (una clase externa que Hilt no puede anotar directamente en su constructor); `bindTareaRepository` simplemente declara la asociación entre la interfaz `TareaRepository` y su implementación `TareaRepositoryImpl`, sin escribir código adicional de construcción, porque `TareaRepositoryImpl` ya tiene su propio constructor `@Inject`.
@@ -312,11 +302,7 @@ import dagger.hilt.android.testing.UninstallModules
 @UninstallModules(NetworkModule::class) // reemplaza el módulo real por uno de test
 class TareasFlowTest
 EOF
-python3 -c "
-codigo = open('app/src/main/kotlin/com/academia/android/TareasFlowTest.kt').read()
-assert '@UninstallModules(NetworkModule::class)' in codigo, 'falta @UninstallModules'
-print('TareasFlowTest.kt: reemplaza NetworkModule por un módulo de test correctamente')
-"
+./gradlew :app:compileDebugKotlin
 ```
 
 **Explicación línea por línea:** `@HiltAndroidTest` habilita la inyección de Hilt dentro del test; `@UninstallModules(NetworkModule::class)` desinstala el módulo de producción, permitiendo que un módulo de test equivalente provea, en su lugar, un `Retrofit` apuntando a un servidor de pruebas en vez del real.
