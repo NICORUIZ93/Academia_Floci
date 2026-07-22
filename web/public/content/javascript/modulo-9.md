@@ -7,13 +7,13 @@
 
 #### Paso 1 · Objetivo y preparación
 
-Al finalizar podrás instalar Vitest, escribir pruebas con Arrange–Act–Assert, verificar resultados y errores y leer un fallo sin modificar primero la expectativa. Protegerás la creación de guías de RutaFlow mediante un contrato ejecutable.
+Al finalizar podrás instalar Vitest, escribir pruebas con Arrange–Act–Assert, verificar resultados y errores y leer un fallo sin modificar primero la expectativa. Protegerás la creación de guías del proyecto mediante un contrato ejecutable.
 
 **Conocimiento previo:** funciones, módulos ESM, excepciones, npm y el proyecto Vite. Comprueba que `npm run build` funciona antes de añadir testing; una prueba no debe ocultar una configuración ya rota.
 
 #### Paso 2 · Contexto y caso real
 
-Toda entrega nueva debe empezar en `CREADA` y rechazar números vacíos. En este incremento del proyecto RutaFlow, una prueba documentará ambas reglas para detectar inmediatamente una regresión durante una refactorización.
+Toda entrega nueva debe empezar en `CREADA` y rechazar números vacíos. En este incremento del proyecto, una prueba documentará ambas reglas para detectar inmediatamente una regresión durante una refactorización.
 
 #### Paso 3 · Teoría, modelo mental y analogía
 
@@ -110,13 +110,13 @@ Ya puedes convertir una regla de dominio en feedback rápido y determinista. El 
 
 #### Paso 1 · Objetivo y preparación
 
-Al finalizar podrás elegir entre spy, mock y fake, controlar temporizadores con Vitest y limpiar el entorno después de cada caso. Verificarás que el filtro de RutaFlow colapsa entradas rápidas sin esperar 300 ms reales.
+Al finalizar podrás elegir entre spy, mock y fake, controlar temporizadores con Vitest y limpiar el entorno después de cada caso. Verificarás que el filtro del proyecto colapsa entradas rápidas sin esperar 300 ms reales.
 
 **Prerrequisitos:** callbacks, closures, `setTimeout`, pruebas Vitest y función `debounce`. Si no tienes `debounce`, créala como función de producción antes de probarla; no la declares dentro del test.
 
 #### Paso 2 · Contexto y caso real
 
-El operador escribe “EN_RUTA” letra por letra. Consultar la API por cada tecla desperdicia red; el filtro espera una pausa. En el proyecto RutaFlow controlaremos el reloj y observaremos la colaboración con búsqueda, manteniendo la prueba rápida y determinista.
+El operador escribe “EN_RUTA” letra por letra. Consultar la API por cada tecla desperdicia red; el filtro espera una pausa. En este proyecto controlaremos el reloj y observaremos la colaboración con búsqueda, manteniendo la prueba rápida y determinista.
 
 #### Paso 3 · Teoría, modelo mental y analogía
 
@@ -204,13 +204,13 @@ Ya puedes controlar colaboraciones y tiempo sin convertir el test en teatro de m
 
 #### Paso 1 · Objetivo y preparación
 
-Al finalizar podrás probar éxito, error HTTP y fallo de red sin tráfico real, crear una respuesta simulada compatible y restaurar `fetch` después de cada caso. Asegurarás el cliente de entregas de RutaFlow en milisegundos.
+Al finalizar podrás probar éxito, error HTTP y fallo de red sin tráfico real, crear una respuesta simulada compatible y restaurar `fetch` después de cada caso. Asegurarás el cliente de entregas del proyecto en milisegundos.
 
 **Conocimiento previo:** `fetch`, Promesas, `async`/`await`, excepciones, mocks y Vitest. Recuerda que HTTP 404 resuelve la Promesa: el cliente debe revisar `response.ok`.
 
 #### Paso 2 · Contexto y caso real
 
-La pantalla no puede depender de un servidor disponible para probar su manejo de errores. En el proyecto RutaFlow, el cliente traducirá respuestas HTTP a datos o errores explícitos, mientras la prueba controla únicamente la frontera `fetch`.
+La pantalla no puede depender de un servidor disponible para probar su manejo de errores. En este proyecto, el cliente traducirá respuestas HTTP a datos o errores explícitos, mientras la prueba controla únicamente la frontera `fetch`.
 
 #### Paso 3 · Teoría, modelo mental y analogía
 
@@ -309,13 +309,13 @@ Ya puedes simular la frontera HTTP conservando su contrato esencial. El siguient
 
 #### Paso 1 · Objetivo y preparación
 
-Al finalizar podrás distinguir análisis estático, formato y cobertura, configurar comandos reproducibles y usar un reporte para encontrar una rama sin prueba. Convertirás calidad de RutaFlow en un contrato ejecutable sin perseguir un porcentaje vacío.
+Al finalizar podrás distinguir análisis estático, formato y cobertura, configurar comandos reproducibles y usar un reporte para encontrar una rama sin prueba. Convertirás calidad del proyecto en un contrato ejecutable sin perseguir un porcentaje vacío.
 
 **Prerrequisitos:** npm, Vitest y una suite verde. Conserva `package-lock.json`; las mismas versiones deben ejecutarse localmente y en CI.
 
 #### Paso 2 · Contexto y caso real
 
-RutaFlow ya tiene pruebas, pero aún puede contener variables sin usar, formato inconsistente o ramas nunca ejercitadas. El proyecto integrará tres señales distintas y bloqueará errores, manteniendo las decisiones de cobertura enfocadas en el dominio crítico.
+El proyecto ya tiene pruebas, pero aún puede contener variables sin usar, formato inconsistente o ramas nunca ejercitadas. El proyecto integrará tres señales distintas y bloqueará errores, manteniendo las decisiones de cobertura enfocadas en el dominio crítico.
 
 #### Paso 3 · Teoría, modelo mental y analogía
 
@@ -335,7 +335,7 @@ Sin embargo, un 100% de cobertura no garantiza en absoluto la ausencia de bugs: 
 
 #### Paso 4 · Demostración guiada desde cero
 
-Instala herramientas en `rutaflow-web`:
+Instala herramientas en `academia-web`:
 
 ```bash
 npm install --save-dev eslint @eslint/js prettier @vitest/coverage-v8

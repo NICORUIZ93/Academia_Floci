@@ -13,7 +13,7 @@ Al finalizar podrás crear objetos que delegan métodos, recorrer su cadena y di
 
 #### Paso 2 · Contexto y caso real
 
-**¿Por qué es importante?** Varias entregas de RutaFlow comparten comportamiento. La delegación evita copiar el mismo método y explica el mecanismo real que después utiliza `class`.
+**¿Por qué es importante?** Varias entregas del proyecto comparten comportamiento. La delegación evita copiar el mismo método y explica el mecanismo real que después utiliza `class`.
 
 #### Paso 3 · Teoría con analogía
 
@@ -73,12 +73,6 @@ node src/prototipos.js
 
 **Fallo deliberado:** asigna `guia.describir = 'texto'` y vuelve a invocarla. El `TypeError` ocurre porque una propiedad propia sombrea el método heredado; elimina esa propiedad para recuperar la delegación.
 
-#### Construcción RutaFlow: delegación visible
-
-Crea `academia-javascript/src/prototipos.js` con `guiaProto.describir` y dos objetos creados mediante `Object.create`. Ejecuta `node src/prototipos.js`; verifica con `hasOwn`, `Object.getPrototypeOf` y conteo que el método vive una sola vez en el prototipo.
-
-Asigna `describir` solo a una instancia para observar *shadowing* sin modificar el prototipo. Después cambia el método compartido y comprueba que la otra instancia delega a la nueva versión. Recorre la cadena hasta `null`. RutaFlow usa prototipos para comprender el lenguaje, no para mutar prototipos globales ni extender `Object.prototype`.
-
 #### Paso 5 · Práctica guiada
 
 Crea dos guías y modifica `guiaProto.describir`. **Pista:** predice cuáles observan el cambio si una de ellas tiene un método propio.
@@ -103,7 +97,7 @@ Al finalizar podrás implementar una jerarquía pequeña con `class`, `extends` 
 
 #### Paso 2 · Contexto y caso real
 
-**¿Por qué es importante?** RutaFlow posee envíos normales y expresos. Heredar solo es correcto si el subtipo conserva todo el contrato del envío base; una característica opcional suele modelarse mejor con composición.
+**¿Por qué es importante?** El proyecto modela envíos normales y expresos. Heredar solo es correcto si el subtipo conserva todo el contrato del envío base; una característica opcional suele modelarse mejor con composición.
 
 #### Paso 3 · Teoría con analogía
 
@@ -175,12 +169,6 @@ node src/clases.js
 
 **Fallo deliberado:** usa `this.prioridad` antes de `super(numero)`. JavaScript lanza `ReferenceError` porque una clase derivada no dispone de `this` hasta ejecutar el constructor base.
 
-#### Construcción RutaFlow: herencia con contrato real
-
-Crea `academia-javascript/src/clases.js` con `Envio` y `EnvioExpress extends Envio`; usa `super` para validar número y ampliar `describir`. Ejecuta `node src/clases.js`; el resultado esperado incluye la descripción base y prioridad, y confirma que el método está en `Envio.prototype`.
-
-Usa `this` antes de `super()` para reproducir `ReferenceError`; corrige el orden. Reemplaza herencia por composición de una política de prioridad y compara cuál modela mejor “tiene” frente a “es”. RutaFlow no crea jerarquías profundas: `extends` se usa solo cuando el subtipo respeta el contrato completo.
-
 #### Paso 5 · Práctica guiada
 
 Agrega `EnvioRefrigerado` con temperatura y extiende la descripción. **Pista:** llama `super` antes de tocar `this` y conserva la validación base.
@@ -205,7 +193,7 @@ Al finalizar podrás exponer valores derivados con getters, validar escrituras d
 
 #### Paso 2 · Contexto y caso real
 
-**¿Por qué es importante?** RutaFlow calcula peso total desde paquetes. Guardar simultáneamente paquetes y total permite que se contradigan; un getter deriva el valor desde una única fuente de verdad.
+**¿Por qué es importante?** El proyecto calcula peso total desde paquetes. Guardar simultáneamente paquetes y total permite que se contradigan; un getter deriva el valor desde una única fuente de verdad.
 
 #### Paso 3 · Teoría con analogía
 
@@ -272,12 +260,6 @@ node src/propiedades.js
 
 **Fallo deliberado:** agrega un setter `pesoTotal` que guarde otro valor y asigna `100`. Ahora paquetes y total pueden contradecirse. Elimina el setter: un dato derivado no debe admitir una escritura sin significado de dominio.
 
-#### Construcción RutaFlow: valores derivados sin duplicación
-
-Crea `academia-javascript/src/propiedades.js` con una clase `Manifiesto` cuyo getter `pesoTotal` calcule desde movimientos y un método validado para agregar. Agrupa guías por estado con claves computadas. Ejecuta `node src/propiedades.js`; el total debe actualizarse sin almacenar una segunda copia desincronizable.
-
-Agrega un setter que acepte peso negativo para observar una invariante rota; elimínalo o valida mediante operación de dominio con nombre. Transforma entradas con `Object.entries`/`fromEntries` sin mutar el original. RutaFlow evita getters costosos o con efectos ocultos: leer una propiedad no debería realizar red ni escritura.
-
 #### Paso 5 · Práctica guiada
 
 Agrega el getter `cantidadPaquetes`. **Pista:** derívalo de `#paquetes.length`; no mantengas un contador adicional.
@@ -302,7 +284,7 @@ Al finalizar podrás proteger una transición con `#campo`, exponer lectura cont
 
 #### Paso 2 · Contexto y caso real
 
-**¿Por qué es importante?** Una entrega de RutaFlow no debe convertirse en entregada dos veces ni saltarse reglas mediante asignación directa. El motor puede impedir el acceso al estado y obligar a usar operaciones válidas.
+**¿Por qué es importante?** Una entrega del proyecto no debe convertirse en entregada dos veces ni saltarse reglas mediante asignación directa. El motor puede impedir el acceso al estado y obligar a usar operaciones válidas.
 
 #### Paso 3 · Teoría con analogía
 
@@ -366,12 +348,6 @@ node src/encapsulacion.js
 **Resultado esperado:** `ENTREGADA`.
 
 **Fallo deliberado:** llama `confirmar()` por segunda vez; recibe `No se puede confirmar desde ENTREGADA`. En `src/acceso-privado.js` intenta `entrega.#estado`: el archivo ni siquiera se analiza y produce `SyntaxError`.
-
-#### Construcción RutaFlow: transición protegida por el motor
-
-Crea `academia-javascript/src/encapsulacion.js` con `Entrega`, campo `#estado`, getter y método `confirmar` que valide la transición. Ejecuta `node src/encapsulacion.js`; debe pasar de `EN_RUTA` a `ENTREGADA` y rechazar una segunda confirmación.
-
-En un archivo separado intenta `entrega.#estado` para observar `SyntaxError` durante análisis; no pongas ese acceso en el script principal porque impediría ejecutar todo. Compara `_estado` y demuestra que sí puede corromperse externamente. RutaFlow expone operaciones con lenguaje de dominio, no setters genéricos que evadan invariantes.
 
 #### Paso 5 · Práctica guiada
 

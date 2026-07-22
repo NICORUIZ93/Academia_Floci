@@ -13,7 +13,7 @@ Al finalizar podrás escribir flujos asíncronos legibles, distinguir dependenci
 
 #### Paso 2 · Contexto y caso real
 
-**¿Por qué es importante?** RutaFlow consulta una entrega y después obtiene su ruta; esos pasos dependen entre sí. En cambio, dos guías independientes deben consultarse en paralelo para no sumar latencias.
+**¿Por qué es importante?** El proyecto consulta una entrega y después obtiene su ruta; esos pasos dependen entre sí. En cambio, dos guías independientes deben consultarse en paralelo para no sumar latencias.
 
 #### Paso 3 · Teoría con analogía
 
@@ -35,7 +35,7 @@ Reescribir una cadena de `.then().then().catch()` como una función `async` con 
 
 ```mermaid
 sequenceDiagram
-    participant UI as Interfaz RutaFlow
+    participant UI as Interfaz de la app
     participant F as función async
     participant API as API
     UI->>F: consultarGuia()
@@ -46,39 +46,6 @@ sequenceDiagram
 ```
 
 #### Paso 4 · Demostración guiada desde cero
-
-#### Construcción RutaFlow: primera consulta secuencial
-
-Desde una carpeta vacía crea `ejemplo-async-await`, ejecuta `npm init -y`, crea `src` y después `src/cliente.js`:
-
-```bash
-mkdir ejemplo-async-await
-cd ejemplo-async-await
-npm init -y
-mkdir src
-```
-
-```javascript
-const esperar = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
-
-async function consultarGuia(numero) {
-  await esperar(50); // se pausa esta función; el event loop sigue trabajando
-  return { numero, estado: 'EN_RUTA' };
-}
-
-console.log('antes');
-const pendiente = consultarGuia('RF-101');
-console.log('es promesa:', pendiente instanceof Promise);
-console.log(await pendiente);
-```
-
-```bash
-node src/cliente-rutaflow.js
-```
-
-**Resultado esperado:** `antes`, `es promesa: true` y la guía `RF-101` en ruta.
-
-**Fallo deliberado:** consulta dos guías independientes con dos `await` consecutivos y mide cerca de 100 ms. No es un error del lenguaje: serializaste trabajo que podía comenzar junto.
 
 #### Paso 5 · Práctica guiada
 
@@ -104,7 +71,7 @@ Al finalizar podrás convertir fallos de red, HTTP y datos en errores diferencia
 
 #### Paso 2 · Contexto y caso real
 
-**¿Por qué es importante?** Una entrega de RutaFlow puede fallar por conexión, por respuesta 404 o por JSON inválido. Mostrar “algo salió mal” para todos los casos impide actuar y diagnosticar.
+**¿Por qué es importante?** Una entrega del proyecto puede fallar por conexión, por respuesta 404 o por JSON inválido. Mostrar “algo salió mal” para todos los casos impide actuar y diagnosticar.
 
 #### Paso 3 · Teoría con analogía
 
@@ -184,7 +151,7 @@ Al finalizar podrás cancelar una petición obsoleta, distinguir cancelación in
 
 #### Paso 2 · Contexto y caso real
 
-**¿Por qué es importante?** En el proyecto RutaFlow un operador puede buscar varias entregas rápidamente. Sin cancelación, una respuesta lenta de la primera búsqueda puede reemplazar el resultado correcto de la última.
+**¿Por qué es importante?** En este proyecto un operador puede buscar varias entregas rápidamente. Sin cancelación, una respuesta lenta de la primera búsqueda puede reemplazar el resultado correcto de la última.
 
 #### Paso 3 · Teoría con analogía
 
@@ -259,7 +226,7 @@ Al finalizar podrás aplicar timeout por intento, backoff exponencial con jitter
 
 #### Paso 2 · Contexto y caso real
 
-**¿Por qué es importante?** RutaFlow debe recuperarse de una caída breve sin duplicar una confirmación de entrega ni saturar un servicio degradado. No todos los errores ni comandos son reintentables.
+**¿Por qué es importante?** El proyecto debe recuperarse de una caída breve sin duplicar una confirmación de entrega ni saturar un servicio degradado. No todos los errores ni comandos son reintentables.
 
 #### Paso 3 · Teoría con analogía
 
@@ -336,13 +303,13 @@ Ya aplicas resiliencia sin convertir reintentos en duplicación o tormenta de tr
 
 #### Paso 1 · Objetivo y preparación
 
-Al finalizar podrás construir una secuencia perezosa con `function*`, detenerla con `yield`, reanudarla con `.next()` y componerla con `yield*`. La aplicarás al proyecto RutaFlow para recorrer entregas por lotes sin crear todas las páginas en memoria.
+Al finalizar podrás construir una secuencia perezosa con `function*`, detenerla con `yield`, reanudarla con `.next()` y componerla con `yield*`. La aplicarás al proyecto para recorrer entregas por lotes sin crear todas las páginas en memoria.
 
 **Conocimiento previo:** funciones, arrays, ciclos `for`, objetos y el protocolo iterable presentado en el módulo de colecciones. Si todavía no distingues un iterable de un iterador, repasa que el iterable puede producir un iterador y que `.next()` devuelve `{ value, done }`.
 
 #### Paso 2 · Contexto y caso real
 
-El panel de operaciones puede recibir miles de entregas. Convertirlas todas en páginas antes de usar la primera aumenta memoria y demora la primera respuesta. En este incremento del proyecto RutaFlow construiremos un paginador perezoso: cada lote se calcula únicamente cuando el consumidor lo solicita.
+El panel de operaciones puede recibir miles de entregas. Convertirlas todas en páginas antes de usar la primera aumenta memoria y demora la primera respuesta. En este incremento del proyecto construiremos un paginador perezoso: cada lote se calcula únicamente cuando el consumidor lo solicita.
 
 #### Paso 3 · Teoría, modelo mental y analogía
 
@@ -426,13 +393,13 @@ Ya puedes producir datos bajo demanda y reconocer cuándo un array completo es i
 
 #### Paso 1 · Objetivo y preparación
 
-Al finalizar podrás interceptar lecturas y escrituras con `Proxy`, conservar la semántica del lenguaje mediante `Reflect` y decidir cuándo esta metaprogramación es adecuada. Protegerás el estado de una entrega de RutaFlow sin ocultar las reglas centrales del dominio.
+Al finalizar podrás interceptar lecturas y escrituras con `Proxy`, conservar la semántica del lenguaje mediante `Reflect` y decidir cuándo esta metaprogramación es adecuada. Protegerás el estado de una entrega del proyecto sin ocultar las reglas centrales del dominio.
 
 **Prerrequisitos:** objetos, propiedades, funciones, excepciones y modo estricto. Recuerda que una asignación puede tener reglas internas —propiedades no escribibles, accesores o herencia— que no conviene reimplementar manualmente.
 
 #### Paso 2 · Contexto y caso real
 
-RutaFlow recibe objetos desde formularios, almacenamiento local y APIs. En el borde de infraestructura queremos auditar cambios y rechazar estados desconocidos antes de que contaminen el proyecto. El Proxy funcionará como una frontera observable; las transiciones de negocio más complejas seguirán en métodos explícitos de la entrega.
+El proyecto recibe objetos desde formularios, almacenamiento local y APIs. En el borde de infraestructura queremos auditar cambios y rechazar estados desconocidos antes de que contaminen el proyecto. El Proxy funcionará como una frontera observable; las transiciones de negocio más complejas seguirán en métodos explícitos de la entrega.
 
 #### Paso 3 · Teoría, modelo mental y analogía
 

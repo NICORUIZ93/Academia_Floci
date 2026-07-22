@@ -7,13 +7,13 @@
 
 #### Paso 1 · Objetivo y preparación
 
-Al finalizar podrás instalar TypeScript, modelar una entrega con unión e interfaz y comprobar tipos sin generar archivos. Separarás el comando de creación del estado completo de una guía de RutaFlow.
+Al finalizar podrás instalar TypeScript, modelar una entrega con unión e interfaz y comprobar tipos sin generar archivos. Separarás el comando de creación del estado completo de una guía del proyecto.
 
-**Conocimiento previo:** objetos, funciones, módulos ESM y npm. Comprueba Node.js y parte del proyecto `rutaflow-web`; TypeScript se compila a JavaScript y no reemplaza el runtime.
+**Conocimiento previo:** objetos, funciones, módulos ESM y npm. Comprueba Node.js y parte del proyecto `academia-web`; TypeScript se compila a JavaScript y no reemplaza el runtime.
 
 #### Paso 2 · Contexto y caso real
 
-Una guía no puede tener cualquier texto como estado y al crearla aún no posee fecha de entrega. En este incremento del proyecto RutaFlow modelaremos contratos diferentes para entrada y entidad persistida, evitando una interfaz gigante llena de opcionales.
+Una guía no puede tener cualquier texto como estado y al crearla aún no posee fecha de entrega. En este incremento del proyecto modelaremos contratos diferentes para entrada y entidad persistida, evitando una interfaz gigante llena de opcionales.
 
 #### Paso 3 · Teoría, modelo mental y analogía
 
@@ -73,7 +73,7 @@ export function crearGuia(entrada: CrearGuia): Guia {
 }
 ```
 
-Ejecuta desde `rutaflow-web`:
+Ejecuta desde `academia-web`:
 
 ```bash
 npx tsc --noEmit
@@ -103,13 +103,13 @@ Ya puedes hacer que estados imposibles fallen antes de ejecutar. El siguiente te
 
 #### Paso 1 · Objetivo y preparación
 
-Al finalizar podrás crear una abstracción genérica que preserve la relación entre entidad e identificador, usar inferencia y añadir restricciones solo cuando sean necesarias. Implementarás un repositorio en memoria tipado para guías de RutaFlow.
+Al finalizar podrás crear una abstracción genérica que preserve la relación entre entidad e identificador, usar inferencia y añadir restricciones solo cuando sean necesarias. Implementarás un repositorio en memoria tipado para guías del proyecto.
 
 **Prerrequisitos:** interfaces, Promesas, `Map` y tipos unión. Si una función siempre trabaja únicamente con `Guia`, mantenla concreta; generic no significa automáticamente mejor diseño.
 
 #### Paso 2 · Contexto y caso real
 
-RutaFlow necesita repositorios para guías y rutas con operaciones parecidas, pero no debe permitir guardar un usuario en el almacén de guías. El parámetro `T` expresará qué entidad entra y sale; `Id` conservará el tipo de búsqueda.
+El proyecto necesita repositorios para guías y rutas con operaciones parecidas, pero no debe permitir guardar un usuario en el almacén de guías. El parámetro `T` expresará qué entidad entra y sale; `Id` conservará el tipo de búsqueda.
 
 #### Paso 3 · Teoría, modelo mental y analogía
 
@@ -189,13 +189,13 @@ Ya puedes reutilizar estructura sin renunciar a precisión. El siguiente tema re
 
 #### Paso 1 · Objetivo y preparación
 
-Al finalizar podrás modelar eventos con una unión discriminada, reducir el tipo mediante `switch` y obligar al compilador a detectar variantes sin manejar. Describirás eventos de geolocalización y entrega de RutaFlow sin conversiones inseguras.
+Al finalizar podrás modelar eventos con una unión discriminada, reducir el tipo mediante `switch` y obligar al compilador a detectar variantes sin manejar. Describirás eventos de geolocalización y entrega del proyecto sin conversiones inseguras.
 
 **Conocimiento previo:** uniones, interfaces, funciones y `never`. Recuerda que `as` no valida nada; solo cambia lo que el compilador supone.
 
 #### Paso 2 · Contexto y caso real
 
-Un evento de ubicación contiene coordenadas y uno de entrega contiene receptor. En el proyecto RutaFlow, una propiedad `tipo` permitirá que cada rama acceda únicamente a sus datos y que una nueva variante rompa compilación hasta decidir su comportamiento.
+Un evento de ubicación contiene coordenadas y uno de entrega contiene receptor. En este proyecto, una propiedad `tipo` permitirá que cada rama acceda únicamente a sus datos y que una nueva variante rompa compilación hasta decidir su comportamiento.
 
 #### Paso 3 · Teoría, modelo mental y analogía
 
@@ -277,13 +277,13 @@ Ya puedes representar alternativas y mantener exhaustividad al evolucionar. El s
 
 #### Paso 1 · Objetivo y preparación
 
-Al finalizar podrás configurar un proyecto estricto, manejar índices posiblemente ausentes y convertir `unknown` en una guía validada en runtime. Establecerás la frontera confiable entre JSON externo y dominio RutaFlow.
+Al finalizar podrás configurar un proyecto estricto, manejar índices posiblemente ausentes y convertir `unknown` en una guía validada en runtime. Establecerás la frontera confiable entre JSON externo y el dominio del proyecto.
 
 **Prerrequisitos:** TypeScript instalado, interfaces, narrowing y terminal. Migra archivos gradualmente, pero no habilites `allowJs` sin entender qué parte sigue fuera del chequeo estricto.
 
 #### Paso 2 · Contexto y caso real
 
-La API puede devolver un número como `7` o eliminar `estado` aunque la interface diga lo contrario. En este incremento del proyecto RutaFlow, TypeScript protegerá código propio y un parser verificará cada respuesta antes de declararla `Guia`.
+La API puede devolver un número como `7` o eliminar `estado` aunque la interface diga lo contrario. En este incremento del proyecto, TypeScript protegerá código propio y un parser verificará cada respuesta antes de declararla `Guia`.
 
 #### Paso 3 · Teoría, modelo mental y analogía
 

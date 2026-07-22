@@ -13,7 +13,7 @@ Al finalizar podrás predecir el orden entre código síncrono, microtareas y ta
 
 #### Paso 2 · Contexto y caso real
 
-**¿Por qué es importante?** El proyecto RutaFlow combina confirmaciones de entrega, temporizadores y actualizaciones de pantalla. Sin el modelo del event loop, el orden observado parece aleatorio aunque siga reglas concretas.
+**¿Por qué es importante?** El proyecto combina confirmaciones de entrega, temporizadores y actualizaciones de pantalla. Sin el modelo del event loop, el orden observado parece aleatorio aunque siga reglas concretas.
 
 #### Paso 3 · Teoría con analogía
 
@@ -40,34 +40,6 @@ flowchart LR
 
 #### Paso 4 · Demostración guiada desde cero
 
-#### Construcción RutaFlow: predecir antes de ejecutar
-
-Desde una carpeta vacía crea `ejemplo-event-loop`, ejecuta `npm init -y`, crea `src` y después `src/event-loop.js`:
-
-```bash
-mkdir ejemplo-event-loop
-cd ejemplo-event-loop
-npm init -y
-mkdir src
-```
-
-```js
-console.log('A: inicio');
-setTimeout(() => console.log('D: temporizador'), 0);
-Promise.resolve().then(() => console.log('C: confirmación en microtask'));
-console.log('B: fin síncrono');
-```
-
-Escribe primero tu predicción y ejecuta:
-
-```bash
-node src/event-loop.js
-```
-
-**Resultado esperado:** `A, B, C, D`.
-
-**Fallo deliberado:** añade antes del final síncrono un bucle intensivo de dos segundos. El temporizador y la promesa se retrasan porque ninguna cola puede ejecutarse mientras el stack permanezca ocupado; `setTimeout(0)` no significa ejecución inmediata.
-
 #### Paso 5 · Práctica guiada
 
 Añade otro `.then` dentro de la microtarea y una promesa dentro del temporizador. **Pista:** dibuja las colas y vacía todas las microtareas antes de escoger la siguiente tarea.
@@ -92,7 +64,7 @@ Al finalizar podrás crear y encadenar una promesa con caminos de éxito, rechaz
 
 #### Paso 2 · Contexto y caso real
 
-**¿Por qué es importante?** Una consulta de entrega en RutaFlow todavía no contiene una guía: contiene el compromiso de producirla o explicar un fallo. Confundir ambos valores genera accesos antes de tiempo y errores sin manejar.
+**¿Por qué es importante?** Una consulta de entrega en este proyecto todavía no contiene una guía: contiene el compromiso de producirla o explicar un fallo. Confundir ambos valores genera accesos antes de tiempo y errores sin manejar.
 
 #### Paso 3 · Teoría con analogía
 
@@ -123,43 +95,6 @@ stateDiagram-v2
 
 #### Paso 4 · Demostración guiada desde cero
 
-#### Construcción RutaFlow: promesa con éxito y fallo
-
-Desde una carpeta vacía crea `ejemplo-promesas`, ejecuta `npm init -y`, crea `src` y después `src/promesas.js`:
-
-```bash
-mkdir ejemplo-promesas
-cd ejemplo-promesas
-npm init -y
-mkdir src
-```
-
-```js
-function consultarGuia(numero) {
-  return new Promise((resolve, reject) => {
-    setTimeout(() => {
-      if (!numero.startsWith('RF-')) return reject(new Error('Número inválido'));
-      resolve({ numero, estado: 'EN_RUTA' });
-    }, 50);
-  });
-}
-
-consultarGuia('RF-101')
-  .then((guia) => ({ ...guia, consultada: true }))
-  .then(console.log)
-  .catch((error) => console.error('No se pudo consultar:', error.message));
-```
-
-Ejecuta:
-
-```bash
-node src/promesas.js
-```
-
-**Resultado esperado:** imprime `{ numero: 'RF-101', estado: 'EN_RUTA', consultada: true }`.
-
-**Fallo deliberado:** cambia el argumento a `101` y observa `No se pudo consultar: Número inválido`. Si omites `return` tras `reject`, el ejecutor continúa; aunque una promesa solo adopta el primer estado, el código posterior puede producir efectos no deseados.
-
 #### Paso 5 · Práctica guiada
 
 Agrega `.finally(() => console.log('Carga finalizada'))`. **Pista:** debe ejecutarse tanto con `RF-101` como con `101`, sin transformar el valor ni ocultar el error.
@@ -184,7 +119,7 @@ Al finalizar podrás seleccionar el combinador según la política de fallos y c
 
 #### Paso 2 · Contexto y caso real
 
-**¿Por qué es importante?** El proyecto RutaFlow consulta varias transportadoras para una entrega. Un fallo no crítico puede registrarse sin descartar éxitos, mientras una operación transaccional puede exigir que todo se complete.
+**¿Por qué es importante?** El proyecto consulta varias transportadoras para una entrega. Un fallo no crítico puede registrarse sin descartar éxitos, mientras una operación transaccional puede exigir que todo se complete.
 
 #### Paso 3 · Teoría con analogía
 
@@ -206,7 +141,7 @@ Elegir el combinador correcto según la semántica real del problema —¿necesi
 
 ```mermaid
 flowchart TD
-    ASK{"¿Qué resultado necesita RutaFlow?"}
+    ASK{"¿Qué resultado necesita el llamador?"}
     ASK -->|"todos o ninguno"| ALL["Promise.all"]
     ASK -->|"reporte de cada operación"| SETTLED["Promise.allSettled"]
     ASK -->|"primera finalizada"| RACE["Promise.race"]
@@ -215,47 +150,13 @@ flowchart TD
 
 #### Paso 4 · Demostración guiada desde cero
 
-#### Construcción RutaFlow: tolerar fallos parciales
-
-Desde una carpeta vacía crea `ejemplo-promesas-grupo`, ejecuta `npm init -y`, crea `src` y después `src/promesas-grupo.js`:
-
-```bash
-mkdir ejemplo-promesas-grupo
-cd ejemplo-promesas-grupo
-npm init -y
-mkdir src
-```
-
-```js
-const consultar = (numero) =>
-  numero === 'RF-ERROR'
-    ? Promise.reject(new Error('Servicio no disponible'))
-    : Promise.resolve({ numero, estado: 'EN_RUTA' });
-
-const numeros = ['RF-101', 'RF-ERROR', 'RF-103'];
-const resultados = await Promise.allSettled(numeros.map(consultar));
-const exitos = resultados.filter(({ status }) => status === 'fulfilled');
-const fallos = resultados.filter(({ status }) => status === 'rejected');
-console.log({ exitos: exitos.length, fallos: fallos.length });
-```
-
-Ejecuta:
-
-```bash
-node src/promesas-grupo.js
-```
-
-**Resultado esperado:** `{ exitos: 2, fallos: 1 }`.
-
-**Fallo deliberado:** sustituye `allSettled` por `all` sin agregar `catch`. El proceso reporta un rechazo no manejado y se pierde el resumen parcial; el combinador no era compatible con la política del lote.
-
 #### Paso 5 · Práctica guiada
 
 Implementa un timeout con `Promise.race([consulta, timeout])`. **Pista:** que `race` termine no cancela automáticamente la consulta perdedora; documenta esa diferencia.
 
 #### Paso 6 · Práctica independiente
 
-Consulta dos réplicas con `Promise.any`, captura `AggregateError` cuando ambas fallen y registra cada causa. Construye una tabla que justifique qué combinador usarías en cuatro casos de RutaFlow.
+Consulta dos réplicas con `Promise.any`, captura `AggregateError` cuando ambas fallen y registra cada causa. Construye una tabla que justifique qué combinador usarías en cuatro casos del proyecto.
 
 #### Paso 7 · Cierre y evidencia
 
@@ -273,7 +174,7 @@ Al finalizar podrás reconocer las etapas fuente→AST→bytecode→optimizació
 
 #### Paso 2 · Contexto y caso real
 
-**¿Por qué es importante?** El proyecto RutaFlow calcula miles de tarifas. Comprender V8 ayuda a medir con criterio, pero la corrección y un contrato estable importan más que perseguir microoptimizaciones no demostradas.
+**¿Por qué es importante?** El proyecto calcula miles de tarifas. Comprender V8 ayuda a medir con criterio, pero la corrección y un contrato estable importan más que perseguir microoptimizaciones no demostradas.
 
 #### Paso 3 · Teoría con analogía
 
@@ -301,39 +202,6 @@ flowchart LR
 
 #### Paso 4 · Demostración guiada desde cero
 
-#### Construcción RutaFlow: observar el AST sin adivinar V8
-
-Desde una carpeta vacía crea `ejemplo-v8`, ejecuta `npm init -y`, crea `src` y después `src/calcular-costo.js`:
-
-```bash
-mkdir ejemplo-v8
-cd ejemplo-v8
-npm init -y
-mkdir src
-```
-
-```js
-export function calcularCosto(pesoKg, tarifa) {
-  if (!Number.isFinite(pesoKg) || !Number.isFinite(tarifa)) {
-    throw new TypeError('pesoKg y tarifa deben ser números');
-  }
-  return pesoKg * tarifa;
-}
-
-for (let i = 0; i < 100_000; i += 1) calcularCosto(4, 2500);
-console.log(calcularCosto(4, 2500));
-```
-
-Ejecuta:
-
-```bash
-node src/calcular-costo.js
-```
-
-**Resultado esperado:** `10000`.
-
-**Fallo deliberado:** prueba `calcularCosto('4', 2500)` y conserva el `TypeError`. Quitar la validación produce coerción y oculta un contrato roto; una aparente rapidez no justifica datos ambiguos.
-
 #### Paso 5 · Práctica guiada
 
 Pega solo la función en [AST Explorer](https://astexplorer.net/) y localiza declaración, parámetros, condicional y retorno. **Pista:** cambia `function` por arrow y compara nodos, no resultados.
@@ -358,7 +226,7 @@ Al finalizar podrás identificar referencias que retienen objetos, implementar u
 
 #### Paso 2 · Contexto y caso real
 
-**¿Por qué es importante?** RutaFlow consulta muchas entregas. Una caché sin límite conserva cada objeto y el recolector no puede liberarlo mientras siga siendo alcanzable.
+**¿Por qué es importante?** El proyecto consulta muchas entregas. Una caché sin límite conserva cada objeto y el recolector no puede liberarlo mientras siga siendo alcanzable.
 
 #### Paso 3 · Teoría con analogía
 
@@ -386,47 +254,6 @@ flowchart TD
 ```
 
 #### Paso 4 · Demostración guiada desde cero
-
-#### Construcción RutaFlow: una caché con límite
-
-Desde una carpeta vacía crea `ejemplo-gc`, ejecuta `npm init -y`, crea `src` y después `src/cache-limitada.js`:
-
-```bash
-mkdir ejemplo-gc
-cd ejemplo-gc
-npm init -y
-mkdir src
-```
-
-```js
-class CacheGuias {
-  #datos = new Map();
-  constructor(limite = 2) { this.limite = limite; }
-  guardar(guia) {
-    this.#datos.delete(guia.numero);
-    this.#datos.set(guia.numero, guia);
-    if (this.#datos.size > this.limite) {
-      const masAntigua = this.#datos.keys().next().value;
-      this.#datos.delete(masAntigua);
-    }
-  }
-  get size() { return this.#datos.size; }
-}
-
-const cache = new CacheGuias(2);
-for (let i = 1; i <= 10_000; i += 1) cache.guardar({ numero: `RF-${i}` });
-console.log('Entradas retenidas:', cache.size);
-```
-
-Ejecuta:
-
-```bash
-node src/cache-limitada.js
-```
-
-**Resultado esperado:** `Entradas retenidas: 2`, no `10000`.
-
-**Fallo deliberado:** elimina la expulsión, registra `process.memoryUsage().heapUsed` antes y después y observa retención creciente. La cifra es orientativa: el GC decide cuándo ejecutarse y memoria reservada no equivale exactamente a objetos vivos.
 
 #### Paso 5 · Práctica guiada
 

@@ -7,13 +7,13 @@
 
 #### Paso 1 · Objetivo y preparación
 
-Al finalizar podrás traducir una colección de entregas a elementos DOM seguros, separar datos de presentación y actualizar una lista con `DocumentFragment`. Construirás la primera vista operativa de RutaFlow sin depender de un framework.
+Al finalizar podrás traducir una colección de entregas a elementos DOM seguros, separar datos de presentación y actualizar una lista con `DocumentFragment`. Construirás la primera vista operativa del proyecto sin depender de un framework.
 
 **Conocimiento previo:** arrays, funciones, objetos, ESM, HTML y proyecto Vite del módulo anterior. Abre las herramientas del navegador y localiza las pestañas Elements y Console antes de comenzar.
 
 #### Paso 2 · Contexto y caso real
 
-La API entrega objetos; el operador necesita una lista legible y segura. En este incremento del proyecto RutaFlow, una función recibirá el nodo destino y los datos, creará cada elemento sin interpretar contenido externo como HTML y reemplazará el resultado anterior de manera controlada.
+La API entrega objetos; el operador necesita una lista legible y segura. En este incremento del proyecto, una función recibirá el nodo destino y los datos, creará cada elemento sin interpretar contenido externo como HTML y reemplazará el resultado anterior de manera controlada.
 
 #### Paso 3 · Teoría, modelo mental y analogía
 
@@ -43,9 +43,9 @@ mkdir src
 touch index.html
 ```
 
-Añade `<ul id="guias" aria-live="polite"></ul>` dentro de `rutaflow-web/index.html`.
+Añade `<ul id="guias" aria-live="polite"></ul>` dentro de `academia-web/index.html`.
 
-Después crea `rutaflow-web/src/ui/render-guias.js`:
+Después crea `academia-web/src/ui/render-guias.js`:
 
 ```js
 export function renderGuias(lista, guias) {
@@ -68,7 +68,7 @@ export function renderGuias(lista, guias) {
 }
 ```
 
-Actualiza `rutaflow-web/src/main.js`:
+Actualiza `academia-web/src/main.js`:
 
 ```js
 import { renderGuias } from "./ui/render-guias.js";
@@ -114,13 +114,13 @@ Ya puedes convertir datos en una vista segura y predecible. El siguiente tema a�
 
 #### Paso 1 · Objetivo y preparación
 
-Al finalizar podrás manejar acciones de una colección dinámica con un solo listener, localizar la fila correcta con `closest` y descartar clics irrelevantes. Permitirás cambiar el estado de una entrega de RutaFlow sin acoplar comportamiento a cada nodo.
+Al finalizar podrás manejar acciones de una colección dinámica con un solo listener, localizar la fila correcta con `closest` y descartar clics irrelevantes. Permitirás cambiar el estado de una entrega del proyecto sin acoplar comportamiento a cada nodo.
 
 **Prerrequisitos:** propagación básica de eventos, selectores CSS y la lista renderizada en el tema anterior. Cada fila debe incluir `data-numero`; cada botón de acción debe incluir `data-action`.
 
 #### Paso 2 · Contexto y caso real
 
-Las entregas se agregan al recibir actualizaciones de red. Si cada fila conserva su propio listener, la aplicación debe registrar y limpiar comportamiento continuamente. El proyecto RutaFlow delegará clics al contenedor estable y emitirá una intención `{ accion, numero }` que el dominio pueda procesar.
+Las entregas se agregan al recibir actualizaciones de red. Si cada fila conserva su propio listener, la aplicación debe registrar y limpiar comportamiento continuamente. El proyecto delegará clics al contenedor estable y emitirá una intención `{ accion, numero }` que el dominio pueda procesar.
 
 #### Paso 3 · Teoría, modelo mental y analogía
 
@@ -220,13 +220,13 @@ Ya puedes mantener interacción estable aunque cambie la colección. El siguient
 
 #### Paso 1 · Objetivo y preparación
 
-Al finalizar podrás construir un formulario accesible, combinar restricciones HTML con mensajes específicos, extraer datos con `FormData` y explicar por qué el servidor debe validar otra vez. Crearás entregas de RutaFlow sin dejar al usuario adivinar qué dato falló.
+Al finalizar podrás construir un formulario accesible, combinar restricciones HTML con mensajes específicos, extraer datos con `FormData` y explicar por qué el servidor debe validar otra vez. Crearás entregas del proyecto sin dejar al usuario adivinar qué dato falló.
 
 **Conocimiento previo:** HTML semántico, eventos, funciones y manipulación DOM. Conserva la consola y el panel de accesibilidad disponibles; no uses colores como único indicador de error.
 
 #### Paso 2 · Contexto y caso real
 
-Un número de guía inválido o un peso negativo puede detener clasificación y facturación. En el proyecto RutaFlow, el navegador dará retroalimentación inmediata, pero el objeto resultante seguirá considerándose no confiable hasta que la API lo valide.
+Un número de guía inválido o un peso negativo puede detener clasificación y facturación. En este proyecto, el navegador dará retroalimentación inmediata, pero el objeto resultante seguirá considerándose no confiable hasta que la API lo valide.
 
 #### Paso 3 · Teoría, modelo mental y analogía
 
@@ -246,7 +246,7 @@ Confiar en la validación nativa del lado del cliente nunca reemplaza la necesid
 
 #### Paso 4 · Demostración guiada desde cero
 
-Añade a `rutaflow-web/index.html`:
+Añade a `academia-web/index.html`:
 
 ```html
 <form id="nueva-guia">
@@ -320,13 +320,13 @@ Ya puedes ofrecer feedback inmediato sin confundirlo con seguridad del servidor.
 
 #### Paso 1 · Objetivo y preparación
 
-Al finalizar podrás persistir una preferencia no sensible, recuperarte de datos dañados y cargar páginas cuando un sentinela se acerque al viewport. Aplicarás ambas APIs a la lista de entregas de RutaFlow sin bloquear el hilo con eventos `scroll` continuos.
+Al finalizar podrás persistir una preferencia no sensible, recuperarte de datos dañados y cargar páginas cuando un sentinela se acerque al viewport. Aplicarás ambas APIs a la lista de entregas del proyecto sin bloquear el hilo con eventos `scroll` continuos.
 
 **Conocimiento previo:** JSON, funciones, DOM y callbacks. Necesitas una lista desplazable, un `<select id="filtro-estado">` y un `<div id="sentinela">Cargar más</div>` al final del documento.
 
 #### Paso 2 · Contexto y caso real
 
-El operador quiere conservar su filtro entre recargas y consultar más entregas al llegar al final. En este incremento del proyecto RutaFlow guardaremos solo la preferencia de interfaz; tokens, direcciones y datos sensibles permanecerán fuera de `localStorage`.
+El operador quiere conservar su filtro entre recargas y consultar más entregas al llegar al final. En este incremento del proyecto guardaremos solo la preferencia de interfaz; tokens, direcciones y datos sensibles permanecerán fuera de `localStorage`.
 
 #### Paso 3 · Teoría, modelo mental y analogía
 
@@ -357,7 +357,7 @@ touch index.html
 ```
 
 ```js
-const CLAVE = "rutaflow:filtro";
+const CLAVE = "app:filtro";
 
 export function prepararPreferencias(select) {
   try {
@@ -400,7 +400,7 @@ npm run dev
 
 **Resultado esperado:** al elegir `EN_RUTA` y recargar, el filtro permanece; al acercar el sentinela aparecen hasta tres lotes y luego cesan las cargas. No se disparan solicitudes paralelas mientras `cargando` es verdadero.
 
-**Fallo deliberado:** desde Console ejecuta `localStorage.setItem("rutaflow:filtro", "{mal-json")` y recarga. `JSON.parse` falla, el `catch` registra el diagnóstico, elimina el valor y recupera `TODAS` sin romper la página.
+**Fallo deliberado:** desde Console ejecuta `localStorage.setItem("app:filtro", "{mal-json")` y recarga. `JSON.parse` falla, el `catch` registra el diagnóstico, elimina el valor y recupera `TODAS` sin romper la página.
 
 #### Paso 5 · Práctica guiada
 
@@ -422,13 +422,13 @@ Ya puedes conservar una preferencia y reaccionar eficientemente a visibilidad. E
 
 #### Paso 1 · Objetivo y preparación
 
-Al finalizar podrás reaccionar al tamaño real de un contenedor y a inserciones realizadas por código externo, limitar el alcance observado y liberar ambos observers. Harás que el tablero RutaFlow se adapte sin sondeo ni listeners globales innecesarios.
+Al finalizar podrás reaccionar al tamaño real de un contenedor y a inserciones realizadas por código externo, limitar el alcance observado y liberar ambos observers. Harás que el tablero de la aplicación se adapte sin sondeo ni listeners globales innecesarios.
 
 **Prerrequisitos:** DOM, callbacks, estilos CSS y patrón de cleanup del tema de eventos. Añade `section id="panel-guias"` con una lista interna para poder cambiar su ancho de manera visible.
 
 #### Paso 2 · Contexto y caso real
 
-El tablero puede vivir en una ventana completa o en un panel lateral, por lo que el ancho de `window` no describe su espacio real. Además, un widget de terceros inserta avisos dentro del panel. El proyecto RutaFlow observará solo esas dos señales y desconectará todo al abandonar la pantalla.
+El tablero puede vivir en una ventana completa o en un panel lateral, por lo que el ancho de `window` no describe su espacio real. Además, un widget de terceros inserta avisos dentro del panel. El proyecto observará solo esas dos señales y desconectará todo al abandonar la pantalla.
 
 #### Paso 3 · Teoría, modelo mental y analogía
 
@@ -513,13 +513,13 @@ Ya puedes observar señales que no controlas sin recurrir a polling y liberar re
 
 #### Paso 1 · Objetivo y preparación
 
-Al finalizar podrás animar un marcador según tiempo transcurrido, cancelar el ciclo, respetar movimiento reducido y reservar tareas prescindibles para períodos ociosos con fallback. Visualizarás el avance de una entrega de RutaFlow sin ligar velocidad al número de frames.
+Al finalizar podrás animar un marcador según tiempo transcurrido, cancelar el ciclo, respetar movimiento reducido y reservar tareas prescindibles para períodos ociosos con fallback. Visualizarás el avance de una entrega del proyecto sin ligar velocidad al número de frames.
 
 **Conocimiento previo:** callbacks, tiempo en milisegundos, estilos transform y ciclo de renderizado. Añade una pista con `<div id="marcador"></div>` y verifica `window.matchMedia` en la consola.
 
 #### Paso 2 · Contexto y caso real
 
-El mapa de RutaFlow recibe posiciones discretas y necesita una transición comprensible entre dos puntos. La confirmación de una entrega es crítica y nunca esperará tiempo ocioso; solo el precálculo opcional de estadísticas se diferirá.
+El mapa del proyecto recibe posiciones discretas y necesita una transición comprensible entre dos puntos. La confirmación de una entrega es crítica y nunca esperará tiempo ocioso; solo el precálculo opcional de estadísticas se diferirá.
 
 #### Paso 3 · Teoría, modelo mental y analogía
 

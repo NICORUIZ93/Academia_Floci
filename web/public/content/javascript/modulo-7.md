@@ -7,13 +7,13 @@
 
 #### Paso 1 · Objetivo y preparación
 
-Al finalizar podrás crear y ejecutar un proyecto modular con ESM, reconocer un módulo CommonJS y diagnosticar el error que aparece al mezclar ambos formatos. Separarás el dominio de entregas de RutaFlow de su punto de entrada mediante exports nombrados.
+Al finalizar podrás crear y ejecutar un proyecto modular con ESM, reconocer un módulo CommonJS y diagnosticar el error que aparece al mezclar ambos formatos. Separarás el dominio de entregas del proyecto de su punto de entrada mediante exports nombrados.
 
 **Conocimiento previo:** funciones, objetos, rutas relativas y uso básico de la terminal. Necesitas Node.js 20 o posterior; compruébalo con `node --version`. Si el comando no existe, instala la versión LTS desde la fuente oficial antes de continuar.
 
 #### Paso 2 · Contexto y caso real
 
-Cuando toda la aplicación vive en un solo archivo, una modificación en reportes puede romper la creación de entregas. En este incremento del proyecto RutaFlow, `guia.js` será responsable del dominio y `main.js` de iniciar el programa. El contrato entre ambos será visible mediante `export` e `import`.
+Cuando toda la aplicación vive en un solo archivo, una modificación en reportes puede romper la creación de entregas. En este incremento del proyecto, `guia.js` será responsable del dominio y `main.js` de iniciar el programa. El contrato entre ambos será visible mediante `export` e `import`.
 
 #### Paso 3 · Teoría, modelo mental y analogía
 
@@ -53,7 +53,7 @@ mkdir src
 Crea esta estructura; la extensión `.js` del import es obligatoria para que Node resuelva el archivo de forma inequívoca:
 
 ```text
-rutaflow-web/
+academia-web/
 ├── package.json
 └── src/
     ├── dominio/
@@ -61,18 +61,18 @@ rutaflow-web/
     └── main.js
 ```
 
-Guarda en `rutaflow-web/package.json`:
+Guarda en `academia-web/package.json`:
 
 ```json
 {
-  "name": "rutaflow-web",
+  "name": "academia-web",
   "private": true,
   "type": "module",
   "scripts": { "start": "node src/main.js" }
 }
 ```
 
-Guarda en `rutaflow-web/src/dominio/guia.js`:
+Guarda en `academia-web/src/dominio/guia.js`:
 
 ```js
 // Export nombrado: el consumidor conoce el nombre del contrato.
@@ -85,7 +85,7 @@ export function crearGuia(numero) {
 }
 ```
 
-Guarda en `rutaflow-web/src/main.js`:
+Guarda en `academia-web/src/main.js`:
 
 ```js
 // La ruta incluye la extensión porque este archivo se ejecuta directamente en Node.
@@ -95,7 +95,7 @@ const guia = crearGuia("RF-101");
 console.log(guia);
 ```
 
-Ejecuta desde `rutaflow-web`:
+Ejecuta desde `academia-web`:
 
 ```bash
 npm start
@@ -125,13 +125,13 @@ Ya puedes dividir responsabilidades con el formato estándar del lenguaje y diag
 
 #### Paso 1 · Objetivo y preparación
 
-Al finalizar podrás diferenciar eliminación de código no usado y carga bajo demanda, generar un bundle de producción y comprobar ambos efectos inspeccionando artefactos reales. Optimizarás el reporte de entregas de RutaFlow con evidencia, no por suposición.
+Al finalizar podrás diferenciar eliminación de código no usado y carga bajo demanda, generar un bundle de producción y comprobar ambos efectos inspeccionando artefactos reales. Optimizarás el reporte de entregas del proyecto con evidencia, no por suposición.
 
-**Prerrequisitos:** haber completado ESM frente a CommonJS, tener el proyecto `rutaflow-web` funcionando y disponer de Node.js y npm. Debes poder explicar qué es un export nombrado antes de continuar.
+**Prerrequisitos:** haber completado ESM frente a CommonJS, tener el proyecto `academia-web` funcionando y disponer de Node.js y npm. Debes poder explicar qué es un export nombrado antes de continuar.
 
 #### Paso 2 · Contexto y caso real
 
-Los operadores usan la lista de entregas en cada sesión, pero abren el reporte de auditoría solo ocasionalmente. El proyecto RutaFlow debe enviar lo esencial al inicio, eliminar una función que nadie consume y descargar la auditoría únicamente cuando se solicite.
+Los operadores usan la lista de entregas en cada sesión, pero abren el reporte de auditoría solo ocasionalmente. El proyecto debe enviar lo esencial al inicio, eliminar una función que nadie consume y descargar la auditoría únicamente cuando se solicite.
 
 #### Paso 3 · Teoría, modelo mental y analogía
 
@@ -175,7 +175,7 @@ npm install --save-dev vite
 npm pkg set scripts.dev="vite" scripts.build="vite build"
 ```
 
-Crea `rutaflow-web/index.html` con `<button id="auditoria">Abrir auditoría</button><script type="module" src="/src/main.js"></script>` y guarda en `src/reportes.js`:
+Crea `academia-web/index.html` con `<button id="auditoria">Abrir auditoría</button><script type="module" src="/src/main.js"></script>` y guarda en `src/reportes.js`:
 
 ```js
 export function resumenDiario(entregas) {
@@ -189,7 +189,7 @@ export function reporteNuncaUsado() {
 }
 ```
 
-Crea `rutaflow-web/src/auditoria.js`:
+Crea `academia-web/src/auditoria.js`:
 
 ```js
 export function abrirAuditoria() {
@@ -198,7 +198,7 @@ export function abrirAuditoria() {
 }
 ```
 
-Actualiza `rutaflow-web/src/main.js`:
+Actualiza `academia-web/src/main.js`:
 
 ```js
 import { resumenDiario } from "./reportes.js";
@@ -243,13 +243,13 @@ Ahora diferencias quitar código imposible de alcanzar de aplazar código que s�
 
 #### Paso 1 · Objetivo y preparación
 
-Al finalizar podrás crear desde una carpeta vacía una aplicación con Vite, explicar qué ocurre durante desarrollo y producción, ejecutar ambos modos e interpretar un error de resolución. El resultado será la primera interfaz web ejecutable del proyecto RutaFlow.
+Al finalizar podrás crear desde una carpeta vacía una aplicación con Vite, explicar qué ocurre durante desarrollo y producción, ejecutar ambos modos e interpretar un error de resolución. El resultado será la primera interfaz web ejecutable del proyecto.
 
 **Conocimiento previo:** ESM, terminal, HTML básico y los conceptos de tree-shaking y code-splitting. Comprueba `node --version` y `npm --version`; usa una versión LTS activa de Node.js para evitar incompatibilidades con la versión actual de Vite.
 
 #### Paso 2 · Contexto y caso real
 
-RutaFlow necesita ciclos de desarrollo rápidos, pero también artefactos optimizados para producción. Vite servirá los módulos mientras programamos y generará una carpeta `dist/` desplegable. No trataremos `npm run dev` como prueba suficiente: el incremento se completa solamente cuando el build y su vista previa funcionan.
+El proyecto necesita ciclos de desarrollo rápidos, pero también artefactos optimizados para producción. Vite servirá los módulos mientras programamos y generará una carpeta `dist/` desplegable. No trataremos `npm run dev` como prueba suficiente: el incremento se completa solamente cuando el build y su vista previa funcionan.
 
 #### Paso 3 · Teoría, modelo mental y analogía
 
@@ -287,17 +287,17 @@ npm install -D vite
 mkdir src
 ```
 
-Implementa la pantalla creando `rutaflow-web/src/main.js`; antes prepara el proyecto con estos comandos.
+Implementa la pantalla creando `academia-web/src/main.js`; antes prepara el proyecto con estos comandos.
 
 Si todavía no creaste el proyecto del tema anterior, ejecuta desde tu carpeta de trabajo:
 
 ```bash
-npm create vite@latest rutaflow-web -- --template vanilla
-cd rutaflow-web
+npm create vite@latest academia-web -- --template vanilla
+cd academia-web
 npm install
 ```
 
-Reemplaza `rutaflow-web/src/main.js` por:
+Reemplaza `academia-web/src/main.js` por:
 
 ```js
 import "./style.css";
@@ -314,7 +314,7 @@ const elementos = entregas
 
 document.querySelector("#app").innerHTML = `
   <main>
-    <h1>RutaFlow</h1>
+    <h1>Academia</h1>
     <p>Entregas activas</p>
     <ul>${elementos}</ul>
   </main>
@@ -358,13 +358,13 @@ Ya puedes distinguir el servidor ágil de desarrollo del artefacto optimizado de
 
 #### Paso 1 · Objetivo y preparación
 
-Al finalizar podrás configurar `type`, `scripts` y `exports` con una intención concreta, ejecutar el contrato operativo del proyecto y diagnosticar JSON inválido o una exportación no autorizada. Dejarás el proyecto RutaFlow reproducible para otra persona.
+Al finalizar podrás configurar `type`, `scripts` y `exports` con una intención concreta, ejecutar el contrato operativo del proyecto y diagnosticar JSON inválido o una exportación no autorizada. Dejarás este proyecto reproducible para otra persona.
 
 **Prerrequisitos:** proyecto Vite funcionando, ESM y terminal. Debes distinguir una aplicación privada de una biblioteca publicada: `exports` define la API de un paquete consumible, no las rutas del navegador.
 
 #### Paso 2 · Contexto y caso real
 
-Si cada integrante inicia RutaFlow con un comando diferente, el entorno deja de ser reproducible. `package.json` será el manifiesto del proyecto: declara su formato, fija tareas comunes y, en el paquete de dominio, limita qué contratos pueden consumir otras aplicaciones.
+Si cada integrante inicia el proyecto con un comando diferente, el entorno deja de ser reproducible. `package.json` será el manifiesto del proyecto: declara su formato, fija tareas comunes y, en el paquete de dominio, limita qué contratos pueden consumir otras aplicaciones.
 
 #### Paso 3 · Teoría, modelo mental y analogía
 
@@ -393,11 +393,11 @@ npm init -y
 mkdir src
 ```
 
-Actualiza `rutaflow-web/package.json`. No copies comentarios dentro del JSON porque el formato no los admite:
+Actualiza `academia-web/package.json`. No copies comentarios dentro del JSON porque el formato no los admite:
 
 ```json
 {
-  "name": "rutaflow-web",
+  "name": "academia-web",
   "private": true,
   "type": "module",
   "scripts": {
@@ -417,11 +417,11 @@ flowchart LR
     SCRIPTS["scripts: tareas repetibles"] --> TEAM["equipo y CI"]
 ```
 
-En un paquete independiente `rutaflow-dominio/package.json`, sí puedes definir una API pública:
+En un paquete independiente `academia-dominio/package.json`, sí puedes definir una API pública:
 
 ```json
 {
-  "name": "@rutaflow/dominio",
+  "name": "@academia/dominio",
   "type": "module",
   "exports": {
     ".": "./src/index.js",
@@ -436,7 +436,7 @@ Ejecuta el contrato de verificación de la aplicación:
 npm run check
 ```
 
-**Resultado esperado:** npm encuentra el script, Vite termina sin errores y crea `dist/`. La aplicación privada no publica `exports`; el paquete de dominio solo permite importar la raíz y `@rutaflow/dominio/estados`.
+**Resultado esperado:** npm encuentra el script, Vite termina sin errores y crea `dist/`. La aplicación privada no publica `exports`; el paquete de dominio solo permite importar la raíz y `@academia/dominio/estados`.
 
 **Fallo deliberado:** elimina la coma después de `"private": true` y ejecuta `npm run check`. npm informa un error `EJSONPARSE` con la zona inválida. Restaura la coma; después intenta importar una ruta interna no declarada en `exports` y observa `ERR_PACKAGE_PATH_NOT_EXPORTED`.
 
@@ -460,13 +460,13 @@ Ya puedes leer `package.json` como contrato técnico y no como archivo incidenta
 
 #### Paso 1 · Objetivo y preparación
 
-Al finalizar podrás cargar un módulo solo cuando el usuario lo solicite, manejar el rechazo de esa carga y resolver un recurso relativo con `import.meta.url`. Integrarás una auditoría diferida en RutaFlow sin bloquear la experiencia principal.
+Al finalizar podrás cargar un módulo solo cuando el usuario lo solicite, manejar el rechazo de esa carga y resolver un recurso relativo con `import.meta.url`. Integrarás una auditoría diferida en el proyecto sin bloquear la experiencia principal.
 
 **Conocimiento previo:** Promesas, `async`/`await`, eventos del DOM, ESM y build con Vite. Mantén abierto el panel Network del navegador para observar cuándo se descarga cada chunk.
 
 #### Paso 2 · Contexto y caso real
 
-La pantalla de entregas es esencial; el visor avanzado de auditoría es opcional y pesado. En este incremento del proyecto RutaFlow, el código principal mostrará la operación diaria y descargará auditoría después de un clic, con un mensaje comprensible si la red impide obtener el chunk.
+La pantalla de entregas es esencial; el visor avanzado de auditoría es opcional y pesado. En este incremento del proyecto, el código principal mostrará la operación diaria y descargará auditoría después de un clic, con un mensaje comprensible si la red impide obtener el chunk.
 
 #### Paso 3 · Teoría, modelo mental y analogía
 
@@ -495,7 +495,7 @@ npm init -y
 mkdir src
 ```
 
-Crea `rutaflow-web/src/auditoria.js`:
+Crea `academia-web/src/auditoria.js`:
 
 ```js
 export function abrirAuditoria(contenedor) {
@@ -506,7 +506,7 @@ export function abrirAuditoria(contenedor) {
 export const rutaCatalogo = new URL("./datos/catalogo.json", import.meta.url);
 ```
 
-Actualiza `rutaflow-web/src/main.js`:
+Actualiza `academia-web/src/main.js`:
 
 ```js
 const boton = document.querySelector("#auditoria");
@@ -559,13 +559,13 @@ Ya puedes convertir una capacidad opcional en un límite de carga observable y r
 
 #### Paso 1 · Objetivo y preparación
 
-Al finalizar podrás separar las responsabilidades de servidor de desarrollo, bundler y transformador, comparar alternativas con criterios medibles y registrar una decisión técnica. Mantendrás Vite en RutaFlow o justificarás un cambio con evidencia reproducible.
+Al finalizar podrás separar las responsabilidades de servidor de desarrollo, bundler y transformador, comparar alternativas con criterios medibles y registrar una decisión técnica. Mantendrás Vite en el proyecto o justificarás un cambio con evidencia reproducible.
 
 **Prerrequisitos:** build de Vite funcionando, ESM, `package.json` e inspección de `dist`. No necesitas dominar configuraciones avanzadas de Webpack: necesitas reconocer qué problema resuelve cada herramienta.
 
 #### Paso 2 · Contexto y caso real
 
-El equipo de RutaFlow propone migrar porque otra herramienta “es más rápida”. Cambiar el pipeline afecta desarrollo, pruebas, plugins, despliegue y mantenimiento. Este tema convierte la preferencia en una decisión del proyecto basada en restricciones, mediciones y consecuencias.
+El equipo del proyecto propone migrar porque otra herramienta “es más rápida”. Cambiar el pipeline afecta desarrollo, pruebas, plugins, despliegue y mantenimiento. Este tema convierte la preferencia en una decisión del proyecto basada en restricciones, mediciones y consecuencias.
 
 #### Paso 3 · Teoría, modelo mental y analogía
 
@@ -605,12 +605,12 @@ npm init -y
 mkdir src
 ```
 
-Crea primero el medidor ejecutable `rutaflow-web/scripts/medir-build.js` y acompáñalo con el registro de decisión descrito a continuación.
+Crea primero el medidor ejecutable `academia-web/scripts/medir-build.js` y acompáñalo con el registro de decisión descrito a continuación.
 
-Crea `rutaflow-web/docs/adr/001-herramienta-build.md`:
+Crea `academia-web/docs/adr/001-herramienta-build.md`:
 
 ```md
-# ADR-001: herramienta de build de RutaFlow
+# ADR-001: herramienta de build del proyecto
 
 ## Contexto
 La aplicación usa ESM, carga diferida y necesita desarrollo rápido.
@@ -627,7 +627,7 @@ Mantener Vite mientras soporte navegadores, plugins y despliegue requeridos.
 Aceptamos su convención y mediremos build, chunks y compatibilidad en CI.
 ```
 
-Crea `rutaflow-web/scripts/medir-build.js`:
+Crea `academia-web/scripts/medir-build.js`:
 
 ```js
 import { readdir, stat } from "node:fs/promises";
@@ -659,7 +659,7 @@ Añade al ADR una matriz con compatibilidad de plugins, tiempo de build, tamaño
 
 #### Paso 6 · Práctica independiente
 
-Transforma un archivo pequeño con Babel o SWC y con esbuild en una carpeta experimental, registra comandos, tiempo y resultado, pero no migres RutaFlow. Decide si la diferencia observada justifica complejidad adicional en este proyecto concreto.
+Transforma un archivo pequeño con Babel o SWC y con esbuild en una carpeta experimental, registra comandos, tiempo y resultado, pero no migres el proyecto completo. Decide si la diferencia observada justifica complejidad adicional en este proyecto concreto.
 
 #### Paso 7 · Cierre y evidencia
 

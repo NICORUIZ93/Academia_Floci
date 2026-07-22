@@ -13,7 +13,7 @@ Al finalizar podrás crear estado privado mediante closures y explicar qué cons
 
 #### Paso 2 · Contexto y caso real
 
-**¿Por qué es importante?** RutaFlow necesita historiales que no puedan alterarse directamente desde cualquier archivo. Un closure expone operaciones controladas sin publicar el estado interno.
+**¿Por qué es importante?** El proyecto necesita historiales que no puedan alterarse directamente desde cualquier archivo. Un closure expone operaciones controladas sin publicar el estado interno.
 
 #### Paso 3 · Teoría con analogía
 
@@ -73,12 +73,6 @@ node src/closures.js
 
 **Fallo deliberado:** devuelve directamente `eventos`, modifícalo desde fuera y observa la fuga. El closure oculta el nombre, pero no protege una referencia compartida; restaura la copia defensiva.
 
-#### Construcción RutaFlow: estado privado por envío
-
-Crea `academia-javascript/src/closures.js` con `crearSeguimiento(guia)` y estado privado de eventos. Construye dos seguimientos, añade eventos distintos y ejecuta `node src/closures.js`; el resultado esperado demuestra historiales independientes e imposibilidad de mutar el array interno directamente.
-
-Devuelve el array original para provocar una fuga de encapsulación y modifícalo desde fuera; corrige devolviendo copia. Añade un límite de eventos y una función de resumen. RutaFlow usa closures cuando el estado simple necesita una API pequeña; una referencia capturada innecesariamente también puede prolongar memoria.
-
 #### Paso 5 · Práctica guiada
 
 Crea dos seguimientos con cantidades distintas. **Pista:** si comparten eventos, el array fue declarado fuera de la factory.
@@ -97,7 +91,7 @@ Ya encapsulas estado por instancia y sabes que privacidad no implica inmutabilid
 
 #### Paso 1 · Objetivo y preparación
 
-Al finalizar podrás predecir el acceso a declaraciones, `var`, `let` y `const` antes de inicializarlos y ordenar el arranque de RutaFlow.
+Al finalizar podrás predecir el acceso a declaraciones, `var`, `let` y `const` antes de inicializarlos y ordenar el arranque del proyecto.
 
 **Conocimiento previo:** scope léxico, funciones y módulos.
 
@@ -159,12 +153,6 @@ node src/hoisting.js
 
 **Fallo deliberado:** mueve una llamada a `crearRepositorio()` encima de su declaración. `ReferenceError: Cannot access ... before initialization` señala la TDZ; el enlace existe, pero todavía no tiene valor utilizable.
 
-#### Construcción RutaFlow: inicialización en orden explícito
-
-Crea `academia-javascript/src/hoisting.js` con una declaración invocada antes de escribirse, un `var` leído antes de asignar y un `const` leído en TDZ. Ejecuta `node src/hoisting.js`; captura por separado `undefined` y `ReferenceError`, mostrando que no significan lo mismo.
-
-Mueve la configuración RutaFlow debajo de una función que la usa para reproducir el error y luego reordena el archivo por dependencias claras. Compara un loop asíncrono con `var` y con `let`, prediciendo `3,3,3` frente a `0,1,2`. Prefiere `const` y no diseñes lógica dependiente de hoisting implícito salvo declaraciones deliberadas.
-
 #### Paso 5 · Práctica guiada
 
 Predice declaración de función, expresión con `var` y flecha con `const` invocadas antes de su línea. **Pista:** separa creación del enlace e inicialización del valor.
@@ -189,7 +177,7 @@ Al finalizar podrás leer un stack trace, reconstruir la cadena de llamadas y co
 
 #### Paso 2 · Contexto y caso real
 
-**¿Por qué es importante?** Cuando el proyecto RutaFlow rechaza una entrega, la traza permite saber qué flujo llegó a la validación. Sin ese modelo, el estudiante corrige la última línea visible aunque la causa esté en una llamada anterior.
+**¿Por qué es importante?** Cuando este proyecto rechaza una entrega, la traza permite saber qué flujo llegó a la validación. Sin ese modelo, el estudiante corrige la última línea visible aunque la causa esté en una llamada anterior.
 
 #### Paso 3 · Teoría con analogía
 
@@ -252,12 +240,6 @@ node src/pila.js
 
 **Fallo deliberado:** crea `function contar(n) { return contar(n + 1); }` y ejecútala en un archivo separado. `RangeError: Maximum call stack size exceeded` muestra recursión sin caso base ni progreso hacia él.
 
-#### Construcción RutaFlow: leer la cadena del fallo
-
-Crea `academia-javascript/src/pila.js` con `procesarLote -> procesarGuia -> validarDestino`, lanzando un error en la última. Ejecuta `node src/pila.js`; lee el stack trace y localiza archivo, línea y cadena de llamadas. Después agrega una recursión sin caso base en un script separado y observa `RangeError`.
-
-Corrige la recursión con caso base y progreso, y añade prueba para entrada vacía. Convierte un recorrido lineal profundo en iterativo y compara límites. RutaFlow conserva contexto del error sin capturar y relanzar inútilmente en cada frame; el call stack ordena ejecución, no resuelve variables.
-
 #### Paso 5 · Práctica guiada
 
 Agrega `asignarRuta` entre lote y guía, vuelve a ejecutar y localiza el nuevo frame. **Pista:** lee la traza de arriba hacia abajo para el origen y de abajo hacia arriba para el recorrido.
@@ -282,7 +264,7 @@ Al finalizar podrás predecir `this` según la forma de llamada y conservar un r
 
 #### Paso 2 · Contexto y caso real
 
-**¿Por qué es importante?** RutaFlow entrega métodos a temporizadores y manejadores. Al separar `centro.describir` de `centro`, cambia la forma de invocación y el método puede perder su centro.
+**¿Por qué es importante?** El proyecto entrega métodos a temporizadores y manejadores. Al separar `centro.describir` de `centro`, cambia la forma de invocación y el método puede perder su centro.
 
 #### Paso 3 · Teoría con analogía
 
@@ -342,12 +324,6 @@ node src/this.js
 
 **Fallo deliberado:** ejecuta `const suelta = centro.describir; suelta('RF-23')`. En un módulo estricto aparece `TypeError` al leer `nombre` de `undefined`: la función ya no fue invocada como método.
 
-#### Construcción RutaFlow: callback sin perder el receptor
-
-Crea `academia-javascript/src/this.js` con un objeto `centro` y método `describirGuia`. Invócalo como método, suelto, con `call`, `apply` y `bind`; ejecuta `node src/this.js` y registra cada salida. El caso suelto debe fallar o devolver `undefined` en modo estricto, mientras bind conserva el centro.
-
-Pasa el método sin bind a un temporizador para reproducir la pérdida. Corrige con bind o una arrow envolvente y explica la diferencia. Crea dos centros usando la misma función y comprueba `call`. RutaFlow evita arrows como métodos que necesitan receptor y evita bind indiscriminado cuando una función pura sería más clara.
-
 #### Paso 5 · Práctica guiada
 
 Invoca el método con `call` y `apply` usando otro centro. **Pista:** ambos ejecutan inmediatamente; cambia únicamente cómo reciben los argumentos.
@@ -372,7 +348,7 @@ Al finalizar podrás construir factories con estado privado y decidir cuándo us
 
 #### Paso 2 · Contexto y caso real
 
-**¿Por qué es importante?** RutaFlow necesita repositorios sustituibles para aprender y probar sin base real. Una factory crea instancias aisladas e inyecta dependencias sin recurrir a variables globales.
+**¿Por qué es importante?** El proyecto necesita repositorios sustituibles para aprender y probar sin base real. Una factory crea instancias aisladas e inyecta dependencias sin recurrir a variables globales.
 
 #### Paso 3 · Teoría con analogía
 
@@ -440,12 +416,6 @@ node src/repositorio.js
 
 **Fallo deliberado:** devuelve el `Map` o sus objetos originales, cambia el estado desde fuera y comprueba la corrupción. La privacidad del enlace no protege referencias entregadas; devuelve copias.
 
-#### Construcción RutaFlow: fábrica de repositorios en memoria
-
-Crea `academia-javascript/src/repositorio.js` con `crearRepositorioGuias`, mapa privado y métodos guardar/buscar/listar. Ejecuta `node src/repositorio.js`; dos repositorios deben mantener datos aislados y `listar` no permitir mutación interna.
-
-Expón por accidente el Map y demuestra la corrupción; restaura una vista copiada. Inyecta una función para generar IDs sin introducir clase ni global. RutaFlow elige factory para estado pequeño y composición; elegirá clase cuando compartir métodos/prototipo o integrarse con una convención lo justifique.
-
 #### Paso 5 · Práctica guiada
 
 Crea dos repositorios con generadores distintos. **Pista:** cada factory debe conservar su propio `Map`; guarda en uno y verifica que el otro sigue vacío.
@@ -470,7 +440,7 @@ Al finalizar podrás diferenciar contexto de ejecución, entorno léxico, scope 
 
 #### Paso 2 · Contexto y caso real
 
-**¿Por qué es importante?** En el proyecto RutaFlow una función puede llamarse desde distintos lugares y aun así resolver las mismas variables externas. Confundir quién llama con dónde se definió produce predicciones erróneas sobre closures.
+**¿Por qué es importante?** En este proyecto una función puede llamarse desde distintos lugares y aun así resolver las mismas variables externas. Confundir quién llama con dónde se definió produce predicciones erróneas sobre closures.
 
 #### Paso 3 · Teoría con analogía
 
@@ -508,7 +478,7 @@ mkdir src
 ```
 
 ```javascript
-const aplicacion = 'RutaFlow';
+const aplicacion = 'App';
 
 function crearProcesador(centro) {
   const prefijo = `${aplicacion}:${centro}`;
@@ -528,15 +498,9 @@ console.log(ejecutarDesdeOtroLugar(procesarBogota));
 node src/contextos.js
 ```
 
-**Resultado esperado:** `RutaFlow:BOG:RF-30`; la traza incluye `ejecutarDesdeOtroLugar`, pero `prefijo` continúa siendo el capturado en `crearProcesador`.
+**Resultado esperado:** `App:BOG:RF-30`; la traza incluye `ejecutarDesdeOtroLugar`, pero `prefijo` continúa siendo el capturado en `crearProcesador`.
 
 **Fallo deliberado:** cambia `prefijo` por `nombreInexistente`. El motor busca en entorno local, entorno de `crearProcesador` y global; al agotar la cadena lanza `ReferenceError`.
-
-#### Construcción RutaFlow: scope léxico frente a orden de llamada
-
-Crea `academia-javascript/src/contextos.js` con una variable global, otra en `crearProcesador` y otra en la función devuelta. Invoca esa función desde dos sitios distintos y ejecuta `node src/contextos.js`; debe resolver siempre según dónde fue definida, no según quién la llamó.
-
-Referencia un nombre inexistente para llegar a `ReferenceError` tras agotar la scope chain. Dibuja en comentarios el entorno capturado y el call stack de una invocación, mostrando que no son la misma estructura. RutaFlow usa este modelo para explicar closures y memoria; los nombres internos del motor pueden variar, pero la semántica observable del lenguaje es el contrato.
 
 #### Paso 5 · Práctica guiada
 

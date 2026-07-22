@@ -13,7 +13,7 @@ Al finalizar podrás elegir el método de array según la intención y construir
 
 #### Paso 2 · Contexto y caso real
 
-**¿Por qué es importante?** El tablero de RutaFlow debe seleccionar guías activas, transformar sus datos y obtener totales. Usar un método con propósito claro permite leer la operación sin descifrar un bucle genérico.
+**¿Por qué es importante?** El tablero del proyecto debe seleccionar guías activas, transformar sus datos y obtener totales. Usar un método con propósito claro permite leer la operación sin descifrar un bucle genérico.
 
 #### Paso 3 · Teoría con analogía
 
@@ -40,43 +40,6 @@ flowchart LR
 
 #### Paso 4 · Demostración guiada desde cero
 
-#### Construcción RutaFlow: calcular la carga activa
-
-Desde una carpeta vacía crea `ejemplo-colecciones`, ejecuta `npm init -y`, crea `src` y después `src/colecciones.js`. Cada operación conserva una intención: `filter` selecciona, `map` transforma y `reduce` agrega.
-
-```bash
-mkdir ejemplo-colecciones
-cd ejemplo-colecciones
-npm init -y
-mkdir src
-```
-
-```js
-const guias = [
-  { numero: 'RF-101', estado: 'EN_RUTA', pesoKg: 4 },
-  { numero: 'RF-102', estado: 'ENTREGADA', pesoKg: 2 },
-  { numero: 'RF-103', estado: 'EN_RUTA', pesoKg: 7 },
-];
-
-const activas = guias.filter((guia) => guia.estado === 'EN_RUTA');
-const pesos = activas.map((guia) => guia.pesoKg);
-const cargaActiva = pesos.reduce((total, peso) => total + peso, 0);
-
-console.log({ numeros: activas.map(({ numero }) => numero), cargaActiva });
-console.log('¿Hay una guía pesada?', guias.some(({ pesoKg }) => pesoKg > 5));
-console.log('¿Todas tienen número?', guias.every(({ numero }) => numero.length > 0));
-```
-
-Desde `academia-javascript`, ejecuta:
-
-```bash
-node src/colecciones.js
-```
-
-**Resultado esperado:** contiene `numeros: ['RF-101', 'RF-103']`, `cargaActiva: 11` y dos valores `true`.
-
-**Fallo deliberado:** elimina el valor inicial `0` y prueba un array vacío. `reduce` lanza `TypeError`; restituir el acumulador inicial hace explícito el resultado del caso vacío.
-
 #### Paso 5 · Práctica guiada
 
 Usa `find` para localizar `RF-103`. **Pista:** prueba también `RF-999` y valida `undefined` antes de leer una propiedad.
@@ -101,7 +64,7 @@ Al finalizar podrás escoger `Array`, `Object`, `Set` o `Map` según orden, dupl
 
 #### Paso 2 · Contexto y caso real
 
-**¿Por qué es importante?** RutaFlow recibe escaneos repetidos y busca guías por número. `Set` expresa unicidad local y `Map` evita recorrer toda la lista en cada consulta.
+**¿Por qué es importante?** El proyecto recibe escaneos repetidos y busca guías por número. `Set` expresa unicidad local y `Map` evita recorrer toda la lista en cada consulta.
 
 #### Paso 3 · Teoría con analogía
 
@@ -141,30 +104,6 @@ npm init -y
 mkdir src
 ```
 
-#### Construcción RutaFlow: evitar escaneos y duplicados
-
-Actualiza `academia-javascript/src/colecciones.js`:
-
-```js
-const codigosEscaneados = ['RF-101', 'RF-101', 'RF-103'];
-const codigosUnicos = new Set(codigosEscaneados);
-
-const guiasPorNumero = new Map(guias.map((guia) => [guia.numero, guia]));
-console.log([...codigosUnicos]);
-console.log(guiasPorNumero.get('RF-103'));
-console.log('Guías indexadas:', guiasPorNumero.size);
-```
-
-Ejecuta:
-
-```bash
-node src/colecciones.js
-```
-
-**Resultado esperado:** dos códigos únicos, la guía `RF-103` y tamaño `3`.
-
-**Fallo deliberado:** busca `RF-999` y lee inmediatamente `.estado`. `Map.get` devuelve `undefined` y aparece `TypeError`; usa `has` o una comprobación explícita antes de acceder.
-
 #### Paso 5 · Práctica guiada
 
 Cuenta escaneos por código con `Map`. **Pista:** usa `(conteos.get(codigo) ?? 0) + 1` y verifica que `RF-101` queda en dos.
@@ -189,7 +128,7 @@ Al finalizar podrás actualizar estructuras anidadas sin modificar versiones ant
 
 #### Paso 2 · Contexto y caso real
 
-**¿Por qué es importante?** RutaFlow necesita conservar estados anteriores para auditoría y para que la interfaz detecte cambios por referencia. Una copia superficial incompleta puede borrar país o mutar una dirección compartida.
+**¿Por qué es importante?** El proyecto necesita conservar estados anteriores para auditoría y para que la interfaz detecte cambios por referencia. Una copia superficial incompleta puede borrar país o mutar una dirección compartida.
 
 #### Paso 3 · Teoría con analogía
 
@@ -217,45 +156,6 @@ flowchart LR
 
 #### Paso 4 · Demostración guiada desde cero
 
-#### Construcción RutaFlow: actualizar sin perder el historial
-
-Desde una carpeta vacía crea `ejemplo-inmutabilidad`, ejecuta `npm init -y`, crea `src` y después `src/estado-inmutable.js`:
-
-```bash
-mkdir ejemplo-inmutabilidad
-cd ejemplo-inmutabilidad
-npm init -y
-mkdir src
-```
-
-```js
-const entrega = Object.freeze({
-  numero: 'RF-101',
-  destino: Object.freeze({ ciudad: 'Lima', pais: 'Perú' }),
-  estado: 'CREADA',
-});
-
-const actualizada = {
-  ...entrega,
-  destino: { ...entrega.destino, ciudad: 'Bogotá' },
-  estado: 'EN_RUTA',
-};
-
-console.log('Anterior:', entrega);
-console.log('Nueva:', actualizada);
-console.log('Referencias distintas:', entrega !== actualizada);
-```
-
-Ejecuta:
-
-```bash
-node src/estado-inmutable.js
-```
-
-**Resultado esperado:** conserva `Perú`, mantiene el original en `CREADA` y muestra `true` al comparar referencias.
-
-**Fallo deliberado:** reemplaza `destino` solo por `{ ciudad: 'Bogotá' }`; desaparece `pais`. Compara ambas salidas y copia también las propiedades del nivel anidado.
-
 #### Paso 5 · Práctica guiada
 
 Actualiza `codigoPostal` sin cambiar ciudad ni país. **Pista:** necesitas spread en el objeto raíz y en `destino`; comprueba qué referencias deben cambiar.
@@ -280,7 +180,7 @@ Al finalizar podrás asociar metadatos débiles a objetos y explicar por qué no
 
 #### Paso 2 · Contexto y caso real
 
-**¿Por qué es importante?** El proyecto RutaFlow puede asociar diagnósticos temporales a objetos de lectura. Un `Map` los mantendría vivos; `WeakMap` no impide su recolección cuando desaparecen las demás referencias.
+**¿Por qué es importante?** El proyecto puede asociar diagnósticos temporales a objetos de lectura. Un `Map` los mantendría vivos; `WeakMap` no impide su recolección cuando desaparecen las demás referencias.
 
 #### Paso 3 · Teoría con analogía
 
@@ -310,41 +210,6 @@ flowchart LR
 
 #### Paso 4 · Demostración guiada desde cero
 
-#### Construcción RutaFlow: metadatos sin retener objetos
-
-Desde una carpeta vacía crea `ejemplo-weakmap`, ejecuta `npm init -y`, crea `src` y después `src/metadatos-debiles.js`:
-
-```bash
-mkdir ejemplo-weakmap
-cd ejemplo-weakmap
-npm init -y
-mkdir src
-```
-
-```js
-const diagnosticos = new WeakMap();
-
-function registrarLectura(guia, origen) {
-  diagnosticos.set(guia, { origen, registradaEn: new Date().toISOString() });
-}
-
-let guiaTemporal = { numero: 'RF-TEMP' };
-registrarLectura(guiaTemporal, 'lector-bodega');
-console.log(diagnosticos.get(guiaTemporal));
-console.log('¿Registrada?', diagnosticos.has(guiaTemporal));
-guiaTemporal = null; // ya no existe una referencia fuerte desde la aplicación
-```
-
-Ejecuta:
-
-```bash
-node src/metadatos-debiles.js
-```
-
-**Resultado esperado:** antes de retirar la referencia muestra metadatos y `true`. No intentes demostrar el momento de recolección: es no determinista.
-
-**Fallo deliberado:** intenta `for (const item of diagnosticos)`. Recibirás `TypeError: diagnosticos is not iterable`; la enumeración haría observable un proceso de recolección que no tiene tiempo garantizado.
-
 #### Paso 5 · Práctica guiada
 
 Usa `WeakSet` para marcar objetos ya validados. **Pista:** solo admite objetos; prueba primero una cadena y diagnostica el `TypeError`.
@@ -369,7 +234,7 @@ Al finalizar podrás ordenar, invertir, insertar y reemplazar elementos sin modi
 
 #### Paso 2 · Contexto y caso real
 
-**¿Por qué es importante?** El proyecto RutaFlow compara distintas propuestas de ruta para una entrega. Si `sort()` altera el plan original, se pierde la referencia necesaria para auditar la decisión.
+**¿Por qué es importante?** El proyecto compara distintas propuestas de ruta para una entrega. Si `sort()` altera el plan original, se pierde la referencia necesaria para auditar la decisión.
 
 #### Paso 3 · Teoría con analogía
 
@@ -397,43 +262,6 @@ flowchart LR
 ```
 
 #### Paso 4 · Demostración guiada desde cero
-
-#### Construcción RutaFlow: ordenar prioridades sin mutar
-
-Desde una carpeta vacía crea `ejemplo-arrays-modernos`, ejecuta `npm init -y`, crea `src` y después `src/arrays-modernos.js`:
-
-```bash
-mkdir ejemplo-arrays-modernos
-cd ejemplo-arrays-modernos
-npm init -y
-mkdir src
-```
-
-```js
-const paradas = [
-  { guia: 'RF-101', prioridad: 2 },
-  { guia: 'RF-102', prioridad: 1 },
-  { guia: 'RF-103', prioridad: 3 },
-];
-
-const ordenadas = paradas.toSorted((a, b) => a.prioridad - b.prioridad);
-const corregidas = ordenadas.with(0, { ...ordenadas[0], prioridad: 0 });
-
-console.log('Original:', paradas.map(({ guia }) => guia));
-console.log('Ordenadas:', ordenadas.map(({ guia }) => guia));
-console.log('Corregidas:', corregidas);
-```
-
-Ejecuta con Node.js 20 o superior:
-
-```bash
-node --version
-node src/arrays-modernos.js
-```
-
-**Resultado esperado:** el original sigue `RF-101, RF-102, RF-103`; la copia ordenada comienza por `RF-102`.
-
-**Fallo deliberado:** sustituye `toSorted` por `sort`; la salida del original cambia porque ambos nombres apuntan al mismo array mutado. Si `toSorted` no existe, valida la versión y usa `[...paradas].sort(...)` conscientemente.
 
 #### Paso 5 · Práctica guiada
 

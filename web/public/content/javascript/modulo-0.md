@@ -182,7 +182,7 @@ Al finalizar convertirás datos externos explícitamente y elegirás `===` para 
 
 #### Paso 2 · Contexto y caso real
 
-**¿Por qué es importante?** Los campos HTML y muchos parámetros HTTP llegan como texto. RutaFlow puede recibir `'101'` aunque el identificador interno sea el número `101`. Compararlos sin una frontera clara puede encontrar la entrega equivocada.
+**¿Por qué es importante?** Los campos HTML y muchos parámetros HTTP llegan como texto. El proyecto puede recibir `'101'` aunque el identificador interno sea el número `101`. Compararlos sin una frontera clara puede encontrar la entrega equivocada.
 
 #### Paso 3 · Teoría con analogía
 
@@ -246,7 +246,7 @@ Al finalizar construirás mensajes legibles con interpolación, valores opcional
 
 #### Paso 2 · Contexto y caso real
 
-**¿Por qué es importante?** Los conductores y operadores de RutaFlow necesitan mensajes claros sobre cada entrega. Concatenar muchas piezas con `+` dificulta ver espacios, unidades y valores faltantes.
+**¿Por qué es importante?** Los conductores y operadores del proyecto necesitan mensajes claros sobre cada entrega. Concatenar muchas piezas con `+` dificulta ver espacios, unidades y valores faltantes.
 
 #### Paso 3 · Teoría con analogía
 
@@ -298,7 +298,7 @@ Ahora puedes presentar datos sin perder legibilidad ni confundir ausencia con ce
 
 #### Paso 1 · Objetivo y preparación
 
-Al finalizar distinguirás el lenguaje de su entorno y ejecutarás la misma regla de RutaFlow desde terminal y navegador.
+Al finalizar distinguirás el lenguaje de su entorno y ejecutarás la misma regla del proyecto desde terminal y navegador.
 
 **Conocimiento previo:** módulos, funciones y DOM básico; si aún no conoces DOM, sigue literalmente la demostración.
 
@@ -363,10 +363,10 @@ Agrega un formulario web que reciba guía y estado, pero conserva `resumenEnvio`
 
 #### Paso 7 · Cierre y evidencia
 
-Completaste un primer incremento de RutaFlow ejecutable en dos entornos. **Evidencia:** demuestra ambos resultados y el fallo deliberado; después explica qué parte es dominio y qué parte adaptador. El siguiente módulo introduce funciones y control de flujo. Fuentes oficiales: [Node.js ECMAScript modules](https://nodejs.org/api/esm.html) y [MDN — DOM](https://developer.mozilla.org/es/docs/Web/API/Document_Object_Model).
+Completaste un primer incremento del proyecto ejecutable en dos entornos. **Evidencia:** demuestra ambos resultados y el fallo deliberado; después explica qué parte es dominio y qué parte adaptador. El siguiente módulo introduce funciones y control de flujo. Fuentes oficiales: [Node.js ECMAScript modules](https://nodejs.org/api/esm.html) y [MDN — DOM](https://developer.mozilla.org/es/docs/Web/API/Document_Object_Model).
 
 **Errores comunes:** abrir módulos con `file://`; importar una ruta incorrecta; usar `document` en Node; mezclar reglas del dominio con la actualización del DOM.
 
 ## Ruta de proyecto progresivo desde carpeta vacía
 
-Conserva `academia-javascript/` para los siguientes módulos. Cada tema agrega una capacidad al mismo RutaFlow; no vuelvas a ejecutar `npm init` ni crees proyectos desechables. Antes de avanzar confirma que `node src/cli.js` y la interfaz web siguen mostrando el mismo resultado. Guarda el hito con Git solo cuando puedas reproducir éxito y fallo desde una terminal nueva.
+Conserva `academia-javascript/` para los siguientes módulos. Cada tema agrega una capacidad al mismo proyecto; no vuelvas a ejecutar `npm init` ni crees proyectos desechables. Antes de avanzar confirma que `node src/cli.js` y la interfaz web siguen mostrando el mismo resultado. Guarda el hito con Git solo cuando puedas reproducir éxito y fallo desde una terminal nueva.

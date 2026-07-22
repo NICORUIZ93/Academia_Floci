@@ -7,13 +7,13 @@
 
 #### Paso 1 · Objetivo y preparación
 
-Al finalizar podrás implementar, probar y elegir entre `debounce` y `throttle` según la interacción, incluyendo cancelación al desmontar. Aplicarás espera a la búsqueda y frecuencia limitada al seguimiento del mapa de RutaFlow.
+Al finalizar podrás implementar, probar y elegir entre `debounce` y `throttle` según la interacción, incluyendo cancelación al desmontar. Aplicarás espera a la búsqueda y frecuencia limitada al seguimiento del mapa del proyecto.
 
 **Conocimiento previo:** closures, temporizadores, callbacks y fake timers de Vitest. Debes tener `npm test` funcionando y comprender que ambas utilidades cambian cuándo se ejecuta una función, no cuánto cuesta.
 
 #### Paso 2 · Contexto y caso real
 
-Buscar por cada tecla satura la API, mientras dejar de actualizar el mapa hasta que termine el movimiento hace que parezca congelado. En el proyecto RutaFlow, la semántica decidirá: pausa final para búsqueda y muestras periódicas para posición.
+Buscar por cada tecla satura la API, mientras dejar de actualizar el mapa hasta que termine el movimiento hace que parezca congelado. En este proyecto, la semántica decidirá: pausa final para búsqueda y muestras periódicas para posición.
 
 #### Paso 3 · Teoría, modelo mental y analogía
 
@@ -83,7 +83,7 @@ export function throttle(funcion, intervaloMs) {
 
 Crea `test/frecuencia.test.js` con fake timers: invoca tres veces cada función, avanza el reloj y verifica una búsqueda tras 300 ms y muestras del mapa cada 100 ms.
 
-Desde la raíz de `rutaflow-web`, ejecuta la prueba:
+Desde la raíz de `academia-web`, ejecuta la prueba:
 
 ```bash
 npm test -- src/utilidades/frecuencia.test.js
@@ -113,13 +113,13 @@ Ya puedes limitar frecuencia según intención, no por moda. El siguiente tema e
 
 #### Paso 1 · Objetivo y preparación
 
-Al finalizar podrás memoizar una función pura con caché limitada, medir aciertos y reconocer cuándo el coste de memoria supera el ahorro. Optimizarás un cálculo repetido de tarifa de RutaFlow sin almacenar respuestas cambiantes.
+Al finalizar podrás memoizar una función pura con caché limitada, medir aciertos y reconocer cuándo el coste de memoria supera el ahorro. Optimizarás un cálculo repetido de tarifa del proyecto sin almacenar respuestas cambiantes.
 
 **Prerrequisitos:** funciones puras, closures, `Map`, serialización y `performance.now()`. Prepara datos deterministas; una comparación con entradas distintas no demuestra un acierto.
 
 #### Paso 2 · Contexto y caso real
 
-El panel recalcula varias veces la tarifa para la misma zona, peso y servicio durante un render. En este incremento del proyecto RutaFlow reutilizaremos resultados idénticos y limitaremos claves para impedir crecimiento indefinido.
+El panel recalcula varias veces la tarifa para la misma zona, peso y servicio durante un render. En este incremento del proyecto reutilizaremos resultados idénticos y limitaremos claves para impedir crecimiento indefinido.
 
 #### Paso 3 · Teoría, modelo mental y analogía
 
@@ -199,13 +199,13 @@ Ya puedes intercambiar cómputo por memoria de forma explícita y limitada. El s
 
 #### Paso 1 · Objetivo y preparación
 
-Al finalizar podrás mover un cálculo CPU-intensivo a un Web Worker, intercambiar mensajes, manejar error y terminar trabajo obsoleto. Mantendrás interactiva la interfaz de RutaFlow mientras se ordenan candidatos de una ruta.
+Al finalizar podrás mover un cálculo CPU-intensivo a un Web Worker, intercambiar mensajes, manejar error y terminar trabajo obsoleto. Mantendrás interactiva la interfaz del proyecto mientras se ordenan candidatos de una ruta.
 
 **Conocimiento previo:** ESM, eventos, Promesas, datos serializables y DevTools. Necesitas ejecutar el ejemplo mediante Vite; abrir HTML con `file://` cambia reglas de módulos y workers.
 
 #### Paso 2 · Contexto y caso real
 
-Ordenar miles de combinaciones de paradas puede ocupar el hilo principal y retrasar clics. En el proyecto RutaFlow, el worker hará cómputo puro y el hilo principal conservará DOM, estados de carga y cancelación.
+Ordenar miles de combinaciones de paradas puede ocupar el hilo principal y retrasar clics. En este proyecto, el worker hará cómputo puro y el hilo principal conservará DOM, estados de carga y cancelación.
 
 #### Paso 3 · Teoría, modelo mental y analogía
 
@@ -291,13 +291,13 @@ Ya puedes separar cómputo de UI sin confundir asincronía con paralelismo. El s
 
 #### Paso 1 · Objetivo y preparación
 
-Al finalizar podrás grabar un escenario reproducible, localizar una tarea larga en el flame chart, aplicar un solo cambio y comparar la misma métrica. Elaborarás evidencia de rendimiento para el filtro de RutaFlow.
+Al finalizar podrás grabar un escenario reproducible, localizar una tarea larga en el flame chart, aplicar un solo cambio y comparar la misma métrica. Elaborarás evidencia de rendimiento para el filtro del proyecto.
 
 **Prerrequisitos:** DevTools Performance, DOM, filtros de arrays y proyecto Vite. Cierra extensiones ruidosas, conserva el mismo equipo y usa el mismo conjunto de datos para antes y después.
 
 #### Paso 2 · Contexto y caso real
 
-El operador informa que el filtro “se siente lento”, pero esa frase no identifica causa ni magnitud. En este incremento del proyecto RutaFlow crearemos un escenario determinista, registraremos dispositivo y pasos y solo optimizaremos la función que el perfil señale.
+El operador informa que el filtro “se siente lento”, pero esa frase no identifica causa ni magnitud. En este incremento del proyecto crearemos un escenario determinista, registraremos dispositivo y pasos y solo optimizaremos la función que el perfil señale.
 
 #### Paso 3 · Teoría, modelo mental y analogía
 
@@ -348,7 +348,7 @@ export function filtrarGuias(guias, termino) {
   // Este trabajo deliberadamente simple será localizable por nombre y medida.
   const resultado = guias.filter((guia) => guia.numero.includes(termino));
   performance.mark("filtro-fin");
-  performance.measure("filtro-rutaflow", "filtro-inicio", "filtro-fin");
+  performance.measure("filtro-app", "filtro-inicio", "filtro-fin");
   return resultado;
 }
 ```
@@ -366,7 +366,7 @@ mkdir src docs
 npm run dev
 ```
 
-En Performance pulsa Record, escribe `RF-099`, detén y busca `filtro-rutaflow` y tareas largas. Repite tres veces y usa la mediana.
+En Performance pulsa Record, escribe `RF-099`, detén y busca `filtro-app` y tareas largas. Repite tres veces y usa la mediana.
 
 **Resultado esperado:** existe una medición en milisegundos asociada al mismo escenario y un bloque identificable en el flame chart; el documento contiene valores, no “parece mejor”.
 
@@ -392,13 +392,13 @@ Ya puedes tratar rendimiento como experimento reproducible. El siguiente tema co
 
 #### Paso 1 · Objetivo y preparación
 
-Al finalizar podrás instrumentar LCP, CLS e INP, relacionar cada métrica con una experiencia visible y distinguir laboratorio de datos de campo. Medirás RutaFlow en producción local y corregirás un desplazamiento provocado deliberadamente.
+Al finalizar podrás instrumentar LCP, CLS e INP, relacionar cada métrica con una experiencia visible y distinguir laboratorio de datos de campo. Medirás el proyecto en producción local y corregirás un desplazamiento provocado deliberadamente.
 
 **Conocimiento previo:** build de Vite, eventos, layout y consola del navegador. Ejecuta producción con `npm run build` y `npm run preview`; el servidor de desarrollo introduce trabajo que distorsiona mediciones.
 
 #### Paso 2 · Contexto y caso real
 
-La portada puede aparecer tarde, una tarjeta puede moverse mientras el operador toca “Entregar” y un filtro puede responder después de una tarea larga. El proyecto RutaFlow capturará las tres señales sin datos personales y usará campo para priorizar dispositivos reales.
+La portada puede aparecer tarde, una tarjeta puede moverse mientras el operador toca “Entregar” y un filtro puede responder después de una tarea larga. El proyecto capturará las tres señales sin datos personales y usará campo para priorizar dispositivos reales.
 
 #### Paso 3 · Teoría, modelo mental y analogía
 

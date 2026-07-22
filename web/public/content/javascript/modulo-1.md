@@ -74,12 +74,6 @@ node src/funciones.js
 
 **Fallo deliberado:** invoca `formatearDinero(10)` antes de declararla. El `ReferenceError` señala la zona muerta temporal; no lo ocultes cambiando arbitrariamente la sintaxis.
 
-#### Construcción RutaFlow: funciones con una responsabilidad visible
-
-Crea `academia-javascript/src/funciones.js` con `calcularTarifa` como declaración, `formatearDinero` como expresión y una arrow para transformar una lista de envíos. Ejecuta `node src/funciones.js`; el resultado esperado muestra `RF-1: $18.50` y explica cuál función puede invocarse antes de su definición.
-
-Invoca la expression antes de inicializarla para observar `ReferenceError`; después usa una arrow como método que intenta leer `this.centro` y comprueba que no recibe el objeto. Corrige con método abreviado. RutaFlow usa arrows en callbacks y métodos normales cuando el receptor dinámico forma parte del contrato.
-
 #### Paso 5 · Práctica guiada
 
 Transforma dos entregas con `envios.map(presentar)`. **Pista:** `presentar` ya recibe cada elemento; predice ambas líneas antes de ejecutar.
@@ -167,12 +161,6 @@ node src/parametros.js
 
 **Fallo deliberado:** reemplaza `undefined` por `null`. El valor por defecto no se activa y la moneda queda `null`. Esto no es un error del motor: los parámetros por defecto solo sustituyen ausencia o `undefined`.
 
-#### Construcción RutaFlow: tarifa compuesta sin mutación accidental
-
-Crea `academia-javascript/src/parametros.js` con `calcularTotal(moneda = 'COP', ...cargos)` y una actualización de envío mediante `{ ...envio, total }`. Ejecuta `node src/parametros.js`; debes ver suma correcta, moneda por defecto y el objeto original sin propiedad `total`.
-
-Pasa `undefined` y luego `null` como moneda para observar que solo el primero activa el valor por defecto. Haz una copia superficial de un objeto con dirección anidada, muta la dirección y comprueba que ambas referencias cambian. RutaFlow usa spread para actualizaciones pequeñas, no como clonación profunda universal.
-
 #### Paso 5 · Práctica guiada
 
 Agrega un cargo opcional por seguro y calcula de nuevo el total. **Pista:** prepara un array `cargos` y expándelo al llamar la función; no pases el array como un único cargo. Predice el resultado antes de ejecutar.
@@ -258,12 +246,6 @@ node src/composicion.js
 **Resultado esperado:** `20.35`.
 
 **Fallo deliberado:** invierte `validarPeso` y `calcularBase`, y ejecuta con `-1`. El error aparece después de calcular un dato inválido; con efectos externos ese orden sería peligroso. Valida antes de transformar.
-
-#### Construcción RutaFlow: componer reglas pequeñas
-
-Crea `academia-javascript/src/composicion.js` con `pipe`, `validarPeso`, `calcularBase` y `aplicarRecargo`. Ejecuta `node src/composicion.js`; el resultado esperado es una tarifa reproducible y un error tipado para peso negativo. Cada función recibe un valor y devuelve otro sin leer variables globales.
-
-Invierte el orden de dos pasos y observa una cifra distinta o un contrato roto. Después implementa un debounce pequeño, invócalo cinco veces y verifica una sola ejecución mediante contador. RutaFlow compone transformaciones puras; debounce pertenece al borde de interacción y no oculta reglas de negocio.
 
 #### Paso 5 · Práctica guiada
 
@@ -355,12 +337,6 @@ node src/estados.js
 
 **Fallo deliberado:** agrega `cancelar` después de `entregar`. El error debe indicar `entregado -> cancelar`; no agregues una transición solo para silenciarlo, porque el estado final es una regla del dominio.
 
-#### Construcción RutaFlow: máquina de estados explícita
-
-Crea `academia-javascript/src/estados.js` con handlers para `CREADA`, `EN_RUTA`, `ENTREGADA` y `CANCELADA`, y recorre una lista de eventos con `for...of`. Ejecuta `node src/estados.js`; la salida esperada muestra cada transición válida y rechaza una acción desconocida.
-
-Elimina un `break` de una versión con switch para observar *fall-through* y luego reemplázala por tabla cuando los casos sean funciones intercambiables. Añade una transición y sus casos límite sin cambiar el despachador. RutaFlow no reemplaza todo switch por objetos: un switch pequeño y exhaustivo puede comunicar mejor un conjunto cerrado.
-
 #### Paso 5 · Práctica guiada
 
 Agrega el estado `en-bodega` entre `asignado` y `en-ruta`. **Pista:** modifica datos de la tabla, no la función `aplicar`; predice qué secuencia anterior dejará de ser válida.
@@ -446,12 +422,6 @@ node src/legado.cjs
 **Resultado esperado:** `35` y `1`; `consultas` no existe en el scope global.
 
 **Fallo deliberado:** reemplaza `Array.from(arguments)` por `arguments.map(...)`. Aparece `TypeError` porque `arguments` es similar a un array, pero no hereda sus métodos. Rest crea un array real y evita la conversión.
-
-#### Construcción RutaFlow: reconocer legado y migrarlo
-
-Crea `academia-javascript/src/legado.cjs` con una IIFE que exponga únicamente `crearContador`, y compara `arguments` con rest dentro de dos funciones. Ejecuta `node src/legado.cjs`; el resultado esperado mantiene la variable interna inaccesible y muestra que rest sí es un array real.
-
-Intenta usar `arguments.map` para provocar `TypeError`; corrige convirtiendo o, preferiblemente, usando rest. Migra la IIFE a `src/contador.js` con ESM y export nombrado, actualizando `package.json` con `type: module`. RutaFlow aprende IIFE para mantener legado, pero el código nuevo usa módulos y contratos explícitos.
 
 #### Paso 5 · Práctica guiada
 

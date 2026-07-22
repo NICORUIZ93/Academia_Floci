@@ -7,19 +7,19 @@
 
 #### Paso 1 · Objetivo y preparación
 
-Al finalizar podrás construir una unión discriminada exhaustiva, derivar tipos con utilidades y mantener un contrato público que falle al añadir estados sin manejar. Endurecerás el ciclo de entrega de RutaFlow sin `any` ni assertions que oculten deuda.
+Al finalizar podrás construir una unión discriminada exhaustiva, derivar tipos con utilidades y mantener un contrato público que falle al añadir estados sin manejar. Endurecerás el ciclo de entrega del proyecto sin `any` ni assertions que oculten deuda.
 
 **Conocimiento previo:** TypeScript strict, generics, narrowing, `never` y pruebas de tipos. Ejecuta `npx tsc --noEmit` limpio antes de modificar el dominio.
 
 #### Paso 2 · Contexto y caso real
 
-RutaFlow incorpora cancelación y devolución a estados existentes. Si cada pantalla usa strings y condicionales parciales, una variante nueva puede quedar sin UI. El proyecto usará discriminante, exhaustividad y tipos derivados para que el cambio rompa en todos los lugares pendientes.
+El proyecto incorpora cancelación y devolución a estados existentes. Si cada pantalla usa strings y condicionales parciales, una variante nueva puede quedar sin UI. El proyecto usará discriminante, exhaustividad y tipos derivados para que el cambio rompa en todos los lugares pendientes.
 
 #### Paso 3 · Teoría, modelo mental y analogía
 
 **Conceptos clave:** propósito, modelo de ejecución, configuración, seguridad, coste, pruebas y operación.
 
-TypeScript avanzado se estudia como una decisión de ingeniería y no como una colección de comandos. Primero identifica el problema que resuelve y los límites de la plataforma; luego construye el incremento mínimo dentro de RutaFlow. Registra entradas, salidas, dependencias y condiciones de fallo. Compara al menos una alternativa y conserva la medición que justifica la elección. Si la tecnología es experimental, se aísla del camino estable y se documenta la estrategia de retirada.
+TypeScript avanzado se estudia como una decisión de ingeniería y no como una colección de comandos. Primero identifica el problema que resuelve y los límites de la plataforma; luego construye el incremento mínimo dentro de este proyecto. Registra entradas, salidas, dependencias y condiciones de fallo. Compara al menos una alternativa y conserva la medición que justifica la elección. Si la tecnología es experimental, se aísla del camino estable y se documenta la estrategia de retirada.
 
 En producción debes considerar configuración por ambiente, identidad de máquina y persona, secretos, compatibilidad, telemetría y recuperación. Una demostración exitosa no prueba comportamiento bajo concurrencia, reintentos, pérdida de red o datos inválidos. Por eso el laboratorio introduce un fallo deliberado y exige una prueba de regresión. El resultado debe poder repetirse desde terminal y CI sin pasos secretos del editor.
 
@@ -33,7 +33,7 @@ En producción debes considerar configuración por ambiente, identidad de máqui
 
 ```mermaid
 flowchart LR
-  A[Requisito RutaFlow] --> B[Decisión y alternativa]
+  A[Requisito] --> B[Decisión y alternativa]
   B --> C[Implementación mínima]
   C --> D[Prueba y medición]
   D --> E[Operación y recuperación]
@@ -41,14 +41,14 @@ flowchart LR
 ```
 #### Paso 4 · Demostración guiada desde cero
 
-Parte de una carpeta vacía para que el ejemplo sea reproducible sin depender de RutaFlow:
+Parte de una carpeta vacía para que el ejemplo sea reproducible sin depender del proyecto:
 ```bash
 mkdir ejemplo-js-modulo-14-tema-1 && cd ejemplo-js-modulo-14-tema-1
 npm init -y
 mkdir src
 ```
 
-Crea `rutaflow-web/src/domain/delivery-status.ts`:
+Crea `academia-web/src/domain/delivery-status.ts`:
 
 ```ts
 // La unión discriminada obliga a tratar cada estado de la entrega.
@@ -101,19 +101,19 @@ Ya puedes hacer que evolución del dominio revele consumidores incompletos. El s
 
 #### Paso 1 · Objetivo y preparación
 
-Al finalizar podrás definir un protocolo de mensajes discriminado, validar entradas dentro del worker, correlacionar respuestas y cancelar solicitudes obsoletas. Calcularás distancia de RutaFlow sin bloquear UI ni confiar ciegamente en TypeScript.
+Al finalizar podrás definir un protocolo de mensajes discriminado, validar entradas dentro del worker, correlacionar respuestas y cancelar solicitudes obsoletas. Calcularás distancia del proyecto sin bloquear UI ni confiar ciegamente en TypeScript.
 
 **Prerrequisitos:** Web Workers, TypeScript, uniones discriminadas y medición de hilo principal. Vite debe ejecutar el ejemplo; el contrato de tipos desaparece cuando un mensaje cruza el límite runtime.
 
 #### Paso 2 · Contexto y caso real
 
-El planificador recibe recalculados sucesivos al mover una parada. El proyecto RutaFlow debe devolver solo el cálculo más reciente, rechazar payloads inválidos y terminar workers al destruir la vista.
+El planificador recibe recalculados sucesivos al mover una parada. El proyecto debe devolver solo el cálculo más reciente, rechazar payloads inválidos y terminar workers al destruir la vista.
 
 #### Paso 3 · Teoría, modelo mental y analogía
 
 **Conceptos clave:** propósito, modelo de ejecución, configuración, seguridad, coste, pruebas y operación.
 
-Workers y ejecución fuera del hilo principal se estudia como una decisión de ingeniería y no como una colección de comandos. Primero identifica el problema que resuelve y los límites de la plataforma; luego construye el incremento mínimo dentro de RutaFlow. Registra entradas, salidas, dependencias y condiciones de fallo. Compara al menos una alternativa y conserva la medición que justifica la elección. Si la tecnología es experimental, se aísla del camino estable y se documenta la estrategia de retirada.
+Workers y ejecución fuera del hilo principal se estudia como una decisión de ingeniería y no como una colección de comandos. Primero identifica el problema que resuelve y los límites de la plataforma; luego construye el incremento mínimo dentro de este proyecto. Registra entradas, salidas, dependencias y condiciones de fallo. Compara al menos una alternativa y conserva la medición que justifica la elección. Si la tecnología es experimental, se aísla del camino estable y se documenta la estrategia de retirada.
 
 En producción debes considerar configuración por ambiente, identidad de máquina y persona, secretos, compatibilidad, telemetría y recuperación. Una demostración exitosa no prueba comportamiento bajo concurrencia, reintentos, pérdida de red o datos inválidos. Por eso el laboratorio introduce un fallo deliberado y exige una prueba de regresión. El resultado debe poder repetirse desde terminal y CI sin pasos secretos del editor.
 
@@ -127,7 +127,7 @@ En producción debes considerar configuración por ambiente, identidad de máqui
 
 ```mermaid
 flowchart LR
-  A[Requisito RutaFlow] --> B[Decisión y alternativa]
+  A[Requisito] --> B[Decisión y alternativa]
   B --> C[Implementación mínima]
   C --> D[Prueba y medición]
   D --> E[Operación y recuperación]
@@ -135,14 +135,14 @@ flowchart LR
 ```
 #### Paso 4 · Demostración guiada desde cero
 
-Parte de una carpeta vacía para que el ejemplo sea reproducible sin depender de RutaFlow:
+Parte de una carpeta vacía para que el ejemplo sea reproducible sin depender del proyecto:
 ```bash
 mkdir ejemplo-js-modulo-14-tema-2 && cd ejemplo-js-modulo-14-tema-2
 npm init -y
 mkdir src
 ```
 
-Crea `rutaflow-web/src/workers/route.worker.ts`:
+Crea `academia-web/src/workers/route.worker.ts`:
 
 ```ts
 // route.worker.ts: el cálculo pesado ocurre fuera del hilo de la interfaz.
@@ -159,7 +159,7 @@ self.onmessage = (event: MessageEvent<unknown>) => {
 };
 ```
 
-Crea `rutaflow-web/src/route-client.ts` con `new Worker(new URL("./workers/route.worker.ts", import.meta.url), { type: "module" })`, maneja las variantes success/error, envía `{ segments: [2.4, 3.1, 1.5] }` y expone `destroy()` que llama `terminate()`.
+Crea `academia-web/src/route-client.ts` con `new Worker(new URL("./workers/route.worker.ts", import.meta.url), { type: "module" })`, maneja las variantes success/error, envía `{ segments: [2.4, 3.1, 1.5] }` y expone `destroy()` que llama `terminate()`.
 
 ```bash
 npm run dev
@@ -189,19 +189,19 @@ Ya puedes operar un protocolo fuera del hilo con límites runtime. El siguiente 
 
 #### Paso 1 · Objetivo y preparación
 
-Al finalizar podrás auditar el grafo de producción, crear un chunk bajo demanda y comparar bytes/solicitudes antes y después. Separarás el mapa de RutaFlow solo si no permanece importado de forma ansiosa.
+Al finalizar podrás auditar el grafo de producción, crear un chunk bajo demanda y comparar bytes/solicitudes antes y después. Separarás el mapa del proyecto solo si no permanece importado de forma ansiosa.
 
 **Conocimiento previo:** ESM, import dinámico, Vite, Rollup y DevTools Network. Conserva un build base y mide comprimido además de tamaño en disco.
 
 #### Paso 2 · Contexto y caso real
 
-La mayoría de operadores consulta listas; pocos abren el mapa avanzado. En el proyecto RutaFlow el mapa se descargará al entrar a su ruta, con estado de carga/error y presupuesto documentado.
+La mayoría de operadores consulta listas; pocos abren el mapa avanzado. En este proyecto el mapa se descargará al entrar a su ruta, con estado de carga/error y presupuesto documentado.
 
 #### Paso 3 · Teoría, modelo mental y analogía
 
 **Conceptos clave:** propósito, modelo de ejecución, configuración, seguridad, coste, pruebas y operación.
 
-Bundlers y optimización se estudia como una decisión de ingeniería y no como una colección de comandos. Primero identifica el problema que resuelve y los límites de la plataforma; luego construye el incremento mínimo dentro de RutaFlow. Registra entradas, salidas, dependencias y condiciones de fallo. Compara al menos una alternativa y conserva la medición que justifica la elección. Si la tecnología es experimental, se aísla del camino estable y se documenta la estrategia de retirada.
+Bundlers y optimización se estudia como una decisión de ingeniería y no como una colección de comandos. Primero identifica el problema que resuelve y los límites de la plataforma; luego construye el incremento mínimo dentro de este proyecto. Registra entradas, salidas, dependencias y condiciones de fallo. Compara al menos una alternativa y conserva la medición que justifica la elección. Si la tecnología es experimental, se aísla del camino estable y se documenta la estrategia de retirada.
 
 En producción debes considerar configuración por ambiente, identidad de máquina y persona, secretos, compatibilidad, telemetría y recuperación. Una demostración exitosa no prueba comportamiento bajo concurrencia, reintentos, pérdida de red o datos inválidos. Por eso el laboratorio introduce un fallo deliberado y exige una prueba de regresión. El resultado debe poder repetirse desde terminal y CI sin pasos secretos del editor.
 
@@ -215,7 +215,7 @@ En producción debes considerar configuración por ambiente, identidad de máqui
 
 ```mermaid
 flowchart LR
-  A[Requisito RutaFlow] --> B[Decisión y alternativa]
+  A[Requisito] --> B[Decisión y alternativa]
   B --> C[Implementación mínima]
   C --> D[Prueba y medición]
   D --> E[Operación y recuperación]
@@ -223,14 +223,14 @@ flowchart LR
 ```
 #### Paso 4 · Demostración guiada desde cero
 
-Parte de una carpeta vacía para que el ejemplo sea reproducible sin depender de RutaFlow:
+Parte de una carpeta vacía para que el ejemplo sea reproducible sin depender del proyecto:
 ```bash
 mkdir ejemplo-js-modulo-14-tema-3 && cd ejemplo-js-modulo-14-tema-3
 npm init -y
 mkdir src
 ```
 
-Crea `rutaflow-web/vite.config.ts`:
+Crea `academia-web/vite.config.ts`:
 
 ```ts
 import { defineConfig } from 'vite';
@@ -280,19 +280,19 @@ Ya puedes relacionar grafo, entrega y experiencia en vez de “hacer chunks”. 
 
 #### Paso 1 · Objetivo y preparación
 
-Al finalizar podrás construir una confirmación operable con teclado, foco visible, nombre accesible y feedback anunciado, y probarla manual y automáticamente. Harás que confirmar una entrega de RutaFlow no dependa de ratón, color o visión.
+Al finalizar podrás construir una confirmación operable con teclado, foco visible, nombre accesible y feedback anunciado, y probarla manual y automáticamente. Harás que confirmar una entrega del proyecto no dependa de ratón, color o visión.
 
 **Prerrequisitos:** HTML semántico, eventos, formularios y lector de pantalla del sistema. Prueba primero con teclado; ARIA complementa semántica, no reemplaza un `<button>` real.
 
 #### Paso 2 · Contexto y caso real
 
-Confirmar entrega es una acción crítica. En el proyecto RutaFlow debe conservar foco, impedir duplicados, anunciar carga/éxito/error y explicar corrección sin mover inesperadamente al operador.
+Confirmar entrega es una acción crítica. En este proyecto debe conservar foco, impedir duplicados, anunciar carga/éxito/error y explicar corrección sin mover inesperadamente al operador.
 
 #### Paso 3 · Teoría, modelo mental y analogía
 
 **Conceptos clave:** propósito, modelo de ejecución, configuración, seguridad, coste, pruebas y operación.
 
-Accesibilidad web se estudia como una decisión de ingeniería y no como una colección de comandos. Primero identifica el problema que resuelve y los límites de la plataforma; luego construye el incremento mínimo dentro de RutaFlow. Registra entradas, salidas, dependencias y condiciones de fallo. Compara al menos una alternativa y conserva la medición que justifica la elección. Si la tecnología es experimental, se aísla del camino estable y se documenta la estrategia de retirada.
+Accesibilidad web se estudia como una decisión de ingeniería y no como una colección de comandos. Primero identifica el problema que resuelve y los límites de la plataforma; luego construye el incremento mínimo dentro de este proyecto. Registra entradas, salidas, dependencias y condiciones de fallo. Compara al menos una alternativa y conserva la medición que justifica la elección. Si la tecnología es experimental, se aísla del camino estable y se documenta la estrategia de retirada.
 
 En producción debes considerar configuración por ambiente, identidad de máquina y persona, secretos, compatibilidad, telemetría y recuperación. Una demostración exitosa no prueba comportamiento bajo concurrencia, reintentos, pérdida de red o datos inválidos. Por eso el laboratorio introduce un fallo deliberado y exige una prueba de regresión. El resultado debe poder repetirse desde terminal y CI sin pasos secretos del editor.
 
@@ -306,7 +306,7 @@ En producción debes considerar configuración por ambiente, identidad de máqui
 
 ```mermaid
 flowchart LR
-  A[Requisito RutaFlow] --> B[Decisión y alternativa]
+  A[Requisito] --> B[Decisión y alternativa]
   B --> C[Implementación mínima]
   C --> D[Prueba y medición]
   D --> E[Operación y recuperación]
@@ -314,14 +314,14 @@ flowchart LR
 ```
 #### Paso 4 · Demostración guiada desde cero
 
-Parte de una carpeta vacía para que el ejemplo sea reproducible sin depender de RutaFlow:
+Parte de una carpeta vacía para que el ejemplo sea reproducible sin depender del proyecto:
 ```bash
 mkdir ejemplo-js-modulo-14-tema-4 && cd ejemplo-js-modulo-14-tema-4
 npm init -y
 mkdir src
 ```
 
-Añade un `<button id="confirm-delivery">Confirmar entrega</button>` y `<p id="delivery-feedback" role="status" aria-live="polite"></p>`. Crea `rutaflow-web/src/ui/delivery-button.ts`:
+Añade un `<button id="confirm-delivery">Confirmar entrega</button>` y `<p id="delivery-feedback" role="status" aria-live="polite"></p>`. Crea `academia-web/src/ui/delivery-button.ts`:
 
 ```ts
 const button = document.querySelector<HTMLButtonElement>('#confirm-delivery');
@@ -375,19 +375,19 @@ Ya puedes verificar operabilidad y comunicación, no solo atributos. El siguient
 
 #### Paso 1 · Objetivo y preparación
 
-Al finalizar podrás compilar una función Rust a WebAssembly, cargarla con fallback JavaScript y medir carga/cómputo antes de decidir. Evaluarás un score de ruta de RutaFlow sin asumir que WASM siempre es más rápido.
+Al finalizar podrás compilar una función Rust a WebAssembly, cargarla con fallback JavaScript y medir carga/cómputo antes de decidir. Evaluarás un score de ruta del proyecto sin asumir que WASM siempre es más rápido.
 
 **Conocimiento previo:** Rust básico o capacidad de seguir una función pura, npm, Vite y medición. Instala Rust, `wasm-pack` y verifica sus versiones; si no están disponibles, conserva el fallback funcional.
 
 #### Paso 2 · Contexto y caso real
 
-El optimizador ejecuta un cálculo numérico muchas veces. En el proyecto RutaFlow se aislará una función pura, se comparará con JavaScript y el resto de la aplicación seguirá funcionando si descarga o instanciación WASM falla.
+El optimizador ejecuta un cálculo numérico muchas veces. En este proyecto se aislará una función pura, se comparará con JavaScript y el resto de la aplicación seguirá funcionando si descarga o instanciación WASM falla.
 
 #### Paso 3 · Teoría, modelo mental y analogía
 
 **Conceptos clave:** propósito, modelo de ejecución, configuración, seguridad, coste, pruebas y operación.
 
-WebAssembly con Rust o C se estudia como una decisión de ingeniería y no como una colección de comandos. Primero identifica el problema que resuelve y los límites de la plataforma; luego construye el incremento mínimo dentro de RutaFlow. Registra entradas, salidas, dependencias y condiciones de fallo. Compara al menos una alternativa y conserva la medición que justifica la elección. Si la tecnología es experimental, se aísla del camino estable y se documenta la estrategia de retirada.
+WebAssembly con Rust o C se estudia como una decisión de ingeniería y no como una colección de comandos. Primero identifica el problema que resuelve y los límites de la plataforma; luego construye el incremento mínimo dentro de este proyecto. Registra entradas, salidas, dependencias y condiciones de fallo. Compara al menos una alternativa y conserva la medición que justifica la elección. Si la tecnología es experimental, se aísla del camino estable y se documenta la estrategia de retirada.
 
 En producción debes considerar configuración por ambiente, identidad de máquina y persona, secretos, compatibilidad, telemetría y recuperación. Una demostración exitosa no prueba comportamiento bajo concurrencia, reintentos, pérdida de red o datos inválidos. Por eso el laboratorio introduce un fallo deliberado y exige una prueba de regresión. El resultado debe poder repetirse desde terminal y CI sin pasos secretos del editor.
 
@@ -401,7 +401,7 @@ En producción debes considerar configuración por ambiente, identidad de máqui
 
 ```mermaid
 flowchart LR
-  A[Requisito RutaFlow] --> B[Decisión y alternativa]
+  A[Requisito] --> B[Decisión y alternativa]
   B --> C[Implementación mínima]
   C --> D[Prueba y medición]
   D --> E[Operación y recuperación]
@@ -409,14 +409,14 @@ flowchart LR
 ```
 #### Paso 4 · Demostración guiada desde cero
 
-Parte de una carpeta vacía para que el ejemplo sea reproducible sin depender de RutaFlow:
+Parte de una carpeta vacía para que el ejemplo sea reproducible sin depender del proyecto:
 ```bash
 mkdir ejemplo-js-modulo-14-tema-5 && cd ejemplo-js-modulo-14-tema-5
 npm init -y
 mkdir src
 ```
 
-Crea `rutaflow-web/wasm/src/lib.rs`:
+Crea `academia-web/wasm/src/lib.rs`:
 
 ```rust
 use wasm_bindgen::prelude::*;
@@ -435,7 +435,7 @@ await init(); // Instancia el módulo antes de invocar sus exportaciones.
 console.log(route_score(12.5, 2));
 ```
 
-Guarda el cargador en `rutaflow-web/src/wasm/route-score.ts` y ejecuta:
+Guarda el cargador en `academia-web/src/wasm/route-score.ts` y ejecuta:
 
 ```bash
 wasm-pack build wasm --target web
@@ -466,19 +466,19 @@ Ya puedes evaluar WASM como intercambio medido, no como reemplazo general. El si
 
 #### Paso 1 · Objetivo y preparación
 
-Al finalizar podrás construir una puntuación local explicable, probar fronteras/sesgo y decidir si ML o una red distribuida resuelven un requisito real. Crearás una señal de riesgo de RutaFlow que nunca sanciona automáticamente.
+Al finalizar podrás construir una puntuación local explicable, probar fronteras/sesgo y decidir si ML o una red distribuida resuelven un requisito real. Crearás una señal de riesgo del proyecto que nunca sanciona automáticamente.
 
 **Prerrequisitos:** funciones puras, estadística descriptiva básica, privacidad y threat modeling. Este laboratorio no es un modelo predictivo validado ni una recomendación laboral; usa datos sintéticos.
 
 #### Paso 2 · Contexto y caso real
 
-Batería baja, GPS impreciso y retraso pueden sugerir que una entrega necesita asistencia, pero también reflejan dispositivo, cobertura o zona. El proyecto RutaFlow mostrará factores y permitirá revisión humana; no enviará ubicación a un tercero.
+Batería baja, GPS impreciso y retraso pueden sugerir que una entrega necesita asistencia, pero también reflejan dispositivo, cobertura o zona. El proyecto mostrará factores y permitirá revisión humana; no enviará ubicación a un tercero.
 
 #### Paso 3 · Teoría, modelo mental y analogía
 
 **Conceptos clave:** propósito, modelo de ejecución, configuración, seguridad, coste, pruebas y operación.
 
-Web3 y machine learning en navegador se estudia como una decisión de ingeniería y no como una colección de comandos. Primero identifica el problema que resuelve y los límites de la plataforma; luego construye el incremento mínimo dentro de RutaFlow. Registra entradas, salidas, dependencias y condiciones de fallo. Compara al menos una alternativa y conserva la medición que justifica la elección. Si la tecnología es experimental, se aísla del camino estable y se documenta la estrategia de retirada.
+Web3 y machine learning en navegador se estudia como una decisión de ingeniería y no como una colección de comandos. Primero identifica el problema que resuelve y los límites de la plataforma; luego construye el incremento mínimo dentro de este proyecto. Registra entradas, salidas, dependencias y condiciones de fallo. Compara al menos una alternativa y conserva la medición que justifica la elección. Si la tecnología es experimental, se aísla del camino estable y se documenta la estrategia de retirada.
 
 En producción debes considerar configuración por ambiente, identidad de máquina y persona, secretos, compatibilidad, telemetría y recuperación. Una demostración exitosa no prueba comportamiento bajo concurrencia, reintentos, pérdida de red o datos inválidos. Por eso el laboratorio introduce un fallo deliberado y exige una prueba de regresión. El resultado debe poder repetirse desde terminal y CI sin pasos secretos del editor.
 
@@ -492,7 +492,7 @@ En producción debes considerar configuración por ambiente, identidad de máqui
 
 ```mermaid
 flowchart LR
-  A[Requisito RutaFlow] --> B[Decisión y alternativa]
+  A[Requisito] --> B[Decisión y alternativa]
   B --> C[Implementación mínima]
   C --> D[Prueba y medición]
   D --> E[Operación y recuperación]
@@ -500,14 +500,14 @@ flowchart LR
 ```
 #### Paso 4 · Demostración guiada desde cero
 
-Parte de una carpeta vacía para que el ejemplo sea reproducible sin depender de RutaFlow:
+Parte de una carpeta vacía para que el ejemplo sea reproducible sin depender del proyecto:
 ```bash
 mkdir ejemplo-js-modulo-14-tema-6 && cd ejemplo-js-modulo-14-tema-6
 npm init -y
 mkdir src
 ```
 
-Crea `rutaflow-web/src/risk/delivery-risk.ts`:
+Crea `academia-web/src/risk/delivery-risk.ts`:
 
 ```ts
 interface RiskInput { battery: number; accuracyMeters: number; minutesLate: number }
@@ -559,9 +559,9 @@ Al finalizar podrás solicitar ubicación con consentimiento, interpretar precis
 
 #### Paso 2 · Contexto y caso real
 
-**¿Por qué es importante?** RutaFlow necesita posición para mostrar avance, pero la API puede ser rechazada, tardar, entregar datos antiguos o reportar una precisión de cientos de metros. La ubicación es un dato sensible y debe pedirse solo mientras una función visible la necesita.
+**¿Por qué es importante?** El proyecto necesita posición para mostrar avance, pero la API puede ser rechazada, tardar, entregar datos antiguos o reportar una precisión de cientos de metros. La ubicación es un dato sensible y debe pedirse solo mientras una función visible la necesita.
 
-Este incremento del proyecto RutaFlow inicia seguimiento únicamente al pulsar “Compartir ubicación”, muestra margen/tiempo y destruye el watch al salir de la entrega.
+Este incremento del proyecto inicia seguimiento únicamente al pulsar “Compartir ubicación”, muestra margen/tiempo y destruye el watch al salir de la entrega.
 
 #### Paso 3 · Teoría, modelo mental y analogía
 
@@ -578,14 +578,14 @@ flowchart LR
 
 #### Paso 4 · Demostración guiada desde cero
 
-Parte de una carpeta vacía para que el ejemplo sea reproducible sin depender de RutaFlow:
+Parte de una carpeta vacía para que el ejemplo sea reproducible sin depender del proyecto:
 ```bash
 mkdir ejemplo-js-modulo-14-tema-7 && cd ejemplo-js-modulo-14-tema-7
 npm init -y
 mkdir src
 ```
 
-Crea `rutaflow-web/src/location/watch-location.js`:
+Crea `academia-web/src/location/watch-location.js`:
 
 ```js
 export function iniciarUbicacion({ onPosition, onError }) {
@@ -643,7 +643,7 @@ Al finalizar podrás elegir almacenamiento según vida útil, tamaño, consulta 
 
 **¿Por qué es importante?** `localStorage`, `sessionStorage`, cookies e IndexedDB no son alternativas equivalentes. Elegir por costumbre puede bloquear la UI, perder datos al cerrar una pestaña o exponer tokens ante XSS.
 
-El proyecto RutaFlow conservará un borrador por pestaña y una cola offline estructurada con claves idempotentes, pero la sesión se manejará con cookie segura emitida por el servidor.
+El proyecto conservará un borrador por pestaña y una cola offline estructurada con claves idempotentes, pero la sesión se manejará con cookie segura emitida por el servidor.
 
 #### Paso 3 · Teoría, modelo mental y analogía
 
@@ -659,17 +659,17 @@ El proyecto RutaFlow conservará un borrador por pestaña y una cola offline est
 
 #### Paso 4 · Demostración guiada desde cero
 
-Parte de una carpeta vacía para que el ejemplo sea reproducible sin depender de RutaFlow:
+Parte de una carpeta vacía para que el ejemplo sea reproducible sin depender del proyecto:
 ```bash
 mkdir ejemplo-js-modulo-14-tema-8 && cd ejemplo-js-modulo-14-tema-8
 npm init -y
 mkdir src
 ```
 
-Crea `rutaflow-web/src/storage/delivery-draft.js`:
+Crea `academia-web/src/storage/delivery-draft.js`:
 
 ```js
-const KEY = 'rutaflow:delivery-draft';
+const KEY = 'app:delivery-draft';
 export const saveDraft = (draft) => sessionStorage.setItem(KEY, JSON.stringify(draft));
 export function loadDraft() {
   try {
@@ -692,7 +692,7 @@ npm run dev
 
 #### Paso 5 · Práctica guiada
 
-Crea una base IndexedDB `rutaflow-offline` y almacena confirmaciones con clave idempotente. **Pista:** resuelve la Promesa solo en `transaction.oncomplete`, no cuando termina una única request.
+Crea una base IndexedDB `academia-offline` y almacena confirmaciones con clave idempotente. **Pista:** resuelve la Promesa solo en `transaction.oncomplete`, no cuando termina una única request.
 
 #### Paso 6 · Práctica independiente
 
@@ -718,7 +718,7 @@ Al finalizar podrás construir y probar una expresión regular con grupos, ancla
 
 **¿Por qué es importante?** Los identificadores logísticos y entradas textuales necesitan validación consistente, pero una regex compleja puede aceptar formatos incorrectos o causar consumo excesivo de CPU con backtracking catastrófico.
 
-RutaFlow parseará códigos públicos `CO-2026-000123` y conservará política de normalización separada de validación.
+El proyecto parseará códigos públicos `CO-2026-000123` y conservará política de normalización separada de validación.
 
 #### Paso 3 · Teoría, modelo mental y analogía
 
@@ -728,14 +728,14 @@ RutaFlow parseará códigos públicos `CO-2026-000123` y conservará política d
 
 #### Paso 4 · Demostración guiada desde cero
 
-Parte de una carpeta vacía para que el ejemplo sea reproducible sin depender de RutaFlow:
+Parte de una carpeta vacía para que el ejemplo sea reproducible sin depender del proyecto:
 ```bash
 mkdir ejemplo-js-modulo-14-tema-9 && cd ejemplo-js-modulo-14-tema-9
 npm init -y
 mkdir src
 ```
 
-Crea `rutaflow-web/src/validation/tracking-code.js`:
+Crea `academia-web/src/validation/tracking-code.js`:
 
 ```js
 const TRACKING_CODE = /^(?<country>[A-Z]{2})-(?<year>\d{4})-(?<sequence>\d{6})$/u;
@@ -785,7 +785,7 @@ Al finalizar podrás reconocer Factory, Strategy, Observer y Pub/Sub, implementa
 
 **¿Por qué es importante?** Un patrón nombra una solución recurrente y sus consecuencias. Aplicarlo sin problema real añade capas, dependencias invisibles y dificultad de prueba.
 
-RutaFlow debe elegir una ruta por tiempo, batería o peajes sin modificar el planificador cada vez; Strategy representa esa variación explícita.
+El proyecto debe elegir una ruta por tiempo, batería o peajes sin modificar el planificador cada vez; Strategy representa esa variación explícita.
 
 #### Paso 3 · Teoría, modelo mental y analogía
 
@@ -804,14 +804,14 @@ classDiagram
 
 #### Paso 4 · Demostración guiada desde cero
 
-Parte de una carpeta vacía para que el ejemplo sea reproducible sin depender de RutaFlow:
+Parte de una carpeta vacía para que el ejemplo sea reproducible sin depender del proyecto:
 ```bash
 mkdir ejemplo-js-modulo-14-tema-10 && cd ejemplo-js-modulo-14-tema-10
 npm init -y
 mkdir src
 ```
 
-Crea `rutaflow-web/src/routing/route-strategy.js`:
+Crea `academia-web/src/routing/route-strategy.js`:
 
 ```js
 export const strategies = {
@@ -863,7 +863,7 @@ Al finalizar podrás registrar un Service Worker, precachear la aplicación mín
 
 **¿Por qué es importante?** Una operación logística puede perder conectividad. Una PWA debe seguir mostrando el último estado seguro y encolar acciones idempotentes, sin fingir que una confirmación offline ya llegó al servidor.
 
-RutaFlow permitirá consultar el shell y último seguimiento público, pero una confirmación offline quedará “pendiente de sincronizar” hasta acuse del servidor.
+El proyecto permitirá consultar el shell y último seguimiento público, pero una confirmación offline quedará “pendiente de sincronizar” hasta acuse del servidor.
 
 #### Paso 3 · Teoría, modelo mental y analogía
 
@@ -873,7 +873,7 @@ RutaFlow permitirá consultar el shell y último seguimiento público, pero una 
 
 ```mermaid
 flowchart LR
-    APP["RutaFlow web"] --> SW["Service Worker"]
+    APP["App web"] --> SW["Service Worker"]
     SW --> CACHE["Cache Storage"]
     SW --> NETWORK["API / red"]
     SW --> QUEUE["cola offline idempotente"]
@@ -881,17 +881,17 @@ flowchart LR
 
 #### Paso 4 · Demostración guiada desde cero
 
-Parte de una carpeta vacía para que el ejemplo sea reproducible sin depender de RutaFlow:
+Parte de una carpeta vacía para que el ejemplo sea reproducible sin depender del proyecto:
 ```bash
 mkdir ejemplo-js-modulo-14-tema-11 && cd ejemplo-js-modulo-14-tema-11
 npm init -y
 mkdir src
 ```
 
-Crea `rutaflow-web/public/sw.js`:
+Crea `academia-web/public/sw.js`:
 
 ```js
-const CACHE = 'rutaflow-shell-v1'; // Cambia versión cuando cambie el contrato del shell.
+const CACHE = 'app-shell-v1'; // Cambia versión cuando cambie el contrato del shell.
 const SHELL = ['/', '/index.html'];
 self.addEventListener('install', (event) => event.waitUntil(caches.open(CACHE).then((c) => c.addAll(SHELL))));
 self.addEventListener('activate', (event) => event.waitUntil(
@@ -905,7 +905,7 @@ self.addEventListener('fetch', (event) => {
 
 Regístralo desde `src/pwa/register-service-worker.js` solo en producción.
 
-Después, desde la raíz de `rutaflow-web`, ejecuta:
+Después, desde la raíz de `academia-web`, ejecuta:
 
 ```bash
 npm run build
@@ -944,7 +944,7 @@ Al finalizar podrás abrir un WebSocket, validar mensajes, mantener heartbeat y 
 
 **¿Por qué es importante?** El seguimiento en vivo no debe consultar la API cada segundo. WebSocket mantiene un canal bidireccional, pero introduce conexión persistente, orden, duplicados, autenticación y recuperación.
 
-RutaFlow mantendrá un socket por vista/servicio, validará cada evento y deduplicará `event.id` al reconectar.
+El proyecto mantendrá un socket por vista/servicio, validará cada evento y deduplicará `event.id` al reconectar.
 
 #### Paso 3 · Teoría, modelo mental y analogía
 
@@ -954,14 +954,14 @@ RutaFlow mantendrá un socket por vista/servicio, validará cada evento y dedupl
 
 #### Paso 4 · Demostración guiada desde cero
 
-Parte de una carpeta vacía para que el ejemplo sea reproducible sin depender de RutaFlow:
+Parte de una carpeta vacía para que el ejemplo sea reproducible sin depender del proyecto:
 ```bash
 mkdir ejemplo-js-modulo-14-tema-12 && cd ejemplo-js-modulo-14-tema-12
 npm init -y
 mkdir src
 ```
 
-Crea `rutaflow-web/src/realtime/tracking-socket.js`:
+Crea `academia-web/src/realtime/tracking-socket.js`:
 
 ```js
 export function connectTracking(url, { onEvent, onState }) {
@@ -1019,7 +1019,7 @@ Al finalizar podrás interpretar un paquete binario con endianness explícito, v
 
 **¿Por qué es importante?** GPS, imágenes, archivos y protocolos pueden entregar bytes, no JSON. Interpretarlos con tamaño u orden incorrecto produce valores corruptos difíciles de diagnosticar.
 
-RutaFlow recibe dos coordenadas escaladas por un millón en ocho bytes big-endian; el decoder será la frontera hacia dominio.
+El proyecto recibe dos coordenadas escaladas por un millón en ocho bytes big-endian; el decoder será la frontera hacia dominio.
 
 #### Paso 3 · Teoría, modelo mental y analogía
 
@@ -1029,14 +1029,14 @@ RutaFlow recibe dos coordenadas escaladas por un millón en ocho bytes big-endia
 
 #### Paso 4 · Demostración guiada desde cero
 
-Parte de una carpeta vacía para que el ejemplo sea reproducible sin depender de RutaFlow:
+Parte de una carpeta vacía para que el ejemplo sea reproducible sin depender del proyecto:
 ```bash
 mkdir ejemplo-js-modulo-14-tema-13 && cd ejemplo-js-modulo-14-tema-13
 npm init -y
 mkdir src
 ```
 
-Crea `rutaflow-web/src/binary/decode-gps.js`:
+Crea `academia-web/src/binary/decode-gps.js`:
 
 ```js
 export function decodeGps(buffer) {
@@ -1090,7 +1090,7 @@ Al finalizar podrás verificar el estado de una característica, usar alternativ
 
 **¿Por qué es importante?** ECMAScript evoluciona. Enseñar una propuesta como universal puede romper producción; ignorar características nuevas mantiene soluciones complejas cuando el runtime ya ofrece una mejor.
 
-RutaFlow formateará instantes mediante un adaptador estable y cargará polyfill solo cuando el análisis de soporte/coste lo justifique.
+El proyecto formateará instantes mediante un adaptador estable y cargará polyfill solo cuando el análisis de soporte/coste lo justifique.
 
 #### Paso 3 · Teoría, modelo mental y analogía
 
@@ -1105,14 +1105,14 @@ flowchart LR
 
 #### Paso 4 · Demostración guiada desde cero
 
-Parte de una carpeta vacía para que el ejemplo sea reproducible sin depender de RutaFlow:
+Parte de una carpeta vacía para que el ejemplo sea reproducible sin depender del proyecto:
 ```bash
 mkdir ejemplo-js-modulo-14-tema-14 && cd ejemplo-js-modulo-14-tema-14
 npm init -y
 mkdir src
 ```
 
-Crea `rutaflow-web/src/platform/time.js`:
+Crea `academia-web/src/platform/time.js`:
 
 ```js
 export function formatDeliveryInstant(iso, timeZone, locale = 'es-CO') {

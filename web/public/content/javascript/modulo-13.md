@@ -9,13 +9,13 @@ Una aplicación no está terminada cuando muestra datos. En producción recibe e
 
 #### Paso 1 · Objetivo y preparación
 
-Al finalizar podrás identificar una frontera de confianza, renderizar texto sin interpretarlo, permitir únicamente URLs HTTPS y explicar el papel limitado de CSP, CORS y CSRF. Endurecerás el seguimiento público de RutaFlow con una prueba de regresión XSS.
+Al finalizar podrás identificar una frontera de confianza, renderizar texto sin interpretarlo, permitir únicamente URLs HTTPS y explicar el papel limitado de CSP, CORS y CSRF. Endurecerás el seguimiento público del proyecto con una prueba de regresión XSS.
 
 **Conocimiento previo:** DOM, URLs, HTTP, cookies y pruebas. Usa únicamente payloads inocuos en un entorno local sin sesiones ni datos reales; el objetivo es observar interpretación, no ejecutar daño.
 
 #### Paso 2 · Contexto y caso real
 
-El código público y estado pueden venir de una API comprometida o de datos almacenados por otra persona. En el proyecto RutaFlow, cada valor seguirá siendo `unknown` hasta validar estructura y cada salida usará una defensa apropiada a texto o URL.
+El código público y estado pueden venir de una API comprometida o de datos almacenados por otra persona. En este proyecto, cada valor seguirá siendo `unknown` hasta validar estructura y cada salida usará una defensa apropiada a texto o URL.
 
 #### Paso 3 · Teoría, modelo mental y analogía
 
@@ -96,7 +96,7 @@ export function renderSeguimiento(raiz, entrada) {
 
 Crea `test/render.test.js` y prueba texto `<img src=x onerror=alert(1)>` y URL `javascript:alert(1)`.
 
-Desde la raíz de `rutaflow-web`, ejecuta:
+Desde la raíz de `academia-web`, ejecuta:
 
 ```bash
 npm test -- src/seguridad/render-seguimiento.test.js
@@ -126,13 +126,13 @@ Ya puedes conservar datos como datos y aplicar defensa según contexto. El sigui
 
 #### Paso 1 · Objetivo y preparación
 
-Al finalizar podrás explicar reachability, diseñar montaje/desmontaje simétricos y confirmar una fuga mediante snapshots comparables. Eliminarás listeners y suscripciones retenidos al navegar en RutaFlow.
+Al finalizar podrás explicar reachability, diseñar montaje/desmontaje simétricos y confirmar una fuga mediante snapshots comparables. Eliminarás listeners y suscripciones retenidos al navegar en la aplicación.
 
 **Prerrequisitos:** closures, listeners, AbortController, store y DevTools Memory. Una subida aislada del heap no prueba fuga; repite el mismo escenario y permite recolección.
 
 #### Paso 2 · Contexto y caso real
 
-La búsqueda global se monta cada vez que el operador vuelve a la lista. Si conserva listeners, cada tecla ejecuta más callbacks y retiene vistas desconectadas. El proyecto RutaFlow asignará propietario y cleanup a cada recurso.
+La búsqueda global se monta cada vez que el operador vuelve a la lista. Si conserva listeners, cada tecla ejecuta más callbacks y retiene vistas desconectadas. El proyecto asignará propietario y cleanup a cada recurso.
 
 #### Paso 3 · Teoría, modelo mental y analogía
 
@@ -221,13 +221,13 @@ Ya puedes diferenciar memoria temporal de retención accidental. El siguiente te
 
 #### Paso 1 · Objetivo y preparación
 
-Al finalizar podrás distinguir fallo operacional de defecto, propagar `cause`, redactar telemetría mediante allowlist y evitar recursión si el reporter falla. Registrarás errores correlacionables de RutaFlow sin cuerpos, tokens ni direcciones.
+Al finalizar podrás distinguir fallo operacional de defecto, propagar `cause`, redactar telemetría mediante allowlist y evitar recursión si el reporter falla. Registrarás errores correlacionables del proyecto sin cuerpos, tokens ni direcciones.
 
 **Conocimiento previo:** excepciones, Promesas, fetch y privacidad básica. Usa datos ficticios; inspecciona el evento final como si fuera a salir del dispositivo.
 
 #### Paso 2 · Contexto y caso real
 
-“Algo salió mal” no permite encontrar el despliegue afectado, pero enviar toda la entrega vulnera a la persona usuaria. En el proyecto RutaFlow se conservarán tipo, versión, ruta lógica, duración y traceId, separando mensaje visible de diagnóstico protegido.
+“Algo salió mal” no permite encontrar el despliegue afectado, pero enviar toda la entrega vulnera a la persona usuaria. En este proyecto se conservarán tipo, versión, ruta lógica, duración y traceId, separando mensaje visible de diagnóstico protegido.
 
 #### Paso 3 · Teoría, modelo mental y analogía
 
@@ -322,13 +322,13 @@ Ya puedes observar sin registrar indiscriminadamente. El siguiente tema adaptar�
 
 #### Paso 1 · Objetivo y preparación
 
-Al finalizar podrás detectar capacidades, ofrecer fallback, formatear cantidad/moneda/instante según locale y respetar zona y movimiento reducido. Presentarás seguimiento RutaFlow en Colombia y Estados Unidos sin cambiar el dato original.
+Al finalizar podrás detectar capacidades, ofrecer fallback, formatear cantidad/moneda/instante según locale y respetar zona y movimiento reducido. Presentarás el seguimiento en Colombia y Estados Unidos sin cambiar el dato original.
 
 **Prerrequisitos:** Intl, fechas ISO, DOM y feature detection. Define explícitamente locale, moneda y zona; no deduzcas una regla de negocio de otra.
 
 #### Paso 2 · Contexto y caso real
 
-Una entrega ocurre en un instante UTC, pero Bogotá y Madrid pueden mostrar fechas distintas. Además, un navegador puede carecer de observer. El proyecto RutaFlow mantendrá una experiencia base y aplicará mejoras solo cuando la capacidad existe.
+Una entrega ocurre en un instante UTC, pero Bogotá y Madrid pueden mostrar fechas distintas. Además, un navegador puede carecer de observer. El proyecto mantendrá una experiencia base y aplicará mejoras solo cuando la capacidad existe.
 
 #### Paso 3 · Teoría, modelo mental y analogía
 

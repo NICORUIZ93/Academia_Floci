@@ -7,13 +7,13 @@
 
 #### Paso 1 · Objetivo y preparación
 
-Al finalizar podrás resolver rutas estáticas y con parámetro, navegar sin recarga, responder a atrás/adelante y respetar enlaces modificados. Construirás el router accesible de la SPA RutaFlow.
+Al finalizar podrás resolver rutas estáticas y con parámetro, navegar sin recarga, responder a atrás/adelante y respetar enlaces modificados. Construirás el router accesible de la SPA del proyecto.
 
 **Conocimiento previo:** DOM, eventos, URLs, módulos y pruebas. Configura el servidor de producción para devolver `index.html` ante rutas conocidas; History API no resuelve por sí sola una recarga profunda.
 
 #### Paso 2 · Contexto y caso real
 
-RutaFlow necesita inicio, listado y detalle `/guias/RF-101`. La URL debe poder copiarse, recargarse y recorrerse con el historial. El proyecto separará resolución pura de efectos del navegador para probarla sin depender de clics manuales.
+El proyecto necesita inicio, listado y detalle `/guias/RF-101`. La URL debe poder copiarse, recargarse y recorrerse con el historial. El proyecto separará resolución pura de efectos del navegador para probarla sin depender de clics manuales.
 
 #### Paso 3 · Teoría, modelo mental y analogía
 
@@ -101,13 +101,13 @@ Ya puedes sincronizar URL, historial y contenido. El siguiente tema centralizar�
 
 #### Paso 1 · Objetivo y preparación
 
-Al finalizar podrás crear un store con lectura, actualización funcional, suscripción y cleanup, verificando inmutabilidad y orden de notificación. Centralizarás filtro y carga de guías de RutaFlow.
+Al finalizar podrás crear un store con lectura, actualización funcional, suscripción y cleanup, verificando inmutabilidad y orden de notificación. Centralizarás filtro y carga de guías del proyecto.
 
 **Prerrequisitos:** closures, `Set`, objetos inmutables y Vitest. El store no hará fetch ni tocará DOM: solo administra transiciones y notifica.
 
 #### Paso 2 · Contexto y caso real
 
-Cabecera, lista y filtros necesitan el mismo estado. En el proyecto RutaFlow, el store será una única fuente y cada vista podrá abandonar la suscripción al cambiar de ruta.
+Cabecera, lista y filtros necesitan el mismo estado. En este proyecto, el store será una única fuente y cada vista podrá abandonar la suscripción al cambiar de ruta.
 
 #### Paso 3 · Teoría, modelo mental y analogía
 
@@ -200,13 +200,13 @@ Ya puedes coordinar estado sin variables globales dispersas. El siguiente tema m
 
 #### Paso 1 · Objetivo y preparación
 
-Al finalizar podrás modelar una operación remota como estados mutuamente excluyentes, validar JSON y cancelar al abandonar la vista. Conectarás el cliente de guías de RutaFlow al store sin dejar pantallas ambiguas.
+Al finalizar podrás modelar una operación remota como estados mutuamente excluyentes, validar JSON y cancelar al abandonar la vista. Conectarás el cliente de guías del proyecto al store sin dejar pantallas ambiguas.
 
 **Conocimiento previo:** fetch, AbortController, parser del módulo 11, store y pruebas de mocks. Necesitas distinguir error HTTP, red, datos y cancelación.
 
 #### Paso 2 · Contexto y caso real
 
-Una lista puede estar esperando, lista, vacía o fallida. En el proyecto RutaFlow cada transición será visible y un reintento iniciará una solicitud nueva; la vista no recibirá simultáneamente datos antiguos y un error nuevo.
+Una lista puede estar esperando, lista, vacía o fallida. En este proyecto cada transición será visible y un reintento iniciará una solicitud nueva; la vista no recibirá simultáneamente datos antiguos y un error nuevo.
 
 #### Paso 3 · Teoría, modelo mental y analogía
 
@@ -288,13 +288,13 @@ Ya puedes integrar red sin estados contradictorios. El siguiente tema ensamblar�
 
 #### Paso 1 · Objetivo y preparación
 
-Al finalizar podrás ensamblar dependencias en un composition root, montar una vista por ruta y ejecutar su `destroy` antes de cambiar. Entregarás una SPA RutaFlow funcional en desarrollo y producción.
+Al finalizar podrás ensamblar dependencias en un composition root, montar una vista por ruta y ejecutar su `destroy` antes de cambiar. Entregarás una SPA funcional en desarrollo y producción.
 
 **Prerrequisitos:** router, store, cliente, render DOM, módulos, pruebas y build. Conserva cada unidad en su carpeta; `app.js` conectará contratos pero no reimplementará sus detalles.
 
 #### Paso 2 · Contexto y caso real
 
-Las piezas aisladas funcionan, pero una aplicación necesita ordenar creación y destrucción. En el proyecto RutaFlow, navegar desmontará la vista anterior, cancelará red, retirará listeners y suscripciones y montará la siguiente con dependencias explícitas.
+Las piezas aisladas funcionan, pero una aplicación necesita ordenar creación y destrucción. En este proyecto, navegar desmontará la vista anterior, cancelará red, retirará listeners y suscripciones y montará la siguiente con dependencias explícitas.
 
 #### Paso 3 · Teoría, modelo mental y analogía
 
@@ -385,29 +385,6 @@ Ya puedes explicar el ciclo completo que automatizan Angular y React. El siguien
 **Fuentes oficiales:** [MDN — SPA glossary](https://developer.mozilla.org/en-US/docs/Glossary/SPA), [Vite — Static Deploy](https://vite.dev/guide/static-deploy.html) y [Web.dev — Code splitting](https://web.dev/articles/reduce-javascript-payloads-with-code-splitting).
 
 ---
-
-## Proyecto transversal RutaFlow: Widget público de seguimiento
-
-RutaFlow conecta este track con una plataforma completa de paquetería. La implementación de referencia está en `examples/rutaflow/javascript/tracking-widget.js`; se estudia como punto de partida pequeño, no como sistema terminado.
-
-### Capacidad y fundamento
-
-Construye el seguimiento sin `innerHTML`: crea nodos, asigna `textContent`, usa `aria-live` y formatea fechas con `Intl`. El contrato público no expone dirección, teléfono, coordenadas ni identificadores internos. Separa obtención, validación, presentación y renderizado para que la función conserve una responsabilidad clara.
-
-### Implementación guiada
-
-1. Copia el contrato y escribe primero casos normales, límite, inválidos y duplicados.
-2. Ejecuta la referencia, provoca un fallo y explica el mensaje antes de modificarla.
-3. Implementa una mejora pequeña manteniendo nombres de dominio, efectos visibles y errores tipados.
-4. Integra con el contrato del track anterior sin compartir tablas, estado mutable ni detalles de framework.
-5. Registra la decisión en el README y etiqueta el hito de RutaFlow correspondiente.
-
-### Verificación profesional
-
-Prueba caracteres HTML en `publicCode`, fecha inválida, actualización de estado y navegación con lector de pantalla. Mide que una actualización reemplace el contenido sin duplicar nodos y explica por qué sanitizar después es más frágil que no interpretar texto como HTML.
-
-El capítulo se completa cuando la evidencia permite a otra persona reproducir el flujo y explicar qué garantías ofrece y cuáles todavía no.
-
 
 ## Construcción guiada del capítulo
 
