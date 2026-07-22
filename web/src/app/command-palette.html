@@ -4,6 +4,7 @@
     <div class="palette-input">
       <lucide-icon [img]="icons.Search" />
       <input
+        #paletteInput
         type="text"
         placeholder="Busca un curso o un tema…"
         [ngModel]="query()"

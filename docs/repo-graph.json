@@ -11611,7 +11611,7 @@
     },
     {
       "path": "web/src/app/command-palette.html",
-      "lines": 28,
+      "lines": 29,
       "kind": "angular-app",
       "symbols": [
         "palette-title",
@@ -11643,7 +11643,7 @@
     },
     {
       "path": "web/src/app/command-palette.ts",
-      "lines": 108,
+      "lines": 129,
       "kind": "angular-app",
       "symbols": [
         "CommandPaletteComponent",

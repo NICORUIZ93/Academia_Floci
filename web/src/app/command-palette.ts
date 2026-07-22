@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, HostListener, computed, inject, signal } from '@angular/core';
+import { Component, ElementRef, HostListener, afterNextRender, computed, inject, signal, viewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { LucideAngularModule, Search, X } from 'lucide-angular';
@@ -29,6 +29,8 @@ export class CommandPaletteComponent {
   readonly query = signal('');
   readonly activeIndex = signal(0);
   readonly activeResultId = computed(() => this.results().length ? `palette-result-${this.activeIndex()}` : null);
+  private readonly paletteInput = viewChild<ElementRef<HTMLInputElement>>('paletteInput');
+  private previousFocus: HTMLElement | null = null;
 
   private readonly topicIndex = inject(TopicIndexService);
   private readonly index = computed<SearchEntry[]>(() => TRACKS.flatMap(track => {
@@ -71,9 +73,11 @@ export class CommandPaletteComponent {
   onKeydown(event: KeyboardEvent): void {
     if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === 'k') {
       event.preventDefault();
+      this.previousFocus = document.activeElement instanceof HTMLElement ? document.activeElement : null;
       this.paletteService.toggle();
       this.query.set('');
       this.activeIndex.set(0);
+      if (this.paletteService.isOpen()) afterNextRender(() => this.paletteInput()?.nativeElement.focus());
     } else if (this.paletteService.isOpen() && event.key === 'ArrowDown' && this.results().length) {
       event.preventDefault();
       this.activeIndex.update(index => (index + 1) % this.results().length);
@@ -84,7 +88,21 @@ export class CommandPaletteComponent {
       event.preventDefault();
       this.select(this.results()[this.activeIndex()]);
     } else if (event.key === 'Escape' && this.paletteService.isOpen()) {
-      this.paletteService.close();
+      this.close();
+    } else if (this.paletteService.isOpen() && event.key === 'Tab') {
+      const dialog = document.querySelector<HTMLElement>('.palette');
+      if (!dialog) return;
+      const focusable = Array.from(dialog.querySelectorAll<HTMLElement>('input, button:not([disabled])'));
+      if (!focusable.length) return;
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first.focus();
+      }
     }
   }
 
@@ -99,6 +117,9 @@ export class CommandPaletteComponent {
     this.paletteService.close();
     this.query.set('');
     this.activeIndex.set(0);
+    const previousFocus = this.previousFocus;
+    this.previousFocus = null;
+    requestAnimationFrame(() => previousFocus?.focus());
   }
 
   close(): void {
